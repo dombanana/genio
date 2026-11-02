@@ -3,7 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#121829">
+<meta name="theme-color" content="#184E4E">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="favicon.png" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-title" content="Gênio">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="mobile-web-app-capable" content="yes">
 <meta name="robots" content="noindex,nofollow">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
@@ -454,6 +460,22 @@ body.ar-open{overflow:hidden}
 html,body{overscroll-behavior-y:none}
 .sess-toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom,0px) + 16px);z-index:150;display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:center;max-width:min(560px,calc(100vw - 32px));background:#0f1d1c;color:#fff;border-radius:14px;padding:10px 12px;box-shadow:0 8px 28px rgba(0,0,0,.3);font:500 14px Rubik,sans-serif}
 .sess-toast .btn{background:rgba(255,255,255,.12);color:#fff;border-color:rgba(255,255,255,.25);padding:6px 12px}
+/* Pix */
+.pix-box{margin-top:14px;padding-top:12px;border-top:1px solid var(--line,#dfe5e2);display:flex;flex-direction:column;gap:10px}
+.pix-wrap{display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap}
+.pix-qr{background:#fff;border-radius:12px;padding:6px;border:1px solid var(--line,#dfe5e2);line-height:0}
+.pix-wrap .col{flex:1;min-width:200px}
+.pix-code{display:block;font:12px/1.35 ui-monospace,Menlo,monospace;word-break:break-all;background:rgba(24,78,78,.06);border-radius:8px;padding:8px;max-height:6.5em;overflow:auto;user-select:all}
+.sub-h{margin:14px 0 4px;font-size:15px}
+/* modelos */
+.mod-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;margin:8px 0 4px}
+.mod-card{position:relative;display:flex}
+.mod-use{flex:1;text-align:left;display:flex;flex-direction:column;gap:2px;padding:12px 14px;border-radius:12px;border:1px solid var(--line,#dfe5e2);background:var(--card,#fff);cursor:pointer;font:inherit;color:inherit}
+.mod-use:hover{border-color:#184E4E}
+.mod-use b{font-size:15px}
+.mod-card .mini{position:absolute;top:6px;right:6px}
+.mod-save{margin:10px 0;display:flex;flex-direction:column;gap:6px}
+.mod-save .row{gap:8px;flex-wrap:wrap}.mod-save input{flex:1;min-width:180px}
 </style>
 <div class="top">
   <div class="brand"><div class="wordmark" id="wordmark" aria-label="Gênio do Capacho"><b>Gênio</b><span>do capacho</span></div><div class="brand-t" id="brandT"></div></div>
@@ -481,6 +503,12 @@ html,body{overscroll-behavior-y:none}
       <div><span class="eyebrow">Estúdio de orçamentos</span><h1>Vamos criar seu capacho</h1><p class="lead">Uma parte de cada vez: conclua cada uma e a próxima abre. “Desfazer” volta a última mudança daquela parte.</p></div>
       <div class="row"><span class="stepnote"><i></i>Etapa 1 de 3</span><span class="badge" id="dStatus">Rascunho</span></div>
     </div>
+    <section class="panel mod-box" id="modBox" aria-labelledby="hMod" hidden>
+      <h2 id="hMod">Começar de um modelo</h2>
+      <p class="hint">Os tapetes, medidas, cores e textos já vêm prontos. Depois é só trocar o nome e colocar o logo do cliente. Para começar do zero, siga direto para a parte 1.</p>
+      <div class="mod-grid" id="modGrid"></div>
+      <p class="hint small ok-t" id="modMsg" aria-live="polite"></p>
+    </section>
 
     <section class="panel part" id="partLogo" data-part="logo">
       <button class="part-head" type="button" data-open="logo"><span class="part-n">1</span><span class="part-t"><span class="eyebrow">Primeiro, a sua ideia</span><b>Artes e textos do cliente</b></span><span class="part-st" id="stLogo"></span></button>
@@ -596,9 +624,11 @@ html,body{overscroll-behavior-y:none}
       <div class="quote-head"><div><span class="eyebrow">Etapa 3 de 3</span><h1 id="qTitle">Orçamento</h1></div><span class="quote-num" id="qNum"></span></div>
       <img class="preview-img" id="qImg" alt="Prévia do tapete no local do cliente">
       <div class="qthumbs" id="qThumbs"></div>
+      <div class="mod-save" id="modSave" hidden><label for="modNome" class="hint">Nome do modelo (os tapetes, medidas, cores, textos e logos deste orçamento)</label><div class="row"><input id="modNome" autocomplete="off" maxlength="40"><button class="btn gold" id="modOk" type="button">Salvar modelo</button><button class="btn ghost" id="modNo" type="button">Cancelar</button></div></div>
       <div class="row">
         <button class="btn gold" id="qShare" type="button">Enviar imagens</button>
         <button class="btn ghost" id="qCopy" type="button">Copiar texto para WhatsApp</button>
+        <button class="btn ghost" id="qSaveMod" type="button">Salvar como modelo</button>
         <button class="btn ghost" id="qArt" type="button">Baixar arte (SVG)</button>
         <button class="btn" id="qCut" type="button">Arquivo de corte</button>
         <button class="btn ghost" data-go="local">← No seu espaço</button>
@@ -624,6 +654,7 @@ html,body{overscroll-behavior-y:none}
         <div class="row between"><h2 id="hPreco">Preço</h2><span class="badge" id="qStatus">Rascunho</span></div>
         <div class="tap-tabs" id="qTaps" role="group" aria-label="Ver tapete" hidden></div>
         <div id="qPrice"></div>
+        <div class="pix-box" id="qPix" hidden></div>
       </section>
       <section class="panel" aria-labelledby="hFicha">
         <div class="row between"><h2 id="hFicha">Ficha do tapete</h2><button class="btn ghost" id="qCopyFicha" style="padding:7px 11px;font-size:13px" type="button">Copiar</button></div>
@@ -686,6 +717,12 @@ html,body{overscroll-behavior-y:none}
         </div>
         <label class="switch"><input type="checkbox" id="refCor">Usar a cor do objeto como cor do fundo do tapete (ligue quando o objeto for o mostruário)</label>
       </section>
+      <section class="panel" aria-labelledby="hCfgApp">
+        <h2 id="hCfgApp">Aplicativo</h2>
+        <p class="hint">Instalado, o Gênio ganha um ícone na tela do celular, abre em tela cheia, não recarrega ao puxar a tela e funciona sem internet. Os orçamentos continuam guardados no aparelho.</p>
+        <div class="row"><button class="btn gold" id="pwaBtn" type="button">Instalar o aplicativo</button></div>
+        <p class="hint small" id="pwaMsg" aria-live="polite"></p>
+      </section>
       <section class="panel" aria-labelledby="hCfgPreco">
         <h2 id="hCfgPreco">Preços</h2>
         <div class="fields">
@@ -709,6 +746,15 @@ html,body{overscroll-behavior-y:none}
           <div class="field"><label for="pVal">Validade (dias)</label><input id="pVal" type="number" inputmode="numeric" min="1" max="90" step="1"></div>
           <div class="field"><label for="pVend">Nome do vendedor</label><input id="pVend" autocomplete="off"></div>
         </div>
+        <h3 class="sub-h">Pix do orçamento</h3>
+        <p class="hint">Com a chave Pix, o orçamento já sai com o QR Code e o Pix copia e cola no valor certo (à vista ou o sinal). O dinheiro cai direto na conta da chave, sem intermediário.</p>
+        <div class="fields">
+          <div class="field"><label for="pixT">Tipo de chave</label><select id="pixT"><option value="cpf">CPF ou CNPJ</option><option value="telefone">Celular</option><option value="email">E-mail</option><option value="aleatoria">Chave aleatória</option></select></div>
+          <div class="field wide2"><label for="pixK">Chave Pix</label><input id="pixK" autocomplete="off" inputmode="text"></div>
+          <div class="field"><label for="pixN">Nome do recebedor</label><input id="pixN" autocomplete="off" maxlength="25" placeholder="como aparece no banco"></div>
+          <div class="field"><label for="pixC">Cidade</label><input id="pixC" autocomplete="off" maxlength="15" placeholder="Sao Paulo"></div>
+        </div>
+        <p class="hint small" id="pixMsg" aria-live="polite"></p>
       </section>
       <section class="panel" aria-labelledby="hCfgBob">
         <div class="row between"><h2 id="hCfgBob">Cores e bobinas</h2><button class="btn ghost" id="palAdd" type="button">Adicionar cor</button></div>
@@ -2939,6 +2985,154 @@ $$("[data-ar]").forEach(b=>{b.hidden=!arSupported();b.addEventListener("click",a
 document.addEventListener("visibilitychange",()=>{if(document.hidden&&AR.on&&!(AR.rec&&AR.rec.state==="recording"))arClose();});
 // imagens de cada tapete visto de cima (JPG), para o orçamento
 async function topViewsAll(){tapInit();if(Q.tapetes.length<1)return [];const cur=Q.ti,sel=S.sel,list=[];for(let i=0;i<Q.tapetes.length;i++){setTapete(i,true);buildBase();const u=await makeTopPreview().catch(()=>null);if(u)list.push(u);}setTapete(cur,true);S.sel=sel;buildBase();return list;}
+
+// ================= Pix no orçamento: copia e cola e QR Code, gerados no próprio aparelho =================
+// BR Code estático do Banco Central (EMV), com valor; só precisa da chave Pix do vendedor. Nada passa por banco ou intermediário.
+const pixAscii=s=>String(s||"").normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^\x20-\x7E]/g,"").trim();
+function crc16(s){let c=0xFFFF;for(let i=0;i<s.length;i++){c^=s.charCodeAt(i)<<8;for(let k=0;k<8;k++)c=c&0x8000?((c<<1)^0x1021)&0xFFFF:(c<<1)&0xFFFF;}return c.toString(16).toUpperCase().padStart(4,"0");}
+const tlv=(id,v)=>id+String(v.length).padStart(2,"0")+v;
+function pixChave(){const t=cfg.pixT||"cpf",v=String(cfg.pixK||"").trim();if(!v)return "";
+  if(t==="email")return v.toLowerCase();if(t==="aleatoria")return v.toLowerCase();const d=v.replace(/\D/g,"");
+  if(t==="telefone")return "+"+(d.startsWith("55")&&d.length>=12?d:"55"+d);return d;}
+function pixChaveOK(){const t=cfg.pixT||"cpf",k=pixChave();if(!k)return false;if(t==="cpf")return k.length===11||k.length===14;if(t==="telefone")return /^\+55\d{10,11}$/.test(k);
+  if(t==="email")return /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(k);return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(k);}
+const pixNome=()=>pixAscii(cfg.pixN||emp().nome||cfg.vend||"Recebedor").slice(0,25)||"Recebedor";
+const pixCidade=()=>pixAscii(cfg.pixC||"Sao Paulo").slice(0,15)||"Sao Paulo";
+function pixPayload(valor,txid){const k=pixChave();if(!k)return "";const ma=tlv("00","br.gov.bcb.pix")+tlv("01",k);
+  const p=tlv("00","01")+tlv("26",ma)+tlv("52","0000")+tlv("53","986")+(valor>0?tlv("54",(Math.round(valor*100)/100).toFixed(2)):"")+tlv("58","BR")+tlv("59",pixNome())+tlv("60",pixCidade())+tlv("62",tlv("05",(pixAscii(txid).replace(/[^A-Za-z0-9]/g,"").slice(0,25))||"***"))+"6304";
+  return p+crc16(p);}
+// ---------- QR Code (modo byte, correção M, versões 1 a 15) ----------
+const QRM={1:[10,1,16,0,0],2:[16,1,28,0,0],3:[26,1,44,0,0],4:[18,2,32,0,0],5:[24,2,43,0,0],6:[16,4,27,0,0],7:[18,4,31,0,0],8:[22,2,38,2,39],9:[22,3,36,2,37],10:[26,4,43,1,44],
+  11:[30,1,50,4,51],12:[22,6,36,2,37],13:[22,8,37,1,38],14:[24,4,40,5,41],15:[24,5,41,5,42]};
+const QRA={1:[],2:[6,18],3:[6,22],4:[6,26],5:[6,30],6:[6,34],7:[6,22,38],8:[6,24,42],9:[6,26,46],10:[6,28,50],11:[6,30,54],12:[6,32,58],13:[6,34,62],14:[6,26,46,66],15:[6,26,48,70]};
+function gfMul(x,y){let z=0;for(let i=7;i>=0;i--){z=(z<<1)^((z>>>7)*0x11D);z^=((y>>>i)&1)*x;}return z&255;}
+function rsDiv(n){const r=new Array(n).fill(0);r[n-1]=1;let root=1;for(let i=0;i<n;i++){for(let j=0;j<n;j++){r[j]=gfMul(r[j],root);if(j+1<n)r[j]^=r[j+1];}root=gfMul(root,2);}return r;}
+function rsRem(data,div){const r=new Array(div.length).fill(0);for(const b of data){const f=b^r.shift();r.push(0);div.forEach((c,i)=>{r[i]^=gfMul(c,f);});}return r;}
+function qrMake(text){const bytes=Array.from(new TextEncoder().encode(text));let V=0;
+  for(let v=1;v<=15;v++){const t=QRM[v],cap=t[1]*t[2]+t[3]*t[4],bits=4+(v<10?8:16)+bytes.length*8;if(bits<=cap*8){V=v;break;}}if(!V)return null;
+  const [ecn,b1,d1,b2,d2]=QRM[V],cap=b1*d1+b2*d2,bb=[];const put=(v,n)=>{for(let i=n-1;i>=0;i--)bb.push((v>>>i)&1);};
+  put(4,4);put(bytes.length,V<10?8:16);bytes.forEach(b=>put(b,8));put(0,Math.min(4,cap*8-bb.length));while(bb.length%8)bb.push(0);
+  const dat=[];for(let i=0;i<bb.length;i+=8)dat.push(bb.slice(i,i+8).reduce((a,b)=>a*2+b,0));for(let p=0;dat.length<cap;p++)dat.push(p%2?0x11:0xEC);
+  const blocks=[];let o=0;for(let i=0;i<b1;i++){blocks.push(dat.slice(o,o+d1));o+=d1;}for(let i=0;i<b2;i++){blocks.push(dat.slice(o,o+d2));o+=d2;}
+  const dv=rsDiv(ecn),ecc=blocks.map(b=>rsRem(b,dv)),cw=[];const mx=Math.max(d1,d2);for(let i=0;i<mx;i++)blocks.forEach(b=>{if(i<b.length)cw.push(b[i]);});for(let i=0;i<ecn;i++)ecc.forEach(e=>cw.push(e[i]));
+  const N=V*4+17,M=[...Array(N)].map(()=>new Array(N).fill(false)),F=[...Array(N)].map(()=>new Array(N).fill(false)),set=(x,y,d)=>{M[y][x]=d;F[y][x]=true;};
+  for(let i=0;i<N;i++){set(6,i,i%2===0);set(i,6,i%2===0);}
+  const finder=(cx,cy)=>{for(let dy=-4;dy<=4;dy++)for(let dx=-4;dx<=4;dx++){const x=cx+dx,y=cy+dy;if(x<0||y<0||x>=N||y>=N)continue;const d=Math.max(Math.abs(dx),Math.abs(dy));set(x,y,d!==2&&d!==4);}};
+  finder(3,3);finder(N-4,3);finder(3,N-4);
+  const al=QRA[V],L=al.length;for(let i=0;i<L;i++)for(let j=0;j<L;j++){if((i===0&&j===0)||(i===0&&j===L-1)||(i===L-1&&j===0))continue;for(let dy=-2;dy<=2;dy++)for(let dx=-2;dx<=2;dx++)set(al[i]+dx,al[j]+dy,Math.max(Math.abs(dx),Math.abs(dy))!==1);}
+  const fmt=mask=>{const d=(0<<3)|mask;let r=d;for(let i=0;i<10;i++)r=(r<<1)^((r>>>9)*0x537);const b=((d<<10)|r)^0x5412,g=i=>((b>>>i)&1)===1;
+    for(let i=0;i<=5;i++)set(8,i,g(i));set(8,7,g(6));set(8,8,g(7));set(7,8,g(8));for(let i=9;i<15;i++)set(14-i,8,g(i));
+    for(let i=0;i<8;i++)set(N-1-i,8,g(i));for(let i=8;i<15;i++)set(8,N-15+i,g(i));set(8,N-8,true);};
+  fmt(0);
+  if(V>=7){let r=V;for(let i=0;i<12;i++)r=(r<<1)^((r>>>11)*0x1F25);const b=(V<<12)|r;for(let i=0;i<18;i++){const bit=((b>>>i)&1)===1,a=N-11+i%3,c=Math.floor(i/3);set(a,c,bit);set(c,a,bit);}}
+  let k=0;for(let right=N-1;right>=1;right-=2){if(right===6)right=5;for(let vert=0;vert<N;vert++)for(let j=0;j<2;j++){const x=right-j,up=((right+1)&2)===0,y=up?N-1-vert:vert;
+      if(!F[y][x]&&k<cw.length*8){M[y][x]=((cw[k>>>3]>>>(7-(k&7)))&1)===1;k++;}}}
+  const MK=[(x,y)=>(x+y)%2===0,(x,y)=>y%2===0,(x,y)=>x%3===0,(x,y)=>(x+y)%3===0,(x,y)=>(Math.floor(x/3)+Math.floor(y/2))%2===0,(x,y)=>x*y%2+x*y%3===0,(x,y)=>(x*y%2+x*y%3)%2===0,(x,y)=>((x+y)%2+x*y%3)%2===0];
+  const apply=m=>{for(let y=0;y<N;y++)for(let x=0;x<N;x++)if(!F[y][x]&&MK[m](x,y))M[y][x]=!M[y][x];};
+  const score=()=>{let s=0;const line=get=>{let run=1,c=get(0);for(let i=1;i<N;i++){const v=get(i);if(v===c){run++;if(run===5)s+=3;else if(run>5)s++;}else{c=v;run=1;}}
+      const str=[...Array(N)].map((_,i)=>get(i)?1:0).join("");let p=str.indexOf("10111010000");while(p>=0){s+=40;p=str.indexOf("10111010000",p+1);}p=str.indexOf("00001011101");while(p>=0){s+=40;p=str.indexOf("00001011101",p+1);}};
+    for(let y=0;y<N;y++)line(i=>M[y][i]);for(let x=0;x<N;x++)line(i=>M[i][x]);
+    for(let y=0;y<N-1;y++)for(let x=0;x<N-1;x++){const c=M[y][x];if(c===M[y][x+1]&&c===M[y+1][x]&&c===M[y+1][x+1])s+=3;}
+    let dk=0;M.forEach(r=>r.forEach(v=>{if(v)dk++;}));s+=Math.floor(Math.abs(dk*20-N*N*10)/(N*N))*10;return s;};
+  let best=0,bs=1e9;for(let m=0;m<8;m++){apply(m);fmt(m);const sc=score();if(sc<bs){bs=sc;best=m;}apply(m);}apply(best);fmt(best);M.mask=best;return M;}
+function qrSvg(text,px){const M=qrMake(text);if(!M)return "";const N=M.length,q=4,S=N+2*q;px=S*Math.max(3,Math.round((px||220)/S));let d="";M.forEach((r,y)=>r.forEach((v,x)=>{if(v)d+=`M${x+q} ${y+q}h1v1h-1z`;}));
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${S} ${S}" width="${px||220}" height="${px||220}" shape-rendering="crispEdges" role="img" aria-label="QR Code do Pix"><rect width="${S}" height="${S}" fill="#fff"/><path d="${d}" fill="#000"/></svg>`;}
+// ---------- no orçamento ----------
+function pixValores(){const G=grandPrice(),p=Q.tapetes&&Q.tapetes.length>1&&G.ready?G:computePrice();if(!p.ready)return null;return {vista:p.pix,sinal:p.sinal};}
+function pixAtual(){const v=pixValores();if(!v)return null;const modo=S.pixModo==="sinal"&&cfg.sinal>0?"sinal":"vista",valor=modo==="sinal"?v.sinal:v.vista;
+  return {modo,valor,code:pixPayload(valor,(Q.numero||"ORC")+(modo==="sinal"?"S":""))};}
+function renderPix(){const box=$("#qPix");if(!box)return;box.replaceChildren();const v=pixValores();if(!v){box.hidden=true;return;}box.hidden=false;
+  const h=document.createElement("p");h.className="eyebrow";h.textContent="Receber no Pix";box.appendChild(h);
+  if(!pixChaveOK()){const p=document.createElement("p");p.className="hint";p.textContent=cfg.pixK?"A chave Pix cadastrada não parece válida para o tipo escolhido. Confira em Configurações → Pagamento.":"Cadastre a sua chave Pix em Configurações → Pagamento para gerar o Pix copia e cola e o QR Code aqui.";
+    const b=document.createElement("button");b.type="button";b.className="btn ghost";b.textContent="Abrir Configurações";b.onclick=()=>go("config");box.append(p,b);return;}
+  const seg=document.createElement("div");seg.className="seg";seg.setAttribute("role","group");seg.setAttribute("aria-label","Valor do Pix");
+  [["vista",`À vista · ${BRL(v.vista)}`],["sinal",`Sinal · ${BRL(v.sinal)}`]].forEach(([k,t])=>{if(k==="sinal"&&!(cfg.sinal>0))return;const b=document.createElement("button");b.type="button";b.textContent=t;b.setAttribute("aria-pressed",String((S.pixModo||"vista")===k));b.onclick=()=>{S.pixModo=k;renderPix();};seg.appendChild(b);});box.appendChild(seg);
+  const a=pixAtual(),wrap=document.createElement("div");wrap.className="pix-wrap";const qr=document.createElement("div");qr.className="pix-qr";qr.innerHTML=qrSvg(a.code,220);
+  const side=document.createElement("div");side.className="col";side.style.gap="8px";const info=document.createElement("p");info.className="hint";info.textContent=`${a.modo==="sinal"?"Sinal":"Pagamento à vista"}: ${BRL(a.valor)} para ${pixNome()}. O cliente abre o app do banco, escolhe Pix e lê o QR Code ou cola o código.`;
+  const code=document.createElement("code");code.className="pix-code";code.textContent=a.code;
+  const cp=document.createElement("button");cp.type="button";cp.className="btn gold";cp.textContent="Copiar Pix copia e cola";cp.onclick=()=>copyText(a.code,"Código Pix copiado. Cole no WhatsApp do cliente ou mostre o QR Code.");
+  side.append(info,code,cp);wrap.append(qr,side);box.appendChild(wrap);}
+// configuração
+const PIXF={pixK:"pixK",pixT:"pixT",pixN:"pixN",pixC:"pixC"};
+function fillPixCfg(){Object.entries(PIXF).forEach(([id,k])=>{const e=$("#"+id);if(e)e.value=cfg[k]||(k==="pixT"?"cpf":"");});pixCfgMsg();}
+function pixCfgMsg(){const e=$("#pixMsg");if(!e)return;if(!cfg.pixK){e.textContent="Sem chave Pix: o orçamento sai sem o QR Code.";e.className="hint small";return;}
+  e.textContent=pixChaveOK()?`Chave conferida: ${pixChave()} · recebedor ${pixNome()} · ${pixCidade()}.`:"A chave não parece válida para o tipo escolhido.";e.className="hint small "+(pixChaveOK()?"ok-t":"warn-t");}
+Object.entries(PIXF).forEach(([id,k])=>{const e=$("#"+id);if(e)e.addEventListener("input",()=>{cfg[k]=e.value.trim();saveCfg();pixCfgMsg();});});
+{const _fc=fillCfg;fillCfg=function(){_fc();fillPixCfg();};const _rq=renderQuote;renderQuote=function(){_rq();renderPix();};
+  const _wt=whatsText;whatsText=function(){const t=_wt();if(!pixChaveOK())return t;const a=pixAtual();if(!a||!a.code)return t;
+    const lines=t.split("\n"),i=lines.findIndex(l=>l.startsWith("Validade:")),add=["",`Pix copia e cola (${a.modo==="sinal"?"sinal":"à vista"}, ${BRL(a.valor)}):`,a.code];
+    if(i>=0)lines.splice(i,0,...add,"");else lines.push(...add);return lines.join("\n");};}
+
+// ================= modelos prontos (kits) =================
+// O orçamento já começa com os tapetes, medidas, cores e textos do kit; o vendedor só troca o nome e o logo do cliente.
+// Kits do sistema + modelos salvos pelo vendedor (guardados no aparelho, com os logos).
+const mT=(text,sizeCm,y,o)=>textLayer(Object.assign({text,sizeCm,y,font:"Montserrat",bold:true,color:"branco"},o||{}));
+const mS=(w,h,layers,o)=>Object.assign(DEFAULT_SPEC(),{w,h,layers},o||{});
+const MODELOS_KIT=[
+  {id:"k-comercio",nome:"Comércio de rua",desc:"Entrada da loja com nome e chamada",tapetes:()=>[
+    {nome:"Entrada da loja",qtd:1,spec:mS(120,60,[mT("NOME DA LOJA",9,-6),mT("SEJA BEM-VINDO",4.5,9,{bold:false})])}]},
+  {id:"k-escola",nome:"Kit escola",desc:"Entrada, diretoria, salas e banheiros",tapetes:()=>[
+    {nome:"Entrada",qtd:1,spec:mS(150,120,[mT("NOME DA ESCOLA",11,-8),mT("BEM-VINDOS",6,12,{bold:false})])},
+    {nome:"Diretoria",qtd:1,spec:mS(60,40,[mT("DIRETORIA",6,0)],{intOn:false})},
+    {nome:"Salas de aula",qtd:6,spec:mS(60,40,[mT("SALA",6,0)],{intOn:false})},
+    {nome:"Banheiros",qtd:2,spec:mS(60,40,[mT("BANHEIRO",5.5,0)],{intOn:false})}]},
+  {id:"k-clinica",nome:"Kit clínica",desc:"Recepção, consultórios e banheiro",tapetes:()=>[
+    {nome:"Recepção",qtd:1,spec:mS(120,60,[mT("NOME DA CLÍNICA",8,-5),mT("RECEPÇÃO",4.5,10,{bold:false})],{int:"azul",fundo:"marinho",flex:"marinho"})},
+    {nome:"Consultórios",qtd:3,spec:mS(60,40,[mT("CONSULTÓRIO",4.5,0)],{intOn:false,fundo:"marinho",flex:"marinho"})},
+    {nome:"Banheiro",qtd:1,spec:mS(60,40,[mT("BANHEIRO",5,0)],{intOn:false,fundo:"marinho",flex:"marinho"})}]},
+  {id:"k-churrasco",nome:"Kit churrasco",desc:"Área gourmet e porta da casa",tapetes:()=>[
+    {nome:"Área do churrasco",qtd:1,spec:mS(120,60,[mT("ESPAÇO GOURMET",8,-5),mT("FAMÍLIA SOBRENOME",5,10,{bold:false})],{int:"vermelho"})},
+    {nome:"Porta",qtd:1,spec:mS(60,40,[mT("BEM-VINDO",5.5,0)],{intOn:false})}]}];
+// guardados no aparelho (IndexedDB, junto da sessão), para caber logos
+async function modelosMeus(){const db=await DB.open();if(!db)return [];return new Promise(res=>{try{const t=db.transaction("sessao").objectStore("sessao").getAll();t.onsuccess=()=>res((t.result||[]).filter(o=>o.id&&o.id.startsWith("m:")).sort((a,b)=>(b.criado||"").localeCompare(a.criado||"")));t.onerror=()=>res([]);}catch(e){res([]);}});}
+async function modeloPut(o){const db=await DB.open();if(!db)return false;return new Promise(res=>{try{const t=db.transaction("sessao","readwrite");t.objectStore("sessao").put(o);t.oncomplete=()=>res(true);t.onerror=()=>res(false);}catch(e){res(false);}});}
+async function modeloDel(id){const db=await DB.open();if(!db)return;return new Promise(res=>{try{const t=db.transaction("sessao","readwrite");t.objectStore("sessao").delete(id);t.oncomplete=res;t.onerror=res;}catch(e){res();}});}
+// orçamento "em branco" = ainda dá para começar por um modelo sem perder nada
+const quoteFresh=()=>!Q.id&&!(Q.fotos&&Q.fotos.length)&&!(Q.tapetes&&Q.tapetes.length>1)&&!(Q.cliente&&Q.cliente.nome);
+function aplicarModelo(lista,nome){const T=lista.map(t=>{const sp=deep(t.spec);(sp.layers||[]).forEach(l=>{l.id=uid();});migrateSpec(sp);sp.guia=cfg.guia;return {id:uid(),nome:t.nome,qtd:t.qtd||1,spec:sp};});if(!T.length)return;
+  // cores que não existem no fornecedor atual viram as mais parecidas
+  const map=c=>{if(!c||palette.some(p=>p.id===c))return c;const o=findColor(c);return o?nearestPal(rgbOf(o.hex))||c:palette[0].id;};T.forEach(t=>specColorIds(t.spec,map));
+  Q.tapetes=T;Q.ti=0;Q.spec=T[0].spec;Q.matFloors={};Q.modelo=nome;if(typeof cardsInit==="function")cardsInit();S.sel=null;S.openPart="logo";Q.feito={};
+  fillSpec();buildBase();loadAllFonts().then(()=>buildBase());renderLayers();renderArtTile();renderSpecSum();renderTapTabs();trackInit();renderParts();renderModelos();
+  const m=$("#modMsg");if(m)m.textContent=`Modelo “${nome}” aplicado: ${T.length} tapete${T.length>1?"s":""}. Agora troque os textos e coloque o logo do cliente em cada um.`;
+  setTimeout(()=>{const s=$("#partLogo");if(s)s.scrollIntoView({behavior:"smooth",block:"start"});},80);}
+let MODTK=0;
+async function renderModelos(){const box=$("#modBox");if(!box)return;const tk=++MODTK,fresh=quoteFresh();box.hidden=!fresh&&!$("#modMsg").textContent;const g=$("#modGrid");if(!fresh){g.replaceChildren();return;}const meus=await modelosMeus();if(tk!==MODTK)return;g.replaceChildren();
+  const card=(nome,desc,fn,del)=>{const b=document.createElement("div");b.className="mod-card";const t=document.createElement("button");t.type="button";t.className="mod-use";t.innerHTML="<b></b><span class=\"hint small\"></span>";t.querySelector("b").textContent=nome;t.querySelector("span").textContent=desc;t.onclick=fn;b.appendChild(t);
+    if(del){const x=document.createElement("button");x.type="button";x.className="mini";x.setAttribute("aria-label",`Apagar o modelo ${nome}`);x.textContent="×";x.onclick=async()=>{await modeloDel(del);renderModelos();};b.appendChild(x);}g.appendChild(b);};
+  meus.forEach(m=>card(m.nome,`Meu modelo · ${m.tapetes.length} tapete${m.tapetes.length>1?"s":""}`,()=>aplicarModelo(m.tapetes,m.nome),m.id));
+  MODELOS_KIT.forEach(k=>{const n=k.tapetes().length;card(k.nome,`${k.desc} · ${n} tapete${n>1?"s":""}`,()=>aplicarModelo(k.tapetes(),k.nome));});}
+$("#qSaveMod").onclick=()=>{const b=$("#modSave");b.hidden=false;const i=$("#modNome");i.value=Q.modelo||tapName(curTap());i.focus();i.select();};
+$("#modOk").onclick=async()=>{const nome=$("#modNome").value.trim();if(!nome)return;tapInit();Q.tapetes[Q.ti].spec=Q.spec;
+  const o={id:"m:"+Date.now().toString(36),nome,criado:new Date().toISOString(),tapetes:Q.tapetes.map(t=>({nome:t.nome,qtd:t.qtd,spec:deep(t.spec)}))};const ok=await modeloPut(o);$("#modSave").hidden=true;
+  qmsg(ok?`Modelo “${nome}” salvo. Ele aparece em “Começar de um modelo” no próximo orçamento.`:"Não consegui salvar o modelo neste aparelho.");};
+$("#modNo").onclick=()=>{$("#modSave").hidden=true;};
+// aparece no começo de cada orçamento novo
+{const _g=go;go=async function(v){const r=await _g(v);if(v==="dados")renderModelos();return r;};
+  const nb=$("#newQuote");if(nb){const _c=nb.onclick;nb.onclick=e=>{_c&&_c(e);const m=$("#modMsg");if(m)m.textContent="";renderModelos();};}}
+
+// ================= instalar como aplicativo =================
+// No site: ícone na tela do celular, abre em tela cheia e funciona sem internet. Pede ao navegador para não apagar os dados guardados.
+const PWA={evt:null};
+const isStandalone=()=>window.matchMedia&&window.matchMedia("(display-mode: standalone)").matches||navigator.standalone===true;
+const isIOS=()=>/iphone|ipad|ipod/i.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
+if(OUTSIDE_CLAUDE&&"serviceWorker" in navigator&&(location.protocol==="https:"||location.hostname==="localhost")){window.addEventListener("load",()=>{navigator.serviceWorker.register("sw.js").catch(()=>{});});}
+if(navigator.storage&&navigator.storage.persist)navigator.storage.persisted().then(p=>{if(!p)navigator.storage.persist().catch(()=>{});}).catch(()=>{});
+window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();PWA.evt=e;renderInstall();pwaBanner();});
+window.addEventListener("appinstalled",()=>{PWA.evt=null;renderInstall();const b=$("#pwaBanner");if(b)b.hidden=true;try{localStorage.setItem("gc.pwaOk","1");}catch(e){}});
+async function pwaInstall(){if(PWA.evt){PWA.evt.prompt();try{await PWA.evt.userChoice;}catch(e){}PWA.evt=null;renderInstall();return;}
+  const m=$("#pwaMsg");if(m)m.textContent=isIOS()?"No iPhone: toque no botão Compartilhar do Safari (quadrado com a seta) e depois em “Adicionar à Tela de Início”.":"Abra o menu do navegador (⋮) e toque em “Instalar app” ou “Adicionar à tela inicial”.";}
+function renderInstall(){const b=$("#pwaBtn"),m=$("#pwaMsg");if(!b)return;const ok=isStandalone();b.hidden=ok||!OUTSIDE_CLAUDE;
+  if(m)m.textContent=ok?"Você já está usando o Gênio instalado como aplicativo.":!OUTSIDE_CLAUDE?"Para instalar, abra o Gênio pelo site (genio.dombanana.tech) no celular.":PWA.evt?"":isIOS()?"No iPhone a instalação é pelo Safari: Compartilhar → “Adicionar à Tela de Início”.":"";}
+// aviso uma vez só, quando o aparelho permite instalar
+function pwaBanner(){if(isStandalone()||!OUTSIDE_CLAUDE)return;let seen=null;try{seen=localStorage.getItem("gc.pwaBanner");}catch(e){}if(seen)return;
+  if(!PWA.evt&&!isIOS())return;let b=$("#pwaBanner");if(!b){b=document.createElement("div");b.id="pwaBanner";b.className="sess-toast pwa-banner";document.body.appendChild(b);}b.replaceChildren();
+  const s=document.createElement("span");s.textContent="Instale o Gênio no celular: abre em tela cheia, não recarrega sem querer e funciona sem internet.";
+  const y=document.createElement("button");y.type="button";y.className="btn ghost";y.textContent=isIOS()&&!PWA.evt?"Como instalar":"Instalar";y.onclick=()=>{if(isIOS()&&!PWA.evt){s.textContent="No Safari: toque em Compartilhar (quadrado com a seta) e depois em “Adicionar à Tela de Início”.";y.remove();}else{b.hidden=true;pwaInstall();}};
+  const n=document.createElement("button");n.type="button";n.className="btn ghost";n.textContent="Agora não";n.onclick=()=>{b.hidden=true;};b.append(s,y,n);b.hidden=false;try{localStorage.setItem("gc.pwaBanner","1");}catch(e){}}
+$("#pwaBtn").onclick=pwaInstall;
+{const _fc=fillCfg;fillCfg=function(){_fc();renderInstall();};}
+if(isIOS())setTimeout(pwaBanner,4000);
 
 // ================= sessão: o trabalho em andamento fica salvo no aparelho =================
 // Cada mudança (digitar, tocar, tirar foto, recortar, mudar de etapa) salva o orçamento aberto em segundo plano.
