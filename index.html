@@ -3080,9 +3080,11 @@ const MODELOS_KIT=[
     {nome:"Recepção",qtd:1,spec:mS(120,60,[mT("NOME DA CLÍNICA",8,-5),mT("RECEPÇÃO",4.5,10,{bold:false})],{int:"azul",fundo:"marinho",flex:"marinho"})},
     {nome:"Consultórios",qtd:3,spec:mS(60,40,[mT("CONSULTÓRIO",4.5,0)],{intOn:false,fundo:"marinho",flex:"marinho"})},
     {nome:"Banheiro",qtd:1,spec:mS(60,40,[mT("BANHEIRO",5,0)],{intOn:false,fundo:"marinho",flex:"marinho"})}]},
-  {id:"k-churrasco",nome:"Kit churrasco",desc:"Área gourmet e porta da casa",tapetes:()=>[
-    {nome:"Área do churrasco",qtd:1,spec:mS(120,60,[mT("ESPAÇO GOURMET",8,-5),mT("FAMÍLIA SOBRENOME",5,10,{bold:false})],{int:"vermelho"})},
-    {nome:"Porta",qtd:1,spec:mS(60,40,[mT("BEM-VINDO",5.5,0)],{intOn:false})}]}];
+  {id:"k-condominio",nome:"Kit condomínio",desc:"Entrada social, halls, elevadores e salão de festas",tapetes:()=>[
+    {nome:"Entrada social",qtd:1,spec:mS(150,120,[mT("NOME DO CONDOMÍNIO",9,-8),mT("BEM-VINDO",6,12,{bold:false})])},
+    {nome:"Hall dos elevadores",qtd:2,spec:mS(120,60,[mT("NOME DO CONDOMÍNIO",6.5,0)])},
+    {nome:"Elevadores",qtd:2,spec:mS(60,40,[mT("NOME DO CONDOMÍNIO",3.5,0)],{intOn:false})},
+    {nome:"Salão de festas",qtd:1,spec:mS(120,60,[mT("SALÃO DE FESTAS",7.5,0)])}]}];
 // guardados no aparelho (IndexedDB, junto da sessão), para caber logos
 async function modelosMeus(){const db=await DB.open();if(!db)return [];return new Promise(res=>{try{const t=db.transaction("sessao").objectStore("sessao").getAll();t.onsuccess=()=>res((t.result||[]).filter(o=>o.id&&o.id.startsWith("m:")).sort((a,b)=>(b.criado||"").localeCompare(a.criado||"")));t.onerror=()=>res([]);}catch(e){res([]);}});}
 async function modeloPut(o){const db=await DB.open();if(!db)return false;return new Promise(res=>{try{const t=db.transaction("sessao","readwrite");t.objectStore("sessao").put(o);t.oncomplete=()=>res(true);t.onerror=()=>res(false);}catch(e){res(false);}});}
@@ -3093,10 +3095,15 @@ function aplicarModelo(lista,nome){const T=lista.map(t=>{const sp=deep(t.spec);(
   // cores que não existem no fornecedor atual viram as mais parecidas
   const map=c=>{if(!c||palette.some(p=>p.id===c))return c;const o=findColor(c);return o?nearestPal(rgbOf(o.hex))||c:palette[0].id;};T.forEach(t=>specColorIds(t.spec,map));
   Q.tapetes=T;Q.ti=0;Q.spec=T[0].spec;Q.matFloors={};Q.modelo=nome;if(typeof cardsInit==="function")cardsInit();S.sel=null;S.openPart="logo";Q.feito={};
-  fillSpec();buildBase();loadAllFonts().then(()=>buildBase());renderLayers();renderArtTile();renderSpecSum();renderTapTabs();trackInit();renderParts();renderModelos();
+  fillSpec();buildBase();const fit=()=>{T.forEach(fitTexts);buildBase();renderArtTile();trackInit();};fit();loadAllFonts().then(fit);renderLayers();renderArtTile();renderSpecSum();renderTapTabs();trackInit();renderParts();renderModelos();
   const m=$("#modMsg");if(m)m.textContent=`Modelo “${nome}” aplicado: ${T.length} tapete${T.length>1?"s":""}. Agora troque os textos e coloque o logo do cliente em cada um.`;
   setTimeout(()=>{const s=$("#partLogo");if(s)s.scrollIntoView({behavior:"smooth",block:"start"});},80);}
 let MODTK=0;
+// texto do modelo cabe no tapete: reduz a letra até caber em 90% da largura e da altura úteis
+function fitTexts(T){withTap(T,()=>{const f=fieldRectCm(),c=fitTexts.c||(fitTexts.c=document.createElement("canvas").getContext("2d")),L=(T.spec.layers||[]).filter(l=>l.type==="text");
+  L.forEach(l=>{for(let i=0;i<12;i++){const g=textGeom(c,l),w=g.w/PXC,h=g.h/PXC,k=Math.min(1,0.9*f.w/w,0.9*f.h/Math.max(1,h));if(k>=0.999)break;l.sizeCm=Math.max(1.5,Math.floor(l.sizeCm*k*2)/2);}});
+  // dois textos: o segundo não pode encostar no primeiro
+  if(L.length===2){const g0=textGeom(c,L[0]),g1=textGeom(c,L[1]),h0=g0.h/PXC,h1=g1.h/PXC,gap=Math.max(1.5,f.h*0.06),tot=h0+gap+h1;if(tot<=f.h*0.92){L[0].y=-(tot/2)+h0/2;L[1].y=tot/2-h1/2;}}});}
 async function renderModelos(){const box=$("#modBox");if(!box)return;const tk=++MODTK,fresh=quoteFresh();box.hidden=!fresh&&!$("#modMsg").textContent;const g=$("#modGrid");if(!fresh){g.replaceChildren();return;}const meus=await modelosMeus();if(tk!==MODTK)return;g.replaceChildren();
   const card=(nome,desc,fn,del)=>{const b=document.createElement("div");b.className="mod-card";const t=document.createElement("button");t.type="button";t.className="mod-use";t.innerHTML="<b></b><span class=\"hint small\"></span>";t.querySelector("b").textContent=nome;t.querySelector("span").textContent=desc;t.onclick=fn;b.appendChild(t);
     if(del){const x=document.createElement("button");x.type="button";x.className="mini";x.setAttribute("aria-label",`Apagar o modelo ${nome}`);x.textContent="×";x.onclick=async()=>{await modeloDel(del);renderModelos();};b.appendChild(x);}g.appendChild(b);};
