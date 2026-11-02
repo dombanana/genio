@@ -536,7 +536,7 @@ details summary{cursor:pointer;font-size:13px;color:var(--muted);font-weight:600
     <div class="cut-report" id="cutReport"></div>
     <p class="msg" id="cutMsg" role="status"></p>
     <div class="row between"><button class="btn ghost" id="cutTest" type="button">Baixar peça de teste de encaixe</button><button class="btn ok" id="cutDl" type="button" disabled>Baixar arquivo de corte</button></div>
-    <p class="notice">Uma camada por cor e parte, em milímetros e tamanho real. Textos já saem em curvas. O fundo sai vazado com o mesmo contorno das peças, já com a folga e a compensação da máquina escolhida.</p>
+    <p class="notice">Uma camada por cor e parte, em milímetros e tamanho real. Textos já saem em curvas. O fundo sai vazado com o mesmo contorno das peças, já com a folga e a compensação da máquina escolhida. Junto vai sempre a ficha técnica para o técnico: medidas, máquina, camadas, passo a passo e conferência.</p>
   </div>
 </div>
 
@@ -1323,7 +1323,7 @@ async function artSVG(){const sp=spec(),f=fieldRectCm();
       out+=`<g id="logo" transform="${tr}">`;if(L.neg&&L.neg.on){out+=`<rect x="${-lw*5}" y="${-lh*5}" width="${lw*10}" height="${lh*10}" rx="${(L.neg.padCm||2)*6}" fill="${colorOf(L.neg.color)}"/>`;}
       out+=`<g transform="translate(${-L.widthCm*5} ${-L.widthCm*rec.h/rec.w*5}) scale(${sc})">${L.neg&&L.neg.on?inner.replace(/fill="[^"]*"/g,`fill="${colorOf(sp.fundo)}"`):inner}</g></g>\n`;}}
   return out+"</svg>\n";}
-$("#qArt").onclick=async()=>{const svg=await artSVG();saveBlob(new Blob([svg],{type:"image/svg+xml"}),`arte-${slugName()}-${spec().w}x${spec().h}.svg`,$("#qMsg"));};
+$("#qArt").onclick=async()=>{const svg=await artSVG();exportWithFicha({base:`arte-${slugName()}-${spec().w}x${spec().h}`,ext:"svg",data:svg,mime:"image/svg+xml",ficha:files=>fichaArte(files),msgEl:$("#qMsg")});};
 
 // ================= cliente =================
 const CF={cNome:"nome",cTel:"tel",cQtd:"qtd",cPrazo:"prazo",cEnd:"end",cObs:"obs"};
@@ -1398,7 +1398,7 @@ $("#newQuote").onclick=()=>{stopLive();Q=newQuote();const last=store.get("gc.las
 
 // ================= configurações =================
 const PF={pM2v:"m2v",pM2s:"m2s",pBase:"base",pFora:"fora",pCoresInc:"coresInc",pCorExtra:"corExtra",pMin:"min",pPix:"pix",pParc:"parc",pCartao:"cartao",pSinal:"sinal",pVal:"val",pVend:"vend",pMargem:"margem",pMaxCores:"maxCores"};
-function fillCfg(){Object.entries(PF).forEach(([id,k])=>{$("#"+id).value=cfg[k]??"";});renderPalTable();renderFontsCfg();renderMachinesCfg();}
+function fillCfg(){Object.entries(PF).forEach(([id,k])=>{$("#"+id).value=cfg[k]??"";});renderPalTable();renderFontsCfg();}
 Object.entries(PF).forEach(([id,k])=>$("#"+id).addEventListener("input",e=>{const v=e.target.value;cfg[k]=(k==="base"||k==="vend")?v:(v===""?null:parseFloat(String(v).replace(",",".")));saveCfg();renderRule();renderWarns();}));
 function renderPalTable(){const tb=$("#palBody");tb.replaceChildren();
   palette.forEach((c,i)=>{const tr=document.createElement("tr");tr.innerHTML=`<td><input type="color" aria-label="Cor de tela"></td><td><input aria-label="Nome"></td><td><input aria-label="Código" placeholder="código"></td><td><input type="number" inputmode="decimal" min="0" step="1" aria-label="Estoque em metros"></td><td><input type="checkbox" aria-label="Ativa"></td><td><button class="mini" type="button" aria-label="Remover cor">×</button></td>`;
@@ -1501,6 +1501,7 @@ function offsetLoop(p,d){ // d>0 empurra para fora da parte (a parte fica à dir
     let m=[n1[0]+n2[0],n1[1]+n2[1]];const lm=Math.hypot(...m);if(lm<1e-6)m=n1;else m=[m[0]/lm,m[1]/lm];const s=d/Math.max(0.5,m[0]*n1[0]+m[1]*n1[1]);o[i]=[b[0]+m[0]*s,b[1]+m[1]*s];}
   return o;
 }
+const byArea=ls=>ls.slice().sort((a,b)=>Math.abs(loopArea(a))-Math.abs(loopArea(b))); // furos e detalhes antes, contorno externo por último
 function buildCutJob(){
   const M=machine(),P=buildPartition(),pp=P.ppmm;
   const minAreaPx=Math.PI*Math.pow(M.peca/2*pp,2);const fixed=cleanSmall(P,minAreaPx,4*pp*pp);
@@ -1512,15 +1513,15 @@ function buildCutJob(){
     const outerIdx=r.role==="flex"?loops.reduce((bi,l,i,a)=>Math.abs(loopArea(l))>Math.abs(loopArea(a[bi]))?i:bi,0):-1;
     const mm=loops.map((l,i)=>offsetLoop(l.map(([x,y])=>[x/pp,y/pp]),i===outerIdx?M.kerf/2:d));
     const thinPx=tm.cnt.get(k)||0;
-    layers.push({name:`${colorName(r.pid)} - ${ROLE_NAME[r.role]}`,pid:r.pid,role:r.role,loops:mm,pieces:loops.filter(l=>loopArea(l)>0).length,thinMm2:thinPx/(pp*pp)});});
+    layers.push({name:`${colorName(r.pid)} - ${ROLE_NAME[r.role]}`,pid:r.pid,role:r.role,loops:byArea(mm),pieces:loops.filter(l=>loopArea(l)>0).length,thinMm2:thinPx/(pp*pp)});});
   return {P,layers,fixed,thin:tm.thin,M,d};
 }
 // 5) formatos
 const mirrorX=(job,x)=>cfg.mirror?job.P.wmm-x:x;
 const asciiName=s=>s.normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^A-Za-z0-9]+/g,"_").replace(/^_|_$/g,"").toUpperCase().slice(0,31)||"CAMADA";
-function toSVG(job){const {wmm,hmm}=job.P;let s=`<?xml version="1.0" encoding="UTF-8"?>\n<svg xmlns="http://www.w3.org/2000/svg" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" width="${wmm}mm" height="${hmm}mm" viewBox="0 0 ${wmm} ${hmm}">\n`;
+function toSVG(job){const {wmm,hmm}=job.P;let s=`<?xml version="1.0" encoding="UTF-8"?>\n<svg xmlns="http://www.w3.org/2000/svg" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" width="${wmm}mm" height="${hmm}mm" viewBox="0 0 ${wmm} ${hmm}">\n`+(job.note?`<!--\n${job.note.join("\n").replace(/--/g,"- -")}\n-->\n`:"");
   job.layers.forEach(L=>{s+=`<g id="${asciiName(L.name)}" inkscape:groupmode="layer" inkscape:label="${L.name}"><path fill="none" stroke="${colorOf(L.pid)}" stroke-width="0.25" d="${L.loops.map(l=>"M"+l.map(([x,y])=>`${mirrorX(job,x).toFixed(2)} ${y.toFixed(2)}`).join("L")+"Z").join("")}"/></g>\n`;});return s+"</svg>\n";}
-function toDXF(job){const {hmm}=job.P,o=[];const p=(c,v)=>o.push(String(c),String(v));
+function toDXF(job){const {hmm}=job.P,o=[];const p=(c,v)=>o.push(String(c),String(v));(job.note||[]).forEach(t=>p(999,t));
   p(0,"SECTION");p(2,"HEADER");p(9,"$ACADVER");p(1,"AC1009");p(9,"$INSUNITS");p(70,4);p(9,"$MEASUREMENT");p(70,1);p(0,"ENDSEC");
   p(0,"SECTION");p(2,"TABLES");p(0,"TABLE");p(2,"LAYER");p(70,job.layers.length);
   job.layers.forEach((L,i)=>{p(0,"LAYER");p(2,asciiName(L.name));p(70,0);p(62,(i%7)+1);p(6,"CONTINUOUS");});p(0,"ENDTAB");p(0,"ENDSEC");
@@ -1544,7 +1545,7 @@ function testJob(){const M=machine(),d=M.kerf/2-M.folga/2,W0=180,H0=90,frame=[],
   frame.push(rect(0,0,W0,H0));
   const shapes=[rect(10,10,40,40)];[2,3,4,5,6,8].forEach((wd,i)=>shapes.push(rect(62+i*14,10,wd,40)));[3,4,5,6,8,10].forEach((dm,i)=>shapes.push(circ(66+i*18,68,dm/2)));
   shapes.forEach(s=>{frame.push(rev(s));pieces.push(s);});
-  const L1={name:"Quadro com furos",pid:spec().fundo,loops:frame.map((l,i)=>offsetLoop(l,i===0?M.kerf/2:d))},L2={name:"Pecas de encaixe",pid:spec().int||"amarelo08",loops:pieces.map(l=>offsetLoop(l,d))};
+  const L1={name:"Quadro com furos",pid:spec().fundo,loops:byArea(frame.map((l,i)=>offsetLoop(l,i===0?M.kerf/2:d)))},L2={name:"Pecas de encaixe",pid:spec().int||"amarelo08",loops:pieces.map(l=>offsetLoop(l,d))};
   return {P:{wmm:W0,hmm:H0},layers:[L1,L2]};}
 
 // ---------- interface ----------
@@ -1574,12 +1575,11 @@ function drawCutPreview(){const P=CJ.P,cv=$("#cutCanvas"),box=$("#cutStage"),aw=
     const c=CJ.thin[i]?[255,0,255]:cols[L];o[j]=c[0];o[j+1]=c[1];o[j+2]=c[2];o[j+3]=255;}
   x.putImageData(img,0,0);x.strokeStyle="rgba(255,255,255,.9)";x.lineWidth=1;const k=w/P.wmm;
   CJ.layers.forEach(L=>L.loops.forEach(l=>{x.beginPath();l.forEach(([a,b],i)=>i?x.lineTo(a*k,b*k):x.moveTo(a*k,b*k));x.closePath();x.stroke();}));}
-$("#cutDl").onclick=()=>{if(!CJ)return;const [fn,mime]=EXPORT[cfg.fileFmt],name=`corte-${slugName()}-${spec().w}x${spec().h}-${machine().id}.${cfg.fileFmt}`;
-  if(!OUTSIDE_CLAUDE&&(cfg.fileFmt==="dxf"||cfg.fileFmt==="plt")){$("#cutMsg").textContent="DXF e PLT só baixam no site genio.dombanana.tech (aqui dentro do Claude, use SVG ou PDF).";return;}
-  saveBlob(new Blob([fn(CJ)],{type:mime}),name,$("#cutMsg"));};
-$("#cutTest").onclick=()=>{const J=testJob(),[fn,mime]=EXPORT[cfg.fileFmt];
-  if(!OUTSIDE_CLAUDE&&(cfg.fileFmt==="dxf"||cfg.fileFmt==="plt")){$("#cutMsg").textContent="DXF e PLT só baixam no site genio.dombanana.tech (aqui dentro do Claude, use SVG ou PDF).";return;}
-  saveBlob(new Blob([fn(J)],{type:mime}),`teste-encaixe-${machine().id}.${cfg.fileFmt}`,$("#cutMsg"));};
+const dlBlocked=()=>{if(!OUTSIDE_CLAUDE&&(cfg.fileFmt==="dxf"||cfg.fileFmt==="plt")){$("#cutMsg").textContent="DXF e PLT só baixam no site genio.dombanana.tech (aqui dentro do Claude, use SVG ou PDF).";return true;}return false;};
+$("#cutDl").onclick=()=>{if(!CJ||dlBlocked())return;const fmt=cfg.fileFmt,[fn,mime]=EXPORT[fmt];CJ.note=cutNote(CJ);$("#cutMsg").textContent="Montando o arquivo e a ficha técnica…";
+  setTimeout(()=>exportWithFicha({base:`corte-${slugName()}-${spec().w}x${spec().h}-${machine().id}`,ext:fmt,data:fn(CJ),mime,ficha:files=>fichaCorte(CJ,fmt,files),msgEl:$("#cutMsg")}),20);};
+$("#cutTest").onclick=()=>{if(dlBlocked())return;const fmt=cfg.fileFmt,J=testJob(),[fn,mime]=EXPORT[fmt];J.M=machine();J.note=["GENIO DO CAPACHO - PECA DE TESTE DE ENCAIXE",...cutNote(J).slice(2)];
+  exportWithFicha({base:`teste-encaixe-${machine().id}`,ext:fmt,data:fn(J),mime,ficha:files=>fichaTeste(J,fmt,files),msgEl:$("#cutMsg")});};
 $("#qCut").onclick=openCut;
 
 // configurações das máquinas
@@ -1590,6 +1590,216 @@ function renderMachinesCfg(){const tb=$("#machBody");tb.replaceChildren();
     nm.oninput=()=>{m.nome=nm.value;saveCfg();};kf.oninput=()=>{m.kerf=num(kf.value);saveCfg();};fg.oninput=()=>{m.folga=num(fg.value);saveCfg();};tr2.oninput=()=>{m.traco=num(tr2.value);saveCfg();};pc.oninput=()=>{m.peca=num(pc.value);saveCfg();};
     tb.appendChild(tr);});}
 $("#machReset").onclick=()=>{cfg.machines=deep(DEFAULT_MACHINES);saveCfg();renderMachinesCfg();};
+
+// ================= ficha técnica: acompanha todo arquivo exportado =================
+// Uma única descrição (blocos) gera a ficha em PDF (A4, para imprimir) e em TXT (abre em qualquer computador).
+const n2=v=>String(Math.round(v*100)/100).replace(".",",");
+const mm2=v=>n2(v)+" mm";
+const nowBR=()=>new Date().toLocaleString("pt-BR",{dateStyle:"short",timeStyle:"short"});
+const dateBR=s=>{const m=/^(\d{4})-(\d{2})-(\d{2})/.exec(s||"");return m?`${m[3]}/${m[2]}/${m[1]}`:(s||"—");};
+const ACI=["vermelho","amarelo","verde","ciano","azul","magenta","branco/preto"];
+const MACH_HELP={
+  faca:"Use a ferramenta de faca oscilante própria para a espessura da borracha. A faca não tira material, por isso o arquivo não leva compensação de corte: deixe desligado o deslocamento de ferramenta (tool offset) no software da mesa. Se o software tiver sobrecorte (overcut), use de 0,5 a 1 mm para os cantos soltarem sem rasgar.",
+  laser:"O arquivo já vem compensado para um corte de 0,3 mm. Desligue a compensação de feixe (kerf ou beam offset) no software do laser, senão as peças saem menores e os furos maiores. Borracha queimada solta fumaça e resíduo: exaustão ligada e bordas limpas antes de montar. Potência e velocidade se acertam com a peça de teste.",
+  agua:"O arquivo já vem compensado para um corte de 0,9 mm. Desligue a compensação de raio no CAM (G41/G42 ou kerf). Se preferir que o CAM compense, gere de novo o arquivo com compensação 0 nesta máquina: nunca as duas ao mesmo tempo. Faça a entrada do jato (lead-in) sempre no lado do refugo, nunca dentro da peça.",
+  arrasto:"Para borracha fina, EVA ou vinil. Mantenha ligada a compensação de lâmina (blade offset) da plotter, de acordo com a lâmina instalada (em geral 0,25 mm na lâmina de 45°): ela corrige o giro da lâmina e não tem relação com a folga deste arquivo. A pressão da lâmina se acerta com a peça de teste.",
+  pers:"Valores definidos pela equipe em Configurações → Máquinas de corte. Confirme que a máquina não aplica outra compensação por cima da que já está no arquivo."
+};
+const FMT_HELP={
+  svg:"SVG em milímetros, já no tamanho real. Abre no Inkscape, CorelDRAW e Illustrator. Cada camada da tabela é um grupo (camada) com o nome da cor. As linhas têm 0,25 mm e nenhum preenchimento: se o software de corte pedir linha fina (hairline), troque só a espessura da linha, nunca o tamanho do desenho.",
+  dxf:"DXF R12 (AC1009) em milímetros. Ao importar, escolha milímetros e escala 1:1. Cada camada da tabela é um LAYER com o nome indicado, e cada contorno é uma polilinha fechada. A origem (0,0) fica no canto inferior esquerdo do tapete.",
+  plt:"PLT (HPGL) com 40 unidades por milímetro (1 unidade = 0,025 mm). A origem fica no canto inferior esquerdo. Cada camada usa uma caneta (SP1 a SP8), indicada na tabela: corte uma caneta por vez, trocando o material entre elas.",
+  pdf:"PDF vetorial no tamanho real. A página 1 tem todas as camadas juntas, para conferir; da página 2 em diante vem uma camada por página, na ordem da tabela. Importe ou imprima a 100%, nunca em “ajustar à página”."
+};
+const isCalibrated=M=>{const d=DEFAULT_MACHINES.find(x=>x.id===M.id);return !d||["kerf","folga","traco","peca"].some(k=>d[k]!==M[k]);};
+function layerRef(L,i,fmt){
+  if(fmt==="dxf")return `layer ${asciiName(L.name)} (cor ${(i%7)+1}, ${ACI[i%7]})`;
+  if(fmt==="plt")return `caneta SP${(i%8)+1}`;
+  if(fmt==="pdf")return `página ${i+2}`;
+  return `camada “${L.name}”`;
+}
+function pedidoRows(){const c=Q.cliente,sp=spec(),q=+c.qtd||1;
+  return [["Pedido",Q.numero||"rascunho (orçamento ainda não salvo)"],["Cliente",c.nome||"—"],["Quantidade",`${q} tapete${q>1?"s iguais":""}`],["Entrega desejada",dateBR(c.prazo)],["Tipo",sp.tipo||"—"],["Rebaixo",sp.rebaixo||"—"]].concat(c.obs?[["Observações",c.obs]]:[]);}
+function tapeteRows(){const sp=spec(),f=fieldRectCm(),a=analyze(sp.w,sp.h);
+  const r=[["Tamanho final",`${fmtCm(sp.w)} × ${fmtCm(sp.h)} cm (${fmtCm(sp.w*10)} × ${fmtCm(sp.h*10)} mm)`],["Borda flex",`${fmtCm(f.fx)} cm, ${colorName(sp.flex)}`]];
+  if(sp.intOn)r.push(["Borda interna",`${fmtCm(f.ix)} cm, ${colorName(sp.int)}`]);
+  r.push(["Fundo",`${fmtCm(f.w)} × ${fmtCm(f.h)} cm, ${colorName(sp.fundo)}`]);
+  r.push(["Uso do rolo",a.emenda?"Os dois lados passam de 120 cm: precisa de emenda (combinar com o responsável).":`faixa de ${a.faixa} cm: o lado de ${fmtCm(a.across)} cm vai na largura da faixa e o de ${fmtCm(a.along)} cm no comprimento do rolo`+(a.ok?"":`; fora do padrão, sobram ${fmtCm(a.faixa-a.across)} cm de rebarba`)]);
+  return r;}
+function maquinaRows(M){const d=M.kerf/2-M.folga/2;
+  return [["Máquina",M.nome],["Compensação do corte",mm2(M.kerf)+" (largura que a ferramenta tira)"],["Folga de encaixe",mm2(M.folga)+" de cada lado, entre peça e furo"],
+    ["Deslocamento já aplicado",(Math.abs(d)<1e-9?"nenhum nos contornos das peças":`${mm2(Math.abs(d))} ${d>0?"para fora":"para dentro"} de cada peça (compensação ÷ 2 − folga ÷ 2)`)+`; contorno externo do tapete: ${mm2(M.kerf/2)} para fora`],
+    ["Traço mínimo",mm2(M.traco)],["Peça ou furo mínimo",mm2(M.peca)],
+    ["Situação dos valores",isCalibrated(M)?"ajustados pela equipe":"valores iniciais do sistema, ainda não calibrados: corte a peça de teste antes"]];}
+function filesBlock(files){return {t:"kv",rows:files.map(([n,d])=>[d,n])};}
+
+function fichaCorte(job,fmt,files){
+  const M=job.M,sp=spec(),q=+Q.cliente.qtd||1,a=analyze(sp.w,sp.h),B=[];
+  B.push({t:"box",s:"O arquivo já sai com a compensação do corte e a folga de encaixe aplicadas. A máquina não deve compensar de novo."});
+  B.push({t:"h",s:"O que veio junto"},filesBlock(files));
+  B.push({t:"h",s:"Pedido"},{t:"kv",rows:pedidoRows()});
+  B.push({t:"h",s:"Tapete"},{t:"kv",rows:tapeteRows()});
+  B.push({t:"h",s:"Arquivo"},{t:"kv",rows:[["Formato",FORMATS[fmt]],["Unidade e escala","milímetros, escala 1:1 (100%)"],["Medida para conferir",`o contorno externo mede ${fmtCm(job.P.wmm)} × ${fmtCm(job.P.hmm)} mm`],
+    ["Espelhado",cfg.mirror?"SIM: cortar com a face do tapete para baixo":"não: cortar com a face do tapete para cima"],["Textos","já convertidos em curvas (não precisa das fontes)"],["Ordem dos contornos","em cada camada, primeiro os menores (furos e detalhes) e por último o contorno externo"]]},{t:"p",s:FMT_HELP[fmt]});
+  B.push({t:"h",s:"Máquina e compensação"},{t:"kv",rows:maquinaRows(M)},{t:"p",s:MACH_HELP[M.id]||MACH_HELP.pers});
+  B.push({t:"h",s:"Camadas"},{t:"table",cols:[{h:"#",w:18},{h:"Material e cor",w:170},{h:"No arquivo",w:150},{h:"Contornos",w:55},{h:"Peças",w:40},{h:"Aviso",w:78}],
+    rows:job.layers.map((L,i)=>[String(i+1),{sw:colorOf(L.pid),s:L.name},layerRef(L,i,fmt),String(L.loops.length),String(L.pieces??"—"),L.thinMm2>25?"tem traços finos":""])});
+  const steps=[`Abra o arquivo no software da máquina e confira a escala: o contorno externo tem de medir ${fmtCm(job.P.wmm)} × ${fmtCm(job.P.hmm)} mm.`,
+    M.id==="arrasto"?"Confira que a compensação automática está desligada (só a compensação de lâmina da plotter fica ligada).":"Confira que a compensação automática da máquina está desligada.",
+    "Se for a primeira vez com esta máquina ou este material, corte antes a peça de teste de encaixe e confira o encaixe.",
+    "Corte uma camada por vez, cada uma no material da cor indicada na tabela. Mantenha a ordem dos contornos do arquivo, para a peça não se mexer.",
+    q>1?`O pedido é de ${q} tapetes iguais: corte ${q} vezes (ou duplique no software, deixando pelo menos 10 mm entre as cópias).`:"O pedido é de 1 tapete.",
+    "Monte pelo desenho da página 2: cada peça entra no furo de mesmo formato da camada vizinha (fundo e borda interna). A peça deve entrar com pressão leve, sem sobrar vão.",
+    "Preencha a conferência no fim desta ficha."];
+  B.push({t:"h",s:"Passo a passo"},{t:"steps",items:steps});
+  const W=[];if(job.fixed)W.push(`${job.fixed} peça${job.fixed===1?"":"s"} ou furo${job.fixed===1?"":"s"} menor${job.fixed===1?"":"es"} que ${mm2(M.peca)} ${job.fixed===1?"foi absorvido":"foram absorvidos"} pela cor vizinha: o detalhe some no tapete.`);
+  const thin=job.layers.filter(L=>L.thinMm2>25);if(thin.length)W.push(`Partes mais finas que ${mm2(M.traco)} em: ${thin.map(L=>L.name).join(", ")}. Corte com cuidado ou peça para engrossar a arte.`);
+  if(fmt==="plt"&&job.layers.length>8)W.push("Há mais de 8 camadas: as canetas se repetem a partir da 9ª. Siga a tabela, não só o número da caneta.");
+  if(!a.ok)W.push(a.emenda?"Tapete com emenda: os dois lados passam de 120 cm.":"Tamanho fora do padrão de 60 ou 120 cm: a sobra do rolo é rebarba.");
+  if(cfg.mirror)W.push("Arquivo espelhado: confira que a face certa da borracha está para baixo.");
+  if(!isCalibrated(M))W.push("Os valores desta máquina ainda são os iniciais do sistema: valide com a peça de teste e ajuste em Configurações → Máquinas de corte.");
+  if(W.length)B.push({t:"h",s:"Atenção"},{t:"bullets",items:W});
+  B.push({t:"h",s:"Conferência"},{t:"checks",items:[`Escala conferida (${fmtCm(job.P.wmm)} × ${fmtCm(job.P.hmm)} mm)`,"Compensação automática da máquina desligada","Peça de teste aprovada para esta máquina e material","Cada camada cortada no material da cor certa",`Quantidade cortada: ${q}`,"Peças encaixadas sem forçar e sem vão"]},{t:"sign",who:"Cortado por"});
+  return {title:"Ficha técnica de corte",sub:`${Q.numero||"Rascunho"} · ${Q.cliente.nome||"cliente"} · ${fmtCm(sp.w)} × ${fmtCm(sp.h)} cm · ${M.nome} · gerada em ${nowBR()}`,blocks:B,job,drawTitle:"Desenho de montagem (visto pela face do tapete)"};
+}
+
+function fichaTeste(job,fmt,files){const M=machine(),B=[];
+  B.push({t:"box",s:"Corte esta peça antes do primeiro pedido em cada máquina e em cada material novo. Ela diz se a folga, a compensação e os tamanhos mínimos estão certos."});
+  B.push({t:"h",s:"O que veio junto"},filesBlock(files));
+  B.push({t:"h",s:"Máquina e compensação"},{t:"kv",rows:maquinaRows(M)},{t:"p",s:MACH_HELP[M.id]||MACH_HELP.pers});
+  B.push({t:"h",s:"Arquivo"},{t:"kv",rows:[["Formato",FORMATS[fmt]],["Unidade e escala","milímetros, escala 1:1 (100%)"],["Medida para conferir","o quadro mede 180 × 90 mm"],["Espelhado",cfg.mirror?"sim":"não"]]},{t:"p",s:FMT_HELP[fmt]});
+  B.push({t:"h",s:"O que tem na peça"},{t:"bullets",items:["Um quadro de 180 × 90 mm com um furo quadrado de 40 mm e a peça quadrada que entra nele.","Seis fendas de 40 mm de altura, com 2, 3, 4, 5, 6 e 8 mm de largura, e as tiras que entram nelas.","Seis círculos de 3, 4, 5, 6, 8 e 10 mm de diâmetro, e os furos correspondentes.",`Camadas: “${job.layers[0].name}” (quadro com os furos) e “${job.layers[1].name}” (peças). Corte cada uma no seu material.`]});
+  const pc=40-M.folga,fu=40+M.folga;
+  B.push({t:"h",s:"Como ler o resultado"},{t:"steps",items:[
+    `Meça a peça quadrada com paquímetro: deve dar ${mm2(pc)} (40 mm menos a folga). O furo deve dar ${mm2(fu)}.`,
+    `Se a peça der menor que ${mm2(pc)}, a máquina tira mais do que o previsto: some a diferença à compensação. Se der maior, subtraia a diferença.`,
+    "Encaixe a peça no furo: deve entrar com pressão leve e não cair ao virar o quadro. Se estiver justa demais, aumente a folga em 0,05 a 0,1 mm; se estiver solta, diminua.",
+    "Veja a fenda mais estreita que cortou limpa, sem rasgar nem deformar: essa largura é o traço mínimo.",
+    "Veja o menor círculo que saiu inteiro e soltou do furo: esse diâmetro é a peça mínima.",
+    "Lance os valores em Configurações → Máquinas de corte, na linha desta máquina. A partir daí todos os arquivos saem com os valores novos."]});
+  B.push({t:"h",s:"Anote aqui"},{t:"checks",items:["Peça quadrada medida: ________ mm      Furo medido: ________ mm","Encaixe:  (  ) justo demais   (  ) bom   (  ) solto",`Menor fenda limpa: ______ mm     Menor círculo inteiro: ______ mm`,"Novos valores: compensação ______  folga ______  traço ______  peça ______"]},{t:"sign",who:"Testado por"});
+  return {title:"Ficha da peça de teste de encaixe",sub:`${M.nome} · material: ____________________ · gerada em ${nowBR()}`,blocks:B,job,drawTitle:"Desenho da peça de teste"};
+}
+
+function fichaArte(files){const sp=spec(),B=[];
+  B.push({t:"box",s:"Esta é a arte para aprovação e conferência. Ela não serve para cortar: não tem compensação nem folga, e os textos ainda dependem das fontes. Para produzir, use o “Arquivo de corte”."});
+  B.push({t:"h",s:"O que veio junto"},filesBlock(files));
+  B.push({t:"h",s:"Pedido"},{t:"kv",rows:pedidoRows()});
+  B.push({t:"h",s:"Tapete"},{t:"kv",rows:tapeteRows()});
+  B.push({t:"h",s:"Cores usadas"},{t:"table",cols:[{h:"Cor",w:200},{h:"Código",w:90},{h:"Tela",w:221}],rows:usedColors().map(id=>{const c=palette.find(p=>p.id===id)||{};return [{sw:colorOf(id),s:c.nome||id},c.codigo||"—",colorOf(id)];})});
+  const texts=sp.layers.filter(L=>L.type==="text"),logos=sp.layers.filter(L=>L.type==="logo");
+  if(texts.length){B.push({t:"h",s:"Textos"},{t:"table",cols:[{h:"Texto",w:150},{h:"Fonte",w:130},{h:"Altura da letra",w:80},{h:"Cor",w:151}],
+    rows:texts.map(L=>[(L.text||"").replace(/\n/g," / "),L.font+(L.bold?" negrito":"")+(L.italic?" itálico":""),fmtCm(L.sizeCm)+" cm",{sw:colorOf(L.color),s:colorName(L.color)+(L.outlineOn?`, contorno ${colorName(L.outlineColor)}`:"")}])});
+    B.push({t:"p",s:`O SVG traz os textos como texto. Para abrir igual, instale as fontes (todas são do Google Fonts, gratuitas): ${[...new Set(texts.map(L=>L.font))].join(", ")}.`});}
+  if(logos.length){B.push({t:"h",s:"Logotipos"},{t:"bullets",items:logos.map((L,i)=>`Logo ${i+1}: ${fmtCm(L.widthCm)} cm de largura; cores: ${L.neg&&L.neg.on?`moldura ${colorName(L.neg.color)} com o desenho na cor do fundo`:L.single?colorName(L.single):[...new Set((L.map||[]).filter(Boolean))].map(colorName).join(", ")}.`)});}
+  B.push({t:"h",s:"Medidas"},{t:"p",s:`O SVG está em milímetros e no tamanho real: ${fmtCm(sp.w*10)} × ${fmtCm(sp.h*10)} mm. Cada parte (borda flex, borda interna, fundo, textos e logos) é um grupo separado.`});
+  return {title:"Ficha da arte",sub:`${Q.numero||"Rascunho"} · ${Q.cliente.nome||"cliente"} · ${fmtCm(sp.w)} × ${fmtCm(sp.h)} cm · gerada em ${nowBR()}`,blocks:B};
+}
+
+// ---------- TXT ----------
+function fichaTXT(F){const o=[],ln=(s="")=>o.push(s);
+  ln("GÊNIO DO CAPACHO — "+F.title.toUpperCase());ln(F.sub);ln("=".repeat(72));
+  F.blocks.forEach(b=>{switch(b.t){
+    case"h":ln();ln(b.s.toUpperCase());ln("-".repeat(b.s.length));break;
+    case"kv":b.rows.forEach(([k,v])=>ln(`${k}: ${v}`));break;
+    case"p":ln(b.s);break;
+    case"box":ln();ln(">>> "+b.s);break;
+    case"table":ln(b.cols.map(c=>c.h).join(" | "));b.rows.forEach(r=>ln(r.map(c=>typeof c==="object"?c.s:c).join(" | ")));break;
+    case"steps":b.items.forEach((s,i)=>ln(`${i+1}. ${s}`));break;
+    case"bullets":b.items.forEach(s=>ln(`- ${s}`));break;
+    case"checks":b.items.forEach(s=>ln(`[ ] ${s}`));break;
+    case"sign":ln();ln(`${b.who}: ______________________   Data: ___/___/______   Visto: ______________`);break;}});
+  if(F.job){ln();ln(`(${F.drawTitle}: veja a última página da ficha em PDF.)`);}
+  return "﻿"+o.join("\r\n")+"\r\n";}
+
+// ---------- PDF (A4, Helvetica, WinAnsi) ----------
+const WIN={0x20AC:0x80,0x201A:0x82,0x2026:0x85,0x2022:0x95,0x2013:0x96,0x2014:0x97,0x2018:0x91,0x2019:0x92,0x201C:0x93,0x201D:0x94};
+const PSUB={"₂":"2","≥":">=","≤":"<=","→":">","⌀":"diâm. ","✓":"ok","−":"-","²":"2"};
+const pdfPlain=s=>{let o="";for(const ch of String(s).replace(/[₂≥≤→⌀✓−²]/g,c=>PSUB[c])){let c=ch.codePointAt(0);if(c>255)c=WIN[c]||63;else if(c<32)c=32;o+=String.fromCharCode(c);}return o;};
+const pdfEsc=s=>pdfPlain(s).replace(/[\\()]/g,"\\$&");
+const HW=(s,sz,b)=>{let w=0;for(const ch of pdfPlain(s))w+=ch===" "?.278:/[MWÆŒ@]/.test(ch)?.86:/[A-ZÀ-Þ]/.test(ch)?.68:/[mw]/.test(ch)?.8:/[iljtfrI.,:;'|!()\[\]\x92\x91]/.test(ch)?.3:/[0-9]/.test(ch)?.556:.54;return w*sz*(b?1.07:1);};
+function wrapT(s,sz,b,maxW){const out=[];String(s).split("\n").forEach(par=>{let line="";par.split(" ").forEach(w=>{const t=line?line+" "+w:w;if(!line||HW(t,sz,b)<=maxW)line=t;else{out.push(line);line=w;}});out.push(line);});return out;}
+const rgbPdf=hex=>rgbOf(hex).map(v=>(v/255).toFixed(3)).join(" ");
+function renderFichaPDF(F){
+  const PW=595.28,PH=841.89,M=42,CW=PW-2*M,pages=[];let o,y;
+  const T=(x,yy,s,sz,b,g=0)=>o.push(`BT ${g} g /${b?"F2":"F1"} ${sz} Tf ${x.toFixed(2)} ${yy.toFixed(2)} Td (${pdfEsc(s)}) Tj ET`);
+  const rule=(yy,g=.75,w=.6)=>o.push(`${g} G ${w} w ${M} ${yy.toFixed(2)} m ${PW-M} ${yy.toFixed(2)} l S`);
+  const newPage=()=>{o=[];pages.push(o);y=PH-M;};
+  const need=h=>{if(y-h<M+16)newPage();};
+  const sw=(x,yy,hex)=>o.push(`${rgbPdf(hex)} rg ${x} ${yy} 9 9 re f 0.45 G 0.4 w ${x} ${yy} 9 9 re S`);
+  newPage();
+  T(M,y-16,F.title,17,true);const br="Gênio do Capacho";T(PW-M-HW(br,9,true),y-14,br,9,true,.4);y-=30;
+  wrapT(F.sub,9,false,CW).forEach(l=>{T(M,y,l,9,false,.35);y-=12;});y+=4;rule(y-4,0,1.2);y-=10;
+  const LH=12.5;
+  F.blocks.forEach(b=>{
+    if(b.t==="h"){need(44);y-=14;T(M,y-12,b.s,12,true);y-=17;rule(y);y-=5;}
+    else if(b.t==="kv"){b.rows.forEach(([k,v])=>{const kl=wrapT(k,8.5,false,140),vl=wrapT(v,9.5,false,CW-150),n=Math.max(kl.length,vl.length);need(n*LH+3);
+      kl.forEach((l,i)=>T(M,y-10-i*LH,l,8.5,false,.4));vl.forEach((l,i)=>T(M+150,y-10-i*LH,l,9.5,false));y-=n*LH+3;});}
+    else if(b.t==="p"){const L=wrapT(b.s,9.5,false,CW);need(L.length*LH+6);y-=4;L.forEach(l=>{T(M,y-10,l,9.5,false,.15);y-=LH;});}
+    else if(b.t==="box"){const L=wrapT(b.s,9.5,true,CW-20),h=L.length*LH+12;need(h+8);y-=4;o.push(`0.92 g ${M} ${(y-h).toFixed(2)} ${CW} ${h.toFixed(2)} re f 0 g ${M} ${(y-h).toFixed(2)} 3.5 ${h.toFixed(2)} re f`);
+      L.forEach((l,i)=>T(M+12,y-15-i*LH,l,9.5,true));y-=h+4;}
+    else if(b.t==="table"){const xs=[];let acc=M;b.cols.forEach(c=>{xs.push(acc);acc+=c.w;});
+      need(30);y-=4;b.cols.forEach((c,i)=>T(xs[i],y-9,c.h,8,true,.4));y-=14;rule(y+1,.6,.5);
+      b.rows.forEach(r=>{const cells=r.map((c,i)=>{const isO=typeof c==="object",tx=isO?c.s:c;return {isO,c,L:wrapT(tx,9,false,b.cols[i].w-6-(isO&&c.sw?13:0))};}),n=Math.max(...cells.map(c=>c.L.length)),h=n*11.5+6;need(h);
+        cells.forEach((c,i)=>{let x=xs[i];if(c.isO&&c.c.sw){sw(x,y-12,c.c.sw);x+=13;}c.L.forEach((l,j)=>T(x,y-10.5-j*11.5,l,9));});y-=h;rule(y+1,.85,.4);});y-=2;}
+    else if(b.t==="steps"||b.t==="bullets"){b.items.forEach((s,i)=>{const L=wrapT(s,9.5,false,CW-18);need(L.length*LH+4);T(M,y-10,b.t==="steps"?`${i+1}.`:"•",9.5,b.t==="steps");L.forEach((l,j)=>T(M+18,y-10-j*LH,l,9.5));y-=L.length*LH+4;});}
+    else if(b.t==="checks"){b.items.forEach(s=>{const L=wrapT(s,9.5,false,CW-18);need(L.length*LH+6);o.push(`0 G 0.7 w ${M} ${(y-11.5).toFixed(2)} 9 9 re S`);L.forEach((l,j)=>T(M+18,y-10-j*LH,l,9.5));y-=L.length*LH+6;});}
+    else if(b.t==="sign"){need(40);y-=26;T(M,y,`${b.who}: ______________________________    Data: ____/____/________    Visto: ________________`,9.5);y-=8;}
+  });
+  if(F.job)drawJobPage(F.job,F.drawTitle);
+  function drawJobPage(job,title){newPage();T(M,y-16,title,15,true);y-=24;
+    T(M,y-6,"Tamanho real nas medidas indicadas. Cada cor é uma camada do arquivo; as peças entram nos furos de mesmo formato.",9,false,.35);y-=22;
+    const {wmm,hmm}=job.P,legH=Math.ceil(job.layers.length/2)*16+30,aw=CW-34,ah=y-M-40-legH,s=Math.min(aw/wmm,ah/hmm),dw=wmm*s,dh=hmm*s,ox=M+34+(aw-dw)/2,top=y-6,oy=top-dh;
+    const X=v=>(ox+v*s).toFixed(2),Y=v=>(oy+(hmm-v)*s).toFixed(2);
+    job.layers.forEach(L=>{const p=L.loops.map(l=>l.map(([a,b2],i)=>`${X(a)} ${Y(b2)} ${i?"l":"m"}`).join(" ")+" h").join(" ");o.push(`${rgbPdf(colorOf(L.pid))} rg ${p} f*`);o.push(`0.25 G 0.35 w ${p} S`);});
+    const yl=oy-16;o.push(`0 G 0.6 w ${ox.toFixed(2)} ${yl} m ${(ox+dw).toFixed(2)} ${yl} l S ${ox.toFixed(2)} ${yl-4} m ${ox.toFixed(2)} ${yl+4} l S ${(ox+dw).toFixed(2)} ${yl-4} m ${(ox+dw).toFixed(2)} ${yl+4} l S`);
+    const tw=`${fmtCm(wmm)} mm`;o.push(`1 g ${(ox+dw/2-HW(tw,9,true)/2-4).toFixed(2)} ${yl-6} ${(HW(tw,9,true)+8).toFixed(2)} 12 re f`);T(ox+dw/2-HW(tw,9,true)/2,yl-3,tw,9,true);
+    const xl=ox-16;o.push(`0 G 0.6 w ${xl.toFixed(2)} ${oy.toFixed(2)} m ${xl.toFixed(2)} ${top.toFixed(2)} l S ${(xl-4).toFixed(2)} ${oy.toFixed(2)} m ${(xl+4).toFixed(2)} ${oy.toFixed(2)} l S ${(xl-4).toFixed(2)} ${top.toFixed(2)} m ${(xl+4).toFixed(2)} ${top.toFixed(2)} l S`);
+    const th=`${fmtCm(hmm)} mm`,tl=HW(th,9,true);o.push(`1 g ${(xl-6).toFixed(2)} ${(oy+dh/2-tl/2-4).toFixed(2)} 12 ${(tl+8).toFixed(2)} re f`);
+    o.push(`BT 0 g /F2 9 Tf 0 1 -1 0 ${(xl+3).toFixed(2)} ${(oy+dh/2-tl/2).toFixed(2)} Tm (${pdfEsc(th)}) Tj ET`);
+    y=yl-28;T(M,y,"Legenda",10,true);y-=6;
+    job.layers.forEach((L,i)=>{const cx=M+(i%2)*(CW/2),cy=y-14-Math.floor(i/2)*16;sw(cx,cy-1,colorOf(L.pid));T(cx+14,cy,`${i+1}. ${L.name}`+(L.pieces!=null?` (${L.pieces} peça${L.pieces===1?"":"s"})`:""),9);});}
+  pages.forEach((ops,i)=>{o=ops;T(M,22,`${F.title} · ${F.sub.split(" · ")[0]} · página ${i+1} de ${pages.length}`,7.5,false,.45);});
+  return buildPDF(pages,F.title);
+}
+function buildPDF(pages,title){
+  const objs=["<< /Type /Catalog /Pages 2 0 R >>",null,"<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>","<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>",`<< /Title (${pdfEsc(title)}) /Producer (Genio Vendas) >>`],kids=[];
+  pages.forEach(ops=>{const c=ops.join("\n");objs.push(`<< /Length ${c.length} >>\nstream\n${c}\nendstream`);const ci=objs.length;
+    objs.push(`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595.28 841.89] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents ${ci} 0 R >>`);kids.push(objs.length);});
+  objs[1]=`<< /Type /Pages /Kids [${kids.map(k=>k+" 0 R").join(" ")}] /Count ${kids.length} >>`;
+  let s="%PDF-1.4\n%\xE2\xE3\xCF\xD3\n";const off=[];objs.forEach((ob,i)=>{off.push(s.length);s+=`${i+1} 0 obj\n${ob}\nendobj\n`;});const x=s.length;
+  s+=`xref\n0 ${objs.length+1}\n0000000000 65535 f \n`+off.map(v=>String(v).padStart(10,"0")+" 00000 n \n").join("")+`trailer\n<< /Size ${objs.length+1} /Root 1 0 R /Info 5 0 R >>\nstartxref\n${x}\n%%EOF\n`;
+  const u=new Uint8Array(s.length);for(let i=0;i<s.length;i++)u[i]=s.charCodeAt(i)&255;return u;}
+
+// ---------- resumo gravado dentro do próprio arquivo (SVG e DXF) ----------
+const ascii=s=>String(s).normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[₂]/g,"2").replace(/[×]/g,"x").replace(/[–—]/g,"-").replace(/[^\x20-\x7e]/g,"?");
+function cutNote(job){const M=job.M||machine(),c=Q.cliente;
+  return ["GENIO DO CAPACHO - ARQUIVO DE CORTE",`Pedido ${Q.numero||"rascunho"} | ${c.nome||"cliente"} | ${+c.qtd||1} un.`,`Tamanho ${fmtCm(job.P.wmm)} x ${fmtCm(job.P.hmm)} mm | milimetros | escala 1:1`,
+    `Maquina: ${M.nome} | compensacao ${n2(M.kerf)} mm | folga ${n2(M.folga)} mm`,"Compensacao e folga JA APLICADAS: nao compensar de novo na maquina.",`Espelhado: ${cfg.mirror?"SIM (face para baixo)":"nao"}`,"Leia a FICHA TECNICA que acompanha este arquivo."].map(ascii);}
+
+// ---------- ZIP (sem compressão) ----------
+const CRC_T=(()=>{const t=new Uint32Array(256);for(let n=0;n<256;n++){let c=n;for(let k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;t[n]=c>>>0;}return t;})();
+const crc32=b=>{let c=~0;for(let i=0;i<b.length;i++)c=CRC_T[(c^b[i])&255]^(c>>>8);return (~c)>>>0;};
+function makeZip(files){const enc=new TextEncoder(),parts=[],cd=[];let off=0;const d=new Date(),tm=(d.getHours()<<11)|(d.getMinutes()<<5)|(d.getSeconds()>>1),dt=((d.getFullYear()-1980)<<9)|((d.getMonth()+1)<<5)|d.getDate();
+  files.forEach(f=>{const nm=enc.encode(f.name),c=crc32(f.data),n=f.data.length,h=new DataView(new ArrayBuffer(30));
+    h.setUint32(0,0x04034b50,true);h.setUint16(4,20,true);h.setUint16(6,0x0800,true);h.setUint16(8,0,true);h.setUint16(10,tm,true);h.setUint16(12,dt,true);h.setUint32(14,c,true);h.setUint32(18,n,true);h.setUint32(22,n,true);h.setUint16(26,nm.length,true);h.setUint16(28,0,true);
+    parts.push(new Uint8Array(h.buffer),nm,f.data);
+    const z=new DataView(new ArrayBuffer(46));z.setUint32(0,0x02014b50,true);z.setUint16(4,20,true);z.setUint16(6,20,true);z.setUint16(8,0x0800,true);z.setUint16(10,0,true);z.setUint16(12,tm,true);z.setUint16(14,dt,true);z.setUint32(16,c,true);z.setUint32(20,n,true);z.setUint32(24,n,true);z.setUint16(28,nm.length,true);z.setUint32(42,off,true);
+    cd.push(new Uint8Array(z.buffer),nm);off+=30+nm.length+n;});
+  const cs=cd.reduce((s,a)=>s+a.length,0),e=new DataView(new ArrayBuffer(22));e.setUint32(0,0x06054b50,true);e.setUint16(8,files.length,true);e.setUint16(10,files.length,true);e.setUint32(12,cs,true);e.setUint32(16,off,true);
+  return new Blob([...parts,...cd,new Uint8Array(e.buffer)],{type:"application/zip"});}
+
+// ---------- exportar: arquivo + ficha, sempre juntos ----------
+// No site sai um .zip (arquivo + ficha em PDF + ficha em TXT). Dentro do Claude saem o arquivo e a ficha em PDF, um depois do outro.
+async function exportWithFicha({base,ext,data,mime,ficha,msgEl}){
+  const main=`${base}.${ext}`,fPdf=`${base}-FICHA.pdf`,fTxt=`${base}-FICHA.txt`;
+  const files=[[main,ext==="svg"&&base.startsWith("arte")?"Arte (SVG)":"Arquivo para a máquina"],[fPdf,"Ficha técnica para imprimir (esta ficha)"]];
+  if(OUTSIDE_CLAUDE)files.push([fTxt,"A mesma ficha em texto simples"]);
+  const F=ficha(files),pdf=renderFichaPDF(F),u8=typeof data==="string"?new TextEncoder().encode(data):data;
+  if(OUTSIDE_CLAUDE){const ok=await saveBlob(makeZip([{name:main,data:u8},{name:fPdf,data:pdf},{name:fTxt,data:new TextEncoder().encode(fichaTXT(F))}]),`${base}.zip`,msgEl);
+    if(ok&&msgEl)msgEl.textContent=`Baixado ${base}.zip: arquivo + ficha técnica (PDF e TXT).`;return ok;}
+  if(!await saveBlob(new Blob([u8],{type:mime}),main,msgEl))return false;
+  const ok=await saveBlob(new Blob([pdf],{type:"application/pdf"}),fPdf,msgEl);if(ok&&msgEl)msgEl.textContent="Arquivo e ficha técnica salvos.";return ok;}
 
 // ================= início =================
 (function init(){
