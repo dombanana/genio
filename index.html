@@ -250,13 +250,21 @@ details summary{cursor:pointer;font-size:13px;color:var(--muted);font-weight:600
 .emp-prev img{max-width:100%;max-height:100%;object-fit:contain}
 .handle.ref{background:rgba(255,79,163,.35);width:18px;height:18px;margin:-9px 0 0 -9px;border-width:2px}
 .handle.ref::after{content:"";position:absolute;left:50%;top:50%;width:4px;height:4px;margin:-2px 0 0 -2px;border-radius:50%;background:#ff4fa3}
+
+.sizebar{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;font-size:14px}
+.sizebar .lbl{color:var(--muted);font-weight:600;font-size:13px}
+.sizebar b{min-width:58px;text-align:center;font-variant-numeric:tabular-nums}
+.sizebar .mini{min-width:36px;height:34px;font-size:17px}
+.sb-g{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.sizebar{column-gap:18px}
+.sizebar .lbl{min-width:100px}
 </style>
 <div class="top">
   <div class="brand"><div class="brand-t"><span class="eyebrow">Gênio do Capacho</span><b>Vendas</b></div></div>
   <nav class="steps" aria-label="Passos do orçamento">
     <button data-go="dados"><span class="n">1</span><span class="t">Dados</span></button>
-    <button data-go="arte"><span class="n">2</span><span class="t">Arte</span></button>
-    <button data-go="local"><span class="n">3</span><span class="t">No local</span></button>
+    <button data-go="local"><span class="n">2</span><span class="t">No local</span></button>
+    <button data-go="arte"><span class="n">3</span><span class="t">Arte</span></button>
     <button data-go="orcamento"><span class="n">4</span><span class="t">Orçamento</span></button>
   </nav>
   <div class="topbtns">
@@ -294,7 +302,7 @@ details summary{cursor:pointer;font-size:13px;color:var(--muted);font-weight:600
       </section>
     </div>
     <div class="col" id="specSlot1"></div>
-    <div class="nav" style="grid-column:1/-1"><span></span><button class="btn big" data-go="arte">Montar a arte →</button></div>
+    <div class="nav" style="grid-column:1/-1"><span></span><button class="btn big" data-go="local">Ver no local →</button></div>
   </section>
 
   <!-- 2. ARTE -->
@@ -304,7 +312,8 @@ details summary{cursor:pointer;font-size:13px;color:var(--muted);font-weight:600
       <div class="art-wrap" id="artWrap"><div class="art-stage" id="artStage"><canvas id="artCanvas" aria-label="Tapete visto de cima"></canvas></div></div>
       <div class="warns" id="warns" role="status"></div>
       <p class="hint">Toque num texto ou logo para escolher. Arraste para mover; a bolinha de baixo muda o tamanho e a de cima gira. Com dois dedos: aproximar muda o tamanho e girar gira.</p>
-      <div class="nav"><button class="btn ghost" data-go="dados">← Dados</button><button class="btn big" data-go="local">Ver no local →</button></div>
+      <p class="msg" id="artMsg" role="status"></p>
+      <div class="nav"><button class="btn ghost" data-go="local">← No local</button><button class="btn big" id="toQuote" type="button">Gerar orçamento →</button></div>
     </div>
     <div class="col sticky" id="layerSlot2"></div>
   </section>
@@ -314,7 +323,7 @@ details summary{cursor:pointer;font-size:13px;color:var(--muted);font-weight:600
     <div class="col">
       <div class="row between">
         <h1>No local</h1>
-        <div class="seg" role="group" aria-label="Fonte da imagem"><button id="mFoto" aria-pressed="true" type="button">Foto</button><button id="mCam" aria-pressed="false" type="button">Câmera ao vivo</button></div>
+        <div class="seg" role="group" aria-label="Fonte da imagem" hidden><button id="mFoto" aria-pressed="true" type="button">Foto</button><button id="mCam" aria-pressed="false" type="button">Câmera ao vivo</button></div>
       </div>
       <div class="stage-wrap" id="stageWrap">
         <div class="stage" id="stage" aria-label="Local com o tapete">
@@ -341,12 +350,16 @@ details summary{cursor:pointer;font-size:13px;color:var(--muted);font-weight:600
             <button class="btn ghost" id="resetPose" type="button">Recomeçar posição</button>
           </div>
         </div>
+        <div class="sizebar" id="sizeBar">
+          <span class="sb-g"><span class="lbl">Largura</span><button class="mini" id="sbWm" type="button" aria-label="Largura menos 10 cm">−</button><b id="sbW"></b><button class="mini" id="sbWp" type="button" aria-label="Largura mais 10 cm">+</button></span>
+          <span class="sb-g"><span class="lbl">Comprimento</span><button class="mini" id="sbHm" type="button" aria-label="Comprimento menos 10 cm">−</button><b id="sbH"></b><button class="mini" id="sbHp" type="button" aria-label="Comprimento mais 10 cm">+</button></span>
+        </div>
         <p class="hint" id="hint"></p>
         <div id="refInfo" class="col" style="gap:8px" hidden></div>
         <p class="msg" id="msg" role="status"></p>
         <details><summary>Ajuste fino da posição</summary><div class="sliders" id="sliders" style="margin-top:10px"></div></details>
       </section>
-      <div class="nav"><button class="btn ghost" data-go="arte">← Arte</button><button class="btn big" id="toQuote" type="button">Gerar orçamento →</button></div>
+      <div class="nav"><button class="btn ghost" data-go="dados">← Dados</button><button class="btn big" data-go="arte">Montar a arte →</button></div>
     </div>
     <div class="col sticky" id="specSlot3"></div>
   </section>
@@ -361,7 +374,7 @@ details summary{cursor:pointer;font-size:13px;color:var(--muted);font-weight:600
         <button class="btn ghost" id="qCopy" type="button">Copiar texto para WhatsApp</button>
         <button class="btn ghost" id="qArt" type="button">Baixar arte (SVG)</button>
         <button class="btn" id="qCut" type="button">Arquivo de corte</button>
-        <button class="btn ghost" data-go="local">← Ajustar prévia</button>
+        <button class="btn ghost" data-go="arte">← Arte</button>
       </div>
       <p class="msg" id="qMsg" role="status"></p>
     </div>
@@ -895,9 +908,24 @@ function move(){if(!G||S.sub==="cantos")return;const pts=[...ptrs.values()],c=pt
   if(S.sub==="persp"&&!two&&Q.pose.ref){msg(`A perspectiva está vindo do ${refCfg().nome.toLowerCase()}. Para mudar, ajuste os cantos dele em “${refCfg().nome}”.`);return;}
   if(S.sub==="persp"&&!two){commit(P=>{dropPlane(P);P.cam.phi=clamp(G.P.cam.phi-(c[1]-G.c[1])*0.22*DEG,12*DEG,86*DEG);P.cam.rho=clamp(G.P.cam.rho+(c[0]-G.c[0])*0.12*DEG,-35*DEG,35*DEG);
     if(G.anchor){const p=unproject(P.cam,G.anchor[0],G.anchor[1]);if(p)P.mat=p;}});return;}
-  commit(P=>{if(P.plane){if(two)P.plane.th=G.P.plane.th-(a-G.a);const w=planeUnproject(P,c[0],c[1]);if(w&&G.grab){P.plane.x=w.x+G.grab.x;P.plane.y=w.y+G.grab.y;}return;}
-    if(two){P.th=G.P.th-(a-G.a);P.cam.h=clamp(G.P.cam.h/(d/G.d),0.3,8);}const w=unproject(P.cam,c[0],c[1]);if(w&&G.grab){const k=P.cam.h/G.P.cam.h;P.mat={x:w.x+G.grab.x*k,y:w.y+G.grab.y*k};}});}
-stage.addEventListener("pointerdown",e=>{if(e.target.classList.contains("handle")||e.target.id==="shoot")return;if(S.sub==="cantos")return;if(S.sub==="ref"){if(!S.live){const p=pos(e);refTap(p[0],p[1]);}return;}stage.setPointerCapture(e.pointerId);ptrs.set(e.pointerId,pos(e));begin();});
+  if(two){if(!G.mode){const dd=Math.abs(d-G.d),da=Math.abs(wrapPi(a-G.a))*G.d/2;if(Math.max(dd,da)<12)return;G.mode=da>dd*1.2?"rot":"size";if(G.mode==="size")pinchStart(pts);}
+    if(G.mode==="size"){pinchMove(pts);return;}
+    commit(P=>{if(P.plane)P.plane.th=G.P.plane.th-wrapPi(a-G.a);else P.th=G.P.th-wrapPi(a-G.a);});return;}
+  commit(P=>{if(P.plane){const w=planeUnproject(P,c[0],c[1]);if(w&&G.grab){P.plane.x=w.x+G.grab.x;P.plane.y=w.y+G.grab.y;}return;}
+    const w=unproject(P.cam,c[0],c[1]);if(w&&G.grab)P.mat={x:w.x+G.grab.x,y:w.y+G.grab.y};});}
+const wrapPi=x=>Math.atan2(Math.sin(x),Math.cos(x));
+// pinça: os dedos são levados para o chão; a abertura medida no chão, na direção da largura ou do comprimento do tapete, muda só aquele lado, de 10 em 10 cm
+const floorPt=(P,sx,sy)=>P.plane?planeUnproject(P,sx,sy):unproject(P.cam,sx,sy);
+function matAxes(P){const th=P.plane?P.plane.th:P.th,ax=rot2(1,0,th),ay=rot2(0,1,th);return {ax,ay};}
+function pinchStart(pts){const P=Q.pose,f1=floorPt(P,...pts[0]),f2=floorPt(P,...pts[1]);if(!f1||!f2){G.mode="rot";return;}const {ax,ay}=matAxes(P),v=[f2.x-f1.x,f2.y-f1.y];
+  const px=Math.abs(v[0]*ax[0]+v[1]*ax[1]),py=Math.abs(v[0]*ay[0]+v[1]*ay[1]);G.axis=px>=py?"w":"h";G.ax=G.axis==="w"?ax:ay;G.s0=G.axis==="w"?px:py;G.cm0=spec()[G.axis];}
+function pinchMove(pts){const P=Q.pose,f1=floorPt(P,...pts[0]),f2=floorPt(P,...pts[1]);if(!f1||!f2||!G.ax)return;const v=[f2.x-f1.x,f2.y-f1.y],s1=Math.abs(v[0]*G.ax[0]+v[1]*G.ax[1]);
+  setMatSize(G.axis,G.cm0+(s1-G.s0)*100);}
+function setMatSize(axis,cm){const v=clamp(Math.round(cm/10)*10,20,400),sp=spec();if(sp[axis]===v)return;const old=sp[axis];sp[axis]=v;
+  if(W&&!validQuad(quadOf(Q.pose))){sp[axis]=old;return;}$("#fW").value=sp.w;$("#fH").value=sp.h;specChanged();renderSizeBar();}
+function renderSizeBar(){const b=$("#sizeBar");if(!b)return;const sp=spec();$("#sbW").textContent=fmt(sp.w/100)+" m";$("#sbH").textContent=fmt(sp.h/100)+" m";}
+["sbWm","sbWp","sbHm","sbHp"].forEach(id=>{const e=$("#"+id);if(e)e.onclick=()=>{const ax=id[2]==="W"?"w":"h";setMatSize(ax,spec()[ax]+(id[3]==="p"?10:-10));};});
+stage.addEventListener("pointerdown",e=>{if(e.target.classList.contains("handle")||e.target.id==="shoot")return;if(S.sub==="cantos")return;if(S.sub==="ref"){if(!S.live){const p=pos(e);refTap(p[0],p[1]);}return;}try{stage.setPointerCapture(e.pointerId);}catch(_){}ptrs.set(e.pointerId,pos(e));begin();});
 stage.addEventListener("pointermove",e=>{if(!ptrs.has(e.pointerId))return;ptrs.set(e.pointerId,pos(e));move();});
 const endPtr=e=>{if(!ptrs.has(e.pointerId))return;ptrs.delete(e.pointerId);begin();};stage.addEventListener("pointerup",endPtr);stage.addEventListener("pointercancel",endPtr);
 stage.addEventListener("wheel",e=>{if(S.sub==="cantos"||S.sub==="ref")return;e.preventDefault();if(Q.pose.ref&&!e.shiftKey)return;
@@ -918,12 +946,12 @@ const SL={
 function buildSliders(){const box=$("#sliders");box.replaceChildren();Object.entries(SL).forEach(([k,d])=>{const id="sl-"+k,w=document.createElement("div");w.className="slider";
   w.innerHTML=`<label for="${id}"><span>${d.label}</span><output id="${id}-o"></output></label><input type="range" id="${id}" min="${d.min}" max="${d.max}" step="${d.step}">`;box.appendChild(w);w.querySelector("input").addEventListener("input",ev=>d.set(+ev.target.value));});}
 function syncSliders(){Object.entries(SL).forEach(([k,d])=>{const i=document.getElementById("sl-"+k);if(!i)return;const v=d.get(Q.pose);if(document.activeElement!==i)i.value=v;document.getElementById("sl-"+k+"-o").textContent=d.out(v);});}
-const HINTS={mover:"Um dedo arrasta o tapete pelo chão. Dois dedos: abrir e fechar muda o tamanho na foto, girar gira o tapete.",
+const HINTS={mover:"Um dedo arrasta o tapete pelo chão. Dois dedos abrindo ou fechando na direção da largura ou do comprimento do tapete mudam só aquele lado, de 10 em 10 cm; dois dedos torcendo giram o tapete.",
   persp:"Arraste para cima e para baixo para inclinar; para os lados para acertar o horizonte. Alinhe as bordas do tapete com as linhas do piso.",
   cantos:"Arraste as quatro bolinhas até onde ficam os cantos do tapete. Depois disso, mover e girar seguem o mesmo chão.",
   ref:"Coloque o objeto de referência no chão, onde vai o tapete, e fotografe com o piso em volta à vista. O sistema acha o objeto sozinho; se não achar, toque nele. Arraste as bolinhas rosa se algum canto não bater."};
 function updateSub(){$$("[data-sub]").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.sub===S.sub)));const sr=$("#subRef");if(sr)sr.textContent=refCfg().nome;if(typeof renderRefInfo==="function")renderRefInfo();
-  $("#hint").textContent=!S.live&&S.sub==="mover"&&Q.pose.ref?`Um dedo arrasta o tapete pelo chão; dois dedos giram. O tamanho e a perspectiva vêm do ${refCfg().nome.toLowerCase()}.`:S.live?"O tapete fica parado na tela: mexa o celular até as linhas do piso encaixarem nas bordas dele e toque no botão redondo para fotografar.":HINTS[S.sub];}
+  $("#hint").textContent=!S.live&&S.sub==="mover"&&Q.pose.ref?`Um dedo arrasta o tapete pelo chão. Dois dedos abrindo ou fechando na direção da largura ou do comprimento mudam só aquele lado, de 10 em 10 cm, medidos no chão pelo ${refCfg().nome.toLowerCase()}; torcendo, giram.`:S.live?"O tapete fica parado na tela: mexa o celular até as linhas do piso encaixarem nas bordas dele e toque no botão redondo para fotografar.":HINTS[S.sub];}
 $$("[data-sub]").forEach(b=>b.onclick=()=>{S.sub=b.dataset.sub;updateSub();schedule();});
 $("#dimsBtn").onclick=()=>{S.dims=!S.dims;$("#dimsBtn").setAttribute("aria-pressed",String(S.dims));schedule();};
 $("#resetPose").onclick=()=>{if(Q.pose.ref&&Q.pose.plane){Object.assign(Q.pose.plane,{x:0,y:0,th:0});}else Q.pose=Q.photo.example?POSE_EX():POSE_NEW();layout();syncSliders();schedule();};
@@ -939,7 +967,7 @@ async function startLive(){msg("");if(!navigator.mediaDevices||!navigator.mediaD
 function liveFail(){S.live=false;setSeg();msg(OUTSIDE_CLAUDE?"Não consegui abrir a câmera. Confira se o navegador tem permissão para usar a câmera e se o site está em https.":"A câmera ao vivo não abre dentro do Claude; ela funciona no site genio.dombanana.tech. Use “Tirar foto” no passo 1.");}
 function stopLive(){clearInterval(lumTimer);if(S.stream){S.stream.getTracks().forEach(t=>t.stop());S.stream=null;}S.live=false;video.srcObject=null;setSeg();}
 function setSeg(){$("#mFoto").setAttribute("aria-pressed",String(!S.live));$("#mCam").setAttribute("aria-pressed",String(S.live));}
-$("#mFoto").onclick=()=>{stopLive();layout();updateSub();schedule();};$("#mCam").onclick=()=>{startLive();};
+// câmera ao vivo desativada: a prévia é sempre sobre a foto do local
 $("#shoot").onclick=()=>{const vw=video.videoWidth,vh=video.videoHeight;if(!vw)return;const cv=document.createElement("canvas");cv.width=vw;cv.height=vh;cv.getContext("2d").drawImage(video,0,0,vw,vh);
   Q.photo={src:cv.toDataURL("image/jpeg",0.9),w:vw,h:vh,example:false};stopLive();const f=$("#flash");f.classList.remove("go");void f.offsetWidth;f.classList.add("go");
   Q.pose.ref=null;Q.pose.plane=null;renderThumb();layout();updateSub();schedule();msg("Foto tirada. Ajuste o tapete se precisar e gere o orçamento.");refAuto();};
@@ -961,7 +989,7 @@ function renderPresets(){const r=$("#presets");r.replaceChildren();PRESETS.forEa
   b.setAttribute("aria-pressed",String(spec().w===w&&spec().h===h));b.onclick=()=>{spec().w=w;spec().h=h;fillSpec();specChanged();};r.appendChild(b);});}
 function fillSpec(){const sp=spec();$("#fW").value=sp.w;$("#fH").value=sp.h;$("#fIntOn").checked=sp.intOn;$("#intBox").hidden=!sp.intOn;$("#fIntCm").value=sp.intCm;$("#fFlexCm").value=sp.flexCm;
   $("#fTipo").value=sp.tipo;$("#fReb").value=sp.rebaixo;renderSwatches();renderPresets();renderRule();}
-function specChanged(){Q.preview=null;renderPresets();renderRule();buildBase();syncSliders();renderWarns();saveLast();}
+function specChanged(){Q.preview=null;renderSizeBar();renderPresets();renderRule();buildBase();syncSliders();renderWarns();saveLast();}
 let saveT=0;function saveLast(){clearTimeout(saveT);saveT=setTimeout(()=>{const sp=deep(spec());sp.layers=sp.layers.filter(L=>L.type==="text");store.set("gc.lastSpec2",sp);},400);}
 function num(id,min,max,def){const v=parseFloat(String($(id).value).replace(",","."));return isFinite(v)?clamp(v,min,max):def;}
 ["#fW","#fH"].forEach(id=>{const key=id==="#fW"?"w":"h";$(id).addEventListener("input",()=>{const v=num(id,30,600,0);if(v>=30){spec()[key]=Math.round(v);specChanged();}});
@@ -1032,7 +1060,7 @@ function renderWarns(){const box=$("#warns");box.replaceChildren();const f=field
 const layerName=L=>L.type==="text"?`“${(L.text||"").split("\n")[0].slice(0,24)}”`:"O logo";
 
 // ---- lista e propriedades ----
-function renderLayers(){const list=$("#layerList");list.replaceChildren();const ls=spec().layers;
+function renderLayers(){if(!LAYER_EL.isConnected)return;const list=$("#layerList");list.replaceChildren();const ls=spec().layers;
   if(!ls.length){const p=document.createElement("p");p.className="hint";p.textContent="Nenhum texto ou logo ainda. Toque em “+ Texto” ou “+ Logo”.";list.appendChild(p);}
   ls.slice().reverse().forEach(L=>{const b=document.createElement("div");b.className="layer";b.setAttribute("role","button");b.tabIndex=0;b.setAttribute("aria-pressed",String(S.sel===L.id));
     const ico=document.createElement("span");ico.className="ico";ico.textContent=L.type==="text"?"T":"◆";if(L.type==="text"){const c=colorOf(L.color),[r,g,b]=rgbOf(c);ico.style.background=c;ico.style.color=(0.2126*r+0.7152*g+0.0722*b)>150?"#241a14":"#fff";ico.style.boxShadow="inset 0 0 0 1px rgba(127,127,127,.45)";}
@@ -1047,7 +1075,7 @@ function renderLayers(){const list=$("#layerList");list.replaceChildren();const 
     b.append(ico,nm,acts);b.onclick=()=>{S.sel=L.id;renderLayers();drawArt();};b.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();b.click();}};list.appendChild(b);});
   renderProps();}
 function field(label,inputHtml){return `<div class="field"><label>${label}</label>${inputHtml}</div>`;}
-function renderProps(){const box=$("#props");box.replaceChildren();const L=selLayer();if(!L){return;}
+function renderProps(){if(!LAYER_EL.isConnected)return;const box=$("#props");box.replaceChildren();const L=selLayer();if(!L){return;}
   const sp=document.createElement("div");sp.className="props";
   if(L.type==="text"){
     const groups=[...new Set(FONTS.map(f=>f.g))].map(g=>`<optgroup label="${g}">${FONTS.filter(f=>f.g===g&&!cfg.fontsOff.includes(f.id)).map(f=>`<option value="${f.id}">${f.id}</option>`).join("")}</optgroup>`).join("");
@@ -1489,19 +1517,22 @@ $("#cfgBack").onclick=()=>go(S.returnTo||"dados");
 // ================= navegação =================
 const SPEC_EL=document.getElementById("spec"),LAYER_EL=document.getElementById("layerPanel");
 async function go(v){
-  if(v==="orcamento"&&!Q.preview&&S.view!=="local")v="local";
   if(S.view==="local"&&v!=="local")stopLive();if(v==="config"&&S.view!=="config")S.returnTo=S.view;
   S.view=v;["dados","arte","local","orcamento","lista","config"].forEach(x=>{$("#v-"+x).hidden=x!==v;});
   $$(".top .steps button").forEach(b=>{if(b.dataset.go===v)b.setAttribute("aria-current","step");else b.removeAttribute("aria-current");});
   const specEl=SPEC_EL,lp=LAYER_EL;
   if(v==="dados"){$("#specSlot1").appendChild(specEl);lp.remove();}
   if(v==="arte"){$("#layerSlot2").appendChild(lp);specEl.remove();artLayout();renderLayers();renderWarns();}
-  if(v==="local"){const s3=$("#specSlot3");s3.appendChild(lp);s3.appendChild(specEl);renderLayers();layout();updateSub();syncSliders();schedule();}
+  if(v==="local"){const s3=$("#specSlot3");lp.remove();s3.appendChild(specEl);layout();updateSub();syncSliders();renderSizeBar();schedule();}
   if(v==="orcamento")renderQuote();if(v==="lista")renderList();if(v==="config")fillCfg();window.scrollTo({top:0});
 }
-$$("[data-go]").forEach(b=>b.addEventListener("click",()=>{if(b.dataset.go==="orcamento"&&S.view==="local"){$("#toQuote").click();return;}go(b.dataset.go);}));
-$("#toQuote").onclick=async()=>{if(S.live){msg("Fotografe primeiro (botão redondo) para gerar o orçamento.");return;}msg("Gerando a imagem…");const url=await buildPreview().catch(()=>null);msg("");
-  if(!url){msg("Não deu para gerar a imagem. Confira se o tapete está visível na foto.");return;}Q.preview=url;await go("orcamento");const r=await saveWithVersions();renderQuote();
+$$("[data-go]").forEach(b=>b.addEventListener("click",()=>{if(b.dataset.go==="orcamento"&&!Q.preview){$("#toQuote").click();return;}go(b.dataset.go);}));
+// gera a imagem do orçamento com a posição marcada no local, sem precisar estar na tela do local
+async function makePreview(){const img=await new Promise((res,rej)=>{const i=new Image();i.onload=()=>res(i);i.onerror=rej;i.src=Q.photo.src;});const sw=W,sh=H;
+  W=760;H=760*img.naturalHeight/img.naturalWidth;try{if(lum.src!==Q.photo.src)lumFromSource(img,Q.photo.src);const P=Q.pose;if(!P.mat&&!P.plane)P.mat=unproject(P.cam,W*0.5,H*0.64)||{x:0,y:2};
+    const q=quadOf(P);if(!validQuad(q))return null;const M=solveH(texRect(),q);if(!M)return null;lastM=M;renderLit(M);return await buildPreview();}finally{W=sw;H=sh;}}
+$("#toQuote").onclick=async()=>{const say=t=>{const m=$("#artMsg");if(m)m.textContent=t;};say("Gerando a imagem…");const url=await makePreview().catch(()=>null);say("");
+  if(!url){say("Não deu para gerar a imagem. Volte em “No local” e confira se o tapete está visível na foto.");return;}Q.preview=url;await go("orcamento");const r=await saveWithVersions();renderQuote();
   qmsg(r.wasApproved?`Arte alterada depois da aprovação: guardada como versão ${Q.versao} e o orçamento voltou para rascunho. Peça nova aprovação ao cliente.`:r.changed?`Arte alterada: guardada como versão ${Q.versao} de ${Q.numero}. A versão anterior continua no histórico.`:`Guardado automaticamente como ${Q.numero}.`);};
 
 
