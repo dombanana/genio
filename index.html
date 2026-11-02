@@ -610,7 +610,7 @@ body.ar-open{overflow:hidden}
         </div>
         <details class="acc"><summary><span>Entrega e observações</span><span class="cur" id="sumEnt"></span></summary>
           <div class="fields">
-            <div class="field"><label for="cPrazo">Entrega desejada</label><input id="cPrazo" type="date"></div>
+            <div class="field"><label for="cPrazo">Entrega desejada</label><input id="cPrazo" type="date"><span class="hint small" id="cPrazoHint"></span></div>
             <div class="field wide"><label for="cEnd">Endereço de entrega</label><input id="cEnd" autocomplete="off"></div>
             <div class="field wide"><label for="cObs">Observações</label><textarea id="cObs"></textarea></div>
           </div>
@@ -701,6 +701,7 @@ body.ar-open{overflow:hidden}
           <div class="field"><label for="pParc">Parcelas no cartão</label><input id="pParc" type="number" inputmode="numeric" min="1" max="24" step="1"></div>
           <div class="field"><label for="pCartao">Acréscimo no cartão (%)</label><input id="pCartao" type="number" inputmode="decimal" min="0" max="50" step="0.5"></div>
           <div class="field"><label for="pSinal">Sinal (%)</label><input id="pSinal" type="number" inputmode="decimal" min="0" max="100" step="5"></div>
+          <div class="field"><label for="pPrazo">Prazo de entrega (dias)</label><input id="pPrazo" type="number" inputmode="numeric" min="1" max="120" step="1"></div>
           <div class="field"><label for="pVal">Validade (dias)</label><input id="pVal" type="number" inputmode="numeric" min="1" max="90" step="1"></div>
           <div class="field"><label for="pVend">Nome do vendedor</label><input id="pVend" autocomplete="off"></div>
         </div>
@@ -917,8 +918,8 @@ const KAPAZI_CORES=[["cinza","Cinza","#9a9b9d"],["grafite","Grafite","#55575c"],
   .map(([id,nome,hex,codigo])=>({id,nome,codigo:codigo||"",hex,ativo:true,estoque:0}));
 const DEFAULT_PALETTE=KAPAZI_CORES;
 const GUIA_PADRAO={kapazi:{nome:"Kapazi",cores:KAPAZI_CORES}};
-const DEFAULT_CFG={m2v:null,m2s:null,base:"consumo",fora:20,coresInc:2,corExtra:10,min:0,pix:5,parc:6,cartao:8,sinal:50,val:7,vend:"",margem:3,maxCores:4,fontsOff:[],ref:{nome:"Cartão-postal",w:10,h:15,cor:false},emp:{}};
-let cfg=Object.assign({},DEFAULT_CFG,store.get("gc.cfg")||{});
+const DEFAULT_CFG={prazo:10,m2v:null,m2s:null,base:"consumo",fora:20,coresInc:2,corExtra:10,min:0,pix:5,parc:6,cartao:8,sinal:50,val:7,vend:"",margem:3,maxCores:4,fontsOff:[],ref:{nome:"Cartão-postal",w:10,h:15,cor:false},emp:{}};
+let cfg=Object.assign({},DEFAULT_CFG,store.get("gc.cfg")||{});if(!(cfg.prazo>0))cfg.prazo=10;
 (()=>{const old=store.get("gc.price");if(old&&!store.get("gc.cfg")){if(old.m2!=null)cfg.m2v=old.m2;["base","fora","min","pix","parc","cartao","sinal","val","vend"].forEach(k=>{if(old[k]!=null)cfg[k]=old[k];});}})();
 let guias=store.get("gc.guias");
 if(!Array.isArray(guias)||!guias.length){guias=[{id:"kapazi",nome:"Kapazi",cores:deep(KAPAZI_CORES)}];const old=store.get("gc.palette");
@@ -1753,7 +1754,7 @@ $("#qArt").onclick=async()=>{const svg=await artSVG();exportWithFicha({base:`art
 
 // ================= cliente =================
 const CF={cNome:"nome",cTel:"tel",cPrazo:"prazo",cEnd:"end",cObs:"obs"};
-function fillClient(){Object.entries(CF).forEach(([id,k])=>{$("#"+id).value=Q.cliente[k]??"";});}
+function fillClient(){Object.entries(CF).forEach(([id,k])=>{$("#"+id).value=Q.cliente[k]??"";});prazoCheck();}
 Object.entries(CF).forEach(([id,k])=>$("#"+id).addEventListener("input",e=>{Q.cliente[k]=k==="qtd"?Math.max(1,parseInt(e.target.value)||1):e.target.value;renderSpecSum();}));
 
 // ================= imagem final =================
@@ -1796,12 +1797,20 @@ function renderQuote(){tapInit();renderQTaps();const p=computePrice(),G=grandPri
   const P=multi&&G.ready?G:p;
   const pay=document.createElement("div");pay.className="pay";
   pay.innerHTML=`<div><span>À vista no Pix</span><b>${BRL(P.pix)}</b><small>${cfg.pix||0}% de desconto</small></div><div><span>Cartão</span><b>${P.parc}× ${BRL(P.parcela)}</b><small>total ${BRL(P.cartao)}</small></div><div><span>Com sinal</span><b>${BRL(P.sinal)}</b><small>agora (${cfg.sinal||0}%) + ${BRL(P.resto)} na entrega</small></div>`;
-  box.appendChild(pay);const v=document.createElement("p");v.className="hint";v.textContent=`Validade: ${cfg.val||7} dias.${cfg.vend?" Vendedor: "+cfg.vend+".":""}`;box.appendChild(v);}
+  box.appendChild(pay);const v=document.createElement("p");v.className="hint";v.textContent=`${prazoTxt()} Validade: ${cfg.val||7} dias.${cfg.vend?" Vendedor: "+cfg.vend+".":""}`;box.appendChild(v);}
 function setStatusBadge(){const b=$("#qStatus"),s=Q.status;b.className="badge "+s;b.textContent=s==="aprovado"?"Aprovado":s==="enviado"?"Enviado":"Rascunho";$("#qApprove").disabled=s==="aprovado"||!computePrice().ready;$("#qApprove").textContent=s==="aprovado"?"Aprovado":"Cliente aprovou";}
+// prazo de entrega: sempre em até N dias (Configurações → Preços); avisa se o cliente quer antes
+const prazoDias=()=>Math.max(1,cfg.prazo|0||10);
+function prazoTxt(){return `Entrega em até ${prazoDias()} dias.`;}
+function prazoCheck(){const e=$("#cPrazoHint");if(!e)return;const d=Q.cliente&&Q.cliente.prazo;if(!d){e.textContent=`Prazo da fábrica: até ${prazoDias()} dias.`;e.className="hint small";return;}
+  const want=new Date(d+"T12:00:00"),min=new Date();min.setHours(12,0,0,0);min.setDate(min.getDate()+prazoDias());
+  if(want<min){e.textContent=`Antes do prazo de ${prazoDias()} dias (o mais cedo seria ${String(min.getDate()).padStart(2,"0")}/${String(min.getMonth()+1).padStart(2,"0")}). Combine com a fábrica antes de prometer.`;e.className="hint small warn-t";}
+  else{e.textContent=`Dentro do prazo de ${prazoDias()} dias.`;e.className="hint small ok-t";}}
+$("#cPrazo").addEventListener("input",()=>setTimeout(prazoCheck,0));
 function whatsText(){tapInit();const e=emp(),multi=Q.tapetes.length>1,G=grandPrice(),L=[...(e.nome?[`*${e.nome}*`,""]:[]),`Olá${Q.cliente.nome?", "+Q.cliente.nome:""}! Segue o orçamento ${multi?`dos seus ${Q.tapetes.length} tapetes personalizados`:"do seu tapete personalizado"}${Q.numero?" ("+Q.numero+")":""}:`,""];
   Q.tapetes.forEach(T=>withTap(T,()=>{const p=computePrice();const ft=fichaText().split("\n");if(multi){if(ft[0].startsWith("Tapete:"))ft.shift();L.push(`*${tapName(T)}*`);}L.push(ft.join("\n"));if(multi&&p.ready)L.push(`Subtotal: ${BRL(p.total)}`);L.push("");}));
   const p=multi?G:computePrice();
-  if(p.ready)L.push(`Total${multi?" do orçamento":""}: ${BRL(p.total)}`,`• Pix: ${BRL(p.pix)}`,`• Cartão: ${p.parc}× de ${BRL(p.parcela)}`,`• Com sinal: ${BRL(p.sinal)} agora + ${BRL(p.resto)} na entrega`,"",`Validade: ${cfg.val||7} dias.`);
+  if(p.ready)L.push(`Total${multi?" do orçamento":""}: ${BRL(p.total)}`,`• Pix: ${BRL(p.pix)}`,`• Cartão: ${p.parc}× de ${BRL(p.parcela)}`,`• Com sinal: ${BRL(p.sinal)} agora + ${BRL(p.resto)} na entrega`,"",prazoTxt(),`Validade: ${cfg.val||7} dias.`);
   L.push("A imagem é uma prévia ilustrativa; cores e proporções podem variar levemente.");const ct=empContatos("\n");if(e.nome||ct)L.push("",...[e.nome,ct,e.end].filter(Boolean));return L.join("\n");}
 function qmsg(t){$("#qMsg").textContent=t||"";}
 async function copyText(t,ok){try{await navigator.clipboard.writeText(t);qmsg(ok);}catch(e){qmsg("Não deu para copiar aqui; selecione o texto da ficha e copie pelo menu do aparelho.");}}
@@ -1831,7 +1840,7 @@ async function openQuote(o){stopLive();Q=deep(o);tapInit();if(Q.photo&&Q.photo.e
 $("#newQuote").onclick=()=>{stopLive();Q=newQuote();const last=lastSpec();if(last)Q.spec=Object.assign(DEFAULT_SPEC(),last);S.sel=null;S.openPart=null;tapInit();fotosInit();fillClient();fillSpec();renderThumb();loadAllFonts();renderLayers();renderArtTile();trackInit();go("dados");};
 
 // ================= configurações =================
-const PF={pM2v:"m2v",pM2s:"m2s",pBase:"base",pFora:"fora",pCoresInc:"coresInc",pCorExtra:"corExtra",pMin:"min",pPix:"pix",pParc:"parc",pCartao:"cartao",pSinal:"sinal",pVal:"val",pVend:"vend",pMargem:"margem",pMaxCores:"maxCores"};
+const PF={pM2v:"m2v",pM2s:"m2s",pBase:"base",pFora:"fora",pCoresInc:"coresInc",pCorExtra:"corExtra",pMin:"min",pPix:"pix",pParc:"parc",pCartao:"cartao",pSinal:"sinal",pVal:"val",pPrazo:"prazo",pVend:"vend",pMargem:"margem",pMaxCores:"maxCores"};
 function fillCfg(){fillEmp();Object.entries(PF).forEach(([id,k])=>{$("#"+id).value=cfg[k]??"";});renderGuias();renderPalTable();renderFontsCfg();}
 Object.entries(PF).forEach(([id,k])=>$("#"+id).addEventListener("input",e=>{const v=e.target.value;cfg[k]=(k==="base"||k==="vend")?v:(v===""?null:parseFloat(String(v).replace(",",".")));saveCfg();renderRule();renderWarns();}));
 function renderPalTable(){const tb=$("#palBody");tb.replaceChildren();
@@ -2074,7 +2083,7 @@ function layerRef(L,i,fmt){
   return `camada “${L.name}”`;
 }
 function pedidoRows(){const c=Q.cliente,sp=spec(),q=curQtd();
-  const ar=Q.arte||{};return [["Tapete",tapName(curTap())],["Pedido",Q.numero?`${Q.numero}, versão ${Q.versao||1} da arte`:"rascunho (orçamento ainda não salvo)"],["Arte-finalista",ar.fin||"—"],["Data do layout",ar.data?dateBR(ar.data):"—"],["Cliente",c.nome||"—"],["Quantidade",`${q} tapete${q>1?"s iguais":""}`],["Entrega desejada",dateBR(c.prazo)],["Tipo",sp.tipo||"—"],["Rebaixo",(sp.rebaixo||"—")+(sp.rebaixo==="Sim"&&sp.molde?`, molde ${sp.molde}`:"")]].concat(c.obs?[["Observações",c.obs]]:[]);}
+  const ar=Q.arte||{};return [["Tapete",tapName(curTap())],["Pedido",Q.numero?`${Q.numero}, versão ${Q.versao||1} da arte`:"rascunho (orçamento ainda não salvo)"],["Arte-finalista",ar.fin||"—"],["Data do layout",ar.data?dateBR(ar.data):"—"],["Cliente",c.nome||"—"],["Quantidade",`${q} tapete${q>1?"s iguais":""}`],["Entrega desejada",dateBR(c.prazo)],["Prazo de entrega",`até ${prazoDias()} dias`],["Tipo",sp.tipo||"—"],["Rebaixo",(sp.rebaixo||"—")+(sp.rebaixo==="Sim"&&sp.molde?`, molde ${sp.molde}`:"")]].concat(c.obs?[["Observações",c.obs]]:[]);}
 function tapeteRows(){const sp=spec(),f=fieldRectCm(),a=analyze(sp.w,sp.h);
   const r=[["Tamanho final",`${fmtCm(sp.w)} × ${fmtCm(sp.h)} cm (${fmtCm(sp.w*10)} × ${fmtCm(sp.h*10)} mm)`],["Borda flex",`${fmtCm(f.fx)} cm, ${colorName(sp.flex)}`]];
   if(sp.intOn)r.push(["Borda interna",`${fmtCm(f.ix)} cm, ${colorName(sp.int)}`]);
