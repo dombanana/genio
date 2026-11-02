@@ -528,7 +528,7 @@ html,body{overscroll-behavior-y:none}
         <div class="tap-tabs" id="tapTabs" role="group" aria-label="Tapetes deste orçamento"></div>
         <div class="fields tap-meta">
           <div class="field wide2"><label for="tapNome">Nome deste tapete</label><input id="tapNome" autocomplete="off" placeholder="Ex.: Entrada principal"></div>
-          <div class="field"><label for="tapCard">Cartão na loja</label><select id="tapCard"><option value="1">Cartão 1</option><option value="2">Cartão 2</option><option value="3">Cartão 3</option><option value="4">Cartão 4</option><option value="5">Cartão 5</option><option value="6">Cartão 6</option></select></div>
+          <div class="field"><label for="tapCard">Cartão na loja</label><select id="tapCard"><option value="0">Sem cartão (postal)</option><option value="1">Cartão 1</option><option value="2">Cartão 2</option><option value="3">Cartão 3</option><option value="4">Cartão 4</option><option value="5">Cartão 5</option><option value="6">Cartão 6</option></select></div>
           <div class="field"><label for="tapQtd">Quantidade</label><input id="tapQtd" type="number" inputmode="numeric" min="1" max="999" value="1"></div>
           <div class="field" style="justify-content:flex-end"><button class="btn ghost" id="tapDel" type="button" hidden>Tirar este tapete</button></div>
         </div>
@@ -2635,15 +2635,15 @@ function setTapete(i,quiet){tapInit();if(!Q.tapetes[i])return;Q.tapetes[Q.ti].sp
   for(const k of ["logo","tapete","local"])if(UND[k])UND[k]={h:[],last:PARTS[k].get(),t:0};renderParts();renderBar();}
 // com um tapete ativo trocado só por um instante (preço, texto e prévia de cada tapete)
 function withTap(T,fn){tapInit();const i=Q.tapetes.indexOf(T);if(i<0)return fn();const s0=Q.spec,t0=Q.ti;Q.tapetes[t0].spec=s0;Q.ti=i;Q.spec=T.spec;try{return fn();}finally{Q.ti=t0;Q.spec=s0;}}
-function addTapete(){tapInit();if(Q.tapetes.length>=6){alert6();return;}Q.tapetes[Q.ti].spec=Q.spec;const src=curTap(),n=Q.tapetes.length+1,T={id:uid(),nome:`Tapete ${n}`,qtd:1,spec:deep(src.spec)};
+function addTapete(){tapInit();Q.tapetes[Q.ti].spec=Q.spec;const src=curTap(),n=Q.tapetes.length+1,T={id:uid(),nome:`Tapete ${n}`,qtd:1,spec:deep(src.spec)};
   T.spec.layers.forEach(l=>{const old=l.id;l.id=uid();void old;});Q.tapetes.push(T);if(typeof cardsInit==="function")cardsInit();if(MF(src.id))Q.matFloors[T.id]=Object.assign({},MF(src.id));setTapete(Q.tapetes.length-1);track("tapete");
   setTimeout(()=>{const e=$("#tapNome");if(e){e.focus();e.select();}},60);}
 function removeTapete(i){tapInit();if(Q.tapetes.length<2)return;const T=Q.tapetes[i];Q.tapetes.splice(i,1);delete Q.matFloors[T.id];
   (Q.fotos||[]).forEach(f=>{if(f.tid===T.id)f.tid=Q.tapetes[0].id;});Q.ti=Math.min(Q.ti,Q.tapetes.length-1);Q.spec=null;Q.spec=Q.tapetes[Q.ti].spec;setTapete(Q.ti);renderFotos();}
 function renderTapTabs(){const b=$("#tapTabs");if(!b)return;tapInit();if(typeof cardsInit==="function")cardsInit();b.replaceChildren();
-  Q.tapetes.forEach((T,i)=>{const t=document.createElement("button");t.type="button";t.className="tap-tab";t.setAttribute("aria-pressed",String(i===Q.ti));t.textContent=`${T.card?T.card+" · ":""}${tapName(T)}`;t.title=T.card?`Cartão ${T.card} na loja`:"";t.onclick=()=>{if(i!==Q.ti)setTapete(i);};b.appendChild(t);});
-  const add=document.createElement("button");add.type="button";add.className="tap-tab add";add.textContent="+ Novo tapete";add.title="Cria outro tapete, começando como cópia deste";add.onclick=addTapete;add.hidden=Q.tapetes.length>=6;b.appendChild(add);
-  const T=curTap();if(typeof cardsInit==="function"){cardsInit();const cs=$("#tapCard");if(cs){[...cs.options].forEach(o=>{const u=Q.tapetes.find(x=>x.card===+o.value);o.textContent=`Cartão ${o.value}${u&&u!==T?` (agora: ${tapName(u)})`:""}`;});cs.value=String(T.card);}}
+  Q.tapetes.forEach((T,i)=>{const t=document.createElement("button");t.type="button";t.className="tap-tab";t.setAttribute("aria-pressed",String(i===Q.ti));t.textContent=`${T.card>=1?T.card+" · ":""}${tapName(T)}`;t.title=T.card>=1?`Cartão ${T.card} na loja`:"Sem cartão numerado";t.onclick=()=>{if(i!==Q.ti)setTapete(i);};b.appendChild(t);});
+  const add=document.createElement("button");add.type="button";add.className="tap-tab add";add.textContent="+ Novo tapete";add.title="Cria outro tapete, começando como cópia deste";add.onclick=addTapete;b.appendChild(add);
+  const T=curTap();if(typeof cardsInit==="function"){cardsInit();const cs=$("#tapCard");if(cs){[...cs.options].forEach(o=>{const u=Q.tapetes.find(x=>x.card===+o.value);o.textContent=`Cartão ${o.value}${u&&u!==T?` (agora: ${tapName(u)})`:""}`;});cs.value=String(T.card>=1?T.card:0);}}
   $("#tapNome").value=T.nome||"";$("#tapQtd").value=T.qtd||1;$("#tapDel").hidden=Q.tapetes.length<2;}
 $("#tapNome").addEventListener("input",e=>{curTap().nome=e.target.value;const tb=$$("#tapTabs .tap-tab")[Q.ti];if(tb)tb.textContent=tapName(curTap());renderParts();});
 $("#tapNome").addEventListener("change",()=>{track("tapete");renderFotos();});
@@ -2651,7 +2651,7 @@ $("#tapQtd").addEventListener("input",e=>{curTap().qtd=Math.max(1,parseInt(e.tar
 $("#tapCard").addEventListener("change",e=>{setCardOf(curTap(),+e.target.value);renderTapTabs();track("tapete");});
 $("#tapDel").onclick=()=>removeTapete(Q.ti);
 // seletor "qual tapete nesta foto"
-function tapOptions(sel,cur){sel.replaceChildren();Q.tapetes.forEach(T=>{const o=document.createElement("option");o.value=T.id;o.textContent=`${T.card?"Cartão "+T.card+" · ":""}${tapName(T)}`;sel.appendChild(o);});sel.value=cur||Q.tapetes[0].id;}
+function tapOptions(sel,cur){sel.replaceChildren();Q.tapetes.forEach(T=>{const o=document.createElement("option");o.value=T.id;o.textContent=`${T.card>=1?"Cartão "+T.card+" · ":""}${tapName(T)}`;sel.appendChild(o);});sel.value=cur||Q.tapetes[0].id;}
 function fotoSetTap(i,tid){fotosSync();const f=Q.fotos[i];if(!f)return;if(i===Q.fi&&f.others&&f.others[tid]&&typeof switchMat==="function"){switchMat(tid);renderFotos();return;}f.tid=tid;Q.preview=null;if(i===Q.fi){const k=Q.tapetes.findIndex(t=>t.id===tid);if(k>=0&&k!==Q.ti)setTapete(k);applyMatFloor();if(S.view==="local"){layout();syncSliders();renderSizeBar();schedule();}}renderFotos();renderFotoTabs();}
 // orçamento: soma de todos os tapetes
 function grandPrice(){tapInit();const ps=Q.tapetes.map(T=>({T,p:withTap(T,()=>computePrice())}));if(ps.some(x=>!x.p.ready))return {ready:false,ps};
@@ -2819,10 +2819,11 @@ async function cardIdentify(quadN,patchFn){const T=gTemplates(),sc=[];
     for(let n=1;n<=6;n++){const t=T[n];let v=0;for(let i=0;i<p.length;i++)v+=p[i]*t[i];sc.push({n,quad:q,ncc:v/p.length});}}
   sc.sort((a,b)=>b.ncc-a.ncc);const b=sc[0],c=sc[1];return b&&b.ncc>0.5&&(!c||b.ncc-c.ncc>0.06)?{n:b.n,quad:b.quad,ncc:b.ncc,card:b.n}:null;}
 // cada tapete do orçamento fica ligado a um cartão (1 a 6)
-function cardsInit(){tapInit();const used=new Set();Q.tapetes.forEach(T=>{if(T.card>=1&&T.card<=6&&!used.has(T.card))used.add(T.card);else T.card=null;});
+// card -1 = tapete sem cartão numerado (usa o cartão-postal universal); a partir do 7º tapete também fica sem
+function cardsInit(){tapInit();const used=new Set();Q.tapetes.forEach(T=>{if(T.card===-1)return;if(T.card>=1&&T.card<=6&&!used.has(T.card))used.add(T.card);else T.card=null;});
   Q.tapetes.forEach(T=>{if(!T.card){for(let n=1;n<=6;n++)if(!used.has(n)){T.card=n;used.add(n);break;}}});}
 const tapByCard=n=>{cardsInit();return Q.tapetes.find(T=>T.card===n)||null;};
-function setCardOf(T,n){cardsInit();const o=Q.tapetes.find(x=>x.card===n);if(o&&o!==T)o.card=T.card;T.card=n;renderTapTabs();renderFotos();}
+function setCardOf(T,n){cardsInit();if(!(n>=1&&n<=6)){T.card=-1;renderTapTabs();renderFotos();return;}const o=Q.tapetes.find(x=>x.card===n);if(o&&o!==T)o.card=T.card>=1?T.card:-1;T.card=n;renderTapTabs();renderFotos();}
 function poseFromCard(id,T){const pl=refPlane(id.quad,{w:GCARD.w,h:GCARD.h},Q.photo.w,Q.photo.h,[GCARD.w,GCARD.h]);if(!pl)return null;
   return {cam:POSE_NEW().cam,mat:null,th:0,plane:Object.assign({H:pl.H},MF(T.id)||{x:0,y:0,th:0}),ref:{quad:id.quad.map(p=>[...p]),xs:GCARD.w,ys:GCARD.h,card:id.n}};}
 // coloca na foto ativa os tapetes dos cartões achados; o primeiro fica selecionado, os outros ficam desenhados
@@ -3080,11 +3081,22 @@ const MODELOS_KIT=[
     {nome:"Recepção",qtd:1,spec:mS(120,60,[mT("NOME DA CLÍNICA",8,-5),mT("RECEPÇÃO",4.5,10,{bold:false})],{int:"azul",fundo:"marinho",flex:"marinho"})},
     {nome:"Consultórios",qtd:3,spec:mS(60,40,[mT("CONSULTÓRIO",4.5,0)],{intOn:false,fundo:"marinho",flex:"marinho"})},
     {nome:"Banheiro",qtd:1,spec:mS(60,40,[mT("BANHEIRO",5,0)],{intOn:false,fundo:"marinho",flex:"marinho"})}]},
-  {id:"k-condominio",nome:"Kit condomínio",desc:"Entrada social, halls, elevadores e salão de festas",tapetes:()=>[
-    {nome:"Entrada social",qtd:1,spec:mS(150,120,[mT("NOME DO CONDOMÍNIO",9,-8),mT("BEM-VINDO",6,12,{bold:false})])},
-    {nome:"Hall dos elevadores",qtd:2,spec:mS(120,60,[mT("NOME DO CONDOMÍNIO",6.5,0)])},
-    {nome:"Elevadores",qtd:2,spec:mS(60,40,[mT("NOME DO CONDOMÍNIO",3.5,0)],{intOn:false})},
-    {nome:"Salão de festas",qtd:1,spec:mS(120,60,[mT("SALÃO DE FESTAS",7.5,0)])}]}];
+  {id:"k-condominio",nome:"Kit condomínio",desc:"Portaria, entradas, halls, elevadores e áreas comuns",tapetes:()=>{const P=(n,q,w,h,t,o)=>({nome:n,qtd:q,spec:mS(w,h,t,o)}),S1=(t,sz)=>[mT(t,sz,0)],N={intOn:false};return [
+    P("Entrada social",1,150,120,[mT("NOME DO CONDOMÍNIO",9,-8),mT("BEM-VINDO",6,12,{bold:false})]),
+    P("Portaria",1,60,40,S1("PORTARIA",5),N),
+    P("Entrada de serviço",1,120,60,S1("ENTRADA DE SERVIÇO",6)),
+    P("Hall social (térreo)",1,120,60,S1("NOME DO CONDOMÍNIO",6.5)),
+    P("Hall dos andares",10,120,60,S1("NOME DO CONDOMÍNIO",6.5)),
+    P("Elevador social",1,60,40,S1("NOME DO CONDOMÍNIO",3.5),N),
+    P("Elevador de serviço",1,60,40,S1("SERVIÇO",5),N),
+    P("Garagem (acesso aos elevadores)",2,120,60,S1("GARAGEM",7.5)),
+    P("Salão de festas",1,120,60,S1("SALÃO DE FESTAS",7.5)),
+    P("Espaço gourmet",1,120,60,S1("ESPAÇO GOURMET",7.5)),
+    P("Academia",1,120,60,S1("ACADEMIA",7.5)),
+    P("Salão de jogos",1,60,40,S1("SALÃO DE JOGOS",4),N),
+    P("Brinquedoteca",1,60,40,S1("BRINQUEDOTECA",4),N),
+    P("Vestiários da piscina",2,60,40,S1("VESTIÁRIO",5),N),
+    P("Administração",1,60,40,S1("ADMINISTRAÇÃO",4),N)];}}];
 // guardados no aparelho (IndexedDB, junto da sessão), para caber logos
 async function modelosMeus(){const db=await DB.open();if(!db)return [];return new Promise(res=>{try{const t=db.transaction("sessao").objectStore("sessao").getAll();t.onsuccess=()=>res((t.result||[]).filter(o=>o.id&&o.id.startsWith("m:")).sort((a,b)=>(b.criado||"").localeCompare(a.criado||"")));t.onerror=()=>res([]);}catch(e){res([]);}});}
 async function modeloPut(o){const db=await DB.open();if(!db)return false;return new Promise(res=>{try{const t=db.transaction("sessao","readwrite");t.objectStore("sessao").put(o);t.oncomplete=()=>res(true);t.onerror=()=>res(false);}catch(e){res(false);}});}
@@ -3096,7 +3108,7 @@ function aplicarModelo(lista,nome){const T=lista.map(t=>{const sp=deep(t.spec);(
   const map=c=>{if(!c||palette.some(p=>p.id===c))return c;const o=findColor(c);return o?nearestPal(rgbOf(o.hex))||c:palette[0].id;};T.forEach(t=>specColorIds(t.spec,map));
   Q.tapetes=T;Q.ti=0;Q.spec=T[0].spec;Q.matFloors={};Q.modelo=nome;if(typeof cardsInit==="function")cardsInit();S.sel=null;S.openPart="logo";Q.feito={};
   fillSpec();buildBase();const fit=()=>{T.forEach(fitTexts);buildBase();renderArtTile();trackInit();};fit();loadAllFonts().then(fit);renderLayers();renderArtTile();renderSpecSum();renderTapTabs();trackInit();renderParts();renderModelos();
-  const m=$("#modMsg");if(m)m.textContent=`Modelo “${nome}” aplicado: ${T.length} tapete${T.length>1?"s":""}. Agora troque os textos e coloque o logo do cliente em cada um.`;
+  const m=$("#modMsg");if(m)m.textContent=`Modelo “${nome}” aplicado: ${T.length} tapete${T.length>1?"s":""} (${T.reduce((a,t)=>a+(t.qtd||1),0)} peças). Agora troque os textos e coloque o logo do cliente. Ajuste as quantidades em cada tapete (parte 2) e tire os que o cliente não quiser.${T.length>6?" Os cartões numerados vão do 1 ao 6: os outros tapetes usam o cartão-postal nas fotos.":""}`;
   setTimeout(()=>{const s=$("#partLogo");if(s)s.scrollIntoView({behavior:"smooth",block:"start"});},80);}
 let MODTK=0;
 // texto do modelo cabe no tapete: reduz a letra até caber em 90% da largura e da altura úteis
