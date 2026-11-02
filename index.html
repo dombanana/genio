@@ -221,6 +221,14 @@ details summary{cursor:pointer;font-size:13px;color:var(--muted);font-weight:600
   #v-arte > .col:first-child{display:contents}
   .art-wrap{position:sticky;top:calc(env(safe-area-inset-top,0px) + var(--topH,60px));z-index:8;background:var(--bg);padding-block:4px;align-self:start}
 }
+
+.cut-vals{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px}
+.cut-vals div{background:var(--surface-2);border-radius:10px;padding:8px 10px;display:flex;flex-direction:column;gap:2px}
+.cut-vals span{font-size:12px;color:var(--muted);font-weight:600}
+.cut-vals b{font-size:16px;font-variant-numeric:tabular-nums}
+.cut-report{display:flex;flex-direction:column;gap:6px}
+.cut-row{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:14px}
+.warn-t{color:var(--warn);font-size:13px}
 </style>
 <div class="top">
   <div class="brand"><span class="eyebrow">Gênio do Capacho</span><b>Vendas</b></div>
@@ -329,6 +337,7 @@ details summary{cursor:pointer;font-size:13px;color:var(--muted);font-weight:600
         <button class="btn gold" id="qShare" type="button">Enviar imagem</button>
         <button class="btn ghost" id="qCopy" type="button">Copiar texto para WhatsApp</button>
         <button class="btn ghost" id="qArt" type="button">Baixar arte (SVG)</button>
+        <button class="btn" id="qCut" type="button">Arquivo de corte</button>
         <button class="btn ghost" data-go="local">← Ajustar prévia</button>
       </div>
       <p class="msg" id="qMsg" role="status"></p>
@@ -403,6 +412,12 @@ details summary{cursor:pointer;font-size:13px;color:var(--muted);font-weight:600
           <div class="field"><label for="pMargem">Margem de segurança da arte (cm)</label><input id="pMargem" type="number" inputmode="decimal" min="0" max="20" step="0.5"></div>
           <div class="field"><label for="pMaxCores">Máximo de cores no logo</label><input id="pMaxCores" type="number" inputmode="numeric" min="1" max="8" step="1"></div>
         </div>
+      </section>
+      <section class="panel" aria-labelledby="hCfgMach">
+        <div class="row between"><h2 id="hCfgMach">Máquinas de corte</h2><button class="btn ghost" id="machReset" type="button">Voltar aos valores iniciais</button></div>
+        <p class="hint">Valores iniciais para borracha de capacho. Corte a peça de teste de encaixe (no Arquivo de corte), meça e ajuste aqui. Compensação = quanto a ferramenta tira de material; folga = espaço total entre a peça e o buraco onde ela encaixa.</p>
+        <div class="table-wrap" style="overflow-x:auto"><table class="cfg-table" style="min-width:620px">
+          <thead><tr><th>Máquina</th><th>Compensação (mm)</th><th>Folga (mm)</th><th>Traço mínimo (mm)</th><th>Peça/furo mínimo (mm)</th></tr></thead><tbody id="machBody"></tbody></table></div>
       </section>
       <section class="panel" aria-labelledby="hCfgFont">
         <h2 id="hCfgFont">Fontes do catálogo</h2>
@@ -503,6 +518,25 @@ details summary{cursor:pointer;font-size:13px;color:var(--muted);font-weight:600
       <div class="row between"><button class="btn ghost" id="leBack3" type="button">← Recorte</button><button class="btn ok" id="leUse" type="button">Usar no tapete</button></div>
     </div>
     <button class="btn ghost" id="leCancel" type="button">Cancelar</button>
+  </div>
+</div>
+
+<!-- ARQUIVO DE CORTE -->
+<div class="sheet" id="cutSheet" role="dialog" aria-modal="true" aria-labelledby="hCut" hidden>
+  <div class="sheet-in">
+    <div class="row between"><h2 id="hCut">Arquivo de corte</h2><button class="btn ghost" id="cutClose" type="button">Fechar</button></div>
+    <div class="fields">
+      <div class="field"><label for="cutMachine">Máquina</label><select id="cutMachine"></select></div>
+      <div class="field"><label for="cutFmt">Tipo de arquivo</label><select id="cutFmt"></select></div>
+    </div>
+    <div class="cut-vals" id="cutVals"></div>
+    <p class="hint" id="cutNote"></p>
+    <label class="switch"><input type="checkbox" id="cutMirror">Espelhar (cortar pelo verso da borracha)</label>
+    <div id="cutStage" style="display:flex;justify-content:center"><canvas id="cutCanvas" style="border-radius:8px;background:var(--stage);max-width:100%"></canvas></div>
+    <div class="cut-report" id="cutReport"></div>
+    <p class="msg" id="cutMsg" role="status"></p>
+    <div class="row between"><button class="btn ghost" id="cutTest" type="button">Baixar peça de teste de encaixe</button><button class="btn ok" id="cutDl" type="button" disabled>Baixar arquivo de corte</button></div>
+    <p class="notice">Uma camada por cor e parte, em milímetros e tamanho real. Textos já saem em curvas. O fundo sai vazado com o mesmo contorno das peças, já com a folga e a compensação da máquina escolhida.</p>
   </div>
 </div>
 
@@ -676,8 +710,8 @@ function drawTextLayer(ctx,L){
   g.lines.forEach((s,i)=>{
     const lw=g.widths[i],x0=L.align==="left"?-g.maxW/2:L.align==="right"?g.maxW/2-lw:-lw/2,y=top+i*g.lh+g.capH;
     const draw=(fn)=>{if(!g.sp){fn(s,x0,y);return;}let x=x0;for(const ch of s){fn(ch,x,y);x+=ctx.measureText(ch).width+g.sp;}};
-    if(L.outlineOn&&g.o>0){ctx.strokeStyle=colorOf(L.outlineColor);ctx.lineWidth=2*g.o;draw((t,x,yy)=>ctx.strokeText(t,x,yy));}
-    ctx.fillStyle=colorOf(L.color);draw((t,x,yy)=>ctx.fillText(t,x,yy));
+    if(L.outlineOn&&g.o>0){ctx.strokeStyle=paint("art",L.outlineColor);ctx.lineWidth=2*g.o;draw((t,x,yy)=>ctx.strokeText(t,x,yy));}
+    ctx.fillStyle=paint("art",L.color);draw((t,x,yy)=>ctx.fillText(t,x,yy));
   });
   return g;
 }
@@ -692,14 +726,14 @@ function logoLabels(L){
 }
 function logoCanvas(L){
   const rec=logoLabels(L);if(!rec.ready)return null;
-  const key=JSON.stringify([L.map,L.single,L.neg,palette.map(p=>p.hex)]);if(rec.col.key===key)return rec.col.cv;
+  const key=JSON.stringify([L.map,L.single,L.neg,palette.map(p=>p.hex),CUTMODE?CUTMODE.id:0]);if(rec.col.key===key)return rec.col.cv;
   const cv=document.createElement("canvas");cv.width=rec.w;cv.height=rec.h;const x=cv.getContext("2d"),id=x.createImageData(rec.w,rec.h),o=id.data;
-  const cols=(L.map||[]).map(m=>m?rgbOf(colorOf(m)):null),one=L.single?rgbOf(colorOf(L.single)):null,neg=L.neg&&L.neg.on;
-  for(let i=0;i<rec.w*rec.h;i++){const k=rec.idx[i];if(!k)continue;const c=neg?[0,0,0]:one||cols[k-1];if(!c)continue;o[i*4]=c[0];o[i*4+1]=c[1];o[i*4+2]=c[2];o[i*4+3]=rec.al[i];}
+  const cols=(L.map||[]).map(m=>m?rgbOf(paint("art",m)):null),one=L.single?rgbOf(paint("art",L.single)):null,neg=L.neg&&L.neg.on;
+  for(let i=0;i<rec.w*rec.h;i++){const k=rec.idx[i];if(!k)continue;const c=neg?[0,0,0]:one||cols[k-1];if(!c)continue;o[i*4]=c[0];o[i*4+1]=c[1];o[i*4+2]=c[2];o[i*4+3]=CUTMODE?(rec.al[i]>=128?255:0):rec.al[i];}
   x.putImageData(id,0,0);
   let out=cv;
   if(neg){const pad=Math.round((L.neg.padCm||2)/L.widthCm*rec.w);const n2=document.createElement("canvas");n2.width=rec.w+2*pad;n2.height=rec.h+2*pad;const y=n2.getContext("2d");
-    y.fillStyle=colorOf(L.neg.color);rr(y,0,0,n2.width,n2.height,pad*0.6);y.fill();y.globalCompositeOperation="destination-out";y.drawImage(cv,pad,pad);out=n2;}
+    y.fillStyle=paint("art",L.neg.color);rr(y,0,0,n2.width,n2.height,pad*0.6);y.fill();y.globalCompositeOperation="destination-out";y.drawImage(cv,pad,pad);out=n2;}
   rec.col={key,cv:out};return out;
 }
 function layerSizeCm(L){
@@ -708,20 +742,22 @@ function layerSizeCm(L){
   if(L.neg&&L.neg.on){w+=2*(L.neg.padCm||2);h+=2*(L.neg.padCm||2);}return [w,h];
 }
 function fieldRectCm(){const sp=spec(),fx=Math.min(sp.flexCm,sp.h/3),ix=sp.intOn?Math.min(sp.intCm,sp.h/4):0;return {fx,ix,w:sp.w-2*fx-2*ix,h:sp.h-2*fx-2*ix};}
+let CUTMODE=null;
+const paint=(role,pid)=>CUTMODE?CUTMODE.code(role,pid):colorOf(pid);
 function drawMatInto(c,m,withNoise){
   const sp=spec(),w=sp.w*PXC,h=sp.h*PXC,r=0.015*PX;
-  c.save();c.shadowColor="rgba(0,0,0,.6)";c.shadowBlur=m*0.7;c.shadowOffsetY=m*0.12;rr(c,m,m,w,h,r);c.fillStyle="#000";c.fill();c.restore();
-  rr(c,m,m,w,h,r);c.fillStyle=colorOf(sp.flex);c.fill();
-  c.save();rr(c,m+1,m+1,w-2,h-2,r);c.strokeStyle="rgba(255,255,255,.10)";c.lineWidth=2;c.stroke();c.restore();
+  if(!CUTMODE){c.save();c.shadowColor="rgba(0,0,0,.6)";c.shadowBlur=m*0.7;c.shadowOffsetY=m*0.12;rr(c,m,m,w,h,r);c.fillStyle="#000";c.fill();c.restore();}
+  rr(c,m,m,w,h,r);c.fillStyle=paint("flex",sp.flex);c.fill();
+  if(!CUTMODE){c.save();rr(c,m+1,m+1,w-2,h-2,r);c.strokeStyle="rgba(255,255,255,.10)";c.lineWidth=2;c.stroke();c.restore();}
   const f=fieldRectCm(),fx=f.fx*PXC,ix=f.ix*PXC;
   c.save();rr(c,m,m,w,h,r);c.clip();
-  if(ix>0){c.fillStyle=colorOf(sp.int);c.fillRect(m+fx,m+fx,w-2*fx,h-2*fx);}
-  c.fillStyle=colorOf(sp.fundo);c.fillRect(m+fx+ix,m+fx+ix,w-2*fx-2*ix,h-2*fx-2*ix);
+  if(ix>0){c.fillStyle=paint("int",sp.int);c.fillRect(m+fx,m+fx,w-2*fx,h-2*fx);}
+  c.fillStyle=paint("fundo",sp.fundo);c.fillRect(m+fx+ix,m+fx+ix,w-2*fx-2*ix,h-2*fx-2*ix);
   c.beginPath();c.rect(m+fx+ix,m+fx+ix,w-2*fx-2*ix,h-2*fx-2*ix);c.clip();
   sp.layers.forEach(L=>{
     c.save();c.translate(m+w/2+L.x*PXC,m+h/2+L.y*PXC);c.rotate((L.rot||0)*DEG);
     if(L.type==="text")drawTextLayer(c,L);
-    else{const cv=logoCanvas(L);if(cv){const [lw,lh]=layerSizeCm(L);c.drawImage(cv,-lw*PXC/2,-lh*PXC/2,lw*PXC,lh*PXC);}}
+    else{const cv=logoCanvas(L);if(cv){const [lw,lh]=layerSizeCm(L);c.imageSmoothingEnabled=!CUTMODE;c.drawImage(cv,-lw*PXC/2,-lh*PXC/2,lw*PXC,lh*PXC);c.imageSmoothingEnabled=true;}}
     c.restore();});
   c.restore();
   if(withNoise){c.save();rr(c,m,m,w,h,r);c.clip();c.fillStyle=c.createPattern(noise,"repeat");c.fillRect(m,m,w,h);c.restore();}
@@ -1362,7 +1398,7 @@ $("#newQuote").onclick=()=>{stopLive();Q=newQuote();const last=store.get("gc.las
 
 // ================= configurações =================
 const PF={pM2v:"m2v",pM2s:"m2s",pBase:"base",pFora:"fora",pCoresInc:"coresInc",pCorExtra:"corExtra",pMin:"min",pPix:"pix",pParc:"parc",pCartao:"cartao",pSinal:"sinal",pVal:"val",pVend:"vend",pMargem:"margem",pMaxCores:"maxCores"};
-function fillCfg(){Object.entries(PF).forEach(([id,k])=>{$("#"+id).value=cfg[k]??"";});renderPalTable();renderFontsCfg();}
+function fillCfg(){Object.entries(PF).forEach(([id,k])=>{$("#"+id).value=cfg[k]??"";});renderPalTable();renderFontsCfg();renderMachinesCfg();}
 Object.entries(PF).forEach(([id,k])=>$("#"+id).addEventListener("input",e=>{const v=e.target.value;cfg[k]=(k==="base"||k==="vend")?v:(v===""?null:parseFloat(String(v).replace(",",".")));saveCfg();renderRule();renderWarns();}));
 function renderPalTable(){const tb=$("#palBody");tb.replaceChildren();
   palette.forEach((c,i)=>{const tr=document.createElement("tr");tr.innerHTML=`<td><input type="color" aria-label="Cor de tela"></td><td><input aria-label="Nome"></td><td><input aria-label="Código" placeholder="código"></td><td><input type="number" inputmode="decimal" min="0" step="1" aria-label="Estoque em metros"></td><td><input type="checkbox" aria-label="Ativa"></td><td><button class="mini" type="button" aria-label="Remover cor">×</button></td>`;
@@ -1392,6 +1428,168 @@ async function go(v){
 $$("[data-go]").forEach(b=>b.addEventListener("click",()=>{if(b.dataset.go==="orcamento"&&S.view==="local"){$("#toQuote").click();return;}go(b.dataset.go);}));
 $("#toQuote").onclick=async()=>{if(S.live){msg("Fotografe primeiro (botão redondo) para gerar o orçamento.");return;}msg("Gerando a imagem…");const url=await buildPreview().catch(()=>null);msg("");
   if(!url){msg("Não deu para gerar a imagem. Confira se o tapete está visível na foto.");return;}Q.preview=url;go("orcamento");};
+
+
+// ================= ARQUIVO DE CORTE (sem IA) =================
+// Máquinas: valores iniciais para borracha de capacho. Calibrar com a peça de teste e ajustar em Configurações.
+const DEFAULT_MACHINES=[
+  {id:"faca",nome:"Mesa CNC com faca oscilante",kerf:0,folga:0.3,traco:5,peca:8,fmt:"dxf",nota:"A faca não tira material: só a folga de encaixe entra no cálculo."},
+  {id:"laser",nome:"Laser CO₂",kerf:0.3,folga:0.2,traco:3,peca:5,fmt:"dxf",nota:"O laser queima cerca de 0,3 mm: o contorno é deslocado para compensar."},
+  {id:"agua",nome:"Jato d'água",kerf:0.9,folga:0.3,traco:4,peca:6,fmt:"dxf",nota:"O jato tira cerca de 0,9 mm: o contorno é deslocado para compensar."},
+  {id:"arrasto",nome:"Plotter de recorte (faca de arrasto)",kerf:0,folga:0.1,traco:2,peca:3,fmt:"plt",nota:"Para borracha fina ou vinil. A faca não tira material."},
+  {id:"pers",nome:"Personalizada",kerf:0,folga:0.3,traco:4,peca:6,fmt:"svg",nota:"Valores livres."}
+];
+const FORMATS={svg:"SVG (Corel, Illustrator, Inkscape)",dxf:"DXF (CAD, mesa CNC, laser)",plt:"PLT / HPGL (plotter de recorte)",pdf:"PDF (vetorial)"};
+if(!cfg.machines)cfg.machines=deep(DEFAULT_MACHINES);if(!cfg.machineSel)cfg.machineSel="faca";if(!cfg.fileFmt)cfg.fileFmt="dxf";if(cfg.mirror==null)cfg.mirror=false;
+const machine=()=>cfg.machines.find(m=>m.id===cfg.machineSel)||cfg.machines[0];
+
+const CODES=[[255,0,0],[0,200,0],[0,0,255],[255,220,0],[255,0,255],[0,230,230],[140,0,0],[0,110,0],[0,0,130],[140,140,0],[130,0,130],[0,130,130],[255,140,0],[140,255,0],[0,140,255],[255,0,140],[90,90,90],[200,200,200]];
+const ROLE_NAME={flex:"Borda flex",int:"Borda interna",fundo:"Fundo",art:"Arte"};
+const hex2=(r,g,b)=>"#"+[r,g,b].map(v=>v.toString(16).padStart(2,"0")).join("");
+
+// 1) desenha o tapete com uma cor-código por parte e lê a partição
+function buildPartition(){
+  const sp=spec(),wmm=sp.w*10,hmm=sp.h*10,ppmm=Math.min(3,Math.sqrt(9e6/(wmm*hmm))),Wp=Math.round(wmm*ppmm),Hp=Math.round(hmm*ppmm);
+  const regions=[];const codeOf=(role,pid)=>{const key=role+":"+pid;let r=regions.find(x=>x.key===key);if(!r){if(regions.length>=CODES.length)return hex2(...CODES[CODES.length-1]);r={key,role,pid,code:CODES[regions.length]};regions.push(r);}return hex2(...r.code);};
+  const cv=document.createElement("canvas");cv.width=Wp;cv.height=Hp;const c=cv.getContext("2d",{willReadFrequently:true});
+  CUTMODE={id:Date.now(),code:codeOf};logoCache.forEach(r=>{if(r.col)r.col={};});
+  try{const k=ppmm*10/PXC;c.setTransform(k,0,0,k,0,0);drawMatInto(c,0,false);}finally{CUTMODE=null;logoCache.forEach(r=>{if(r.col)r.col={};});}
+  const d=c.getImageData(0,0,Wp,Hp).data,n=Wp*Hp,lab=new Uint8Array(n),K=regions.length;
+  for(let i=0;i<n;i++){if(d[i*4+3]<128){lab[i]=255;continue;}let best=0,bd=1e9;for(let k=0;k<K;k++){const cc=regions[k].code,dr=d[i*4]-cc[0],dg=d[i*4+1]-cc[1],db=d[i*4+2]-cc[2],dd=dr*dr+dg*dg+db*db;if(dd<bd){bd=dd;best=k;}}lab[i]=best;}
+  return {sp,wmm,hmm,ppmm,Wp,Hp,lab,regions};
+}
+// 2) limpa peças e furos menores que o mínimo (vão para a cor vizinha)
+function cleanSmall(P,minAreaPx,realPx){
+  const {Wp:w,Hp:h,lab}=P,n=w*h,seen=new Uint8Array(n),q=new Int32Array(n);let fixed=0;
+  for(let s=0;s<n;s++){if(seen[s]||lab[s]===255)continue;const L=lab[s];let qh=0,qt=0;q[qt++]=s;seen[s]=1;const nb=new Map();
+    while(qh<qt){const p=q[qh++],x=p%w,y=(p/w)|0;
+      for(const nn of [x>0?p-1:-1,x<w-1?p+1:-1,y>0?p-w:-1,y<h-1?p+w:-1]){if(nn<0)continue;const l2=lab[nn];if(l2===L){if(!seen[nn]){seen[nn]=1;q[qt++]=nn;}}else if(l2!==255)nb.set(l2,(nb.get(l2)||0)+1);}}
+    if(qt<minAreaPx&&nb.size){let best=-1,bc=-1;nb.forEach((v,k)=>{if(v>bc){bc=v;best=k;}});for(let i=0;i<qt;i++)lab[q[i]]=best;if(qt>=realPx)fixed++;}}
+  return fixed;
+}
+// 3) traços finos: distância até a borda da própria parte (chanfro), abertura com raio r
+function thinMap(P,rPx){
+  const {Wp:w,Hp:h,lab}=P,n=w*h,D=new Float32Array(n),INF=1e9;
+  for(let i=0;i<n;i++){const L=lab[i];if(L===255){D[i]=0;continue;}const x=i%w,y=(i/w)|0;
+    const edge=(x===0||lab[i-1]!==L)||(x===w-1||lab[i+1]!==L)||(y===0||lab[i-w]!==L)||(y===h-1||lab[i+w]!==L);D[i]=edge?0.5:INF;}
+  const pass=(i,j,c)=>{if(lab[j]===lab[i]&&D[j]+c<D[i])D[i]=D[j]+c;};
+  for(let y=0;y<h;y++)for(let x=0;x<w;x++){const i=y*w+x;if(D[i]===0)continue;if(x>0)pass(i,i-1,1);if(y>0){pass(i,i-w,1);if(x>0)pass(i,i-w-1,1.414);if(x<w-1)pass(i,i-w+1,1.414);}}
+  for(let y=h-1;y>=0;y--)for(let x=w-1;x>=0;x--){const i=y*w+x;if(D[i]===0)continue;if(x<w-1)pass(i,i+1,1);if(y<h-1){pass(i,i+w,1);if(x<w-1)pass(i,i+w+1,1.414);if(x>0)pass(i,i+w-1,1.414);}}
+  // cobre o que está a até r de um ponto com folga >= r
+  const C=new Float32Array(n);for(let i=0;i<n;i++)C[i]=(lab[i]!==255&&D[i]>=rPx)?0:INF;
+  const pass2=(i,j,c)=>{if(lab[j]===lab[i]&&C[j]+c<C[i])C[i]=C[j]+c;};
+  for(let y=0;y<h;y++)for(let x=0;x<w;x++){const i=y*w+x;if(lab[i]===255)continue;if(x>0)pass2(i,i-1,1);if(y>0){pass2(i,i-w,1);if(x>0)pass2(i,i-w-1,1.414);if(x<w-1)pass2(i,i-w+1,1.414);}}
+  for(let y=h-1;y>=0;y--)for(let x=w-1;x>=0;x--){const i=y*w+x;if(lab[i]===255)continue;if(x<w-1)pass2(i,i+1,1);if(y<h-1){pass2(i,i+w,1);if(x<w-1)pass2(i,i+w+1,1.414);if(x>0)pass2(i,i+w-1,1.414);}}
+  const thin=new Uint8Array(n);const cnt=new Map();for(let i=0;i<n;i++){if(lab[i]!==255&&C[i]>rPx+0.5){thin[i]=1;cnt.set(lab[i],(cnt.get(lab[i])||0)+1);}}
+  return {thin,cnt};
+}
+// 4) contorno de cada parte: borda dos pixels -> suaviza -> simplifica -> mm -> desloca (corte + folga)
+function traceLabel(P,k){
+  const {Wp:w,Hp:h,lab}=P,ins=(x,y)=>x>=0&&y>=0&&x<w&&y<h&&lab[y*w+x]===k,W1=w+1,next=new Map();
+  const add=(ax,ay,bx,by)=>{const kk=ay*W1+ax;let a=next.get(kk);if(!a){a=[];next.set(kk,a);}a.push(by*W1+bx);};
+  for(let y=0;y<h;y++)for(let x=0;x<w;x++){if(lab[y*w+x]!==k)continue;if(!ins(x,y-1))add(x,y,x+1,y);if(!ins(x+1,y))add(x+1,y,x+1,y+1);if(!ins(x,y+1))add(x+1,y+1,x,y+1);if(!ins(x-1,y))add(x,y+1,x,y);}
+  const loops=[];for(const start of [...next.keys()]){while(next.has(start)){const pts=[];let cur=start,guard=0;
+    do{pts.push([cur%W1,(cur/W1)|0]);const a=next.get(cur);if(!a)break;const nx=a.pop();if(!a.length)next.delete(cur);cur=nx;}while(cur!==start&&++guard<2e7);if(pts.length>3)loops.push(pts);}}
+  return loops;
+}
+function smoothLoop(pts,it){let p=pts;for(let t=0;t<it;t++){const n=p.length,o=new Array(n);for(let i=0;i<n;i++){const a=p[(i-1+n)%n],b=p[i],c=p[(i+1)%n];o[i]=[(a[0]+2*b[0]+c[0])/4,(a[1]+2*b[1]+c[1])/4];}p=o;}return p;}
+function loopArea(p){let s=0;for(let i=0;i<p.length;i++){const a=p[i],b=p[(i+1)%p.length];s+=a[0]*b[1]-b[0]*a[1];}return s/2;}
+function offsetLoop(p,d){ // d>0 empurra para fora da parte (a parte fica à direita do sentido do contorno)
+  if(!d)return p;const n=p.length,o=new Array(n);
+  for(let i=0;i<n;i++){const a=p[(i-1+n)%n],b=p[i],c=p[(i+1)%n];
+    let n1=[b[1]-a[1],-(b[0]-a[0])],n2=[c[1]-b[1],-(c[0]-b[0])];const l1=Math.hypot(...n1)||1,l2=Math.hypot(...n2)||1;n1=[n1[0]/l1,n1[1]/l1];n2=[n2[0]/l2,n2[1]/l2];
+    let m=[n1[0]+n2[0],n1[1]+n2[1]];const lm=Math.hypot(...m);if(lm<1e-6)m=n1;else m=[m[0]/lm,m[1]/lm];const s=d/Math.max(0.5,m[0]*n1[0]+m[1]*n1[1]);o[i]=[b[0]+m[0]*s,b[1]+m[1]*s];}
+  return o;
+}
+function buildCutJob(){
+  const M=machine(),P=buildPartition(),pp=P.ppmm;
+  const minAreaPx=Math.PI*Math.pow(M.peca/2*pp,2);const fixed=cleanSmall(P,minAreaPx,4*pp*pp);
+  const tm=thinMap(P,M.traco/2*pp);
+  const d=(M.kerf/2-M.folga/2);
+  const layers=[];
+  P.regions.forEach((r,k)=>{let loops=traceLabel(P,k);if(!loops.length)return;
+    loops=loops.map(l=>rdpClosed(smoothLoop(l,3),0.35)).filter(l=>l.length>=3&&Math.abs(loopArea(l))>2);
+    const outerIdx=r.role==="flex"?loops.reduce((bi,l,i,a)=>Math.abs(loopArea(l))>Math.abs(loopArea(a[bi]))?i:bi,0):-1;
+    const mm=loops.map((l,i)=>offsetLoop(l.map(([x,y])=>[x/pp,y/pp]),i===outerIdx?M.kerf/2:d));
+    const thinPx=tm.cnt.get(k)||0;
+    layers.push({name:`${colorName(r.pid)} - ${ROLE_NAME[r.role]}`,pid:r.pid,role:r.role,loops:mm,pieces:loops.filter(l=>loopArea(l)>0).length,thinMm2:thinPx/(pp*pp)});});
+  return {P,layers,fixed,thin:tm.thin,M,d};
+}
+// 5) formatos
+const mirrorX=(job,x)=>cfg.mirror?job.P.wmm-x:x;
+const asciiName=s=>s.normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^A-Za-z0-9]+/g,"_").replace(/^_|_$/g,"").toUpperCase().slice(0,31)||"CAMADA";
+function toSVG(job){const {wmm,hmm}=job.P;let s=`<?xml version="1.0" encoding="UTF-8"?>\n<svg xmlns="http://www.w3.org/2000/svg" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" width="${wmm}mm" height="${hmm}mm" viewBox="0 0 ${wmm} ${hmm}">\n`;
+  job.layers.forEach(L=>{s+=`<g id="${asciiName(L.name)}" inkscape:groupmode="layer" inkscape:label="${L.name}"><path fill="none" stroke="${colorOf(L.pid)}" stroke-width="0.25" d="${L.loops.map(l=>"M"+l.map(([x,y])=>`${mirrorX(job,x).toFixed(2)} ${y.toFixed(2)}`).join("L")+"Z").join("")}"/></g>\n`;});return s+"</svg>\n";}
+function toDXF(job){const {hmm}=job.P,o=[];const p=(c,v)=>o.push(String(c),String(v));
+  p(0,"SECTION");p(2,"HEADER");p(9,"$ACADVER");p(1,"AC1009");p(9,"$INSUNITS");p(70,4);p(9,"$MEASUREMENT");p(70,1);p(0,"ENDSEC");
+  p(0,"SECTION");p(2,"TABLES");p(0,"TABLE");p(2,"LAYER");p(70,job.layers.length);
+  job.layers.forEach((L,i)=>{p(0,"LAYER");p(2,asciiName(L.name));p(70,0);p(62,(i%7)+1);p(6,"CONTINUOUS");});p(0,"ENDTAB");p(0,"ENDSEC");
+  p(0,"SECTION");p(2,"ENTITIES");
+  job.layers.forEach(L=>{const ln=asciiName(L.name);L.loops.forEach(l=>{p(0,"POLYLINE");p(8,ln);p(66,1);p(70,1);l.forEach(([x,y])=>{p(0,"VERTEX");p(8,ln);p(10,mirrorX(job,x).toFixed(3));p(20,(hmm-y).toFixed(3));});p(0,"SEQEND");p(8,ln);});});
+  p(0,"ENDSEC");p(0,"EOF");return o.join("\r\n")+"\r\n";}
+function toPLT(job){const {hmm}=job.P,u=40;let s="IN;PA;";job.layers.forEach((L,i)=>{s+=`SP${(i%8)+1};`;L.loops.forEach(l=>{const q=l.map(([x,y])=>`${Math.round(mirrorX(job,x)*u)},${Math.round((hmm-y)*u)}`);s+=`PU${q[0]};PD${q.slice(1).join(",")},${q[0]};`;});});return s+"PU;SP0;\n";}
+function toPDF(job){const {wmm,hmm}=job.P,k=72/25.4,W=(wmm*k).toFixed(2),Hh=(hmm*k).toFixed(2);
+  const pageContent=ls=>ls.map(L=>{const [r,g,b]=rgbOf(colorOf(L.pid)).map(v=>(v/255).toFixed(3));return `${r} ${g} ${b} RG 0.5 w\n`+L.loops.map(l=>l.map(([x,y],i)=>`${(mirrorX(job,x)*k).toFixed(2)} ${((hmm-y)*k).toFixed(2)} ${i?"l":"m"}`).join("\n")+"\nh S").join("\n");}).join("\n");
+  const pages=[job.layers].concat(job.layers.map(L=>[L])),objs=[];
+  objs.push("<< /Type /Catalog /Pages 2 0 R >>");objs.push(null);const kids=[];
+  pages.forEach(ls=>{const c=pageContent(ls);const ci=objs.length+2;objs.push(`<< /Length ${c.length} >>\nstream\n${c}\nendstream`);kids.push(objs.length+1);objs.push(`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${W} ${Hh}] /Contents ${ci-1} 0 R >>`);});
+  objs[1]=`<< /Type /Pages /Kids [${kids.map(i=>i+" 0 R").join(" ")}] /Count ${kids.length} >>`;
+  let s="%PDF-1.4\n";const off=[];objs.forEach((o,i)=>{off.push(s.length);s+=`${i+1} 0 obj\n${o}\nendobj\n`;});
+  const x=s.length;s+=`xref\n0 ${objs.length+1}\n0000000000 65535 f \n`+off.map(o=>String(o).padStart(10,"0")+" 00000 n \n").join("")+`trailer\n<< /Size ${objs.length+1} /Root 1 0 R >>\nstartxref\n${x}\n%%EOF\n`;return s;}
+const EXPORT={svg:[toSVG,"image/svg+xml"],dxf:[toDXF,"application/dxf"],plt:[toPLT,"application/octet-stream"],pdf:[toPDF,"application/pdf"]};
+// 6) peça de teste de encaixe (quadro com furos + peças), com a mesma compensação
+function testJob(){const M=machine(),d=M.kerf/2-M.folga/2,W0=180,H0=90,frame=[],pieces=[];
+  const rect=(x,y,w,h)=>[[x,y],[x+w,y],[x+w,y+h],[x,y+h]],circ=(cx,cy,r)=>Array.from({length:48},(_,i)=>{const a=i/48*Math.PI*2;return [cx+r*Math.cos(a),cy+r*Math.sin(a)];});
+  const rev=l=>l.slice().reverse();
+  frame.push(rect(0,0,W0,H0));
+  const shapes=[rect(10,10,40,40)];[2,3,4,5,6,8].forEach((wd,i)=>shapes.push(rect(62+i*14,10,wd,40)));[3,4,5,6,8,10].forEach((dm,i)=>shapes.push(circ(66+i*18,68,dm/2)));
+  shapes.forEach(s=>{frame.push(rev(s));pieces.push(s);});
+  const L1={name:"Quadro com furos",pid:spec().fundo,loops:frame.map((l,i)=>offsetLoop(l,i===0?M.kerf/2:d))},L2={name:"Pecas de encaixe",pid:spec().int||"amarelo08",loops:pieces.map(l=>offsetLoop(l,d))};
+  return {P:{wmm:W0,hmm:H0},layers:[L1,L2]};}
+
+// ---------- interface ----------
+let CJ=null;
+function openCut(){$("#cutSheet").hidden=false;document.body.style.overflow="hidden";fillCutSelectors();runCutCheck();}
+function closeCut(){$("#cutSheet").hidden=true;document.body.style.overflow="";}
+function fillCutSelectors(){const ms=$("#cutMachine");ms.innerHTML=cfg.machines.map(m=>`<option value="${m.id}">${m.nome}</option>`).join("");ms.value=cfg.machineSel;
+  const fs=$("#cutFmt");fs.innerHTML=Object.entries(FORMATS).map(([k,v])=>`<option value="${k}">${v}</option>`).join("");fs.value=cfg.fileFmt;$("#cutMirror").checked=!!cfg.mirror;showMachine();}
+function showMachine(){const M=machine();$("#cutVals").innerHTML=`<div><span>Compensação do corte</span><b>${fmtCm(M.kerf)} mm</b></div><div><span>Folga de encaixe</span><b>${fmtCm(M.folga)} mm</b></div><div><span>Traço mínimo</span><b>${fmtCm(M.traco)} mm</b></div><div><span>Peça ou furo mínimo</span><b>${fmtCm(M.peca)} mm</b></div>`;
+  $("#cutNote").textContent=M.nota+" Cada contorno é deslocado "+fmtCm(Math.abs(M.kerf/2-M.folga/2))+" mm "+(M.kerf/2-M.folga/2>=0?"para fora":"para dentro")+" da peça.";}
+$("#cutMachine").onchange=e=>{cfg.machineSel=e.target.value;const M=machine();cfg.fileFmt=M.fmt;$("#cutFmt").value=M.fmt;saveCfg();showMachine();runCutCheck();};
+$("#cutFmt").onchange=e=>{cfg.fileFmt=e.target.value;saveCfg();};$("#cutMirror").onchange=e=>{cfg.mirror=e.target.checked;saveCfg();};
+$("#cutClose").onclick=closeCut;
+function runCutCheck(){$("#cutMsg").textContent="Analisando a arte…";$("#cutDl").disabled=true;
+  setTimeout(()=>{try{CJ=buildCutJob();}catch(e){$("#cutMsg").textContent="Não deu para montar o arquivo: "+e.message;return;}drawCutPreview();
+    const box=$("#cutReport");box.replaceChildren();
+    CJ.layers.forEach(L=>{const r=document.createElement("div");r.className="cut-row";r.innerHTML=`<span class="dot" style="background:${colorOf(L.pid)}"></span><span>${L.name}</span><span class="hint">${L.loops.length} contorno${L.loops.length===1?"":"s"}</span>`;
+      if(L.thinMm2>25){const w=document.createElement("b");w.className="warn-t";w.textContent=`traços finos: ${Math.round(L.thinMm2)} mm²`;r.appendChild(w);}box.appendChild(r);});
+    const thinTot=CJ.layers.reduce((s,L)=>s+L.thinMm2,0);
+    $("#cutMsg").textContent=(CJ.fixed?`${CJ.fixed} peça${CJ.fixed===1?"":"s"} ou furo${CJ.fixed===1?"":"s"} menor${CJ.fixed===1?"":"es"} que ${fmtCm(CJ.M.peca)} mm ${CJ.fixed===1?"foi absorvido":"foram absorvidos"} pela cor vizinha. `:"")+
+      (thinTot>25?`Há partes mais finas que ${fmtCm(CJ.M.traco)} mm (em magenta): aumente a letra ou troque a fonte, ou a máquina pode não cortar bem.`:"Tudo dentro do mínimo da máquina.");
+    $("#cutDl").disabled=false;},30);}
+function drawCutPreview(){const P=CJ.P,cv=$("#cutCanvas"),box=$("#cutStage"),aw=Math.min(760,box.parentElement.clientWidth),ah=aw*P.Hp/P.Wp;cv.style.width=aw+"px";cv.style.height=ah+"px";
+  const sc=Math.min(1,1200/P.Wp),w=Math.round(P.Wp*sc),h=Math.round(P.Hp*sc);cv.width=w;cv.height=h;const x=cv.getContext("2d"),img=x.createImageData(w,h),o=img.data;
+  const cols=P.regions.map(r=>rgbOf(colorOf(r.pid)));
+  for(let y=0;y<h;y++)for(let xx=0;xx<w;xx++){const i=Math.min(P.Hp-1,Math.round(y/sc))*P.Wp+Math.min(P.Wp-1,Math.round(xx/sc)),j=(y*w+xx)*4,L=P.lab[i];if(L===255)continue;
+    const c=CJ.thin[i]?[255,0,255]:cols[L];o[j]=c[0];o[j+1]=c[1];o[j+2]=c[2];o[j+3]=255;}
+  x.putImageData(img,0,0);x.strokeStyle="rgba(255,255,255,.9)";x.lineWidth=1;const k=w/P.wmm;
+  CJ.layers.forEach(L=>L.loops.forEach(l=>{x.beginPath();l.forEach(([a,b],i)=>i?x.lineTo(a*k,b*k):x.moveTo(a*k,b*k));x.closePath();x.stroke();}));}
+$("#cutDl").onclick=()=>{if(!CJ)return;const [fn,mime]=EXPORT[cfg.fileFmt],name=`corte-${slugName()}-${spec().w}x${spec().h}-${machine().id}.${cfg.fileFmt}`;
+  if(!OUTSIDE_CLAUDE&&(cfg.fileFmt==="dxf"||cfg.fileFmt==="plt")){$("#cutMsg").textContent="DXF e PLT só baixam no site genio.dombanana.tech (aqui dentro do Claude, use SVG ou PDF).";return;}
+  saveBlob(new Blob([fn(CJ)],{type:mime}),name,$("#cutMsg"));};
+$("#cutTest").onclick=()=>{const J=testJob(),[fn,mime]=EXPORT[cfg.fileFmt];
+  if(!OUTSIDE_CLAUDE&&(cfg.fileFmt==="dxf"||cfg.fileFmt==="plt")){$("#cutMsg").textContent="DXF e PLT só baixam no site genio.dombanana.tech (aqui dentro do Claude, use SVG ou PDF).";return;}
+  saveBlob(new Blob([fn(J)],{type:mime}),`teste-encaixe-${machine().id}.${cfg.fileFmt}`,$("#cutMsg"));};
+$("#qCut").onclick=openCut;
+
+// configurações das máquinas
+function renderMachinesCfg(){const tb=$("#machBody");tb.replaceChildren();
+  cfg.machines.forEach(m=>{const tr=document.createElement("tr");tr.innerHTML=`<td><input aria-label="Nome da máquina"></td><td><input type="number" step="0.05" min="0" aria-label="Compensação (mm)"></td><td><input type="number" step="0.05" min="0" aria-label="Folga (mm)"></td><td><input type="number" step="0.5" min="0" aria-label="Traço mínimo (mm)"></td><td><input type="number" step="0.5" min="0" aria-label="Peça mínima (mm)"></td>`;
+    const [nm,kf,fg,tr2,pc]=tr.querySelectorAll("input");nm.value=m.nome;kf.value=m.kerf;fg.value=m.folga;tr2.value=m.traco;pc.value=m.peca;
+    const num=v=>Math.max(0,parseFloat(String(v).replace(",","."))||0);
+    nm.oninput=()=>{m.nome=nm.value;saveCfg();};kf.oninput=()=>{m.kerf=num(kf.value);saveCfg();};fg.oninput=()=>{m.folga=num(fg.value);saveCfg();};tr2.oninput=()=>{m.traco=num(tr2.value);saveCfg();};pc.oninput=()=>{m.peca=num(pc.value);saveCfg();};
+    tb.appendChild(tr);});}
+$("#machReset").onclick=()=>{cfg.machines=deep(DEFAULT_MACHINES);saveCfg();renderMachinesCfg();};
 
 // ================= início =================
 (function init(){
