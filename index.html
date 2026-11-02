@@ -263,7 +263,7 @@ details summary{cursor:pointer;font-size:13px;color:var(--muted);font-weight:600
       <section class="panel" aria-labelledby="hCli">
         <h2 id="hCli">Cliente</h2>
         <div class="fields">
-          <div class="field wide"><label for="cNome">Nome ou empresa</label><input id="cNome" autocomplete="off" placeholder="Wilson’s Bar"></div>
+          <div class="field wide"><label for="cNome">Nome ou empresa</label><input id="cNome" autocomplete="off" placeholder="Ex.: Padaria Sol Nascente"></div>
           <div class="field"><label for="cTel">WhatsApp</label><input id="cTel" inputmode="tel" placeholder="(11) 90000-0000"></div>
           <div class="field"><label for="cQtd">Quantidade</label><input id="cQtd" type="number" inputmode="numeric" min="1" max="999" value="1"></div>
           <div class="field"><label for="cPrazo">Entrega desejada</label><input id="cPrazo" type="date"></div>
@@ -618,7 +618,9 @@ const POSE_EX=()=>({cam:{phi:EX.phi,rho:EX.rho,psi:0,h:EX.h,fL:EX.fN},mat:{x:exH
 const POSE_NEW=()=>({cam:{phi:52*DEG,rho:0,psi:0,h:1.5,fL:0.66},mat:null,th:0,plane:null});
 const textLayer=(o)=>Object.assign({id:uid(),type:"text",text:"TEXTO",font:"Alfa Slab One",sizeCm:10,color:"amarelo08",bold:false,italic:false,spacing:0,align:"center",outlineOn:false,outlineColor:"preto03",outlineCm:0.6,x:0,y:0,rot:0},o||{});
 const DEFAULT_SPEC=()=>({w:150,h:80,fundo:"preto03",int:"amarelo08",flex:"preto03",intOn:true,intCm:3,flexCm:5,tipo:"Vulcanizado",rebaixo:"Não",
-  layers:[textLayer({text:"WILSON’S",sizeCm:11,y:-8}),textLayer({text:"BAR",sizeCm:11,y:9})]});
+  layers:[textLayer({text:"GÊNIO",sizeCm:11,y:-8,color:"branco"}),textLayer({text:"DO CAPACHO",sizeCm:11,y:9,color:"branco"})]});
+// quem ainda tem guardada a arte de exemplo antiga (Wilson’s Bar) passa a ver a nova
+const lastSpec=()=>{const l=store.get("gc.lastSpec2");if(l&&Array.isArray(l.layers)&&l.layers.map(L=>L.text).join("|")==="WILSON’S|BAR"){const d=DEFAULT_SPEC();l.layers=d.layers;l.fundo=d.fundo;}return l;};
 function migrateSpec(sp){
   if(sp.layers)return sp;
   const L=[];const k=(sp.logoSize||100)/100;
@@ -989,7 +991,7 @@ const layerName=L=>L.type==="text"?`“${(L.text||"").split("\n")[0].slice(0,24)
 function renderLayers(){const list=$("#layerList");list.replaceChildren();const ls=spec().layers;
   if(!ls.length){const p=document.createElement("p");p.className="hint";p.textContent="Nenhum texto ou logo ainda. Toque em “+ Texto” ou “+ Logo”.";list.appendChild(p);}
   ls.slice().reverse().forEach(L=>{const b=document.createElement("div");b.className="layer";b.setAttribute("role","button");b.tabIndex=0;b.setAttribute("aria-pressed",String(S.sel===L.id));
-    const ico=document.createElement("span");ico.className="ico";ico.textContent=L.type==="text"?"T":"◆";ico.style.color=L.type==="text"?colorOf(L.color):"";
+    const ico=document.createElement("span");ico.className="ico";ico.textContent=L.type==="text"?"T":"◆";if(L.type==="text"){const c=colorOf(L.color),[r,g,b]=rgbOf(c);ico.style.background=c;ico.style.color=(0.2126*r+0.7152*g+0.0722*b)>150?"#241a14":"#fff";ico.style.boxShadow="inset 0 0 0 1px rgba(127,127,127,.45)";}
     const nm=document.createElement("span");nm.className="nm";nm.textContent=L.type==="text"?(L.text||"(vazio)").replace(/\n/g," / "):"Logo"+(L.widthCm?` · ${fmtCm(L.widthCm)} cm`:"");
     if(L.type==="text")nm.style.fontFamily=`"${L.font}", serif`;
     const acts=document.createElement("span");acts.className="acts";const i=ls.indexOf(L);
@@ -1423,7 +1425,7 @@ async function renderList(){const all=(await DB.all()).sort((a,b)=>(b.atualizado
     const st=document.createElement("span");st.className="badge "+o.status;st.textContent=o.status==="aprovado"?"Aprovado":o.status==="enviado"?"Enviado":"Rascunho";b.append(img,mid,st);b.onclick=()=>openQuote(o);box.appendChild(b);});}
 $$("[data-f]").forEach(b=>b.onclick=()=>{S.filter=b.dataset.f;$$("[data-f]").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));renderList();});
 async function openQuote(o){stopLive();Q=deep(o);migrateSpec(Q.spec);S.sel=null;fillClient();fillSpec();renderThumb();await loadAllFonts();renderLayers();go(Q.preview?"orcamento":"arte");}
-$("#newQuote").onclick=()=>{stopLive();Q=newQuote();const last=store.get("gc.lastSpec2");if(last)Q.spec=Object.assign(DEFAULT_SPEC(),last);S.sel=null;fillClient();fillSpec();renderThumb();loadAllFonts();renderLayers();go("dados");};
+$("#newQuote").onclick=()=>{stopLive();Q=newQuote();const last=lastSpec();if(last)Q.spec=Object.assign(DEFAULT_SPEC(),last);S.sel=null;fillClient();fillSpec();renderThumb();loadAllFonts();renderLayers();go("dados");};
 
 // ================= configurações =================
 const PF={pM2v:"m2v",pM2s:"m2s",pBase:"base",pFora:"fora",pCoresInc:"coresInc",pCorExtra:"corExtra",pMin:"min",pPix:"pix",pParc:"parc",pCartao:"cartao",pSinal:"sinal",pVal:"val",pVend:"vend",pMargem:"margem",pMaxCores:"maxCores"};
@@ -1925,7 +1927,7 @@ function renderVersions(){const box=$("#qVers"),sec=$("#qVersSec");if(!box)retur
 
 // ================= início =================
 (function init(){
-  const last=store.get("gc.lastSpec2");if(last)Q.spec=Object.assign(DEFAULT_SPEC(),last);
+  const last=lastSpec();if(last)Q.spec=Object.assign(DEFAULT_SPEC(),last);
   buildSliders();fillClient();fillSpec();renderThumb();
   const topH=()=>document.documentElement.style.setProperty("--topH",$(".top").offsetHeight+"px");
   new ResizeObserver(()=>{layout();schedule();}).observe($("#stageWrap"));new ResizeObserver(()=>artLayout()).observe($("#artWrap"));new ResizeObserver(topH).observe($(".top"));topH();
