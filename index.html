@@ -229,6 +229,17 @@ details summary{cursor:pointer;font-size:13px;color:var(--muted);font-weight:600
 .cut-report{display:flex;flex-direction:column;gap:6px}
 .cut-row{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:14px}
 .warn-t{color:var(--warn);font-size:13px}
+
+.var-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.var{appearance:none;display:flex;flex-direction:column;gap:4px;align-items:flex-start;text-align:left;border:1px solid var(--line);border-radius:10px;padding:6px;background:transparent;color:var(--ink);font:600 13px var(--font-ui);cursor:pointer;min-width:0}
+.var canvas{width:100%;height:auto;border-radius:6px;display:block}
+.var[aria-pressed="true"]{border-color:var(--ouro);box-shadow:0 0 0 2px var(--ouro) inset}
+.var .hint{font-size:11.5px}
+.var-sw{display:flex;gap:3px}.var-sw i{width:14px;height:14px;border-radius:4px;border:1px solid rgba(127,127,127,.5)}
+.vers{display:flex;flex-direction:column;gap:8px}
+.ver{display:grid;grid-template-columns:72px minmax(0,1fr) auto;gap:10px;align-items:center}
+.ver img{width:72px;height:48px;object-fit:cover;border-radius:6px;background:var(--surface-2)}
+.ver div{display:flex;flex-direction:column;gap:2px;min-width:0}
 </style>
 <div class="top">
   <div class="brand"><span class="eyebrow">Gênio do Capacho</span><b>Vendas</b></div>
@@ -356,6 +367,12 @@ details summary{cursor:pointer;font-size:13px;color:var(--muted);font-weight:600
         <button class="btn ok" id="qApprove" type="button">Cliente aprovou</button>
       </div>
       <p class="notice">Só orçamento aprovado entra no plano de corte.</p>
+      <section class="panel" id="qVersSec" aria-labelledby="hVers" hidden>
+        <div class="row between"><h2 id="hVers">Versões da arte</h2></div>
+        <p class="hint" id="qVersCur"></p>
+        <div class="vers" id="qVers"></div>
+        <p class="notice">Todo orçamento gerado fica guardado com a arte completa para reabrir e alterar. Cada alteração vira uma nova versão.</p>
+      </section>
     </div>
   </section>
 
@@ -504,7 +521,10 @@ details summary{cursor:pointer;font-size:13px;color:var(--muted);font-weight:600
     </div>
     <!-- 3 -->
     <div id="lePanel3" class="col" style="gap:10px" hidden>
-      <p class="hint">O logo sai em cores chapadas, sem degradê. Cada cor encontrada vira a cor da fábrica mais próxima; troque se quiser.</p>
+      <p class="hint">O logo sai em cores chapadas, sem degradê. Cada cor encontrada vira uma bobina diferente, a mais próxima; troque se quiser.</p>
+      <span class="hint">Sugestões de cores para o fundo do tapete (toque para usar):</span>
+      <div class="var-grid" id="leVar"></div>
+      <span class="hint">Ou escolha cor por cor:</span>
       <div class="colorsel" id="leColors"></div>
       <div class="row">
         <label class="switch"><input type="checkbox" id="leSingle">Tudo de uma cor só</label>
@@ -999,6 +1019,7 @@ function renderProps(){const box=$("#props");box.replaceChildren();const L=selLa
     sp.innerHTML=`
       <div class="row"><button class="btn ghost" id="pEditLogo" type="button">Editar logo</button></div>
       <div class="fields"><div class="field"><label for="pWidth">Largura do logo (cm)</label><input id="pWidth" type="number" inputmode="decimal" min="2" max="500" step="0.5"></div></div>
+      <span class="hint">Sugestões de cores (toque para usar):</span><div class="var-grid" id="pVar"></div>
       <div class="colorsel" id="pMap"></div>
       <label class="switch"><input type="checkbox" id="pSingle">Tudo de uma cor só</label><div class="swatches" id="pSingleSw" hidden></div>
       <label class="switch"><input type="checkbox" id="pNeg">Negativo (vazado num quadro)</label><div class="swatches" id="pNegSw" hidden></div>`;
@@ -1023,12 +1044,15 @@ function renderProps(){const box=$("#props");box.replaceChildren();const L=selLa
     on("pSingle","change",e=>{L.single=e.target.checked?(L.single||L.map.find(Boolean)||activePal()[0].id):null;artChanged(true);});
     on("pNeg","change",e=>{L.neg=Object.assign({color:spec().int||"amarelo08",padCm:2},L.neg||{},{on:e.target.checked});artChanged(true);});
   }
+  if(L.type==="logo")renderLogoVar(L);
   on("pRot","input",e=>{L.rot=+e.target.value;artChanged(false);});
   on("pX","input",e=>{const v=parseFloat(String(e.target.value).replace(",","."));if(isFinite(v)){L.x=v;artChanged(false);}});
   on("pY","input",e=>{const v=parseFloat(String(e.target.value).replace(",","."));if(isFinite(v)){L.y=v;artChanged(false);}});
   on("pCx","click",()=>{L.x=0;artChanged(true);});on("pCy","click",()=>{L.y=0;artChanged(true);});
   renderPropsValues();
 }
+function renderLogoVar(L){const rec=logoLabels(L);if(!rec.ready){setTimeout(()=>{if(selLayer()===L&&$("#pVar"))renderLogoVar(L);},150);return;}
+  renderVariants($("#pVar"),rec,L.colors,L.id,L,v=>{if(v.map)L.map=[...v.map];L.single=v.single||null;if(L.neg)L.neg.on=false;artChanged(true);});}
 function renderLayersNames(){const L=selLayer();const it=[...$$("#layerList .layer")].find(b=>b.getAttribute("aria-pressed")==="true");if(it&&L&&L.type==="text")it.querySelector(".nm").textContent=(L.text||"(vazio)").replace(/\n/g," / ");}
 function setVal(id,v){const e=$("#"+id);if(e&&document.activeElement!==e)e.value=v;}
 function renderPropsValues(){const L=selLayer();if(!L)return;
@@ -1243,15 +1267,19 @@ function leQuantize(){
   let groups=C.map((c,i)=>({rgb:c,count:cnt[i]})).filter(g=>g.count>0).sort((a,b)=>b.count-a.count);
   let merged=true;while(merged){merged=false;outer:for(let i=0;i<groups.length;i++)for(let j=i+1;j<groups.length;j++)if(cdist(groups[i].rgb,groups[j].rgb)<40){const a=groups[i],b=groups[j],t=a.count+b.count;
     a.rgb=a.rgb.map((v,k)=>(v*a.count+b.rgb[k]*b.count)/t);a.count=t;groups.splice(j,1);merged=true;break outer;}}
-  const tot=groups.reduce((s,g)=>s+g.count,0);groups=groups.filter((g,i)=>i===0||g.count/tot>=0.03).slice(0,Math.max(1,cfg.maxCores||4));
+  const tot=groups.reduce((s,g)=>s+g.count,0);groups=groups.filter((g,i)=>i===0||g.count/tot>=0.008).slice(0,Math.max(1,cfg.maxCores||4));
   LE.colors=groups.map(g=>({rgb:g.rgb.map(Math.round)}));
-  // rótulo por pixel
-  const idx=new Uint8Array(n);for(let i=0;i<n;i++){if(F[i]<0.02)continue;const p=[d[i*4],d[i*4+1],d[i*4+2]];let bi=0,bd=1e9;LE.colors.forEach((c,k)=>{const dd=cdist(c.rgb,p);if(dd<bd){bd=dd;bi=k;}});idx[i]=bi+1;}
-  // pixel de borda (meio transparente) herda a cor do vizinho mais firme
+  // rótulo por pixel: só os pixels "firmes" (miolo da cor, sem mistura) decidem; os da borda herdam do firme mais perto (até 3 px),
+  // assim a mistura de duas cores na borda não vira uma terceira cor em volta das letras
+  const idx=new Uint8Array(n),firm=new Uint8Array(n),qu=new Int32Array(n),dist=new Uint8Array(n);let qh=0,qt=0;
+  for(let i=0;i<n;i++){if(F[i]<0.02)continue;const p=[d[i*4],d[i*4+1],d[i*4+2]];let bi=0,d1=1e9,d2=1e9;LE.colors.forEach((c,k)=>{const dd=cdist(c.rgb,p);if(dd<d1){d2=d1;d1=dd;bi=k;}else if(dd<d2)d2=dd;});idx[i]=bi+1;
+    if(F[i]>=0.95&&(LE.colors.length<2||d1<0.6*d2)){const x=i%w;let ok=true;for(const o of [-1,1,-w,w,-w-1,-w+1,w-1,w+1]){const j=i+o;if(j<0||j>=n||F[j]<0.95||Math.abs((j%w)-x)>1){ok=false;break;}}if(ok){firm[i]=1;qu[qt++]=i;}}}
+  while(qh<qt){const i=qu[qh++],x=i%w;if(dist[i]>=3)continue;for(const o of [-1,1,-w,w]){const j=i+o;if(j<0||j>=n||firm[j]||F[j]<0.02||Math.abs((j%w)-x)>1)continue;firm[j]=1;dist[j]=dist[i]+1;idx[j]=idx[i];qu[qt++]=j;}}
   LE.idx=idx;
-  if(!LE.map||LE.map.length!==LE.colors.length)LE.map=LE.colors.map(c=>nearestPal(c.rgb));
+  if(!LE.map||LE.map.length!==LE.colors.length)LE.map=distinctMap(LE.colors);
 }
 function leRenderColors(){const box=$("#leColors");box.replaceChildren();
+  {const lc=leLabelsCanvas();renderVariants($("#leVar"),lc?srcFromLabelsCanvas(lc):null,LE.colors,LE.layer?LE.layer.id:null,LE,v=>{LE.map=v.map?[...v.map]:LE.map;LE.single=v.single||null;if(LE.neg)LE.neg.on=false;leRenderColors();leDraw3();});}
   if(!LE.single&&!(LE.neg&&LE.neg.on))LE.colors.forEach((c,i)=>box.appendChild(colorMapRow(c,LE.map[i],v=>{LE.map[i]=v;leDraw3();})));
   $("#leSingle").checked=!!LE.single;$("#leSingleBox").hidden=!LE.single;if(LE.single)swatchRow($("#leSingleSw"),LE.single,id=>{LE.single=id;leRenderColors();leDraw3();});
   $("#leNeg").checked=!!(LE.neg&&LE.neg.on);$("#leNegBox").hidden=!(LE.neg&&LE.neg.on);if(LE.neg&&LE.neg.on)swatchRow($("#leNegSw"),LE.neg.color,id=>{LE.neg.color=id;leRenderColors();leDraw3();});
@@ -1354,7 +1382,7 @@ function fichaText(){const sp=spec(),a=analyze(sp.w,sp.h),L=[`Medidas: ${fmt(sp.
       L.push(`Logo: ${fmtCm(lw)} × ${fmtCm(lh)} cm · ${cs} · ${pos}`);}});
   L.push(`Cores no tapete: ${usedColors().map(colorName).join(", ")}`,`Quantidade: ${Q.cliente.qtd||1}`);return L.join("\n");}
 function renderQuote(){const p=computePrice();Q.preco=p.ready?{total:p.total,pix:p.pix,cartao:p.cartao,parc:p.parc,sinal:p.sinal,m2:p.m2}:null;
-  $("#qTitle").textContent=Q.cliente.nome?`Orçamento · ${Q.cliente.nome}`:"Orçamento";$("#qNum").textContent=Q.numero?`${Q.numero} · ${dataBR(Q.criado)}`:"ainda não salvo";
+  $("#qTitle").textContent=Q.cliente.nome?`Orçamento · ${Q.cliente.nome}`:"Orçamento";$("#qNum").textContent=Q.numero?`${Q.numero} · versão ${Q.versao||1} · ${dataBR(Q.criado)}`:"ainda não salvo";renderVersions();
   $("#qImg").src=Q.preview||"";$("#qFicha").textContent=fichaText();setStatusBadge();const box=$("#qPrice");box.replaceChildren();
   if(!p.ready){const n=document.createElement("div");n.className="rule "+(p.a.emenda?"bad":"warn");
     n.innerHTML=p.a.emenda?"<b>Sem preço</b><span>As duas medidas passam de 120 cm. Ajuste a medida ou peça liberação do administrador.</span>":`<b>Falta o preço por m² do ${spec().tipo.toLowerCase()}</b><span>Defina em Configurações.</span>`;
@@ -1378,10 +1406,11 @@ $("#qShare").onclick=async()=>{if(!Q.preview){qmsg("Gere a prévia no passo 3.")
   if(OUTSIDE_CLAUDE){try{const file=new File([blob],name,{type:"image/jpeg"});if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],text:whatsText()});markSent();return;}}catch(e){if(e&&e.name==="AbortError")return;}}
   if(await saveBlob(blob,name,$("#qMsg")))markSent();};
 function markSent(){if(Q.status==="rascunho"){Q.status="enviado";setStatusBadge();}}
-$("#qSave").onclick=async()=>{await saveQuote();qmsg("Orçamento salvo neste aparelho.");renderQuote();};
-$("#qApprove").onclick=async()=>{Q.status="aprovado";Q.aprovado=new Date().toISOString();await saveQuote();renderQuote();qmsg("Aprovado. Vai para o plano de corte quando o sistema do administrador estiver no ar.");};
+$("#qSave").onclick=async()=>{await saveWithVersions();qmsg("Orçamento salvo neste aparelho.");renderQuote();};
+$("#qApprove").onclick=async()=>{Q.status="aprovado";Q.aprovado=new Date().toISOString();await saveWithVersions();renderQuote();qmsg("Aprovado. Vai para o plano de corte quando o sistema do administrador estiver no ar.");};
 const DB={db:null,open(){return new Promise(res=>{if(this.db)return res(this.db);try{const r=indexedDB.open("genio-vendas",1);r.onupgradeneeded=()=>r.result.createObjectStore("orcamentos",{keyPath:"id"});r.onsuccess=()=>{this.db=r.result;res(this.db);};r.onerror=()=>res(null);}catch(e){res(null);}});},
   async all(){const db=await this.open();if(!db)return memList.slice();return new Promise(res=>{const t=db.transaction("orcamentos").objectStore("orcamentos").getAll();t.onsuccess=()=>res(t.result||[]);t.onerror=()=>res([]);});},
+  async get(id){const db=await this.open();if(!db)return deep(memList.find(x=>x.id===id)||null);return new Promise(res=>{const t=db.transaction("orcamentos").objectStore("orcamentos").get(id);t.onsuccess=()=>res(t.result||null);t.onerror=()=>res(null);});},
   async put(o){const db=await this.open();if(!db){const i=memList.findIndex(x=>x.id===o.id);if(i>=0)memList[i]=o;else memList.push(o);return;}return new Promise(res=>{const t=db.transaction("orcamentos","readwrite");t.objectStore("orcamentos").put(o);t.oncomplete=res;t.onerror=res;});}};
 let memList=[];
 async function saveQuote(){if(!Q.id){Q.id="q"+Date.now();Q.criado=new Date().toISOString();const n=(store.get("gc.seq")||0)+1;store.set("gc.seq",n);Q.numero="ORC-"+String(n).padStart(4,"0");}
@@ -1390,7 +1419,7 @@ async function renderList(){const all=(await DB.all()).sort((a,b)=>(b.atualizado
   if(!items.length){const p=document.createElement("p");p.className="empty-note";p.textContent=all.length?"Nenhum orçamento neste filtro.":"Nenhum orçamento salvo ainda. Os que você salvar aparecem aqui.";box.appendChild(p);return;}
   items.forEach(o=>{const b=document.createElement("button");b.className="item";b.type="button";const img=document.createElement("img");img.alt="";img.src=o.preview||o.photo.src;
     const mid=document.createElement("div"),t=document.createElement("div");t.className="t";t.textContent=(o.cliente.nome||"Sem nome")+" · "+o.numero;const s=document.createElement("div");s.className="s";
-    s.textContent=`${fmt(o.spec.w/100)} × ${fmt(o.spec.h/100)} m · ${o.preco?BRL(o.preco.total):"sem preço"} · ${dataBR(o.atualizado||o.criado)}`;mid.append(t,s);
+    s.textContent=`${(o.versao||1)>1?"v"+o.versao+" · ":""}${fmt(o.spec.w/100)} × ${fmt(o.spec.h/100)} m · ${o.preco?BRL(o.preco.total):"sem preço"} · ${dataBR(o.atualizado||o.criado)}`;mid.append(t,s);
     const st=document.createElement("span");st.className="badge "+o.status;st.textContent=o.status==="aprovado"?"Aprovado":o.status==="enviado"?"Enviado":"Rascunho";b.append(img,mid,st);b.onclick=()=>openQuote(o);box.appendChild(b);});}
 $$("[data-f]").forEach(b=>b.onclick=()=>{S.filter=b.dataset.f;$$("[data-f]").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));renderList();});
 async function openQuote(o){stopLive();Q=deep(o);migrateSpec(Q.spec);S.sel=null;fillClient();fillSpec();renderThumb();await loadAllFonts();renderLayers();go(Q.preview?"orcamento":"arte");}
@@ -1427,7 +1456,8 @@ async function go(v){
 }
 $$("[data-go]").forEach(b=>b.addEventListener("click",()=>{if(b.dataset.go==="orcamento"&&S.view==="local"){$("#toQuote").click();return;}go(b.dataset.go);}));
 $("#toQuote").onclick=async()=>{if(S.live){msg("Fotografe primeiro (botão redondo) para gerar o orçamento.");return;}msg("Gerando a imagem…");const url=await buildPreview().catch(()=>null);msg("");
-  if(!url){msg("Não deu para gerar a imagem. Confira se o tapete está visível na foto.");return;}Q.preview=url;go("orcamento");};
+  if(!url){msg("Não deu para gerar a imagem. Confira se o tapete está visível na foto.");return;}Q.preview=url;await go("orcamento");const r=await saveWithVersions();renderQuote();
+  qmsg(r.wasApproved?`Arte alterada depois da aprovação: guardada como versão ${Q.versao} e o orçamento voltou para rascunho. Peça nova aprovação ao cliente.`:r.changed?`Arte alterada: guardada como versão ${Q.versao} de ${Q.numero}. A versão anterior continua no histórico.`:`Guardado automaticamente como ${Q.numero}.`);};
 
 
 // ================= ARQUIVO DE CORTE (sem IA) =================
@@ -1619,7 +1649,7 @@ function layerRef(L,i,fmt){
   return `camada “${L.name}”`;
 }
 function pedidoRows(){const c=Q.cliente,sp=spec(),q=+c.qtd||1;
-  return [["Pedido",Q.numero||"rascunho (orçamento ainda não salvo)"],["Cliente",c.nome||"—"],["Quantidade",`${q} tapete${q>1?"s iguais":""}`],["Entrega desejada",dateBR(c.prazo)],["Tipo",sp.tipo||"—"],["Rebaixo",sp.rebaixo||"—"]].concat(c.obs?[["Observações",c.obs]]:[]);}
+  return [["Pedido",Q.numero?`${Q.numero}, versão ${Q.versao||1} da arte`:"rascunho (orçamento ainda não salvo)"],["Cliente",c.nome||"—"],["Quantidade",`${q} tapete${q>1?"s iguais":""}`],["Entrega desejada",dateBR(c.prazo)],["Tipo",sp.tipo||"—"],["Rebaixo",sp.rebaixo||"—"]].concat(c.obs?[["Observações",c.obs]]:[]);}
 function tapeteRows(){const sp=spec(),f=fieldRectCm(),a=analyze(sp.w,sp.h);
   const r=[["Tamanho final",`${fmtCm(sp.w)} × ${fmtCm(sp.h)} cm (${fmtCm(sp.w*10)} × ${fmtCm(sp.h*10)} mm)`],["Borda flex",`${fmtCm(f.fx)} cm, ${colorName(sp.flex)}`]];
   if(sp.intOn)r.push(["Borda interna",`${fmtCm(f.ix)} cm, ${colorName(sp.int)}`]);
@@ -1774,7 +1804,7 @@ function buildPDF(pages,title){
 // ---------- resumo gravado dentro do próprio arquivo (SVG e DXF) ----------
 const ascii=s=>String(s).normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[₂]/g,"2").replace(/[×]/g,"x").replace(/[–—]/g,"-").replace(/[^\x20-\x7e]/g,"?");
 function cutNote(job){const M=job.M||machine(),c=Q.cliente;
-  return ["GENIO DO CAPACHO - ARQUIVO DE CORTE",`Pedido ${Q.numero||"rascunho"} | ${c.nome||"cliente"} | ${+c.qtd||1} un.`,`Tamanho ${fmtCm(job.P.wmm)} x ${fmtCm(job.P.hmm)} mm | milimetros | escala 1:1`,
+  return ["GENIO DO CAPACHO - ARQUIVO DE CORTE",`Pedido ${Q.numero?Q.numero+" v"+(Q.versao||1):"rascunho"} | ${c.nome||"cliente"} | ${+c.qtd||1} un.`,`Tamanho ${fmtCm(job.P.wmm)} x ${fmtCm(job.P.hmm)} mm | milimetros | escala 1:1`,
     `Maquina: ${M.nome} | compensacao ${n2(M.kerf)} mm | folga ${n2(M.folga)} mm`,"Compensacao e folga JA APLICADAS: nao compensar de novo na maquina.",`Espelhado: ${cfg.mirror?"SIM (face para baixo)":"nao"}`,"Leia a FICHA TECNICA que acompanha este arquivo."].map(ascii);}
 
 // ---------- ZIP (sem compressão) ----------
@@ -1800,6 +1830,98 @@ async function exportWithFicha({base,ext,data,mime,ficha,msgEl}){
     if(ok&&msgEl)msgEl.textContent=`Baixado ${base}.zip: arquivo + ficha técnica (PDF e TXT).`;return ok;}
   if(!await saveBlob(new Blob([u8],{type:mime}),main,msgEl))return false;
   const ok=await saveBlob(new Blob([pdf],{type:"application/pdf"}),fPdf,msgEl);if(ok&&msgEl)msgEl.textContent="Arquivo e ficha técnica salvos.";return ok;}
+
+// ================= cores do logo: mapeamento sem repetir cor e sugestões de combinação =================
+const lumOf=rgb=>0.2126*rgb[0]+0.7152*rgb[1]+0.0722*rgb[2];
+// cada cor do cartão vai para a bobina mais próxima que ainda não foi usada (a cor maior escolhe primeiro)
+function distinctMap(colors){const used=new Set(),pal=activePal();
+  return colors.map(c=>{const r=pal.map(p=>({id:p.id,d:cdist(c.rgb,rgbOf(p.hex))})).sort((a,b)=>a.d-b.d);const pick=r.find(x=>!used.has(x.id)&&x.d<r[0].d+60)||r[0];used.add(pick.id);return pick.id;});}
+// cores que o tapete já usa sem contar este logo (para saber quantas cores novas a sugestão traz)
+function matColorsExcept(layerId){const sp=spec(),set=new Set([sp.fundo,sp.flex]);if(sp.intOn)set.add(sp.int);
+  sp.layers.forEach(L=>{if(L.id===layerId)return;if(L.type==="text"){set.add(L.color);if(L.outlineOn)set.add(L.outlineColor);}
+    else if(L.type==="logo"){if(L.neg&&L.neg.on)set.add(L.neg.color);else if(L.single)set.add(L.single);else (L.map||[]).forEach(m=>{if(m)set.add(m);});}});return set;}
+const varColors=v=>v.single?[v.single]:[...new Set(v.map.filter(Boolean))];
+function logoVariants(colors,layerId){
+  const pal=activePal(),fundo=spec().fundo,fr=rgbOf(colorOf(fundo)),k=colors.length,others=matColorsExcept(layerId);
+  const cand=pal.filter(p=>p.id!==fundo&&cdist(rgbOf(p.hex),fr)>=55),out=[],seen=new Set();
+  const push=v=>{if(!v)return;if(v.map&&new Set(v.map).size===1&&v.map[0]){v={nome:v.nome,single:v.map[0]};}const key=v.single?"s:"+v.single:"m:"+v.map.join(",");if(seen.has(key))return;seen.add(key);
+    const cs=varColors(v);v.total=new Set([...others,...cs]).size;v.novas=cs.filter(c=>!others.has(c)).length;v.some=cs.some(c=>c===fundo||cdist(rgbOf(colorOf(c)),fr)<45);out.push(v);};
+  push({nome:"Cores do cartão",map:distinctMap(colors)});
+  // só bobinas que o tapete já usa (não aumenta o número de cores; cores parecidas do cartão podem dividir a mesma bobina)
+  const own=cand.filter(p=>others.has(p.id)).sort((a,b)=>lumOf(rgbOf(a.hex))-lumOf(rgbOf(b.hex)));
+  if(k>1&&own.length){const order=colors.map((c,i)=>i).sort((a,b)=>lumOf(colors[a].rgb)-lumOf(colors[b].rgb)),map=new Array(k);order.forEach((ci,r)=>map[ci]=own[Math.min(own.length-1,Math.floor(r*own.length/k))].id);push({nome:"Só cores do tapete",map});}
+  // dentro do limite de cores por tapete: junta cores do cartão de brilho parecido para caber
+  const allow=(cfg.maxCores||99)-others.size,m=Math.min(k,own.length+Math.max(0,allow));
+  if(k>1&&m>=2&&m<k){const order=colors.map((c,i)=>i).sort((a,b)=>lumOf(colors[a].rgb)-lumOf(colors[b].rgb));let best=null;
+    const rec2=(st,acc)=>{if(acc.length===m){const nov=acc.filter(p=>!others.has(p.id)).length;if(nov>allow)return;const sd=acc.slice().sort((a,b)=>lumOf(rgbOf(a.hex))-lumOf(rgbOf(b.hex))),rg=sd.map(p=>rgbOf(p.hex));
+        let sep=1e9;for(let a=0;a<rg.length;a++)for(let b=a+1;b<rg.length;b++)sep=Math.min(sep,cdist(rg[a],rg[b]));const map=new Array(k);order.forEach((ci,r)=>map[ci]=sd[Math.min(m-1,Math.floor(r*m/k))].id);
+        const fid=colors.reduce((t,c,i)=>t+cdist(c.rgb,rgbOf(colorOf(map[i]))),0)/k,sc=Math.min(...rg.map(r=>cdist(r,fr)),90)+0.8*Math.min(sep,90)-0.3*fid;if(!best||sc>best.sc)best={sc,map};return;}
+      for(let i=st;i<cand.length;i++){acc.push(cand[i]);rec2(i+1,acc);acc.pop();}};rec2(0,[]);
+    if(best)push({nome:`Dentro do limite (${m} cores no logo)`,map:best.map});}
+  if(k>1&&cand.length>=k){
+    const order=colors.map((c,i)=>i).sort((a,b)=>lumOf(colors[a].rgb)-lumOf(colors[b].rgb)),combos=[];
+    const rec=(st,acc)=>{if(acc.length===k){combos.push(acc.slice());return;}for(let i=st;i<cand.length;i++){acc.push(cand[i]);rec(i+1,acc);acc.pop();}};rec(0,[]);
+    // a cor mais clara do cartão vai para a bobina mais clara, e assim por diante: o desenho continua legível
+    const sc=combos.map(S=>{const s=S.slice().sort((a,b)=>lumOf(rgbOf(a.hex))-lumOf(rgbOf(b.hex))),map=new Array(k);order.forEach((ci,j)=>map[ci]=s[j].id);
+      const rg=s.map(p=>rgbOf(p.hex)),con=Math.min(...rg.map(r=>cdist(r,fr)));let sep=1e9;for(let a=0;a<rg.length;a++)for(let b=a+1;b<rg.length;b++)sep=Math.min(sep,cdist(rg[a],rg[b]));
+      const fid=colors.reduce((t,c,i)=>t+cdist(c.rgb,rgbOf(colorOf(map[i]))),0)/k,nov=s.filter(p=>!others.has(p.id)).length;return {map,con:Math.min(con,90),sep:Math.min(sep,90),fid,nov};});
+    const top=f=>sc.slice().sort((a,b)=>f(b)-f(a));
+    const t1=top(v=>v.con+0.8*v.sep-0.35*v.fid)[0];push(t1&&{nome:"Mais contraste",map:t1.map});
+    const t2=top(v=>-100*v.nov+v.con+0.6*v.sep-0.2*v.fid)[0];push(t2&&{nome:t2.nov?"Menos cores novas":"Sem cor nova",map:t2.map});
+    const jac=(a,b)=>{const A=new Set(a),B=new Set(b);let i=0;A.forEach(x=>{if(B.has(x))i++;});return i/(A.size+B.size-i);};
+    for(const v of top(v=>v.con+0.8*v.sep-0.15*v.fid)){if(out.length>=6)break;if(out.some(o=>o.map&&jac(o.map,v.map)>=0.5))continue;push({nome:"Outra combinação",map:v.map});}
+  }
+  const mono=cand.slice().sort((a,b)=>cdist(rgbOf(b.hex),fr)-cdist(rgbOf(a.hex),fr));
+  const monoEco=mono.find(p=>others.has(p.id));if(monoEco)push({nome:"Uma cor, sem cor nova",single:monoEco.id});
+  if(mono[0])push({nome:"Uma cor, mais contraste",single:mono[0].id});
+  return out.slice(0,8);}
+// miniatura do logo com uma combinação, sobre a cor do fundo do tapete
+function variantThumb(src,v,tw){const {w,h,idx,al}=src;let x0=w,y0=h,x1=-1,y1=-1;
+  if(!src.bb){for(let i=0;i<w*h;i++)if(idx[i]&&al[i]>40){const x=i%w,y=(i/w)|0;if(x<x0)x0=x;if(x>x1)x1=x;if(y<y0)y0=y;if(y>y1)y1=y;}src.bb=x1<0?[0,0,w-1,h-1]:[x0,y0,x1,y1];}
+  [x0,y0,x1,y1]=src.bb;const bw=x1-x0+1,bh=y1-y0+1,pad=0.12,th=Math.round(tw*0.62),s=Math.min(tw*(1-2*pad)/bw,th*(1-2*pad)/bh),ox=(tw-bw*s)/2,oy=(th-bh*s)/2;
+  const c=document.createElement("canvas");c.width=tw;c.height=th;const x=c.getContext("2d"),img=x.createImageData(tw,th),o=img.data,bg=rgbOf(colorOf(spec().fundo));
+  const cols=(v.map||[]).map(m=>m?rgbOf(colorOf(m)):null),one=v.single?rgbOf(colorOf(v.single)):null;
+  for(let yy=0;yy<th;yy++)for(let xx=0;xx<tw;xx++){const j=(yy*tw+xx)*4;let r=bg;const sx=Math.floor((xx-ox)/s)+x0,sy=Math.floor((yy-oy)/s)+y0;
+    if(sx>=x0&&sx<=x1&&sy>=y0&&sy<=y1){const i=sy*w+sx,k=idx[i],a=al[i]/255;if(k&&a>0.02){const cc=one||cols[k-1];if(cc){r=[bg[0]+(cc[0]-bg[0])*a,bg[1]+(cc[1]-bg[1])*a,bg[2]+(cc[2]-bg[2])*a];}}}
+    o[j]=r[0];o[j+1]=r[1];o[j+2]=r[2];o[j+3]=255;}
+  x.putImageData(img,0,0);return c;}
+function renderVariants(box,src,colors,layerId,cur,apply){box.replaceChildren();if(!src||!colors||!colors.length)return;
+  const vs=logoVariants(colors,layerId),key=v=>v.single?"s:"+v.single:"m:"+v.map.join(","),ck=cur.neg&&cur.neg.on?"neg":cur.single?"s:"+cur.single:"m:"+(cur.map||[]).join(",");
+  vs.forEach(v=>{const b=document.createElement("button");b.type="button";b.className="var";b.setAttribute("aria-pressed",String(key(v)===ck));
+    const cv=variantThumb(src,v,176);cv.setAttribute("aria-hidden","true");const t=document.createElement("b");t.textContent=v.nome;
+    const sw=document.createElement("span");sw.className="var-sw";varColors(v).forEach(id=>{const d=document.createElement("i");d.style.background=colorOf(id);d.title=colorName(id);sw.appendChild(d);});
+    const s=document.createElement("span");s.className="hint";s.textContent=`${v.total} cores no tapete`+(v.novas?` · ${v.novas} nova${v.novas>1?"s":""}`:"")+(v.total>(cfg.maxCores||99)?` · passa do limite de ${cfg.maxCores}`:"")+(v.some?" · parte some no fundo":"");if(v.some||v.total>(cfg.maxCores||99))s.classList.add("warn-t");
+    b.title=varColors(v).map(colorName).join(", ");b.append(cv,t,sw,s);b.onclick=()=>apply(v);box.appendChild(b);});}
+function srcFromLabelsCanvas(c){const w=c.width,h=c.height,d=c.getContext("2d").getImageData(0,0,w,h).data,idx=new Uint8Array(w*h),al=new Uint8Array(w*h);for(let i=0;i<w*h;i++){idx[i]=d[i*4];al[i]=d[i*4+1];}return {w,h,idx,al};}
+
+// ================= versões da arte: todo orçamento gerado fica guardado =================
+// As versões anteriores guardam o desenho completo (camadas, logos com a foto do cartão, posição na foto) para reabrir e alterar.
+// Imagens grandes repetidas entre versões ficam num depósito só (Q.pool), sem duplicar.
+const hashStr=s=>{let h=0x811c9dc5;for(let i=0;i<s.length;i+=1){h^=s.charCodeAt(i);h=Math.imul(h,0x01000193);}return (h>>>0).toString(36)+"_"+s.length.toString(36);};
+const BIG=s=>typeof s==="string"&&s.length>2000&&s.startsWith("data:");
+function packDeep(o,pool){if(Array.isArray(o))return o.map(x=>packDeep(x,pool));if(o&&typeof o==="object"){const r={};for(const k in o)r[k]=packDeep(o[k],pool);return r;}
+  if(BIG(o)){const h=hashStr(o);pool[h]=o;return "pool:"+h;}return o;}
+function unpackDeep(o,pool){if(Array.isArray(o))return o.map(x=>unpackDeep(x,pool));if(o&&typeof o==="object"){const r={};for(const k in o)r[k]=unpackDeep(o[k],pool);return r;}
+  if(typeof o==="string"&&o.startsWith("pool:"))return pool[o.slice(5)]||"";return o;}
+const artKey=q=>JSON.stringify([q.spec,q.photo&&q.photo.src&&q.photo.src.length]);
+function prunePool(q){const used=new Set();JSON.stringify(q.revisoes||[]).replace(/pool:([a-z0-9_]+)/g,(m,h)=>{used.add(h);return m;});Object.keys(q.pool||{}).forEach(h=>{if(!used.has(h))delete q.pool[h];});}
+// Guarda o orçamento; se a arte mudou desde a última vez, a versão anterior vai para o histórico.
+async function saveWithVersions(){const old=Q.id?await DB.get(Q.id):null;let changed=false;
+  if(old&&old.preview&&artKey(old)!==artKey(Q)){changed=true;Q.pool=Q.pool||{};Q.revisoes=Q.revisoes||[];
+    Q.revisoes.unshift({versao:old.versao||1,data:old.atualizado||old.criado,total:old.preco?old.preco.total:null,status:old.status,
+      spec:packDeep(old.spec,Q.pool),pose:deep(old.pose),photo:packDeep(old.photo,Q.pool),preview:packDeep(old.preview,Q.pool)});
+    if(Q.revisoes.length>15)Q.revisoes.length=15;prunePool(Q);Q.versao=(old.versao||1)+1;
+    if(old.status==="aprovado"){Q.status="rascunho";Q.aprovado=null;}}
+  if(!Q.versao)Q.versao=1;await saveQuote();return {changed,wasApproved:!!(changed&&old.status==="aprovado")};}
+function restoreVersion(i){const r=Q.revisoes[i];if(!r)return;Q.spec=migrateSpec(unpackDeep(r.spec,Q.pool));Q.pose=deep(r.pose);Q.photo=unpackDeep(r.photo,Q.pool);Q.preview=unpackDeep(r.preview,Q.pool);
+  S.sel=null;fillSpec();renderThumb();loadAllFonts();renderLayers();
+  saveWithVersions().then(()=>{renderQuote();qmsg(`Versão ${r.versao} restaurada como versão ${Q.versao}. A anterior continua guardada.`);});}
+function renderVersions(){const box=$("#qVers"),sec=$("#qVersSec");if(!box)return;box.replaceChildren();const rv=Q.revisoes||[];sec.hidden=!Q.id;
+  $("#qVersCur").textContent=Q.id?`Versão ${Q.versao||1} (atual) · salva em ${dataBR(Q.atualizado||Q.criado)}`:"";
+  if(!rv.length){const p=document.createElement("p");p.className="hint";p.textContent="Quando a arte for alterada, a versão anterior fica guardada aqui.";box.appendChild(p);return;}
+  rv.forEach((r,i)=>{const row=document.createElement("div");row.className="ver";const img=document.createElement("img");img.alt=`Versão ${r.versao}`;img.src=unpackDeep(r.preview,Q.pool||{});
+    const t=document.createElement("div");t.innerHTML=`<b>Versão ${r.versao}</b><span class="hint">${dataBR(r.data)}${r.total!=null?" · "+BRL(r.total):""}${r.status==="aprovado"?" · era a aprovada":""}</span>`;
+    const b=document.createElement("button");b.type="button";b.className="btn ghost";b.textContent="Restaurar";b.onclick=()=>restoreVersion(i);row.append(img,t,b);box.appendChild(row);});}
 
 // ================= início =================
 (function init(){
