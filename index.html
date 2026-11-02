@@ -450,6 +450,10 @@ body.ar-open{overflow:hidden}
 .ar-flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none}
 .ar-flash.go{animation:arfl .35s ease-out}
 @keyframes arfl{from{opacity:.8}to{opacity:0}}
+/* puxar a tela para baixo não recarrega a página (o trabalho também fica salvo) */
+html,body{overscroll-behavior-y:none}
+.sess-toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom,0px) + 16px);z-index:150;display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:center;max-width:min(560px,calc(100vw - 32px));background:#0f1d1c;color:#fff;border-radius:14px;padding:10px 12px;box-shadow:0 8px 28px rgba(0,0,0,.3);font:500 14px Rubik,sans-serif}
+.sess-toast .btn{background:rgba(255,255,255,.12);color:#fff;border-color:rgba(255,255,255,.25);padding:6px 12px}
 </style>
 <div class="top">
   <div class="brand"><div class="wordmark" id="wordmark" aria-label="Gênio do Capacho"><b>Gênio</b><span>do capacho</span></div><div class="brand-t" id="brandT"></div></div>
@@ -1822,7 +1826,7 @@ $("#qShare").onclick=async()=>{const L=(Q.previews&&Q.previews.length?Q.previews
 function markSent(){if(Q.status==="rascunho"){Q.status="enviado";setStatusBadge();}}
 $("#qSave").onclick=async()=>{await saveWithVersions();qmsg("Orçamento salvo neste aparelho.");renderQuote();};
 $("#qApprove").onclick=async()=>{Q.status="aprovado";Q.aprovado=new Date().toISOString();await saveWithVersions();renderQuote();qmsg("Aprovado. Vai para o plano de corte quando o sistema do administrador estiver no ar.");};
-const DB={db:null,open(){return new Promise(res=>{if(this.db)return res(this.db);try{const r=indexedDB.open("genio-vendas",1);r.onupgradeneeded=()=>r.result.createObjectStore("orcamentos",{keyPath:"id"});r.onsuccess=()=>{this.db=r.result;res(this.db);};r.onerror=()=>res(null);}catch(e){res(null);}});},
+const DB={db:null,open(){return new Promise(res=>{if(this.db)return res(this.db);try{const r=indexedDB.open("genio-vendas",2);r.onupgradeneeded=()=>{const d=r.result;if(!d.objectStoreNames.contains("orcamentos"))d.createObjectStore("orcamentos",{keyPath:"id"});if(!d.objectStoreNames.contains("sessao"))d.createObjectStore("sessao",{keyPath:"id"});};r.onsuccess=()=>{this.db=r.result;res(this.db);};r.onerror=()=>res(null);}catch(e){res(null);}});},
   async all(){const db=await this.open();if(!db)return memList.slice();return new Promise(res=>{const t=db.transaction("orcamentos").objectStore("orcamentos").getAll();t.onsuccess=()=>res(t.result||[]);t.onerror=()=>res([]);});},
   async get(id){const db=await this.open();if(!db)return deep(memList.find(x=>x.id===id)||null);return new Promise(res=>{const t=db.transaction("orcamentos").objectStore("orcamentos").get(id);t.onsuccess=()=>res(t.result||null);t.onerror=()=>res(null);});},
   async put(o){const db=await this.open();if(!db){const i=memList.findIndex(x=>x.id===o.id);if(i>=0)memList[i]=o;else memList.push(o);return;}return new Promise(res=>{const t=db.transaction("orcamentos","readwrite");t.objectStore("orcamentos").put(o);t.oncomplete=res;t.onerror=res;});}};
@@ -2936,6 +2940,35 @@ document.addEventListener("visibilitychange",()=>{if(document.hidden&&AR.on&&!(A
 // imagens de cada tapete visto de cima (JPG), para o orçamento
 async function topViewsAll(){tapInit();if(Q.tapetes.length<1)return [];const cur=Q.ti,sel=S.sel,list=[];for(let i=0;i<Q.tapetes.length;i++){setTapete(i,true);buildBase();const u=await makeTopPreview().catch(()=>null);if(u)list.push(u);}setTapete(cur,true);S.sel=sel;buildBase();return list;}
 
+// ================= sessão: o trabalho em andamento fica salvo no aparelho =================
+// Cada mudança (digitar, tocar, tirar foto, recortar, mudar de etapa) salva o orçamento aberto em segundo plano.
+// Se a página recarregar sem querer (puxar a tela para baixo, fechar a aba, o celular matar o navegador), ao abrir de novo volta tudo onde estava.
+const SESS={t:0,dirty:false,busy:false,on:false,last:0};
+function sessSnap(){if(typeof fotosSync==="function")try{fotosSync();}catch(e){}if(Q.tapetes&&Q.tapetes[Q.ti])Q.tapetes[Q.ti].spec=Q.spec;
+  return {id:"atual",Q,view:S.view==="config"||S.view==="lista"?(S.returnTo||S.listReturn||"dados"):S.view,artReturn:S.artReturn||null,openPart:S.openPart||null,salvo:new Date().toISOString()};}
+async function sessSave(){if(!SESS.on||SESS.busy)return;SESS.busy=true;SESS.dirty=false;try{const db=await DB.open();if(!db)return;const o=sessSnap();
+    await new Promise(res=>{let t;try{t=db.transaction("sessao","readwrite");t.objectStore("sessao").put(o);}catch(e){try{t=db.transaction("sessao","readwrite");t.objectStore("sessao").put(Object.assign({},o,{Q:deep(o.Q)}));}catch(e2){return res();}}t.oncomplete=res;t.onerror=res;t.onabort=res;});SESS.last=Date.now();}
+  finally{SESS.busy=false;if(SESS.dirty)sessLater();}}
+function sessLater(){SESS.dirty=true;clearTimeout(SESS.t);SESS.t=setTimeout(sessSave,600);}
+["input","change","pointerup","keyup"].forEach(ev=>document.addEventListener(ev,sessLater,true));
+// salvar já, antes de o navegador fechar ou ir para o fundo
+document.addEventListener("visibilitychange",()=>{if(document.hidden){clearTimeout(SESS.t);sessSave();}});
+window.addEventListener("pagehide",()=>{clearTimeout(SESS.t);sessSave();});
+// as mudanças que não vêm de um toque (foto carregada, cartão achado, troca de etapa) também salvam
+{const _t=track;track=function(k){_t(k);sessLater();};const _g=go;go=async function(v){const r=await _g(v);sessLater();return r;};}
+async function sessRead(){const db=await DB.open();if(!db)return null;return new Promise(res=>{try{const t=db.transaction("sessao").objectStore("sessao").get("atual");t.onsuccess=()=>res(t.result||null);t.onerror=()=>res(null);}catch(e){res(null);}});}
+function sessToast(txt,act){let b=$("#sessToast");if(!b){b=document.createElement("div");b.id="sessToast";b.className="sess-toast";b.setAttribute("role","status");document.body.appendChild(b);}b.replaceChildren();
+  const s=document.createElement("span");s.textContent=txt;b.appendChild(s);if(act){const k=document.createElement("button");k.type="button";k.className="btn ghost";k.textContent=act.t;k.onclick=()=>{b.hidden=true;act.f();};b.appendChild(k);}
+  const x=document.createElement("button");x.type="button";x.className="btn ghost";x.textContent="OK";x.onclick=()=>{b.hidden=true;};b.appendChild(x);b.hidden=false;clearTimeout(b._t);b._t=setTimeout(()=>{b.hidden=true;},12000);}
+const sessHasWork=q=>!!(q&&((q.fotos&&q.fotos.length)||(q.cliente&&(q.cliente.nome||q.cliente.tel))||(q.tapetes||[]).some(t=>t.spec&&t.spec.layers&&t.spec.layers.some(l=>l.type==="logo"))||q.id||q.feito&&Object.keys(q.feito).length));
+async function sessRestore(){let o=null;try{o=await sessRead();}catch(e){}
+  if(o&&o.Q&&sessHasWork(o.Q)){try{Q=o.Q;tapInit();fotosInit();if(Q.spec)migrateSpec(Q.spec);(Q.tapetes||[]).forEach(t=>t.spec&&migrateSpec(t.spec));S.sel=null;S.openPart=o.openPart||null;S.artReturn=o.artReturn||null;
+      fillClient();fillSpec();renderThumb();await loadAllFonts();renderLayers();renderArtTile();trackInit();buildBase();const v=["dados","arte","local","orcamento"].includes(o.view)?o.view:"dados";await go(v==="orcamento"&&!Q.preview?"local":v);renderParts();
+      const d=new Date(o.salvo),hh=`${String(d.getHours()).padStart(2,"0")}:${String(d.getMinutes()).padStart(2,"0")}`;
+      sessToast(`Voltei para o orçamento em andamento${Q.cliente&&Q.cliente.nome?` de ${Q.cliente.nome}`:""} (salvo às ${hh}).`,{t:"Começar um novo",f:()=>$("#newQuote").click()});}
+    catch(e){console.warn("sessão",e);}}
+  SESS.on=true;sessLater();}
+
 // ================= início =================
 (function init(){
   const last=lastSpec();if(last)Q.spec=Object.assign(DEFAULT_SPEC(),last);
@@ -2944,6 +2977,7 @@ async function topViewsAll(){tapInit();if(Q.tapetes.length<1)return [];const cur
   new ResizeObserver(()=>{layout();schedule();}).observe($("#stageWrap"));new ResizeObserver(()=>artLayout()).observe($("#artWrap"));new ResizeObserver(topH).observe($(".top"));topH();
   window.addEventListener("resize",()=>{layout();schedule();artLayout();});
   tapInit();fotosInit();go("dados");buildBase();loadAllFonts();trackInit();renderParts();
+  if(typeof sessRestore==="function")sessRestore();
 })();
 
 </script>
