@@ -541,7 +541,7 @@ body.ar-open{overflow:hidden}
       </div>
       <div class="foto-tabs" id="fotoTabs" role="tablist" aria-label="Fotos do local"></div>
       <label class="foto-tapsel" id="fotoTapSel" hidden><span class="hint small">Tapete nesta foto</span><select id="fotoTap"></select></label>
-      <div class="row ar-row"><button class="btn ghost" type="button" data-ar hidden><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 10l5-3v10l-5-3z"/><rect x="3" y="6" width="12" height="12" rx="2"/></svg> Ver ao vivo com os cartões</button></div>
+      <div class="row ar-row"><button class="btn ghost" type="button" data-ar hidden><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 10l5-3v10l-5-3z"/><rect x="3" y="6" width="12" height="12" rx="2"/></svg> Ver ao vivo (vídeo)</button></div>
       <div class="mat-chips" id="matChips" hidden></div>
       <div class="nophoto" id="noPhoto" hidden><b>Ainda não tem foto do local</b><span class="hint">Coloque o cartão-postal no chão, onde vai o tapete, e fotografe. Sem foto, o orçamento sai com o tapete visto de cima.</span><div class="row" style="justify-content:center"><label class="btn gold" for="filePhoto">Escolher foto</label><label class="btn ghost" for="fileShot"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg> Tirar foto</label></div></div>
       <div class="stage-wrap" id="stageWrap">
@@ -707,6 +707,12 @@ body.ar-open{overflow:hidden}
       </section>
       <section class="panel" aria-labelledby="hCfgBob">
         <div class="row between"><h2 id="hCfgBob">Cores e bobinas</h2><button class="btn ghost" id="palAdd" type="button">Adicionar cor</button></div>
+        <div class="fields guia-row">
+          <div class="field"><label for="guiaSel">Fornecedor (guia de cores)</label><select id="guiaSel"></select></div>
+          <div class="field"><label for="guiaNome">Nome do fornecedor</label><input id="guiaNome" autocomplete="off"></div>
+          <div class="field" style="justify-content:flex-end"><div class="row"><button class="btn ghost" id="guiaAdd" type="button">Novo fornecedor</button><button class="btn ghost" id="guiaDel" type="button" hidden>Tirar este fornecedor</button></div></div>
+        </div>
+        <p class="hint small" id="guiaMsg" aria-live="polite"></p>
         <p class="hint">Cada cor da fábrica com o código e a cor de tela usada na prévia. Só as cores ativas aparecem para o vendedor. O estoque em metros é da bobina de 120 cm.</p>
         <div class="table-wrap" style="overflow-x:auto"><table class="cfg-table" style="min-width:560px">
           <thead><tr><th>Tela</th><th>Nome</th><th>Código</th><th>Estoque (m)</th><th>Ativa</th><th></th></tr></thead>
@@ -862,7 +868,7 @@ body.ar-open{overflow:hidden}
 <input type="file" id="fileShot" accept="image/*" capture="environment" class="sr">
 <input type="file" id="fLogo" accept="image/*" class="sr" multiple>
 <input type="file" id="fLogoCam" accept="image/*" capture="environment" class="sr">
-<div class="ar-view" id="arView" hidden role="dialog" aria-label="Ao vivo com os cartões">
+<div class="ar-view" id="arView" hidden role="dialog" aria-label="Ao vivo">
   <video id="arVideo" playsinline muted autoplay></video>
   <canvas id="arCanvas"></canvas>
   <div class="ar-flash" id="arFlash"></div>
@@ -901,20 +907,34 @@ const FONTS=[
 const fontOf=id=>FONTS.find(f=>f.id===id)||FONTS[0];
 
 // ================= configurações =================
-const DEFAULT_PALETTE=[
-  {id:"preto03",nome:"Preto",codigo:"03",hex:"#323234"},{id:"amarelo08",nome:"Amarelo",codigo:"08",hex:"#e6d21e"},
-  {id:"branco",nome:"Branco",codigo:"",hex:"#ecebe6"},{id:"cinza",nome:"Cinza",codigo:"",hex:"#7c7d80"},{id:"grafite",nome:"Grafite",codigo:"",hex:"#4a4b50"},
-  {id:"vermelho",nome:"Vermelho",codigo:"",hex:"#b3261e"},{id:"vinho",nome:"Vinho",codigo:"",hex:"#6b1d24"},{id:"laranja",nome:"Laranja",codigo:"",hex:"#e0701c"},
-  {id:"azul",nome:"Azul",codigo:"",hex:"#1f4fa3"},{id:"marinho",nome:"Azul-marinho",codigo:"",hex:"#1b2a4d"},{id:"verde",nome:"Verde",codigo:"",hex:"#1f7a3d"},
-  {id:"marrom",nome:"Marrom",codigo:"",hex:"#5a3b25"},{id:"bege",nome:"Bege",codigo:"",hex:"#cdb48c"}
-].map(c=>Object.assign(c,{ativo:true,estoque:0}));
+// guias de cores por fornecedor: cada fornecedor tem o seu mostruário; o vendedor trabalha com o fornecedor escolhido em Configurações
+// Kapazi: as 23 cores do mostruário (ordem do guia). Os ids antigos foram mantidos para os orçamentos já salvos.
+const KAPAZI_CORES=[["cinza","Cinza","#9a9b9d"],["grafite","Grafite","#55575c"],["preto03","Preto","#2b2b2d","03"],["marrom","Marrom","#4a2f22"],["bege","Bege","#c4a979"],
+  ["ouro","Ouro Carajás","#c98d2b"],["branco","Branco","#eeede8"],["amarelo08","Amarelo","#f2c21b","08"],["laranja","Laranja","#ee6a1d"],["vermelho","Vermelho","#c8232c"],
+  ["vinho","Bordô","#6e1f27"],["marinho","Azul Marinho","#1f2a52"],["azul","Azul Royal","#1f4fae"],["verdemusgo","Verde Musgo","#5c6332"],["verde","Verde Bandeira","#1c7a3a"],
+  ["prata","Prata","#b9bcc0"],["azulmaritimo","Azul Marítimo","#0a78c2"],["verdefloresta","Verde Floresta","#1f4a3a"],["rosapink","Rosa Pink","#e2408a"],
+  ["verdepiscina","Verde Piscina (Tiffany)","#1fa58f"],["roxo","Roxo","#5e3a8c"],["verdelimao","Verde Limão","#a6c93a"],["vermelhoferrari","Vermelho Ferrari","#d8261f"]]
+  .map(([id,nome,hex,codigo])=>({id,nome,codigo:codigo||"",hex,ativo:true,estoque:0}));
+const DEFAULT_PALETTE=KAPAZI_CORES;
+const GUIA_PADRAO={kapazi:{nome:"Kapazi",cores:KAPAZI_CORES}};
 const DEFAULT_CFG={m2v:null,m2s:null,base:"consumo",fora:20,coresInc:2,corExtra:10,min:0,pix:5,parc:6,cartao:8,sinal:50,val:7,vend:"",margem:3,maxCores:4,fontsOff:[],ref:{nome:"Cartão-postal",w:10,h:15,cor:false},emp:{}};
-let palette=(store.get("gc.palette")||deep(DEFAULT_PALETTE)).map(c=>Object.assign({ativo:true,estoque:0},c));
 let cfg=Object.assign({},DEFAULT_CFG,store.get("gc.cfg")||{});
 (()=>{const old=store.get("gc.price");if(old&&!store.get("gc.cfg")){if(old.m2!=null)cfg.m2v=old.m2;["base","fora","min","pix","parc","cartao","sinal","val","vend"].forEach(k=>{if(old[k]!=null)cfg[k]=old[k];});}})();
-const saveCfg=()=>store.set("gc.cfg",cfg), savePal=()=>store.set("gc.palette",palette);
-const colorOf=id=>(palette.find(c=>c.id===id)||{hex:"#888"}).hex;
-const colorName=id=>{const c=palette.find(c=>c.id===id);return c?(c.nome+(c.codigo?" "+c.codigo:"")):"—";};
+let guias=store.get("gc.guias");
+if(!Array.isArray(guias)||!guias.length){guias=[{id:"kapazi",nome:"Kapazi",cores:deep(KAPAZI_CORES)}];const old=store.get("gc.palette");
+  // quem já tinha cores salvas: guarda código, estoque e se está ativa; cores criadas à mão continuam no fim
+  if(Array.isArray(old)){const K=guias[0].cores,OLD=["preto03","amarelo08","branco","cinza","grafite","vermelho","vinho","laranja","azul","marinho","verde","marrom","bege"];
+    old.forEach(o=>{const c=K.find(x=>x.id===o.id);if(c){if(o.codigo)c.codigo=o.codigo;c.estoque=o.estoque||0;c.ativo=o.ativo!==false;}else if(!OLD.includes(o.id))K.push(Object.assign({ativo:true,estoque:0},o));});}
+  store.set("gc.guias",guias);}
+guias.forEach(g=>{g.cores=(g.cores||[]).map(c=>Object.assign({ativo:true,estoque:0},c));});
+if(!guias.some(g=>g.id===cfg.guia))cfg.guia=guias[0].id;
+const guiaAtiva=()=>guias.find(g=>g.id===cfg.guia)||guias[0];
+let palette=guiaAtiva().cores;
+const saveCfg=()=>store.set("gc.cfg",cfg), savePal=()=>{guiaAtiva().cores=palette;store.set("gc.guias",guias);};
+// cor que não está no fornecedor atual (orçamento antigo): procura nos outros guias para não sumir
+const findColor=id=>palette.find(c=>c.id===id)||guias.reduce((r,g)=>r||g.cores.find(c=>c.id===id),null);
+const colorOf=id=>(findColor(id)||{hex:"#888"}).hex;
+const colorName=id=>{const c=findColor(id);return c?(c.nome+(c.codigo?" "+c.codigo:"")):"—";};
 const activePal=()=>palette.filter(c=>c.ativo);
 const rgbOf=hex=>{const n=parseInt(hex.slice(1),16);return [n>>16&255,n>>8&255,n&255];};
 const cdist=(a,b)=>{const dr=a[0]-b[0],dg=a[1]-b[1],db=a[2]-b[2];return Math.sqrt((2*dr*dr+4*dg*dg+3*db*db)/9);};
@@ -931,7 +951,7 @@ const DEFAULT_SPEC=()=>({w:150,h:80,fundo:"preto03",int:"amarelo08",flex:"preto0
 // quem ainda tem guardada a arte de exemplo antiga (Wilson’s Bar) passa a ver a nova
 const lastSpec=()=>{const l=store.get("gc.lastSpec2");if(l&&Array.isArray(l.layers)&&l.layers.map(L=>L.text).join("|")==="WILSON’S|BAR"){const d=DEFAULT_SPEC();l.layers=d.layers;l.fundo=d.fundo;}return l;};
 function migrateSpec(sp){
-  if(sp.layers)return sp;
+  if(sp&&!sp.guia)sp.guia=cfg.guia;if(sp.layers)return sp;
   const L=[];const k=(sp.logoSize||100)/100;
   if(sp.logoTipo!=="imagem"){[sp.l1,sp.l2].forEach((t,i,a)=>{if(t&&t.trim())L.push(textLayer({text:t.trim(),font:sp.font||"Alfa Slab One",color:sp.logo||"amarelo08",sizeCm:11*k,y:a[1]&&a[0]?(i?9:-8)*k:0}));});}
   sp.layers=L;["l1","l2","font","logoSize","logoTipo","logoData","logoSrc","logoEdit","tint","logo"].forEach(x=>delete sp[x]);return sp;
@@ -1758,7 +1778,7 @@ function fichaText(){const sp=spec(),a=analyze(sp.w,sp.h),L=[`Medidas: ${fmt(sp.
     if(Ly.type==="text")L.push(`Texto ${i+1}: “${(Ly.text||"").replace(/\n/g," / ")}” · ${Ly.font}${Ly.bold?" negrito":""}${Ly.italic?" itálico":""} · letra de ${fmtCm(Ly.sizeCm)} cm · ${colorName(Ly.color)}${Ly.outlineOn?` · contorno ${colorName(Ly.outlineColor)} ${fmtCm(Ly.outlineCm)} cm`:""} · ${pos}`);
     else{const cs=Ly.neg&&Ly.neg.on?`negativo em ${colorName(Ly.neg.color)}`:Ly.single?colorName(Ly.single):[...new Set((Ly.map||[]).filter(Boolean))].map(colorName).join(", ");const [lw,lh]=layerSizeCm(Ly);
       L.push(`Logo: ${fmtCm(lw)} × ${fmtCm(lh)} cm · ${cs} · ${pos}`);}});
-  L.push(`Cores no tapete: ${usedColors().map(colorName).join(", ")}`,`Quantidade: ${curQtd()}`);if(Q.tapetes&&Q.tapetes.length>1)L.unshift(`Tapete: ${tapName(curTap())}`);const ac=Q.arte||{};L.push(`Arte: versão ${Q.versao||1}${ac.fin?" · arte-finalista "+ac.fin:""}${ac.data?" · layout de "+dataBR(ac.data):""}`);return L.join("\n");}
+  L.push(`Cores no tapete: ${usedColors().map(colorName).join(", ")} · guia ${(guias.find(g=>g.id===sp.guia)||guiaAtiva()).nome}`,`Quantidade: ${curQtd()}`);if(Q.tapetes&&Q.tapetes.length>1)L.unshift(`Tapete: ${tapName(curTap())}`);const ac=Q.arte||{};L.push(`Arte: versão ${Q.versao||1}${ac.fin?" · arte-finalista "+ac.fin:""}${ac.data?" · layout de "+dataBR(ac.data):""}`);return L.join("\n");}
 function renderQuote(){tapInit();renderQTaps();const p=computePrice(),G=grandPrice(),multi=Q.tapetes.length>1;Q.preco=G.ready?{total:G.total,pix:G.pix,cartao:G.cartao,parc:G.parc,sinal:G.sinal,m2:p.m2}:null;
   $("#qTitle").textContent=Q.cliente.nome?`Orçamento · ${Q.cliente.nome}`:"Orçamento";$("#qNum").textContent=Q.numero?`${Q.numero} · versão ${Q.versao||1} · ${dataBR(Q.criado)}`:"ainda não salvo";renderVersions();
   $("#qImg").src=Q.preview||"";renderQThumbs();$("#qFicha").textContent=fichaText();setStatusBadge();const box=$("#qPrice");box.replaceChildren();
@@ -1812,7 +1832,7 @@ $("#newQuote").onclick=()=>{stopLive();Q=newQuote();const last=lastSpec();if(las
 
 // ================= configurações =================
 const PF={pM2v:"m2v",pM2s:"m2s",pBase:"base",pFora:"fora",pCoresInc:"coresInc",pCorExtra:"corExtra",pMin:"min",pPix:"pix",pParc:"parc",pCartao:"cartao",pSinal:"sinal",pVal:"val",pVend:"vend",pMargem:"margem",pMaxCores:"maxCores"};
-function fillCfg(){fillEmp();Object.entries(PF).forEach(([id,k])=>{$("#"+id).value=cfg[k]??"";});renderPalTable();renderFontsCfg();}
+function fillCfg(){fillEmp();Object.entries(PF).forEach(([id,k])=>{$("#"+id).value=cfg[k]??"";});renderGuias();renderPalTable();renderFontsCfg();}
 Object.entries(PF).forEach(([id,k])=>$("#"+id).addEventListener("input",e=>{const v=e.target.value;cfg[k]=(k==="base"||k==="vend")?v:(v===""?null:parseFloat(String(v).replace(",",".")));saveCfg();renderRule();renderWarns();}));
 function renderPalTable(){const tb=$("#palBody");tb.replaceChildren();
   palette.forEach((c,i)=>{const tr=document.createElement("tr");tr.innerHTML=`<td><input type="color" aria-label="Cor de tela"></td><td><input aria-label="Nome"></td><td><input aria-label="Código" placeholder="código"></td><td><input type="number" inputmode="decimal" min="0" step="1" aria-label="Estoque em metros"></td><td><input type="checkbox" aria-label="Ativa"></td><td><button class="mini" type="button" aria-label="Remover cor">×</button></td>`;
@@ -1821,7 +1841,22 @@ function renderPalTable(){const tb=$("#palBody");tb.replaceChildren();
     del.onclick=()=>{if(palette.length<=1)return;palette.splice(i,1);palChanged(true);};tb.appendChild(tr);});}
 function palChanged(full){savePal();if(full)renderPalTable();logoCache.forEach(r=>{r.col={};});renderSwatches();buildBase();}
 $("#palAdd").onclick=()=>{palette.push({id:"c"+Date.now(),nome:"Nova cor",codigo:"",hex:"#888888",ativo:true,estoque:0});palChanged(true);};
-$("#palReset").onclick=()=>{palette=deep(DEFAULT_PALETTE);palChanged(true);};
+$("#palReset").onclick=()=>{const g=GUIA_PADRAO[guiaAtiva().id];if(!g)return;palette=deep(g.cores);savePal();palChanged(true);};
+// fornecedores
+function renderGuias(){const sel=$("#guiaSel");sel.replaceChildren();guias.forEach(g=>{const o=document.createElement("option");o.value=g.id;o.textContent=`${g.nome} (${g.cores.length} cores)`;sel.appendChild(o);});sel.value=guiaAtiva().id;
+  $("#guiaNome").value=guiaAtiva().nome;$("#guiaDel").hidden=guias.length<2;$("#palReset").hidden=!GUIA_PADRAO[guiaAtiva().id];$("#palReset").textContent=`Voltar às cores do guia ${guiaAtiva().nome}`;}
+function specColorIds(sp,fn){["fundo","int","flex"].forEach(k=>{sp[k]=fn(sp[k]);});(sp.layers||[]).forEach(L=>{if(L.type==="text"){L.color=fn(L.color);if(L.outlineColor)L.outlineColor=fn(L.outlineColor);}
+  else{if(L.single)L.single=fn(L.single);if(L.neg&&L.neg.color)L.neg.color=fn(L.neg.color);if(Array.isArray(L.map))L.map=L.map.map(m=>m?fn(m):m);}});}
+// troca de fornecedor: as cores do orçamento aberto viram as mais parecidas do novo guia (mesmo nome primeiro, depois a cor de tela)
+function setGuia(id){if(!guias.some(g=>g.id===id))return;const prev=palette;cfg.guia=id;saveCfg();palette=guiaAtiva().cores;let n=0;
+  const map=c=>{if(!c||palette.some(p=>p.id===c))return c;const o=findColor(c)||prev.find(p=>p.id===c);if(!o)return c;const same=palette.find(p=>p.ativo!==false&&p.nome.toLowerCase()===o.nome.toLowerCase());n++;return same?same.id:nearestPal(rgbOf(o.hex))||c;};
+  (Q.tapetes&&Q.tapetes.length?Q.tapetes.map(t=>t.spec):[Q.spec]).forEach(sp=>{if(sp){specColorIds(sp,map);sp.guia=id;}});
+  palChanged(true);renderGuias();if(typeof fillSpec==="function")fillSpec();const m=$("#guiaMsg");if(m)m.textContent=n?`Guia ${guiaAtiva().nome}: as cores do orçamento aberto foram trocadas pelas mais parecidas deste guia. Confira no tapete.`:`Guia de cores ${guiaAtiva().nome} escolhido.`;}
+$("#guiaSel").onchange=e=>setGuia(e.target.value);
+$("#guiaNome").addEventListener("input",e=>{guiaAtiva().nome=e.target.value||"Fornecedor";savePal();const o=$("#guiaSel").selectedOptions[0];if(o)o.textContent=`${guiaAtiva().nome} (${palette.length} cores)`;});
+$("#guiaAdd").onclick=()=>{const g={id:"f"+Date.now().toString(36),nome:"Novo fornecedor",cores:deep(palette).map(c=>Object.assign(c,{estoque:0}))};guias.push(g);store.set("gc.guias",guias);setGuia(g.id);
+  const m=$("#guiaMsg");if(m)m.textContent="Novo fornecedor criado começando com as cores do guia anterior. Dê o nome e ajuste as cores, códigos e cores de tela conforme o mostruário dele.";setTimeout(()=>{$("#guiaNome").focus();$("#guiaNome").select();},50);};
+$("#guiaDel").onclick=()=>{if(guias.length<2)return;const g=guiaAtiva();guias=guias.filter(x=>x!==g);store.set("gc.guias",guias);setGuia(guias[0].id);};
 function renderFontsCfg(){const g=$("#fontsGrid");g.replaceChildren();FONTS.forEach(f=>{const l=document.createElement("label");l.style.fontFamily=`"${f.id}", serif`;const cb=document.createElement("input");cb.type="checkbox";cb.checked=!cfg.fontsOff.includes(f.id);
   cb.onchange=()=>{cfg.fontsOff=cb.checked?cfg.fontsOff.filter(x=>x!==f.id):[...cfg.fontsOff,f.id];saveCfg();};l.append(cb,document.createTextNode(f.id));g.appendChild(l);});}
 $("#cfgBack").onclick=()=>go(S.returnTo||"dados");
@@ -2451,11 +2486,14 @@ function refApply(det,setColor,fixed){const r=refCfg();if(!fixed&&(!r.w||!r.h))r
   if(setColor&&r.cor&&P.ref.pid)refUseColor();
   Q.preview=null;syncSliders();schedule();renderRefInfo();return true;}
 function refUseColor(){const pid=Q.pose.ref&&Q.pose.ref.pid;if(!pid)return;const sp=spec();if(sp.flex===sp.fundo)sp.flex=pid;sp.fundo=pid;renderSwatches();specChanged();renderRefInfo();}
+// foto muito de perto: o chão que aparece é menor que o tapete
+function floorTip(){const P=Q.pose;if(!P||!P.plane||!P.ref)return "";const inv=invH(P.plane.H);if(!inv)return "";const cy=P.ref.quad.reduce((s,p)=>s+p[1],0)/4,a=applyH(inv,0,cy),b=applyH(inv,1,cy),span=Math.hypot(a[0]-b[0],a[1]-b[1]);
+  return isFinite(span)&&Math.max(spec().w,spec().h)/100>span*1.3?` A foto mostra só uns ${Math.round(span*100)} cm de chão de um lado ao outro, menos que o tapete: para ver o tapete inteiro, fotografe de mais longe (1 a 2 m), com o piso em volta à vista.`:"";}
 async function refAuto(){if(!Q.photo||Q.photo.example)return;const r=refCfg(),nm=r.nome.toLowerCase();
   msg("Procurando os cartões na foto…");if(await gcardsAuto())return;
   if(!r.w||!r.h){msg(`Para usar o ${nm} como régua, defina o tamanho dele em Configurações → Objeto de referência.`);return;}
   msg(`Procurando o ${nm} na foto…`);const det=await refAutoDetect().catch(()=>null);if(det)det.quad=await refineFull(det.quad).catch(()=>det.quad);
-  if(det&&await refPlace(det,true))msg(`Achei o ${nm}: o tapete já está no tamanho real e na perspectiva do chão${r.cor&&Q.pose.ref.pid?`, com o fundo na cor dele (${colorName(Q.pose.ref.pid)})`:""}. Confira os cantos em “${r.nome}”.`);
+  if(det&&await refPlace(det,true))msg(`Achei o ${nm}: o tapete já está no tamanho real e na perspectiva do chão${r.cor&&Q.pose.ref.pid?`, com o fundo na cor dele (${colorName(Q.pose.ref.pid)})`:""}. Confira os cantos em “${r.nome}”.${floorTip()}`);
   else msg(`Não achei o ${nm} sozinho. Toque em “${r.nome}” e depois toque nele na foto.`);}
 async function refTap(sx,sy){const r=refCfg(),nm=r.nome.toLowerCase();if(false){msg(`Defina o tamanho do ${nm} em Configurações → Objeto de referência.`);return;}
   msg(`Procurando o ${nm} onde você tocou…`);const det=await refTapDetect(sx/W,sy/H).catch(()=>null);if(det)det.quad=await refineFull(det.quad).catch(()=>det.quad);
@@ -2742,10 +2780,15 @@ async function gcardsPlace(ids,merge){fotosSync();const f=Q.fotos[Q.fi];if(!f)re
 async function gcardsCands(){const out=[],add=q=>{if(!out.some(o=>o.quad.every((p,i)=>Math.hypot(p[0]-q[i][0],p[1]-q[i][1])<0.002)))out.push({quad:q});};
   try{const F=await refFullLum(),k=Math.max(1,Math.ceil(F.w/1600)),w=Math.floor(F.w/k),h=Math.floor(F.h/k),L=new Float32Array(w*h);
     for(let y=0;y<h;y++)for(let x=0;x<w;x++){let v=0;for(let b=0;b<k;b++)for(let a=0;a<k;a++)v+=F.L[(y*k+b)*F.w+x*k+a];L[y*w+x]=v/(k*k);}
-    if(typeof arDetect==="function")arDetect({w,h,L}).forEach(q=>add(q.map(([x,y])=>[x/w,y/h])));}catch(e){}
+    if(typeof arDetect==="function")arDetect({w,h,L}).filter(o=>!o.plain).forEach(o=>add(o.q.map(([x,y])=>[x/w,y/h])));}catch(e){}
   ((await refAutoDetect(true).catch(()=>[]))||[]).slice(0,8).forEach(c=>add(c.quad));return out;}
+// o cartão Gênio tem moldura preta logo fora da área branca; um cartão-postal comum, não (evita confundir o postal universal com um cartão numerado)
+async function gRingOK(quadN){const F=await refFullLum(),q=quadN.map(([u,v])=>[u*F.w,v*F.h]),c=q.reduce((s,p)=>[s[0]+p[0]/4,s[1]+p[1]/4],[0,0]),at=(x,y)=>{if(x<0||y<0||x>=F.w-1||y>=F.h-1)return -1;return F.L[(y|0)*F.w+(x|0)];};
+  let ring=0,rc=0,ins=0,ic=0;for(let k=0;k<4;k++){const a=q[k],b=q[(k+1)%4];for(let s=1;s<16;s++){const u=s/16,px=a[0]+(b[0]-a[0])*u,py=a[1]+(b[1]-a[1])*u,dx=px-c[0],dy=py-c[1];
+    const v=at(c[0]+dx*1.07,c[1]+dy*1.07);if(v>=0){ring+=v;rc++;}const w=at(c[0]+dx*0.85,c[1]+dy*0.85);if(w>=0){ins+=w;ic++;}}}
+  return rc>20&&ic>20&&ring/rc<0.45*(ins/ic);}
 async function gcardsAuto(){const cs=await gcardsCands();const ids=[];
-  for(const c of cs.slice(0,20)){const q=await refineFull(c.quad).catch(()=>c.quad);let id=await cardIdentify(q);if(!id&&q!==c.quad)id=await cardIdentify(c.quad);if(!id)continue;
+  for(const c of cs.slice(0,20)){const q=await refineFull(c.quad).catch(()=>c.quad);let id=await cardIdentify(q);if(!id&&q!==c.quad)id=await cardIdentify(c.quad);if(!id||!(await gRingOK(id.quad)))continue;
     const o=ids.find(x=>x.n===id.n);if(!o)ids.push(id);else if(id.ncc>o.ncc)Object.assign(o,id);}
   if(!ids.length)return false;return gcardsPlace(ids,false);}
 // trocar o tapete selecionado dentro da mesma foto
@@ -2819,15 +2862,18 @@ function arDetect(F){const {w,h,L}=F,n=w*h,t=Math.max(95,Math.min(215,otsu(L)+12
     const c=q.reduce((s,p)=>[s[0]+p[0]/4,s[1]+p[1]/4],[0,0]);let ring=0,rc=0,inside=0,ic=0;
     for(let k=0;k<4;k++){const a=q[k],b=q[(k+1)%4];for(let s=1;s<10;s++){const u=s/10,px=a[0]+(b[0]-a[0])*u,py=a[1]+(b[1]-a[1])*u,dx=px-c[0],dy=py-c[1],o=1.07,ii=0.8;
       const v=bil(F,c[0]+dx*o,c[1]+dy*o);if(v>=0){ring+=v;rc++;}const vi=bil(F,c[0]+dx*ii,c[1]+dy*ii);if(vi>=0){inside+=vi;ic++;}}}
-    if(!rc||!ic)continue;ring/=rc;inside/=ic;if(ring>inside*0.55)continue;out.push(q);}
+    if(!rc||!ic)continue;ring/=rc;inside/=ic;if(ring>inside*0.85)continue;out.push({q,plain:ring>inside*0.55});}
   return out;}
 // cada cartão vira uma "trilha" pela posição; o número só vale depois de lido igual em vários quadros (nunca troca um tapete por outro por engano)
 let ARID=0;
 function arTrack(F){const sx=1/F.w,sy=1/F.h,used=new Set();
-  for(const q of arDetect(F)){const side=Math.min(...[0,1,2,3].map(k=>Math.hypot(q[(k+1)%4][0]-q[k][0],q[(k+1)%4][1]-q[k][1])));if(side<16)continue;
+  for(const D of arDetect(F)){const q=D.q,side=Math.min(...[0,1,2,3].map(k=>Math.hypot(q[(k+1)%4][0]-q[k][0],q[(k+1)%4][1]-q[k][1])));if(side<16)continue;
     const qn=q.map(([x,y])=>[x*sx,y*sy]),c=qn.reduce((s,p)=>[s[0]+p[0]/4,s[1]+p[1]/4],[0,0]);
     let T=null,bd=0.07;for(const k in AR.tr){const t=AR.tr[k];if(used.has(k))continue;const d=Math.hypot(t.c[0]-c[0],t.c[1]-c[1]);if(d<bd){bd=d;T=t;}}
     if(!T){T={key:"t"+(++ARID),votes:{},n:0,q:null,c,miss:0,rot:0};AR.tr[T.key]=T;}used.add(T.key);T.c=c;T.miss=0;
+    // contorno sem número (cartão-postal universal): guarda os cantos suavizados; vale como postal depois de algumas tentativas sem ler número
+    T.tries=(T.tries||0)+1;if(!T.pq)T.pq=qn;else{let best=null,be=1e9;for(let s=0;s<4;s++){const qq=[0,1,2,3].map(k=>qn[(k+s)%4]),e=qq.reduce((a,p,i)=>a+Math.hypot(p[0]-T.pq[i][0],p[1]-T.pq[i][1]),0);if(e<be){be=e;best=qq;}}
+      T.pq=be<0.1?T.pq.map((p,i)=>[p[0]+(best[i][0]-p[0])*0.55,p[1]+(best[i][1]-p[1])*0.55]):qn;}
     const id=arIdentify(F,q);if(id){T.votes[id.n]=(T.votes[id.n]||0)+id.ncc*Math.min(1,id.lead*5);
       const vs=Object.entries(T.votes).sort((a,b)=>b[1]-a[1]);if(vs[0][1]>=1.6&&(!vs[1]||vs[0][1]>vs[1][1]*2.5))T.n=+vs[0][0];
       // cantos na ordem do cartão (o canto 0 é o de cima à esquerda da área branca)
@@ -2845,8 +2891,15 @@ function arFrame(){const v=AR.video,vw=v.videoWidth,vh=v.videoHeight;if(!vw)retu
   const f=26*Math.hypot(cw,ch)/43.267,vis=[];
   const seenN=new Set();for(const k in AR.tr){const tr=AR.tr[k];if(!tr.n||!tr.q||tr.miss>12||seenN.has(tr.n))continue;seenN.add(tr.n);const T=tapByCard(tr.n);if(!T)continue;const img=tr.q.map(([u,w])=>[u*cw,w*ch]),X=GCARD.w/100,Y=GCARD.h/100,P=solvePose(img,[[-X/2,Y/2],[X/2,Y/2],[X/2,-Y/2],[-X/2,-Y/2]],f,cw/2,ch/2);if(!P)continue;
     const m=MF(T.id)||{x:0,y:0,th:0},hw=T.spec.w/200,hd=T.spec.h/200,quad=[[-hw,hd],[hw,hd],[hw,-hd],[-hw,-hd]].map(([a,b])=>{const [p,q]=rot2(a,b,m.th||0);return applyH(P.Hp,p+(m.x||0),q+(m.y||0));});
-    if(quad.some(p=>!isFinite(p[0])||!isFinite(p[1])))continue;const bc=arBase(T),M=withTap(T,()=>solveH(texRect(),quad));if(!M)continue;paintMatN(x,bc,M,8);vis.push(T);}AR.vis=vis.map(T=>T.card);
-  if(AR.frame%10===0)arSay(vis.length?`Vendo ${vis.map(T=>`cartão ${T.card} (${tapName(T)})`).join(", ")}.`:Object.values(AR.tr).some(t=>t.n)?"Achei um cartão sem tapete ligado. Ligue um tapete a ele na parte 2.":Object.keys(AR.tr).length?"Lendo o número do cartão… chegue um pouco mais perto.":"Aponte para os cartões no chão, com o celular a 1 ou 2 metros.");}
+    if(quad.some(p=>!isFinite(p[0])||!isFinite(p[1])))continue;const bc=arBase(T),M=withTap(T,()=>solveH(texRect(),quad));if(!M)continue;paintMatN(x,bc,M,8);vis.push(T);}
+  // cartão-postal universal: o tapete aberto, centrado no cartão, deitado como na foto (largura ao longo do lado de cima do cartão)
+  const r=refCfg(),T0=curTap();let pv=false;if(r.w&&r.h)for(const k in AR.tr){const tr=AR.tr[k];if(tr.n||(tr.tries||0)<4||!tr.pq||tr.miss>12)continue;const img=tr.pq.map(([u,w])=>[u*cw,w*ch]);let P=null;
+    for(const [a,b] of [[r.w,r.h],[r.h,r.w]]){const X=a/100,Y=b/100,Pp=solvePose(img,[[-X/2,Y/2],[X/2,Y/2],[X/2,-Y/2],[-X/2,-Y/2]],f,cw/2,ch/2);if(Pp&&(!P||Pp.rms<P.rms))P=Object.assign(Pp,{X,Y});}
+    if(!P||P.rms>Math.max(4,0.04*Math.hypot(img[0][0]-img[2][0],img[0][1]-img[2][1])))continue;
+    const hw=T0.spec.w/200,hd=T0.spec.h/200,th=0,quad=[[-hw,hd],[hw,hd],[hw,-hd],[-hw,-hd]].map(([a,b])=>{const [p,q]=rot2(a,b,th);return applyH(P.Hp,p,q);});
+    if(quad.some(p=>!isFinite(p[0])||!isFinite(p[1])))continue;const M=withTap(T0,()=>solveH(texRect(),quad));if(!M)continue;paintMatN(x,arBase(T0),M,8);pv=true;break;}
+  AR.vis=vis.map(T=>T.card);AR.pv=pv;
+  if(AR.frame%10===0)arSay(vis.length||pv?`Vendo ${vis.map(T=>`cartão ${T.card} (${tapName(T)})`).concat(pv?[`o ${r.nome.toLowerCase()} (${tapName(T0)})`]:[]).join(", ")}.`:Object.values(AR.tr).some(t=>t.n)?"Achei um cartão sem tapete ligado. Ligue um tapete a ele na parte 2.":Object.values(AR.tr).some(t=>(t.tries||0)<4)?"Lendo o cartão…":Object.keys(AR.tr).length?"Achei um cartão, mas a medida dele não bate com o objeto de referência (Configurações) nem é um cartão Gênio. Chegue um pouco mais perto.":"Aponte para o cartão no chão, com o celular a 1 ou 2 metros, pegando o piso em volta.");}
 function paintMatN(x,tex,M,n){const bw=tex.width,bh=tex.height,Tp=(u,v)=>applyH(M,u,v);x.save();x.globalAlpha=0.97;
   for(let j=0;j<n;j++)for(let i=0;i<n;i++){const u0=i/n*bw,u1=(i+1)/n*bw,v0=j/n*bh,v1=(j+1)/n*bh;drawTri(x,tex,[[u0,v0],[u1,v0],[u1,v1]],[Tp(u0,v0),Tp(u1,v0),Tp(u1,v1)]);drawTri(x,tex,[[u0,v0],[u1,v1],[u0,v1]],[Tp(u0,v0),Tp(u1,v1),Tp(u0,v1)]);}x.restore();}
 function renderArLegend(){const b=$("#arLegend");if(!b)return;b.replaceChildren();cardsInit();Q.tapetes.forEach(T=>{const s=document.createElement("span");s.className="ar-chip";s.textContent=`${T.card} · ${tapName(T)} · ${fmt(T.spec.w/100)} × ${fmt(T.spec.h/100)} m`;b.appendChild(s);});}
@@ -2872,7 +2925,7 @@ $("#arClose").onclick=arClose;$("#arRec").onclick=arRecToggle;$("#arShot").oncli
 $$("[data-ar]").forEach(b=>{b.hidden=!arSupported();b.addEventListener("click",arOpen);});
 document.addEventListener("visibilitychange",()=>{if(document.hidden&&AR.on&&!(AR.rec&&AR.rec.state==="recording"))arClose();});
 // imagens de cada tapete visto de cima (JPG), para o orçamento
-async function topViewsAll(){tapInit();if(Q.tapetes.length<1)return [];const cur=Q.ti,list=[];for(let i=0;i<Q.tapetes.length;i++){setTapete(i,true);buildBase();const u=await makeTopPreview().catch(()=>null);if(u)list.push(u);}setTapete(cur,true);buildBase();return list;}
+async function topViewsAll(){tapInit();if(Q.tapetes.length<1)return [];const cur=Q.ti,sel=S.sel,list=[];for(let i=0;i<Q.tapetes.length;i++){setTapete(i,true);buildBase();const u=await makeTopPreview().catch(()=>null);if(u)list.push(u);}setTapete(cur,true);S.sel=sel;buildBase();return list;}
 
 // ================= início =================
 (function init(){
