@@ -2909,14 +2909,14 @@ const arSupported=()=>!!(navigator.mediaDevices&&navigator.mediaDevices.getUserM
 function arMime(){if(!window.MediaRecorder)return "";const L=["video/mp4;codecs=avc1.42E01E","video/mp4;codecs=avc1","video/mp4","video/webm;codecs=vp9","video/webm;codecs=vp8","video/webm"];
   for(const m of L)try{if(MediaRecorder.isTypeSupported(m))return m;}catch(e){}return "";}
 function arSay(t){const e=$("#arMsg");if(e)e.textContent=t;}
-async function arOpen(){gravAsk();ghReset();if(!arSupported()){msg("Este navegador não abre a câmera ao vivo. Use o site do Gênio no celular (Chrome ou Safari).");return;}
+async function arOpen(){gravAsk();ghReset();arWorkerStart();if(!arSupported()){msg("Este navegador não abre a câmera ao vivo. Use o site do Gênio no celular (Chrome ou Safari).");return;}
   cardsInit();const v=$("#arView");v.hidden=false;document.body.classList.add("ar-open");AR.video=$("#arVideo");AR.cv=$("#arCanvas");AR.x=AR.cv.getContext("2d");
   AR.det=document.createElement("canvas");AR.dx=AR.det.getContext("2d",{willReadFrequently:true});AR.tr={};AR.last={};for(const k in ANC)delete ANC[k];AR.frame=0;arSay("Abrindo a câmera…");renderArLegend();
   try{AR.stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:"environment"},width:{ideal:1920},height:{ideal:1080}},audio:false});}
   catch(e){arSay(OUTSIDE_CLAUDE?"Não consegui abrir a câmera. Confira se o navegador tem permissão para usar a câmera.":"A câmera ao vivo só abre no site do Gênio (genio.dombanana.tech), no celular.");return;}
   AR.video.srcObject=AR.stream;await AR.video.play().catch(()=>{});AR.on=true;arSay("Aponte para os cartões no chão.");$("#arRec").disabled=false;$("#arShot").disabled=false;
   const loop=()=>{if(!AR.on)return;arFrame();AR.raf=requestAnimationFrame(loop);};AR.raf=requestAnimationFrame(loop);}
-function arClose(){if(AR.rec&&AR.rec.state!=="inactive")AR.rec.stop();AR.on=false;cancelAnimationFrame(AR.raf);clearInterval(AR.timer);if(AR.stream){AR.stream.getTracks().forEach(t=>t.stop());AR.stream=null;}
+function arClose(){if(AR.rec&&AR.rec.state!=="inactive")AR.rec.stop();AR.on=false;if(AR.wk){AR.wk.terminate();AR.wk=null;}AR.wkBusy=false;AR.res=null;cancelAnimationFrame(AR.raf);clearInterval(AR.timer);if(AR.stream){AR.stream.getTracks().forEach(t=>t.stop());AR.stream=null;}
   if(AR.video)AR.video.srcObject=null;$("#arView").hidden=true;document.body.classList.remove("ar-open");}
 // ---------- detecção rápida, quadro a quadro ----------
 function arLum(){const vw=AR.video.videoWidth,vh=AR.video.videoHeight;if(!vw||!vh)return null;const k=Math.min(1,800/Math.max(vw,vh)),w=Math.round(vw*k),h=Math.round(vh*k);if(AR.det.width!==w){AR.det.width=w;AR.det.height=h;}
@@ -2957,15 +2957,16 @@ function arDetectMask(F,M){const {w,h,L}=F,n=w*h,lab=new Int32Array(n),out=[],st
   return out;}
 // cada cartão vira uma "trilha" pela posição; o número só vale depois de lido igual em vários quadros (nunca troca um tapete por outro por engano)
 let ARID=0;
+function arDetectAll(F){return {w:F.w,h:F.h,dets:arDetect(F).map(D=>({q:D.q,plain:D.plain,id:arIdentify(F,D.q)}))};}
 function arTrack(F){const sx=1/F.w,sy=1/F.h,used=new Set();
-  for(const D of arDetect(F)){const q=D.q,side=Math.min(...[0,1,2,3].map(k=>Math.hypot(q[(k+1)%4][0]-q[k][0],q[(k+1)%4][1]-q[k][1])));if(side<16)continue;
+  for(const D of F.dets){const q=D.q,side=Math.min(...[0,1,2,3].map(k=>Math.hypot(q[(k+1)%4][0]-q[k][0],q[(k+1)%4][1]-q[k][1])));if(side<16)continue;
     const qn=q.map(([x,y])=>[x*sx,y*sy]),c=qn.reduce((s,p)=>[s[0]+p[0]/4,s[1]+p[1]/4],[0,0]);
     let T=null,bd=0.07;for(const k in AR.tr){const t=AR.tr[k];if(used.has(k))continue;const d=Math.hypot(t.c[0]-c[0],t.c[1]-c[1]);if(d<bd){bd=d;T=t;}}
     if(!T){T={key:"t"+(++ARID),votes:{},n:0,q:null,c,miss:0,rot:0};AR.tr[T.key]=T;}used.add(T.key);T.c=c;T.miss=0;T.seen=AR.frame;
     // contorno sem número (cartão-postal universal): guarda os cantos suavizados; vale como postal depois de algumas tentativas sem ler número
     T.tries=(T.tries||0)+1;if(!T.pq)T.pq=qn;else{let best=null,be=1e9;for(let s=0;s<4;s++){const qq=[0,1,2,3].map(k=>qn[(k+s)%4]),e=qq.reduce((a,p,i)=>a+Math.hypot(p[0]-T.pq[i][0],p[1]-T.pq[i][1]),0);if(e<be){be=e;best=qq;}}
       if(be<0.1)T.pq=T.pq.map((p,i)=>[p[0]+(best[i][0]-p[0])*0.55,p[1]+(best[i][1]-p[1])*0.55]);else{T.pq=qn;T.mkv=null;}}
-    const id=arIdentify(F,q);if(id){T.votes[id.n]=(T.votes[id.n]||0)+id.ncc*Math.min(1,id.lead*5);
+    const id=D.id;if(id){T.votes[id.n]=(T.votes[id.n]||0)+id.ncc*Math.min(1,id.lead*5);
       const vs=Object.entries(T.votes).sort((a,b)=>b[1]-a[1]);if(vs[0][1]>=1.6&&(!vs[1]||vs[0][1]>vs[1][1]*2.5))T.n=+vs[0][0];
       // cantos na ordem do cartão (o canto 0 é o de cima à esquerda da área branca)
       if(id.n===T.n){const qq=id.q.map(([x,y])=>[x*sx,y*sy]);T.q=T.q&&T.q.every((p,i)=>Math.hypot(p[0]-qq[i][0],p[1]-qq[i][1])<0.05)?T.q.map((p,i)=>[p[0]+(qq[i][0]-p[0])*0.55,p[1]+(qq[i][1]-p[1])*0.55]):qq;}}
@@ -2973,26 +2974,48 @@ function arTrack(F){const sx=1/F.w,sy=1/F.h,used=new Set();
       let best=null,be=1e9;for(let s=0;s<4;s++){const qq=[0,1,2,3].map(k=>qn[(k+s)%4]),e=qq.reduce((a,p,i)=>a+Math.hypot(p[0]-T.q[i][0],p[1]-T.q[i][1]),0);if(e<be){be=e;best=qq;}}
       if(best&&be<0.08)T.q=T.q.map((p,i)=>[p[0]+(best[i][0]-p[0])*0.55,p[1]+(best[i][1]-p[1])*0.55]);}}
   for(const k in AR.tr)if(!used.has(k)&&++AR.tr[k].miss>12)delete AR.tr[k];}
+// ---------- detecção em segundo plano (Web Worker): a imagem roda lisa enquanto o cartão é procurado ----------
+const AR_DET_MAX=640;
+function arWorkerSrc(){const F=[otsu,arPatch,arIdentify,gTemplates,arMasks,arDetect,arDetectMask,arDetectAll,convexHull,hullToQuad,orderQuad,refineQuad,quadOK,solveH].map(f=>f.toString()).join("\n");
+  return `var window=self;const DEG=Math.PI/180;const GCARD=${JSON.stringify(GCARD)},GTPL=${JSON.stringify(GTPL)};let GT=null;const bil=${bil.toString()},polyArea=${polyArea.toString()},applyH=${applyH.toString()};
+${F}
+let cv=null,cx=null;
+onmessage=e=>{const {b,cap,max}=e.data;try{const k=Math.min(1,max/Math.max(b.width,b.height)),w=Math.round(b.width*k),h=Math.round(b.height*k);
+  if(!cv||cv.width!==w||cv.height!==h){cv=new OffscreenCanvas(w,h);cx=cv.getContext("2d",{willReadFrequently:true});}cx.drawImage(b,0,0,w,h);b.close&&b.close();
+  const d=cx.getImageData(0,0,w,h).data,L=new Float32Array(w*h),Mn=new Float32Array(w*h);for(let i=0;i<w*h;i++){const r=d[i*4],g=d[i*4+1],bb=d[i*4+2];L[i]=0.2126*r+0.7152*g+0.0722*bb;Mn[i]=Math.min(r,g,bb);}
+  postMessage({res:arDetectAll({w,h,L,Mn}),cap});}catch(err){postMessage({err:String(err),cap});}};`;}
+function arWorkerStart(){AR.wk=null;AR.wkBusy=false;AR.res=null;
+  if(!window.Worker||!window.OffscreenCanvas||!window.createImageBitmap)return;
+  try{const u=URL.createObjectURL(new Blob([arWorkerSrc()],{type:"text/javascript"})),w=new Worker(u);
+    w.onmessage=e=>{AR.wkBusy=false;if(e.data.err){AR.wkFail=(AR.wkFail||0)+1;if(AR.wkFail>3){w.terminate();AR.wk=null;}return;}AR.wkFail=0;AR.res=e.data;};
+    w.onerror=()=>{w.terminate();AR.wk=null;AR.wkBusy=false;};AR.wk=w;}catch(e){AR.wk=null;}}
+function arSend(){const v=AR.video;if(!AR.wk||AR.wkBusy||!v.videoWidth)return;AR.wkBusy=true;
+  const cap={R:DEV.R?DEV.R.map(r=>[...r]):null,up:upFloor()};
+  createImageBitmap(v).then(b=>{if(!AR.wk){b.close&&b.close();AR.wkBusy=false;return;}AR.wk.postMessage({b,cap,max:AR_DET_MAX},[b]);}).catch(()=>{AR.wkBusy=false;if(AR.wk){AR.wk.terminate();AR.wk=null;}});}
+// a leitura é de um quadro de alguns milissegundos atrás: gira para a posição de agora pelo giroscópio
+function measNow(m,cap){if(!m||!cap||!cap.R||!DEV.R)return m;const dR=devDelta(DEV.R,cap.R);["C","long","n","xv","yv"].forEach(k=>{if(m[k])m[k]=mul3(dR,m[k]);});return m;}
 // ---------- desenho ----------
 const ARBASE=new Map();
 function arBase(T){const c=ARBASE.get(T.id);if(c&&c.s===T.spec&&c.v===BASEV)return c.c;const b=baseOf(T);ARBASE.set(T.id,{s:T.spec,v:BASEV,c:b});return b;}
 function arFrame(){const v=AR.video,vw=v.videoWidth,vh=v.videoHeight;if(!vw)return;const k=Math.min(1,1280/Math.max(vw,vh)),cw=Math.round(vw*k),ch=Math.round(vh*k);
   if(AR.cv.width!==cw||AR.cv.height!==ch){AR.cv.width=cw;AR.cv.height=ch;}const x=AR.x;x.drawImage(v,0,0,cw,ch);
-  AR.frame++;if(AR.frame%2===0){const F=arLum();if(F)arTrack(F);}
-  const f=26*Math.hypot(cw,ch)/43.267,vis=[],drawn=new Set(),now=Date.now(),fresh=AR.frame%2===0;
+  AR.frame++;let fresh=false,cap=null;
+  if(AR.wk){if(AR.res){arTrack(AR.res.res);cap=AR.res.cap;AR.res=null;fresh=true;}arSend();}
+  else if(AR.frame%2===0){const F=arLum();if(F){arTrack(arDetectAll(F));fresh=true;}}
+  const f=26*Math.hypot(cw,ch)/43.267,vis=[],drawn=new Set(),now=Date.now(),up0=cap?cap.up:upFloor();
   // cartões Gênio: o número diz para que lado é o topo, sem ambiguidade
   const seenN=new Set();for(const k in AR.tr){const tr=AR.tr[k];if(!tr.n||!tr.q||tr.miss>0||seenN.has(tr.n))continue;seenN.add(tr.n);const T=tapByCard(tr.n);if(!T)continue;
-    const key="n"+tr.n;let meas=null;if(fresh&&tr.seen===AR.frame){const img=tr.q.map(([u,w])=>[u*cw,w*ch]);if(upFloor())meas=floorMeas(img,GCARD.w/100,GCARD.h/100,f,cw/2,ch/2,true,now);
-      else{const P=poseFloor(img,GCARD.w/100,GCARD.h/100,f,cw/2,ch/2);if(P)meas={C:P.t,long:P.xv,yv:P.yv,xv:P.xv,fixed:true};}}
+    const key="n"+tr.n;let meas=null;if(fresh&&tr.seen===AR.frame){const img=tr.q.map(([u,w])=>[u*cw,w*ch]);if(up0)meas=floorMeas(img,GCARD.w/100,GCARD.h/100,f,cw/2,ch/2,true,now,up0);
+      else{const P=poseFloor(img,GCARD.w/100,GCARD.h/100,f,cw/2,ch/2);if(P)meas={C:P.t,long:P.xv,yv:P.yv,xv:P.xv,fixed:true};}meas=measNow(meas,cap);}
     const A=anchorStep(key,T,meas?[meas]:null,now);if(A&&now-(A.seenAt||0)<GHOST&&drawAnchor(x,A,T,f,cw,ch)){drawn.add(key);vis.push(T);}}
   // cartão-postal universal: o tapete que está aberto
   const r=refCfg(),T0=curTap();let pv=false;
   if(r.w&&r.h){const plainK=Object.keys(AR.tr).filter(k=>{const t=AR.tr[k];return !t.n&&(t.tries||0)>=4&&t.pq&&t.miss===0;}).sort((a,b)=>polyArea(AR.tr[b].pq)-polyArea(AR.tr[a].pq));
     let cands=null;const tr=plainK.length?AR.tr[plainK[0]]:null;
     if(tr&&fresh&&tr.seen===AR.frame){const img=tr.pq.map(([u,w])=>[u*cw,w*ch]),lim=Math.max(4,0.04*Math.hypot(img[0][0]-img[2][0],img[0][1]-img[2][1]));cands=[];
-      if(upFloor()){const m=floorMeas(img,r.w/100,r.h/100,f,cw/2,ch/2,false,now);if(m)cands.push(m);}
+      if(up0){const m=floorMeas(img,r.w/100,r.h/100,f,cw/2,ch/2,false,now,up0);if(m)cands.push(m);}
       else for(const [a,b] of [[r.w,r.h],[r.h,r.w]]){const P=poseFloor(img,a/100,b/100,f,cw/2,ch/2);if(P&&P.rms<=lim)cands.push({C:P.t,xv:P.xv,yv:P.yv,long:a>=b?P.xv:P.yv,rms:P.rms});}
-      if(!cands.length)cands=null;}
+      cands.forEach(m=>measNow(m,cap));if(!cands.length)cands=null;}
     if(ANC.p&&ANC.p.T!==T0)delete ANC.p;
     const A=(tr||ANC.p)?anchorStep("p",T0,cands,now):null;if(A&&now-(A.seenAt||0)<GHOST&&drawAnchor(x,A,T0,f,cw,ch)){pv=true;drawn.add("p");}}
   // sem cartão por muito tempo: some (e a altura do celular é medida de novo)
@@ -3072,7 +3095,7 @@ function ghPush(h,now){GH.at=now||Date.now();GH.buf.push(h);if(GH.buf.length>13)
   if(GH.h==null){if(GH.buf.length>=3)GH.h=m;}else{const r=GH.buf.slice(-6).sort((a,b)=>a-b),rm=r[r.length>>1];
     if(r.length>=6&&r[0]>rm*0.88&&r[5]<rm*1.12&&Math.abs(rm/GH.h-1)>0.2)GH.h=rm;            // a pessoa abaixou ou levantou: trava na altura nova
     else GH.h+=Math.max(-0.02*GH.h,Math.min(0.02*GH.h,m-GH.h));}return GH.h==null?m:GH.h;}
-function floorMeas(img,X,Y,f,cx,cy,fixed,now){const n=upFloor();if(!n)return null;
+function floorMeas(img,X,Y,f,cx,cy,fixed,now,up){const n=up||upFloor();if(!n)return null;
   const R=img.map(([u,v])=>[(u-cx)/f,(v-cy)/f,1]);if(R.some(r=>v3d(n,r)>-0.04))return null;          // canto no horizonte ou acima: não é o chão
   const U=R.map(r=>r.map(c=>-c/v3d(n,r))),sub=(a,b)=>[a[0]-b[0],a[1]-b[1],a[2]-b[2]],len=a=>Math.hypot(a[0],a[1],a[2]);   // cantos no chão, celular a 1 m
   const e=[sub(U[1],U[0]),sub(U[2],U[1]),sub(U[2],U[3]),sub(U[3],U[0])],en=e.map(v3n);
@@ -3091,7 +3114,7 @@ function floorMeas(img,X,Y,f,cx,cy,fixed,now){const n=upFloor();if(!n)return nul
 // 2) entre as leituras possíveis do cartão (lado maior para um lado ou para o outro, topo para cá ou para lá),
 //    fica com a mais parecida com a previsão — nunca vira 90° ou 180° por ruído;
 // 3) mistura leitura e previsão (sem tremer); uma mudança grande só é aceita se se repetir por vários quadros (o cartão foi mexido de verdade).
-const GHOST=600,ANC={},I3=[[1,0,0],[0,1,0],[0,0,1]],mul3=(M,v)=>[0,1,2].map(i=>M[i][0]*v[0]+M[i][1]*v[1]+M[i][2]*v[2]);
+const GHOST=1200,ANC={},I3=[[1,0,0],[0,1,0],[0,0,1]],mul3=(M,v)=>[0,1,2].map(i=>M[i][0]*v[0]+M[i][1]*v[1]+M[i][2]*v[2]);
 function anchorStep(key,T,cands,now){const A=ANC[key];let pred=null;
   if(A){const dR=DEV.R&&A.dev?devDelta(DEV.R,A.dev):I3;pred={C:mul3(dR,A.C),x:mul3(dR,A.x),n:mul3(dR,A.n),L:mul3(dR,A.L)};
     const up=upFloor();if(up&&v3d(up,pred.n)>0.8){const pl=v=>v3n(v.map((c,i)=>c-up[i]*v3d(v,up)));pred.n=up;pred.L=pl(pred.L);pred.x=pl(pred.x);}}   // o chão vem da gravidade
