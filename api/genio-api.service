@@ -1,0 +1,18 @@
+[Unit]
+Description=API do Gênio do Capacho
+After=network.target mariadb.service
+
+[Service]
+EnvironmentFile=/etc/genio/env
+ExecStart=/usr/bin/python3 /opt/genio/api/genio_api.py
+Restart=always
+RestartSec=3
+User=genio
+Group=genio
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

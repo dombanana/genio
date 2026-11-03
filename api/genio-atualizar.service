@@ -1,0 +1,6 @@
+[Unit]
+Description=Atualiza o Gênio a partir do GitHub
+
+[Service]
+Type=oneshot
+ExecStart=/bin/bash /opt/genio/api/atualizar.sh
