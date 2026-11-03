@@ -2984,7 +2984,7 @@ function arFrame(){const v=AR.video,vw=v.videoWidth,vh=v.videoHeight;if(!vw)retu
   const seenN=new Set();for(const k in AR.tr){const tr=AR.tr[k];if(!tr.n||!tr.q||tr.miss>0||seenN.has(tr.n))continue;seenN.add(tr.n);const T=tapByCard(tr.n);if(!T)continue;
     const key="n"+tr.n;let meas=null;if(fresh&&tr.seen===AR.frame){const img=tr.q.map(([u,w])=>[u*cw,w*ch]);if(upFloor())meas=floorMeas(img,GCARD.w/100,GCARD.h/100,f,cw/2,ch/2,true,now);
       else{const P=poseFloor(img,GCARD.w/100,GCARD.h/100,f,cw/2,ch/2);if(P)meas={C:P.t,long:P.xv,yv:P.yv,xv:P.xv,fixed:true};}}
-    const A=anchorStep(key,T,meas?[meas]:null,now);if(A&&drawAnchor(x,A,T,f,cw,ch)){drawn.add(key);vis.push(T);}}
+    const A=anchorStep(key,T,meas?[meas]:null,now);if(A&&now-(A.seenAt||0)<GHOST&&drawAnchor(x,A,T,f,cw,ch)){drawn.add(key);vis.push(T);}}
   // cartão-postal universal: o tapete que está aberto
   const r=refCfg(),T0=curTap();let pv=false;
   if(r.w&&r.h){const plainK=Object.keys(AR.tr).filter(k=>{const t=AR.tr[k];return !t.n&&(t.tries||0)>=4&&t.pq&&t.miss===0;}).sort((a,b)=>polyArea(AR.tr[b].pq)-polyArea(AR.tr[a].pq));
@@ -2994,7 +2994,7 @@ function arFrame(){const v=AR.video,vw=v.videoWidth,vh=v.videoHeight;if(!vw)retu
       else for(const [a,b] of [[r.w,r.h],[r.h,r.w]]){const P=poseFloor(img,a/100,b/100,f,cw/2,ch/2);if(P&&P.rms<=lim)cands.push({C:P.t,xv:P.xv,yv:P.yv,long:a>=b?P.xv:P.yv,rms:P.rms});}
       if(!cands.length)cands=null;}
     if(ANC.p&&ANC.p.T!==T0)delete ANC.p;
-    const A=(tr||ANC.p)?anchorStep("p",T0,cands,now):null;if(A&&drawAnchor(x,A,T0,f,cw,ch)){pv=true;drawn.add("p");}}
+    const A=(tr||ANC.p)?anchorStep("p",T0,cands,now):null;if(A&&now-(A.seenAt||0)<GHOST&&drawAnchor(x,A,T0,f,cw,ch)){pv=true;drawn.add("p");}}
   // sem cartão por muito tempo: some (e a altura do celular é medida de novo)
   if(now-GH.at>3000&&GH.buf.length)ghReset();
   for(const key in ANC)if(!drawn.has(key)&&now-ANC[key].at>(DEV.R?8000:1500))delete ANC[key];
@@ -3069,7 +3069,9 @@ const GH={buf:[],h:null,at:0};
 function upFloor(){const u=upCam();if(!u)return null;return v3d(u,[0,-0.7071,-0.7071])>=0?u:u.map(v=>-v);}   // celular apontado para o chão: "cima" sai pelo alto da tela e para trás
 function ghReset(){GH.buf=[];GH.h=null;}
 function ghPush(h,now){GH.at=now||Date.now();GH.buf.push(h);if(GH.buf.length>13)GH.buf.shift();const s=[...GH.buf].sort((a,b)=>a-b),m=s[s.length>>1];
-  if(GH.h==null){if(GH.buf.length>=3)GH.h=m;}else GH.h+=Math.max(-0.02*GH.h,Math.min(0.02*GH.h,m-GH.h));return GH.h==null?m:GH.h;}
+  if(GH.h==null){if(GH.buf.length>=3)GH.h=m;}else{const r=GH.buf.slice(-6).sort((a,b)=>a-b),rm=r[r.length>>1];
+    if(r.length>=6&&r[0]>rm*0.88&&r[5]<rm*1.12&&Math.abs(rm/GH.h-1)>0.2)GH.h=rm;            // a pessoa abaixou ou levantou: trava na altura nova
+    else GH.h+=Math.max(-0.02*GH.h,Math.min(0.02*GH.h,m-GH.h));}return GH.h==null?m:GH.h;}
 function floorMeas(img,X,Y,f,cx,cy,fixed,now){const n=upFloor();if(!n)return null;
   const R=img.map(([u,v])=>[(u-cx)/f,(v-cy)/f,1]);if(R.some(r=>v3d(n,r)>-0.04))return null;          // canto no horizonte ou acima: não é o chão
   const U=R.map(r=>r.map(c=>-c/v3d(n,r))),sub=(a,b)=>[a[0]-b[0],a[1]-b[1],a[2]-b[2]],len=a=>Math.hypot(a[0],a[1],a[2]);   // cantos no chão, celular a 1 m
@@ -3089,7 +3091,7 @@ function floorMeas(img,X,Y,f,cx,cy,fixed,now){const n=upFloor();if(!n)return nul
 // 2) entre as leituras possíveis do cartão (lado maior para um lado ou para o outro, topo para cá ou para lá),
 //    fica com a mais parecida com a previsão — nunca vira 90° ou 180° por ruído;
 // 3) mistura leitura e previsão (sem tremer); uma mudança grande só é aceita se se repetir por vários quadros (o cartão foi mexido de verdade).
-const ANC={},I3=[[1,0,0],[0,1,0],[0,0,1]],mul3=(M,v)=>[0,1,2].map(i=>M[i][0]*v[0]+M[i][1]*v[1]+M[i][2]*v[2]);
+const GHOST=600,ANC={},I3=[[1,0,0],[0,1,0],[0,0,1]],mul3=(M,v)=>[0,1,2].map(i=>M[i][0]*v[0]+M[i][1]*v[1]+M[i][2]*v[2]);
 function anchorStep(key,T,cands,now){const A=ANC[key];let pred=null;
   if(A){const dR=DEV.R&&A.dev?devDelta(DEV.R,A.dev):I3;pred={C:mul3(dR,A.C),x:mul3(dR,A.x),n:mul3(dR,A.n),L:mul3(dR,A.L)};
     const up=upFloor();if(up&&v3d(up,pred.n)>0.8){const pl=v=>v3n(v.map((c,i)=>c-up[i]*v3d(v,up)));pred.n=up;pred.L=pl(pred.L);pred.x=pl(pred.x);}}   // o chão vem da gravidade
@@ -3099,12 +3101,14 @@ function anchorStep(key,T,cands,now){const A=ANC[key];let pred=null;
     const agree=pred?Math.abs(v3d(L,pred.L)):1;return {c,n,L,agree,score:(c.rms||1)*(1+3*(1-agree))};}).sort((a,b)=>a.score-b.score)[0];
   let {n,L}=best,C=best.c.C;
   // sentido do eixo maior: o mesmo de antes; na primeira vez, o que deixa o topo da arte para o lado de cima da tela (longe de quem olha)
-  if(best.c.fixed){}else if(pred){if(v3d(L,pred.L)<0)L=L.map(v=>-v);}else{const y=v3x(n,L),fw=[0,-1,0],fp=v3n(fw.map((v,i)=>v-n[i]*v3d(fw,n)));if(v3d(y,fp)<0)L=L.map(v=>-v);}
-  if(pred){const jump=v3d(L,pred.L)<0.6||Math.hypot(C[0]-pred.C[0],C[1]-pred.C[1],C[2]-pred.C[2])>0.35;
-    if(jump){const dis=((A&&A.dis)||0)+1;if(dis<6){const k=keep(pred);k.dis=dis;k.at=now;return k;}}   // mudança grande isolada: ignora
+  const fresh2=A&&now-(A.seenAt||0)<2000;
+  if(best.c.fixed){}else if(pred&&fresh2){if(v3d(L,pred.L)<0)L=L.map(v=>-v);}else{const y=v3x(n,L),fw=[0,-1,0],fp=v3n(fw.map((v,i)=>v-n[i]*v3d(fw,n)));if(v3d(y,fp)<0)L=L.map(v=>-v);}
+  const lost=!A||now-(A.seenAt||0)>GHOST;   // cartão sumiu por um instante: a leitura nova vale na hora (sem misturar com a posição velha)
+  if(pred&&!lost){const jump=v3d(L,pred.L)<0.6||Math.hypot(C[0]-pred.C[0],C[1]-pred.C[1],C[2]-pred.C[2])>0.35;
+    if(jump){const dis=((A&&A.dis)||0)+1;if(dis<3){const k=keep(pred);k.dis=dis;k.at=now;return k;}}   // mudança grande isolada: ignora
     else{const dC=Math.hypot(C[0]-pred.C[0],C[1]-pred.C[1],C[2]-pred.C[2]),dA=Math.acos(Math.min(1,Math.abs(v3d(L,pred.L)))),a=dC<0.015&&dA<2*DEG?0.18:dC<0.05&&dA<6*DEG?0.35:0.6;   // parado: quase não mexe; andando: acompanha
       C=C.map((v,i)=>pred.C[i]+(v-pred.C[i])*a);L=v3n(L.map((v,i)=>pred.L[i]+(v-pred.L[i])*a));n=v3n(n.map((v,i)=>pred.n[i]+(v-pred.n[i])*a));}}
-  L=v3n(L.map((v,i)=>v-n[i]*v3d(L,n)));const sp=T.spec,x=sp.w>=sp.h?L:v3x(n,L);const k=keep({C,x,n,L});k.dis=0;k.at=now;return k;}
+  L=v3n(L.map((v,i)=>v-n[i]*v3d(L,n)));const sp=T.spec,x=sp.w>=sp.h?L:v3x(n,L);const k=keep({C,x,n,L});k.dis=0;k.at=now;k.seenAt=now;return k;}
 function drawAnchor(cx2d,A,T,f,cw,ch){const y=v3x(A.n,A.x),W=T.spec.w/100,H=T.spec.h/100,objC=[[-W/2,H/2],[W/2,H/2],[W/2,-H/2],[-W/2,-H/2]];
   return paintObj(cx2d,T,poseFromRT(A.x,y,A.C,f,cw/2,ch/2),objC);}
 
