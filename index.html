@@ -2959,7 +2959,7 @@ function arDetectMask(F,M){const {w,h,L}=F,n=w*h,lab=new Int32Array(n),out=[],st
 let ARID=0;
 function arDetectAll(F){return {w:F.w,h:F.h,dets:arDetect(F).map(D=>({q:D.q,plain:D.plain,id:arIdentify(F,D.q)}))};}
 function arTrack(F){const sx=1/F.w,sy=1/F.h,used=new Set();
-  for(const D of F.dets){const q=D.q,side=Math.min(...[0,1,2,3].map(k=>Math.hypot(q[(k+1)%4][0]-q[k][0],q[(k+1)%4][1]-q[k][1])));if(side<16)continue;
+  for(const D of F.dets){const q=D.q,side=Math.min(...[0,1,2,3].map(k=>Math.hypot(q[(k+1)%4][0]-q[k][0],q[(k+1)%4][1]-q[k][1])));if(side<(D.hi?6:16))continue;
     const qn=q.map(([x,y])=>[x*sx,y*sy]),c=qn.reduce((s,p)=>[s[0]+p[0]/4,s[1]+p[1]/4],[0,0]);
     let T=null,bd=0.07;for(const k in AR.tr){const t=AR.tr[k];if(used.has(k))continue;const d=Math.hypot(t.c[0]-c[0],t.c[1]-c[1]);if(d<bd){bd=d;T=t;}}
     if(!T){T={key:"t"+(++ARID),votes:{},n:0,q:null,c,miss:0,rot:0};AR.tr[T.key]=T;}used.add(T.key);T.c=c;T.miss=0;T.seen=AR.frame;
@@ -2979,11 +2979,19 @@ const AR_DET_MAX=640;
 function arWorkerSrc(){const F=[otsu,arPatch,arIdentify,gTemplates,arMasks,arDetect,arDetectMask,arDetectAll,convexHull,hullToQuad,orderQuad,refineQuad,quadOK,solveH].map(f=>f.toString()).join("\n");
   return `var window=self;const DEG=Math.PI/180;const GCARD=${JSON.stringify(GCARD)},GTPL=${JSON.stringify(GTPL)};let GT=null;const bil=${bil.toString()},polyArea=${polyArea.toString()},applyH=${applyH.toString()};
 ${F}
-let cv=null,cx=null;
-onmessage=e=>{const {b,cap,max}=e.data;try{const k=Math.min(1,max/Math.max(b.width,b.height)),w=Math.round(b.width*k),h=Math.round(b.height*k);
-  if(!cv||cv.width!==w||cv.height!==h){cv=new OffscreenCanvas(w,h);cx=cv.getContext("2d",{willReadFrequently:true});}cx.drawImage(b,0,0,w,h);b.close&&b.close();
-  const d=cx.getImageData(0,0,w,h).data,L=new Float32Array(w*h),Mn=new Float32Array(w*h);for(let i=0;i<w*h;i++){const r=d[i*4],g=d[i*4+1],bb=d[i*4+2];L[i]=0.2126*r+0.7152*g+0.0722*bb;Mn[i]=Math.min(r,g,bb);}
-  postMessage({res:arDetectAll({w,h,L,Mn}),cap});}catch(err){postMessage({err:String(err),cap});}};`;}
+let cv=null,cx=null,cv2=null,cx2=null;
+const lumOf=(x,w,h)=>{const d=x.getImageData(0,0,w,h).data,L=new Float32Array(w*h),Mn=new Float32Array(w*h);for(let i=0;i<w*h;i++){const r=d[i*4],g=d[i*4+1],bb=d[i*4+2];L[i]=0.2126*r+0.7152*g+0.0722*bb;Mn[i]=Math.min(r,g,bb);}return {w,h,L,Mn};};
+const cen=q=>q.reduce((s,p)=>[s[0]+p[0]/4,s[1]+p[1]/4],[0,0]);
+onmessage=e=>{const {b,cap,max,roi}=e.data;try{const BW=b.width,BH=b.height,k=Math.min(1,max/Math.max(BW,BH)),w=Math.round(BW*k),h=Math.round(BH*k);
+  if(!cv||cv.width!==w||cv.height!==h){cv=new OffscreenCanvas(w,h);cx=cv.getContext("2d",{willReadFrequently:true});}cx.drawImage(b,0,0,w,h);
+  const res=arDetectAll(lumOf(cx,w,h));res.roi=0;
+  if(roi){const sx=Math.max(0,Math.round(roi[0]*BW)),sy=Math.max(0,Math.round(roi[1]*BH)),sw=Math.min(BW-sx,Math.round(roi[2]*BW)),sh=Math.min(BH-sy,Math.round(roi[3]*BH));
+    if(sw>40&&sh>40){const s2=Math.min(1,560/Math.max(sw,sh)),w2=Math.round(sw*s2),h2=Math.round(sh*s2);
+      if(!cv2||cv2.width!==w2||cv2.height!==h2){cv2=new OffscreenCanvas(w2,h2);cx2=cv2.getContext("2d",{willReadFrequently:true});}
+      cx2.drawImage(b,sx,sy,sw,sh,0,0,w2,h2);const r2=arDetectAll(lumOf(cx2,w2,h2)),map=p=>[(sx+p[0]/s2)*k,(sy+p[1]/s2)*k];
+      const add=r2.dets.map(D=>({q:D.q.map(map),plain:D.plain,id:D.id?Object.assign({},D.id,{q:D.id.q.map(map)}):null,hi:true}));res.roi=add.length;
+      res.dets=res.dets.filter(D=>{const c=cen(D.q);return !add.some(A=>{const a=cen(A.q);return Math.hypot(a[0]-c[0],a[1]-c[1])<Math.max(6,0.02*w);});}).concat(add);}}
+  b.close&&b.close();postMessage({res,cap});}catch(err){postMessage({err:String(err),cap});}};`;}
 function arWorkerStart(){AR.wk=null;AR.wkBusy=false;AR.res=null;
   if(!window.Worker||!window.OffscreenCanvas||!window.createImageBitmap)return;
   try{const u=URL.createObjectURL(new Blob([arWorkerSrc()],{type:"text/javascript"})),w=new Worker(u);
@@ -2991,16 +2999,29 @@ function arWorkerStart(){AR.wk=null;AR.wkBusy=false;AR.res=null;
     w.onerror=()=>{w.terminate();AR.wk=null;AR.wkBusy=false;};AR.wk=w;}catch(e){AR.wk=null;}}
 function arSend(){const v=AR.video;if(!AR.wk||AR.wkBusy||!v.videoWidth)return;AR.wkBusy=true;
   const cap={R:DEV.R?DEV.R.map(r=>[...r]):null,up:upFloor()};
-  createImageBitmap(v).then(b=>{if(!AR.wk){b.close&&b.close();AR.wkBusy=false;return;}AR.wk.postMessage({b,cap,max:AR_DET_MAX},[b]);}).catch(()=>{AR.wkBusy=false;if(AR.wk){AR.wk.terminate();AR.wk=null;}});}
+  const roi=arRoi();createImageBitmap(v).then(b=>{if(!AR.wk){b.close&&b.close();AR.wkBusy=false;return;}AR.wk.postMessage({b,cap,max:AR_DET_MAX,roi},[b]);}).catch(()=>{AR.wkBusy=false;if(AR.wk){AR.wk.terminate();AR.wk=null;}});}
+// região vista em resolução cheia: em volta de um cartão já achado (vez a vez entre eles) ou, procurando, o centro da imagem
+function arRoi(){AR.roiN=(AR.roiN||0)+1;const T=Object.values(AR.tr).filter(t=>t.pq&&t.miss<=3);
+  if(T.length){const t=T[AR.roiN%T.length],xs=t.pq.map(p=>p[0]),ys=t.pq.map(p=>p[1]),cx=(Math.min(...xs)+Math.max(...xs))/2,cy=(Math.min(...ys)+Math.max(...ys))/2,
+      rw=Math.min(0.6,Math.max(0.22,4*(Math.max(...xs)-Math.min(...xs)))),rh=Math.min(0.6,Math.max(0.14,4*(Math.max(...ys)-Math.min(...ys))));
+    return [Math.max(0,cx-rw/2),Math.max(0,cy-rh/2),rw,rh];}
+  return AR.roiN%2?[0.25,0.3,0.5,0.4]:null;}
 // a leitura é de um quadro de alguns milissegundos atrás: gira para a posição de agora pelo giroscópio
 function measNow(m,cap){if(!m||!cap||!cap.R||!DEV.R)return m;const dR=devDelta(DEV.R,cap.R);["C","long","n","xv","yv"].forEach(k=>{if(m[k])m[k]=mul3(dR,m[k]);});return m;}
+// linha de diagnóstico no canto da imagem (sai nas fotos e vídeos de teste)
+const AR_DIAG=true;
+function arDiag(x,cw,ch,on){const fs=Math.round(cw*0.024),f=v=>v==null?"–":(+v).toFixed(2).replace(".",",");x.save();x.font=`600 ${fs}px system-ui,sans-serif`;
+  const R=Object.entries(DIAG.r).map(([k,v])=>`${k} ${v}`).join(", ")||"nenhum retângulo";
+  const L=[`${on?"TAPETE NA TELA":"SEM TAPETE"} · leituras ${f(DIAG.rate)}/s · retângulos ${DIAG.dets} (de perto ${DIAG.roi})`,`cartões: ${R}`,
+    `altura ${f(GH.h)} m (lida ${f(DIAG.hm)}) · lente ${f(FH.k||1)}${FH.k?"":" (aprendendo)"}`,`cantos ${f(DIAG.cos)} · proporção ${f(DIAG.asp)} · gravidade ${upFloor()?"sim":"não"} · giroscópio ${DEV.R?"sim":"não"}`];
+  const y0=ch-fs*0.6-L.length*fs*1.3;x.fillStyle="rgba(0,0,0,.55)";x.fillRect(0,y0-fs*0.2,cw,L.length*fs*1.3+fs*0.6);x.fillStyle="#fff";L.forEach((l,i)=>x.fillText(l,fs*0.5,y0+fs*(1+i*1.3)));x.restore();}
 // ---------- desenho ----------
 const ARBASE=new Map();
 function arBase(T){const c=ARBASE.get(T.id);if(c&&c.s===T.spec&&c.v===BASEV)return c.c;const b=baseOf(T);ARBASE.set(T.id,{s:T.spec,v:BASEV,c:b});return b;}
 function arFrame(){const v=AR.video,vw=v.videoWidth,vh=v.videoHeight;if(!vw)return;const k=Math.min(1,1280/Math.max(vw,vh)),cw=Math.round(vw*k),ch=Math.round(vh*k);
   if(AR.cv.width!==cw||AR.cv.height!==ch){AR.cv.width=cw;AR.cv.height=ch;}const x=AR.x;x.drawImage(v,0,0,cw,ch);
   AR.frame++;let fresh=false,cap=null;
-  if(AR.wk){if(AR.res){arTrack(AR.res.res);cap=AR.res.cap;AR.res=null;fresh=true;}arSend();}
+  if(AR.wk){if(AR.res){DIAG.r={};DIAG.dets=AR.res.res.dets.length;DIAG.roi=AR.res.res.roi||0;arTrack(AR.res.res);cap=AR.res.cap;AR.res=null;fresh=true;}arSend();}
   else if(AR.frame%2===0){const F=arLum();if(F){arTrack(arDetectAll(F));fresh=true;}}
   const f0=26*Math.hypot(cw,ch)/43.267,f=f0*(FH.k||1),vis=[],drawn=new Set(),now=Date.now(),up0=cap?cap.up:upFloor();
   // cartões Gênio: o número diz para que lado é o topo, sem ambiguidade
@@ -3026,6 +3047,7 @@ function arFrame(){const v=AR.video,vw=v.videoWidth,vh=v.videoHeight;if(!vw)retu
   if(now-GH.at>3000&&GH.buf.length)ghReset();
   for(const key in ANC)if(!drawn.has(key)&&now-ANC[key].at>(DEV.R?8000:1500))delete ANC[key];
   AR.vis=vis.map(T=>T.card);AR.pv=pv;
+  if(fresh){DIAG.n++;const t=Date.now();if(t-DIAG.t0>1000){DIAG.rate=DIAG.n*1000/(t-(DIAG.t0||t-1000));DIAG.n=0;DIAG.t0=t;}}if(AR_DIAG)arDiag(x,cw,ch,pv||vis.length>0);
   if(AR.frame%10===0)arSay(vis.length||pv?`Vendo ${vis.map(T=>`cartão ${T.card} (${tapName(T)})`).concat(pv?[`o ${r.nome.toLowerCase()} (${tapName(T0)})`]:[]).join(", ")}.`:Object.values(AR.tr).some(t=>t.n)?"Achei um cartão sem tapete ligado. Ligue um tapete a ele na parte 2.":Object.values(AR.tr).some(t=>(t.tries||0)<4)?"Lendo o cartão…":Object.keys(AR.tr).length?"Achei um cartão, mas a medida dele não bate com o objeto de referência (Configurações) nem é um cartão Gênio. Chegue um pouco mais perto.":"Aponte para o cartão no chão, com o celular a 1 ou 2 metros, pegando o piso em volta.");}
 function paintMatN(x,tex,M,n){const bw=tex.width,bh=tex.height,Tp=(u,v)=>applyH(M,u,v);x.save();x.globalAlpha=0.97;
   for(let j=0;j<n;j++)for(let i=0;i<n;i++){const u0=i/n*bw,u1=(i+1)/n*bw,v0=j/n*bh,v1=(j+1)/n*bh;drawTri(x,tex,[[u0,v0],[u1,v0],[u1,v1]],[Tp(u0,v0),Tp(u1,v0),Tp(u1,v1)]);drawTri(x,tex,[[u0,v0],[u1,v1],[u0,v1]],[Tp(u0,v0),Tp(u1,v1),Tp(u0,v1)]);}x.restore();}
@@ -3117,16 +3139,17 @@ function lensLearn(img,X,Y,f0,cx,cy,n,fixed){if(!n)return;const sc=LK.map(k=>{co
   if(m<2||m>38||(Math.min(FH.S[0],FH.S[40])-FH.S[m])/FH.W<0.04)return;const a=FH.S[m-1],c=FH.S[m],d=FH.S[m+1],den=a-2*c+d;if(den>0)k=LK[m]*Math.pow(4.4,(0.5*(a-d)/den)/40);
   if(FH.k)k=FH.k*Math.max(0.97,Math.min(1.03,k/FH.k));   // entre dois valores da grade
   if(!FH.k||Math.abs(k/FH.k-1)>0.02){FH.k=k;try{localStorage.setItem("genio-ar-lente",k.toFixed(3));}catch(e){}}}
-function floorMeas(img,X,Y,f,cx,cy,fixed,now,up){const n=up||upFloor();if(!n)return null;
-  const g=floorShape(img,f,cx,cy,n,X,Y,fixed);if(!g)return null;                                         // canto no horizonte ou acima: não é o chão
-  const lk=!!FH.k;if(g.maxCos>(lk?0.36:0.55))return null;                                                // no chão os cantos têm de ser quase retos (mais folga até aprender a lente)
-  const {U,e,alongA,mL,mS,big,sm,asp}=g;if(asp<(lk?0.75:0.6)||asp>(lk?1.33:1.65))return null;                              // proporção do cartão
-  const hm=Math.sqrt(big*sm/(mL*mS));if(!(hm>0.15&&hm<2.6))return null;                                 // altura do celular que este cartão indica
+const DIAG={r:{},n:0,ok:0,t0:0,rate:0,dets:0,roi:0},rej=w=>{DIAG.r[w]=(DIAG.r[w]||0)+1;};
+function floorMeas(img,X,Y,f,cx,cy,fixed,now,up){const n=up||upFloor();if(!n){rej("sem gravidade");return null;}
+  const g=floorShape(img,f,cx,cy,n,X,Y,fixed);if(!g){rej("acima do horizonte");return null;}                                         // canto no horizonte ou acima: não é o chão
+  const lk=!!FH.k;if(g.maxCos>(lk?0.36:0.55)){rej("cantos tortos");return null;}                                                // no chão os cantos têm de ser quase retos (mais folga até aprender a lente)
+  const {U,e,alongA,mL,mS,big,sm,asp}=g;if(asp<(lk?0.75:0.6)||asp>(lk?1.33:1.65)){rej("proporção");return null;}                              // proporção do cartão
+  const hm=Math.sqrt(big*sm/(mL*mS));if(!(hm>0.15&&hm<2.6)){rej("altura impossível");return null;}                                 // altura do celular que este cartão indica
   const Cu=[0,1,2].map(i=>(U[0][i]+U[1][i]+U[2][i]+U[3][i])/4);
   let L=alongA?[0,1,2].map(i=>e[0][i]+e[2][i]):[0,1,2].map(i=>e[1][i]+e[3][i]);L=v3n(L.map((v,i)=>v-n[i]*v3d(L,n)));
-  return {Cu,hm,C:Cu.map(v=>v*(GH.h||hm)),n,long:L,rms:1,score:g.score,fixed:!!fixed,floor:true};}
+  return {Cu,hm,C:Cu.map(v=>v*(GH.h||hm)),n,long:L,rms:1,score:g.score,cos:g.maxCos,asp:g.asp,fixed:!!fixed,floor:true};}
 // a leitura escolhida entra na altura travada; fora dela (mais de 35%) é ignorada
-function floorFinish(m,now){if(!m)return null;const h=ghPush(m.hm,now);if(Math.abs(m.hm/h-1)>0.35)return null;m.C=m.Cu.map(v=>v*h);return m;}
+function floorFinish(m,now){if(!m)return null;const h=ghPush(m.hm,now);if(Math.abs(m.hm/h-1)>0.35){rej("altura diferente da travada");DIAG.hm=m.hm;return null;}m.C=m.Cu.map(v=>v*h);rej("usado");DIAG.hm=m.hm;DIAG.cos=m.cos;DIAG.asp=m.asp;return m;}
 
 // ---------- âncora: o tapete preso ao cartão, sem pular nem inverter ----------
 // Estado por cartão, em coordenadas da câmera: centro C, eixo do tapete x (no chão) e normal do chão n.
@@ -3149,7 +3172,7 @@ function anchorStep(key,T,cands,now){const A=ANC[key];let pred=null;
   const lost=!A||now-(A.seenAt||0)>GHOST;   // cartão sumiu por um instante: a leitura nova vale na hora (sem misturar com a posição velha)
   if(pred&&!lost){const jump=v3d(L,pred.L)<0.6||Math.hypot(C[0]-pred.C[0],C[1]-pred.C[1],C[2]-pred.C[2])>0.35;
     if(jump){const dis=((A&&A.dis)||0)+1;if(dis<3){const k=keep(pred);k.dis=dis;k.at=now;return k;}}   // mudança grande isolada: ignora
-    else{const dC=Math.hypot(C[0]-pred.C[0],C[1]-pred.C[1],C[2]-pred.C[2]),dA=Math.acos(Math.min(1,Math.abs(v3d(L,pred.L)))),a=dC<0.015&&dA<2*DEG?0.18:dC<0.05&&dA<6*DEG?0.35:0.6;   // parado: quase não mexe; andando: acompanha
+    else{const dC=Math.hypot(C[0]-pred.C[0],C[1]-pred.C[1],C[2]-pred.C[2]),dA=Math.acos(Math.min(1,Math.abs(v3d(L,pred.L)))),a=dC<0.01&&dA<1.5*DEG?0.25:dC<0.03&&dA<4*DEG?0.5:0.85;   // parado: quase não mexe; andando: acompanha
       C=C.map((v,i)=>pred.C[i]+(v-pred.C[i])*a);L=v3n(L.map((v,i)=>pred.L[i]+(v-pred.L[i])*a));n=v3n(n.map((v,i)=>pred.n[i]+(v-pred.n[i])*a));}}
   L=v3n(L.map((v,i)=>v-n[i]*v3d(L,n)));const sp=T.spec,x=sp.w>=sp.h?L:v3x(n,L);const k=keep({C,x,n,L});k.dis=0;k.at=now;k.seenAt=now;return k;}
 function drawAnchor(cx2d,A,T,f,cw,ch){const y=v3x(A.n,A.x),W=T.spec.w/100,H=T.spec.h/100,objC=[[-W/2,H/2],[W/2,H/2],[W/2,-H/2],[-W/2,-H/2]];
