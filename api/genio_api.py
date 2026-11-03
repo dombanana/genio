@@ -5,6 +5,8 @@ Roda atrás do nginx em genio.dombanana.tech/api. Só biblioteca padrão do Pyth
 mais o PyMySQL (pacote python3-pymysql do Ubuntu).
 
 Fase 1: tapetes publicados para o cartão com QR Code.
+Fase 2: contas (administrador e vendedores), login por e-mail e senha, convites, aparelhos por plano
+        e pedidos de "quero vender" da página de vendas.
   - o vendedor publica um tapete (POST /api/tapetes, com a chave de publicação);
   - cada tapete tem um código fixo; cada publicação vira uma nova versão;
   - o cliente abre /t/<código> e a página busca a versão mais nova em /api/t/<código>.
@@ -15,7 +17,7 @@ Configuração por variáveis de ambiente (arquivo /etc/genio/env, só o root l�
   GENIO_CHAVE   (chave de publicação dos vendedores)
   GENIO_PORT    (porta local, padrão 8110)
 """
-import base64, hmac, json, os, secrets, sys, threading, time
+import base64, hashlib, hmac, json, os, re, secrets, sys, threading, time
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import urlparse
 
@@ -69,6 +71,16 @@ def q(sql, args=(), one=False, commit=False):
         return None
     return (rows[0] if rows else None) if one else rows
 
+def q_insert(sql, args=()):
+    sql = sql.replace("?", PH)
+    with _lock:
+        c = _cur()
+        c.execute(sql, args)
+        rid = c.lastrowid
+        _commit()
+        c.close()
+    return rid
+
 def migrar():
     q(f"""CREATE TABLE IF NOT EXISTS tapetes_publicados (
         codigo VARCHAR(12) PRIMARY KEY,
@@ -92,6 +104,29 @@ def migrar():
         q("CREATE INDEX idx_versoes_codigo ON tapete_versoes (codigo, versao)", commit=True)
     except Exception:
         pass
+    # contas
+    q(f"""CREATE TABLE IF NOT EXISTS contas (
+        id {AUTO}, nome VARCHAR(120) NOT NULL, email VARCHAR(190) NOT NULL UNIQUE, senha VARCHAR(200),
+        papel VARCHAR(20) NOT NULL, plano VARCHAR(20) NOT NULL, ativo INT NOT NULL DEFAULT 1,
+        criado VARCHAR(30) NOT NULL, ultimo_acesso VARCHAR(30))""", commit=True)
+    q(f"""CREATE TABLE IF NOT EXISTS aparelhos (
+        id {AUTO}, conta_id BIGINT NOT NULL, chave VARCHAR(64) NOT NULL, nome VARCHAR(160),
+        ativo INT NOT NULL DEFAULT 1, criado VARCHAR(30) NOT NULL, visto VARCHAR(30))""", commit=True)
+    q("""CREATE TABLE IF NOT EXISTS sessoes (
+        token VARCHAR(64) PRIMARY KEY, conta_id BIGINT NOT NULL, aparelho_id BIGINT,
+        criado VARCHAR(30) NOT NULL, visto VARCHAR(30), expira VARCHAR(30) NOT NULL)""", commit=True)
+    q("""CREATE TABLE IF NOT EXISTS convites (
+        token VARCHAR(64) PRIMARY KEY, conta_id BIGINT NOT NULL, criado VARCHAR(30) NOT NULL,
+        expira VARCHAR(30) NOT NULL, usado VARCHAR(30))""", commit=True)
+    q(f"""CREATE TABLE IF NOT EXISTS interesse (
+        id {AUTO}, nome VARCHAR(120) NOT NULL, telefone VARCHAR(40) NOT NULL, cidade VARCHAR(120),
+        mensagem VARCHAR(600), criado VARCHAR(30) NOT NULL, visto INT NOT NULL DEFAULT 0)""", commit=True)
+    for idx in ("CREATE INDEX idx_aparelhos_conta ON aparelhos (conta_id, chave)",
+                "CREATE INDEX idx_sessoes_conta ON sessoes (conta_id)"):
+        try:
+            q(idx, commit=True)
+        except Exception:
+            pass
 
 agora = lambda: time.strftime("%Y-%m-%dT%H:%M:%S", time.gmtime())
 
@@ -159,6 +194,207 @@ def status(codigos):
             out[c] = {"versao": row[0], "aberturas": row[1], "ultima_abertura": row[2]}
     return out
 
+# ---------- contas ----------
+# Planos: limite de aparelhos ligados à conta (vendedor = aparelho conectado). None = sem limite.
+PLANOS = {
+    "vendedor":  {"nome": "Vendedor", "aparelhos": 1, "orcamentos": 150},
+    "ilimitado": {"nome": "Vendedor Ilimitado", "aparelhos": 1, "orcamentos": None},
+    "admin":     {"nome": "Administrador", "aparelhos": None, "orcamentos": None},
+}
+SESSAO_DIAS = 180
+CONVITE_DIAS = 7
+EMAIL_OK = re.compile(r"^[^@\s]{1,80}@[^@\s]{1,100}\.[^@\s]{2,20}$")
+h64 = lambda t: hashlib.sha256(t.encode()).hexdigest()
+quando = lambda dias: time.strftime("%Y-%m-%dT%H:%M:%S", time.gmtime(time.time() + dias * 86400))
+
+def senha_hash(senha):
+    sal = secrets.token_bytes(16)
+    d = hashlib.pbkdf2_hmac("sha256", senha.encode(), sal, 210000)
+    return "pbkdf2$210000$" + base64.b64encode(sal).decode() + "$" + base64.b64encode(d).decode()
+
+def senha_ok(senha, guardada):
+    try:
+        _, it, sal, d = (guardada or "").split("$")
+        x = hashlib.pbkdf2_hmac("sha256", senha.encode(), base64.b64decode(sal), int(it))
+        return hmac.compare_digest(x, base64.b64decode(d))
+    except Exception:
+        return False
+
+def senha_valida(senha):
+    if not isinstance(senha, str) or len(senha) < 8 or len(senha) > 200:
+        raise ValueError("a senha precisa ter pelo menos 8 caracteres")
+
+# tentativas de login: no máximo 8 por e-mail e 30 por endereço a cada 15 minutos
+_tent = {}
+def limite(chave, n, janela=900):
+    t = time.time()
+    L = [x for x in _tent.get(chave, []) if t - x < janela]
+    if len(L) >= n:
+        _tent[chave] = L
+        return False
+    L.append(t)
+    _tent[chave] = L
+    return True
+
+def conta_pub(row):
+    cid, nome, email, papel, plano, ativo, criado, ult = row
+    return {"id": cid, "nome": nome, "email": email, "papel": papel, "plano": plano, "plano_nome": PLANOS.get(plano, {}).get("nome", plano),
+            "ativo": bool(ativo), "criado": criado, "ultimo_acesso": ult}
+
+CONTA_COLS = "id, nome, email, papel, plano, ativo, criado, ultimo_acesso"
+
+def aparelho_registrar(conta_id, plano, chave, nome):
+    chave = str(chave or "")[:64]
+    if not re.fullmatch(r"[A-Za-z0-9_-]{8,64}", chave):
+        raise ValueError("aparelho inválido")
+    row = q("SELECT id, ativo FROM aparelhos WHERE conta_id=? AND chave=?", (conta_id, chave), one=True)
+    if row and row[1]:
+        q("UPDATE aparelhos SET visto=?, nome=? WHERE id=?", (agora(), str(nome or "")[:160], row[0]), commit=True)
+        return row[0]
+    lim = PLANOS.get(plano, {}).get("aparelhos", 1)
+    if lim is not None:
+        n = q("SELECT COUNT(*) FROM aparelhos WHERE conta_id=? AND ativo=1", (conta_id,), one=True)[0]
+        if n >= lim:
+            raise PermissionError(f"o seu plano permite {lim} aparelho{'s' if lim > 1 else ''}. Peça ao administrador para liberar este aparelho.")
+    if row:
+        q("UPDATE aparelhos SET ativo=1, visto=?, nome=? WHERE id=?", (agora(), str(nome or "")[:160], row[0]), commit=True)
+        return row[0]
+    return q_insert("INSERT INTO aparelhos (conta_id, chave, nome, ativo, criado, visto) VALUES (?,?,?,1,?,?)",
+                    (conta_id, chave, str(nome or "")[:160], agora(), agora()))
+
+def sessao_nova(conta_id, aparelho_id):
+    tok = secrets.token_urlsafe(32)
+    q("INSERT INTO sessoes (token, conta_id, aparelho_id, criado, visto, expira) VALUES (?,?,?,?,?,?)",
+      (h64(tok), conta_id, aparelho_id, agora(), agora(), quando(SESSAO_DIAS)), commit=True)
+    q("UPDATE contas SET ultimo_acesso=? WHERE id=?", (agora(), conta_id), commit=True)
+    return tok
+
+def sessao_conta(tok):
+    if not tok:
+        return None
+    row = q(f"""SELECT c.id, c.nome, c.email, c.papel, c.plano, c.ativo, c.criado, c.ultimo_acesso, s.expira, s.aparelho_id, a.ativo
+               FROM sessoes s JOIN contas c ON c.id=s.conta_id LEFT JOIN aparelhos a ON a.id=s.aparelho_id WHERE s.token=?""", (h64(tok),), one=True)
+    if not row or not row[5] or row[8] < agora():
+        return None
+    if row[9] is not None and not row[10]:          # aparelho desligado pelo administrador
+        return None
+    c = conta_pub(row[:8])
+    c["aparelho_id"] = row[9]
+    return c
+
+def entrar(d):
+    email = str(d.get("email") or "").strip().lower()
+    row = q("SELECT id, senha, papel, plano, ativo FROM contas WHERE email=?", (email,), one=True)
+    if not row or not row[1] or not senha_ok(str(d.get("senha") or ""), row[1]):
+        raise PermissionError("e-mail ou senha não conferem")
+    if not row[4]:
+        raise PermissionError("esta conta está desativada. Fale com o administrador.")
+    ap = aparelho_registrar(row[0], row[3] if row[2] != "admin" else "admin", d.get("aparelho"), d.get("nome_aparelho"))
+    return sessao_nova(row[0], ap)
+
+def convite_novo(conta_id):
+    tok = secrets.token_urlsafe(24)
+    q("INSERT INTO convites (token, conta_id, criado, expira) VALUES (?,?,?,?)", (h64(tok), conta_id, agora(), quando(CONVITE_DIAS)), commit=True)
+    return tok
+
+def convite_ler(tok):
+    row = q("""SELECT v.conta_id, v.expira, v.usado, c.nome, c.email, c.ativo FROM convites v JOIN contas c ON c.id=v.conta_id WHERE v.token=?""",
+            (h64(str(tok or "")),), one=True)
+    if not row or row[2] or row[1] < agora() or not row[5]:
+        return None
+    return {"conta_id": row[0], "nome": row[3], "email": row[4]}
+
+def convite_usar(tok, d):
+    cv = convite_ler(tok)
+    if not cv:
+        raise ValueError("este convite não vale mais. Peça um novo ao administrador.")
+    senha_valida(d.get("senha"))
+    q("UPDATE contas SET senha=? WHERE id=?", (senha_hash(d["senha"]), cv["conta_id"]), commit=True)
+    q("UPDATE convites SET usado=? WHERE token=?", (agora(), h64(tok)), commit=True)
+    q("DELETE FROM sessoes WHERE conta_id=?", (cv["conta_id"],), commit=True)   # senha nova: as sessões antigas saem
+    return entrar({"email": cv["email"], "senha": d["senha"], "aparelho": d.get("aparelho"), "nome_aparelho": d.get("nome_aparelho")})
+
+# Primeiro acesso: só enquanto não existe administrador, e só com o código cujo hash está no repositório.
+PRIMEIRO = os.path.join(os.path.dirname(os.path.abspath(__file__)), "primeiro_acesso.sha256")
+def primeiro_valido(tok):
+    if q("SELECT 1 FROM contas WHERE papel='admin'", one=True):
+        return False
+    try:
+        alvo = open(PRIMEIRO).read().strip()
+    except Exception:
+        return False
+    return bool(tok) and hmac.compare_digest(h64(str(tok)), alvo)
+
+def primeiro_usar(d):
+    if not primeiro_valido(d.get("c")):
+        raise ValueError("este link de primeiro acesso não vale mais")
+    nome = str(d.get("nome") or "").strip()[:120]
+    email = str(d.get("email") or "").strip().lower()[:190]
+    if not nome or not EMAIL_OK.match(email):
+        raise ValueError("confira o nome e o e-mail")
+    senha_valida(d.get("senha"))
+    q_insert("INSERT INTO contas (nome, email, senha, papel, plano, ativo, criado) VALUES (?,?,?,'admin','admin',1,?)",
+             (nome, email, senha_hash(d["senha"]), agora()))
+    return entrar({"email": email, "senha": d["senha"], "aparelho": d.get("aparelho"), "nome_aparelho": d.get("nome_aparelho")})
+
+def admin_contas():
+    out = []
+    for row in q(f"SELECT {CONTA_COLS} FROM contas ORDER BY id DESC") or []:
+        c = conta_pub(row)
+        c["tem_senha"] = bool(q("SELECT 1 FROM contas WHERE id=? AND senha IS NOT NULL", (c["id"],), one=True))
+        c["aparelhos"] = [{"id": a[0], "nome": a[1], "criado": a[2], "visto": a[3]}
+                          for a in q("SELECT id, nome, criado, visto FROM aparelhos WHERE conta_id=? AND ativo=1 ORDER BY id", (c["id"],)) or []]
+        out.append(c)
+    return out
+
+def admin_criar(d):
+    nome = str(d.get("nome") or "").strip()[:120]
+    email = str(d.get("email") or "").strip().lower()[:190]
+    plano = str(d.get("plano") or "vendedor")
+    papel = "admin" if plano == "admin" else "vendedor"
+    if not nome or not EMAIL_OK.match(email):
+        raise ValueError("confira o nome e o e-mail")
+    if plano not in PLANOS:
+        raise ValueError("plano desconhecido")
+    if q("SELECT 1 FROM contas WHERE email=?", (email,), one=True):
+        raise ValueError("já existe uma conta com este e-mail")
+    cid = q_insert("INSERT INTO contas (nome, email, papel, plano, ativo, criado) VALUES (?,?,?,?,1,?)", (nome, email, papel, plano, agora()))
+    return {"id": cid, "convite": convite_novo(cid)}
+
+def admin_mudar(cid, d, eu):
+    row = q("SELECT id, papel FROM contas WHERE id=?", (cid,), one=True)
+    if not row:
+        raise ValueError("conta não encontrada")
+    if "ativo" in d:
+        if cid == eu["id"] and not d["ativo"]:
+            raise ValueError("você não pode desativar a própria conta")
+        q("UPDATE contas SET ativo=? WHERE id=?", (1 if d["ativo"] else 0, cid), commit=True)
+        if not d["ativo"]:
+            q("DELETE FROM sessoes WHERE conta_id=?", (cid,), commit=True)
+    if "plano" in d:
+        if d["plano"] not in PLANOS or d["plano"] == "admin" or row[1] == "admin":
+            raise ValueError("plano inválido")
+        q("UPDATE contas SET plano=? WHERE id=?", (d["plano"], cid), commit=True)
+    return {"ok": True}
+
+def admin_aparelho_tirar(aid):
+    q("UPDATE aparelhos SET ativo=0 WHERE id=?", (aid,), commit=True)
+    q("DELETE FROM sessoes WHERE aparelho_id=?", (aid,), commit=True)
+    return {"ok": True}
+
+def interesse_novo(d, ip):
+    nome = str(d.get("nome") or "").strip()[:120]
+    tel = re.sub(r"[^0-9+() -]", "", str(d.get("telefone") or ""))[:40].strip()
+    if not nome or len(re.sub(r"\D", "", tel)) < 10:
+        raise ValueError("informe o nome e um telefone com DDD")
+    q_insert("INSERT INTO interesse (nome, telefone, cidade, mensagem, criado) VALUES (?,?,?,?,?)",
+             (nome, tel, str(d.get("cidade") or "").strip()[:120], str(d.get("mensagem") or "").strip()[:600], agora()))
+    return {"ok": True}
+
+def admin_interesse():
+    return [{"id": r[0], "nome": r[1], "telefone": r[2], "cidade": r[3], "mensagem": r[4], "criado": r[5], "visto": bool(r[6])}
+            for r in q("SELECT id, nome, telefone, cidade, mensagem, criado, visto FROM interesse ORDER BY id DESC") or []]
+
 # ---------- HTTP ----------
 def codigo_ok(c):
     return 4 <= len(c) <= 12 and all(ch in ALFA for ch in c)
@@ -169,10 +405,14 @@ class H(BaseHTTPRequestHandler):
     def log_message(self, fmt, *a):
         sys.stderr.write("%s %s\n" % (self.command, self.path.split("?")[0]))
 
-    def _send(self, code, obj=None, body=None, ctype="application/json; charset=utf-8", cache="no-store"):
+    def _send(self, code, obj=None, body=None, ctype="application/json; charset=utf-8", cache="no-store", cookie=None):
         if body is None:
             body = json.dumps(obj, ensure_ascii=False).encode()
         self.send_response(code)
+        if cookie is not None:
+            seg = "; Secure" if self.headers.get("X-Forwarded-Proto") == "https" else ""
+            idade = SESSAO_DIAS * 86400 if cookie else 0
+            self.send_header("Set-Cookie", f"genio_s={cookie}; Path=/; Max-Age={idade}; HttpOnly; SameSite=Lax{seg}")
         self.send_header("Content-Type", ctype)
         self.send_header("Content-Length", str(len(body)))
         self.send_header("Cache-Control", cache)
@@ -188,6 +428,23 @@ class H(BaseHTTPRequestHandler):
         k = self.headers.get("X-Genio-Chave", "")
         return bool(CHAVE) and hmac.compare_digest(k.encode(), CHAVE.encode())
 
+    def _tok(self):
+        for parte in (self.headers.get("Cookie") or "").split(";"):
+            k, _, v = parte.strip().partition("=")
+            if k == "genio_s":
+                return v
+        return None
+
+    def _eu(self):
+        return sessao_conta(self._tok())
+
+    def _ip(self):
+        return self.headers.get("X-Real-IP") or self.client_address[0]
+
+    def _origem_ok(self):
+        o = self.headers.get("Origin")
+        return not o or urlparse(o).netloc == (self.headers.get("Host") or "")
+
     def _json(self):
         n = int(self.headers.get("Content-Length") or 0)
         if n <= 0 or n > MAX_BODY:
@@ -200,6 +457,26 @@ class H(BaseHTTPRequestHandler):
             if p == "/api/saude":
                 q("SELECT 1", one=True)
                 return self._send(200, {"ok": True, "banco": True, "hora": agora()})
+            if p == "/api/eu":
+                eu = self._eu()
+                if not eu:
+                    return self._erro(401, "entre com a sua conta")
+                return self._send(200, dict(eu, planos=PLANOS))
+            if p == "/api/convite":
+                qs = dict(x.split("=", 1) for x in (urlparse(self.path).query or "").split("&") if "=" in x)
+                if qs.get("p"):
+                    return self._send(200, {"primeiro": True}) if primeiro_valido(qs["p"]) else self._erro(404, "este link de primeiro acesso não vale mais")
+                cv = convite_ler(qs.get("c"))
+                return self._send(200, {"nome": cv["nome"], "email": cv["email"]}) if cv else self._erro(404, "este convite não vale mais. Peça um novo ao administrador.")
+            if p.startswith("/api/admin/"):
+                eu = self._eu()
+                if not eu or eu["papel"] != "admin":
+                    return self._erro(403, "só o administrador")
+                if p == "/api/admin/contas":
+                    return self._send(200, {"contas": admin_contas(), "planos": PLANOS})
+                if p == "/api/admin/interesse":
+                    return self._send(200, {"interesse": admin_interesse()})
+                return self._erro(404, "não encontrado")
             parts = p.split("/")
             if len(parts) == 4 and parts[1:3] == ["api", "t"] and codigo_ok(parts[3]):
                 d = ler(parts[3])
@@ -216,6 +493,57 @@ class H(BaseHTTPRequestHandler):
     def do_POST(self):
         p = urlparse(self.path).path.rstrip("/")
         try:
+            if p in ("/api/entrar", "/api/sair", "/api/convite", "/api/primeiro", "/api/interesse") or p.startswith("/api/admin/"):
+                if not self._origem_ok():
+                    return self._erro(403, "origem não permitida")
+                if p == "/api/sair":
+                    t = self._tok()
+                    if t:
+                        q("DELETE FROM sessoes WHERE token=?", (h64(t),), commit=True)
+                    return self._send(200, {"ok": True}, cookie="")
+                d = self._json()
+                if p == "/api/entrar":
+                    email = str(d.get("email") or "").strip().lower()
+                    if not limite("e:" + email, 8) or not limite("i:" + self._ip(), 30):
+                        return self._erro(429, "muitas tentativas. Espere 15 minutos e tente de novo.")
+                    try:
+                        return self._send(200, {"ok": True}, cookie=entrar(d))
+                    except PermissionError as e:
+                        return self._erro(403, str(e))
+                if p == "/api/convite":
+                    if not limite("i:" + self._ip(), 30):
+                        return self._erro(429, "muitas tentativas. Espere 15 minutos.")
+                    try:
+                        return self._send(200, {"ok": True}, cookie=convite_usar(d.get("c"), d))
+                    except PermissionError as e:
+                        return self._erro(403, str(e))
+                if p == "/api/primeiro":
+                    if not limite("i:" + self._ip(), 30):
+                        return self._erro(429, "muitas tentativas. Espere 15 minutos.")
+                    return self._send(200, {"ok": True}, cookie=primeiro_usar(d))
+                if p == "/api/interesse":
+                    if not limite("q:" + self._ip(), 5, 3600):
+                        return self._erro(429, "recebemos os seus dados. Já já entramos em contato.")
+                    return self._send(200, interesse_novo(d, self._ip()))
+                eu = self._eu()
+                if not eu or eu["papel"] != "admin":
+                    return self._erro(403, "só o administrador")
+                parts = p.split("/")
+                if p == "/api/admin/contas":
+                    r = admin_criar(d)
+                    return self._send(200, r)
+                if len(parts) == 5 and parts[3] == "contas" and parts[4].isdigit():
+                    return self._send(200, admin_mudar(int(parts[4]), d, eu))
+                if len(parts) == 6 and parts[3] == "contas" and parts[4].isdigit() and parts[5] == "convite":
+                    if not q("SELECT 1 FROM contas WHERE id=?", (int(parts[4]),), one=True):
+                        return self._erro(404, "conta não encontrada")
+                    return self._send(200, {"convite": convite_novo(int(parts[4]))})
+                if len(parts) == 6 and parts[3] == "aparelhos" and parts[4].isdigit() and parts[5] == "tirar":
+                    return self._send(200, admin_aparelho_tirar(int(parts[4])))
+                if p == "/api/admin/interesse/visto":
+                    q("UPDATE interesse SET visto=1", commit=True)
+                    return self._send(200, {"ok": True})
+                return self._erro(404, "não encontrado")
             if p in ("/api/tapetes", "/api/status"):
                 if not self._autorizado():
                     return self._erro(401, "chave de publicação inválida")
