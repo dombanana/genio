@@ -1242,7 +1242,7 @@ function move(){if(!G||S.sub==="cantos")return;const pts=[...ptrs.values()],c=pt
   if(two){if(!G.mode){const dd=Math.abs(d-G.d),da=Math.abs(wrapPi(a-G.a))*G.d/2;if(Math.max(dd,da)<12)return;G.mode=da>dd*1.2?"rot":"size";if(G.mode==="size")pinchStart(pts);}
     if(G.mode==="size"){pinchMove(pts);return;}
     commit(P=>{if(P.plane)P.plane.th=G.P.plane.th-wrapPi(a-G.a);else P.th=G.P.th-wrapPi(a-G.a);});return;}
-  commit(P=>{if(P.plane){const w=planeUnproject(P,c[0],c[1]);if(w&&G.grab){P.plane.x=w.x+G.grab.x;P.plane.y=w.y+G.grab.y;}return;}
+  commit(P=>{if(P.plane){if(P.ref)return;const w=planeUnproject(P,c[0],c[1]);if(w&&G.grab){P.plane.x=w.x+G.grab.x;P.plane.y=w.y+G.grab.y;}return;}
     const w=unproject(P.cam,c[0],c[1]);if(w&&G.grab)P.mat={x:w.x+G.grab.x,y:w.y+G.grab.y};});}
 const wrapPi=x=>Math.atan2(Math.sin(x),Math.cos(x));
 // pinça: os dedos são levados para o chão; a abertura medida no chão, na direção da largura ou do comprimento do tapete, muda só aquele lado, de 10 em 10 cm
@@ -1282,7 +1282,7 @@ const HINTS={mover:"Um dedo arrasta o tapete pelo chão. Dois dedos abrindo ou f
   cantos:"Arraste as quatro bolinhas até onde ficam os cantos do tapete. Depois disso, mover e girar seguem o mesmo chão.",
   ref:"Coloque o objeto de referência no chão, onde vai o tapete, e fotografe com o piso em volta à vista. O sistema acha o objeto sozinho; se não achar, toque nele. Arraste as bolinhas rosa se algum canto não bater."};
 function updateSub(){$$("[data-sub]").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.sub===S.sub)));const sr=$("#subRef");if(sr)sr.textContent=refCfg().nome;if(typeof renderRefInfo==="function")renderRefInfo();
-  $("#hint").textContent=!S.live&&S.sub==="mover"&&Q.pose.ref?`Um dedo arrasta o tapete pelo chão. Dois dedos abrindo ou fechando na direção da largura ou do comprimento mudam só aquele lado, de 10 em 10 cm, medidos no chão pelo ${refCfg().nome.toLowerCase()}; torcendo, giram.`:S.live?"O tapete fica parado na tela: mexa o celular até as linhas do piso encaixarem nas bordas dele e toque no botão redondo para fotografar.":HINTS[S.sub];}
+  $("#hint").textContent=!S.live&&S.sub==="mover"&&Q.pose.ref?`${Q.pose.ref?"O centro do tapete fica preso no cartão. ":"Um dedo arrasta o tapete pelo chão. "}Dois dedos abrindo ou fechando na direção da largura ou do comprimento mudam só aquele lado, de 10 em 10 cm, medidos no chão pelo ${refCfg().nome.toLowerCase()}; torcendo, giram.`:S.live?"O tapete fica parado na tela: mexa o celular até as linhas do piso encaixarem nas bordas dele e toque no botão redondo para fotografar.":HINTS[S.sub];}
 $$("[data-sub]").forEach(b=>b.onclick=()=>{S.sub=b.dataset.sub;updateSub();schedule();});
 $("#dimsBtn").onclick=()=>{S.dims=!S.dims;$("#dimsBtn").setAttribute("aria-pressed",String(S.dims));schedule();};
 $("#resetPose").onclick=()=>{if(Q.pose.ref&&Q.pose.plane){Object.assign(Q.pose.plane,{x:0,y:0,th:0});keepMatFloor();}else Q.pose=POSE_NEW();layout();syncSliders();schedule();};
@@ -2671,8 +2671,13 @@ function fotosInit(){if(Q.photo&&Q.photo.example){Q.photo=null;Q.pose=POSE_NEW()
   if(!Array.isArray(Q.fotos))Q.fotos=Q.photo&&Q.photo.src?[{photo:Q.photo,pose:Q.pose}]:[];Q.fotos=Q.fotos.filter(f=>f&&f.photo&&f.photo.src&&!f.photo.example);
   if(!(Q.fi>=0&&Q.fi<Q.fotos.length))Q.fi=0;if(Q.fotos.length&&!Q.photo){Q.photo=Q.fotos[Q.fi].photo;Q.pose=Q.fotos[Q.fi].pose;}}
 function fotosSync(){fotosInit();if(!Q.photo||!Q.fotos.length)return;Q.fotos[Q.fi]=Object.assign(Q.fotos[Q.fi]||{},{photo:Q.photo,pose:Q.pose});}
-function applyMatFloor(){const P=Q.pose,m=MF();if(P&&P.ref&&P.plane&&m)Object.assign(P.plane,m);}
-function keepMatFloor(){const P=Q.pose;if(P&&P.ref&&P.plane)setMF({x:P.plane.x,y:P.plane.y,th:P.plane.th});}
+// regra: o cartão é sempre o centro do tapete. O lado maior do tapete fica paralelo ao lado maior do cartão,
+// a não ser que o vendedor gire o tapete com dois dedos (fica guardado por tapete).
+function thRule(ref,sp){if(!ref)return 0;return ((ref.xs||0)>=(ref.ys||0))===(sp.w>=sp.h)?0:Math.PI/2;}
+function centerPlane(P,T){if(!P||!P.ref||!P.plane)return;const sp=(T&&T.spec)||spec(),m=MF(T&&T.id);P.plane.x=0;P.plane.y=0;P.plane.th=m&&m.thSet?m.th:thRule(P.ref,sp);}
+function applyMatFloor(){centerPlane(Q.pose,curTap());}
+function keepMatFloor(){const P=Q.pose;if(!(P&&P.ref&&P.plane))return;const r=thRule(P.ref,spec()),d=Math.abs(Math.atan2(Math.sin(P.plane.th-r),Math.cos(P.plane.th-r)));
+  setMF(d>0.02?{x:0,y:0,th:P.plane.th,thSet:true}:{x:0,y:0,th:r});}
 function selectFoto(i,quiet){fotosSync();if(!Q.fotos[i])return;Q.fi=i;Q.photo=Q.fotos[i].photo;Q.pose=Q.fotos[i].pose;const f=Q.fotos[i];if(!tapById(f.tid))f.tid=curTap().id;const k=Q.tapetes.findIndex(t=>t.id===f.tid);if(k>=0&&k!==Q.ti)setTapete(k,quiet);applyMatFloor();
   if(!quiet){if(S.view==="local"){layout();syncSliders();updateSub();schedule();}renderFotoTabs();if(typeof renderMatChips==="function")renderMatChips();}}
 const userFotos=()=>{fotosInit();return Q.fotos;};
@@ -2688,7 +2693,7 @@ function removeFoto(i){fotosSync();const f=Q.fotos[i];if(!f)return;const wasFram
 function fotoMsg(t){const e=$("#fotoCount");if(e)e.textContent=t;}
 // miniatura da foto com o contorno do tapete bem claro (o tapete pronto só aparece no passo "No seu espaço")
 function fotoQuad(i,tid,pose){fotosSync();const f=Q.fotos[i],T=tapById(tid||f.tid)||curTap(),sw=W,sh=H,sp=Q.photo,spo=Q.pose,ss=Q.spec;W=f.photo.w;H=f.photo.h;Q.photo=f.photo;Q.pose=pose||f.pose;Q.spec=T.spec;let q=null,rq=null;
-  try{const P=Q.pose,m=MF(T.id);if(P.ref&&P.plane&&m)Object.assign(P.plane,m);if(!P.mat&&!P.plane)P.mat=unproject(P.cam,W*0.5,H*0.64)||{x:0,y:2};q=quadOf(P);if(!validQuad(q))q=null;else q=q.map(([x,y])=>[x/W,y/H]);rq=P.ref?P.ref.quad:null;}
+  try{const P=Q.pose;centerPlane(P,T);if(!P.mat&&!P.plane)P.mat=unproject(P.cam,W*0.5,H*0.64)||{x:0,y:2};q=quadOf(P);if(!validQuad(q))q=null;else q=q.map(([x,y])=>[x/W,y/H]);rq=P.ref?P.ref.quad:null;}
   finally{W=sw;H=sh;Q.photo=sp;Q.pose=spo;Q.spec=ss;}return {q,rq};}
 function fotoCanvas(i,tw){const f=Q.fotos[i],c=document.createElement("canvas"),th=Math.round(tw*f.photo.h/f.photo.w),dpr=Math.min(2,window.devicePixelRatio||1);c.width=tw*dpr;c.height=th*dpr;c.style.width="100%";c.style.height="auto";
   const x=c.getContext("2d"),img=new Image();img.onload=()=>{x.setTransform(dpr,0,0,dpr,0,0);x.drawImage(img,0,0,tw,th);const {q,rq}=fotoQuad(i),P=pts=>{x.beginPath();pts.forEach(([u,v],k)=>k?x.lineTo(u*tw,v*th):x.moveTo(u*tw,v*th));x.closePath();};
@@ -2825,7 +2830,7 @@ function cardsInit(){tapInit();const used=new Set();Q.tapetes.forEach(T=>{if(T.c
 const tapByCard=n=>{cardsInit();return Q.tapetes.find(T=>T.card===n)||null;};
 function setCardOf(T,n){cardsInit();if(!(n>=1&&n<=GCARD.n)){T.card=-1;renderTapTabs();renderFotos();return;}const o=Q.tapetes.find(x=>x.card===n);if(o&&o!==T)o.card=T.card>=1?T.card:-1;T.card=n;renderTapTabs();renderFotos();}
 function poseFromCard(id,T){const pl=refPlane(id.quad,{w:GCARD.w,h:GCARD.h},Q.photo.w,Q.photo.h,[GCARD.w,GCARD.h]);if(!pl)return null;
-  return {cam:POSE_NEW().cam,mat:null,th:0,plane:Object.assign({H:pl.H},MF(T.id)||{x:0,y:0,th:0}),ref:{quad:id.quad.map(p=>[...p]),xs:GCARD.w,ys:GCARD.h,card:id.n}};}
+  const P={cam:POSE_NEW().cam,mat:null,th:0,plane:{H:pl.H,x:0,y:0,th:0},ref:{quad:id.quad.map(p=>[...p]),xs:GCARD.w,ys:GCARD.h,card:id.n}};centerPlane(P,T);return P;}
 // coloca na foto ativa os tapetes dos cartões achados; o primeiro fica selecionado, os outros ficam desenhados
 async function gcardsPlace(ids,merge){fotosSync();const f=Q.fotos[Q.fi];if(!f)return false;const miss=[];let placed=[];
   const mats=merge?Object.assign({},f.others||{},f.tid&&Q.pose&&Q.pose.ref&&Q.pose.ref.card?{[f.tid]:Q.pose}:{}):{};
@@ -2864,7 +2869,7 @@ function baseOf0(T){return withTap(T,()=>{const sp=spec(),w=sp.w*PXC,h=sp.h*PXC,
 function litCanvas(bc,M,Wd,Hd){const lc=document.createElement("canvas");lc.width=bc.width;lc.height=bc.height;const x=lc.getContext("2d"),L=document.createElement("canvas");L.width=40;L.height=22;const lx=L.getContext("2d"),id=lx.createImageData(40,22);
   for(let j=0;j<22;j++)for(let i=0;i<40;i++){const [sx,sy]=applyH(M,(i+.5)/40*bc.width,(j+.5)/22*bc.height),f=sampleLum(sx/Wd,sy/Hd),k=(j*40+i)*4;id.data[k]=255*f;id.data[k+1]=255*f*0.95;id.data[k+2]=255*f*0.85;id.data[k+3]=255;}
   lx.putImageData(id,0,0);x.drawImage(bc,0,0);x.globalCompositeOperation="multiply";x.drawImage(L,0,0,bc.width,bc.height);x.globalCompositeOperation="destination-in";x.drawImage(bc,0,0);x.globalCompositeOperation="source-over";return lc;}
-function othersList(){const f=Q.fotos&&Q.fotos[Q.fi];if(!f||!f.others)return [];return Object.entries(f.others).map(([tid,P])=>{const T=tapById(tid);if(!T)return null;const m=MF(tid);if(P.ref&&P.plane&&m)Object.assign(P.plane,m);return {T,P};}).filter(Boolean);}
+function othersList(){const f=Q.fotos&&Q.fotos[Q.fi];if(!f||!f.others)return [];return Object.entries(f.others).map(([tid,P])=>{const T=tapById(tid);if(!T)return null;centerPlane(P,T);return {T,P};}).filter(Boolean);}
 function otherQuadM(T,P){return withTap(T,()=>{const q=quadOf(P);if(!validQuad(q))return null;const M=solveH(texRect(),q);return M?{q,M}:null;});}
 function paintMat(x,tex,M,k){const n=16,bw=tex.width,bh=tex.height,Tp=(u,v)=>{const p=applyH(M,u,v);return [p[0]*k,p[1]*k];};
   for(let j=0;j<n;j++)for(let i=0;i<n;i++){const u0=i/n*bw,u1=(i+1)/n*bw,v0=j/n*bh,v1=(j+1)/n*bh;drawTri(x,tex,[[u0,v0],[u1,v0],[u1,v1]],[Tp(u0,v0),Tp(u1,v0),Tp(u1,v1)]);drawTri(x,tex,[[u0,v0],[u1,v1],[u0,v1]],[Tp(u0,v0),Tp(u1,v1),Tp(u0,v1)]);}}
@@ -2890,7 +2895,7 @@ const arSupported=()=>!!(navigator.mediaDevices&&navigator.mediaDevices.getUserM
 function arMime(){if(!window.MediaRecorder)return "";const L=["video/mp4;codecs=avc1.42E01E","video/mp4;codecs=avc1","video/mp4","video/webm;codecs=vp9","video/webm;codecs=vp8","video/webm"];
   for(const m of L)try{if(MediaRecorder.isTypeSupported(m))return m;}catch(e){}return "";}
 function arSay(t){const e=$("#arMsg");if(e)e.textContent=t;}
-async function arOpen(){if(!arSupported()){msg("Este navegador não abre a câmera ao vivo. Use o site do Gênio no celular (Chrome ou Safari).");return;}
+async function arOpen(){gravAsk();if(!arSupported()){msg("Este navegador não abre a câmera ao vivo. Use o site do Gênio no celular (Chrome ou Safari).");return;}
   cardsInit();const v=$("#arView");v.hidden=false;document.body.classList.add("ar-open");AR.video=$("#arVideo");AR.cv=$("#arCanvas");AR.x=AR.cv.getContext("2d");
   AR.det=document.createElement("canvas");AR.dx=AR.det.getContext("2d",{willReadFrequently:true});AR.tr={};AR.frame=0;arSay("Abrindo a câmera…");renderArLegend();
   try{AR.stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:"environment"},width:{ideal:1920},height:{ideal:1080}},audio:false});}
@@ -2961,14 +2966,14 @@ function arFrame(){const v=AR.video,vw=v.videoWidth,vh=v.videoHeight;if(!vw)retu
   if(AR.cv.width!==cw||AR.cv.height!==ch){AR.cv.width=cw;AR.cv.height=ch;}const x=AR.x;x.drawImage(v,0,0,cw,ch);
   AR.frame++;if(AR.frame%2===0){const F=arLum();if(F)arTrack(F);}
   const f=26*Math.hypot(cw,ch)/43.267,vis=[];
-  const seenN=new Set();for(const k in AR.tr){const tr=AR.tr[k];if(!tr.n||!tr.q||tr.miss>12||seenN.has(tr.n))continue;seenN.add(tr.n);const T=tapByCard(tr.n);if(!T)continue;const img=tr.q.map(([u,w])=>[u*cw,w*ch]),X=GCARD.w/100,Y=GCARD.h/100,P=solvePose(img,[[-X/2,Y/2],[X/2,Y/2],[X/2,-Y/2],[-X/2,-Y/2]],f,cw/2,ch/2);if(!P)continue;
-    const m=MF(T.id)||{x:0,y:0,th:0},hw=T.spec.w/200,hd=T.spec.h/200,quad=[[-hw,hd],[hw,hd],[hw,-hd],[-hw,-hd]].map(([a,b])=>{const [p,q]=rot2(a,b,m.th||0);return applyH(P.Hp,p+(m.x||0),q+(m.y||0));});
+  const seenN=new Set();for(const k in AR.tr){const tr=AR.tr[k];if(!tr.n||!tr.q||tr.miss>12||seenN.has(tr.n))continue;seenN.add(tr.n);const T=tapByCard(tr.n);if(!T)continue;const img=tr.q.map(([u,w])=>[u*cw,w*ch]),X=GCARD.w/100,Y=GCARD.h/100,P=poseFloor(img,X,Y,f,cw/2,ch/2);if(!P)continue;
+    const m=MF(T.id),th=m&&m.thSet?m.th:thRule({xs:X,ys:Y},T.spec),hw=T.spec.w/200,hd=T.spec.h/200,quad=[[-hw,hd],[hw,hd],[hw,-hd],[-hw,-hd]].map(([a,b])=>{const [p,q]=rot2(a,b,th);return applyH(P.Hp,p,q);});
     if(quad.some(p=>!isFinite(p[0])||!isFinite(p[1])))continue;const bc=arBase(T),M=withTap(T,()=>solveH(texRect(),quad));if(!M)continue;paintMatN(x,bc,M,8);vis.push(T);}
-  // cartão-postal universal: o tapete aberto, centrado no cartão, deitado como na foto (largura ao longo do lado de cima do cartão)
+  // cartão-postal universal: o tapete aberto, com o centro no centro do cartão e o lado maior paralelo ao lado maior do cartão
   const r=refCfg(),T0=curTap();let pv=false;const plainK=Object.keys(AR.tr).filter(k=>{const t=AR.tr[k];return !t.n&&(t.tries||0)>=4&&t.pq&&t.miss<=12;}).sort((a,b)=>polyArea(AR.tr[b].pq)-polyArea(AR.tr[a].pq));if(r.w&&r.h)for(const k of plainK){const tr=AR.tr[k];if(tr.n||(tr.tries||0)<4||!tr.pq||tr.miss>12)continue;const img=tr.pq.map(([u,w])=>[u*cw,w*ch]);let P=null;
-    for(const [a,b] of [[r.w,r.h],[r.h,r.w]]){const X=a/100,Y=b/100,Pp=solvePose(img,[[-X/2,Y/2],[X/2,Y/2],[X/2,-Y/2],[-X/2,-Y/2]],f,cw/2,ch/2);if(Pp&&(!P||Pp.rms<P.rms))P=Object.assign(Pp,{X,Y});}
+    for(const [a,b] of [[r.w,r.h],[r.h,r.w]]){const X=a/100,Y=b/100,Pp=poseFloor(img,X,Y,f,cw/2,ch/2);if(Pp&&(!P||Pp.rms<P.rms))P=Object.assign(Pp,{X,Y});}
     if(!P||P.rms>Math.max(4,0.04*Math.hypot(img[0][0]-img[2][0],img[0][1]-img[2][1])))continue;
-    const hw=T0.spec.w/200,hd=T0.spec.h/200,th=0,quad=[[-hw,hd],[hw,hd],[hw,-hd],[-hw,-hd]].map(([a,b])=>{const [p,q]=rot2(a,b,th);return applyH(P.Hp,p,q);});
+    const m0=MF(T0.id),hw=T0.spec.w/200,hd=T0.spec.h/200,th=m0&&m0.thSet?m0.th:thRule({xs:P.X,ys:P.Y},T0.spec),quad=[[-hw,hd],[hw,hd],[hw,-hd],[-hw,-hd]].map(([a,b])=>{const [p,q]=rot2(a,b,th);return applyH(P.Hp,p,q);});
     if(quad.some(p=>!isFinite(p[0])||!isFinite(p[1])))continue;const M=withTap(T0,()=>solveH(texRect(),quad));if(!M)continue;paintMatN(x,arBase(T0),M,8);pv=true;break;}
   AR.vis=vis.map(T=>T.card);AR.pv=pv;
   if(AR.frame%10===0)arSay(vis.length||pv?`Vendo ${vis.map(T=>`cartão ${T.card} (${tapName(T)})`).concat(pv?[`o ${r.nome.toLowerCase()} (${tapName(T0)})`]:[]).join(", ")}.`:Object.values(AR.tr).some(t=>t.n)?"Achei um cartão sem tapete ligado. Ligue um tapete a ele na parte 2.":Object.values(AR.tr).some(t=>(t.tries||0)<4)?"Lendo o cartão…":Object.keys(AR.tr).length?"Achei um cartão, mas a medida dele não bate com o objeto de referência (Configurações) nem é um cartão Gênio. Chegue um pouco mais perto.":"Aponte para o cartão no chão, com o celular a 1 ou 2 metros, pegando o piso em volta.");}
@@ -2998,6 +3003,30 @@ $$("[data-ar]").forEach(b=>{b.hidden=!arSupported();b.addEventListener("click",a
 document.addEventListener("visibilitychange",()=>{if(document.hidden&&AR.on&&!(AR.rec&&AR.rec.state==="recording"))arClose();});
 // imagens de cada tapete visto de cima (JPG), para o orçamento
 async function topViewsAll(){tapInit();if(Q.tapetes.length<1)return [];const cur=Q.ti,sel=S.sel,list=[];for(let i=0;i<Q.tapetes.length;i++){setTapete(i,true);buildBase();const u=await makeTopPreview().catch(()=>null);if(u)list.push(u);}setTapete(cur,true);S.sel=sel;buildBase();return list;}
+
+// ---------- sensores: o chão é sempre o plano perpendicular à gravidade ----------
+// O acelerômetro diz para onde é "para cima". Com isso o tapete nunca fica de lado: só sobra achar a posição e o giro no chão,
+// e o cartão pequeno e tremido na imagem deixa de bagunçar a perspectiva.
+const GRAV={g:null,t:0,on:false};
+function gravOn(){if(GRAV.on)return;GRAV.on=true;window.addEventListener("devicemotion",e=>{const a=e.accelerationIncludingGravity;if(!a||a.x==null)return;const v=[a.x,a.y,a.z],n=Math.hypot(v[0],v[1],v[2]);if(n<6||n>14)return;GRAV.g=GRAV.g?GRAV.g.map((p,i)=>p*0.8+v[i]*0.2):v;GRAV.t=Date.now();});}
+async function gravAsk(){try{if(window.DeviceMotionEvent&&typeof DeviceMotionEvent.requestPermission==="function"){const r=await DeviceMotionEvent.requestPermission();if(r!=="granted")return false;}}catch(e){return false;}gravOn();return true;}
+function upCam(){if(!GRAV.g||Date.now()-GRAV.t>1500)return null;const [ax,ay,az]=GRAV.g,an=(((screen.orientation&&screen.orientation.angle)||window.orientation||0)|0)*Math.PI/180;
+  const x=ax*Math.cos(an)-ay*Math.sin(an),y=ax*Math.sin(an)+ay*Math.cos(an),v=[x,-y,-az],n=Math.hypot(v[0],v[1],v[2]);return v.map(c=>c/n);}
+const v3d=(a,b)=>a[0]*b[0]+a[1]*b[1]+a[2]*b[2],v3x=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]],v3n=a=>{const n=Math.hypot(a[0],a[1],a[2])||1;return a.map(c=>c/n);};
+// translação com a rotação fixa: sistema linear pequeno (mínimos quadrados)
+function solveT(img,obj,xv,yv,f,cx,cy){const A=[[0,0,0],[0,0,0],[0,0,0]],b=[0,0,0],add=(r,y)=>{for(let i=0;i<3;i++){b[i]+=r[i]*y;for(let j=0;j<3;j++)A[i][j]+=r[i]*r[j];}};
+  obj.forEach(([X,Y],k)=>{const a=[X*xv[0]+Y*yv[0],X*xv[1]+Y*yv[1],X*xv[2]+Y*yv[2]],un=(img[k][0]-cx)/f,vn=(img[k][1]-cy)/f;add([1,0,-un],un*a[2]-a[0]);add([0,1,-vn],vn*a[2]-a[1]);});
+  const det=m=>m[0][0]*(m[1][1]*m[2][2]-m[1][2]*m[2][1])-m[0][1]*(m[1][0]*m[2][2]-m[1][2]*m[2][0])+m[0][2]*(m[1][0]*m[2][1]-m[1][1]*m[2][0]),D=det(A);if(Math.abs(D)<1e-12)return null;
+  return [0,1,2].map(c=>det(A.map((row,i)=>row.map((v,j)=>j===c?b[i]:v)))/D);}
+function poseFromRT(xv,yv,t,f,cx,cy){return [f*xv[0]+cx*xv[2],f*yv[0]+cx*yv[2],f*t[0]+cx*t[2],f*xv[1]+cy*xv[2],f*yv[1]+cy*yv[2],f*t[1]+cy*t[2],xv[2],yv[2],t[2]];}
+function reproj(Hp,obj,img){let e=0;obj.forEach(([X,Y],k)=>{const p=applyH(Hp,X,Y);e+=(p[0]-img[k][0])**2+(p[1]-img[k][1])**2;});return Math.sqrt(e/obj.length);}
+function poseFloor(img,X,Y,f,cx,cy){const obj=[[-X/2,Y/2],[X/2,Y/2],[X/2,-Y/2],[-X/2,-Y/2]],P=solvePose(img,obj,f,cx,cy);if(!P)return null;const up=upCam();if(!up)return P;
+  const R=P.R,col=j=>[R[0][j],R[1][j],R[2][j]],z0=col(2);let n=v3d(up,z0)<0?up.map(v=>-v):up;   // o sinal do acelerômetro muda entre aparelhos
+  if(Math.acos(Math.min(1,v3d(n,z0)))>40*DEG)return P;                                         // sensor e imagem discordam demais: fica com a imagem
+  let x0=col(0);x0=v3n(x0.map((c,i)=>c-n[i]*v3d(x0,n)));const nx=v3x(n,x0);let best=null;
+  for(let d=-10;d<=10;d+=0.5){const a=d*DEG,xv=x0.map((c,i)=>c*Math.cos(a)+nx[i]*Math.sin(a)),yv=v3x(n,xv),t=solveT(img,obj,xv,yv,f,cx,cy);if(!t||t[2]<=0)continue;
+    const Hp=poseFromRT(xv,yv,t,f,cx,cy),e=reproj(Hp,obj,img);if(!best||e<best.rms)best={Hp,rms:e,t,floor:true};}
+  return best&&best.rms<P.rms*3+3?best:P;}
 
 // ================= Pix no orçamento: copia e cola e QR Code, gerados no próprio aparelho =================
 // BR Code estático do Banco Central (EMV), com valor; só precisa da chave Pix do vendedor. Nada passa por banco ou intermediário.
