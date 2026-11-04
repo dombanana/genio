@@ -478,6 +478,22 @@ html,body{overscroll-behavior-y:none}
 .mod-card .mini{position:absolute;top:6px;right:6px}
 .mod-save{margin:10px 0;display:flex;flex-direction:column;gap:6px}
 .mod-save .row{gap:8px;flex-wrap:wrap}.mod-save input{flex:1;min-width:180px}
+.mod-box{padding:12px 16px}
+.mod-pick{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.mod-pick label{font-weight:600;font-size:14px}
+.mod-pick select{flex:1;min-width:200px;min-height:44px}
+.sr-only{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+#qThumbs{display:block}
+.qthumbs-row{display:flex;flex-wrap:wrap;gap:10px;margin:6px 0}
+.qthumb-w{position:relative}
+.qthumb-w .qthumb{width:112px;height:72px;position:relative}
+.qthumb-w.on .qthumb{outline:3px solid #184E4E;outline-offset:1px}
+.qthumb-n{position:absolute;left:4px;bottom:4px;background:rgba(24,78,78,.88);color:#fff;font:600 11px/1 Rubik,system-ui,sans-serif;padding:3px 6px;border-radius:6px}
+.qthumb-x{position:absolute;top:-10px;right:-10px;width:34px;height:34px;border-radius:50%;border:2px solid #fff;background:#A33A2A;color:#fff;font:700 20px/1 Rubik,system-ui,sans-serif;cursor:pointer;display:grid;place-items:center;box-shadow:0 1px 4px rgba(0,0,0,.25);padding:0}
+.qthumb-x:hover{background:#862c1f}
+.qthumb-bar{gap:8px;flex-wrap:wrap;margin:4px 0 8px}
+.qthumb-off{margin-top:6px}.qthumb-off summary{cursor:pointer;font-size:14px;color:var(--muted,#66756F);padding:6px 0}
+.qthumb-off .qthumb{width:96px;height:62px;position:relative;opacity:.75}
 </style>
 <div class="top">
   <a class="mod-volta" href="app.html" aria-label="Voltar aos módulos">‹ Módulos</a><div class="brand"><div class="wordmark" id="wordmark" aria-label="Gênio do Capacho"><b>Gênio</b><span>do capacho</span></div><div class="brand-t" id="brandT"></div></div>
@@ -506,9 +522,9 @@ html,body{overscroll-behavior-y:none}
       <div class="row"><span class="stepnote"><i></i>Etapa 1 de 3</span><span class="badge" id="dStatus">Rascunho</span></div>
     </div>
     <section class="panel mod-box" id="modBox" aria-labelledby="hMod" hidden>
-      <h2 id="hMod">Começar de um modelo</h2>
-      <p class="hint">Os tapetes, medidas, cores e textos já vêm prontos. Depois é só trocar o nome e colocar o logo do cliente. Para começar do zero, siga direto para a parte 1.</p>
-      <div class="mod-grid" id="modGrid"></div>
+      <h2 id="hMod" class="sr-only">Modelo do orçamento</h2>
+      <div class="mod-pick"><label for="modSel">Começar</label><select id="modSel"></select><button class="btn ghost" type="button" id="modUse" hidden>Usar este modelo</button><button class="btn ghost" type="button" id="modDel" hidden>Apagar modelo</button></div>
+      <div class="mod-grid" id="modGrid" hidden></div>
       <p class="hint small ok-t" id="modMsg" aria-live="polite"></p>
     </section>
 
@@ -935,7 +951,7 @@ html,body{overscroll-behavior-y:none}
   <div class="ar-bottom">
     <p class="ar-msg" id="arMsg" aria-live="polite"></p>
     <div class="ar-btns"><button class="btn gold" id="arShot" type="button" disabled>Foto JPG</button><button class="btn ar-rec" id="arRec" type="button" disabled>● Gravar</button></div>
-    <label class="ar-keep"><input type="checkbox" id="arKeep" checked> Cada foto também entra no orçamento como foto do local</label>
+    <label class="ar-keep"><input type="checkbox" id="arKeep" checked> Cada foto também entra no orçamento, com o tapete aplicado</label>
   </div>
 </div>
 
@@ -3057,7 +3073,8 @@ function arFrame(){const v=AR.video,vw=v.videoWidth,vh=v.videoHeight;if(!vw)retu
   if(now-GH.at>3000&&GH.buf.length)ghReset();
   for(const key in ANC)if(!drawn.has(key)&&now-ANC[key].at>(DEV.R?8000:1500))delete ANC[key];
   AR.vis=vis.map(T=>T.card);AR.pv=pv;
-  if(fresh){DIAG.n++;const t=Date.now();if(t-DIAG.t0>1000){DIAG.rate=DIAG.n*1000/(t-(DIAG.t0||t-1000));DIAG.n=0;DIAG.t0=t;}}if(AR_DIAG)arDiag(x,cw,ch,pv||vis.length>0);
+  if(fresh){DIAG.n++;const t=Date.now();if(t-DIAG.t0>1000){DIAG.rate=DIAG.n*1000/(t-(DIAG.t0||t-1000));DIAG.n=0;DIAG.t0=t;}}if(AR.wantShot){const f=AR.wantShot;AR.wantShot=null;f();}   // a foto é tirada aqui: com o tapete, antes da linha de diagnóstico
+  if(AR_DIAG)arDiag(x,cw,ch,pv||vis.length>0);
   if(AR.frame%10===0)arSay(vis.length||pv?`Vendo ${vis.map(T=>`cartão ${T.card} (${tapName(T)})`).concat(pv?[`o ${r.nome.toLowerCase()} (${tapName(T0)})`]:[]).join(", ")}.`:Object.values(AR.tr).some(t=>t.n)?"Achei um cartão sem tapete ligado. Ligue um tapete a ele na parte 2.":Object.values(AR.tr).some(t=>(t.tries||0)<4)?"Lendo o cartão…":Object.keys(AR.tr).length?"Achei um cartão, mas a medida dele não bate com o objeto de referência (Configurações) nem é um cartão Gênio. Chegue um pouco mais perto.":"Aponte para o cartão no chão, com o celular a 1 ou 2 metros, pegando o piso em volta.");}
 function paintMatN(x,tex,M,n){const bw=tex.width,bh=tex.height,Tp=(u,v)=>applyH(M,u,v);x.save();x.globalAlpha=0.97;
   for(let j=0;j<n;j++)for(let i=0;i<n;i++){const u0=i/n*bw,u1=(i+1)/n*bw,v0=j/n*bh,v1=(j+1)/n*bh;drawTri(x,tex,[[u0,v0],[u1,v0],[u1,v1]],[Tp(u0,v0),Tp(u1,v0),Tp(u1,v1)]);drawTri(x,tex,[[u0,v0],[u1,v1],[u0,v1]],[Tp(u0,v0),Tp(u1,v1),Tp(u0,v1)]);}x.restore();}
@@ -3074,12 +3091,13 @@ function arRecToggle(){const b=$("#arRec");if(AR.rec&&AR.rec.state==="recording"
     await saveBlob(blob,name,$("#arMsg"));};
   AR.rec.start(500);AR.t0=Date.now();b.textContent="■ Parar 0:00";b.classList.add("rec");
   AR.timer=setInterval(()=>{const s=Math.floor((Date.now()-AR.t0)/1000);b.textContent=`■ Parar ${Math.floor(s/60)}:${String(s%60).padStart(2,"0")}`;},500);}
-async function arShot(){if(!AR.on||!AR.cv.width)return;AR.shots++;const blob=await new Promise(r=>AR.cv.toBlob(r,"image/jpeg",0.92));if(!blob)return;
-  // a mesma cena, sem os tapetes, entra como foto do local do orçamento (lá os cartões são achados de novo, com mais precisão)
-  const c=document.createElement("canvas");c.width=AR.cv.width;c.height=AR.cv.height;c.getContext("2d").drawImage(AR.video,0,0,c.width,c.height);const clean=c.toDataURL("image/jpeg",0.92);
+// foto do ao vivo: exatamente o que está na tela, com o tapete aplicado (sem a linha de diagnóstico)
+async function arShot(){if(!AR.on||!AR.cv.width)return;AR.shots++;
+  const c=await new Promise(res=>{AR.wantShot=()=>{const k=document.createElement("canvas");k.width=AR.cv.width;k.height=AR.cv.height;k.getContext("2d").drawImage(AR.cv,0,0);res(k);};});
   const fl=$("#arFlash");if(fl){fl.classList.remove("go");void fl.offsetWidth;fl.classList.add("go");}
+  const blob=await new Promise(r=>c.toBlob(r,"image/jpeg",0.92));if(!blob)return;
   await saveBlob(blob,`${arBase0()}-foto-${AR.shots}.jpg`,$("#arMsg"));
-  if($("#arKeep").checked){onFotoFile(clean,c.width,c.height,null,null);arSay(`Foto ${AR.shots} salva e incluída no orçamento como foto do local.`);}}
+  if($("#arKeep").checked&&typeof galAddAr==="function"){galAddAr(c.toDataURL("image/jpeg",0.88));arSay(`Foto ${AR.shots} salva e incluída no orçamento, com o tapete aplicado.`);}}
 $("#arClose").onclick=arClose;$("#arRec").onclick=arRecToggle;$("#arShot").onclick=arShot;
 $$("[data-ar]").forEach(b=>{b.hidden=!arSupported();b.addEventListener("click",arOpen);});
 document.addEventListener("visibilitychange",()=>{if(document.hidden&&AR.on&&!(AR.rec&&AR.rec.state==="recording"))arClose();});
@@ -3342,7 +3360,15 @@ function fitTexts(T){withTap(T,()=>{const f=fieldRectCm(),c=fitTexts.c||(fitText
   L.forEach(l=>{for(let i=0;i<12;i++){const g=textGeom(c,l),w=g.w/PXC,h=g.h/PXC,k=Math.min(1,0.9*f.w/w,0.9*f.h/Math.max(1,h));if(k>=0.999)break;l.sizeCm=Math.max(1.5,Math.floor(l.sizeCm*k*2)/2);}});
   // dois textos: o segundo não pode encostar no primeiro
   if(L.length===2){const g0=textGeom(c,L[0]),g1=textGeom(c,L[1]),h0=g0.h/PXC,h1=g1.h/PXC,gap=Math.max(1.5,f.h*0.06),tot=h0+gap+h1;if(tot<=f.h*0.92){L[0].y=-(tot/2)+h0/2;L[1].y=tot/2-h1/2;}}});}
-async function renderModelos(){const box=$("#modBox");if(!box)return;const tk=++MODTK,fresh=quoteFresh();box.hidden=!fresh&&!$("#modMsg").textContent;const g=$("#modGrid");if(!fresh){g.replaceChildren();return;}const meus=await modelosMeus();if(tk!==MODTK)return;g.replaceChildren();
+// o orçamento começa sempre no "Livre"; os kits e os modelos salvos ficam num menu discreto
+async function renderModelos(){const box=$("#modBox");if(!box)return;const tk=++MODTK,fresh=quoteFresh();box.hidden=!fresh&&!$("#modMsg").textContent;const sel=$("#modSel"),bu=$("#modUse"),bd=$("#modDel");
+  if(sel){$(".mod-pick").hidden=!fresh;if(fresh){const meus=await modelosMeus();if(tk!==MODTK)return;const ops=[["livre","Livre: qualquer tapete, do zero"]].concat(MODELOS_KIT.map(k=>["k:"+k.id,`${k.nome} (${k.tapetes().length} tapete${k.tapetes().length>1?"s":""})`]),meus.map(m=>["m:"+m.id,`Meu modelo: ${m.nome}`]));
+      sel.replaceChildren(...ops.map(([v,t])=>{const o=document.createElement("option");o.value=v;o.textContent=t;return o;}));sel.value="livre";
+      const upd=()=>{bu.hidden=sel.value==="livre";bd.hidden=!sel.value.startsWith("m:");};upd();sel.onchange=upd;
+      bu.onclick=()=>{const v=sel.value;if(v.startsWith("k:")){const k=MODELOS_KIT.find(x=>"k:"+x.id===v);if(k)aplicarModelo(k.tapetes(),k.nome);}else if(v.startsWith("m:")){const m=meus.find(x=>"m:"+x.id===v);if(m)aplicarModelo(m.tapetes,m.nome);}};
+      bd.onclick=async()=>{const v=sel.value;if(!v.startsWith("m:"))return;await modeloDel(v.slice(2));renderModelos();};}}
+  return;
+  const g=$("#modGrid");if(!fresh){g.replaceChildren();return;}const meus=await modelosMeus();if(tk!==MODTK)return;g.replaceChildren();
   const card=(nome,desc,fn,del)=>{const b=document.createElement("div");b.className="mod-card";const t=document.createElement("button");t.type="button";t.className="mod-use";t.innerHTML="<b></b><span class=\"hint small\"></span>";t.querySelector("b").textContent=nome;t.querySelector("span").textContent=desc;t.onclick=fn;b.appendChild(t);
     if(del){const x=document.createElement("button");x.type="button";x.className="mini";x.setAttribute("aria-label",`Apagar o modelo ${nome}`);x.textContent="×";x.onclick=async()=>{await modeloDel(del);renderModelos();};b.appendChild(x);}g.appendChild(b);};
   meus.forEach(m=>card(m.nome,`Meu modelo · ${m.tapetes.length} tapete${m.tapetes.length>1?"s":""}`,()=>aplicarModelo(m.tapetes,m.nome),m.id));
@@ -3454,6 +3480,54 @@ function fotoMapa(colors){const P=activePal().map(p=>{const c=rgbOf(p.hex),mx=Ma
     $("#lePolyDel").disabled=!(LE.polySel>=0&&LE.poly.length>3);
     $("#leLegend").innerHTML=`<span>${E.N} tons</span>`+cols.map((cc,i)=>`<span><i style="background:rgb(${cc.join(",")})"></i>tom ${i+1}</span>`).join("")+`<span>(as cores trocam no passo 3)</span>`;};
 }
+
+// ================= imagens do orçamento: fotos do ao vivo, fotos do local e vistas de cima =================
+// Cada imagem tem uma chave (ao vivo, foto do local, vista de cima de um tapete). O vendedor escolhe a ordem e tira
+// as que não servem; a escolha fica guardada e vale também quando as imagens são geradas de novo.
+// Q.galAll: todas as imagens geradas [{k,u,tipo}]; Q.galOrd: chaves visíveis, na ordem; Q.galOff: chaves tiradas.
+// Q.previews/Q.preview continuam sendo a lista visível e a capa (o resto do sistema usa estes).
+const GAL={sel:0,undo:null};
+const galTipo=k=>k.startsWith("a:")?"Ao vivo":k.startsWith("f:")?"Foto do local":"Vista de cima";
+function galSync(){const all=Q.galAll||[],byK=new Map(all.map(x=>[x.k,x])),off=new Set(Q.galOff||[]);
+  let ord=(Q.galOrd||[]).filter(k=>byK.has(k)&&!off.has(k));all.forEach(x=>{if(!off.has(x.k)&&!ord.includes(x.k))ord.push(x.k);});
+  Q.galOrd=ord;Q.galOff=[...off].filter(k=>byK.has(k));Q.previews=ord.map(k=>byK.get(k).u);Q.preview=Q.previews[0]||null;if(GAL.sel>=ord.length)GAL.sel=Math.max(0,ord.length-1);}
+function galSet(items){Q.galAll=items;galSync();}
+// foto tirada no ao vivo: entra na hora, no começo da lista (é a que mostra o tapete no lugar)
+function galAddAr(u){Q.arShots=Q.arShots||[];const id=Date.now().toString(36);Q.arShots.push({id,u});
+  const it={k:"a:"+id,u};Q.galAll=[it].concat((Q.galAll||[]));Q.galOrd=["a:"+id].concat(Q.galOrd||[]);galSync();
+  if(S.view==="orcamento")galRefresh();if(Q.id)galSave();}
+let galT=0;const galSave=()=>{clearTimeout(galT);galT=setTimeout(()=>{if(Q.id)saveQuote();},600);};
+makeAllPreviews=async function(){fotosSync();const cur=Q.fi,items=[];
+  (Q.arShots||[]).slice().reverse().forEach(a=>items.push({k:"a:"+a.id,u:a.u}));
+  for(let i=0;i<Q.fotos.length;i++){selectFoto(i,true);buildBase();const u=await makePreview().catch(()=>null);if(u)items.push({k:"f:"+(Q.fotos[i].id||i),u});}
+  if(Q.fotos.length){selectFoto(cur,true);buildBase();}
+  tapInit();if(Q.tapetes.length){const ct=Q.ti,sel=S.sel;for(let i=0;i<Q.tapetes.length;i++){setTapete(i,true);buildBase();const u=await makeTopPreview().catch(()=>null);if(u)items.push({k:"t:"+(Q.tapetes[i].id||i),u});}setTapete(ct,true);S.sel=sel;buildBase();}
+  galSet(items);return Q.previews.slice();};
+function galRefresh(){$("#qImg").src=Q.previews[GAL.sel]||Q.preview||"";renderQThumbs();}
+function galMove(i,d){const o=Q.galOrd,j=i+d;if(j<0||j>=o.length)return;[o[i],o[j]]=[o[j],o[i]];GAL.sel=j;galSync();galRefresh();galSave();}
+function galOff(i){const k=Q.galOrd[i];if(!k)return;Q.galOff=(Q.galOff||[]).concat([k]);GAL.undo={k,pos:i};galSync();galRefresh();galSave();}
+function galOn(k,pos){Q.galOff=(Q.galOff||[]).filter(x=>x!==k);const o=(Q.galOrd||[]).filter(x=>x!==k);o.splice(pos==null?o.length:Math.min(pos,o.length),0,k);Q.galOrd=o;GAL.undo=null;galSync();GAL.sel=Q.galOrd.indexOf(k);galRefresh();galSave();}
+renderQThumbs=function(){const b=$("#qThumbs");if(!b)return;b.replaceChildren();
+  if(!Q.galAll&&Q.previews&&Q.previews.length){Q.galAll=Q.previews.map((u,i)=>({k:"x:"+i,u}));galSync();}
+  if(GAL.sel>=(Q.previews||[]).length)GAL.sel=0;{const qi=$("#qImg");if(qi&&Q.previews&&Q.previews[GAL.sel])qi.src=Q.previews[GAL.sel];}
+  const L=Q.previews||[],byK=new Map((Q.galAll||[]).map(x=>[x.k,x]));
+  const tit=document.createElement("p");tit.className="hint small";tit.textContent=L.length?(L.length>1?`${L.length} imagens vão para o cliente, nesta ordem (a primeira é a capa). Toque numa imagem para escolher e mudar a ordem; o × tira a imagem.`:"1 imagem vai para o cliente. O × tira a imagem."):"Nenhuma imagem vai para o cliente. Volte uma imagem abaixo ou gere de novo.";b.appendChild(tit);
+  const row=document.createElement("div");row.className="qthumbs-row";b.appendChild(row);
+  L.forEach((u,i)=>{const w=document.createElement("div");w.className="qthumb-w"+(i===GAL.sel?" on":"");
+    const t=document.createElement("button");t.type="button";t.className="qthumb";t.setAttribute("aria-label",`Ver imagem ${i+1}: ${galTipo(Q.galOrd[i])}`);const im=document.createElement("img");im.src=u;im.alt="";t.appendChild(im);
+    const n=document.createElement("span");n.className="qthumb-n";n.textContent=i===0?"capa":String(i+1);t.appendChild(n);
+    t.onclick=()=>{GAL.sel=i;galRefresh();};
+    const x=document.createElement("button");x.type="button";x.className="qthumb-x";x.setAttribute("aria-label",`Tirar a imagem ${i+1}`);x.textContent="×";x.onclick=e=>{e.stopPropagation();galOff(i);};
+    w.append(t,x);row.appendChild(w);});
+  if(L.length>1){const bar=document.createElement("div");bar.className="row qthumb-bar";const i=GAL.sel;
+    const mk=(txt,fn,dis,lab)=>{const bt=document.createElement("button");bt.type="button";bt.className="btn ghost";bt.textContent=txt;bt.disabled=dis;if(lab)bt.setAttribute("aria-label",lab);bt.onclick=fn;bar.appendChild(bt);};
+    mk("← Antes",()=>galMove(i,-1),i<=0,"Mover a imagem escolhida para antes");mk("Depois →",()=>galMove(i,1),i>=L.length-1,"Mover a imagem escolhida para depois");if(i>0)mk("Usar como capa",()=>{const o=Q.galOrd,k=o.splice(i,1)[0];o.unshift(k);GAL.sel=0;galSync();galRefresh();galSave();},false);
+    b.appendChild(bar);}
+  if(GAL.undo){const u=document.createElement("div");u.className="row";const bt=document.createElement("button");bt.type="button";bt.className="btn ghost";bt.textContent="Desfazer: voltar a imagem tirada";const g=GAL.undo;bt.onclick=()=>galOn(g.k,g.pos);u.appendChild(bt);b.appendChild(u);}
+  const off=(Q.galOff||[]).map(k=>byK.get(k)).filter(Boolean);
+  if(off.length){const d=document.createElement("details");d.className="qthumb-off";const s=document.createElement("summary");s.textContent=`Imagens tiradas (${off.length})`;d.appendChild(s);const r=document.createElement("div");r.className="qthumbs-row";
+    off.forEach(it=>{const t=document.createElement("button");t.type="button";t.className="qthumb";t.setAttribute("aria-label","Voltar esta imagem para o orçamento");const im=document.createElement("img");im.src=it.u;im.alt="";t.appendChild(im);const n=document.createElement("span");n.className="qthumb-n";n.textContent="+ voltar";t.appendChild(n);t.onclick=()=>galOn(it.k);r.appendChild(t);});
+    d.appendChild(r);b.appendChild(d);}};
 
 // ================= instalar como aplicativo =================
 // No site: ícone na tela do celular, abre em tela cheia e funciona sem internet. Pede ao navegador para não apagar os dados guardados.
