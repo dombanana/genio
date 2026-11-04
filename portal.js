@@ -26,14 +26,14 @@ const G=(()=>{
   const data=s=>{if(!s)return"—";const d=new Date(s+"Z");return d.toLocaleDateString("pt-BR",{day:"2-digit",month:"2-digit",year:"2-digit"})+" "+d.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});};
   // módulos do GenIO: o Capacho funciona; os outros entram aos poucos com a mesma base (fotos, prévia, orçamento, Pix)
   const MODULOS=[
-    {id:"capacho",nome:"Capachos personalizados",url:"capacho.html",on:true,img:"img/mod-capacho.jpg"},
-    {id:"placas",nome:"Placas e sinalização",img:"img/mod-placas.jpg"},
-    {id:"adesivos",nome:"Adesivos e vitrines",img:"img/mod-adesivos.jpg"},
-    {id:"uniformes",nome:"Uniformes e camisetas",img:"img/mod-uniformes.jpg"},
-    {id:"impressos",nome:"Cartões e impressos",img:"img/mod-cartoes.jpg"},
-    {id:"banners",nome:"Banners e faixas",img:"img/mod-banners.jpg"},
-    {id:"brindes",nome:"Brindes e carimbos",img:"img/mod-brindes.jpg"},
-    {id:"parede",nome:"Adesivos de parede",img:"img/mod-parede.jpg"}];
+    {id:"capacho",nome:"Capachos personalizados",url:"capacho.html",on:true,img:"img/cat-capacho.jpg?v=6102044c0d"},
+    {id:"placas",nome:"Placas e sinalização",img:"img/cat-placas.jpg?v=6102044c0d"},
+    {id:"adesivos",nome:"Adesivos e vitrines",img:"img/cat-adesivos.jpg?v=6102044c0d"},
+    {id:"uniformes",nome:"Uniformes e camisetas",img:"img/cat-uniformes.jpg?v=6102044c0d"},
+    {id:"impressos",nome:"Cartões e impressos",img:"img/cat-cartoes.jpg?v=6102044c0d"},
+    {id:"banners",nome:"Banners e faixas",img:"img/cat-banners.jpg?v=6102044c0d"},
+    {id:"brindes",nome:"Brindes e carimbos",img:"img/cat-brindes.jpg?v=6102044c0d"},
+    {id:"parede",nome:"Adesivos de parede",img:"img/cat-parede.jpg?v=6102044c0d"}];
   // fotos: imagens do catálogo GenIO (brand/catalogo no repositório), produto isolado em fundo lavanda; só foto e título
   // cartão do catálogo: título em cima da foto; o cartão inteiro é o link quando o módulo está no ar; sem link, "Em breve" explícito
   const cardMod=(m,link)=>{const d=`<b>${esc(m.nome)}</b><img src="${m.img}" alt="" width="350" height="350" loading="lazy">${m.on?"":'<span class="tag">Em breve</span>'}`;
