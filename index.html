@@ -3,34 +3,37 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Gênio · Vendas de personalizados</title>
+<title>GenIO · Personalização assistida para o comércio</title>
 <meta name="description" content="Orçamento de capacho e personalizados na frente do cliente: foto do lugar, prévia no chão, preço com Pix ou cartão.">
-<meta name="theme-color" content="#184E4E">
+<meta name="theme-color" content="#6933C5">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="favicon.png" type="image/png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
-<meta name="apple-mobile-web-app-title" content="Gênio">
+<meta name="apple-mobile-web-app-title" content="GenIO">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&display=swap">
-<link rel="stylesheet" href="portal.css?v=5099e2b680">
+<link rel="stylesheet" href="portal.css?v=10fe7b41e4">
 <style>
-.hero-art{background:var(--marca);border-radius:20px;padding:24px;color:#fff;position:relative;overflow:hidden;min-height:300px;display:flex;flex-direction:column;justify-content:flex-end}
-.hero-art .piso{position:absolute;inset:0;background:repeating-linear-gradient(115deg,rgba(255,255,255,.05) 0 22px,rgba(255,255,255,0) 22px 44px)}
-.hero-art .tap{position:absolute;left:50%;top:44%;width:62%;aspect-ratio:3/2;transform:translate(-50%,-50%) perspective(520px) rotateX(52deg) rotateZ(-8deg);background:#2B3F8F;border:10px solid #22336F;border-radius:10px;display:grid;place-items:center;box-shadow:0 24px 40px rgba(0,0,0,.35)}
+.hero-art{background:var(--marfim);border-radius:20px;padding:24px;color:var(--texto);position:relative;overflow:hidden;min-height:300px;display:flex;flex-direction:column;justify-content:flex-end;border:1px solid var(--linha)}
+.hero-art .piso{position:absolute;inset:0;background:repeating-linear-gradient(115deg,rgba(105,51,197,.05) 0 22px,rgba(105,51,197,0) 22px 44px)}
+.hero-art .tap{position:absolute;left:50%;top:44%;width:62%;aspect-ratio:3/2;transform:translate(-50%,-50%) perspective(520px) rotateX(52deg) rotateZ(-8deg);background:#6933C5;border:10px solid #49258B;border-radius:10px;display:grid;place-items:center;box-shadow:0 24px 40px rgba(28,22,53,.18)}
 .hero-art .tap b{color:#fff;font-size:clamp(18px,3vw,26px);letter-spacing:.06em}
-.hero-art .med{position:absolute;left:19%;right:19%;top:72%;border-top:1.5px dashed rgba(255,255,255,.7);font-size:12px;text-align:center;padding-top:4px;opacity:.9}
-.hero-art .orc{position:relative;background:#fff;color:var(--texto);border-radius:14px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;max-width:320px}
+.hero-art .med{position:absolute;left:19%;right:19%;top:72%;border-top:1.5px dashed rgba(28,22,53,.3);font-size:12px;text-align:center;padding-top:4px;color:var(--texto2)}
+.hero-art .orc{position:relative;background:#fff;color:var(--texto);border-radius:14px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;max-width:320px;box-shadow:var(--sombra)}
 .hero-art .orc b{color:var(--marca);font-size:20px}
 .hero-art .orc span{font-size:13px;color:var(--texto2)}
+.marca b i{font-style:normal;color:var(--marca)}
+.marca b{color:var(--texto)}
 </style>
 </head>
 <body>
 <header class="top"><div class="wrap">
-  <a class="marca" href="/?vendas=1" aria-label="Gênio, página inicial"><b>Gênio</b><span>vendas</span></a>
+  <a class="marca" href="/?vendas=1" aria-label="GenIO, página inicial"><b>Gen<i>IO</i></b><span>vendas</span></a>
   <div class="fill"></div>
+  <a class="btn btn-t" href="#sobre">Sobre</a>
   <a class="btn btn-t" href="#planos">Planos</a>
   <button class="btn btn-p btn-sm" id="bEntrar" type="button">Entrar</button>
 </div></header>
@@ -41,7 +44,7 @@
     <h1>O orçamento fica pronto na frente do cliente.</h1>
     <p class="sub">Você fotografa o lugar, mostra o capacho no chão do cliente com as medidas e fecha o preço com Pix ou cartão. Tudo no celular, em poucos minutos.</p>
     <div class="ctas">
-      <a class="btn btn-p" href="#quero">Quero vender com o Gênio</a>
+      <a class="btn btn-p" href="#quero">Quero vender com o GenIO</a>
       <button class="btn btn-s" type="button" data-entrar>Já tenho conta</button>
     </div>
   </div>
@@ -70,6 +73,16 @@
   <div class="mods" id="mods"></div>
 </div></section>
 
+<section class="sec" id="sobre"><div class="wrap">
+  <h2>Por que GenIO</h2>
+  <p class="sub">A marca é maior que o capacho: um mesmo nome para vários módulos de personalização do comércio.</p>
+  <div class="passos">
+    <div class="card passo"><h3>Gen</h3><p class="muted">De Generativa: criar e adaptar soluções a partir de referências, necessidades e regras.</p></div>
+    <div class="card passo"><h3>IO</h3><p class="muted">De Inteligência Operacional: transformar a ideia em medidas, especificações, orçamento e execução.</p></div>
+  </div>
+  <p class="muted" style="margin-top:16px">GenIO soa como "gênio": a lembrança de criatividade, facilidade e solução. O IO acrescenta a parte operacional — o resultado precisa ser realizável, com medidas conferidas e preço calculado, não só imaginado.</p>
+</div></section>
+
 <section class="sec alt" id="planos"><div class="wrap">
   <h2>Planos para vendedores</h2>
   <p class="sub">Pré-pago, por mês. Cada plano vale para um aparelho.</p>
@@ -83,7 +96,7 @@
 
 <section class="sec" id="quero"><div class="wrap">
   <div class="card" style="max-width:680px">
-    <h2>Quero vender com o Gênio</h2>
+    <h2>Quero vender com o GenIO</h2>
     <p class="muted">Deixe o seu contato. A gente chama no WhatsApp para explicar e liberar o seu acesso.</p>
     <form id="fQuero" class="form2" novalidate>
       <div class="campo"><label for="qNome">Nome</label><input id="qNome" autocomplete="name" required></div>
@@ -96,7 +109,7 @@
 </div></section>
 </main>
 
-<footer class="rod"><div class="wrap">Gênio · Dom Banana · <a href="#" data-entrar>Entrar</a></div></footer>
+<footer class="rod"><div class="wrap">GenIO · Dom Banana · <a href="#" data-entrar>Entrar</a></div></footer>
 
 <div class="modal" id="mEntrar" hidden role="dialog" aria-modal="true" aria-labelledby="tEntrar">
   <div class="card">
@@ -113,7 +126,7 @@
   </div>
 </div>
 
-<script src="portal.js?v=5099e2b680"></script>
+<script src="portal.js?v=10fe7b41e4"></script>
 <script>
 (()=>{const {$, $$}=G,qs=new URLSearchParams(location.search);
   $("#mods").innerHTML=G.MODULOS.map(m=>`<div class="mod ${m.on?"on":"off"}"><div class="ic">${m.ic}</div><span class="tag">${m.on?"Disponível":"Em breve"}</span><b>${G.esc(m.nome)}</b><span>${G.esc(m.desc)}</span></div>`).join("");

@@ -1,14 +1,14 @@
 {
-  "name": "Gênio · Vendas",
-  "short_name": "Gênio",
-  "description": "Vendas de personalizados na frente do cliente: capacho, placas, adesivos e mais.",
+  "name": "GenIO",
+  "short_name": "GenIO",
+  "description": "Personalização assistida por tecnologia para o comércio: capacho, placas, adesivos e mais.",
   "lang": "pt-BR",
   "start_url": "/app.html",
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#F4EFE4",
-  "theme_color": "#184E4E",
+  "background_color": "#FFFEFA",
+  "theme_color": "#6933C5",
   "icons": [
     {
       "src": "icon-192.png",

@@ -3,52 +3,37 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#184E4E">
+<meta name="theme-color" content="#6933C5">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="favicon.png" type="image/png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
-<meta name="apple-mobile-web-app-title" content="Gênio">
+<meta name="apple-mobile-web-app-title" content="GenIO">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="robots" content="noindex,nofollow">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <script>(function(){var c=null;try{c=JSON.parse(localStorage.getItem("genio-conta")||"null")}catch(e){}var V="/?entrar=1&volta=capacho.html";fetch("/api/eu",{credentials:"same-origin",cache:"no-store"}).then(function(r){if(r.status===401||r.status===403){try{localStorage.removeItem("genio-conta")}catch(e){}location.replace(V);return null}return r.ok?r.json():null}).then(function(d){if(d)try{localStorage.setItem("genio-conta",JSON.stringify({id:d.id,nome:d.nome,email:d.email,papel:d.papel,plano:d.plano,plano_nome:d.plano_nome,em:Date.now()}))}catch(e){}}).catch(function(){if(!c)location.replace(V)})})();</script>
-<style>.mod-volta{display:inline-flex;align-items:center;gap:4px;min-height:40px;padding:0 12px 0 8px;margin-right:8px;border-radius:10px;color:#184E4E;font:600 15px/1 Rubik,system-ui,sans-serif;text-decoration:none;border:1.5px solid #DFE3DA;background:#fff}.mod-volta:hover{border-color:#184E4E}</style>
+<style>.mod-volta{display:inline-flex;align-items:center;gap:4px;min-height:40px;padding:0 12px 0 8px;margin-right:8px;border-radius:10px;color:#6933C5;font:600 15px/1 Rubik,system-ui,sans-serif;text-decoration:none;border:1.5px solid #E3DDF0;background:#fff}.mod-volta:hover{border-color:#6933C5}</style>
 </head>
 <body>
-<title>Gênio Vendas</title>
+<title>GenIO · Capacho</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Roboto+Slab:wght@400;700&family=Arvo:ital,wght@0,400;0,700;1,400;1,700&family=Archivo+Black&family=Montserrat:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&family=Poppins:ital,wght@0,400;0,700;1,400;1,700&family=Oswald:wght@400;700&family=Bebas+Neue&family=Anton&family=Lora:ital,wght@0,400;0,600;0,700;1,400;1,700&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Merriweather:ital,wght@0,400;0,700;1,400;1,700&family=Pacifico&family=Lobster&family=Dancing+Script:wght@400;700&family=Great+Vibes&family=Black+Ops+One&family=Bangers&family=Figtree:wght@400;500;600;700&family=Rubik:wght@400;500;600;700;800&display=swap">
 <style>
 /* Layout: app de vendas em 3 passos. Barra com o passo atual; cada passo em duas colunas no computador e uma no celular. No passo 2 o palco fica preso no topo do celular. */
-/* Sistema visual "Estúdio" (proposta 02/11/2026): verde petróleo, terracota, marfim; Rubik na interface */
+/* Identidade GenIO (manual 04/11/2026): violeta, violeta escuro, turquesa, branco quente; Rubik na interface.
+   Sempre clara: não troca de cor pelo modo escuro do aparelho, igual às páginas de entrada. */
 :root{
-  --bg:#F4F3EE; --surface:#FFFFFF; --surface-2:#F6F2E7; --line:#DFE3DA;
-  --ink:#263D38; --muted:#66756F; --ouro:#184E4E; --ouro-ink:#184E4E; --on-accent:#FFFFFF;
-  --carmim:#B6502B; --carmim-ink:#B6502B; --terracota:#CF6739; --ok:#2E7D5B; --warn:#A8551E; --stage:#ECEAE2; --field:#FFFFFF;
-  --soft:#EEF3EF;
+  --bg:#FFFEFA; --surface:#FFFFFF; --surface-2:#F2ECFB; --line:#E3DDF0;
+  --ink:#1C1635; --muted:#6B6578; --ouro:#6933C5; --ouro-ink:#49258B; --on-accent:#FFFFFF;
+  --carmim:#6933C5; --carmim-ink:#49258B; --terracota:#04C6C0; --ok:#2E7D5B; --warn:#A8551E; --stage:#ECEAE2; --field:#FFFFFF;
+  --soft:#F7F3FD;
   --font-display:"Rubik",system-ui,-apple-system,"Segoe UI",sans-serif;
   --font-ui:"Rubik",system-ui,-apple-system,"Segoe UI",sans-serif;
   color-scheme:light;
-}
-@media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){
-    --bg:#0F1D1C; --surface:#152826; --surface-2:#1B3330; --line:#2B4542;
-    --ink:#EEF0EA; --muted:#A3B1AB; --ouro:#5FB3A8; --ouro-ink:#7FC9BE; --on-accent:#0F1D1C;
-    --carmim:#C9603A; --carmim-ink:#E0875F; --terracota:#E0875F; --ok:#6CC08B; --warn:#F0A43A; --stage:#0B1514; --field:#10201F;
-    --soft:#18302D;
-    color-scheme:dark;
-  }
-}
-:root[data-theme="dark"]{
-  --bg:#0F1D1C; --surface:#152826; --surface-2:#1B3330; --line:#2B4542;
-  --ink:#EEF0EA; --muted:#A3B1AB; --ouro:#5FB3A8; --ouro-ink:#7FC9BE; --on-accent:#0F1D1C;
-  --carmim:#C9603A; --carmim-ink:#E0875F; --terracota:#E0875F; --ok:#6CC08B; --warn:#F0A43A; --stage:#0B1514; --field:#10201F;
-  --soft:#18302D;
-  color-scheme:dark;
 }
 html,body{background:var(--bg);color:var(--ink)}
 body{font-family:var(--font-ui);font-size:15px;line-height:1.45;
@@ -318,9 +303,10 @@ details.acc>*:not(summary){margin-bottom:12px}
 .nextbar b{display:block;font-size:14px}
 .mini-stage{background:var(--stage);border-radius:12px;padding:14px;display:flex;justify-content:center}
 .mini-stage canvas{display:block;max-width:100%}
-.wordmark{display:flex;flex-direction:column;line-height:.95;color:var(--ouro)}
-.wordmark b{font:800 24px/1 var(--font-display);letter-spacing:-.01em}
-.wordmark span{font:700 10px/1.2 var(--font-ui);letter-spacing:.16em;text-transform:uppercase;color:var(--terracota)}
+.wordmark{display:flex;flex-direction:column;line-height:.95;color:var(--ink)}
+.wordmark b{font:800 24px/1 var(--font-display);letter-spacing:-.01em;font-style:normal}
+.wordmark b i{font-style:normal;color:var(--ouro)}
+.wordmark span{font:700 10px/1.2 var(--font-ui);letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
 .brand-t{flex-direction:row!important;align-items:center;gap:8px;padding-left:12px;margin-left:4px;border-left:1px solid var(--line)}
 .brand-t[hidden]{display:none!important}
 .brand-rev{font-size:12px;color:var(--muted);font-weight:500;max-width:22vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -452,8 +438,8 @@ body.ar-open{overflow:hidden}
 .ar-bottom{position:absolute;left:0;right:0;bottom:0;padding:12px 16px calc(env(safe-area-inset-bottom,0px) + 14px);background:linear-gradient(transparent,rgba(0,0,0,.7));display:flex;flex-direction:column;align-items:center;gap:8px}
 .ar-msg{margin:0;color:#fff;font:500 14px Rubik,sans-serif;text-align:center;min-height:1.3em;text-shadow:0 1px 2px #000}
 .ar-btns{display:flex;gap:10px}
-.ar-rec{background:#fff;color:#B6502B;font-weight:700;min-width:120px}
-.ar-rec.rec{background:#B6502B;color:#fff}
+.ar-rec{background:#fff;color:#6933C5;font-weight:700;min-width:120px}
+.ar-rec.rec{background:#6933C5;color:#fff}
 .ar-keep{color:#fff;font:400 12px Rubik,sans-serif;display:flex;gap:6px;align-items:center}
 .ar-flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none}
 .ar-flash.go{animation:arfl .35s ease-out}
@@ -473,7 +459,7 @@ html,body{overscroll-behavior-y:none}
 .mod-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;margin:8px 0 4px}
 .mod-card{position:relative;display:flex}
 .mod-use{flex:1;text-align:left;display:flex;flex-direction:column;gap:2px;padding:12px 14px;border-radius:12px;border:1px solid var(--line,#dfe5e2);background:var(--card,#fff);cursor:pointer;font:inherit;color:inherit}
-.mod-use:hover{border-color:#184E4E}
+.mod-use:hover{border-color:#6933C5}
 .mod-use b{font-size:15px}
 .mod-card .mini{position:absolute;top:6px;right:6px}
 .mod-save{margin:10px 0;display:flex;flex-direction:column;gap:6px}
@@ -487,7 +473,7 @@ html,body{overscroll-behavior-y:none}
 .qthumbs-row{display:flex;flex-wrap:wrap;gap:10px;margin:6px 0}
 .qthumb-w{position:relative}
 .qthumb-w .qthumb{width:112px;height:72px;position:relative}
-.qthumb-w.on .qthumb{outline:3px solid #184E4E;outline-offset:1px}
+.qthumb-w.on .qthumb{outline:3px solid #6933C5;outline-offset:1px}
 .qthumb-n{position:absolute;left:4px;bottom:4px;background:rgba(24,78,78,.88);color:#fff;font:600 11px/1 Rubik,system-ui,sans-serif;padding:3px 6px;border-radius:6px}
 .qthumb-x{position:absolute;top:-10px;right:-10px;width:34px;height:34px;border-radius:50%;border:2px solid #fff;background:#A33A2A;color:#fff;font:700 20px/1 Rubik,system-ui,sans-serif;cursor:pointer;display:grid;place-items:center;box-shadow:0 1px 4px rgba(0,0,0,.25);padding:0}
 .qthumb-x:hover{background:#862c1f}
@@ -497,8 +483,8 @@ html,body{overscroll-behavior-y:none}
 /* menos burocracia: quadros, toque para editar, × para apagar */
 .art-item.s2{position:relative;padding-right:40px}
 .art-th.tap{appearance:none;border:0;cursor:pointer;position:relative;padding:0}
-.art-th.tap:focus-visible{outline:3px solid #184E4E;outline-offset:2px}
-.th-pen{position:absolute;right:2px;bottom:2px;background:#184E4E;color:#fff;border-radius:6px;width:20px;height:20px;display:grid;place-items:center}
+.art-th.tap:focus-visible{outline:3px solid #6933C5;outline-offset:2px}
+.th-pen{position:absolute;right:2px;bottom:2px;background:#6933C5;color:#fff;border-radius:6px;width:20px;height:20px;display:grid;place-items:center}
 .tile-x{position:absolute;top:-8px;right:-8px;width:36px;height:36px;border-radius:50%;border:2px solid #fff;background:#A33A2A;color:#fff;font:700 20px/1 Rubik,system-ui,sans-serif;cursor:pointer;display:grid;place-items:center;box-shadow:0 1px 4px rgba(0,0,0,.25);padding:0;z-index:2}
 .art-item.s2 .tile-x{top:50%;right:4px;transform:translateY(-50%)}
 .add-tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:8px}
@@ -509,16 +495,16 @@ html,body{overscroll-behavior-y:none}
 .ftile-tag{position:absolute;left:6px;bottom:6px;background:rgba(0,0,0,.6);color:#fff;font:600 12px/1 Rubik,system-ui,sans-serif;padding:4px 7px;border-radius:6px}
 .ftile-tag.ok{background:rgba(24,78,78,.9)}
 .ftile-sel{position:absolute;left:6px;right:6px;top:6px;min-height:34px;font-size:13px;opacity:.95}
-.ftile.add{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;border:2px dashed #b9c4bf;background:#fff;color:#184E4E;font:600 14px/1.2 Rubik,system-ui,sans-serif;cursor:pointer;text-align:center;padding:12px;min-height:120px;appearance:none}
-.ftile.add:hover{border-color:#184E4E;background:#f4f8f6}
-.ftile.add.main{border-style:solid;border-color:#184E4E;background:#eaf2ef}
+.ftile.add{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;border:2px dashed #b9c4bf;background:#fff;color:#6933C5;font:600 14px/1.2 Rubik,system-ui,sans-serif;cursor:pointer;text-align:center;padding:12px;min-height:120px;appearance:none}
+.ftile.add:hover{border-color:#6933C5;background:#f4f8f6}
+.ftile.add.main{border-style:solid;border-color:#6933C5;background:#eaf2ef}
 .mini-stage.tap-edit{position:relative;cursor:pointer}
-.stage-pen{position:absolute;right:10px;bottom:10px;display:inline-flex;align-items:center;gap:6px;background:#184E4E;color:#fff;font:600 14px/1 Rubik,system-ui,sans-serif;padding:8px 12px;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,.2)}
-.linkbtn{appearance:none;border:0;background:none;color:#184E4E;text-decoration:underline;font:600 14px Rubik,system-ui,sans-serif;cursor:pointer;padding:6px 4px}
+.stage-pen{position:absolute;right:10px;bottom:10px;display:inline-flex;align-items:center;gap:6px;background:#6933C5;color:#fff;font:600 14px/1 Rubik,system-ui,sans-serif;padding:8px 12px;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,.2)}
+.linkbtn{appearance:none;border:0;background:none;color:#6933C5;text-decoration:underline;font:600 14px Rubik,system-ui,sans-serif;cursor:pointer;padding:6px 4px}
 @media (max-width:420px){.add-tiles{grid-template-columns:repeat(3,1fr);gap:8px}.ftile.add{min-height:96px;font-size:13px}}
 </style>
 <div class="top">
-  <a class="mod-volta" href="app.html" aria-label="Voltar aos módulos">‹ Módulos</a><div class="brand"><div class="wordmark" id="wordmark" aria-label="Gênio do Capacho"><b>Gênio</b><span>do capacho</span></div><div class="brand-t" id="brandT"></div></div>
+  <a class="mod-volta" href="app.html" aria-label="Voltar aos módulos">‹ Módulos</a><div class="brand"><div class="wordmark" id="wordmark" aria-label="GenIO · Capacho"><b>Gen<i>IO</i></b><span>Capacho</span></div><div class="brand-t" id="brandT"></div></div>
   <nav class="steps" aria-label="Passos do orçamento">
     <button data-go="dados"><span class="n">1</span><span class="t">Criar o tapete</span></button>
     <button data-go="local"><span class="n">2</span><span class="t">No seu espaço</span></button>
@@ -756,14 +742,14 @@ html,body{overscroll-behavior-y:none}
           <div class="field"><label for="refH">Comprimento (cm)</label><input id="refH" type="number" inputmode="decimal" min="1" step="0.1"></div>
         </div>
         <div class="cards-box">
-          <p class="hint"><b>Cartões Gênio 1 a 15.</b> Cada cartão numerado fica ligado a um tapete do orçamento (escolha em “Cartão na loja”, na parte 2). Espalhe os cartões no chão da loja, cada um onde vai um tapete: a foto (ou o vídeo ao vivo) acha cada cartão, lê o número e coloca o tapete certo no tamanho real. Imprima em tamanho real (100%, sem ajustar à página).</p>
+          <p class="hint"><b>Cartões GenIO 1 a 15.</b> Cada cartão numerado fica ligado a um tapete do orçamento (escolha em “Cartão na loja”, na parte 2). Espalhe os cartões no chão da loja, cada um onde vai um tapete: a foto (ou o vídeo ao vivo) acha cada cartão, lê o número e coloca o tapete certo no tamanho real. Imprima em tamanho real (100%, sem ajustar à página).</p>
           <div class="row"><a class="btn ghost" href="cartoes-genio-10x15.pdf" download>Cartões 10 × 15 cm (PDF)</a><a class="btn ghost" href="cartoes-genio-A4.pdf" download>Cartões em folha A4 (PDF)</a></div>
         </div>
         <label class="switch"><input type="checkbox" id="refCor">Usar a cor do objeto como cor do fundo do tapete (ligue quando o objeto for o mostruário)</label>
       </section>
       <section class="panel" aria-labelledby="hCfgApp">
         <h2 id="hCfgApp">Aplicativo</h2>
-        <p class="hint">Instalado, o Gênio ganha um ícone na tela do celular, abre em tela cheia, não recarrega ao puxar a tela e funciona sem internet. Os orçamentos continuam guardados no aparelho.</p>
+        <p class="hint">Instalado, o GenIO ganha um ícone na tela do celular, abre em tela cheia, não recarrega ao puxar a tela e funciona sem internet. Os orçamentos continuam guardados no aparelho.</p>
         <div class="row"><button class="btn gold" id="pwaBtn" type="button">Instalar o aplicativo</button></div>
         <p class="hint small" id="pwaMsg" aria-live="polite"></p>
       </section>
@@ -1423,9 +1409,9 @@ function drawArt(){
   if(guides.y){const [,gy]=cmToArt(0,0);actx.strokeStyle="#ff4fa3";actx.setLineDash([]);actx.beginPath();actx.moveTo(0,gy);actx.lineTo(AW,gy);actx.stroke();}
   actx.restore();
   const L=selLayer();if(!L)return;
-  const c=layerCorners(L).map(([x,y])=>cmToArt(x,y));actx.save();actx.strokeStyle="#CF6739";actx.lineWidth=2;actx.beginPath();c.forEach((p,i)=>i?actx.lineTo(p[0],p[1]):actx.moveTo(p[0],p[1]));actx.closePath();actx.stroke();
+  const c=layerCorners(L).map(([x,y])=>cmToArt(x,y));actx.save();actx.strokeStyle="#04C6C0";actx.lineWidth=2;actx.beginPath();c.forEach((p,i)=>i?actx.lineTo(p[0],p[1]):actx.moveTo(p[0],p[1]));actx.closePath();actx.stroke();
   const hp=handlePos(L);const topMid=[(c[0][0]+c[1][0])/2,(c[0][1]+c[1][1])/2];actx.beginPath();actx.moveTo(topMid[0],topMid[1]);actx.lineTo(hp.rot[0],hp.rot[1]);actx.stroke();
-  [[hp.scale,"#CF6739"],[hp.rot,"#ffffff"]].forEach(([p,col])=>{actx.beginPath();actx.arc(p[0],p[1],9,0,Math.PI*2);actx.fillStyle=col;actx.fill();actx.lineWidth=2;actx.strokeStyle="#241a14";actx.stroke();});
+  [[hp.scale,"#04C6C0"],[hp.rot,"#ffffff"]].forEach(([p,col])=>{actx.beginPath();actx.arc(p[0],p[1],9,0,Math.PI*2);actx.fillStyle=col;actx.fill();actx.lineWidth=2;actx.strokeStyle="#241a14";actx.stroke();});
   actx.restore();
 }
 function hitLayer(cx,cy){const ls=spec().layers;for(let i=ls.length-1;i>=0;i--){const L=ls[i],[w,h]=layerSizeCm(L),[u,v]=rot2(cx-L.x,cy-L.y,-(L.rot||0)*DEG);if(Math.abs(u)<=w/2+1&&Math.abs(v)<=h/2+1)return L;}return null;}
@@ -2653,10 +2639,10 @@ const EMPF={empNome:"nome",empCnpj:"cnpj",empTel:"tel",empEmail:"email",empSite:
 const emp=()=>cfg.emp||{};
 const empContatos=(sep)=>{const e=emp();return [e.tel&&("WhatsApp "+e.tel),e.email,e.site,e.insta&&(e.insta.startsWith("@")?e.insta:"@"+e.insta)].filter(Boolean).join(sep||" · ");};
 function renderBrand(){const e=emp(),b=$("#brandT");if(!b)return;b.replaceChildren();
-  // o topo é sempre do Gênio do Capacho; a revenda aparece ao lado, discreta (o logo dela vai nas imagens, textos e fichas do orçamento)
+  // o topo é sempre do GenIO · Capacho; a revenda aparece ao lado, discreta (o logo dela vai nas imagens, textos e fichas do orçamento)
   if(e.logo){const i=document.createElement("img");i.src=e.logo;i.alt="";i.className="brand-logo";b.appendChild(i);}
   if(e.nome){const n=document.createElement("span");n.className="brand-rev";n.textContent=e.nome;b.appendChild(n);}
-  b.hidden=!(e.logo||e.nome);document.title=(e.nome?e.nome+" · ":"")+"Gênio do Capacho";}
+  b.hidden=!(e.logo||e.nome);document.title=(e.nome?e.nome+" · ":"")+"GenIO · Capacho";}
 function fillEmp(){const e=emp();Object.entries(EMPF).forEach(([id,k])=>{$("#"+id).value=e[k]||"";});const pv=$("#empPrev");pv.replaceChildren();
   if(e.logo){const i=document.createElement("img");i.src=e.logo;i.alt="Logo da empresa";pv.appendChild(i);}else pv.textContent="sem logo";$("#empLogoDel").disabled=!e.logo;
   const r=refCfg();$("#refNome").value=r.nome;$("#refW").value=r.w||"";$("#refH").value=r.h||"";$("#refCor").checked=r.cor;}
@@ -2673,7 +2659,7 @@ $("#empLogoDel").onclick=()=>{const e=Object.assign({},emp());delete e.logo;dele
   cfg.ref=Object.assign({},cfg.ref||{},{nome:$("#refNome").value.trim()||"Cartão-postal",w:n($("#refW").value),h:n($("#refH").value)});saveCfg();updateSub();}));
 $("#refCor").addEventListener("change",e=>{cfg.ref=Object.assign({},cfg.ref||{},{cor:e.target.checked});saveCfg();});
 // faixa da imagem do orçamento com a empresa
-async function drawEmpBand(x,iw,ih,band,rightText){const e=emp();x.fillStyle="#184E4E";x.fillRect(0,ih,iw,band);let lx=band*0.35;
+async function drawEmpBand(x,iw,ih,band,rightText){const e=emp();x.fillStyle="#1C1635";x.fillRect(0,ih,iw,band);let lx=band*0.35;
   if(e.logo){const lg=await new Promise(res=>{const i=new Image();i.onload=()=>res(i);i.onerror=()=>res(null);i.src=e.logo;});
     if(lg){const lh=band*0.72,lw=Math.min(band*2.4,lh*lg.naturalWidth/lg.naturalHeight),pad=band*0.08;x.fillStyle="#fff";
       if(x.roundRect){x.beginPath();x.roundRect(lx-pad,ih+(band-lh)/2-pad,lw+2*pad,lh+2*pad,band*0.1);x.fill();}else x.fillRect(lx-pad,ih+(band-lh)/2-pad,lw+2*pad,lh+2*pad);

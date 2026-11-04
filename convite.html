@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Gênio · Convite</title>
-<meta name="theme-color" content="#184E4E">
+<title>GenIO · Convite</title>
+<meta name="theme-color" content="#6933C5">
 <meta name="robots" content="noindex,nofollow">
 <meta name="referrer" content="no-referrer">
 <link rel="manifest" href="manifest.webmanifest">
@@ -12,10 +12,10 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&display=swap">
-<link rel="stylesheet" href="portal.css?v=5099e2b680">
+<link rel="stylesheet" href="portal.css?v=10fe7b41e4">
 </head>
 <body>
-<header class="top"><div class="wrap"><a class="marca" href="/?vendas=1"><b>Gênio</b><span>vendas</span></a></div></header>
+<header class="top"><div class="wrap"><a class="marca" href="/?vendas=1"><b>Gen<i>IO</i></b><span>vendas</span></a></div></header>
 <main class="wrap" style="padding:40px 16px">
   <div class="card" style="max-width:460px;margin:0 auto">
     <div id="carregando" class="muted">Abrindo o convite…</div>
@@ -34,7 +34,7 @@
     </form>
   </div>
 </main>
-<script src="portal.js?v=5099e2b680"></script>
+<script src="portal.js?v=10fe7b41e4"></script>
 <script>
 (async()=>{const {$}=G,qs=new URLSearchParams(location.search),c=qs.get("c"),p=qs.get("p");
   // tira o código do endereço (não fica no histórico nem é compartilhado sem querer)
@@ -43,7 +43,7 @@
   if(!c&&!p){ruim("O link do convite está incompleto. Peça um novo a quem cadastrou você.");return;}
   let info;try{info=await G.api("convite?"+(p?"p="+encodeURIComponent(p):"c="+encodeURIComponent(c)));}catch(e){ruim(e.message);return;}
   $("#carregando").hidden=true;$("#f").hidden=false;G.olho();
-  if(p){$("#tit").textContent="Primeiro acesso do administrador";$("#sub").textContent="Este link vale uma vez só: crie a conta que vai administrar o Gênio.";$("#novoAdm").hidden=false;$("#nome").focus();}
+  if(p){$("#tit").textContent="Primeiro acesso do administrador";$("#sub").textContent="Este link vale uma vez só: crie a conta que vai administrar o GenIO.";$("#novoAdm").hidden=false;$("#nome").focus();}
   else{$("#sub").textContent=`${info.nome}, o seu login é ${info.email}.`;$("#s1").focus();}
   $("#f").onsubmit=async e=>{e.preventDefault();const out=$("#out"),b=$("#f button[type=submit]"),s1=$("#s1").value,s2=$("#s2").value;
     if(p&&(!$("#nome").value.trim()||!/^\S+@\S+\.\S+$/.test($("#email").value.trim()))){G.msg(out,"Preencha o seu nome e o e-mail.");return;}

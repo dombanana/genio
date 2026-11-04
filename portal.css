@@ -1,5 +1,5 @@
-/* Gênio — páginas de entrada, módulos, convite e administração. Identidade "Estúdio". */
-:root{--marca:#184E4E;--terra:#CF6739;--acao:#B6502B;--acao2:#9C4323;--marfim:#F6F2E7;--pagina:#F4F3EE;--cartao:#FFFFFF;--texto:#263D38;--texto2:#66756F;--linha:#DFE3DA;--ok:#2F7D4F;--erro:#A33A2A;--sombra:0 1px 2px rgba(24,78,78,.06),0 6px 24px rgba(24,78,78,.06)}
+/* GenIO — páginas de entrada, módulos, convite e administração. Identidade GenIO (manual 04/11/2026): sempre clara. */
+:root{--marca:#6933C5;--terra:#04C6C0;--acao:#6933C5;--acao2:#49258B;--marfim:#F2ECFB;--pagina:#FFFEFA;--cartao:#FFFFFF;--texto:#1C1635;--texto2:#6B6578;--linha:#E3DDF0;--ok:#2F7D4F;--erro:#A33A2A;--sombra:0 1px 2px rgba(28,22,53,.06),0 6px 24px rgba(28,22,53,.06)}
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
 body{margin:0;background:var(--pagina);color:var(--texto);font:16px/1.5 Rubik,system-ui,-apple-system,"Segoe UI",sans-serif;padding:env(safe-area-inset-top,0) env(safe-area-inset-right,0) env(safe-area-inset-bottom,0) env(safe-area-inset-left,0)}
@@ -7,19 +7,20 @@ a{color:var(--marca)}
 img,svg{max-width:100%}
 [hidden]{display:none!important}
 .wrap{max-width:1080px;margin:0 auto;padding:0 16px}
-.top{position:sticky;top:0;z-index:5;background:rgba(244,243,238,.92);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid var(--linha)}
+.top{position:sticky;top:0;z-index:5;background:rgba(255,254,250,.92);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid var(--linha)}
 .top .wrap{display:flex;align-items:center;gap:12px;min-height:60px}
-.marca{display:flex;align-items:baseline;gap:6px;text-decoration:none;color:var(--marca)}
-.marca b{font-size:24px;font-weight:800;letter-spacing:-.02em}
-.marca span{font-size:13px;font-weight:600;color:var(--terra);text-transform:uppercase;letter-spacing:.08em}
+.marca{display:flex;align-items:baseline;gap:6px;text-decoration:none;color:var(--texto)}
+.marca b{font-size:24px;font-weight:800;letter-spacing:-.02em;font-style:normal}
+.marca b i{font-style:normal;color:var(--marca)}
+.marca span{font-size:13px;font-weight:600;color:var(--texto2);text-transform:uppercase;letter-spacing:.08em}
 .top .fill{flex:1}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:0 20px;border-radius:12px;border:1.5px solid transparent;font:600 16px/1 Rubik,system-ui,sans-serif;cursor:pointer;text-decoration:none;transition:background .15s,border-color .15s,transform .05s}
 .btn:active{transform:translateY(1px)}
-.btn:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,a:focus-visible{outline:3px solid rgba(207,103,57,.45);outline-offset:2px}
+.btn:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,a:focus-visible{outline:3px solid rgba(105,51,197,.4);outline-offset:2px}
 .btn-p{background:var(--acao);color:#fff}
 .btn-p:hover{background:var(--acao2)}
 .btn-s{background:transparent;color:var(--marca);border-color:var(--marca)}
-.btn-s:hover{background:rgba(24,78,78,.06)}
+.btn-s:hover{background:rgba(105,51,197,.07)}
 .btn-t{background:transparent;color:var(--marca);padding:0 12px}
 .btn-sm{min-height:40px;padding:0 14px;font-size:15px;border-radius:10px}
 .btn[disabled]{opacity:.55;cursor:default}
@@ -55,7 +56,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--marca)}
 .mod{display:flex;flex-direction:column;gap:8px;background:var(--cartao);border:1px solid var(--linha);border-radius:16px;padding:20px;text-decoration:none;color:var(--texto);min-height:168px;position:relative;transition:border-color .15s,box-shadow .15s,transform .1s}
 a.mod:hover{border-color:var(--marca);box-shadow:var(--sombra)}
 a.mod:active{transform:translateY(1px)}
-.mod .ic{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;background:rgba(24,78,78,.08);color:var(--marca)}
+.mod .ic{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;background:rgba(105,51,197,.1);color:var(--marca)}
 .mod .ic svg{width:26px;height:26px}
 .mod b{font-size:18px;color:var(--marca)}
 .mod span{font-size:14px;color:var(--texto2)}
@@ -72,7 +73,7 @@ a.mod:active{transform:translateY(1px)}
 .form2{display:grid;grid-template-columns:1fr 1fr;gap:0 16px}
 .form2 .full{grid-column:1/-1}
 .rod{padding:32px 0;color:var(--texto2);font-size:14px}
-.modal{position:fixed;inset:0;z-index:20;background:rgba(20,40,38,.45);display:grid;place-items:center;padding:16px}
+.modal{position:fixed;inset:0;z-index:20;background:rgba(28,22,53,.5);display:grid;place-items:center;padding:16px}
 .modal .card{width:100%;max-width:420px;max-height:calc(100vh - 32px);overflow:auto}
 .x{float:right;border:0;background:transparent;font-size:28px;line-height:1;color:var(--texto2);cursor:pointer;width:44px;height:44px;margin:-12px -12px 0 0;border-radius:10px}
 .chip{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;padding:4px 10px;border-radius:999px;background:var(--marfim);color:var(--texto2)}
