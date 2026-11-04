@@ -860,6 +860,12 @@ html,body{overscroll-behavior-y:none}
     <!-- 2 -->
     <div id="lePanel2" class="col" style="gap:10px" hidden>
       <p class="hint" id="le2Hint"></p>
+      <div class="le-tools" role="group" aria-label="Tipo de arte"><button class="chip" data-kind="logo" aria-pressed="true" type="button">Logo ou desenho</button><button class="chip" data-kind="foto" aria-pressed="false" type="button">Foto (vira estêncil)</button></div>
+      <div class="sliders" id="leFotoBox" hidden>
+        <div class="slider"><label for="leTons"><span>Tons</span><output id="leTonsO"></output></label><input type="range" id="leTons" min="2" max="4" step="1" value="3"></div>
+        <div class="slider"><label for="leDet"><span>Detalhe</span><output id="leDetO"></output></label><input type="range" id="leDet" min="1" max="3" step="1" value="2"></div>
+        <div class="slider"><label for="leBias"><span>Mais claro ou mais escuro</span><output id="leBiasO"></output></label><input type="range" id="leBias" min="-30" max="30" step="2" value="0"></div>
+      </div>
       <div class="le-tools" role="group" aria-label="Ferramenta">
         <button class="chip" data-tool="blocos" aria-pressed="true" type="button">Blocos</button>
         <button class="chip" data-tool="poly" aria-pressed="false" type="button">Recorte livre</button>
@@ -1510,7 +1516,7 @@ function imgToCanvas(src){return new Promise(res=>{const i=new Image();i.onload=
 async function openLogoEditor(layer,src,rest){const qm=$("#leQueue");if(qm){qm.hidden=!rest;qm.textContent=rest?`Depois desta, ${rest>1?"faltam":"falta"} ${rest} ${rest>1?"imagens":"imagem"}.`:"";}
   const ed=layer&&layer.edit&&(!src||src===layer.edit.src)?layer.edit:null;src=src||(ed&&ed.src);if(!src)return;
   const cv=await imgToCanvas(src);if(!cv)return;
-  Object.assign(LE,{layer,src,img:cv,step:1,tool:"blocos",polySel:-1,editMask:null,bgTest:spec().fundo,colors:null,map:null,single:null,neg:null,rot90:ed?ed.rot90||0:0});
+  Object.assign(LE,{layer,src,img:cv,step:1,tool:"blocos",polySel:-1,editMask:null,bgTest:spec().fundo,colors:null,map:null,single:null,neg:null,rot90:ed?ed.rot90||0:0,foto:ed&&ed.foto?Object.assign({},ed.foto):null,fotoCache:null,fotoAuto:false,fotoPolyOk:!!(ed&&ed.foto)});
   if(ed){LE.quad=ed.quad.map(p=>[...p]);LE.tol=ed.tol;LE.soft=ed.soft;LE.blockOn=ed.blockOn||null;LE.poly=ed.poly?ed.poly.map(p=>[...p]):null;LE.map=layer.map?[...layer.map]:null;LE.single=layer.single;LE.neg=layer.neg?deep(layer.neg):null;
     if(ed.edit){const ec=await imgToCanvas(ed.edit);LE.editSrc=ec;}}
   else{LE.quad=detectCard(cv)||insetQuad(cv);LE.tol=60;LE.soft=8;LE.blockOn=null;LE.poly=null;LE.editSrc=null;}
@@ -1731,7 +1737,7 @@ $("#leUse").onclick=async()=>{const lc=leLabelsCanvas();if(!lc){$("#leMsg").text
   const edit=document.createElement("canvas");edit.width=LE.ww;edit.height=LE.wh;const ex=edit.getContext("2d"),ei=ex.createImageData(LE.ww,LE.wh);for(let i=0;i<LE.ww*LE.wh;i++){const v=LE.editMask[i];ei.data[i*4]=v>0?255:v<0?0:128;ei.data[i*4+3]=255;}ex.putImageData(ei,0,0);
   const sp=spec(),f=fieldRectCm();let L=LE.layer;
   const data={labels:lc.toDataURL("image/png"),colors:LE.colors,map:LE.map,single:LE.single,neg:LE.neg,ar:lc.height/lc.width,
-    edit:{src:LE.src,quad:LE.quad,tol:LE.tol,soft:LE.soft,blockOn:LE.blockOn,poly:LE.poly,rot90:0,edit:edit.toDataURL("image/png")}};
+    edit:{src:LE.src,quad:LE.quad,tol:LE.tol,soft:LE.soft,blockOn:LE.blockOn,poly:LE.poly,rot90:0,foto:LE.foto&&LE.foto.on?Object.assign({},LE.foto):null,edit:edit.toDataURL("image/png")}};
   if(L){[...logoCache.keys()].forEach(k=>{if(k.startsWith(L.id+"|"))logoCache.delete(k);});Object.assign(L,data);}
   else{const nl=sp.layers.filter(l=>l.type==="logo").length,cells=[[0,0],[-1,-1],[1,-1],[-1,1],[1,1],[0,-1],[0,1],[-1,0],[1,0]],c=cells[nl%9],k=Math.floor(nl/9),
       wcm=Math.round(Math.min(f.w*(nl?0.28:0.5),(f.h*(nl?0.3:0.6))/data.ar)*10)/10;
@@ -3349,6 +3355,105 @@ $("#modNo").onclick=()=>{$("#modSave").hidden=true;};
 // aparece no começo de cada orçamento novo
 {const _g=go;go=async function(v){const r=await _g(v);if(v==="dados")renderModelos();return r;};
   const nb=$("#newQuote");if(nb){const _c=nb.onclick;nb.onclick=e=>{_c&&_c(e);const m=$("#modMsg");if(m)m.textContent="";renderModelos();};}}
+
+// ================= foto → estêncil (sem IA) =================
+// Uma foto (pessoa, bicho, paisagem) não vira capacho direto: o capacho tem 2 a 4 cores de vinil, em áreas lisas.
+// Aqui a foto vira um estêncil, como um cartaz: suaviza, separa em tons de claro a escuro (cortes achados pelo
+// histograma da própria foto), apaga manchas menores que o detalhe que o vinil aguenta e entrega cada tom como
+// uma "cor do logo" — no passo 3 cada tom vira uma cor do guia do fornecedor, como qualquer logo.
+const FOTO_DEF={on:false,tons:3,det:2,bias:0};
+// pistas de que é foto: muita área "marcada" sobre um fundo que não é liso
+function fotoPareceFoto(){if(!LE.A||!LE.blocks)return false;const n=LE.ww*LE.wh;let ink=0;for(let i=0;i<n;i+=3)if(LE.A[i]>0.5)ink++;ink*=3;
+  const on=LE.blocks.filter((b,i)=>LE.blockOn&&LE.blockOn[i]);const area=on.reduce((s,b)=>s+b.w*b.h,0);return ink/n>0.55||area/n>0.7;}
+// cortes de tom: Otsu com 1, 2 ou 3 limiares (procura completa num histograma de 64 faixas)
+function fotoCortes(hist,k){const B=hist.length,P=new Float64Array(B+1),S=new Float64Array(B+1);for(let i=0;i<B;i++){P[i+1]=P[i]+hist[i];S[i+1]=S[i]+hist[i]*i;}
+  const cls=(a,b)=>{const w=P[b]-P[a];if(w<=0)return 0;const m=(S[b]-S[a])/w;return w*m*m;};let best=-1,bt=null;
+  if(k===1){for(let a=1;a<B;a++){const v=cls(0,a)+cls(a,B);if(v>best){best=v;bt=[a];}}}
+  else if(k===2){for(let a=1;a<B-1;a++)for(let b=a+1;b<B;b++){const v=cls(0,a)+cls(a,b)+cls(b,B);if(v>best){best=v;bt=[a,b];}}}
+  else{for(let a=1;a<B-2;a++)for(let b=a+1;b<B-1;b++)for(let c=b+1;c<B;c++){const v=cls(0,a)+cls(a,b)+cls(b,c)+cls(c,B);if(v>best){best=v;bt=[a,b,c];}}}
+  return bt.map(t=>t/B);}
+// estêncil: devolve rótulos 1..N (do mais escuro ao mais claro) por pixel e a cor média de cada tom
+function fotoEstencil(par){const w=LE.ww,h=LE.wh,n=w*h,d=LE.warp.data,N=Math.max(2,Math.min(4,par.tons|0));
+  const key=[w,h,LE.warpKey,N,par.det,par.bias].join("|");if(LE.fotoCache&&LE.fotoCache.key===key)return LE.fotoCache;
+  // grade de trabalho: o lado maior com 110, 160 ou 240 células (grosso, médio, fino)
+  const G=[0,130,190,270][par.det]||190,cs=Math.max(1,Math.max(w,h)/G),gw=Math.max(4,Math.round(w/cs)),gh=Math.max(4,Math.round(h/cs)),gn=gw*gh;
+  const Lg=new Float32Array(gn),cnt=new Float32Array(gn);
+  for(let y=0;y<h;y++){const gy=Math.min(gh-1,(y*gh/h)|0);for(let x=0;x<w;x++){const i=y*w+x,g=gy*gw+Math.min(gw-1,(x*gw/w)|0);Lg[g]+=0.2126*d[i*4]+0.7152*d[i*4+1]+0.0722*d[i*4+2];cnt[g]++;}}
+  for(let g=0;g<gn;g++)Lg[g]/=cnt[g]||1;
+  // suaviza 2× (caixa 3×3) e estica o contraste entre os percentis 2% e 98%
+  const blur=a=>{const o=new Float32Array(gn);for(let y=0;y<gh;y++)for(let x=0;x<gw;x++){let s=0,c=0;for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++){const xx=x+dx,yy=y+dy;if(xx<0||yy<0||xx>=gw||yy>=gh)continue;s+=a[yy*gw+xx];c++;}o[y*gw+x]=s/c;}return o;};
+  // contraste local: cada ponto comparado com a vizinhança (raio ~1/10 da foto), metade global e metade local —
+  // olhos, sobrancelhas e sombras do rosto aparecem mesmo com luz desigual
+  let L=blur(Lg);const R=Math.max(3,Math.round(Math.max(gw,gh)/10)),W=gw+1,I=new Float64Array(W*(gh+1)),I2=new Float64Array(W*(gh+1));
+  for(let y=0;y<gh;y++){let r=0,r2=0;for(let x=0;x<gw;x++){const v=L[y*gw+x];r+=v;r2+=v*v;I[(y+1)*W+x+1]=I[y*W+x+1]+r;I2[(y+1)*W+x+1]=I2[y*W+x+1]+r2;}}
+  const glo=L.reduce((a,b)=>a+b,0)/gn,gsd=Math.sqrt(L.reduce((a,b)=>a+(b-glo)*(b-glo),0)/gn)||1,M=new Float32Array(gn);
+  for(let y=0;y<gh;y++)for(let x=0;x<gw;x++){const x0=Math.max(0,x-R),y0=Math.max(0,y-R),x1=Math.min(gw,x+R+1),y1=Math.min(gh,y+R+1),a=(x1-x0)*(y1-y0),
+      m=(I[y1*W+x1]-I[y0*W+x1]-I[y1*W+x0]+I[y0*W+x0])/a,q=(I2[y1*W+x1]-I2[y0*W+x1]-I2[y1*W+x0]+I2[y0*W+x0])/a,sd=Math.sqrt(Math.max(0,q-m*m)),v=L[y*gw+x];
+    M[y*gw+x]=0.45*(v-glo)/gsd+0.55*(v-m)/Math.max(gsd*0.35,sd);}
+  L=M;const srt=Float32Array.from(L).sort(),lo=srt[(gn*0.02)|0],hi=srt[Math.min(gn-1,(gn*0.98)|0)];
+  for(let g=0;g<gn;g++)L[g]=clamp((L[g]-lo)/Math.max(1e-6,hi-lo)+par.bias/100,0,1);
+  const hist=new Float64Array(64);for(let g=0;g<gn;g++)hist[Math.min(63,(L[g]*64)|0)]++;const T=fotoCortes(hist,N-1);
+  let lab=new Uint8Array(gn);for(let g=0;g<gn;g++){let k=1;for(const t of T)if(L[g]>=t)k++;lab[g]=k;}
+  // maioria 3×3 (tira serrilhado) e remove manchas pequenas (menos que ~ 1/150 da área... mínimo de 6 células)
+  const maj=a=>{const o=new Uint8Array(gn);for(let y=0;y<gh;y++)for(let x=0;x<gw;x++){const c=[0,0,0,0,0];for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++){const xx=x+dx,yy=y+dy;if(xx<0||yy<0||xx>=gw||yy>=gh)continue;c[a[yy*gw+xx]]++;}
+    let b=a[y*gw+x];for(let k=1;k<=4;k++)if(c[k]>c[b])b=k;o[y*gw+x]=c[b]>=5?b:a[y*gw+x];}return o;};
+  lab=maj(lab);const minC=[0,9,5,3][par.det]||5,comp=new Int32Array(gn).fill(-1),st=new Int32Array(gn);
+  for(let pass=0;pass<2;pass++){comp.fill(-1);let id=0;
+    for(let s0=0;s0<gn;s0++){if(comp[s0]>=0)continue;const k=lab[s0];let sp=0,m=0;const cells=[],nb=[0,0,0,0,0];st[sp++]=s0;comp[s0]=id;
+      while(sp){const p=st[--sp];cells.push(p);m++;const x=p%gw,y=(p/gw)|0;for(const q of [x>0?p-1:-1,x<gw-1?p+1:-1,y>0?p-gw:-1,y<gh-1?p+gw:-1]){if(q<0)continue;if(lab[q]===k){if(comp[q]<0){comp[q]=id;st[sp++]=q;}}else nb[lab[q]]++;}}
+      if(m<minC){let b=0;for(let kk=1;kk<=4;kk++)if(nb[kk]>nb[b])b=kk;if(b)cells.forEach(p=>lab[p]=b);}id++;}}
+  // volta para o tamanho da foto com bordas suaves: cada tom é interpolado e ganha o mais forte
+  const idx=new Uint8Array(n),fld=[];for(let k=1;k<=N;k++){const f=new Float32Array(gn);for(let g=0;g<gn;g++)f[g]=lab[g]===k?1:0;fld.push(blur(f));}
+  const acc=Array.from({length:N},()=>[0,0,0,0]);
+  for(let y=0;y<h;y++){const gy=(y+0.5)*gh/h-0.5,y0=Math.max(0,Math.floor(gy)),y1=Math.min(gh-1,y0+1),fy=clamp(gy-y0,0,1);
+    for(let x=0;x<w;x++){const gx=(x+0.5)*gw/w-0.5,x0=Math.max(0,Math.floor(gx)),x1=Math.min(gw-1,x0+1),fx=clamp(gx-x0,0,1);let bk=0,bv=-1;
+      for(let k=0;k<N;k++){const f=fld[k],v=(f[y0*gw+x0]*(1-fx)+f[y0*gw+x1]*fx)*(1-fy)+(f[y1*gw+x0]*(1-fx)+f[y1*gw+x1]*fx)*fy;if(v>bv){bv=v;bk=k;}}
+      const i=y*w+x;idx[i]=bk+1;const a=acc[bk];a[0]+=d[i*4];a[1]+=d[i*4+1];a[2]+=d[i*4+2];a[3]++;}}
+  const colors=acc.map(a=>({rgb:a[3]?[a[0]/a[3],a[1]/a[3],a[2]/a[3]].map(Math.round):[128,128,128],n:a[3]}));
+  LE.fotoCache={key,idx,colors,N};return LE.fotoCache;}
+// cores do estêncil no guia: do mais escuro ao mais claro, cada tom na bobina de brilho parecido (sem repetir)
+function fotoMapa(colors){const P=activePal().map(p=>{const c=rgbOf(p.hex),mx=Math.max(...c),mn=Math.min(...c);return {id:p.id,L:lumOf(c),sat:mx?(mx-mn)/mx:0};});
+  // estêncil fica legível em tons neutros: do preto ao branco, os do meio espaçados por brilho
+  let pool=P.filter(p=>p.sat<0.18);if(pool.length<colors.length)pool=P;pool.sort((a,b)=>a.L-b.L);
+  const N=colors.length,used=new Set(),out=[];
+  for(let k=0;k<N;k++){const alvo=pool[0].L+(pool[pool.length-1].L-pool[0].L)*(N===1?0:k/(N-1));
+    const c=pool.filter(p=>!used.has(p.id)).sort((a,b)=>Math.abs(a.L-alvo)-Math.abs(b.L-alvo))[0]||pool[0];used.add(c.id);out.push(c.id);}
+  // os tons vêm do mais escuro (1) ao mais claro (N)
+  return out;}
+// ---------- liga no editor de arte ----------
+{const _final=leFinal,_quant=leQuantize,_draw2=leDraw2,_step=leStep,_hint=leHint;
+  const box=$("#leFotoBox"),kinds=$$("[data-kind]");
+  const sync=()=>{const on=!!(LE.foto&&LE.foto.on);kinds.forEach(b=>b.setAttribute("aria-pressed",String((b.dataset.kind==="foto")===on)));if(box)box.hidden=!on;
+    const bl=$('[data-tool="blocos"]');if(bl)bl.hidden=on;$$("#lePanel2 .sliders .slider").forEach(s=>{if(s.id!=="leBrushBox"&&!s.closest("#leFotoBox"))s.hidden=on;});
+    if(on){$("#leTons").value=LE.foto.tons;$("#leDet").value=LE.foto.det;$("#leBias").value=LE.foto.bias;$("#leTonsO").textContent=LE.foto.tons;$("#leDetO").textContent=["","grosso","médio","fino"][LE.foto.det];$("#leBiasO").textContent=LE.foto.bias>0?"+"+LE.foto.bias:LE.foto.bias;}};
+  const setKind=k=>{LE.foto=Object.assign({},FOTO_DEF,LE.foto||{},{on:k==="foto"});LE.fotoAuto=false;if(LE.foto.on&&LE.tool==="blocos")LE.tool="poly";if(!LE.foto.on&&LE.tool==="poly")LE.tool="blocos";
+    if(LE.foto.on&&LE.poly&&!LE.fotoPolyOk){LE.poly=[[0,0],[LE.ww,0],[LE.ww,LE.wh],[0,LE.wh]];LE.fotoPolyOk=true;}LE.map=null;sync();setTool(LE.tool);leHint();leDraw2();};
+  kinds.forEach(b=>b.onclick=()=>setKind(b.dataset.kind));
+  [["#leTons","tons"],["#leDet","det"],["#leBias","bias"]].forEach(([id,k])=>{const el=$(id);if(el)el.addEventListener("input",()=>{LE.foto[k]=+el.value;LE.map=null;sync();if(!leRaf)leRaf=requestAnimationFrame(()=>{leRaf=0;leDraw2();});});});
+  leStep=function(n){const was=LE.step;_step(n);
+    if(n===2&&was===1){if(!LE.foto){LE.foto=Object.assign({},FOTO_DEF);if(fotoPareceFoto()){LE.foto.on=true;LE.fotoAuto=true;LE.tool="poly";LE.poly=[[0,0],[LE.ww,0],[LE.ww,LE.wh],[0,LE.wh]];LE.fotoPolyOk=true;setTool("poly");}}sync();leHint();leDraw2();}};
+  leHint=function(){if(LE.foto&&LE.foto.on){$("#le2Hint").textContent=(LE.fotoAuto?"Parece uma foto: o sistema transformou em estêncil (poucos tons, como um cartaz). Se for um logo, toque em “Logo ou desenho”. ":"")+
+      "Escolha quantos tons e o detalhe. Para tirar o fundo, use “Recorte livre” (arraste os pontos em volta) ou a “Borracha”.";return;}_hint();};
+  leFinal=function(){if(!(LE.foto&&LE.foto.on))return _final();const n=LE.ww*LE.wh,P=polyMask(),F=new Float32Array(n);let any=false;
+    for(let i=0;i<n;i++){let a=P[i];const e=LE.editMask[i];if(e<0)a=0;F[i]=a;if(a>0.5)any=true;}LE.F=F;
+    if(!any){$("#le2Hint").textContent="Nada ficou dentro do recorte. Toque em “Recorte livre” e aumente a área.";return false;}return true;};
+  leQuantize=function(){if(!(LE.foto&&LE.foto.on))return _quant();const E=fotoEstencil(LE.foto),n=LE.ww*LE.wh,idx=new Uint8Array(n);
+    for(let i=0;i<n;i++)if(LE.F[i]>0.02)idx[i]=E.idx[i];LE.idx=idx;LE.colors=E.colors.map(c=>({rgb:c.rgb}));
+    if(!LE.map||LE.map.length!==LE.colors.length)LE.map=fotoMapa(LE.colors);};
+  leDraw2=function(){if(!(LE.foto&&LE.foto.on))return _draw2();
+    const c=leCanvas.getContext("2d"),k=leCanvas.width/LE.ww,w=LE.ww,h=LE.wh,E=fotoEstencil(LE.foto),P=polyMask();
+    const t=document.createElement("canvas");t.width=w;t.height=h;const x=t.getContext("2d"),img=x.createImageData(w,h),o=img.data;
+    const cols=fotoMapa(E.colors).map(id=>rgbOf(colorOf(id)));
+    for(let i=0;i<w*h;i++){const inn=P[i]>0.5&&LE.editMask[i]>=0,col=cols[E.idx[i]-1]||[128,128,128];o[i*4]=col[0];o[i*4+1]=col[1];o[i*4+2]=col[2];o[i*4+3]=inn?255:40;}
+    x.putImageData(img,0,0);c.setTransform(1,0,0,1,0,0);c.clearRect(0,0,leCanvas.width,leCanvas.height);c.drawImage(t,0,0,leCanvas.width,leCanvas.height);
+    const lw=leCanvas.width/LE.sw;c.save();c.strokeStyle="#e0a100";c.lineWidth=2*lw;c.setLineDash(LE.tool==="poly"?[]:[4*lw,4*lw]);c.beginPath();LE.poly.forEach((p,i)=>i?c.lineTo(p[0]*k,p[1]*k):c.moveTo(p[0]*k,p[1]*k));c.closePath();c.stroke();c.restore();
+    leHandles.replaceChildren();
+    if(LE.tool==="poly"){const s=LE.sw/LE.ww;LE.poly.forEach((p,i)=>{const hd=document.createElement("div");hd.className="handle";hd.style.left=p[0]*s+"px";hd.style.top=p[1]*s+"px";if(i===LE.polySel)hd.style.background="#fff";hd.dataset.i=i;leHandles.appendChild(hd);leBindPoly(hd);});
+      LE.poly.forEach((p,i)=>{const q=LE.poly[(i+1)%LE.poly.length],hd=document.createElement("div");hd.className="handle";hd.style.width=hd.style.height="22px";hd.style.margin="-11px 0 0 -11px";hd.style.background="rgba(255,255,255,.75)";hd.style.borderColor="#e0a100";hd.title="Adicionar ponto";
+        hd.style.left=(p[0]+q[0])/2*s+"px";hd.style.top=(p[1]+q[1])/2*s+"px";hd.addEventListener("pointerdown",e=>{e.stopPropagation();LE.poly.splice(i+1,0,[(p[0]+q[0])/2,(p[1]+q[1])/2]);LE.polySel=i+1;leDraw2();});leHandles.appendChild(hd);});}
+    $("#lePolyDel").disabled=!(LE.polySel>=0&&LE.poly.length>3);
+    $("#leLegend").innerHTML=`<span>${E.N} tons</span>`+cols.map((cc,i)=>`<span><i style="background:rgb(${cc.join(",")})"></i>tom ${i+1}</span>`).join("")+`<span>(as cores trocam no passo 3)</span>`;};
+}
 
 // ================= instalar como aplicativo =================
 // No site: ícone na tela do celular, abre em tela cheia e funciona sem internet. Pede ao navegador para não apagar os dados guardados.
