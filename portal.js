@@ -24,17 +24,16 @@ const G=(()=>{
   function olho(){$$(".senha").forEach(w=>{const i=$("input",w),b=$("button",w);if(!b)return;b.onclick=()=>{const v=i.type==="password";i.type=v?"text":"password";b.textContent=v?"Esconder":"Mostrar";b.setAttribute("aria-pressed",v);i.focus();};});}
   const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
   const data=s=>{if(!s)return"—";const d=new Date(s+"Z");return d.toLocaleDateString("pt-BR",{day:"2-digit",month:"2-digit",year:"2-digit"})+" "+d.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});};
-  const I=p=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${p}</svg>`;
   // módulos do GenIO: o Capacho funciona; os outros entram aos poucos com a mesma base (fotos, prévia, orçamento, Pix)
   const MODULOS=[
-    {id:"capacho",nome:"Capachos personalizados",desc:"Tapetes e capachos personalizados, com a prévia no chão do cliente.",url:"capacho.html",on:true,img:"img/mod-capacho.jpg",ic:I('<rect x="3" y="7" width="18" height="10" rx="2"/><rect x="6" y="10" width="12" height="4" rx="1"/>')},
-    {id:"placas",nome:"Placas e sinalização",desc:"Placas de porta, fachada, PVC, acrílico e sinalização.",img:"img/mod-placas.jpg",ic:I('<rect x="4" y="5" width="16" height="10" rx="1.5"/><path d="M12 15v5M9 20h6"/>')},
-    {id:"adesivos",nome:"Adesivos e vitrines",desc:"Adesivos de vitrine, parede, frota e recorte.",img:"img/mod-adesivos.jpg",ic:I('<path d="M5 4h10l4 4v12H5z"/><path d="M15 4v4h4"/><path d="M8 13h8M8 16h5"/>')},
-    {id:"uniformes",nome:"Uniformes e camisetas",desc:"Camisetas, polos, aventais e jalecos com a marca.",img:"img/mod-uniformes.jpg",ic:I('<path d="M8 4l-5 3 2 4 3-1v10h8V10l3 1 2-4-5-3c-.5 1.5-2 2.5-4 2.5S8.5 5.5 8 4z"/>')},
-    {id:"impressos",nome:"Cartões e impressos",desc:"Cartões de visita, panfletos, cardápios e blocos.",img:"img/mod-cartoes.jpg",ic:I('<rect x="3" y="6" width="18" height="12" rx="2"/><path d="M7 10h6M7 13h10"/>')},
-    {id:"banners",nome:"Banners e faixas",desc:"Banners, faixas, wind banners e lonas.",img:"img/mod-banners.jpg",ic:I('<path d="M6 3v18"/><path d="M6 4h12l-3 4 3 4H6"/>')},
-    {id:"brindes",nome:"Brindes e carimbos",desc:"Canecas, chaveiros, sacolas, carimbos e brindes com a marca.",img:"img/mod-brindes.jpg",ic:I('<rect x="4" y="9" width="16" height="11" rx="1.5"/><path d="M3 9h18M12 9v11M12 9c-2-3-6-3-6-1s3 1 6 1c3 0 6 1 6-1s-4-2-6 1"/>')},
-    {id:"parede",nome:"Adesivos de parede",desc:"Adesivos decorativos de parede, sob medida, com instalação.",img:"img/mod-parede.jpg",ic:I('<path d="M5 4h14v16H5z"/><path d="M9 4c2 4 2 8 0 16M15 4c-2 4-2 8 0 16"/>')}];
+    {id:"capacho",nome:"Capachos personalizados",desc:"Prévia no chão do cliente.",url:"capacho.html",on:true,img:"img/mod-capacho.jpg"},
+    {id:"placas",nome:"Placas e sinalização",desc:"Fachada, porta e sinalização.",img:"img/mod-placas.jpg"},
+    {id:"adesivos",nome:"Adesivos e vitrines",desc:"Vitrine, frota e recorte.",img:"img/mod-adesivos.jpg"},
+    {id:"uniformes",nome:"Uniformes e camisetas",desc:"Camisetas e polos com a marca.",img:"img/mod-uniformes.jpg"},
+    {id:"impressos",nome:"Cartões e impressos",desc:"Cartões, panfletos e cardápios.",img:"img/mod-cartoes.jpg"},
+    {id:"banners",nome:"Banners e faixas",desc:"Lonas, faixas e wind banners.",img:"img/mod-banners.jpg"},
+    {id:"brindes",nome:"Brindes e carimbos",desc:"Canecas, chaveiros e carimbos.",img:"img/mod-brindes.jpg"},
+    {id:"parede",nome:"Adesivos de parede",desc:"Sob medida, com instalação.",img:"img/mod-parede.jpg"}];
   // fotos de capa: banco de imagens livre (Pexels, uso comercial livre), provisórias até ter fotos reais dos produtos
   // aplicativo instalado: guarda o pedido de instalação do navegador
   let inst=null;window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();inst=e;document.dispatchEvent(new Event("genio-instalavel"));});
