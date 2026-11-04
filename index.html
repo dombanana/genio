@@ -15,7 +15,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&display=swap">
-<link rel="stylesheet" href="portal.css?v=cad726c76b">
+<link rel="stylesheet" href="portal.css?v=a56c02de47">
 <style>
 .hero-art{background:var(--marfim);border-radius:20px;padding:24px;color:var(--texto);position:relative;overflow:hidden;min-height:300px;display:flex;flex-direction:column;justify-content:flex-end;border:1px solid var(--linha)}
 .hero-art .piso{position:absolute;inset:0;background:repeating-linear-gradient(115deg,rgba(105,51,197,.05) 0 22px,rgba(105,51,197,0) 22px 44px)}
@@ -126,7 +126,7 @@
   </div>
 </div>
 
-<script src="portal.js?v=cad726c76b"></script>
+<script src="portal.js?v=a56c02de47"></script>
 <script>
 (()=>{const {$, $$}=G,qs=new URLSearchParams(location.search);
   $("#mods").innerHTML=G.MODULOS.map(m=>`<div class="mod ${m.on?"on":"off"}"><div class="mod-cover" style="background-image:url('${m.img}')"><span class="tag">${m.on?"Disponível":"Em breve"}</span></div><div class="mod-body"><div class="ic">${m.ic}</div><b>${G.esc(m.nome)}</b><span class="desc">${G.esc(m.desc)}</span></div></div>`).join("");

@@ -34,7 +34,7 @@ const G=(()=>{
     {id:"impressos",nome:"Cartões e impressos",desc:"Cartões de visita, panfletos, cardápios e blocos.",img:"img/mod-cartoes.jpg",ic:I('<rect x="3" y="6" width="18" height="12" rx="2"/><path d="M7 10h6M7 13h10"/>')},
     {id:"banners",nome:"Banners e faixas",desc:"Banners, faixas, wind banners e lonas.",img:"img/mod-banners.jpg",ic:I('<path d="M6 3v18"/><path d="M6 4h12l-3 4 3 4H6"/>')},
     {id:"brindes",nome:"Brindes e carimbos",desc:"Canecas, chaveiros, sacolas, carimbos e brindes com a marca.",img:"img/mod-brindes.jpg",ic:I('<rect x="4" y="9" width="16" height="11" rx="1.5"/><path d="M3 9h18M12 9v11M12 9c-2-3-6-3-6-1s3 1 6 1c3 0 6 1 6-1s-4-2-6 1"/>')},
-    {id:"papel",nome:"Papel de parede e instalação",desc:"Revestimento de parede sob medida, com instalação.",img:"img/mod-papel.jpg",ic:I('<rect x="4" y="4" width="16" height="16" rx="1.5"/><path d="M4 9h16M4 14h16M9 4v16M14 4v16"/>')}];
+    {id:"parede",nome:"Adesivos de parede",desc:"Adesivos decorativos de parede, sob medida, com instalação.",img:"img/mod-parede.jpg",ic:I('<path d="M5 4h14v16H5z"/><path d="M9 4c2 4 2 8 0 16M15 4c-2 4-2 8 0 16"/>')}];
   // fotos de capa: banco de imagens livre (Pexels, uso comercial livre), provisórias até ter fotos reais dos produtos
   // aplicativo instalado: guarda o pedido de instalação do navegador
   let inst=null;window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();inst=e;document.dispatchEvent(new Event("genio-instalavel"));});

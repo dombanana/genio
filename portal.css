@@ -92,7 +92,7 @@ a.mod:active{transform:translateY(1px)}
 .link{display:block;word-break:break-all;background:var(--marfim);border:1px dashed var(--linha);border-radius:10px;padding:10px 12px;font-size:14px;margin:8px 0 12px}
 .saud{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px;margin:32px 0 8px}
 .saud-oi{display:flex;align-items:center;gap:12px}
-.saud-ic{width:44px;height:44px;flex-shrink:0}
+.saud-ic{width:44px;height:44px;flex-shrink:0;border-radius:50%;object-fit:cover;border:2px solid var(--marca)}
 .vazio{padding:24px;text-align:center;color:var(--texto2)}
 @media (max-width:860px){.hero .grid{grid-template-columns:1fr;gap:24px}.passos{grid-template-columns:1fr 1fr}}
 @media (max-width:560px){.passos,.planos,.form2{grid-template-columns:1fr}.sec{padding:40px 0}.hero{padding:32px 0}.card{padding:20px}.top .btn{min-height:44px;padding:0 14px}.marca b{font-size:22px}}
