@@ -53,16 +53,19 @@ input:focus,select:focus,textarea:focus{border-color:var(--marca)}
 .passo{counter-increment:p}
 .passo:before{content:counter(p);display:inline-grid;place-items:center;width:32px;height:32px;border-radius:50%;background:var(--marca);color:#fff;font-weight:700;margin-bottom:12px}
 .mods{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;margin-top:24px}
-.mod{display:flex;flex-direction:column;gap:8px;background:var(--cartao);border:1px solid var(--linha);border-radius:16px;padding:20px;text-decoration:none;color:var(--texto);min-height:168px;position:relative;transition:border-color .15s,box-shadow .15s,transform .1s}
+.mod{display:flex;flex-direction:column;background:var(--cartao);border:1px solid var(--linha);border-radius:16px;overflow:hidden;text-decoration:none;color:var(--texto);position:relative;transition:border-color .15s,box-shadow .15s,transform .1s}
 a.mod:hover{border-color:var(--marca);box-shadow:var(--sombra)}
 a.mod:active{transform:translateY(1px)}
-.mod .ic{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;background:rgba(105,51,197,.1);color:var(--marca)}
+.mod-cover{height:120px;background:var(--marfim) center/cover no-repeat;position:relative;flex-shrink:0}
+.mod-body{display:flex;flex-direction:column;gap:8px;padding:0 20px 20px}
+.mod .ic{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;background:var(--cartao);color:var(--marca);box-shadow:0 1px 2px rgba(28,22,53,.08);border:1px solid var(--linha);margin-top:-22px}
 .mod .ic svg{width:26px;height:26px}
 .mod b{font-size:18px;color:var(--marca)}
-.mod span{font-size:14px;color:var(--texto2)}
-.mod .tag{position:absolute;top:16px;right:16px;font-size:12px;font-weight:600;padding:4px 10px;border-radius:999px;background:var(--marfim);color:var(--texto2)}
+.mod span.desc{font-size:14px;color:var(--texto2)}
+.mod .tag{position:absolute;top:12px;right:12px;font-size:12px;font-weight:600;padding:4px 10px;border-radius:999px;background:rgba(255,254,250,.92);color:var(--texto2);backdrop-filter:blur(2px)}
 .mod.on .tag{background:#E9F4EC;color:var(--ok)}
-.mod.off{opacity:.72}
+.mod.off{opacity:.78}
+.mod.off .mod-cover{filter:grayscale(.35)}
 .planos{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:24px;max-width:760px}
 .plano .preco{font-size:36px;font-weight:800;color:var(--marca);letter-spacing:-.02em}
 .plano .preco small{font-size:16px;font-weight:500;color:var(--texto2)}

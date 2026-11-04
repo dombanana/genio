@@ -27,14 +27,15 @@ const G=(()=>{
   const I=p=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${p}</svg>`;
   // módulos do GenIO: o Capacho funciona; os outros entram aos poucos com a mesma base (fotos, prévia, orçamento, Pix)
   const MODULOS=[
-    {id:"capacho",nome:"Capachos personalizados",desc:"Tapetes e capachos personalizados, com a prévia no chão do cliente.",url:"capacho.html",on:true,ic:I('<rect x="3" y="7" width="18" height="10" rx="2"/><rect x="6" y="10" width="12" height="4" rx="1"/>')},
-    {id:"placas",nome:"Placas e sinalização",desc:"Placas de porta, fachada, PVC, acrílico e sinalização.",ic:I('<rect x="4" y="5" width="16" height="10" rx="1.5"/><path d="M12 15v5M9 20h6"/>')},
-    {id:"adesivos",nome:"Adesivos e vitrines",desc:"Adesivos de vitrine, parede, frota e recorte.",ic:I('<path d="M5 4h10l4 4v12H5z"/><path d="M15 4v4h4"/><path d="M8 13h8M8 16h5"/>')},
-    {id:"uniformes",nome:"Uniformes e camisetas",desc:"Camisetas, polos, aventais e jalecos com a marca.",ic:I('<path d="M8 4l-5 3 2 4 3-1v10h8V10l3 1 2-4-5-3c-.5 1.5-2 2.5-4 2.5S8.5 5.5 8 4z"/>')},
-    {id:"impressos",nome:"Cartões e impressos",desc:"Cartões de visita, panfletos, cardápios e blocos.",ic:I('<rect x="3" y="6" width="18" height="12" rx="2"/><path d="M7 10h6M7 13h10"/>')},
-    {id:"banners",nome:"Banners e faixas",desc:"Banners, faixas, wind banners e lonas.",ic:I('<path d="M6 3v18"/><path d="M6 4h12l-3 4 3 4H6"/>')},
-    {id:"brindes",nome:"Brindes e carimbos",desc:"Canecas, chaveiros, sacolas, carimbos e brindes com a marca.",ic:I('<rect x="4" y="9" width="16" height="11" rx="1.5"/><path d="M3 9h18M12 9v11M12 9c-2-3-6-3-6-1s3 1 6 1c3 0 6 1 6-1s-4-2-6 1"/>')},
-    {id:"papel",nome:"Papel de parede e instalação",desc:"Revestimento de parede sob medida, com instalação.",ic:I('<rect x="4" y="4" width="16" height="16" rx="1.5"/><path d="M4 9h16M4 14h16M9 4v16M14 4v16"/>')}];
+    {id:"capacho",nome:"Capachos personalizados",desc:"Tapetes e capachos personalizados, com a prévia no chão do cliente.",url:"capacho.html",on:true,img:"img/mod-capacho.jpg",ic:I('<rect x="3" y="7" width="18" height="10" rx="2"/><rect x="6" y="10" width="12" height="4" rx="1"/>')},
+    {id:"placas",nome:"Placas e sinalização",desc:"Placas de porta, fachada, PVC, acrílico e sinalização.",img:"img/mod-placas.jpg",ic:I('<rect x="4" y="5" width="16" height="10" rx="1.5"/><path d="M12 15v5M9 20h6"/>')},
+    {id:"adesivos",nome:"Adesivos e vitrines",desc:"Adesivos de vitrine, parede, frota e recorte.",img:"img/mod-adesivos.jpg",ic:I('<path d="M5 4h10l4 4v12H5z"/><path d="M15 4v4h4"/><path d="M8 13h8M8 16h5"/>')},
+    {id:"uniformes",nome:"Uniformes e camisetas",desc:"Camisetas, polos, aventais e jalecos com a marca.",img:"img/mod-uniformes.jpg",ic:I('<path d="M8 4l-5 3 2 4 3-1v10h8V10l3 1 2-4-5-3c-.5 1.5-2 2.5-4 2.5S8.5 5.5 8 4z"/>')},
+    {id:"impressos",nome:"Cartões e impressos",desc:"Cartões de visita, panfletos, cardápios e blocos.",img:"img/mod-cartoes.jpg",ic:I('<rect x="3" y="6" width="18" height="12" rx="2"/><path d="M7 10h6M7 13h10"/>')},
+    {id:"banners",nome:"Banners e faixas",desc:"Banners, faixas, wind banners e lonas.",img:"img/mod-banners.jpg",ic:I('<path d="M6 3v18"/><path d="M6 4h12l-3 4 3 4H6"/>')},
+    {id:"brindes",nome:"Brindes e carimbos",desc:"Canecas, chaveiros, sacolas, carimbos e brindes com a marca.",img:"img/mod-brindes.jpg",ic:I('<rect x="4" y="9" width="16" height="11" rx="1.5"/><path d="M3 9h18M12 9v11M12 9c-2-3-6-3-6-1s3 1 6 1c3 0 6 1 6-1s-4-2-6 1"/>')},
+    {id:"papel",nome:"Papel de parede e instalação",desc:"Revestimento de parede sob medida, com instalação.",img:"img/mod-papel.jpg",ic:I('<rect x="4" y="4" width="16" height="16" rx="1.5"/><path d="M4 9h16M4 14h16M9 4v16M14 4v16"/>')}];
+  // fotos de capa: banco de imagens livre (Pexels, uso comercial livre), provisórias até ter fotos reais dos produtos
   // aplicativo instalado: guarda o pedido de instalação do navegador
   let inst=null;window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();inst=e;document.dispatchEvent(new Event("genio-instalavel"));});
   const instalar=async()=>{if(!inst)return false;inst.prompt();const r=await inst.userChoice.catch(()=>null);inst=null;return r&&r.outcome==="accepted";};
