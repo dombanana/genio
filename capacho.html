@@ -335,7 +335,8 @@ details.acc>*:not(summary){margin-bottom:12px}
 .actionbar .ab-next{background:var(--carmim);color:#fff;font-size:16px;font-weight:700;padding:12px 22px;min-height:52px;box-shadow:0 2px 0 rgba(0,0,0,.08)}
 .actionbar .ab-next:hover{filter:brightness(1.05)}
 .actionbar .btn[disabled]{opacity:.35}
-.actionbar .ab-undo[hidden]{display:none}
+.actionbar .ab-undo{display:none}
+.part-undo{margin-left:auto}
 @media (max-width:860px){
   .actionbar{flex-wrap:wrap;padding:6px;gap:6px}
   .actionbar .ab-t{order:-1;flex-basis:100%;font-size:13px}
@@ -381,7 +382,8 @@ details.acc>*:not(summary){margin-bottom:12px}
 
 @media (max-width:560px){
   .top{display:grid;grid-template-columns:auto 1fr auto;align-items:center;column-gap:8px}
-  .top .steps{justify-self:center}
+  .top .brand{justify-self:center}
+  .top .mod-volta{margin:0}
   .topbtns{display:flex;gap:6px}
   .topbtns .btn{padding:8px 9px;min-height:40px}
   .actionbar{grid-column:1/-1;flex-wrap:nowrap;padding:6px;gap:6px}
@@ -505,18 +507,13 @@ html,body{overscroll-behavior-y:none}
 </style>
 <div class="top">
   <a class="mod-volta" href="app.html" aria-label="Voltar aos módulos">‹ Módulos</a><div class="brand"><div class="wordmark" id="wordmark" aria-label="GenIO · Capacho"><b>Gen<i>IO</i></b><span>Capacho</span></div><div class="brand-t" id="brandT"></div></div>
-  <nav class="steps" aria-label="Passos do orçamento">
-    <button data-go="dados"><span class="n">1</span><span class="t">Criar o tapete</span></button>
-    <button data-go="local"><span class="n">2</span><span class="t">No seu espaço</span></button>
-    <button data-go="orcamento"><span class="n">3</span><span class="t">Orçamento</span></button>
-  </nav>
   <div class="topbtns">
     <button class="btn ghost" data-go="lista" aria-label="Projetos do cliente"><span class="long">Projetos</span><span class="short"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M8 6h12M8 12h12M8 18h12"/><circle cx="4" cy="6" r="1"/><circle cx="4" cy="12" r="1"/><circle cx="4" cy="18" r="1"/></svg></span></button>
     <button class="btn ghost" data-go="config" aria-label="Configurações"><span class="long">Configurações</span><span class="short"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></span></button>
   </div>
   <div class="actionbar" id="actionBar" role="navigation" aria-label="Voltar e seguir">
     <button class="btn ghost ab-back" id="abBack" type="button" aria-label="Voltar"><span aria-hidden="true">←</span><span class="abl"> Voltar</span></button>
-    <button class="btn ghost ab-undo" id="abUndo" type="button" aria-label="Desfazer"><span aria-hidden="true">↶</span><span class="abl"> Desfazer</span></button>
+    <button class="btn ghost ab-undo" id="abUndo" type="button" hidden aria-label="Desfazer">↶</button>
     <span class="ab-t" id="abTitle"></span>
     <button class="btn big ab-next" id="abNext" type="button">Seguir →</button>
   </div>
@@ -536,23 +533,22 @@ html,body{overscroll-behavior-y:none}
     </section>
 
     <section class="panel part" id="partLogo" data-part="logo">
-      <button class="part-head" type="button" data-open="logo"><span class="part-n">1</span><span class="part-t"><b>Artes e textos do cliente</b></span><span class="part-st" id="stLogo"></span></button>
+      <button class="part-head" type="button" data-open="logo"><span class="part-n">1</span><span class="part-t"><b>Arte</b></span><span class="part-st" id="stLogo"></span></button>
       <div class="part-body">
-        <p class="hint" id="artNote"></p>
+        <div class="row between"><p class="hint" id="artNote" style="margin:0"></p><button class="linkbtn part-undo" type="button" data-undo="logo" hidden>↶ Desfazer</button></div>
         <div class="art-list" id="artList"></div>
         <p class="hint small ok-t" id="artUndo" aria-live="polite"></p>
         <div class="add-tiles" id="artTile">
-          <label class="ftile add main" for="fLogo"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 17l-5-5-9 8"/></svg><span>+ Arte ou logo</span></label>
-          <label class="ftile add" for="fLogoCam" aria-label="Fotografar a arte ou o cartão de visita"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg><span>Fotografar arte</span></label>
+          <label class="ftile add main" for="fLogo"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 17l-5-5-9 8"/></svg><span>+ Arte</span></label>
           <button class="ftile add" id="addText1" type="button"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 6V4h14v2M12 4v16M9 20h6"/></svg><span>+ Texto</span></button>
         </div>
       </div>
     </section>
 
     <section class="panel part" id="partTapete" data-part="tapete">
-      <button class="part-head" type="button" data-open="tapete"><span class="part-n">2</span><span class="part-t"><b>Tapetes: medidas, cores e arte</b></span><span class="part-st" id="stTapete"></span></button>
+      <button class="part-head" type="button" data-open="tapete"><span class="part-n">2</span><span class="part-t"><b>Tapete</b></span><span class="part-st" id="stTapete"></span></button>
       <div class="part-body">
-        <div class="tap-tabs" id="tapTabs" role="group" aria-label="Tapetes deste orçamento"></div>
+        <div class="row between"><div class="tap-tabs" id="tapTabs" role="group" aria-label="Tapetes deste orçamento"></div><button class="linkbtn part-undo" type="button" data-undo="tapete" hidden>↶ Desfazer</button></div>
         <div class="fields tap-meta">
           <div class="field wide2"><label for="tapNome">Nome deste tapete</label><input id="tapNome" autocomplete="off" placeholder="Ex.: Entrada principal"></div>
           <div class="field"><label for="tapCard">Cartão na loja</label><select id="tapCard"><option value="0">Sem cartão (postal)</option><option value="1">Cartão 1</option><option value="2">Cartão 2</option><option value="3">Cartão 3</option><option value="4">Cartão 4</option><option value="5">Cartão 5</option><option value="6">Cartão 6</option><option value="7">Cartão 7</option><option value="8">Cartão 8</option><option value="9">Cartão 9</option><option value="10">Cartão 10</option><option value="11">Cartão 11</option><option value="12">Cartão 12</option><option value="13">Cartão 13</option><option value="14">Cartão 14</option><option value="15">Cartão 15</option></select></div>
@@ -561,7 +557,7 @@ html,body{overscroll-behavior-y:none}
         </div>
         <div class="tap-grid">
           <div class="col" style="gap:10px">
-            <div class="mini-stage"><canvas id="miniCanvas" aria-label="Prévia do capacho visto de cima"></canvas></div>
+            <div class="mini-stage"><canvas id="miniCanvas" aria-label="Resultado do tapete, visto de cima"></canvas></div>
             <div class="row between"><span class="hint" id="miniInfo"></span><button class="btn gold" id="openArt" type="button">Arrumar a arte no tapete ✎</button></div>
           </div>
           <div id="specSlot1"></div>
@@ -570,12 +566,12 @@ html,body{overscroll-behavior-y:none}
     </section>
 
     <section class="panel part" id="partFotos" data-part="fotos">
-      <button class="part-head" type="button" data-open="fotos"><span class="part-n">3</span><span class="part-t"><b>Fotos do local</b></span><span class="part-st" id="stFotos"></span></button>
+      <button class="part-head" type="button" data-open="fotos"><span class="part-n">3</span><span class="part-t"><b>Local</b></span><span class="part-st" id="stFotos"></span></button>
       <div class="part-body">
-        <p class="hint">Cartão no chão, onde vai o tapete.</p>
+        <div class="row between"><p class="hint" style="margin:0">Cartão no chão, onde vai o tapete.</p><button class="linkbtn part-undo" type="button" data-undo="fotos" hidden>↶ Desfazer</button></div>
+        <div class="row" id="fotoAdd"><label class="btn gold" for="filePhoto">+ Foto do local</label><button class="btn ghost" type="button" data-ar hidden><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 10l5-3v10l-5-3z"/><rect x="3" y="6" width="12" height="12" rx="2"/></svg> Ao vivo</button><span class="hint small" id="fotoCount"></span></div>
         <div class="fotos" id="fotoGrid"></div>
         <p class="hint small ok-t" id="fotoUndo" aria-live="polite"></p>
-        <div class="row" id="fotoAdd" hidden><label class="btn gold" for="filePhoto">Escolher foto</label><label class="btn ghost" for="fileShot"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg> Tirar foto</label><button class="btn ghost" type="button" data-ar hidden><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 10l5-3v10l-5-3z"/><rect x="3" y="6" width="12" height="12" rx="2"/></svg> Ao vivo (vídeo)</button><span class="hint small" id="fotoCount"></span></div>
       </div>
     </section>
   </section>
@@ -583,7 +579,7 @@ html,body{overscroll-behavior-y:none}
   <!-- 2. ARTE -->
   <section class="view" id="v-arte" hidden>
     <div class="col">
-      <div class="row between"><div><span class="eyebrow">Arte do tapete</span><h1>Arrumar a arte</h1></div><span class="hint" id="artSize"></span></div>
+      <div class="row between"><h1 style="margin:0">Arrumar a arte</h1><span class="row"><span class="hint" id="artSize"></span><button class="linkbtn part-undo" type="button" data-undo="tapete" hidden>↶ Desfazer</button></span></div>
       <div class="backbar" id="artBack" hidden><span>Você abriu a arte a partir da foto do local.</span><button class="btn ghost" data-artback type="button">Voltar para a foto</button></div>
       <div class="art-wrap" id="artWrap"><div class="art-stage" id="artStage"><canvas id="artCanvas" aria-label="Tapete visto de cima"></canvas></div></div>
       <div class="warns" id="warns" role="status"></div>
@@ -596,14 +592,14 @@ html,body{overscroll-behavior-y:none}
   <section class="view" id="v-local" hidden>
     <div class="col">
       <div class="row between">
-        <div><h1>No seu espaço</h1></div>
+        <div><h1>Resultado no local</h1></div>
         <div class="seg" role="group" aria-label="Fonte da imagem" hidden><button id="mFoto" aria-pressed="true" type="button">Foto</button><button id="mCam" aria-pressed="false" type="button">Câmera ao vivo</button></div>
       </div>
       <div class="foto-tabs" id="fotoTabs" role="tablist" aria-label="Fotos do local"></div>
       <label class="foto-tapsel" id="fotoTapSel" hidden><span class="hint small">Tapete nesta foto</span><select id="fotoTap"></select></label>
-      <div class="row ar-row"><button class="btn ghost" type="button" data-ar hidden><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 10l5-3v10l-5-3z"/><rect x="3" y="6" width="12" height="12" rx="2"/></svg> Ver ao vivo (vídeo)</button></div>
+      <div class="row ar-row"><button class="btn ghost" type="button" data-ar hidden><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 10l5-3v10l-5-3z"/><rect x="3" y="6" width="12" height="12" rx="2"/></svg> Ao vivo</button></div>
       <div class="mat-chips" id="matChips" hidden></div>
-      <div class="nophoto" id="noPhoto" hidden><b>Ainda não tem foto do local</b><span class="hint">Coloque o cartão-postal no chão, onde vai o tapete, e fotografe. Sem foto, o orçamento sai com o tapete visto de cima.</span><div class="row" style="justify-content:center"><label class="btn gold" for="filePhoto">Escolher foto</label><label class="btn ghost" for="fileShot"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg> Tirar foto</label></div></div>
+      <div class="nophoto" id="noPhoto" hidden><b>Sem foto do local</b><span class="hint">Cartão no chão, onde vai o tapete. Sem foto, o orçamento sai com o tapete visto de cima.</span><div class="row" style="justify-content:center"><label class="btn gold" for="filePhoto">+ Foto do local</label></div></div>
       <div class="stage-wrap" id="stageWrap">
         <div class="stage" id="stage" aria-label="Local com o tapete">
           <img class="bg" id="bg" alt="Foto do local">
@@ -630,7 +626,7 @@ html,body{overscroll-behavior-y:none}
             <button class="btn ghost" id="resetPose" type="button">Recomeçar posição</button>
           </div>
         </div>
-        <div class="row between"><span></span><button class="linkbtn" id="artFromLocal" type="button">Arrumar a arte ✎</button></div>
+        <div class="row between"><button class="linkbtn part-undo" type="button" data-undo="local" hidden>↶ Desfazer</button><button class="linkbtn" id="artFromLocal" type="button">Arrumar a arte ✎</button></div>
         <div class="sizebar" id="sizeBar">
           <span class="sb-g"><span class="lbl">Largura</span><button class="mini" id="sbWm" type="button" aria-label="Largura menos 10 cm">−</button><b id="sbW"></b><button class="mini" id="sbWp" type="button" aria-label="Largura mais 10 cm">+</button></span>
           <span class="sb-g"><span class="lbl">Comprimento</span><button class="mini" id="sbHm" type="button" aria-label="Comprimento menos 10 cm">−</button><b id="sbH"></b><button class="mini" id="sbHp" type="button" aria-label="Comprimento mais 10 cm">+</button></span>
@@ -650,7 +646,7 @@ html,body{overscroll-behavior-y:none}
   <section class="view" id="v-orcamento" hidden>
     <div class="col">
       <div class="quote-head"><div><h1 id="qTitle">Orçamento</h1></div><span class="quote-num" id="qNum"></span></div>
-      <img class="preview-img" id="qImg" alt="Prévia do tapete no local do cliente">
+      <img class="preview-img" id="qImg" alt="Resultado no local">
       <div class="qthumbs" id="qThumbs"></div>
       <div class="mod-save" id="modSave" hidden><label for="modNome" class="hint">Nome do modelo (os tapetes, medidas, cores, textos e logos deste orçamento)</label><div class="row"><input id="modNome" autocomplete="off" maxlength="40"><button class="btn gold" id="modOk" type="button">Salvar modelo</button><button class="btn ghost" id="modNo" type="button">Cancelar</button></div></div>
       <div class="row">
@@ -1776,7 +1772,7 @@ function renderArtTile(){const box=$("#artList");if(!box)return;box.replaceChild
     const acts=document.createElement("div");acts.className="row";
     if(L.type==="logo"){const ed=document.createElement("button");ed.type="button";ed.className="btn ghost";ed.textContent="Editar";ed.onclick=()=>openLogoEditor(L);
       const tr=document.createElement("label");tr.className="btn ghost";tr.htmlFor="fLogo";tr.textContent="Trocar";tr.onclick=()=>{S.logoReplace=L.id;};acts.append(ed,tr);}
-    const rm=document.createElement("button");rm.type="button";rm.className="btn ghost";rm.textContent="Tirar";rm.setAttribute("aria-label",`Tirar ${L.type==="logo"?"esta arte":"este texto"}`);
+    const rm=document.createElement("button");rm.type="button";rm.className="btn ghost";rm.textContent="Remover";rm.setAttribute("aria-label",`Remover ${L.type==="logo"?"esta arte":"este texto"}`);
     rm.onclick=()=>{const sp=spec();sp.layers=sp.layers.filter(x=>x!==L);if(S.sel===L.id)S.sel=null;artChanged(true);renderLayers();renderArtTile();track("logo");renderParts();};acts.appendChild(rm);
     row.append(th,mid,acts);box.appendChild(row);});}
 $("#addText1").onclick=()=>{const sp=spec(),f=fieldRectCm(),nt=sp.layers.filter(l=>l.type==="text").length;
@@ -2702,7 +2698,7 @@ const tapSlug=()=>{tapInit();if(Q.tapetes.length<2)return "";return "-"+tapName(
 
 // ================= fluxo em partes: barra fixa (voltar / desfazer / seguir), até 3 fotos do local =================
 // Partes: 1 logotipo · 2 tapete (medidas, cores, arte) · 3 fotos do local · 4 alinhar no local → orçamento (dados do cliente no fim).
-const PART_ORDER=["logo","tapete","fotos"],PART_NAME={logo:"Artes e textos",tapete:"Tapete",fotos:"Fotos do local",local:"Alinhar no local"};
+const PART_ORDER=["logo","tapete","fotos"],PART_NAME={logo:"Arte",tapete:"Tapete",fotos:"Local",local:"Resultado no local"};
 const cap1=s=>s[0].toUpperCase()+s.slice(1);
 // ---------- fotos do local: Q.photo/Q.pose são sempre os da foto ativa; Q.fotos guarda todas ----------
 function fotosInit(){if(Q.photo&&Q.photo.example){Q.photo=null;Q.pose=POSE_NEW();}
@@ -2757,10 +2753,10 @@ function renderFotos(){const g=$("#fotoGrid");if(!g)return;fotosInit();g.replace
     const info=document.createElement("div");info.className="foto-info";const nc=(f.cards||[]).length,st=f.pose&&f.pose.ref?(f.pose.ref.card?`Cartão${nc>1?"ões":""} ${(f.cards&&f.cards.length?f.cards:[f.pose.ref.card]).sort().join(", ")} achado${nc>1?"s":""} ✓ tamanho real`:"Cartão achado ✓ tamanho real"):"Cartão não achado: marque no passo seguinte";
     info.innerHTML=`<b>Foto ${i+1}</b><span class="hint small ${f.pose&&f.pose.ref?"ok-t":""}"></span>`;info.querySelector("span").textContent=st;
     const acts=document.createElement("div");acts.className="row";const tr=document.createElement("label");tr.className="btn ghost";tr.htmlFor="filePhoto";tr.textContent="Trocar";tr.onclick=()=>{S.fotoReplace=i;};acts.appendChild(tr);
-    {const rm=document.createElement("button");rm.type="button";rm.className="btn ghost";rm.textContent="Tirar";rm.setAttribute("aria-label",`Tirar a foto ${i+1}`);rm.onclick=()=>removeFoto(i);acts.appendChild(rm);}
+    {const rm=document.createElement("button");rm.type="button";rm.className="btn ghost";rm.textContent="Remover";rm.setAttribute("aria-label",`Remover a foto ${i+1}`);rm.onclick=()=>removeFoto(i);acts.appendChild(rm);}
     if(Q.tapetes.length>1){const ts=document.createElement("label");ts.className="foto-tap";ts.innerHTML="<span class=\"hint small\">Tapete nesta foto</span>";const sel=document.createElement("select");tapOptions(sel,f.tid);sel.onchange=()=>fotoSetTap(i,sel.value);ts.appendChild(sel);info.appendChild(ts);}
     card.append(info,acts);g.appendChild(card);});
-  if(!Q.fotos.length){const e=document.createElement("div");e.className="foto-empty";e.innerHTML="<b>Nenhuma foto do local ainda</b><span class=\"hint\">Coloque o cartão-postal no chão, onde vai o tapete, e fotografe com o piso em volta à vista. Se não tiver foto, dá para seguir e o orçamento sai com o tapete visto de cima.</span>";g.appendChild(e);}
+  if(!Q.fotos.length){const e=document.createElement("div");e.className="foto-empty";e.innerHTML="<span class=\"hint\">Sem foto, o orçamento sai com o tapete visto de cima.</span>";g.appendChild(e);}
   const n=userFotos().length;fotoMsg(n?`${n} foto${n>1?"s":""}`:"");renderParts();}
 function renderFotoTabs(){const b=$("#fotoTabs");if(!b)return;fotosInit();tapInit();b.replaceChildren();b.hidden=Q.fotos.length<2&&Q.tapetes.length<2;
   const ft=$("#fotoTapSel");if(ft){ft.hidden=!(Q.tapetes.length>1&&Q.fotos.length);if(Q.fotos.length){tapOptions($("#fotoTap"),Q.fotos[Q.fi].tid);}}
@@ -2821,22 +2817,22 @@ stage.addEventListener("pointerup",tapEnd,true);stage.addEventListener("pointerc
 // ---------- barra fixa no topo: voltar · desfazer · seguir, sempre na tela ----------
 function barSpec(){const v=S.view;
   if(v==="dados"){const op=openPart(),idx=op?PART_ORDER.indexOf(op):-1;
-    if(op==="logo")return {back:null,undo:"logo",t:"Parte 1 de 4 · Artes e textos",next:spec().layers.length?"Concluir artes e textos ✓":"Seguir sem arte →",ns:spec().layers.length?"Concluir artes ✓":"Seguir sem arte →",go:()=>donePart("logo")};
-    if(op==="tapete")return {back:()=>openPartK("logo"),undo:"tapete",t:Q.tapetes&&Q.tapetes.length>1?`Parte 2 de 4 · Tapete “${tapName(curTap())}”`:"Parte 2 de 4 · Tapete",next:"Concluir tapete ✓",go:()=>donePart("tapete")};
-    if(op==="fotos")return Q.fotos.length?{back:()=>openPartK("tapete"),undo:"fotos",t:"Parte 3 de 4 · Fotos do local",next:"Concluir fotos →",ns:"Concluir fotos →",go:()=>donePart("fotos")}
-      :{back:()=>openPartK("tapete"),undo:"fotos",t:"Parte 3 de 4 · Fotos do local",next:"Seguir sem foto →",ns:"Seguir sem foto →",go:()=>{Q.feito=Object.assign({},Q.feito,{fotos:true});S.openPart=null;renderParts();$("#toQuote").click();}};
-    void idx;return {back:()=>openPartK("fotos"),undo:null,t:"Etapa 1 concluída",next:"Ver no seu espaço →",go:()=>go("local")};}
+    if(op==="logo")return {back:null,undo:"logo",t:"Parte 1 de 4 · Artes e textos",next:"Seguir →",go:()=>donePart("logo")};
+    if(op==="tapete")return {back:()=>openPartK("logo"),undo:"tapete",t:Q.tapetes&&Q.tapetes.length>1?`Parte 2 de 4 · Tapete “${tapName(curTap())}”`:"Parte 2 de 4 · Tapete",next:"Seguir →",go:()=>donePart("tapete")};
+    if(op==="fotos")return Q.fotos.length?{back:()=>openPartK("tapete"),undo:"fotos",t:"Parte 3 de 4 · Fotos do local",next:"Seguir →",go:()=>donePart("fotos")}
+      :{back:()=>openPartK("tapete"),undo:"fotos",t:"Parte 3 de 4 · Fotos do local",next:"Seguir →",go:()=>{Q.feito=Object.assign({},Q.feito,{fotos:true});S.openPart=null;renderParts();$("#toQuote").click();}};
+    void idx;return {back:()=>openPartK("fotos"),undo:null,t:"Etapa 1 concluída",next:"Seguir →",go:()=>go("local")};}
   if(v==="arte")return {back:()=>go(S.artReturn||"dados"),undo:"tapete",t:"Arte do tapete",next:"Concluir arte ✓",go:()=>{track("tapete");go(S.artReturn||"dados");}};
-  if(v==="local")return {back:()=>{go("dados");openPartK("fotos");},undo:"local",t:"Parte 4 de 4 · Alinhar no local",next:Q.photo?"Concluir e gerar orçamento →":"Gerar orçamento sem foto →",ns:Q.photo?"Gerar orçamento →":"Seguir sem foto →",go:()=>{Q.feito=Object.assign({},Q.feito,{local:true});$("#toQuote").click();}};
+  if(v==="local")return {back:()=>{go("dados");openPartK("fotos");},undo:"local",t:"Parte 4 de 4 · Alinhar no local",next:"Gerar orçamento →",go:()=>{Q.feito=Object.assign({},Q.feito,{local:true});$("#toQuote").click();}};
   if(v==="orcamento")return {back:()=>go("local"),undo:null,t:Q.numero?`Orçamento ${Q.numero}`:"Orçamento",next:"Enviar imagens ↗",go:()=>$("#qShare").click()};
   if(v==="lista")return {back:()=>go(S.listReturn||"dados"),undo:null,t:"Projetos do cliente",next:"Novo projeto →",go:()=>$("#newQuote").click()};
-  if(v==="config")return {back:()=>go(S.returnTo||"dados"),undo:null,t:"Configurações",next:"Concluir configurações ✓",ns:"Concluir ✓",go:()=>go(S.returnTo||"dados")};
+  if(v==="config")return {back:()=>go(S.returnTo||"dados"),undo:null,t:"Configurações",next:"Concluir ✓",go:()=>go(S.returnTo||"dados")};
   return {back:null,undo:null,t:"",next:"Seguir →",go:()=>{}};}
 let BAR=null;
 function renderBar(){const b=$("#actionBar");if(!b)return;BAR=barSpec();$("#abBack").disabled=!BAR.back;$("#abTitle").textContent=BAR.t;$("#abNext").textContent=window.innerWidth<=560&&BAR.ns?BAR.ns:BAR.next;
-  const ub=$("#abUndo");ub.hidden=!BAR.undo;ub.disabled=!(BAR.undo&&UND[BAR.undo]&&UND[BAR.undo].h.length);
+  $$("[data-undo]").forEach(b=>{const k=b.dataset.undo;b.hidden=!(UND[k]&&UND[k].h.length);});
   document.documentElement.style.setProperty("--topH",$(".top").offsetHeight+"px");}
-window.addEventListener("resize",()=>renderBar());$("#abBack").onclick=()=>{if(BAR&&BAR.back)BAR.back();};$("#abNext").onclick=()=>{if(BAR)BAR.go();};$("#abUndo").onclick=()=>{if(BAR&&BAR.undo)undo(BAR.undo);};
+window.addEventListener("resize",()=>renderBar());$("#abBack").onclick=()=>{if(BAR&&BAR.back)BAR.back();};$("#abNext").onclick=()=>{if(BAR)BAR.go();};$$("[data-undo]").forEach(b=>b.onclick=()=>undo(b.dataset.undo));
 // quem preenche os dados do cliente no fim: título e salvamento acompanham
 Object.keys(CF).forEach(id=>$("#"+id).addEventListener("input",()=>{if(S.view!=="orcamento")return;$("#qTitle").textContent=Q.cliente.nome?`Orçamento · ${Q.cliente.nome}`:"Orçamento";clearTimeout(S.cliT);S.cliT=setTimeout(()=>{if(Q.id)saveQuote();},900);}));
 // todas as fotos viram imagem de orçamento
