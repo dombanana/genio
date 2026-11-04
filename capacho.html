@@ -511,7 +511,7 @@ html,body{overscroll-behavior-y:none}
     <button data-go="orcamento"><span class="n">3</span><span class="t">Orçamento</span></button>
   </nav>
   <div class="topbtns">
-    <button class="btn ghost" data-go="lista" aria-label="Orçamentos salvos"><span class="long">Orçamentos</span><span class="short"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M8 6h12M8 12h12M8 18h12"/><circle cx="4" cy="6" r="1"/><circle cx="4" cy="12" r="1"/><circle cx="4" cy="18" r="1"/></svg></span></button>
+    <button class="btn ghost" data-go="lista" aria-label="Projetos do cliente"><span class="long">Projetos</span><span class="short"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M8 6h12M8 12h12M8 18h12"/><circle cx="4" cy="6" r="1"/><circle cx="4" cy="12" r="1"/><circle cx="4" cy="18" r="1"/></svg></span></button>
     <button class="btn ghost" data-go="config" aria-label="Configurações"><span class="long">Configurações</span><span class="short"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></span></button>
   </div>
   <div class="actionbar" id="actionBar" role="navigation" aria-label="Voltar e seguir">
@@ -526,9 +526,12 @@ html,body{overscroll-behavior-y:none}
   <!-- 1. CRIAR O TAPETE: logotipo, tapete, fotos do local -->
   <section class="view one" id="v-dados">
     <div class="view-head">
-      <div><span class="eyebrow">Estúdio de orçamentos</span><h1>Vamos criar seu capacho</h1><p class="lead">Uma parte de cada vez: conclua cada uma e a próxima abre. “Desfazer” volta a última mudança daquela parte.</p></div>
+      <div><span class="eyebrow">Projeto do cliente</span><h1>Vamos criar seu capacho</h1><p class="lead">Uma parte de cada vez: conclua cada uma e a próxima abre. “Desfazer” volta a última mudança daquela parte.</p></div>
       <div class="row"><span class="stepnote"><i></i>Etapa 1 de 3</span><span class="badge" id="dStatus">Rascunho</span></div>
     </div>
+    <section class="panel" id="projCliente" style="margin-bottom:16px">
+      <div class="field wide"><label for="pNome">Nome do cliente <span class="hint small">(dá nome a este projeto)</span></label><input id="pNome" autocomplete="off" placeholder="Ex.: Padaria Sol Nascente"></div>
+    </section>
     <section class="panel mod-box" id="modBox" aria-labelledby="hMod" hidden>
       <h2 id="hMod" class="sr-only">Modelo do orçamento</h2>
       <div class="mod-pick"><label for="modSel">Começar</label><select id="modSel"></select><button class="btn ghost" type="button" id="modUse" hidden>Usar este modelo</button><button class="btn ghost" type="button" id="modDel" hidden>Apagar modelo</button></div>
@@ -707,10 +710,10 @@ html,body{overscroll-behavior-y:none}
   <!-- LISTA -->
   <section id="v-lista" hidden>
     <div class="col" style="max-width:760px;margin:0 auto">
-      <div class="row between"><h1>Orçamentos</h1><button class="btn" id="newQuote" type="button">Novo orçamento</button></div>
+      <div class="row between"><h1>Projetos do cliente</h1><button class="btn" id="newQuote" type="button">Novo projeto</button></div>
       <div class="seg" role="group" aria-label="Filtro"><button data-f="todos" aria-pressed="true" type="button">Todos</button><button data-f="aprovado" aria-pressed="false" type="button">Aprovados</button><button data-f="aberto" aria-pressed="false" type="button">Em aberto</button></div>
       <div class="list" id="list"></div>
-      <p class="notice">Por enquanto os orçamentos ficam guardados só neste aparelho. Com o login (etapa 2), eles vão para o servidor e o administrador vê todos.</p>
+      <p class="notice">Por enquanto os projetos ficam guardados só neste aparelho. Com o login (etapa 2), eles vão para o servidor e o administrador vê todos.</p>
     </div>
   </section>
 
@@ -1840,9 +1843,11 @@ async function artSVG(){const sp=spec(),f=fieldRectCm();
 $("#qArt").onclick=async()=>{const svg=await artSVG();exportWithFicha({base:`arte-${slugName()}${tapSlug()}-${spec().w}x${spec().h}`,ext:"svg",data:svg,mime:"image/svg+xml",ficha:files=>fichaArte(files),msgEl:$("#qMsg")});};
 
 // ================= cliente =================
+// nome do cliente: tem dois campos ligados ao mesmo Q.cliente.nome — o do passo 1 (projeto, vem primeiro) e o do orçamento (passo 3)
 const CF={cNome:"nome",cTel:"tel",cPrazo:"prazo",cEnd:"end",cObs:"obs"};
-function fillClient(){Object.entries(CF).forEach(([id,k])=>{$("#"+id).value=Q.cliente[k]??"";});prazoCheck();}
-Object.entries(CF).forEach(([id,k])=>$("#"+id).addEventListener("input",e=>{Q.cliente[k]=k==="qtd"?Math.max(1,parseInt(e.target.value)||1):e.target.value;renderSpecSum();}));
+function fillClient(){Object.entries(CF).forEach(([id,k])=>{$("#"+id).value=Q.cliente[k]??"";});const pn=$("#pNome");if(pn)pn.value=Q.cliente.nome||"";prazoCheck();}
+Object.entries(CF).forEach(([id,k])=>$("#"+id).addEventListener("input",e=>{Q.cliente[k]=k==="qtd"?Math.max(1,parseInt(e.target.value)||1):e.target.value;if(k==="nome"){const pn=$("#pNome");if(pn&&pn!==e.target)pn.value=e.target.value;}renderSpecSum();}));
+{const pn=$("#pNome");if(pn)pn.addEventListener("input",e=>{Q.cliente.nome=e.target.value;const cn=$("#cNome");if(cn)cn.value=e.target.value;renderSpecSum();if(S.view==="orcamento")$("#qTitle").textContent=Q.cliente.nome?`Orçamento · ${Q.cliente.nome}`:"Orçamento";clearTimeout(S.cliT);S.cliT=setTimeout(()=>{if(Q.id)saveQuote();},900);});}
 
 // ================= imagem final =================
 function drawTri(ctx,img,s,d){const [[x0,y0],[x1,y1],[x2,y2]]=s,[[u0,v0],[u1,v1],[u2,v2]]=d,den=(x1-x0)*(y2-y0)-(x2-x0)*(y1-y0);if(Math.abs(den)<1e-9)return;
@@ -2843,7 +2848,7 @@ function barSpec(){const v=S.view;
   if(v==="arte")return {back:()=>go(S.artReturn||"dados"),undo:"tapete",t:"Arte do tapete",next:"Concluir arte ✓",go:()=>{track("tapete");go(S.artReturn||"dados");}};
   if(v==="local")return {back:()=>{go("dados");openPartK("fotos");},undo:"local",t:"Parte 4 de 4 · Alinhar no local",next:Q.photo?"Concluir e gerar orçamento →":"Gerar orçamento sem foto →",ns:Q.photo?"Gerar orçamento →":"Seguir sem foto →",go:()=>{Q.feito=Object.assign({},Q.feito,{local:true});$("#toQuote").click();}};
   if(v==="orcamento")return {back:()=>go("local"),undo:null,t:Q.numero?`Orçamento ${Q.numero}`:"Orçamento",next:"Enviar imagens ↗",go:()=>$("#qShare").click()};
-  if(v==="lista")return {back:()=>go(S.listReturn||"dados"),undo:null,t:"Orçamentos salvos",next:"Novo orçamento →",go:()=>$("#newQuote").click()};
+  if(v==="lista")return {back:()=>go(S.listReturn||"dados"),undo:null,t:"Projetos do cliente",next:"Novo projeto →",go:()=>$("#newQuote").click()};
   if(v==="config")return {back:()=>go(S.returnTo||"dados"),undo:null,t:"Configurações",next:"Concluir configurações ✓",ns:"Concluir ✓",go:()=>go(S.returnTo||"dados")};
   return {back:null,undo:null,t:"",next:"Seguir →",go:()=>{}};}
 let BAR=null;
