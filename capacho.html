@@ -494,6 +494,28 @@ html,body{overscroll-behavior-y:none}
 .qthumb-bar{gap:8px;flex-wrap:wrap;margin:4px 0 8px}
 .qthumb-off{margin-top:6px}.qthumb-off summary{cursor:pointer;font-size:14px;color:var(--muted,#66756F);padding:6px 0}
 .qthumb-off .qthumb{width:96px;height:62px;position:relative;opacity:.75}
+/* menos burocracia: quadros, toque para editar, × para apagar */
+.art-item.s2{position:relative;padding-right:40px}
+.art-th.tap{appearance:none;border:0;cursor:pointer;position:relative;padding:0}
+.art-th.tap:focus-visible{outline:3px solid #184E4E;outline-offset:2px}
+.th-pen{position:absolute;right:2px;bottom:2px;background:#184E4E;color:#fff;border-radius:6px;width:20px;height:20px;display:grid;place-items:center}
+.tile-x{position:absolute;top:-8px;right:-8px;width:36px;height:36px;border-radius:50%;border:2px solid #fff;background:#A33A2A;color:#fff;font:700 20px/1 Rubik,system-ui,sans-serif;cursor:pointer;display:grid;place-items:center;box-shadow:0 1px 4px rgba(0,0,0,.25);padding:0;z-index:2}
+.art-item.s2 .tile-x{top:50%;right:4px;transform:translateY(-50%)}
+.add-tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:8px}
+.fotos.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px}
+.ftile{position:relative;border-radius:14px;background:var(--stage,#eef0ea);min-height:120px}
+.ftile-open{appearance:none;border:0;padding:0;margin:0;width:100%;height:100%;min-height:120px;border-radius:14px;overflow:hidden;cursor:pointer;display:block;background:transparent}
+.ftile-open canvas{width:100%;height:100%;object-fit:cover;display:block;border-radius:14px}
+.ftile-tag{position:absolute;left:6px;bottom:6px;background:rgba(0,0,0,.6);color:#fff;font:600 12px/1 Rubik,system-ui,sans-serif;padding:4px 7px;border-radius:6px}
+.ftile-tag.ok{background:rgba(24,78,78,.9)}
+.ftile-sel{position:absolute;left:6px;right:6px;top:6px;min-height:34px;font-size:13px;opacity:.95}
+.ftile.add{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;border:2px dashed #b9c4bf;background:#fff;color:#184E4E;font:600 14px/1.2 Rubik,system-ui,sans-serif;cursor:pointer;text-align:center;padding:12px;min-height:120px;appearance:none}
+.ftile.add:hover{border-color:#184E4E;background:#f4f8f6}
+.ftile.add.main{border-style:solid;border-color:#184E4E;background:#eaf2ef}
+.mini-stage.tap-edit{position:relative;cursor:pointer}
+.stage-pen{position:absolute;right:10px;bottom:10px;display:inline-flex;align-items:center;gap:6px;background:#184E4E;color:#fff;font:600 14px/1 Rubik,system-ui,sans-serif;padding:8px 12px;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,.2)}
+.linkbtn{appearance:none;border:0;background:none;color:#184E4E;text-decoration:underline;font:600 14px Rubik,system-ui,sans-serif;cursor:pointer;padding:6px 4px}
+@media (max-width:420px){.add-tiles{grid-template-columns:repeat(3,1fr);gap:8px}.ftile.add{min-height:96px;font-size:13px}}
 </style>
 <div class="top">
   <a class="mod-volta" href="app.html" aria-label="Voltar aos módulos">‹ Módulos</a><div class="brand"><div class="wordmark" id="wordmark" aria-label="Gênio do Capacho"><b>Gênio</b><span>do capacho</span></div><div class="brand-t" id="brandT"></div></div>
@@ -533,9 +555,11 @@ html,body{overscroll-behavior-y:none}
       <div class="part-body">
         <p class="hint" id="artNote"></p>
         <div class="art-list" id="artList"></div>
-        <div class="tile add" id="artTile">
-          <div class="row" style="justify-content:center"><label class="btn gold" for="fLogo">+ Enviar arte ou logo</label><label class="btn ghost icon" for="fLogoCam" aria-label="Fotografar a arte ou o cartão de visita"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg></label><button class="btn ghost" id="addText1" type="button">+ Texto</button></div>
-          <span class="hint small">Sem limite: envie quantas artes precisar (dá para escolher várias de uma vez na galeria) e escreva quantos textos quiser. Tudo vai no mesmo tapete.</span>
+        <p class="hint small ok-t" id="artUndo" aria-live="polite"></p>
+        <div class="add-tiles" id="artTile">
+          <label class="ftile add main" for="fLogo"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 17l-5-5-9 8"/></svg><span>+ Arte ou logo</span></label>
+          <label class="ftile add" for="fLogoCam" aria-label="Fotografar a arte ou o cartão de visita"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg><span>Fotografar arte</span></label>
+          <button class="ftile add" id="addText1" type="button"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 6V4h14v2M12 4v16M9 20h6"/></svg><span>+ Texto</span></button>
         </div>
       </div>
     </section>
@@ -563,9 +587,10 @@ html,body{overscroll-behavior-y:none}
     <section class="panel part" id="partFotos" data-part="fotos">
       <button class="part-head" type="button" data-open="fotos"><span class="part-n">3</span><span class="part-t"><span class="eyebrow">Onde eles vão ficar</span><b>Fotos do local</b></span><span class="part-st" id="stFotos"></span></button>
       <div class="part-body">
-        <p class="hint">Deixe o cartão no chão, onde vai o tapete, e não mexa nele entre as fotos do mesmo lugar. Com os cartões Gênio numerados (1 a 15), cada cartão chama o seu tapete: dá para ter vários tapetes na mesma foto. Pode colocar quantas fotos quiser e escolher qual tapete aparece em cada uma. Em cada foto aparece só o contorno do tapete, bem claro, para conferir se a foto pegou toda a área.</p>
+        <p class="hint">Cartão no chão, onde vai o tapete. Toque numa foto para abrir; o quadro vazio adiciona.</p>
         <div class="fotos" id="fotoGrid"></div>
-        <div class="row" id="fotoAdd"><label class="btn gold" for="filePhoto">Escolher foto</label><label class="btn ghost" for="fileShot"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg> Tirar foto</label><button class="btn ghost" type="button" data-ar hidden><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 10l5-3v10l-5-3z"/><rect x="3" y="6" width="12" height="12" rx="2"/></svg> Ao vivo (vídeo)</button><span class="hint small" id="fotoCount"></span></div>
+        <p class="hint small ok-t" id="fotoUndo" aria-live="polite"></p>
+        <div class="row" id="fotoAdd" hidden><label class="btn gold" for="filePhoto">Escolher foto</label><label class="btn ghost" for="fileShot"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg> Tirar foto</label><button class="btn ghost" type="button" data-ar hidden><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 10l5-3v10l-5-3z"/><rect x="3" y="6" width="12" height="12" rx="2"/></svg> Ao vivo (vídeo)</button><span class="hint small" id="fotoCount"></span></div>
       </div>
     </section>
   </section>
@@ -646,6 +671,7 @@ html,body{overscroll-behavior-y:none}
       <div class="row">
         <button class="btn gold" id="qShare" type="button">Enviar imagens</button>
         <button class="btn ghost" id="qCopy" type="button">Copiar texto para WhatsApp</button>
+        <button class="btn" id="qFornecedor" type="button">Pedir ao fornecedor</button>
         <button class="btn ghost" id="qSaveMod" type="button">Salvar como modelo</button>
         <button class="btn ghost" id="qArt" type="button">Baixar arte (SVG)</button>
         <button class="btn" id="qCut" type="button">Arquivo de corte</button>
@@ -779,6 +805,7 @@ html,body{overscroll-behavior-y:none}
         <div class="fields guia-row">
           <div class="field"><label for="guiaSel">Fornecedor (guia de cores)</label><select id="guiaSel"></select></div>
           <div class="field"><label for="guiaNome">Nome do fornecedor</label><input id="guiaNome" autocomplete="off"></div>
+          <div class="field"><label for="guiaWhats">WhatsApp do fornecedor (para pedir pelo orçamento)</label><input id="guiaWhats" inputmode="tel" placeholder="(11) 90000-0000" autocomplete="off"></div>
           <div class="field" style="justify-content:flex-end"><div class="row"><button class="btn ghost" id="guiaAdd" type="button">Novo fornecedor</button><button class="btn ghost" id="guiaDel" type="button" hidden>Tirar este fornecedor</button></div></div>
         </div>
         <p class="hint small" id="guiaMsg" aria-live="polite"></p>
@@ -1001,7 +1028,7 @@ if(!Array.isArray(guias)||!guias.length){guias=[{id:"kapazi",nome:"Kapazi",cores
   if(Array.isArray(old)){const K=guias[0].cores,OLD=["preto03","amarelo08","branco","cinza","grafite","vermelho","vinho","laranja","azul","marinho","verde","marrom","bege"];
     old.forEach(o=>{const c=K.find(x=>x.id===o.id);if(c){if(o.codigo)c.codigo=o.codigo;c.estoque=o.estoque||0;c.ativo=o.ativo!==false;}else if(!OLD.includes(o.id))K.push(Object.assign({ativo:true,estoque:0},o));});}
   store.set("gc.guias",guias);}
-guias.forEach(g=>{g.cores=(g.cores||[]).map(c=>Object.assign({ativo:true,estoque:0},c));});
+guias.forEach(g=>{g.cores=(g.cores||[]).map(c=>Object.assign({ativo:true,estoque:0},c));if(g.whats==null)g.whats="";});
 if(!guias.some(g=>g.id===cfg.guia))cfg.guia=guias[0].id;
 const guiaAtiva=()=>guias.find(g=>g.id===cfg.guia)||guias[0];
 let palette=guiaAtiva().cores;
@@ -1022,7 +1049,7 @@ const POSE_EX=()=>({cam:{phi:EX.phi,rho:EX.rho,psi:0,h:EX.h,fL:EX.fN},mat:{x:exH
 const POSE_NEW=()=>({cam:{phi:52*DEG,rho:0,psi:0,h:1.5,fL:0.66},mat:null,th:0,plane:null});
 const textLayer=(o)=>Object.assign({id:uid(),type:"text",text:"TEXTO",font:"Alfa Slab One",sizeCm:10,color:"amarelo08",bold:false,italic:false,spacing:0,align:"center",outlineOn:false,outlineColor:"preto03",outlineCm:0.6,x:0,y:0,rot:0},o||{});
 const DEFAULT_SPEC=()=>({w:150,h:80,fundo:"preto03",int:"amarelo08",flex:"preto03",intOn:true,intCm:3,flexCm:5,tipo:"Vulcanizado",rebaixo:"Não",
-  layers:[textLayer({text:"GÊNIO",sizeCm:11,y:-8,color:"branco"}),textLayer({text:"DO CAPACHO",sizeCm:11,y:9,color:"branco"})]});
+  layers:[]});   // começa limpo: o vendedor cria do zero
 // quem ainda tem guardada a arte de exemplo antiga (Wilson’s Bar) passa a ver a nova
 const lastSpec=()=>{const l=store.get("gc.lastSpec2");if(l&&Array.isArray(l.layers)&&l.layers.map(L=>L.text).join("|")==="WILSON’S|BAR"){const d=DEFAULT_SPEC();l.layers=d.layers;l.fundo=d.fundo;}return l;};
 function migrateSpec(sp){
@@ -1886,9 +1913,23 @@ function whatsText(){tapInit();const e=emp(),multi=Q.tapetes.length>1,G=grandPri
   const p=multi?G:computePrice();
   if(p.ready)L.push(`Total${multi?" do orçamento":""}: ${BRL(p.total)}`,`• Pix: ${BRL(p.pix)}`,`• Cartão: ${p.parc}× de ${BRL(p.parcela)}`,`• Com sinal: ${BRL(p.sinal)} agora + ${BRL(p.resto)} na entrega`,"",prazoTxt(),`Validade: ${cfg.val||7} dias.`);
   L.push("A imagem é uma prévia ilustrativa; cores e proporções podem variar levemente.");const ct=empContatos("\n");if(e.nome||ct)L.push("",...[e.nome,ct,e.end].filter(Boolean));return L.join("\n");}
+// pedido ao fornecedor: mesmo texto de hoje, sem preço, com entrega e o envio neutro (o cliente nunca vê o nome do fornecedor)
+function fornecedorText(){tapInit();const e=emp(),multi=Q.tapetes.length>1,g=guiaAtiva();
+  const L=[`Pedido${Q.numero?" "+Q.numero:""}${e.nome?" · "+e.nome:""}`,""];
+  Q.tapetes.forEach(T=>withTap(T,()=>{const ft=fichaText().split("\n");if(multi){if(ft[0].startsWith("Tapete:"))L.push(`*${tapName(T)}*`);}L.push(ft.join("\n"),"");}));
+  const c=Q.cliente||{};L.push(`Entrega desejada: ${c.prazo?dataBR(c.prazo):"a combinar"} (${prazoTxt()})`);
+  L.push(`Endereço de entrega: ${c.end||"a confirmar com a loja antes de enviar"}`);
+  if(c.obs)L.push(`Observações: ${c.obs}`);
+  L.push("","*ENVIO NEUTRO*: sem marca, nota ou material do fornecedor dentro da caixa; remetente e etiqueta em nome de "+(e.nome||"nossa loja")+".");
+  if(e.tel||e.end)L.push(...[e.nome&&("Remetente: "+e.nome),e.end,e.tel&&("Contato: "+e.tel)].filter(Boolean));
+  return L.join("\n");}
+function pedirFornecedor(){const g=guiaAtiva(),num=(g.whats||"").replace(/\D/g,"");
+  if(!num){qmsg(`Falta o WhatsApp do fornecedor “${g.nome}”. Preencha em Configurações → Fornecedor (guia de cores).`);go("config");return;}
+  const win=window.open(`https://wa.me/${num}?text=${encodeURIComponent(fornecedorText())}`,"_blank","noopener");if(!win)qmsg("O navegador bloqueou a aba. Permita pop-ups ou copie o texto abaixo.");}
 function qmsg(t){$("#qMsg").textContent=t||"";}
 async function copyText(t,ok){try{await navigator.clipboard.writeText(t);qmsg(ok);}catch(e){qmsg("Não deu para copiar aqui; selecione o texto da ficha e copie pelo menu do aparelho.");}}
 $("#qCopy").onclick=()=>{copyText(whatsText(),"Texto copiado. Cole no WhatsApp do cliente.");markSent();};$("#qCopyFicha").onclick=()=>copyText($("#qFicha").textContent,"Ficha copiada.");
+{const b=$("#qFornecedor");if(b)b.onclick=pedirFornecedor;}
 $("#qShare").onclick=async()=>{const L=(Q.previews&&Q.previews.length?Q.previews:[Q.preview]).filter(Boolean);if(!L.length){qmsg("Gere o orçamento no passo “No seu espaço”.");return;}
   const base0=`orcamento-${(Q.numero||"previa").toLowerCase()}-${spec().w}x${spec().h}`,blobs=await Promise.all(L.map(async u=>(await fetch(u)).blob())),names=blobs.map((b,i)=>L.length>1?`${base0}-${i+1}.jpg`:`${base0}.jpg`);
   if(OUTSIDE_CLAUDE){try{const files=blobs.map((b,i)=>new File([b],names[i],{type:"image/jpeg"}));if(navigator.canShare&&navigator.canShare({files})){await navigator.share({files,text:whatsText()});markSent();return;}}catch(e){if(e&&e.name==="AbortError")return;}}
@@ -1927,7 +1968,7 @@ $("#palAdd").onclick=()=>{palette.push({id:"c"+Date.now(),nome:"Nova cor",codigo
 $("#palReset").onclick=()=>{const g=GUIA_PADRAO[guiaAtiva().id];if(!g)return;palette=deep(g.cores);savePal();palChanged(true);};
 // fornecedores
 function renderGuias(){const sel=$("#guiaSel");sel.replaceChildren();guias.forEach(g=>{const o=document.createElement("option");o.value=g.id;o.textContent=`${g.nome} (${g.cores.length} cores)`;sel.appendChild(o);});sel.value=guiaAtiva().id;
-  $("#guiaNome").value=guiaAtiva().nome;$("#guiaDel").hidden=guias.length<2;$("#palReset").hidden=!GUIA_PADRAO[guiaAtiva().id];$("#palReset").textContent=`Voltar às cores do guia ${guiaAtiva().nome}`;}
+  $("#guiaNome").value=guiaAtiva().nome;const gw=$("#guiaWhats");if(gw)gw.value=guiaAtiva().whats||"";$("#guiaDel").hidden=guias.length<2;$("#palReset").hidden=!GUIA_PADRAO[guiaAtiva().id];$("#palReset").textContent=`Voltar às cores do guia ${guiaAtiva().nome}`;}
 function specColorIds(sp,fn){["fundo","int","flex"].forEach(k=>{sp[k]=fn(sp[k]);});(sp.layers||[]).forEach(L=>{if(L.type==="text"){L.color=fn(L.color);if(L.outlineColor)L.outlineColor=fn(L.outlineColor);}
   else{if(L.single)L.single=fn(L.single);if(L.neg&&L.neg.color)L.neg.color=fn(L.neg.color);if(Array.isArray(L.map))L.map=L.map.map(m=>m?fn(m):m);}});}
 // troca de fornecedor: as cores do orçamento aberto viram as mais parecidas do novo guia (mesmo nome primeiro, depois a cor de tela)
@@ -1937,6 +1978,7 @@ function setGuia(id){if(!guias.some(g=>g.id===id))return;const prev=palette;cfg.
   palChanged(true);renderGuias();if(typeof fillSpec==="function")fillSpec();const m=$("#guiaMsg");if(m)m.textContent=n?`Guia ${guiaAtiva().nome}: as cores do orçamento aberto foram trocadas pelas mais parecidas deste guia. Confira no tapete.`:`Guia de cores ${guiaAtiva().nome} escolhido.`;}
 $("#guiaSel").onchange=e=>setGuia(e.target.value);
 $("#guiaNome").addEventListener("input",e=>{guiaAtiva().nome=e.target.value||"Fornecedor";savePal();const o=$("#guiaSel").selectedOptions[0];if(o)o.textContent=`${guiaAtiva().nome} (${palette.length} cores)`;});
+{const gw=$("#guiaWhats");if(gw)gw.addEventListener("input",e=>{guiaAtiva().whats=e.target.value;savePal();});}
 $("#guiaAdd").onclick=()=>{const g={id:"f"+Date.now().toString(36),nome:"Novo fornecedor",cores:deep(palette).map(c=>Object.assign(c,{estoque:0}))};guias.push(g);store.set("gc.guias",guias);setGuia(g.id);
   const m=$("#guiaMsg");if(m)m.textContent="Novo fornecedor criado começando com as cores do guia anterior. Dê o nome e ajuste as cores, códigos e cores de tela conforme o mostruário dele.";setTimeout(()=>{$("#guiaNome").focus();$("#guiaNome").select();},50);};
 $("#guiaDel").onclick=()=>{if(guias.length<2)return;const g=guiaAtiva();guias=guias.filter(x=>x!==g);store.set("gc.guias",guias);setGuia(guias[0].id);};
