@@ -330,7 +330,7 @@ details.acc>*:not(summary){margin-bottom:12px}
 /* ---- barra fixa no topo: voltar · desfazer · seguir ---- */
 .top{flex-wrap:wrap;row-gap:8px;padding-bottom:10px}
 .actionbar{flex-basis:100%;display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:8px;box-shadow:0 6px 18px -12px rgba(24,78,78,.35)}
-.actionbar .ab-t{flex:1;min-width:0;text-align:center;font-weight:600;font-size:14px;color:var(--ouro);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.actionbar .ab-t{flex:1;min-width:0;font-size:0;color:transparent}
 .actionbar .btn{min-height:44px}
 .actionbar .ab-next{background:var(--carmim);color:#fff;font-size:16px;font-weight:700;padding:12px 22px;min-height:52px;box-shadow:0 2px 0 rgba(0,0,0,.08)}
 .actionbar .ab-next:hover{filter:brightness(1.05)}
@@ -525,12 +525,8 @@ html,body{overscroll-behavior-y:none}
 <main>
   <!-- 1. CRIAR O TAPETE: logotipo, tapete, fotos do local -->
   <section class="view one" id="v-dados">
-    <div class="view-head">
-      <div><span class="eyebrow">Projeto do cliente</span><h1>Vamos criar seu capacho</h1><p class="lead">Uma parte de cada vez: conclua cada uma e a próxima abre. “Desfazer” volta a última mudança daquela parte.</p></div>
-      <div class="row"><span class="stepnote"><i></i>Etapa 1 de 3</span><span class="badge" id="dStatus">Rascunho</span></div>
-    </div>
     <section class="panel" id="projCliente" style="margin-bottom:16px">
-      <div class="field wide"><label for="pNome">Nome do cliente <span class="hint small">(dá nome a este projeto)</span></label><input id="pNome" autocomplete="off" placeholder="Ex.: Padaria Sol Nascente"></div>
+      <div class="field wide"><label for="pNome" class="row between"><span>Nome do cliente</span><span class="badge" id="dStatus">Rascunho</span></label><input id="pNome" autocomplete="off" placeholder="Ex.: Padaria Sol Nascente"></div>
     </section>
     <section class="panel mod-box" id="modBox" aria-labelledby="hMod" hidden>
       <h2 id="hMod" class="sr-only">Modelo do orçamento</h2>
@@ -540,7 +536,7 @@ html,body{overscroll-behavior-y:none}
     </section>
 
     <section class="panel part" id="partLogo" data-part="logo">
-      <button class="part-head" type="button" data-open="logo"><span class="part-n">1</span><span class="part-t"><span class="eyebrow">Primeiro, a sua ideia</span><b>Artes e textos do cliente</b></span><span class="part-st" id="stLogo"></span></button>
+      <button class="part-head" type="button" data-open="logo"><span class="part-n">1</span><span class="part-t"><b>Artes e textos do cliente</b></span><span class="part-st" id="stLogo"></span></button>
       <div class="part-body">
         <p class="hint" id="artNote"></p>
         <div class="art-list" id="artList"></div>
@@ -554,7 +550,7 @@ html,body{overscroll-behavior-y:none}
     </section>
 
     <section class="panel part" id="partTapete" data-part="tapete">
-      <button class="part-head" type="button" data-open="tapete"><span class="part-n">2</span><span class="part-t"><span class="eyebrow">Os tapetes</span><b>Medidas, cores e arte de cada tapete</b></span><span class="part-st" id="stTapete"></span></button>
+      <button class="part-head" type="button" data-open="tapete"><span class="part-n">2</span><span class="part-t"><b>Tapetes: medidas, cores e arte</b></span><span class="part-st" id="stTapete"></span></button>
       <div class="part-body">
         <div class="tap-tabs" id="tapTabs" role="group" aria-label="Tapetes deste orçamento"></div>
         <div class="fields tap-meta">
@@ -574,9 +570,9 @@ html,body{overscroll-behavior-y:none}
     </section>
 
     <section class="panel part" id="partFotos" data-part="fotos">
-      <button class="part-head" type="button" data-open="fotos"><span class="part-n">3</span><span class="part-t"><span class="eyebrow">Onde eles vão ficar</span><b>Fotos do local</b></span><span class="part-st" id="stFotos"></span></button>
+      <button class="part-head" type="button" data-open="fotos"><span class="part-n">3</span><span class="part-t"><b>Fotos do local</b></span><span class="part-st" id="stFotos"></span></button>
       <div class="part-body">
-        <p class="hint">Cartão no chão, onde vai o tapete. Toque numa foto para abrir; o quadro vazio adiciona.</p>
+        <p class="hint">Cartão no chão, onde vai o tapete.</p>
         <div class="fotos" id="fotoGrid"></div>
         <p class="hint small ok-t" id="fotoUndo" aria-live="polite"></p>
         <div class="row" id="fotoAdd" hidden><label class="btn gold" for="filePhoto">Escolher foto</label><label class="btn ghost" for="fileShot"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg> Tirar foto</label><button class="btn ghost" type="button" data-ar hidden><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 10l5-3v10l-5-3z"/><rect x="3" y="6" width="12" height="12" rx="2"/></svg> Ao vivo (vídeo)</button><span class="hint small" id="fotoCount"></span></div>
@@ -591,7 +587,7 @@ html,body{overscroll-behavior-y:none}
       <div class="backbar" id="artBack" hidden><span>Você abriu a arte a partir da foto do local.</span><button class="btn ghost" data-artback type="button">Voltar para a foto</button></div>
       <div class="art-wrap" id="artWrap"><div class="art-stage" id="artStage"><canvas id="artCanvas" aria-label="Tapete visto de cima"></canvas></div></div>
       <div class="warns" id="warns" role="status"></div>
-      <p class="hint">Toque num texto ou logo para escolher. Arraste para mover; a bolinha de baixo muda o tamanho e a de cima gira. Com dois dedos: aproximar muda o tamanho e girar gira.</p>
+      <p class="hint">Arraste para mover; bolinha de baixo muda o tamanho, a de cima gira.</p>
     </div>
     <div class="col sticky" id="layerSlot2"></div>
   </section>
@@ -600,7 +596,7 @@ html,body{overscroll-behavior-y:none}
   <section class="view" id="v-local" hidden>
     <div class="col">
       <div class="row between">
-        <div><span class="eyebrow">Etapa 2 de 3 · parte 4</span><h1>No seu espaço</h1></div>
+        <div><h1>No seu espaço</h1></div>
         <div class="seg" role="group" aria-label="Fonte da imagem" hidden><button id="mFoto" aria-pressed="true" type="button">Foto</button><button id="mCam" aria-pressed="false" type="button">Câmera ao vivo</button></div>
       </div>
       <div class="foto-tabs" id="fotoTabs" role="tablist" aria-label="Fotos do local"></div>
@@ -634,7 +630,7 @@ html,body{overscroll-behavior-y:none}
             <button class="btn ghost" id="resetPose" type="button">Recomeçar posição</button>
           </div>
         </div>
-        <div class="row between"><span class="hint small">Toque duas vezes no tapete para arrumar a arte.</span><button class="linkbtn" id="artFromLocal" type="button">Arrumar a arte ✎</button></div>
+        <div class="row between"><span></span><button class="linkbtn" id="artFromLocal" type="button">Arrumar a arte ✎</button></div>
         <div class="sizebar" id="sizeBar">
           <span class="sb-g"><span class="lbl">Largura</span><button class="mini" id="sbWm" type="button" aria-label="Largura menos 10 cm">−</button><b id="sbW"></b><button class="mini" id="sbWp" type="button" aria-label="Largura mais 10 cm">+</button></span>
           <span class="sb-g"><span class="lbl">Comprimento</span><button class="mini" id="sbHm" type="button" aria-label="Comprimento menos 10 cm">−</button><b id="sbH"></b><button class="mini" id="sbHp" type="button" aria-label="Comprimento mais 10 cm">+</button></span>
@@ -653,26 +649,25 @@ html,body{overscroll-behavior-y:none}
   <!-- 4. ORÇAMENTO -->
   <section class="view" id="v-orcamento" hidden>
     <div class="col">
-      <div class="quote-head"><div><span class="eyebrow">Etapa 3 de 3</span><h1 id="qTitle">Orçamento</h1></div><span class="quote-num" id="qNum"></span></div>
+      <div class="quote-head"><div><h1 id="qTitle">Orçamento</h1></div><span class="quote-num" id="qNum"></span></div>
       <img class="preview-img" id="qImg" alt="Prévia do tapete no local do cliente">
       <div class="qthumbs" id="qThumbs"></div>
       <div class="mod-save" id="modSave" hidden><label for="modNome" class="hint">Nome do modelo (os tapetes, medidas, cores, textos e logos deste orçamento)</label><div class="row"><input id="modNome" autocomplete="off" maxlength="40"><button class="btn gold" id="modOk" type="button">Salvar modelo</button><button class="btn ghost" id="modNo" type="button">Cancelar</button></div></div>
       <div class="row">
-        <button class="btn gold" id="qShare" type="button">Enviar imagens</button>
+        <button class="btn gold" id="qShare" type="button" hidden>Enviar imagens</button>
         <button class="btn ghost" id="qCopy" type="button">Copiar texto para WhatsApp</button>
         <button class="btn" id="qFornecedor" type="button">Pedir ao fornecedor</button>
         <button class="btn ghost" id="qSaveMod" type="button">Salvar como modelo</button>
         <button class="btn ghost" id="qArt" type="button">Baixar arte (SVG)</button>
         <button class="btn" id="qCut" type="button">Arquivo de corte</button>
-        <button class="btn ghost" data-go="local">← No seu espaço</button>
       </div>
       <p class="msg" id="qMsg" role="status"></p>
     </div>
     <div class="col">
       <section class="panel" aria-labelledby="hCli">
-        <div class="row between"><div><span class="eyebrow">Para quem é</span><h2 id="hCli">Dados do cliente</h2></div><span class="hint small">Preencha depois de gerar</span></div>
+        <h2 id="hCli">Cliente</h2>
         <div class="fields">
-          <div class="field wide"><label for="cNome">Nome ou empresa</label><input id="cNome" autocomplete="off" placeholder="Ex.: Padaria Sol Nascente"></div>
+          <div class="field wide" hidden><label for="cNome">Nome ou empresa</label><input id="cNome" autocomplete="off"></div>
           <div class="field wide2"><label for="cTel">WhatsApp</label><input id="cTel" inputmode="tel" placeholder="(11) 90000-0000"></div>
         </div>
         <details class="acc"><summary><span>Entrega e observações</span><span class="cur" id="sumEnt"></span></summary>
@@ -694,15 +689,12 @@ html,body{overscroll-behavior-y:none}
         <pre class="summary" id="qFicha"></pre>
       </section>
       <div class="row">
-        <button class="btn ghost" id="qSave" type="button">Salvar orçamento</button>
         <button class="btn ok" id="qApprove" type="button">Cliente aprovou</button>
       </div>
-      <p class="notice">Só orçamento aprovado entra no plano de corte.</p>
       <section class="panel" id="qVersSec" aria-labelledby="hVers" hidden>
         <div class="row between"><h2 id="hVers">Versões da arte</h2></div>
         <p class="hint" id="qVersCur"></p>
         <div class="vers" id="qVers"></div>
-        <p class="notice">Todo orçamento gerado fica guardado com a arte completa para reabrir e alterar. Cada alteração vira uma nova versão.</p>
       </section>
     </div>
   </section>
@@ -710,21 +702,19 @@ html,body{overscroll-behavior-y:none}
   <!-- LISTA -->
   <section id="v-lista" hidden>
     <div class="col" style="max-width:760px;margin:0 auto">
-      <div class="row between"><h1>Projetos do cliente</h1><button class="btn" id="newQuote" type="button">Novo projeto</button></div>
+      <div class="row between"><h1>Projetos do cliente</h1><button class="btn" id="newQuote" type="button" hidden>Novo projeto</button></div>
       <div class="seg" role="group" aria-label="Filtro"><button data-f="todos" aria-pressed="true" type="button">Todos</button><button data-f="aprovado" aria-pressed="false" type="button">Aprovados</button><button data-f="aberto" aria-pressed="false" type="button">Em aberto</button></div>
       <div class="list" id="list"></div>
-      <p class="notice">Por enquanto os projetos ficam guardados só neste aparelho. Com o login (etapa 2), eles vão para o servidor e o administrador vê todos.</p>
     </div>
   </section>
 
   <!-- CONFIGURAÇÕES -->
   <section id="v-config" hidden>
     <div class="col" style="max-width:900px;margin:0 auto">
-      <div class="row between"><h1>Configurações</h1><span class="tag-prov">valores provisórios</span></div>
-      <p class="notice">Quando o login entrar (etapa 2), só o administrador vai ver e mudar esta tela. Até lá os valores ficam guardados neste aparelho.</p>
+      <h1>Configurações</h1>
       <section class="panel" aria-labelledby="hCfgEmp">
         <h2 id="hCfgEmp">Sua empresa</h2>
-        <p class="hint">Quem vende o tapete. Aparece no topo do sistema, na imagem e no texto do orçamento e nas fichas técnicas.</p>
+        <p class="hint">Aparece no orçamento e nas fichas.</p>
         <div class="emp-logo"><div class="emp-prev" id="empPrev">sem logo</div><div class="row"><label class="btn ghost" for="fEmpLogo">Enviar logo</label><button class="btn ghost" id="empLogoDel" type="button">Tirar logo</button></div></div>
         <div class="fields">
           <div class="field wide"><label for="empNome">Nome da empresa</label><input id="empNome" autocomplete="organization"></div>
@@ -738,23 +728,17 @@ html,body{overscroll-behavior-y:none}
       </section>
       <section class="panel" aria-labelledby="hCfgRef">
         <h2 id="hCfgRef">Objeto de referência</h2>
-        <p class="hint">Objeto de tamanho conhecido que fica no chão na hora da foto: hoje o cartão-postal, depois o mostruário do tapete. O sistema acha ele na foto e usa como régua para o tamanho real e a perspectiva do chão. Com o cartão, deixe o verso (lado claro) para cima.</p>
+        <p class="hint">Fica no chão na hora da foto e serve de régua. Cartão: lado claro para cima.</p>
         <div class="fields">
           <div class="field"><label for="refNome">Nome do objeto</label><input id="refNome" autocomplete="off"></div>
           <div class="field"><label for="refW">Largura (cm)</label><input id="refW" type="number" inputmode="decimal" min="1" step="0.1"></div>
           <div class="field"><label for="refH">Comprimento (cm)</label><input id="refH" type="number" inputmode="decimal" min="1" step="0.1"></div>
         </div>
         <div class="cards-box">
-          <p class="hint"><b>Cartões GenIO 1 a 15.</b> Cada cartão numerado fica ligado a um tapete do orçamento (escolha em “Cartão na loja”, na parte 2). Espalhe os cartões no chão da loja, cada um onde vai um tapete: a foto (ou o vídeo ao vivo) acha cada cartão, lê o número e coloca o tapete certo no tamanho real. Imprima em tamanho real (100%, sem ajustar à página).</p>
+          <p class="hint"><b>Cartões GenIO 1 a 15</b> — um por tapete, no chão onde ele vai. Imprima em 100%.</p>
           <div class="row"><a class="btn ghost" href="cartoes-genio-10x15.pdf" download>Cartões 10 × 15 cm (PDF)</a><a class="btn ghost" href="cartoes-genio-A4.pdf" download>Cartões em folha A4 (PDF)</a></div>
         </div>
         <label class="switch"><input type="checkbox" id="refCor">Usar a cor do objeto como cor do fundo do tapete (ligue quando o objeto for o mostruário)</label>
-      </section>
-      <section class="panel" aria-labelledby="hCfgApp">
-        <h2 id="hCfgApp">Aplicativo</h2>
-        <p class="hint">Instalado, o GenIO ganha um ícone na tela do celular, abre em tela cheia, não recarrega ao puxar a tela e funciona sem internet. Os orçamentos continuam guardados no aparelho.</p>
-        <div class="row"><button class="btn gold" id="pwaBtn" type="button">Instalar o aplicativo</button></div>
-        <p class="hint small" id="pwaMsg" aria-live="polite"></p>
       </section>
       <section class="panel" aria-labelledby="hCfgPreco">
         <h2 id="hCfgPreco">Preços</h2>
@@ -780,7 +764,7 @@ html,body{overscroll-behavior-y:none}
           <div class="field"><label for="pVend">Nome do vendedor</label><input id="pVend" autocomplete="off"></div>
         </div>
         <h3 class="sub-h">Pix do orçamento</h3>
-        <p class="hint">Com a chave Pix, o orçamento já sai com o QR Code e o Pix copia e cola no valor certo (à vista ou o sinal). O dinheiro cai direto na conta da chave, sem intermediário.</p>
+        <p class="hint">Com a chave, o orçamento sai com QR Code e Pix copia e cola.</p>
         <div class="fields">
           <div class="field"><label for="pixT">Tipo de chave</label><select id="pixT"><option value="cpf">CPF ou CNPJ</option><option value="telefone">Celular</option><option value="email">E-mail</option><option value="aleatoria">Chave aleatória</option></select></div>
           <div class="field wide2"><label for="pixK">Chave Pix</label><input id="pixK" autocomplete="off" inputmode="text"></div>
@@ -798,7 +782,7 @@ html,body{overscroll-behavior-y:none}
           <div class="field" style="justify-content:flex-end"><div class="row"><button class="btn ghost" id="guiaAdd" type="button">Novo fornecedor</button><button class="btn ghost" id="guiaDel" type="button" hidden>Tirar este fornecedor</button></div></div>
         </div>
         <p class="hint small" id="guiaMsg" aria-live="polite"></p>
-        <p class="hint">Cada cor da fábrica com o código e a cor de tela usada na prévia. Só as cores ativas aparecem para o vendedor. O estoque em metros é da bobina de 120 cm.</p>
+        <p class="hint">Só as cores ativas aparecem para o vendedor. Estoque em metros da bobina de 120 cm.</p>
         <div class="table-wrap" style="overflow-x:auto"><table class="cfg-table" style="min-width:560px">
           <thead><tr><th>Tela</th><th>Nome</th><th>Código</th><th>Estoque (m)</th><th>Ativa</th><th></th></tr></thead>
           <tbody id="palBody"></tbody>
@@ -814,25 +798,24 @@ html,body{overscroll-behavior-y:none}
       </section>
       <section class="panel" aria-labelledby="hCfgMach">
         <div class="row between"><h2 id="hCfgMach">Máquinas de corte</h2><button class="btn ghost" id="machReset" type="button">Voltar aos valores iniciais</button></div>
-        <p class="hint">Valores iniciais para borracha de capacho. Corte a peça de teste de encaixe (no Arquivo de corte), meça e ajuste aqui. Compensação = quanto a ferramenta tira de material; folga = espaço total entre a peça e o buraco onde ela encaixa.</p>
+        <p class="hint">Corte a peça de teste (no Arquivo de corte), meça e ajuste aqui.</p>
         <div class="table-wrap" style="overflow-x:auto"><table class="cfg-table" style="min-width:620px">
           <thead><tr><th>Máquina</th><th>Compensação (mm)</th><th>Folga (mm)</th><th>Traço mínimo (mm)</th><th>Peça/furo mínimo (mm)</th></tr></thead><tbody id="machBody"></tbody></table></div>
       </section>
       <section class="panel" aria-labelledby="hCfgFont">
         <h2 id="hCfgFont">Fontes do catálogo</h2>
-        <p class="hint">Desmarque as que não quer oferecer aos vendedores.</p>
+        
         <div class="fonts-grid" id="fontsGrid"></div>
       </section>
-      <div class="nav"><button class="btn ghost" id="cfgBack" type="button">← Voltar</button><span></span></div>
     </div>
   </section>
 </main>
 
 <!-- PAINEL DO TAPETE (base) -->
 <section class="panel" id="spec" aria-labelledby="hTapete">
-  <div class="row between"><h2 id="hTapete">Ajuste os detalhes</h2><span class="hint small">muda na hora</span></div>
+  <h2 id="hTapete">Tapete</h2>
   <div class="group">
-    <div class="group-title"><span>Medidas do tapete</span><span class="hint small">em centímetros</span></div>
+    <div class="group-title"><span>Medidas</span></div>
     <div class="fields">
       <div class="field"><label for="fW">Largura (cm)</label><input id="fW" type="number" inputmode="numeric" min="30" max="600" step="5"></div>
       <div class="field"><label for="fH">Comprimento (cm)</label><input id="fH" type="number" inputmode="numeric" min="30" max="600" step="5"></div>
@@ -950,7 +933,7 @@ html,body{overscroll-behavior-y:none}
     <div class="cut-report" id="cutReport"></div>
     <p class="msg" id="cutMsg" role="status"></p>
     <div class="row between"><button class="btn ghost" id="cutTest" type="button">Baixar peça de teste de encaixe</button><button class="btn ok" id="cutDl" type="button" disabled>Baixar arquivo de corte</button></div>
-    <p class="notice">Uma camada por cor e parte, em milímetros e tamanho real. Textos já saem em curvas. O fundo sai vazado com o mesmo contorno das peças, já com a folga e a compensação da máquina escolhida. Junto vai sempre a ficha técnica para o técnico: medidas, máquina, camadas, passo a passo e conferência.</p>
+    <p class="notice">Uma camada por cor, em mm, tamanho real, com a ficha técnica junto.</p>
   </div>
 </div>
 
@@ -1779,7 +1762,7 @@ $("#leUse").onclick=async()=>{const lc=leLabelsCanvas();if(!lc){$("#leMsg").text
 // parte 1: várias artes (logos) e vários textos no mesmo tapete
 function renderArtTile(){const box=$("#artList");if(!box)return;box.replaceChildren();const ls=spec().layers,nt=$("#artNote");
   const nLogo=ls.filter(l=>l.type==="logo").length,nTxt=ls.filter(l=>l.type==="text").length;
-  if(nt)nt.textContent=ls.length?`${nLogo} arte${nLogo===1?"":"s"} e ${nTxt} texto${nTxt===1?"":"s"} neste tapete. Posição e tamanho você acerta em “Arrumar a arte no tapete”.`:"Envie o desenho, a marca ou uma foto do cartão de visita, e escreva os textos. Pode mandar quantos precisar.";
+  if(nt)nt.textContent=ls.length?`${nLogo} arte${nLogo===1?"":"s"} e ${nTxt} texto${nTxt===1?"":"s"} neste tapete. Posição e tamanho você acerta em “Arrumar a arte no tapete”.`:"";if(nt)nt.hidden=!nt.textContent;
   ls.forEach((L,i)=>{const row=document.createElement("div");row.className="art-item";
     const th=document.createElement("div");th.className="art-th";
     if(L.type==="logo"){const cv=logoCanvas(L);if(cv){const c=document.createElement("canvas");c.width=cv.width;c.height=cv.height;c.getContext("2d").drawImage(cv,0,0);th.appendChild(c);}else{th.textContent="…";setTimeout(renderArtTile,200);}}
@@ -1846,7 +1829,7 @@ $("#qArt").onclick=async()=>{const svg=await artSVG();exportWithFicha({base:`art
 // nome do cliente: tem dois campos ligados ao mesmo Q.cliente.nome — o do passo 1 (projeto, vem primeiro) e o do orçamento (passo 3)
 const CF={cNome:"nome",cTel:"tel",cPrazo:"prazo",cEnd:"end",cObs:"obs"};
 function fillClient(){Object.entries(CF).forEach(([id,k])=>{$("#"+id).value=Q.cliente[k]??"";});const pn=$("#pNome");if(pn)pn.value=Q.cliente.nome||"";prazoCheck();}
-Object.entries(CF).forEach(([id,k])=>$("#"+id).addEventListener("input",e=>{Q.cliente[k]=k==="qtd"?Math.max(1,parseInt(e.target.value)||1):e.target.value;if(k==="nome"){const pn=$("#pNome");if(pn&&pn!==e.target)pn.value=e.target.value;}renderSpecSum();}));
+Object.entries(CF).forEach(([id,k])=>$("#"+id).addEventListener("input",e=>{Q.cliente[k]=k==="qtd"?Math.max(1,parseInt(e.target.value)||1):e.target.value;if(k==="nome"){const pn=$("#pNome");if(pn&&pn!==e.target)pn.value=e.target.value;}renderSpecSum();clearTimeout(S.cliT);S.cliT=setTimeout(()=>{if(Q.id)saveQuote();},900);}));
 {const pn=$("#pNome");if(pn)pn.addEventListener("input",e=>{Q.cliente.nome=e.target.value;const cn=$("#cNome");if(cn)cn.value=e.target.value;renderSpecSum();if(S.view==="orcamento")$("#qTitle").textContent=Q.cliente.nome?`Orçamento · ${Q.cliente.nome}`:"Orçamento";clearTimeout(S.cliT);S.cliT=setTimeout(()=>{if(Q.id)saveQuote();},900);});}
 
 // ================= imagem final =================
@@ -1926,7 +1909,6 @@ $("#qShare").onclick=async()=>{const L=(Q.previews&&Q.previews.length?Q.previews
   if(OUTSIDE_CLAUDE){try{const files=blobs.map((b,i)=>new File([b],names[i],{type:"image/jpeg"}));if(navigator.canShare&&navigator.canShare({files})){await navigator.share({files,text:whatsText()});markSent();return;}}catch(e){if(e&&e.name==="AbortError")return;}}
   let ok=false;for(let i=0;i<blobs.length;i++)ok=(await saveBlob(blobs[i],names[i],$("#qMsg")))||ok;if(ok)markSent();};
 function markSent(){if(Q.status==="rascunho"){Q.status="enviado";setStatusBadge();}}
-$("#qSave").onclick=async()=>{await saveWithVersions();qmsg("Orçamento salvo neste aparelho.");renderQuote();};
 $("#qApprove").onclick=async()=>{Q.status="aprovado";Q.aprovado=new Date().toISOString();await saveWithVersions();renderQuote();qmsg("Aprovado. Vai para o plano de corte quando o sistema do administrador estiver no ar.");};
 const DB={db:null,open(){return new Promise(res=>{if(this.db)return res(this.db);try{const r=indexedDB.open("genio-vendas",2);r.onupgradeneeded=()=>{const d=r.result;if(!d.objectStoreNames.contains("orcamentos"))d.createObjectStore("orcamentos",{keyPath:"id"});if(!d.objectStoreNames.contains("sessao"))d.createObjectStore("sessao",{keyPath:"id"});};r.onsuccess=()=>{this.db=r.result;res(this.db);};r.onerror=()=>res(null);}catch(e){res(null);}});},
   async all(){const db=await this.open();if(!db)return memList.slice();return new Promise(res=>{const t=db.transaction("orcamentos").objectStore("orcamentos").getAll();t.onsuccess=()=>res(t.result||[]);t.onerror=()=>res([]);});},
@@ -1975,7 +1957,6 @@ $("#guiaAdd").onclick=()=>{const g={id:"f"+Date.now().toString(36),nome:"Novo fo
 $("#guiaDel").onclick=()=>{if(guias.length<2)return;const g=guiaAtiva();guias=guias.filter(x=>x!==g);store.set("gc.guias",guias);setGuia(guias[0].id);};
 function renderFontsCfg(){const g=$("#fontsGrid");g.replaceChildren();FONTS.forEach(f=>{const l=document.createElement("label");l.style.fontFamily=`"${f.id}", serif`;const cb=document.createElement("input");cb.type="checkbox";cb.checked=!cfg.fontsOff.includes(f.id);
   cb.onchange=()=>{cfg.fontsOff=cb.checked?cfg.fontsOff.filter(x=>x!==f.id):[...cfg.fontsOff,f.id];saveCfg();};l.append(cb,document.createTextNode(f.id));g.appendChild(l);});}
-$("#cfgBack").onclick=()=>go(S.returnTo||"dados");
 
 // ================= navegação =================
 const SPEC_EL=document.getElementById("spec"),LAYER_EL=document.getElementById("layerPanel");
@@ -2460,9 +2441,9 @@ async function saveWithVersions(){const old=Q.id?await DB.get(Q.id):null;let cha
 function restoreVersion(i){const r=Q.revisoes[i];if(!r)return;if(r.tapetes){Q.tapetes=unpackDeep(r.tapetes,Q.pool);Q.ti=r.ti||0;Q.spec=Q.tapetes[Q.ti].spec;migrateSpec(Q.spec);}else{Q.spec=migrateSpec(unpackDeep(r.spec,Q.pool));Q.tapetes=null;}tapInit();Q.pose=deep(r.pose);Q.photo=unpackDeep(r.photo,Q.pool);Q.preview=unpackDeep(r.preview,Q.pool);
   S.sel=null;fillSpec();renderThumb();loadAllFonts();renderLayers();
   saveWithVersions().then(()=>{renderQuote();qmsg(`Versão ${r.versao} restaurada como versão ${Q.versao}. A anterior continua guardada.`);});}
-function renderVersions(){const box=$("#qVers"),sec=$("#qVersSec");if(!box)return;box.replaceChildren();const rv=Q.revisoes||[];sec.hidden=!Q.id;
+function renderVersions(){const box=$("#qVers"),sec=$("#qVersSec");if(!box)return;box.replaceChildren();const rv=Q.revisoes||[];sec.hidden=!Q.id||!rv.length;
   $("#qVersCur").textContent=Q.id?`Versão ${Q.versao||1} (atual) · salva em ${dataBR(Q.atualizado||Q.criado)}`:"";
-  if(!rv.length){const p=document.createElement("p");p.className="hint";p.textContent="Quando a arte for alterada, a versão anterior fica guardada aqui.";box.appendChild(p);return;}
+  if(!rv.length)return;
   rv.forEach((r,i)=>{const row=document.createElement("div");row.className="ver";const img=document.createElement("img");img.alt=`Versão ${r.versao}`;img.src=unpackDeep(r.preview,Q.pool||{});
     const t=document.createElement("div");t.innerHTML=`<b>Versão ${r.versao}</b><span class="hint">${dataBR(r.data)}${r.total!=null?" · "+BRL(r.total):""}${r.status==="aprovado"?" · era a aprovada":""}</span>`;
     const b=document.createElement("button");b.type="button";b.className="btn ghost";b.textContent="Restaurar";b.onclick=()=>restoreVersion(i);row.append(img,t,b);box.appendChild(row);});}
@@ -3544,7 +3525,7 @@ renderQThumbs=function(){const b=$("#qThumbs");if(!b)return;b.replaceChildren();
   if(!Q.galAll&&Q.previews&&Q.previews.length){Q.galAll=Q.previews.map((u,i)=>({k:"x:"+i,u}));galSync();}
   if(GAL.sel>=(Q.previews||[]).length)GAL.sel=0;{const qi=$("#qImg");if(qi&&Q.previews&&Q.previews[GAL.sel])qi.src=Q.previews[GAL.sel];}
   const L=Q.previews||[],byK=new Map((Q.galAll||[]).map(x=>[x.k,x]));
-  const tit=document.createElement("p");tit.className="hint small";tit.textContent=L.length?(L.length>1?`${L.length} imagens vão para o cliente, nesta ordem (a primeira é a capa). Toque numa imagem para escolher e mudar a ordem; o × tira a imagem.`:"1 imagem vai para o cliente. O × tira a imagem."):"Nenhuma imagem vai para o cliente. Volte uma imagem abaixo ou gere de novo.";b.appendChild(tit);
+  const tit=document.createElement("p");tit.className="hint small";tit.textContent=L.length?(L.length>1?`${L.length} imagens para o cliente; a primeira é a capa.`:""):"Nenhuma imagem para o cliente.";b.appendChild(tit);
   const row=document.createElement("div");row.className="qthumbs-row";b.appendChild(row);
   L.forEach((u,i)=>{const w=document.createElement("div");w.className="qthumb-w"+(i===GAL.sel?" on":"");
     const t=document.createElement("button");t.type="button";t.className="qthumb";t.setAttribute("aria-label",`Ver imagem ${i+1}: ${galTipo(Q.galOrd[i])}`);const im=document.createElement("img");im.src=u;im.alt="";t.appendChild(im);
@@ -3581,7 +3562,7 @@ function pwaBanner(){if(isStandalone()||!OUTSIDE_CLAUDE)return;let seen=null;try
   const s=document.createElement("span");s.textContent="Instale o Gênio no celular: abre em tela cheia, não recarrega sem querer e funciona sem internet.";
   const y=document.createElement("button");y.type="button";y.className="btn ghost";y.textContent=isIOS()&&!PWA.evt?"Como instalar":"Instalar";y.onclick=()=>{if(isIOS()&&!PWA.evt){s.textContent="No Safari: toque em Compartilhar (quadrado com a seta) e depois em “Adicionar à Tela de Início”.";y.remove();}else{b.hidden=true;pwaInstall();}};
   const n=document.createElement("button");n.type="button";n.className="btn ghost";n.textContent="Agora não";n.onclick=()=>{b.hidden=true;};b.append(s,y,n);b.hidden=false;try{localStorage.setItem("gc.pwaBanner","1");}catch(e){}}
-$("#pwaBtn").onclick=pwaInstall;
+{const pb=$("#pwaBtn");if(pb)pb.onclick=pwaInstall;}
 {const _fc=fillCfg;fillCfg=function(){_fc();renderInstall();};}
 if(isIOS())setTimeout(pwaBanner,4000);
 

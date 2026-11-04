@@ -12,7 +12,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&display=swap">
-<link rel="stylesheet" href="portal.css?v=b01a7185b8">
+<link rel="stylesheet" href="portal.css?v=5ba69c9a35">
 </head>
 <body>
 <header class="top"><div class="wrap"><a class="marca" href="/?vendas=1"><b>Gen<i>IO</i></b><span>vendas</span></a></div></header>
@@ -27,14 +27,13 @@
         <div class="campo"><label for="nome">Seu nome</label><input id="nome" autocomplete="name"></div>
         <div class="campo"><label for="email">Seu e-mail (é o seu login)</label><input id="email" type="email" inputmode="email" autocomplete="username" autocapitalize="none" spellcheck="false"></div>
       </div>
-      <div class="campo"><label for="s1">Senha nova <span class="muted">(pelo menos 8 caracteres)</span></label><div class="senha"><input id="s1" type="password" autocomplete="new-password" minlength="8"><button type="button" aria-pressed="false">Mostrar</button></div></div>
-      <div class="campo"><label for="s2">Repita a senha</label><div class="senha"><input id="s2" type="password" autocomplete="new-password" minlength="8"><button type="button" aria-pressed="false">Mostrar</button></div></div>
+      <div class="campo"><label for="s1">Senha <span class="muted">(pelo menos 8 caracteres)</span></label><div class="senha"><input id="s1" type="password" autocomplete="new-password" minlength="8"><button type="button" aria-pressed="false">Mostrar</button></div></div>
       <div id="out" class="msg" hidden></div>
       <button class="btn btn-p" type="submit" style="width:100%">Salvar e entrar</button>
     </form>
   </div>
 </main>
-<script src="portal.js?v=b01a7185b8"></script>
+<script src="portal.js?v=5ba69c9a35"></script>
 <script>
 (async()=>{const {$}=G,qs=new URLSearchParams(location.search),c=qs.get("c"),p=qs.get("p");
   // tira o código do endereço (não fica no histórico nem é compartilhado sem querer)
@@ -43,12 +42,11 @@
   if(!c&&!p){ruim("O link do convite está incompleto. Peça um novo a quem cadastrou você.");return;}
   let info;try{info=await G.api("convite?"+(p?"p="+encodeURIComponent(p):"c="+encodeURIComponent(c)));}catch(e){ruim(e.message);return;}
   $("#carregando").hidden=true;$("#f").hidden=false;G.olho();
-  if(p){$("#tit").textContent="Primeiro acesso do administrador";$("#sub").textContent="Este link vale uma vez só: crie a conta que vai administrar o GenIO.";$("#novoAdm").hidden=false;$("#nome").focus();}
+  if(p){$("#tit").textContent="Primeiro acesso do administrador";$("#sub").textContent="Crie a conta do administrador.";$("#novoAdm").hidden=false;$("#nome").focus();}
   else{$("#sub").textContent=`${info.nome}, o seu login é ${info.email}.`;$("#s1").focus();}
-  $("#f").onsubmit=async e=>{e.preventDefault();const out=$("#out"),b=$("#f button[type=submit]"),s1=$("#s1").value,s2=$("#s2").value;
+  $("#f").onsubmit=async e=>{e.preventDefault();const out=$("#out"),b=$("#f button[type=submit]"),s1=$("#s1").value;
     if(p&&(!$("#nome").value.trim()||!/^\S+@\S+\.\S+$/.test($("#email").value.trim()))){G.msg(out,"Preencha o seu nome e o e-mail.");return;}
     if(s1.length<8){G.msg(out,"A senha precisa ter pelo menos 8 caracteres.");return;}
-    if(s1!==s2){G.msg(out,"As duas senhas não estão iguais.");return;}
     b.disabled=true;G.msg(out,"");
     try{const base={senha:s1,aparelho:G.aparelho(),nome_aparelho:G.nomeAparelho()};
       if(p)await G.api("primeiro",Object.assign(base,{c:p,nome:$("#nome").value.trim(),email:$("#email").value.trim()}));else await G.api("convite",Object.assign(base,{c}));

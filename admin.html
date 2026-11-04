@@ -11,7 +11,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&display=swap">
-<link rel="stylesheet" href="portal.css?v=b01a7185b8">
+<link rel="stylesheet" href="portal.css?v=5ba69c9a35">
 </head>
 <body>
 <header class="top"><div class="wrap">
@@ -20,12 +20,11 @@
   <a class="btn btn-s btn-sm" href="app.html">Módulos</a>
 </div></header>
 <main class="wrap" style="padding-bottom:48px">
-  <div class="saud"><div><h1 style="margin:0">Administração</h1><p class="muted" style="margin:4px 0 0">Vendedores, convites e aparelhos.</p></div></div>
+  <div class="saud"><div><h1 style="margin:0">Administração</h1></div></div>
   <div id="top" class="msg" hidden></div>
 
   <section class="card" style="margin:16px 0 24px">
     <h2>Novo vendedor</h2>
-    <p class="muted small">O sistema gera um link de convite. Mande para a pessoa: ela abre, cria a senha e já entra.</p>
     <form id="fNovo" class="form2" novalidate>
       <div class="campo"><label for="nNome">Nome</label><input id="nNome" autocomplete="off"></div>
       <div class="campo"><label for="nEmail">E-mail (vai ser o login)</label><input id="nEmail" type="email" inputmode="email" autocapitalize="none" spellcheck="false" autocomplete="off"></div>
@@ -46,7 +45,7 @@
     <div class="lista" id="interesse"><div class="vazio">Carregando…</div></div>
   </section>
 </main>
-<script src="portal.js?v=b01a7185b8"></script>
+<script src="portal.js?v=5ba69c9a35"></script>
 <script>
 (async()=>{const {$,esc}=G;let PL={},EU=null;
   try{EU=await G.eu();}catch(e){}
@@ -54,7 +53,7 @@
   if(EU.papel!=="admin"){location.replace("app.html");return;}
   const top=$("#top");
   const linkDe=t=>location.origin+"/convite.html?c="+encodeURIComponent(t);
-  function mostraConvite(box,nome,url){const txt=`Olá, ${nome.split(" ")[0]}! O seu acesso ao Gênio está pronto. Abra o link, crie a sua senha e comece a usar: ${url} (o link vale 7 dias)`;
+  function mostraConvite(box,nome,url){const txt=`Olá, ${nome.split(" ")[0]}! O seu acesso ao GenIO está pronto. Abra o link, crie a sua senha e comece a usar: ${url} (o link vale 7 dias)`;
     box.hidden=false;box.innerHTML=`<div class="msg ok">Convite de <b>${esc(nome)}</b> pronto. Mande o link pelo WhatsApp:</div><span class="link">${esc(url)}</span>
       <div class="linha"><a class="btn btn-p btn-sm" target="_blank" rel="noopener" href="https://wa.me/?text=${encodeURIComponent(txt)}">Mandar no WhatsApp</a><button class="btn btn-s btn-sm" type="button" data-cp>Copiar link</button></div>`;
     box.querySelector("[data-cp]").onclick=async e=>{try{await navigator.clipboard.writeText(url);e.target.textContent="Copiado";}catch(x){e.target.textContent="Selecione e copie";}};}

@@ -15,11 +15,11 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&display=swap">
-<link rel="stylesheet" href="portal.css?v=b01a7185b8">
+<link rel="stylesheet" href="portal.css?v=5ba69c9a35">
 </head>
 <body>
 <header class="top"><div class="wrap">
-  <a class="marca" href="app.html" aria-label="GenIO, módulos"><b>Gen<i>IO</i></b><span>módulos</span></a>
+  <span class="marca" aria-label="GenIO, módulos"><b>Gen<i>IO</i></b><span>módulos</span></span>
   <div class="fill"></div>
   <a class="btn btn-t btn-sm" href="admin.html" id="lAdmin" hidden>Administração</a>
   <button class="btn btn-s btn-sm" type="button" id="bSair">Sair</button>
@@ -36,7 +36,7 @@
   <div class="mods" id="mods" aria-live="polite"></div>
   <div style="height:48px"></div>
 </main>
-<script src="portal.js?v=b01a7185b8"></script>
+<script src="portal.js?v=5ba69c9a35"></script>
 <script>
 (async()=>{const {$}=G;
   let c=null;try{c=await G.eu();}catch(e){c=null;}
@@ -48,7 +48,7 @@
   $("#mods").innerHTML=G.MODULOS.map(m=>m.on
     ?`<a class="mod on" href="${m.url}"><div class="mod-cover" style="background-image:url('${m.img}')"></div><div class="mod-body"><b>${G.esc(m.nome)}</b><span class="desc">${G.esc(m.desc)}</span></div></a>`
     :`<div class="mod off" aria-disabled="true"><div class="mod-cover" style="background-image:url('${m.img}')"><span class="tag">Em breve</span></div><div class="mod-body"><b>${G.esc(m.nome)}</b><span class="desc">${G.esc(m.desc)}</span></div></div>`).join("");
-  $("#bSair").onclick=()=>{if(confirm("Sair da conta neste aparelho?"))G.sair();};
+  $("#bSair").onclick=()=>G.sair();
   const bi=$("#bInst"),mostra=()=>{bi.hidden=!G.podeInstalar();};mostra();document.addEventListener("genio-instalavel",mostra);
   bi.onclick=async()=>{await G.instalar();mostra();};
   G.ls.set("genio-ultimo","app.html");

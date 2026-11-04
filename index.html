@@ -15,7 +15,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&display=swap">
-<link rel="stylesheet" href="portal.css?v=b01a7185b8">
+<link rel="stylesheet" href="portal.css?v=5ba69c9a35">
 <style>
 .hero-art{background:var(--marfim);border-radius:20px;padding:24px;color:var(--texto);position:relative;overflow:hidden;min-height:300px;display:flex;flex-direction:column;justify-content:flex-end;border:1px solid var(--linha)}
 .hero-art .piso{position:absolute;inset:0;background:repeating-linear-gradient(115deg,rgba(105,51,197,.05) 0 22px,rgba(105,51,197,0) 22px 44px)}
@@ -42,10 +42,9 @@
 <section class="hero"><div class="wrap grid">
   <div>
     <h1>O orçamento fica pronto na frente do cliente.</h1>
-    <p class="sub">Você fotografa o lugar, mostra o capacho no chão do cliente com as medidas e fecha o preço com Pix ou cartão. Tudo no celular, em poucos minutos.</p>
+    <p class="sub">Foto do lugar, capacho no chão com as medidas, preço com Pix ou cartão. No celular, em minutos.</p>
     <div class="ctas">
       <a class="btn btn-p" href="#quero">Quero vender com o GenIO</a>
-      <button class="btn btn-s" type="button" data-entrar>Já tenho conta</button>
     </div>
   </div>
   <div class="hero-art" aria-hidden="true">
@@ -58,29 +57,25 @@
 
 <section class="sec alt"><div class="wrap">
   <h2>Como funciona</h2>
-  <p class="sub">O mesmo caminho em cada venda, sem planilha e sem programa de desenho.</p>
   <div class="passos">
-    <div class="card passo"><h3>Arte e dados</h3><p class="muted">O logo ou a arte do cliente, a foto do lugar e os dados de contato.</p></div>
-    <div class="card passo"><h3>No lugar</h3><p class="muted">Um cartão no chão serve de régua: o capacho aparece no tamanho certo, com as medidas.</p></div>
-    <div class="card passo"><h3>Personalizar</h3><p class="muted">Textos, cores do fornecedor, fontes e kits prontos para escola, clínica, comércio e condomínio.</p></div>
-    <div class="card passo"><h3>Orçamento</h3><p class="muted">Prévia, ficha de produção e preço com sinal, Pix à vista ou cartão. Envia no WhatsApp.</p></div>
+    <div class="card passo"><h3>Arte e dados</h3><p class="muted">Logo do cliente e foto do lugar.</p></div>
+    <div class="card passo"><h3>No lugar</h3><p class="muted">Um cartão no chão é a régua: o capacho aparece no tamanho certo.</p></div>
+    <div class="card passo"><h3>Personalizar</h3><p class="muted">Textos, cores, fontes e kits prontos.</p></div>
+    <div class="card passo"><h3>Orçamento</h3><p class="muted">Prévia e preço com Pix ou cartão, direto no WhatsApp.</p></div>
   </div>
 </div></section>
 
 <section class="sec"><div class="wrap">
   <h2>Módulos</h2>
-  <p class="sub">Cada tipo de produto é um módulo, com a mesma forma de trabalhar. O Capacho já está funcionando; os outros chegam em seguida.</p>
   <div class="mods" id="mods"></div>
 </div></section>
 
 <section class="sec" id="sobre"><div class="wrap">
   <h2>Por que GenIO</h2>
-  <p class="sub">A marca é maior que o capacho: um mesmo nome para vários módulos de personalização do comércio.</p>
   <div class="passos">
     <div class="card passo"><h3>Gen</h3><p class="muted">De Generativa: criar e adaptar soluções a partir de referências, necessidades e regras.</p></div>
     <div class="card passo"><h3>IO</h3><p class="muted">De Inteligência Operacional: transformar a ideia em medidas, especificações, orçamento e execução.</p></div>
   </div>
-  <p class="muted" style="margin-top:16px">GenIO soa como "gênio": a lembrança de criatividade, facilidade e solução. O IO acrescenta a parte operacional — o resultado precisa ser realizável, com medidas conferidas e preço calculado, não só imaginado.</p>
 </div></section>
 
 <section class="sec alt" id="planos"><div class="wrap">
@@ -97,7 +92,7 @@
 <section class="sec" id="quero"><div class="wrap">
   <div class="card" style="max-width:680px">
     <h2>Quero vender com o GenIO</h2>
-    <p class="muted">Deixe o seu contato. A gente chama no WhatsApp para explicar e liberar o seu acesso.</p>
+    <p class="muted">A gente chama você no WhatsApp.</p>
     <form id="fQuero" class="form2" novalidate>
       <div class="campo"><label for="qNome">Nome</label><input id="qNome" autocomplete="name" required></div>
       <div class="campo"><label for="qTel">WhatsApp com DDD</label><input id="qTel" type="tel" inputmode="tel" autocomplete="tel" placeholder="(11) 90000-0000" required></div>
@@ -109,13 +104,12 @@
 </div></section>
 </main>
 
-<footer class="rod"><div class="wrap">GenIO · Dom Banana · <a href="#" data-entrar>Entrar</a></div></footer>
+<footer class="rod"><div class="wrap">GenIO · Dom Banana</div></footer>
 
 <div class="modal" id="mEntrar" hidden role="dialog" aria-modal="true" aria-labelledby="tEntrar">
   <div class="card">
     <button class="x" type="button" aria-label="Fechar" data-fechar>×</button>
     <h2 id="tEntrar">Entrar</h2>
-    <p class="muted small">Use o e-mail e a senha que você escolheu no convite.</p>
     <form id="fEntrar" novalidate>
       <div class="campo"><label for="eEmail">E-mail</label><input id="eEmail" type="email" inputmode="email" autocomplete="username" autocapitalize="none" spellcheck="false" required></div>
       <div class="campo"><label for="eSenha">Senha</label><div class="senha"><input id="eSenha" type="password" autocomplete="current-password" required><button type="button" aria-pressed="false">Mostrar</button></div></div>
@@ -126,7 +120,7 @@
   </div>
 </div>
 
-<script src="portal.js?v=b01a7185b8"></script>
+<script src="portal.js?v=5ba69c9a35"></script>
 <script>
 (()=>{const {$, $$}=G,qs=new URLSearchParams(location.search);
   $("#mods").innerHTML=G.MODULOS.map(m=>`<div class="mod ${m.on?"on":"off"}"><div class="mod-cover" style="background-image:url('${m.img}')"><span class="tag">${m.on?"Disponível":"Em breve"}</span></div><div class="mod-body"><b>${G.esc(m.nome)}</b><span class="desc">${G.esc(m.desc)}</span></div></div>`).join("");
@@ -139,7 +133,7 @@
   document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!m.hidden)fechar();});
   G.olho();
   // já entrou neste aparelho: vai direto ao painel (a página de vendas continua em /?vendas=1)
-  G.eu().then(c=>{if(c){if(!qs.has("vendas")){location.replace(volta());return;}$("#bEntrar").textContent="Abrir o painel";$("#bEntrar").onclick=()=>location.href="app.html";}
+  G.eu().then(c=>{if(c){if(!qs.has("vendas")){location.replace(volta());return;}$("#bEntrar").textContent="Painel";$("#bEntrar").onclick=()=>location.href="app.html";}
     else if(qs.has("entrar")||matchMedia("(display-mode: standalone)").matches||navigator.standalone)abrir();}).catch(()=>{if(qs.has("entrar"))abrir();});
   $("#fEntrar").onsubmit=async e=>{e.preventDefault();const out=$("#eOut"),b=e.submitter||$("#fEntrar button[type=submit]");
     const email=$("#eEmail").value.trim(),senha=$("#eSenha").value;if(!email||!senha){G.msg(out,"Preencha o e-mail e a senha.");return;}

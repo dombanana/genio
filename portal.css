@@ -94,4 +94,4 @@ a.mod:active{transform:translateY(1px)}
 .saud-ic{width:auto;height:108px;flex-shrink:0}
 .vazio{padding:24px;text-align:center;color:var(--texto2)}
 @media (max-width:860px){.hero .grid{grid-template-columns:1fr;gap:24px}.passos{grid-template-columns:1fr 1fr}}
-@media (max-width:560px){.passos,.planos,.form2{grid-template-columns:1fr}.sec{padding:40px 0}.hero{padding:32px 0}.card{padding:20px}.top .btn{min-height:44px;padding:0 14px}.marca b{font-size:22px}}
+@media (max-width:560px){.passos,.planos,.form2{grid-template-columns:1fr}.sec{padding:40px 0}.hero{padding:32px 0}.card{padding:20px}.top .btn{min-height:44px;padding:0 12px;white-space:nowrap}.top .wrap{gap:8px}.top a[href^="#"]{display:none}.marca b{font-size:22px}}
