@@ -15,7 +15,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&display=swap">
-<link rel="stylesheet" href="portal.css?v=5ba69c9a35">
+<link rel="stylesheet" href="portal.css?v=6340bed61d">
 </head>
 <body>
 <header class="top"><div class="wrap">
@@ -26,17 +26,15 @@
 </div></header>
 <main class="wrap">
   <div class="saud">
-    <div class="saud-oi">
-      <img class="saud-ic" src="img/faztudo.png" alt="" width="55" height="108">
-      <div><h1 id="oi" style="margin:0">Olá</h1><p class="muted" id="plano" style="margin:4px 0 0"></p></div>
-    </div>
+    <div><h1 id="oi">Olá</h1><p class="muted" id="plano" style="margin:4px 0 0"></p></div>
     <button class="btn btn-s btn-sm" type="button" id="bInst" hidden>Instalar no aparelho</button>
+    <img class="saud-ic" src="img/parceiro.png" alt="" width="77" height="150">
   </div>
   <div id="off" class="msg info" hidden>Sem internet. O Capacho funciona assim mesmo.</div>
   <div class="mods" id="mods" aria-live="polite"></div>
   <div style="height:48px"></div>
 </main>
-<script src="portal.js?v=5ba69c9a35"></script>
+<script src="portal.js?v=6340bed61d"></script>
 <script>
 (async()=>{const {$}=G;
   let c=null;try{c=await G.eu();}catch(e){c=null;}
@@ -44,10 +42,7 @@
   $("#oi").textContent="Olá, "+(c.nome||"").split(" ")[0];
   $("#plano").textContent=c.plano_nome||"";
   $("#lAdmin").hidden=c.papel!=="admin";$("#off").hidden=!c.offline;
-  // o cartão inteiro é o objeto: clicar nele abre o módulo; sem botão separado
-  $("#mods").innerHTML=G.MODULOS.map(m=>m.on
-    ?`<a class="mod on" href="${m.url}"><div class="mod-cover" style="background-image:url('${m.img}')"></div><div class="mod-body"><b>${G.esc(m.nome)}</b><span class="desc">${G.esc(m.desc)}</span></div></a>`
-    :`<div class="mod off" aria-disabled="true"><div class="mod-cover" style="background-image:url('${m.img}')"><span class="tag">Em breve</span></div><div class="mod-body"><b>${G.esc(m.nome)}</b><span class="desc">${G.esc(m.desc)}</span></div></div>`).join("");
+  G.renderMods($("#mods"),true);
   $("#bSair").onclick=()=>G.sair();
   const bi=$("#bInst"),mostra=()=>{bi.hidden=!G.podeInstalar();};mostra();document.addEventListener("genio-instalavel",mostra);
   bi.onclick=async()=>{await G.instalar();mostra();};

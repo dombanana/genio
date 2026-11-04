@@ -26,19 +26,23 @@ const G=(()=>{
   const data=s=>{if(!s)return"—";const d=new Date(s+"Z");return d.toLocaleDateString("pt-BR",{day:"2-digit",month:"2-digit",year:"2-digit"})+" "+d.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});};
   // módulos do GenIO: o Capacho funciona; os outros entram aos poucos com a mesma base (fotos, prévia, orçamento, Pix)
   const MODULOS=[
-    {id:"capacho",nome:"Capachos personalizados",desc:"Prévia no chão do cliente.",url:"capacho.html",on:true,img:"img/mod-capacho.jpg"},
-    {id:"placas",nome:"Placas e sinalização",desc:"Fachada, porta e sinalização.",img:"img/mod-placas.jpg"},
-    {id:"adesivos",nome:"Adesivos e vitrines",desc:"Vitrine, frota e recorte.",img:"img/mod-adesivos.jpg"},
-    {id:"uniformes",nome:"Uniformes e camisetas",desc:"Camisetas e polos com a marca.",img:"img/mod-uniformes.jpg"},
-    {id:"impressos",nome:"Cartões e impressos",desc:"Cartões, panfletos e cardápios.",img:"img/mod-cartoes.jpg"},
-    {id:"banners",nome:"Banners e faixas",desc:"Lonas, faixas e wind banners.",img:"img/mod-banners.jpg"},
-    {id:"brindes",nome:"Brindes e carimbos",desc:"Canecas, chaveiros e carimbos.",img:"img/mod-brindes.jpg"},
-    {id:"parede",nome:"Adesivos de parede",desc:"Sob medida, com instalação.",img:"img/mod-parede.jpg"}];
-  // fotos de capa: banco de imagens livre (Pexels, uso comercial livre), provisórias até ter fotos reais dos produtos
+    {id:"capacho",nome:"Capachos personalizados",url:"capacho.html",on:true,img:"img/mod-capacho.jpg"},
+    {id:"placas",nome:"Placas e sinalização",img:"img/mod-placas.jpg"},
+    {id:"adesivos",nome:"Adesivos e vitrines",img:"img/mod-adesivos.jpg"},
+    {id:"uniformes",nome:"Uniformes e camisetas",img:"img/mod-uniformes.jpg"},
+    {id:"impressos",nome:"Cartões e impressos",img:"img/mod-cartoes.jpg"},
+    {id:"banners",nome:"Banners e faixas",img:"img/mod-banners.jpg"},
+    {id:"brindes",nome:"Brindes e carimbos",img:"img/mod-brindes.jpg"},
+    {id:"parede",nome:"Adesivos de parede",img:"img/mod-parede.jpg"}];
+  // fotos: imagens do catálogo GenIO (brand/catalogo no repositório), produto isolado em fundo lavanda; só foto e título
+  // cartão do catálogo: título em cima da foto; o cartão inteiro é o link quando o módulo está no ar; sem link, "Em breve" explícito
+  const cardMod=(m,link)=>{const d=`<b>${esc(m.nome)}</b><img src="${m.img}" alt="" width="350" height="350" loading="lazy">${m.on?"":'<span class="tag">Em breve</span>'}`;
+    return m.on&&link?`<a class="mod on" href="${m.url}">${d}</a>`:`<div class="mod ${m.on?"on":"off"}"${m.on?"":' aria-disabled="true"'}>${d}</div>`;};
+  const renderMods=(el,link)=>{el.innerHTML=MODULOS.map(m=>cardMod(m,link)).join("");};
   // aplicativo instalado: guarda o pedido de instalação do navegador
   let inst=null;window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();inst=e;document.dispatchEvent(new Event("genio-instalavel"));});
   const instalar=async()=>{if(!inst)return false;inst.prompt();const r=await inst.userChoice.catch(()=>null);inst=null;return r&&r.outcome==="accepted";};
   const podeInstalar=()=>!!inst;
   if("serviceWorker" in navigator&&(location.protocol==="https:"||location.hostname==="localhost"||location.hostname==="127.0.0.1"))navigator.serviceWorker.register("sw.js").catch(()=>{});
-  return {api,aparelho,nomeAparelho,eu,sair,guardada,$,$$,msg,olho,esc,data,MODULOS,instalar,podeInstalar,ls};
+  return {api,aparelho,nomeAparelho,eu,sair,guardada,$,$$,msg,olho,esc,data,MODULOS,renderMods,instalar,podeInstalar,ls};
 })();

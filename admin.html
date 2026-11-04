@@ -11,7 +11,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&display=swap">
-<link rel="stylesheet" href="portal.css?v=5ba69c9a35">
+<link rel="stylesheet" href="portal.css?v=6340bed61d">
 </head>
 <body>
 <header class="top"><div class="wrap">
@@ -41,11 +41,11 @@
   </section>
 
   <section>
-    <div class="linha" style="justify-content:space-between;margin-bottom:12px"><h2 style="margin:0">Quero vender</h2><span class="muted small">Pedidos da página de vendas</span></div>
+    <div class="linha" style="justify-content:space-between;margin-bottom:12px"><h2 style="margin:0">Contatos do site</h2><span class="muted small">Orçamentos e interesse na franquia</span></div>
     <div class="lista" id="interesse"><div class="vazio">Carregando…</div></div>
   </section>
 </main>
-<script src="portal.js?v=5ba69c9a35"></script>
+<script src="portal.js?v=6340bed61d"></script>
 <script>
 (async()=>{const {$,esc}=G;let PL={},EU=null;
   try{EU=await G.eu();}catch(e){}
@@ -80,7 +80,7 @@
     document.querySelectorAll("[data-plano]").forEach(s=>s.onchange=async()=>{try{await G.api(`admin/contas/${s.dataset.plano}`,{plano:s.value});G.msg(top,"Plano alterado.","ok");}catch(e){G.msg(top,e.message);carregar();}});
     try{const r=await G.api("admin/interesse");$("#interesse").innerHTML=r.interesse.map(i=>{const n=i.telefone.replace(/\D/g,""),w=n.length<=11?"55"+n:n;
       return `<div class="card conta"><div class="cab"><b>${esc(i.nome)}</b><span class="muted small">${esc(i.cidade||"")} · ${G.data(i.criado)}</span></div>${i.mensagem?`<p class="muted">${esc(i.mensagem)}</p>`:""}
-        <div class="linha"><a class="btn btn-p btn-sm" target="_blank" rel="noopener" href="https://wa.me/${w}">Chamar ${esc(i.telefone)}</a><button class="btn btn-s btn-sm" type="button" data-criar="${esc(i.nome)}">Criar conta</button></div></div>`;}).join("")||'<div class="vazio">Ninguém pediu ainda.</div>';
+        <div class="linha"><a class="btn btn-p btn-sm" target="_blank" rel="noopener" href="https://wa.me/${w}">Chamar ${esc(i.telefone)}</a><button class="btn btn-s btn-sm" type="button" data-criar="${esc(i.nome)}">Criar conta</button></div></div>`;}).join("")||'<div class="vazio">Nenhum contato ainda.</div>';
       document.querySelectorAll("[data-criar]").forEach(b=>b.onclick=()=>{$("#nNome").value=b.dataset.criar;$("#nEmail").focus();scrollTo({top:0,behavior:"smooth"});});}catch(e){}
   }
   $("#fNovo").onsubmit=async e=>{e.preventDefault();const out=$("#nOut"),b=$("#fNovo button[type=submit]"),nome=$("#nNome").value.trim(),email=$("#nEmail").value.trim();

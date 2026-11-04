@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>GenIO · Seja franqueado</title>
+<meta name="description" content="Três kits, o mesmo catálogo: Essencial, Comercial e Operacional. Venda e execute personalização para o comércio.">
+<meta name="theme-color" content="#6933C5">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="favicon.png" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-title" content="GenIO">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="portal.css?v=6340bed61d">
+<style>
+.kits{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:24px}
+.kit{display:flex;flex-direction:column;gap:12px}
+.kit .n{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--terra)}
+.kit h3{font-size:24px;margin:0}
+.kit ul{padding:0;margin:0;list-style:none;flex:1}
+.kit li{padding:6px 0 6px 26px;position:relative;font-size:15px}
+.kit li:before{content:"";position:absolute;left:3px;top:13px;width:11px;height:6px;border-left:2.5px solid var(--terra);border-bottom:2.5px solid var(--terra);transform:rotate(-45deg)}
+.kit li.mais{color:var(--marca);font-weight:600}
+.kit .uso,.kit .cond{font-size:14px;color:var(--texto2);margin:0}
+.kit .uso b,.kit .cond b{color:var(--texto);font-weight:600}
+.kit.dest{border:2px solid var(--marca)}
+.loja{display:grid;grid-template-columns:1.2fr .8fr;gap:24px;align-items:center;margin-top:24px}
+.loja img{width:100%;height:auto;border-radius:16px;display:block}
+.loja ol{margin:0;padding-left:20px}
+.loja li{margin:0 0 8px}
+.duv{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:24px}
+.duv .card b{display:block;color:var(--marca);margin-bottom:4px}
+.duv .card p{margin:0;color:var(--texto2)}
+@media (max-width:860px){.kits{grid-template-columns:1fr}.loja{grid-template-columns:1fr}}
+@media (max-width:560px){.duv{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <a class="marca" href="/?vendas=1" aria-label="GenIO, página inicial"><b>Gen<i>IO</i></b></a>
+  <div class="fill"></div>
+  <a class="btn btn-t" href="/?vendas=1#produtos">Produtos</a>
+  <a class="btn btn-s btn-sm" href="/?vendas=1&entrar=1">Entrar</a>
+  <a class="btn btn-p btn-sm" href="#interesse">Tenho interesse</a>
+</div></header>
+
+<main>
+<section class="hero" style="padding-bottom:8px"><div class="wrap">
+  <h1>Três kits. O mesmo catálogo.</h1>
+  <p class="sub">Escolha como começar. Todo parceiro vende os oito produtos; o kit muda o que você leva para a rua.</p>
+</div></section>
+
+<section class="sec" style="padding-top:16px"><div class="wrap">
+  <div class="kits">
+    <div class="card kit">
+      <span class="n">01</span><h3>Essencial</h3>
+      <ul><li>Camiseta ou polo e identificação</li><li>Acesso ao aplicativo</li><li>Formação básica de produtos e instalação</li><li>Materiais comerciais digitais</li></ul>
+      <p class="uso"><b>Para</b> começar: apresentar, vender e encaminhar.</p>
+      <p class="cond"><b>Condições</b> a consultar.</p>
+      <a class="btn btn-s" href="#interesse" data-kit="Essencial">Tenho interesse</a>
+    </div>
+    <div class="card kit dest">
+      <span class="n">02</span><h3>Comercial</h3>
+      <ul><li>Tudo do Essencial</li><li class="mais">Mochila e portfólio de amostras</li><li class="mais">Trena, caneta e bloco</li><li class="mais">Organizadores e referências para fotos</li></ul>
+      <p class="uso"><b>Para</b> visitar o comércio, medir e apresentar amostras.</p>
+      <p class="cond"><b>Condições</b> a consultar.</p>
+      <a class="btn btn-p" href="#interesse" data-kit="Comercial">Tenho interesse</a>
+    </div>
+    <div class="card kit">
+      <span class="n">03</span><h3>Operacional</h3>
+      <ul><li>Tudo do Comercial</li><li class="mais">Ferramentas e acessórios de instalação</li><li class="mais">Proteção adequada às atividades</li></ul>
+      <p class="uso"><b>Para</b> executar os serviços em que tiver capacitação.</p>
+      <p class="cond"><b>Condições</b> a consultar.</p>
+      <a class="btn btn-s" href="#interesse" data-kit="Operacional">Tenho interesse</a>
+    </div>
+  </div>
+  <p class="muted small" style="margin-top:16px">Celular ou tablet: do parceiro. O aplicativo funciona no seu aparelho.</p>
+</div></section>
+
+<section class="sec alt"><div class="wrap">
+  <h2>O que todos podem vender</h2>
+  <div class="mods" id="mods"></div>
+</div></section>
+
+<section class="sec"><div class="wrap">
+  <h2>Parceiro em ação</h2>
+  <div class="loja">
+    <img src="img/loja.jpg" alt="Loja conceito GenIO: capacho, adesivo no vidro, placa de recepção, uniformes, banner, canecas e carimbo" width="1200" height="675" loading="lazy">
+    <div>
+      <ol>
+        <li><b>Apresentar</b> — a loja e as amostras mostram o que vendemos.</li>
+        <li><b>Medir</b> — foto do local com a régua de referência; medidas conferidas.</li>
+        <li><b>Orçar</b> — prévia e preço no aplicativo, na frente do cliente.</li>
+        <li><b>Instalar</b> — pelo protocolo de cada serviço, com a capacitação correspondente.</li>
+      </ol>
+      <p class="muted small" style="margin:12px 0 0">Formação comum de produtos e instalação para todos; trilhas específicas por atividade.</p>
+    </div>
+  </div>
+</div></section>
+
+<section class="sec alt"><div class="wrap">
+  <h2>Dúvidas essenciais</h2>
+  <div class="duv">
+    <div class="card"><b>O kit limita o que eu vendo?</b><p>Não. O catálogo é o mesmo para os três.</p></div>
+    <div class="card"><b>Preciso de aparelho?</b><p>Só o seu celular ou tablet. O aplicativo roda nele.</p></div>
+    <div class="card"><b>Quanto custa?</b><p>Condições em definição. Deixe o contato e a gente conversa.</p></div>
+    <div class="card"><b>Como é a formação?</b><p>Base comum de produtos e instalação; trilhas específicas por serviço.</p></div>
+  </div>
+</div></section>
+
+<section class="sec" id="interesse"><div class="wrap">
+  <div class="card" style="max-width:680px">
+    <h2>Tenho interesse</h2>
+    <form id="fInt" class="form2" novalidate>
+      <div class="campo"><label for="iNome">Nome</label><input id="iNome" autocomplete="name" required></div>
+      <div class="campo"><label for="iTel">WhatsApp com DDD</label><input id="iTel" type="tel" inputmode="tel" autocomplete="tel" placeholder="(11) 90000-0000" required></div>
+      <div class="campo"><label for="iKit">Kit</label><select id="iKit"><option>Essencial</option><option selected>Comercial</option><option>Operacional</option><option>Ainda não sei</option></select></div>
+      <div class="campo"><label for="iCid">Cidade</label><input id="iCid" autocomplete="address-level2"></div>
+      <div class="campo full"><label for="iMsg">Quer contar algo? <span class="muted">(opcional)</span></label><textarea id="iMsg" placeholder="Ex.: já vendo capacho na rua, quero começar…"></textarea></div>
+      <div class="full"><div id="iOut" class="msg" hidden></div><button class="btn btn-p" type="submit">Enviar</button></div>
+    </form>
+  </div>
+</div></section>
+</main>
+
+<footer class="rod"><div class="wrap">GenIO · Dom Banana · genio.dombanana.tech</div></footer>
+
+<script src="portal.js?v=6340bed61d"></script>
+<script>
+(()=>{const {$, $$}=G;
+  G.renderMods($("#mods"),false);
+  $$("[data-kit]").forEach(a=>a.onclick=()=>{$("#iKit").value=a.dataset.kit;});
+  $("#fInt").onsubmit=async e=>{e.preventDefault();const out=$("#iOut"),b=$("#fInt button[type=submit]");
+    const d={nome:$("#iNome").value.trim(),telefone:$("#iTel").value.trim(),cidade:$("#iCid").value.trim(),mensagem:`[Franquia · ${$("#iKit").value}] ${$("#iMsg").value.trim()}`};
+    if(!d.nome||d.telefone.replace(/\D/g,"").length<10){G.msg(out,"Preencha o nome e o WhatsApp com DDD.");return;}
+    b.disabled=true;try{await G.api("interesse",d);G.msg(out,"Recebemos. A gente chama você no WhatsApp.","ok");$("#fInt").reset();}catch(err){G.msg(out,err.message);}b.disabled=false;};
+})();
+</script>
+</body>
+</html>
