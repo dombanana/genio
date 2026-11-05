@@ -53,18 +53,19 @@ input:focus,select:focus,textarea:focus{border-color:var(--marca)}
 .passos.tres{grid-template-columns:repeat(3,1fr)}
 .passo{counter-increment:p}
 .passo:before{content:counter(p);display:inline-grid;place-items:center;width:32px;height:32px;border-radius:50%;background:var(--marca);color:#fff;font-weight:700;margin-bottom:12px}
-.mods{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;margin-top:24px}
-/* cartão do catálogo: foto do produto isolado em fundo lavanda e só o título em cima (documento 04/11/2026) */
-.mod{display:flex;flex-direction:column;background:#EBE3F5;border-radius:16px;overflow:hidden;text-decoration:none;color:var(--texto);position:relative;padding:14px 16px 0;transition:box-shadow .15s,transform .1s}
-.mod b{font-size:17px;line-height:1.2;font-weight:700;color:var(--texto);padding-right:8px}
-.mod img{display:block;width:100%;height:auto;aspect-ratio:1;object-fit:cover;margin:4px 0 0}
+.mods{display:grid;grid-template-columns:1fr;gap:14px;margin-top:24px}
+@media (min-width:900px){.mods{grid-template-columns:1fr 1fr}}
+/* cartão do catálogo: título à esquerda, cena do produto à direita (referência do dono, 04/11/2026) */
+.mod{display:flex;align-items:stretch;min-height:124px;background:#EBE3F5;border-radius:18px;overflow:hidden;text-decoration:none;color:var(--texto);position:relative;transition:box-shadow .15s,transform .1s}
+.mod b{flex:0 0 44%;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:8px;padding:16px 8px 16px 20px;font-size:22px;line-height:1.1;font-weight:700;color:var(--texto);position:relative;z-index:1}
+.mod .cena{flex:1;background:#EBE3F5 center/cover no-repeat;position:relative}
+.mod .cena:before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#EBE3F5 0,rgba(235,227,245,0) 32%)}
 a.mod:hover{box-shadow:0 0 0 2px var(--marca) inset}
 a.mod:active{transform:translateY(1px)}
-.mod .tag{position:absolute;bottom:12px;right:12px;font-size:12px;font-weight:600;padding:4px 10px;border-radius:999px;background:#fff;color:var(--texto2)}
+.mod .tag{font-size:12px;font-weight:600;padding:4px 10px;border-radius:999px;background:#fff;color:var(--texto2)}
 .mod.off{cursor:default}
 .mod.off b{color:var(--texto2)}
-.mod.off img{opacity:.6}
-@media (max-width:520px){.mods{grid-template-columns:1fr 1fr;gap:12px}.mod{padding:10px 12px 0}.mod b{font-size:15px}.mod .tag{bottom:8px;right:8px}}
+@media (max-width:520px){.mods{gap:12px}.mod{min-height:112px}.mod b{font-size:19px;padding:14px 6px 14px 16px}}
 .planos{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:24px;max-width:760px}
 .plano .preco{font-size:36px;font-weight:800;color:var(--marca);letter-spacing:-.02em}
 .plano .preco small{font-size:16px;font-weight:500;color:var(--texto2)}
@@ -89,12 +90,14 @@ a.mod:active{transform:translateY(1px)}
 .ap{display:flex;align-items:center;gap:8px;padding:8px 0;border-top:1px solid var(--linha);font-size:14px}
 .ap span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis}
 .link{display:block;word-break:break-all;background:var(--marfim);border:1px dashed var(--linha);border-radius:10px;padding:10px 12px;font-size:14px;margin:8px 0 12px}
-/* saudação: parceiro à direita, apontando para a esquerda (documento 04/11/2026); não espelhar */
-.saud{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:24px 0 8px;background:var(--marfim);border-radius:16px;padding:16px 20px;min-height:132px}
+/* saudação: a loja GenIO ao fundo e o parceiro à direita, apontando para a esquerda (referência do dono, 04/11/2026) */
+.saud{position:relative;display:flex;align-items:center;gap:16px;margin:24px 0 8px;border-radius:18px;overflow:hidden;min-height:170px;padding:20px 24px;background:#EBE3F5 url(img/loja-saud.jpg) right center/cover no-repeat}
+.saud:before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#EBE3F5 0,#EBE3F5 30%,rgba(235,227,245,0) 62%)}
+.saud>*{position:relative}
 .saud h1{font-size:clamp(26px,4.5vw,36px);margin:0}
-.saud-ic{width:auto;height:150px;flex-shrink:0;margin:-32px 0 -16px}
 .saud .btn{align-self:center}
-@media (max-width:520px){.saud{padding:12px 16px;min-height:0}.saud-ic{height:118px;margin:-22px 0 -12px}}
+.saud-ic{position:absolute;right:16px;bottom:0;height:150px;width:auto}
+@media (max-width:520px){.saud{min-height:140px;padding:16px 18px;background-position:72% center}.saud-ic{height:124px;right:8px}}
 .vazio{padding:24px;text-align:center;color:var(--texto2)}
 @media (max-width:860px){.hero .grid{grid-template-columns:1fr;gap:24px}.passos,.passos.tres{grid-template-columns:1fr 1fr}}
 @media (max-width:560px){.passos,.passos.tres,.planos,.form2{grid-template-columns:1fr}.sec{padding:40px 0}.hero{padding:32px 0}.card{padding:20px}.top .btn{min-height:44px;padding:0 12px;white-space:nowrap}.top .wrap{gap:8px}.top .btn-t:not(.btn-sm){display:none}.marca b{font-size:22px}}
