@@ -198,7 +198,7 @@ details summary{cursor:pointer;font-size:13px;color:var(--muted);font-weight:600
 .font-sel{font:600 15px var(--font-ui)}
 .inline{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
 .colorsel{display:flex;flex-direction:column;gap:6px}
-.cmap{display:grid;grid-template-columns:34px 18px minmax(0,1fr);gap:8px;align-items:center}
+.cmap{display:grid;grid-template-columns:34px 18px minmax(0,1fr);gap:8px;align-items:center;padding:3px}.cmap:has(input[type=checkbox]){grid-template-columns:22px 34px 18px minmax(0,1fr)}
 .cmap .orig{width:34px;height:34px;border-radius:8px;border:1px solid var(--line)}
 .cmap select{font:600 14px var(--font-ui);color:var(--ink);background:var(--field);border:1px solid var(--line);border-radius:8px;padding:7px 8px;min-width:0;width:100%}
 .le-tools{display:flex;flex-wrap:wrap;gap:6px}
@@ -517,6 +517,13 @@ html,body{overscroll-behavior-y:none}
 .nota-m small{color:#6B6578;font-size:11px}
 .nota-prod.off{opacity:.55}.nota-m img{max-width:220px;max-height:160px;border-radius:8px;display:block}.nota-m a{color:#6933C5;font-weight:600}
 .btn.ic{padding:8px 10px;min-width:0}.switch.small{font-size:13px;font-weight:500}
+#leZoom{position:relative;width:100%;height:100%;transform-origin:0 0;will-change:transform}
+.le-zoomctl{position:absolute;right:8px;bottom:8px;display:flex;gap:4px;background:rgba(28,22,53,.75);border-radius:10px;padding:4px}
+.le-zoomctl button{appearance:none;border:0;background:none;color:#fff;font:700 15px Rubik,sans-serif;width:34px;height:30px;border-radius:7px;cursor:pointer}
+.le-zoomctl button:hover{background:rgba(255,255,255,.15)}
+.chip.undo{border-style:dashed}
+.cmap input[type=checkbox]{width:20px;height:20px;accent-color:#6933C5;margin:0}
+.cmap.marcada{outline:2px solid #6933C5;border-radius:8px}
 </style>
 <div class="top">
   <a class="mod-volta" href="app.html" aria-label="Voltar aos módulos">‹ Módulos</a><div class="brand"><div class="wordmark" id="wordmark" aria-label="GenIO · Capacho"><b>Gen<i>IO</i></b><span>Capacho</span></div><div class="brand-t" id="brandT"></div></div>
@@ -896,7 +903,8 @@ html,body{overscroll-behavior-y:none}
       <h2 id="hLogoEd">Arte do cliente</h2><span class="hint small" id="leQueue" hidden></span>
       <div class="steps" aria-label="Passos do logo"><button id="leS1" type="button"><span class="n">1</span><span class="t">Cartão</span></button><button id="leS2" type="button"><span class="n">2</span><span class="t">Recorte</span></button><button id="leS3" type="button"><span class="n">3</span><span class="t">Cores</span></button></div>
     </div>
-    <div class="le-stage" id="leStage"><canvas id="leCanvas"></canvas><div id="leHandles"></div></div>
+    <div class="le-stage" id="leStage"><div id="leZoom"><canvas id="leCanvas"></canvas><div id="leHandles"></div></div>
+      <div class="le-zoomctl"><button type="button" data-z="-1" aria-label="Diminuir">−</button><button type="button" data-z="0" id="leZoomOut">1×</button><button type="button" data-z="1" aria-label="Aumentar">+</button></div></div>
     <!-- 1 -->
     <div id="lePanel1" class="col" style="gap:8px">
       <p class="hint" id="le1Hint">A imagem inteira vira a arte. Se for foto de cartão de visita, toque em “Achar o cartão”; ou arraste os 4 cantos.</p>
@@ -912,6 +920,7 @@ html,body{overscroll-behavior-y:none}
         <div class="slider"><label for="leBias"><span>Mais claro ou mais escuro</span><output id="leBiasO"></output></label><input type="range" id="leBias" min="-30" max="30" step="2" value="0"></div>
       </div>
       <div class="le-tools" role="group" aria-label="Ferramenta">
+        <button class="chip undo" id="leUndo2" type="button" title="Desfazer o último comando">↶ Desfazer</button>
         <button class="chip" data-tool="fundo" aria-pressed="false" type="button">Tocar no fundo</button>
         <button class="chip" data-tool="blocos" aria-pressed="true" type="button">Blocos</button>
         <button class="chip" data-tool="poly" aria-pressed="false" type="button">Recorte livre</button>
@@ -932,7 +941,7 @@ html,body{overscroll-behavior-y:none}
       <p class="hint">O logo sai em cores chapadas, sem degradê. Cada cor encontrada vira uma bobina diferente, a mais próxima; troque se quiser.</p>
       <span class="hint">Sugestões de cores para o fundo do tapete (toque para usar):</span>
       <div class="var-grid" id="leVar"></div>
-      <span class="hint">Ou escolha cor por cor:</span>
+      <div class="row between"><span class="hint">Ou escolha cor por cor. Marque cores e apague de uma vez:</span><span class="row"><button class="chip undo" id="leUndo3" type="button">↶ Desfazer</button><button class="btn ghost" id="leApagar" type="button" disabled>Apagar marcadas</button></span></div>
       <div class="colorsel" id="leColors"></div>
       <div class="row">
         <label class="switch"><input type="checkbox" id="leSingle">Tudo de uma cor só</label>
@@ -1588,7 +1597,7 @@ function imgToCanvas(src){return new Promise(res=>{const i=new Image();i.onload=
 async function openLogoEditor(layer,src,rest){const qm=$("#leQueue");if(qm){qm.hidden=!rest;qm.textContent=rest?`Depois desta, ${rest>1?"faltam":"falta"} ${rest} ${rest>1?"imagens":"imagem"}.`:"";}
   const ed=layer&&layer.edit&&(!src||src===layer.edit.src)?layer.edit:null;src=src||(ed&&ed.src);if(!src)return;
   const cv=await imgToCanvas(src);if(!cv)return;
-  Object.assign(LE,{layer,src,img:cv,step:1,tool:"blocos",polySel:-1,editMask:null,bgTest:spec().fundo,colors:null,map:null,single:null,neg:null,rot90:ed?ed.rot90||0:0,foto:ed&&ed.foto?Object.assign({},ed.foto):null,fotoCache:null,fotoAuto:false,fotoPolyOk:!!(ed&&ed.foto)});
+  Object.assign(LE,{layer,src,img:cv,step:1,tool:"blocos",hist:[],apagar:new Set(),polySel:-1,editMask:null,bgTest:spec().fundo,colors:null,map:null,single:null,neg:null,rot90:ed?ed.rot90||0:0,foto:ed&&ed.foto?Object.assign({},ed.foto):null,fotoCache:null,fotoAuto:false,fotoPolyOk:!!(ed&&ed.foto)});
   if(ed){LE.quad=ed.quad.map(p=>[...p]);LE.tol=ed.tol;LE.soft=ed.soft;LE.blockOn=ed.blockOn||null;LE.poly=ed.poly?ed.poly.map(p=>[...p]):null;LE.map=layer.map?[...layer.map]:null;LE.single=layer.single;LE.neg=layer.neg?deep(layer.neg):null;
     if(ed.edit){const ec=await imgToCanvas(ed.edit);LE.editSrc=ec;}}
   else{const w=cv.width,h=cv.height;LE.quad=[[0,0],[w,0],[w,h],[0,h]];LE.tol=60;LE.soft=8;LE.tolAuto=true;LE.blockOn=null;LE.poly=null;LE.editSrc=null;}
@@ -1629,7 +1638,7 @@ function leStep(n){
   if(n>=2&&LE.step===1){leWarp();LE.A=null;if(LE.tolAuto){leAutoTol();LE.tolAuto=false;}}
   if(n>=2&&!LE.A)leComputeData(false);
   if(n===3&&LE.step!==3){if(!leFinal()){if(LE.step!==2)leStep(2);return;}leQuantize();}
-  LE.step=n;["1","2","3"].forEach(i=>{$("#lePanel"+i).hidden=+i!==n;const b=$("#leS"+i);if(+i===n)b.setAttribute("aria-current","step");else b.removeAttribute("aria-current");});
+  LE.step=n;leZoomReset();leUndoBtns();["1","2","3"].forEach(i=>{$("#lePanel"+i).hidden=+i!==n;const b=$("#leS"+i);if(+i===n)b.setAttribute("aria-current","step");else b.removeAttribute("aria-current");});
   leHandles.replaceChildren();
   if(n===1){leSize(LE.img.width,LE.img.height);leDraw1();}
   else if(n===2){leSize(LE.ww,LE.wh);leHint();setTool(LE.tool);}
@@ -1755,16 +1764,36 @@ function setTool(t){LE.tool=t;$$("[data-tool]").forEach(b=>b.setAttribute("aria-
   $("#leBrushO").textContent=$("#leBrush").value+" px";leStage.style.cursor=t==="erase"||t==="paint"||t==="fundo"?"crosshair":"default";if(LE.step===2)leDraw2();}
 $$("[data-tool]").forEach(b=>b.onclick=()=>setTool(b.dataset.tool));
 let lePaint=null;
-leStage.addEventListener("pointerdown",e=>{if(e.target.classList.contains("handle"))return;const r=leStage.getBoundingClientRect(),px=e.clientX-r.left,py=e.clientY-r.top;
+// ---- zoom do editor: dois dedos (pinça e arrasto) ou botões; a ferramenta continua no dedo único ----
+const ZM={k:1,x:0,y:0},zPts=new Map();let zTwo=null;
+function leZoomApply(){const z=$("#leZoom");if(!z)return;const sw=LE.sw||1,sh=LE.sh||1;ZM.k=Math.max(1,Math.min(8,ZM.k));ZM.x=Math.min(0,Math.max(sw-sw*ZM.k,ZM.x));ZM.y=Math.min(0,Math.max(sh-sh*ZM.k,ZM.y));
+  z.style.transform=`translate(${ZM.x}px,${ZM.y}px) scale(${ZM.k})`;const b=$("#leZoomOut");if(b)b.textContent=ZM.k.toFixed(ZM.k<2?1:0).replace(".0","")+"×";}
+function leZoomReset(){ZM.k=1;ZM.x=0;ZM.y=0;leZoomApply();}
+function leZoomAt(f,cx,cy){const k0=ZM.k,k1=Math.max(1,Math.min(8,k0*f));ZM.x=cx-(cx-ZM.x)*k1/k0;ZM.y=cy-(cy-ZM.y)*k1/k0;ZM.k=k1;leZoomApply();}
+$$(".le-zoomctl button").forEach(b=>b.onclick=()=>{const d=+b.dataset.z;if(!d)leZoomReset();else leZoomAt(d>0?1.6:1/1.6,LE.sw/2,LE.sh/2);});
+const lePos=e=>{const r=leStage.getBoundingClientRect();return [(e.clientX-r.left-ZM.x)/ZM.k,(e.clientY-r.top-ZM.y)/ZM.k];};
+leStage.addEventListener("pointerdown",e=>{if(e.target.closest(".le-zoomctl"))return;if(e.pointerType==="touch"){zPts.set(e.pointerId,[e.clientX,e.clientY]);
+    if(zPts.size===2){const P=[...zPts.values()];zTwo={d:Math.hypot(P[1][0]-P[0][0],P[1][1]-P[0][1]),k:ZM.k,x:ZM.x,y:ZM.y,mx:(P[0][0]+P[1][0])/2,my:(P[0][1]+P[1][1])/2};lePaint=null;try{leStage.setPointerCapture(e.pointerId);}catch(_){}return;}}
+  if(e.target.classList.contains("handle"))return;const [px,py]=lePos(e);
   if(LE.step===2){const s=LE.ww/LE.sw,x=Math.round(px*s),y=Math.round(py*s);
     if(LE.tool==="blocos"){let hit=-1,ba=1e18;LE.blocks.forEach((b,i)=>{const pad=8*s;if(x>=b.x0-pad&&x<=b.x1+pad&&y>=b.y0-pad&&y<=b.y1+pad){const a=b.w*b.h;if(a<ba){ba=a;hit=i;}}});
-      if(hit>=0){LE.blockOn[hit]=!LE.blockOn[hit];leDraw2();}}
-    else if(LE.tool==="erase"||LE.tool==="paint"){leStage.setPointerCapture(e.pointerId);lePaint={v:LE.tool==="erase"?-1:1};paintAt(x,y);}
+      if(hit>=0){leSnap();LE.blockOn[hit]=!LE.blockOn[hit];leDraw2();}}
+    else if(LE.tool==="erase"||LE.tool==="paint"){leStage.setPointerCapture(e.pointerId);leSnap();lePaint={v:LE.tool==="erase"?-1:1};paintAt(x,y);}
     else if(LE.tool==="poly"){LE.polySel=-1;leDraw2();}
-    else if(LE.tool==="fundo"){leBgAt(x,y);}}
+    else if(LE.tool==="fundo"){leSnap();leBgAt(x,y);}}
   else if(LE.step===3){const s=LE.ww/LE.sw;void s;}});
-leStage.addEventListener("pointermove",e=>{if(!lePaint)return;const r=leStage.getBoundingClientRect(),s=LE.ww/LE.sw;paintAt(Math.round((e.clientX-r.left)*s),Math.round((e.clientY-r.top)*s));});
-leStage.addEventListener("pointerup",()=>{lePaint=null;});leStage.addEventListener("pointercancel",()=>{lePaint=null;});
+leStage.addEventListener("pointermove",e=>{if(zPts.has(e.pointerId))zPts.set(e.pointerId,[e.clientX,e.clientY]);
+  if(zTwo&&zPts.size===2){const P=[...zPts.values()],r=leStage.getBoundingClientRect(),d=Math.hypot(P[1][0]-P[0][0],P[1][1]-P[0][1]),mx=(P[0][0]+P[1][0])/2,my=(P[0][1]+P[1][1])/2;
+    const k1=Math.max(1,Math.min(8,zTwo.k*d/zTwo.d)),cx=zTwo.mx-r.left,cy=zTwo.my-r.top;ZM.x=cx-(cx-zTwo.x)*k1/zTwo.k+(mx-zTwo.mx);ZM.y=cy-(cy-zTwo.y)*k1/zTwo.k+(my-zTwo.my);ZM.k=k1;leZoomApply();return;}
+  if(!lePaint)return;const [px,py]=lePos(e),s=LE.ww/LE.sw;paintAt(Math.round(px*s),Math.round(py*s));});
+const leUp=e=>{lePaint=null;zPts.delete(e.pointerId);if(zPts.size<2)zTwo=null;};leStage.addEventListener("pointerup",leUp);leStage.addEventListener("pointercancel",leUp);
+leStage.addEventListener("wheel",e=>{if(LE.step<2)return;e.preventDefault();const r=leStage.getBoundingClientRect();leZoomAt(e.deltaY<0?1.15:1/1.15,e.clientX-r.left,e.clientY-r.top);},{passive:false});
+// ---- desfazer: um comando por clique (pincel, borracha, bloco, fundo, apagar cores) ----
+function leSnap(){LE.hist=LE.hist||[];LE.hist.push({editMask:LE.editMask?new Int8Array(LE.editMask):null,blockOn:LE.blockOn?LE.blockOn.slice():null,bg:LE.bg?LE.bg.slice():null,tol:LE.tol,soft:LE.soft,map:LE.map?LE.map.slice():null,step:LE.step});if(LE.hist.length>30)LE.hist.shift();leUndoBtns();}
+function leUndo(){const h=LE.hist&&LE.hist.pop();if(!h)return;if(h.editMask)LE.editMask=h.editMask;if(h.blockOn)LE.blockOn=h.blockOn;if(h.bg)LE.bg=h.bg;LE.tol=h.tol;LE.soft=h.soft;$("#leTol").value=LE.tol;$("#leSoft").value=LE.soft;
+  if(LE.step===3){LE.F=finalMaskFast();leQuantize();if(h.map&&h.map.length===LE.colors.length)LE.map=h.map;leRenderColors();leDraw3();}else{leComputeData(true);if(h.blockOn&&LE.blocks&&h.blockOn.length===LE.blocks.length)LE.blockOn=h.blockOn;leHint();leDraw2();}leUndoBtns();}
+function leUndoBtns(){const n=LE.hist?LE.hist.length:0;["leUndo2","leUndo3"].forEach(id=>{const b=$("#"+id);if(b)b.disabled=!n;});}
+["leUndo2","leUndo3"].forEach(id=>{const b=$("#"+id);if(b)b.onclick=leUndo;});
 function paintAt(x,y){const rad=Math.round(+$("#leBrush").value*(LE.ww/LE.sw)/2),w=LE.ww,h=LE.wh;
   for(let yy=Math.max(0,y-rad);yy<=Math.min(h-1,y+rad);yy++)for(let xx=Math.max(0,x-rad);xx<=Math.min(w-1,x+rad);xx++)if((xx-x)**2+(yy-y)**2<=rad*rad)LE.editMask[yy*w+xx]=lePaint.v;
   if(!leRaf)leRaf=requestAnimationFrame(()=>{leRaf=0;leDraw2();});}
@@ -1799,7 +1828,11 @@ function leQuantize(){
 }
 function leRenderColors(){const box=$("#leColors");box.replaceChildren();
   {const lc=leLabelsCanvas();renderVariants($("#leVar"),lc?srcFromLabelsCanvas(lc):null,LE.colors,LE.layer?LE.layer.id:null,LE,v=>{LE.map=v.map?[...v.map]:LE.map;LE.single=v.single||null;if(LE.neg)LE.neg.on=false;if(v.fundo){LE.bgTest=v.fundo;LE.fundoSug=v.fundo;}else LE.fundoSug=null;leRenderColors();leDraw3();});}
-  if(!LE.single&&!(LE.neg&&LE.neg.on))LE.colors.forEach((c,i)=>box.appendChild(colorMapRow(c,LE.map[i],v=>{LE.map[i]=v;leDraw3();})));
+  LE.apagar=LE.apagar||new Set();const bA=$("#leApagar");
+  if(!LE.single&&!(LE.neg&&LE.neg.on))LE.colors.forEach((c,i)=>{const row=colorMapRow(c,LE.map[i],v=>{LE.map[i]=v;leDraw3();});const ck=document.createElement("input");ck.type="checkbox";ck.title="Marcar para apagar";ck.checked=LE.apagar.has(i);row.classList.toggle("marcada",ck.checked);
+    ck.onchange=()=>{if(ck.checked)LE.apagar.add(i);else LE.apagar.delete(i);row.classList.toggle("marcada",ck.checked);bA.disabled=!LE.apagar.size;bA.textContent=LE.apagar.size?`Apagar ${LE.apagar.size} cor${LE.apagar.size>1?"es":""}`:"Apagar marcadas";};row.prepend(ck);box.appendChild(row);});
+  bA.disabled=!LE.apagar.size;bA.textContent=LE.apagar.size?`Apagar ${LE.apagar.size} cor${LE.apagar.size>1?"es":""}`:"Apagar marcadas";
+  bA.onclick=()=>{if(!LE.apagar.size)return;leSnap();const sel=new Set([...LE.apagar].map(i=>i+1));for(let i=0;i<LE.idx.length;i++)if(sel.has(LE.idx[i]))LE.editMask[i]=-1;LE.apagar=new Set();LE.F=finalMaskFast();LE.map=null;leQuantize();leRenderColors();leDraw3();};
   $("#leSingle").checked=!!LE.single;$("#leSingleBox").hidden=!LE.single;if(LE.single)swatchRow($("#leSingleSw"),LE.single,id=>{LE.single=id;leRenderColors();leDraw3();});
   $("#leNeg").checked=!!(LE.neg&&LE.neg.on);$("#leNegBox").hidden=!(LE.neg&&LE.neg.on);if(LE.neg&&LE.neg.on)swatchRow($("#leNegSw"),LE.neg.color,id=>{LE.neg.color=id;leRenderColors();leDraw3();});
   swatchRow($("#leBgSw"),LE.bgTest,id=>{LE.bgTest=id;leRenderColors();leDraw3();});}
