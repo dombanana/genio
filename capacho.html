@@ -1273,8 +1273,8 @@ function move(){if(!G||S.sub==="cantos")return;const pts=[...ptrs.values()],c=pt
     if(G.anchor){const p=unproject(P.cam,G.anchor[0],G.anchor[1]);if(p)P.mat=p;}});return;}
   if(two){if(!G.mode){const dd=Math.abs(d-G.d),da=Math.abs(wrapPi(a-G.a))*G.d/2;if(Math.max(dd,da)<12)return;G.mode=da>dd*1.2?"rot":"size";if(G.mode==="size")pinchStart(pts);}
     if(G.mode==="size"){pinchMove(pts);return;}
-    commit(P=>{if(P.plane)P.plane.th=G.P.plane.th-wrapPi(a-G.a);else P.th=G.P.th-wrapPi(a-G.a);});return;}
-  commit(P=>{if(P.plane){const w=planeUnproject(P,c[0],c[1]);if(w&&G.grab){P.plane.x=w.x+G.grab.x;P.plane.y=w.y+G.grab.y;}return;}
+    commit(P=>{if(P.plane){P.plane.th=G.P.plane.th-wrapPi(a-G.a);P.plane.user=true;}else P.th=G.P.th-wrapPi(a-G.a);});return;}
+  commit(P=>{if(P.plane){const w=planeUnproject(P,c[0],c[1]);if(w&&G.grab){P.plane.x=w.x+G.grab.x;P.plane.y=w.y+G.grab.y;P.plane.user=true;}return;}
     const w=unproject(P.cam,c[0],c[1]);if(w&&G.grab)P.mat={x:w.x+G.grab.x,y:w.y+G.grab.y};});}
 const wrapPi=x=>Math.atan2(Math.sin(x),Math.cos(x));
 // pinça: os dedos são levados para o chão; a abertura medida no chão, na direção da largura ou do comprimento do tapete, muda só aquele lado, de 10 em 10 cm
@@ -1292,7 +1292,7 @@ stage.addEventListener("pointerdown",e=>{if(e.target.classList.contains("handle"
 stage.addEventListener("pointermove",e=>{if(!ptrs.has(e.pointerId))return;ptrs.set(e.pointerId,pos(e));move();});
 const endPtr=e=>{if(!ptrs.has(e.pointerId))return;ptrs.delete(e.pointerId);begin();if(!ptrs.size){fotosSync();track("local");}};stage.addEventListener("pointerup",endPtr);stage.addEventListener("pointercancel",endPtr);
 stage.addEventListener("wheel",e=>{if(S.sub==="cantos"||S.sub==="ref")return;e.preventDefault();if(Q.pose.ref&&!e.shiftKey)return;
-  if(e.shiftKey){commit(P=>{if(P.plane)P.plane.th+=e.deltaY*0.003;else P.th+=e.deltaY*0.003;});return;}
+  if(e.shiftKey){commit(P=>{if(P.plane){P.plane.th+=e.deltaY*0.003;P.plane.user=true;}else P.th+=e.deltaY*0.003;});return;}
   if(S.sub==="persp"){commit(P=>{dropPlane(P);P.cam.phi=clamp(P.cam.phi-e.deltaY*0.05*DEG,12*DEG,86*DEG);},true);return;}
   commit(P=>{dropPlane(P);P.cam.h=clamp(P.cam.h*Math.exp(e.deltaY*0.0012),0.3,8);},true);},{passive:false});
 function bindHandle(h){h.addEventListener("pointerdown",e=>{e.stopPropagation();h.setPointerCapture(e.pointerId);h._q=(lastQuad||[]).map(p=>[...p]);});
@@ -1303,7 +1303,7 @@ const wrap180=a=>((a+180)%360+360)%360-180;
 const SL={
   phi:{label:"Inclinação da câmera",min:12,max:86,step:1,get:P=>P.cam.phi/DEG,set:v=>commit(P=>{dropPlane(P);P.cam.phi=v*DEG;},true),out:v=>Math.round(v)+"°"},
   rho:{label:"Horizonte",min:-35,max:35,step:.5,get:P=>P.cam.rho/DEG,set:v=>commit(P=>{dropPlane(P);P.cam.rho=v*DEG;},true),out:v=>fmt(Math.round(v*2)/2,1)+"°"},
-  th:{label:"Rotação no piso",min:-180,max:180,step:1,get:P=>wrap180((P.plane?P.plane.th:P.th)/DEG),set:v=>commit(P=>{if(P.plane)P.plane.th=v*DEG;else P.th=v*DEG;}),out:v=>Math.round(v)+"°"},
+  th:{label:"Rotação no piso",min:-180,max:180,step:1,get:P=>wrap180((P.plane?P.plane.th:P.th)/DEG),set:v=>commit(P=>{if(P.plane){P.plane.th=v*DEG;P.plane.user=true;}else P.th=v*DEG;}),out:v=>Math.round(v)+"°"},
   size:{label:"Tamanho na foto",min:25,max:300,step:1,get:P=>150/P.cam.h,set:v=>commit(P=>{dropPlane(P);P.cam.h=150/v;},true),out:v=>Math.round(v)+"%"},
   fL:{label:"Lente",min:40,max:120,step:1,get:P=>P.cam.fL*100,set:v=>commit(P=>{dropPlane(P);P.cam.fL=v/100;},true),out:v=>v<58?"grande-angular":v>85?"tele":"normal"}};
 function buildSliders(){const box=$("#sliders");box.replaceChildren();Object.entries(SL).forEach(([k,d])=>{const id="sl-"+k,w=document.createElement("div");w.className="slider";
@@ -1317,7 +1317,7 @@ function updateSub(){$$("[data-sub]").forEach(b=>b.setAttribute("aria-pressed",S
   $("#hint").textContent=!S.live&&S.sub==="mover"&&Q.pose.ref?`${Q.pose.ref?"O centro do tapete fica preso no centro do cartão. ":"Um dedo arrasta o tapete pelo chão. "}Dois dedos abrindo ou fechando na direção da largura ou do comprimento mudam só aquele lado, de 10 em 10 cm, medidos no chão pelo ${refCfg().nome.toLowerCase()}${Q.pose.ref?".":"; torcendo, giram."}`:S.live?"O tapete fica parado na tela: mexa o celular até as linhas do piso encaixarem nas bordas dele e toque no botão redondo para fotografar.":HINTS[S.sub];}
 $$("[data-sub]").forEach(b=>b.onclick=()=>{S.sub=b.dataset.sub;updateSub();schedule();});
 $("#dimsBtn").onclick=()=>{S.dims=!S.dims;$("#dimsBtn").setAttribute("aria-pressed",String(S.dims));schedule();};
-$("#resetPose").onclick=()=>{if(Q.pose.ref&&Q.pose.plane){Object.assign(Q.pose.plane,{x:0,y:0,th:0});keepMatFloor();}else Q.pose=POSE_NEW();layout();syncSliders();schedule();};
+$("#resetPose").onclick=()=>{if(Q.pose.ref&&Q.pose.plane){Object.assign(Q.pose.plane,{x:0,y:0,th:0,user:false});applyMatFloor();}else Q.pose=POSE_NEW();layout();syncSliders();schedule();};
 function msg(t){$("#msg").textContent=t||"";}
 
 // ================= câmera ao vivo e fotos =================
@@ -2866,7 +2866,7 @@ function cornerFrame(ref,sp){const X=(ref.xs||10)/100,Y=(ref.ys||15)/100,O=[[-X/
 // regra (de novo): o tapete fica com o centro no centro do cartão e o lado maior paralelo ao lado maior do cartão.
 // Dos dois sentidos possíveis, o topo da arte fica para o lado de longe de quem fotografa (a arte aparece "de pé").
 function thRule(ref,sp){if(!ref)return 0;return ((ref.xs||0)>=(ref.ys||0))===(sp.w>=sp.h)?0:Math.PI/2;}
-function centerPlane(P,T){if(!P||!P.ref||!P.plane)return;const sp=(T&&T.spec)||spec(),t0=thRule(P.ref,sp),hh=sp.h/200;P.plane.x=0;P.plane.y=0;
+function centerPlane(P,T){if(!P||!P.ref||!P.plane||P.plane.user)return;const sp=(T&&T.spec)||spec(),t0=thRule(P.ref,sp),hh=sp.h/200;P.plane.x=0;P.plane.y=0;
   const topY=th=>{const [a,b]=rot2(0,hh,th);return applyH(P.plane.H,a,b)[1];};P.plane.th=topY(t0)<=topY(t0+Math.PI)?t0:t0+Math.PI;}
 function applyMatFloor(){centerPlane(Q.pose,curTap());}
 function keepMatFloor(){}
