@@ -717,7 +717,7 @@ html,body{overscroll-behavior-y:none}
       <section class="panel" aria-labelledby="hCfgEmp">
         <h2 id="hCfgEmp">Sua empresa</h2>
         <p class="hint">Aparece no orçamento e nas fichas.</p>
-        <div class="emp-logo"><div class="emp-prev" id="empPrev">sem logo</div><div class="row"><label class="btn ghost" for="fEmpLogo">Enviar logo</label><button class="btn ghost" id="empLogoDel" type="button">Tirar logo</button></div></div>
+
         <div class="fields">
           <div class="field wide"><label for="empNome">Nome da empresa</label><input id="empNome" autocomplete="organization"></div>
           <div class="field"><label for="empCnpj">CNPJ</label><input id="empCnpj" inputmode="numeric" autocomplete="off"></div>
@@ -940,7 +940,7 @@ html,body{overscroll-behavior-y:none}
 </div>
 
 <input type="file" id="filePhoto" accept="image/*" class="sr">
-<input type="file" id="fEmpLogo" accept="image/*" class="sr">
+
 <input type="file" id="fileShot" accept="image/*" capture="environment" class="sr">
 <input type="file" id="fLogo" accept="image/*" class="sr" multiple>
 <input type="file" id="fLogoCam" accept="image/*" capture="environment" class="sr">
@@ -2378,7 +2378,7 @@ function fichaArte(files){const sp=spec(),B=[];
 
 // ---------- TXT ----------
 function fichaTXT(F){const o=[],ln=(s="")=>o.push(s);
-  ln(((emp().nome||"Gênio do Capacho").toUpperCase())+" — "+F.title.toUpperCase());ln(F.sub);if(empContatos())ln(empContatos());ln("=".repeat(72));
+  ln(((emp().nome||"GenIO").toUpperCase())+" — "+F.title.toUpperCase());ln(F.sub);if(empContatos())ln(empContatos());ln("=".repeat(72));
   F.blocks.forEach(b=>{switch(b.t){
     case"h":ln();ln(b.s.toUpperCase());ln("-".repeat(b.s.length));break;
     case"kv":b.rows.forEach(([k,v])=>ln(`${k}: ${v}`));break;
@@ -2408,7 +2408,7 @@ function renderFichaPDF(F){
   const need=h=>{if(y-h<M+16)newPage();};
   const sw=(x,yy,hex)=>o.push(`${rgbPdf(hex)} rg ${x} ${yy} 9 9 re f 0.45 G 0.4 w ${x} ${yy} 9 9 re S`);
   newPage();
-  T(M,y-16,F.title,17,true);const E=emp(),br=E.nome||"Gênio do Capacho";
+  T(M,y-16,F.title,17,true);const E=Object.assign({},emp(),{logoJpg:genioJpg().jpg,logoW:genioJpg().w,logoH:genioJpg().h}),br=E.nome||"GenIO";
   if(E.logoJpg&&E.logoW){const lh=34,lw=Math.min(120,lh*E.logoW/E.logoH),k2=Math.min(lw/E.logoW,lh/E.logoH),dw=E.logoW*k2,dh=E.logoH*k2;o.push(`q ${dw.toFixed(2)} 0 0 ${dh.toFixed(2)} ${(PW-M-dw).toFixed(2)} ${(y-dh+6).toFixed(2)} cm /Im1 Do Q`);
     T(PW-M-dw-8-HW(br,9,true),y-14,br,9,true,.4);}else T(PW-M-HW(br,9,true),y-14,br,9,true,.4);y-=30;
   wrapT(F.sub,9,false,CW).forEach(l=>{T(M,y,l,9,false,.35);y-=12;});y+=4;rule(y-4,0,1.2);y-=10;
@@ -2442,11 +2442,11 @@ function renderFichaPDF(F){
     y=yl-28;T(M,y,"Legenda",10,true);y-=6;
     job.layers.forEach((L,i)=>{const cx=M+(i%2)*(CW/2),cy=y-14-Math.floor(i/2)*16;sw(cx,cy-1,colorOf(L.pid));T(cx+14,cy,`${i+1}. ${L.name}`+(L.pieces!=null?` (${L.pieces} peça${L.pieces===1?"":"s"})`:""),9);});}
   const ctf=[emp().nome,empContatos()].filter(Boolean).join(" · ");pages.forEach((ops,i)=>{o=ops;T(M,22,`${F.title} · ${F.sub.split(" · ")[0]} · página ${i+1} de ${pages.length}`,7.5,false,.45);if(ctf)T(M,12,ctf,7,false,.55);});
-  return buildPDF(pages,F.title,emp().logoJpg||null);
+  return buildPDF(pages,F.title,genioJpg().jpg);
 }
 function buildPDF(pages,title,jpg){
   const objs=["<< /Type /Catalog /Pages 2 0 R >>",null,"<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>","<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>",`<< /Title (${pdfEsc(title)}) /Producer (Genio Vendas) >>`],kids=[];
-  let xo="";if(jpg){const bin=atob(jpg.split(",")[1]),E=emp();objs.push(`<< /Type /XObject /Subtype /Image /Width ${E.logoW} /Height ${E.logoH} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${bin.length} >>\nstream\n${bin}\nendstream`);xo=` /XObject << /Im1 ${objs.length} 0 R >>`;}
+  let xo="";if(jpg){const bin=atob(jpg.split(",")[1]),E={logoW:genioJpg().w,logoH:genioJpg().h};objs.push(`<< /Type /XObject /Subtype /Image /Width ${E.logoW} /Height ${E.logoH} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${bin.length} >>\nstream\n${bin}\nendstream`);xo=` /XObject << /Im1 ${objs.length} 0 R >>`;}
   pages.forEach(ops=>{const c=ops.join("\n");objs.push(`<< /Length ${c.length} >>\nstream\n${c}\nendstream`);const ci=objs.length;
     objs.push(`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595.28 841.89] /Resources << /Font << /F1 3 0 R /F2 4 0 R >>${xo} >> /Contents ${ci} 0 R >>`);kids.push(objs.length);});
   objs[1]=`<< /Type /Pages /Kids [${kids.map(k=>k+" 0 R").join(" ")}] /Count ${kids.length} >>`;
@@ -2750,38 +2750,32 @@ function renderRefInfo(){const box=$("#refInfo");if(!box)return;box.hidden=S.sub
 // ================= empresa que vende (revenda): logo e dados =================
 // Fica nas Configurações. Aparece no topo, na imagem e no texto do orçamento e nas fichas técnicas.
 const EMPF={empNome:"nome",empCnpj:"cnpj",empTel:"tel",empEmail:"email",empSite:"site",empInsta:"insta",empEnd:"end"};
-const emp=()=>cfg.emp||{};
+const emp=()=>{const e=cfg.emp||{};if(e.logo||e.logoJpg){delete e.logo;delete e.logoJpg;delete e.logoW;delete e.logoH;cfg.emp=e;try{saveCfg();}catch(_){}}return e;};
+// a marca do orçamento é sempre GenIO (a franquia); o franqueado entra com nome e contatos ao lado
+function genioMark(h,escuro){const fs=h*0.78,c=document.createElement("canvas"),x=c.getContext("2d");x.font=`800 ${fs}px Rubik, sans-serif`;const w1=x.measureText("Gen").width,w2=x.measureText("IO").width;
+  c.width=Math.ceil(w1+w2+fs*0.1);c.height=Math.ceil(h);const y=c.getContext("2d");y.font=`800 ${fs}px Rubik, sans-serif`;y.textBaseline="middle";if(escuro){y.fillStyle="#fff";y.fillRect(0,0,c.width,c.height);}
+  y.fillStyle=escuro?"#1C1635":"#fff";y.fillText("Gen",0,h/2+fs*0.04);y.fillStyle=escuro?"#6933C5":"#04C6C0";y.fillText("IO",w1,h/2+fs*0.04);return c;}
+let GENIO_JPG=null;function genioJpg(){if(GENIO_JPG)return GENIO_JPG;const c=genioMark(96,true);GENIO_JPG={jpg:c.toDataURL("image/jpeg",0.92),w:c.width,h:c.height};return GENIO_JPG;}
 const empContatos=(sep)=>{const e=emp();return [e.tel&&("WhatsApp "+e.tel),e.email,e.site,e.insta&&(e.insta.startsWith("@")?e.insta:"@"+e.insta)].filter(Boolean).join(sep||" · ");};
 function renderBrand(){const e=emp(),b=$("#brandT");if(!b)return;b.replaceChildren();
   // o topo é sempre do GenIO · Capacho; a revenda aparece ao lado, discreta (o logo dela vai nas imagens, textos e fichas do orçamento)
-  if(e.logo){const i=document.createElement("img");i.src=e.logo;i.alt="";i.className="brand-logo";b.appendChild(i);}
   if(e.nome){const n=document.createElement("span");n.className="brand-rev";n.textContent=e.nome;b.appendChild(n);}
-  b.hidden=!(e.logo||e.nome);document.title=(e.nome?e.nome+" · ":"")+"GenIO · Capacho";}
-function fillEmp(){const e=emp();Object.entries(EMPF).forEach(([id,k])=>{$("#"+id).value=e[k]||"";});const pv=$("#empPrev");pv.replaceChildren();
-  if(e.logo){const i=document.createElement("img");i.src=e.logo;i.alt="Logo da empresa";pv.appendChild(i);}else pv.textContent="sem logo";$("#empLogoDel").disabled=!e.logo;
+  b.hidden=!e.nome;document.title=(e.nome?e.nome+" · ":"")+"GenIO · Capacho";}
+function fillEmp(){const e=emp();Object.entries(EMPF).forEach(([id,k])=>{$("#"+id).value=e[k]||"";});
   const r=refCfg();$("#refNome").value=r.nome;$("#refW").value=r.w||"";$("#refH").value=r.h||"";$("#refCor").checked=r.cor;}
 Object.entries(EMPF).forEach(([id,k])=>$("#"+id).addEventListener("input",e=>{cfg.emp=Object.assign({},emp(),{[k]:e.target.value.trim()});saveCfg();renderBrand();}));
-// logo: guarda um PNG (com transparência) para a tela e um JPEG em fundo branco para as fichas em PDF
-$("#fEmpLogo").addEventListener("change",e=>{const f=e.target.files&&e.target.files[0];e.target.value="";if(!f)return;const r=new FileReader();
-  r.onload=()=>{const img=new Image();img.onload=()=>{const k=Math.min(1,480/Math.max(img.naturalWidth,img.naturalHeight)),w=Math.max(1,Math.round(img.naturalWidth*k)),h=Math.max(1,Math.round(img.naturalHeight*k));
-    const c=document.createElement("canvas");c.width=w;c.height=h;const x=c.getContext("2d");x.drawImage(img,0,0,w,h);const png=c.toDataURL("image/png");
-    const j=document.createElement("canvas");j.width=w;j.height=h;const y=j.getContext("2d");y.fillStyle="#fff";y.fillRect(0,0,w,h);y.drawImage(c,0,0);
-    cfg.emp=Object.assign({},emp(),{logo:png,logoJpg:j.toDataURL("image/jpeg",0.9),logoW:w,logoH:h});saveCfg();fillEmp();renderBrand();};img.src=r.result;};r.readAsDataURL(f);});
-$("#empLogoDel").onclick=()=>{const e=Object.assign({},emp());delete e.logo;delete e.logoJpg;cfg.emp=e;saveCfg();fillEmp();renderBrand();};
 // objeto de referência
 ["refNome","refW","refH"].forEach(id=>$("#"+id).addEventListener("input",()=>{const n=v=>{const x=parseFloat(String(v).replace(",","."));return x>0?x:null;};
   cfg.ref=Object.assign({},cfg.ref||{},{nome:$("#refNome").value.trim()||"Cartão-postal",w:n($("#refW").value),h:n($("#refH").value)});saveCfg();updateSub();}));
 $("#refCor").addEventListener("change",e=>{cfg.ref=Object.assign({},cfg.ref||{},{cor:e.target.checked});saveCfg();});
 // faixa da imagem do orçamento com a empresa
 async function drawEmpBand(x,iw,ih,band,rightText){const e=emp();x.fillStyle="#1C1635";x.fillRect(0,ih,iw,band);let lx=band*0.35;
-  if(e.logo){const lg=await new Promise(res=>{const i=new Image();i.onload=()=>res(i);i.onerror=()=>res(null);i.src=e.logo;});
-    if(lg){const lh=band*0.72,lw=Math.min(band*2.4,lh*lg.naturalWidth/lg.naturalHeight),pad=band*0.08;x.fillStyle="#fff";
-      if(x.roundRect){x.beginPath();x.roundRect(lx-pad,ih+(band-lh)/2-pad,lw+2*pad,lh+2*pad,band*0.1);x.fill();}else x.fillRect(lx-pad,ih+(band-lh)/2-pad,lw+2*pad,lh+2*pad);
-      const k=Math.min(lw/lg.naturalWidth,lh/lg.naturalHeight),dw=lg.naturalWidth*k,dh=lg.naturalHeight*k;x.drawImage(lg,lx+(lw-dw)/2,ih+(band-dh)/2,dw,dh);lx+=lw+band*0.35;}}
+  try{await document.fonts.load("800 20px Rubik");}catch(_){}
+  const lg=genioMark(band*0.62,false);x.drawImage(lg,lx,ih+(band-lg.height)/2);lx+=lg.width+band*0.35;
   x.textBaseline="middle";x.textAlign="left";const ct=empContatos();
   if(e.nome){x.fillStyle="#f7f0e3";x.font=`700 ${band*0.3}px Rubik, sans-serif`;x.fillText(e.nome,lx,ih+band*(ct?0.36:0.5),iw*0.5-lx);
     if(ct){x.fillStyle="#c9c1b2";x.font=`500 ${band*0.2}px Rubik, sans-serif`;x.fillText(ct,lx,ih+band*0.7,iw*0.55-lx);}}
-  x.textAlign="right";x.fillStyle="#f7f0e3";x.font=`600 ${band*(e.nome||e.logo?0.22:0.36)}px Rubik, sans-serif`;x.fillText(rightText,iw-band*0.35,ih+band/2,e.nome||e.logo?iw*0.42:iw-band*0.8);}
+  x.textAlign="right";x.fillStyle="#f7f0e3";x.font=`600 ${band*0.22}px Rubik, sans-serif`;x.fillText(rightText,iw-band*0.35,ih+band/2,iw*0.42);}
 
 // ================= vários tapetes no mesmo orçamento (cada um com nome) =================
 // Q.tapetes = [{id,nome,qtd,spec}]; Q.ti = tapete ativo; Q.spec é sempre o spec do tapete ativo (o resto do sistema usa spec()).
