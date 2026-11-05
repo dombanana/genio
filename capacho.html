@@ -2025,6 +2025,7 @@ const FotoCrop=(()=>{
 .fc .fc-n{font-size:14px;opacity:.8;min-width:60px;text-align:center}
 .fc .fc-stage{position:relative;max-width:100%;max-height:100%;touch-action:none;user-select:none}
 .fc .fc-stage canvas{display:block;max-width:100%;max-height:100%}
+.fc .fc-hint{font-size:13px;opacity:.7;text-align:center;padding:4px 16px 0}
 .fc .fc-dim{position:absolute;inset:0;pointer-events:none;box-shadow:0 0 0 9999px rgba(0,0,0,.55);border:1.5px solid #fff}
 .fc .fc-dim:before,.fc .fc-dim:after{content:"";position:absolute;background:rgba(255,255,255,.35)}
 .fc .fc-dim:before{left:33.33%;right:33.33%;top:0;bottom:0;border-left:1px solid rgba(255,255,255,.35);border-right:1px solid rgba(255,255,255,.35);background:none}
@@ -2069,7 +2070,7 @@ const FotoCrop=(()=>{
     const img=await carregar(f);let ang=0,rot=0,crop=null;
     const stage=document.createElement("div");stage.className="fc-stage";const cv=document.createElement("canvas");stage.appendChild(cv);const dim=document.createElement("div");dim.className="fc-dim";stage.appendChild(dim);
     const hs=[0,1,2,3].map(i=>{const h=document.createElement("div");h.className="fc-h";h.dataset.i=i;stage.appendChild(h);return h;});mid.appendChild(stage);
-    ctl.hidden=false;ctl.innerHTML=`<label>Endireitar <input type="range" class="fc-ang" min="-30" max="30" step="0.5" value="0"><output class="fc-ango">0°</output></label><button type="button" class="fc-btn fc-rot">Girar 90°</button>`;
+    ctl.hidden=false;ctl.innerHTML=`<label>Endireitar <input type="range" class="fc-ang" min="-45" max="45" step="0.5" value="0"><output class="fc-ango">0°</output></label><button type="button" class="fc-btn fc-rot">Girar 90°</button><p class="fc-hint" style="width:100%;margin:0">Dois dedos: pinça abre ou fecha o recorte; girar os dedos endireita a foto.</p>`;
     bot.innerHTML=`<button type="button" class="fc-btn fc-redo">Refazer</button><button type="button" class="fc-btn p fc-use">Usar foto</button>`;
     // desenho: imagem girada (90° + fino) num canvas do tamanho da caixa girada; mostrada no tamanho que couber
     const full=document.createElement("canvas");
@@ -2081,14 +2082,23 @@ const FotoCrop=(()=>{
     const desenharCrop=()=>{dim.style.left=crop.x+"px";dim.style.top=crop.y+"px";dim.style.width=crop.w+"px";dim.style.height=crop.h+"px";
       const P=[[crop.x,crop.y],[crop.x+crop.w,crop.y],[crop.x+crop.w,crop.y+crop.h],[crop.x,crop.y+crop.h]];hs.forEach((h,i)=>{h.style.left=P[i][0]+"px";h.style.top=P[i][1]+"px";});};
     const pos=e=>{const r=cv.getBoundingClientRect();return [e.clientX-r.left,e.clientY-r.top];};
-    hs.forEach(h=>{h.addEventListener("pointerdown",e=>{e.stopPropagation();h.setPointerCapture(e.pointerId);h._on=true;});
+    hs.forEach(h=>{h.addEventListener("pointerdown",e=>{e.stopPropagation();try{h.setPointerCapture(e.pointerId);}catch(_){}h._on=true;});
       h.addEventListener("pointermove",e=>{if(!h._on)return;const [px,py]=pos(e),i=+h.dataset.i,c=crop,x=Math.max(0,Math.min(cv.width,px)),y=Math.max(0,Math.min(cv.height,py)),r=c.x+c.w,b=c.y+c.h;
         if(i===0){c.w=Math.max(40,r-x);c.x=r-c.w;c.h=Math.max(40,b-y);c.y=b-c.h;}else if(i===1){c.w=Math.max(40,x-c.x);c.h=Math.max(40,b-y);c.y=b-c.h;}else if(i===2){c.w=Math.max(40,x-c.x);c.h=Math.max(40,y-c.y);}else{c.w=Math.max(40,r-x);c.x=r-c.w;c.h=Math.max(40,y-c.y);}desenharCrop();});
       const up=()=>{h._on=false;};h.addEventListener("pointerup",up);h.addEventListener("pointercancel",up);});
-    let drag=null;stage.addEventListener("pointerdown",e=>{if(e.target.classList.contains("fc-h"))return;const [px,py]=pos(e);if(px<crop.x||px>crop.x+crop.w||py<crop.y||py>crop.y+crop.h)return;stage.setPointerCapture(e.pointerId);drag={px,py,x:crop.x,y:crop.y};});
-    stage.addEventListener("pointermove",e=>{if(!drag)return;const [px,py]=pos(e);crop.x=Math.max(0,Math.min(cv.width-crop.w,drag.x+px-drag.px));crop.y=Math.max(0,Math.min(cv.height-crop.h,drag.y+py-drag.py));desenharCrop();});
-    const fimDrag=()=>{drag=null;};stage.addEventListener("pointerup",fimDrag);stage.addEventListener("pointercancel",fimDrag);
-    $(".fc-ang").oninput=e=>{ang=+e.target.value;$(".fc-ango").textContent=(ang>0?"+":"")+ang.toString().replace(".",",")+"°";render();};
+    // um dedo: move o recorte. Dois dedos: pinça abre/fecha o recorte, girar os dedos endireita a foto
+    const pts=new Map();let drag=null,two=null;
+    const setAng=v=>{ang=Math.max(-45,Math.min(45,v));$(".fc-ang").value=ang;$(".fc-ango").textContent=(ang>0?"+":"")+(Math.round(ang*2)/2).toString().replace(".",",")+"°";};
+    stage.addEventListener("pointerdown",e=>{if(e.target.classList.contains("fc-h"))return;const [px,py]=pos(e);try{stage.setPointerCapture(e.pointerId);}catch(_){}pts.set(e.pointerId,[px,py]);
+      if(pts.size===2){const P=[...pts.values()];two={d:Math.hypot(P[1][0]-P[0][0],P[1][1]-P[0][1]),a:Math.atan2(P[1][1]-P[0][1],P[1][0]-P[0][0]),ang,crop:Object.assign({},crop)};drag=null;return;}
+      if(px<crop.x||px>crop.x+crop.w||py<crop.y||py>crop.y+crop.h)return;drag={px,py,x:crop.x,y:crop.y};});
+    stage.addEventListener("pointermove",e=>{if(!pts.has(e.pointerId))return;pts.set(e.pointerId,pos(e));
+      if(two&&pts.size===2){const P=[...pts.values()],d=Math.hypot(P[1][0]-P[0][0],P[1][1]-P[0][1]),a=Math.atan2(P[1][1]-P[0][1],P[1][0]-P[0][0]);
+        setAng(two.ang-(a-two.a)*180/Math.PI);const k=Math.max(0.2,d/two.d),c=two.crop,cx=c.x+c.w/2,cy=c.y+c.h/2;
+        let w=Math.max(40,Math.min(cv.width,c.w*k)),h=Math.max(40,Math.min(cv.height,c.h*k));crop.w=w;crop.h=h;crop.x=Math.max(0,Math.min(cv.width-w,cx-w/2));crop.y=Math.max(0,Math.min(cv.height-h,cy-h/2));render();return;}
+      if(!drag)return;const [px,py]=pos(e);crop.x=Math.max(0,Math.min(cv.width-crop.w,drag.x+px-drag.px));crop.y=Math.max(0,Math.min(cv.height-crop.h,drag.y+py-drag.py));desenharCrop();});
+    const fimDrag=e=>{pts.delete(e.pointerId);drag=null;if(pts.size<2)two=null;};stage.addEventListener("pointerup",fimDrag);stage.addEventListener("pointercancel",fimDrag);
+    $(".fc-ang").oninput=e=>{setAng(+e.target.value);render();};
     $(".fc-rot").onclick=()=>{rot=(rot+1)%4;crop=null;render();};
     $(".fc-redo").onclick=async()=>{st.shots.splice(st.i,1);if(!st.shots.length&&!st.prontas.length){await camera();return;}ajustar();};
     $(".fc-use").onclick=()=>{const k=full.width/cv.width,o=document.createElement("canvas");o.width=Math.round(crop.w*k);o.height=Math.round(crop.h*k);o.getContext("2d").drawImage(full,crop.x*k,crop.y*k,crop.w*k,crop.h*k,0,0,o.width,o.height);
