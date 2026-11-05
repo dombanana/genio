@@ -871,8 +871,8 @@ html,body{overscroll-behavior-y:none}
     <div class="le-stage" id="leStage"><canvas id="leCanvas"></canvas><div id="leHandles"></div></div>
     <!-- 1 -->
     <div id="lePanel1" class="col" style="gap:8px">
-      <p class="hint" id="le1Hint">O sistema procurou o cartão na foto. Confira os 4 cantos e arraste se precisar.</p>
-      <div class="row"><button class="btn ghost" id="leDetect" type="button">Achar o cartão de novo</button><button class="btn ghost" id="leWhole" type="button">Usar a imagem inteira</button><button class="btn ghost" id="leRot" type="button">Girar 90°</button><button class="btn" id="leNext1" type="button">Próximo →</button></div>
+      <p class="hint" id="le1Hint">A imagem inteira vira a arte. Se for foto de cartão de visita, toque em “Achar o cartão”; ou arraste os 4 cantos.</p>
+      <div class="row"><button class="btn ghost" id="leDetect" type="button">Achar o cartão</button><button class="btn ghost" id="leWhole" type="button">Usar a imagem inteira</button><button class="btn ghost" id="leRot" type="button">Girar 90°</button><button class="btn" id="leNext1" type="button">Próximo →</button></div>
     </div>
     <!-- 2 -->
     <div id="lePanel2" class="col" style="gap:10px" hidden>
@@ -884,6 +884,7 @@ html,body{overscroll-behavior-y:none}
         <div class="slider"><label for="leBias"><span>Mais claro ou mais escuro</span><output id="leBiasO"></output></label><input type="range" id="leBias" min="-30" max="30" step="2" value="0"></div>
       </div>
       <div class="le-tools" role="group" aria-label="Ferramenta">
+        <button class="chip" data-tool="fundo" aria-pressed="false" type="button">Tocar no fundo</button>
         <button class="chip" data-tool="blocos" aria-pressed="true" type="button">Blocos</button>
         <button class="chip" data-tool="poly" aria-pressed="false" type="button">Recorte livre</button>
         <button class="chip" data-tool="erase" aria-pressed="false" type="button">Borracha</button>
@@ -1556,7 +1557,7 @@ async function openLogoEditor(layer,src,rest){const qm=$("#leQueue");if(qm){qm.h
   Object.assign(LE,{layer,src,img:cv,step:1,tool:"blocos",polySel:-1,editMask:null,bgTest:spec().fundo,colors:null,map:null,single:null,neg:null,rot90:ed?ed.rot90||0:0,foto:ed&&ed.foto?Object.assign({},ed.foto):null,fotoCache:null,fotoAuto:false,fotoPolyOk:!!(ed&&ed.foto)});
   if(ed){LE.quad=ed.quad.map(p=>[...p]);LE.tol=ed.tol;LE.soft=ed.soft;LE.blockOn=ed.blockOn||null;LE.poly=ed.poly?ed.poly.map(p=>[...p]):null;LE.map=layer.map?[...layer.map]:null;LE.single=layer.single;LE.neg=layer.neg?deep(layer.neg):null;
     if(ed.edit){const ec=await imgToCanvas(ed.edit);LE.editSrc=ec;}}
-  else{LE.quad=detectCard(cv)||insetQuad(cv);LE.tol=60;LE.soft=8;LE.blockOn=null;LE.poly=null;LE.editSrc=null;}
+  else{const w=cv.width,h=cv.height;LE.quad=[[0,0],[w,0],[w,h],[0,h]];LE.tol=60;LE.soft=8;LE.blockOn=null;LE.poly=null;LE.editSrc=null;}
   $("#leTol").value=LE.tol;$("#leSoft").value=LE.soft;
   $("#logoEditor").hidden=false;document.body.style.overflow="hidden";leStep(1);
 }
@@ -1623,9 +1624,13 @@ function leWarp(){const key=JSON.stringify(LE.quad);if(LE.warpKey&&LE.warpKey!==
   LE.warp=out;LE.ww=w;LE.wh=h;LE.bg=borderColor(out);LE.editMask=new Int8Array(w*h);
   if(LE.editSrc&&LE.editSrc.width===w&&LE.editSrc.height===h){const ed=LE.editSrc.getContext("2d").getImageData(0,0,w,h).data;for(let i=0;i<w*h;i++)LE.editMask[i]=ed[i*4]>170?1:ed[i*4]<85?-1:0;}
   LE.editSrc=null;}
-function borderColor(img){const {data,width:w,height:h}=img,b=Math.max(2,Math.round(Math.min(w,h)*0.03)),R=[],G=[],B=[];
-  for(let y=0;y<h;y+=2)for(let x=0;x<w;x+=2){if(x>=b&&x<w-b&&y>=b&&y<h-b)continue;const i=(y*w+x)*4;R.push(data[i]);G.push(data[i+1]);B.push(data[i+2]);}
-  const med=a=>{a.sort((x,y)=>x-y);return a[a.length>>1]||0;};return [med(R),med(G),med(B)];}
+function borderColor(img){const {data,width:w,height:h}=img,b=Math.max(2,Math.round(Math.min(w,h)*0.03)),bins=new Map();
+  for(let y=0;y<h;y+=2)for(let x=0;x<w;x+=2){if(x>=b&&x<w-b&&y>=b&&y<h-b)continue;const i=(y*w+x)*4,r=data[i],g=data[i+1],bl=data[i+2],k=((r>>5)<<6)|((g>>5)<<3)|(bl>>5);
+    const e=bins.get(k)||{n:0,r:0,g:0,b:0};e.n++;e.r+=r;e.g+=g;e.b+=bl;bins.set(k,e);}
+  let best=null;bins.forEach(e=>{if(!best||e.n>best.n)best=e;});return best?[Math.round(best.r/best.n),Math.round(best.g/best.n),Math.round(best.b/best.n)]:[255,255,255];}
+// o vendedor toca no fundo da foto: a cor dali vira o fundo a tirar
+function leBgAt(x,y){const {data}=LE.warp,w=LE.ww,h=LE.wh;let r=0,g=0,b=0,n=0;for(let dy=-3;dy<=3;dy++)for(let dx=-3;dx<=3;dx++){const xx=x+dx,yy=y+dy;if(xx<0||yy<0||xx>=w||yy>=h)continue;const i=(yy*w+xx)*4;r+=data[i];g+=data[i+1];b+=data[i+2];n++;}
+  if(n){LE.bg=[Math.round(r/n),Math.round(g/n),Math.round(b/n)];LE.blockOn=null;leCompute(false);}}
 let leRaf=0;["#leTol","#leSoft"].forEach(id=>$(id).addEventListener("input",()=>{LE.tol=+$("#leTol").value;LE.soft=+$("#leSoft").value;if(!leRaf)leRaf=requestAnimationFrame(()=>{leRaf=0;leCompute(true);});}));
 $("#leBrush").addEventListener("input",e=>{$("#leBrushO").textContent=e.target.value+" px";});
 // fundo -> alfa; blocos; proposta de logo
@@ -1703,7 +1708,7 @@ function leBindPoly(hd){hd.addEventListener("pointerdown",e=>{e.stopPropagation(
 $("#lePolyDel").onclick=()=>{if(LE.polySel>=0&&LE.poly.length>3){LE.poly.splice(LE.polySel,1);LE.polySel=-1;leDraw2();}};
 $("#lePolyReset").onclick=()=>{lePolyDefault();LE.polySel=-1;leDraw2();};
 function setTool(t){LE.tool=t;$$("[data-tool]").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.tool===t)));$("#leBrushBox").hidden=!(t==="erase"||t==="paint");$("#lePolyBtns").hidden=t!=="poly";
-  $("#leBrushO").textContent=$("#leBrush").value+" px";leStage.style.cursor=t==="erase"||t==="paint"?"crosshair":"default";if(LE.step===2)leDraw2();}
+  $("#leBrushO").textContent=$("#leBrush").value+" px";leStage.style.cursor=t==="erase"||t==="paint"||t==="fundo"?"crosshair":"default";if(LE.step===2)leDraw2();}
 $$("[data-tool]").forEach(b=>b.onclick=()=>setTool(b.dataset.tool));
 let lePaint=null;
 leStage.addEventListener("pointerdown",e=>{if(e.target.classList.contains("handle"))return;const r=leStage.getBoundingClientRect(),px=e.clientX-r.left,py=e.clientY-r.top;
@@ -1711,7 +1716,8 @@ leStage.addEventListener("pointerdown",e=>{if(e.target.classList.contains("handl
     if(LE.tool==="blocos"){let hit=-1,ba=1e18;LE.blocks.forEach((b,i)=>{const pad=8*s;if(x>=b.x0-pad&&x<=b.x1+pad&&y>=b.y0-pad&&y<=b.y1+pad){const a=b.w*b.h;if(a<ba){ba=a;hit=i;}}});
       if(hit>=0){LE.blockOn[hit]=!LE.blockOn[hit];leDraw2();}}
     else if(LE.tool==="erase"||LE.tool==="paint"){leStage.setPointerCapture(e.pointerId);lePaint={v:LE.tool==="erase"?-1:1};paintAt(x,y);}
-    else if(LE.tool==="poly"){LE.polySel=-1;leDraw2();}}
+    else if(LE.tool==="poly"){LE.polySel=-1;leDraw2();}
+    else if(LE.tool==="fundo"){leBgAt(x,y);}}
   else if(LE.step===3){const s=LE.ww/LE.sw;void s;}});
 leStage.addEventListener("pointermove",e=>{if(!lePaint)return;const r=leStage.getBoundingClientRect(),s=LE.ww/LE.sw;paintAt(Math.round((e.clientX-r.left)*s),Math.round((e.clientY-r.top)*s));});
 leStage.addEventListener("pointerup",()=>{lePaint=null;});leStage.addEventListener("pointercancel",()=>{lePaint=null;});
@@ -3613,7 +3619,7 @@ function fotoMapa(colors){const P=activePal().map(p=>{const c=rgbOf(p.hex),mx=Ma
   kinds.forEach(b=>b.onclick=()=>setKind(b.dataset.kind));
   [["#leTons","tons"],["#leDet","det"],["#leBias","bias"]].forEach(([id,k])=>{const el=$(id);if(el)el.addEventListener("input",()=>{LE.foto[k]=+el.value;LE.map=null;sync();if(!leRaf)leRaf=requestAnimationFrame(()=>{leRaf=0;leDraw2();});});});
   leStep=function(n){const was=LE.step;_step(n);
-    if(n===2&&was===1){if(!LE.foto){LE.foto=Object.assign({},FOTO_DEF);if(fotoPareceFoto()){LE.foto.on=true;LE.fotoAuto=true;LE.tool="poly";LE.poly=[[0,0],[LE.ww,0],[LE.ww,LE.wh],[0,LE.wh]];LE.fotoPolyOk=true;setTool("poly");}}sync();leHint();leDraw2();}};
+    if(n===2&&was===1){if(!LE.foto){LE.foto=Object.assign({},FOTO_DEF);/* a arte entra sempre como logo (cores chapadas); estêncil só se o vendedor escolher */}sync();leHint();leDraw2();}};
   leHint=function(){if(LE.foto&&LE.foto.on){$("#le2Hint").textContent=(LE.fotoAuto?"Parece uma foto: o sistema transformou em estêncil (poucos tons, como um cartaz). Se for um logo, toque em “Logo ou desenho”. ":"")+
       "Escolha quantos tons e o detalhe. Para tirar o fundo, use “Recorte livre” (arraste os pontos em volta) ou a “Borracha”.";return;}_hint();};
   leFinal=function(){if(!(LE.foto&&LE.foto.on))return _final();const n=LE.ww*LE.wh,P=polyMask(),F=new Float32Array(n);let any=false;
