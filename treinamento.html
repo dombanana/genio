@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>GenIO · Vídeos de treinamento</title>
+<meta name="theme-color" content="#6933C5">
+<meta name="robots" content="noindex,nofollow">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="favicon.png" type="image/png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="portal.css?v=8228d20625">
+<style>
+.vids{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-top:16px}
+.vid{display:block;background:#EBE3F5;border-radius:16px;overflow:hidden;color:var(--texto);text-decoration:none}
+.vid .th{aspect-ratio:16/9;background:#DFD3F1 center/cover no-repeat;display:grid;place-items:center;font-size:40px;color:var(--marca)}
+.vid b{display:block;padding:12px 14px}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <a class="marca" href="app.html" aria-label="Voltar aos módulos"><b>Gen<i>IO</i></b><span>treinamento</span></a>
+  <div class="fill"></div>
+  <a class="btn btn-s btn-sm" href="app.html">← Módulos</a>
+</div></header>
+<main class="wrap" style="padding-top:20px">
+  <h1 style="margin:0 0 4px">Vídeos de treinamento</h1>
+  <p class="muted" id="sem" hidden>Os primeiros vídeos estão sendo gravados. Enquanto isso, a central de atendimento tira as dúvidas.</p>
+  <div class="vids" id="vids"></div>
+</main>
+<script src="portal.js?v=8228d20625"></script>
+<script>
+(async()=>{const {$}=G;const c=await G.eu().catch(()=>null);if(!c){location.replace("/?entrar=1&volta=treinamento.html");return;}
+  const V=G.VIDEOS||[];$("#sem").hidden=!!V.length;
+  $("#vids").innerHTML=V.map(v=>`<a class="vid" href="${G.esc(v.url)}" target="_blank" rel="noopener"><div class="th" style="${v.img?`background-image:url('${G.esc(v.img)}')`:""}">${v.img?"":"▶"}</div><b>${G.esc(v.titulo)}</b></a>`).join("");
+})();
+</script>
+</body>
+</html>

@@ -15,40 +15,32 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&display=swap">
-<link rel="stylesheet" href="portal.css?v=6446732c9b">
+<link rel="stylesheet" href="portal.css?v=8228d20625">
 <style>
 .hero h1{color:var(--texto)}
 .hero h1 i{font-style:normal;color:var(--marca);text-decoration:underline;text-decoration-color:var(--terra);text-decoration-thickness:4px;text-underline-offset:6px}
 .hero-art{display:grid;place-items:center;position:relative;min-height:320px}
 .hero-art:before{content:"";position:absolute;width:min(380px,80%);aspect-ratio:1;border-radius:50%;background:var(--marfim)}
 .hero-art img{position:relative;width:min(300px,70%);height:auto}
-.franq{display:grid;grid-template-columns:1fr auto;gap:24px;align-items:center}
-.franq img{height:170px;width:auto;margin:-24px 0 -24px 0}
-@media (max-width:640px){.hero-art{min-height:240px}.hero-art img{width:62%}.franq{grid-template-columns:1fr}.franq img{display:none}}
+@media (max-width:640px){.hero-art{min-height:240px}.hero-art img{width:62%}}
 </style>
 </head>
 <body>
 <header class="top"><div class="wrap">
   <a class="marca" href="/?vendas=1" aria-label="GenIO, página inicial"><b>Gen<i>IO</i></b></a>
   <div class="fill"></div>
-  <a class="btn btn-t" href="#produtos">Produtos</a>
-  <a class="btn btn-t" href="#como">Como funciona</a>
-  <a class="btn btn-t" href="franquia.html">Seja franqueado</a>
-  <button class="btn btn-s btn-sm" id="bEntrar" type="button">Entrar</button>
-  <a class="btn btn-p btn-sm" href="#orcamento">Pedir orçamento</a>
+  <a class="btn btn-s btn-sm" href="franquia.html"><span class="lg">Seja franqueado</span><span class="sm">Franquia</span></a>
+  <button class="btn btn-p btn-sm" id="bEntrar" type="button"><span class="lg">Espaço do franqueado</span><span class="sm">Franqueado</span></button>
 </div></header>
 
 <main>
 <section class="hero"><div class="wrap grid">
   <div>
     <h1>Sua ideia merece uma <i>boa impressão</i></h1>
-    <p class="sub">Do capacho à comunicação da sua loja. Conte o que você precisa; o GenIO dá forma.</p>
-    <div class="ctas">
-      <a class="btn btn-p" href="#orcamento">Pedir orçamento</a>
-      <a class="btn btn-s" href="#produtos">Ver produtos</a>
-    </div>
+    <p class="sub">Personalização para o seu comércio: capachos, placas, adesivos, uniformes, cartões, banners e brindes. Um representante GenIO vai até você, mede, mostra o resultado e fecha o orçamento na hora.</p>
+    <a class="btn btn-p" href="#contato">Solicitar contato</a>
   </div>
-  <div class="hero-art" aria-hidden="true"><img src="img/genio.png?v=6446732c9b" alt="" width="306" height="372"></div>
+  <div class="hero-art" aria-hidden="true"><img src="img/genio.png?v=8228d20625" alt="" width="306" height="372"></div>
 </div></section>
 
 <section class="sec" id="produtos"><div class="wrap">
@@ -56,31 +48,15 @@
   <div class="mods" id="mods"></div>
 </div></section>
 
-<section class="sec alt" id="como"><div class="wrap">
-  <h2>Como funciona</h2>
-  <div class="passos tres">
-    <div class="card passo"><h3>Envie referências</h3><p class="muted">Sua arte ou logo e uma foto de onde vai ficar.</p></div>
-    <div class="card passo"><h3>Revise a proposta</h3><p class="muted">Prévia, medidas e preço para aprovar.</p></div>
-    <div class="card passo"><h3>Acompanhe o pedido</h3><p class="muted">Produção, entrega ou instalação.</p></div>
-  </div>
-</div></section>
-
-<section class="sec"><div class="wrap">
-  <div class="card franq">
-    <div><h2>Seja franqueado</h2><p class="muted">Três kits, o mesmo catálogo. Venda e execute pequenos serviços que todo comércio precisa.</p><a class="btn btn-s" href="franquia.html">Ver os kits</a></div>
-    <img src="img/parceiro.png?v=6446732c9b" alt="" width="88" height="170">
-  </div>
-</div></section>
-
-<section class="sec alt" id="orcamento"><div class="wrap">
+<section class="sec alt" id="contato"><div class="wrap">
   <div class="card" style="max-width:680px">
-    <h2>Pedir orçamento</h2>
+    <h2>Solicite o contato de um representante</h2>
     <form id="fOrc" class="form2" novalidate>
       <div class="campo"><label for="oNome">Nome</label><input id="oNome" autocomplete="name" required></div>
       <div class="campo"><label for="oTel">WhatsApp com DDD</label><input id="oTel" type="tel" inputmode="tel" autocomplete="tel" placeholder="(11) 90000-0000" required></div>
-      <div class="campo"><label for="oProd">Produto</label><select id="oProd"></select></div>
+      <div class="campo"><label for="oProd">Interesse</label><select id="oProd"></select></div>
       <div class="campo"><label for="oCid">Cidade</label><input id="oCid" autocomplete="address-level2"></div>
-      <div class="campo full"><label for="oMsg">O que você precisa</label><textarea id="oMsg" placeholder="Ex.: capacho 1,20 × 0,60 com o logo da padaria"></textarea></div>
+      <div class="campo full"><label for="oMsg">Conte o que precisa <span class="muted">(opcional)</span></label><textarea id="oMsg" placeholder="Ex.: capacho para a entrada da padaria"></textarea></div>
       <div class="full"><div id="oOut" class="msg" hidden></div><button class="btn btn-p" type="submit">Enviar</button></div>
     </form>
   </div>
@@ -103,14 +79,14 @@
   </div>
 </div>
 
-<script src="portal.js?v=6446732c9b"></script>
+<script src="portal.js?v=8228d20625"></script>
 <script>
 (()=>{const {$, $$}=G,qs=new URLSearchParams(location.search);
   // catálogo: clicar no produto disponível já escolhe ele no pedido de orçamento; "Em breve" não é clicável
   G.renderMods($("#mods"),false);
-  $("#oProd").innerHTML=G.MODULOS.filter(m=>m.on&&!m.interno).map(m=>`<option value="${m.id}">${G.esc(m.nome)}</option>`).join("")+'<option value="outro">Outro produto</option>';
+  $("#oProd").innerHTML=G.MODULOS.filter(m=>m.on&&!m.interno).map(m=>`<option value="${m.id}">${G.esc(m.nome)}</option>`).join("")+'<option value="outro">Outro / ainda não sei</option>';
   $$("#mods .mod.on").forEach(el=>{const m=G.MODULOS.find(x=>x.nome===el.querySelector("b").textContent);el.setAttribute("role","link");el.tabIndex=0;el.style.cursor="pointer";
-    const ir=()=>{$("#oProd").value=m.id;location.hash="orcamento";setTimeout(()=>$("#oMsg").focus(),400);};el.onclick=ir;el.onkeydown=e=>{if(e.key==="Enter")ir();};});
+    const ir=()=>{$("#oProd").value=m.id;location.hash="contato";setTimeout(()=>$("#oMsg").focus(),400);};el.onclick=ir;el.onkeydown=e=>{if(e.key==="Enter")ir();};});
   const volta=()=>{const v=qs.get("volta");return v&&/^[a-z]+\.html$/.test(v)?v:"app.html";};
   const m=$("#mEntrar");
   const abrir=()=>{m.hidden=false;setTimeout(()=>$("#eEmail").focus(),30);};
@@ -120,7 +96,7 @@
   document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!m.hidden)fechar();});
   G.olho();
   // já entrou neste aparelho: vai direto ao painel (a página de vendas continua em /?vendas=1)
-  G.eu().then(c=>{if(c){if(!qs.has("vendas")){location.replace(volta());return;}$("#bEntrar").textContent="Painel";$("#bEntrar").onclick=()=>location.href="app.html";}
+  G.eu().then(c=>{if(c){if(!qs.has("vendas")){location.replace(volta());return;}$("#bEntrar").onclick=()=>location.href="app.html";}
     else if(qs.has("entrar")||matchMedia("(display-mode: standalone)").matches||navigator.standalone)abrir();}).catch(()=>{if(qs.has("entrar"))abrir();});
   $("#fEntrar").onsubmit=async e=>{e.preventDefault();const out=$("#eOut"),b=e.submitter||$("#fEntrar button[type=submit]");
     const email=$("#eEmail").value.trim(),senha=$("#eSenha").value;if(!email||!senha){G.msg(out,"Preencha o e-mail e a senha.");return;}
@@ -128,9 +104,9 @@
     catch(err){G.msg(out,err.message);b.disabled=false;}};
   // pedido de orçamento: vai para a mesma lista de contatos do site (a administração vê)
   $("#fOrc").onsubmit=async e=>{e.preventDefault();const out=$("#oOut"),b=$("#fOrc button[type=submit]"),prod=G.MODULOS.find(x=>x.id===$("#oProd").value);
-    const d={nome:$("#oNome").value.trim(),telefone:$("#oTel").value.trim(),cidade:$("#oCid").value.trim(),mensagem:`[Orçamento · ${prod?prod.nome:"Outro produto"}] ${$("#oMsg").value.trim()}`};
+    const d={nome:$("#oNome").value.trim(),telefone:$("#oTel").value.trim(),cidade:$("#oCid").value.trim(),mensagem:`[Contato · ${prod?prod.nome:"Outro"}] ${$("#oMsg").value.trim()}`};
     if(!d.nome||d.telefone.replace(/\D/g,"").length<10){G.msg(out,"Preencha o nome e o WhatsApp com DDD.");return;}
-    b.disabled=true;try{await G.api("interesse",d);G.msg(out,"Recebemos. A gente chama você no WhatsApp.","ok");$("#fOrc").reset();}catch(err){G.msg(out,err.message);}b.disabled=false;};
+    b.disabled=true;try{await G.api("interesse",d);G.msg(out,"Recebemos. Um representante chama você no WhatsApp.","ok");$("#fOrc").reset();}catch(err){G.msg(out,err.message);}b.disabled=false;};
 })();
 </script>
 </body>

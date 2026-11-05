@@ -15,7 +15,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&display=swap">
-<link rel="stylesheet" href="portal.css?v=6446732c9b">
+<link rel="stylesheet" href="portal.css?v=8228d20625">
 </head>
 <body>
 <header class="top"><div class="wrap">
@@ -28,21 +28,19 @@
 <main class="wrap">
   <div class="saud">
     <h1 id="oi">Olá</h1>
-    <img class="saud-ic" src="img/parceiro.png?v=6446732c9b" alt="" width="77" height="150">
+    <a class="saud-link" href="treinamento.html">▶ Vídeos de treinamento</a>
+    <img class="saud-ic" src="img/parceiro.png?v=8228d20625" alt="" width="77" height="150">
   </div>
   <section class="ctx">
     <div class="cli">
-      <div class="cli-l">
-        <div class="row between"><label for="cliSel">Cliente</label><button class="linkbtn" type="button" id="cliNovo">Novo cliente</button></div>
-        <select id="cliSel"></select>
-        <input id="cliente" autocomplete="off" placeholder="Nome ou empresa" hidden>
-        <p class="muted small" id="cliInfo" aria-live="polite"></p>
+      <div class="row between"><label for="cNome">Cliente</label><span class="row" style="gap:14px"><button class="linkbtn" type="button" id="cliTodos">Ver todos</button><button class="linkbtn" type="button" id="cliNovo">Cliente novo</button></span></div>
+      <div class="cli-campos">
+        <input id="cNome" autocomplete="off" placeholder="Nome ou empresa">
+        <input id="cTel" type="tel" inputmode="tel" autocomplete="off" placeholder="Telefone">
+        <input id="cBairro" list="bairros" autocomplete="off" placeholder="Bairro"><datalist id="bairros"></datalist>
       </div>
-      <div class="cli-r">
-        <label for="fCampo">Filtrar por</label>
-        <select id="fCampo"><option value="nome">Nome</option><option value="produto">Produto</option><option value="tel">Telefone</option><option value="data">Último contato</option></select>
-        <input id="fTermo" autocomplete="off" placeholder="Nome ou empresa">
-      </div>
+      <div class="cli-lista" id="cliLista" hidden></div>
+      <p class="muted small" id="cliInfo" aria-live="polite"></p>
     </div>
   </section>
   <div id="off" class="msg info" hidden>Sem internet. O Capacho funciona assim mesmo.</div>
@@ -50,7 +48,7 @@
   <div class="mods" id="mods" aria-live="polite"></div>
   <div style="height:48px"></div>
 </main>
-<script src="portal.js?v=6446732c9b"></script>
+<script src="portal.js?v=8228d20625"></script>
 <script>
 (async()=>{const {$, $$}=G;
   let c=null;try{c=await G.eu();}catch(e){c=null;}
@@ -61,32 +59,40 @@
   if(G.ATENDIMENTO){const at=$("#lAtend");at.href="https://wa.me/"+G.ATENDIMENTO+"?text="+encodeURIComponent("Olá! Sou "+(c.nome||"")+", do GenIO.");at.hidden=false;}
   G.renderMods($("#mods"),true);
   // cliente: é o contexto de todos os módulos. Fica guardado neste aparelho e o módulo abre já no projeto dele
-  const ci=$("#cliente"),info=$("#cliInfo");let CL=[];
+  const fN=$("#cNome"),fT=$("#cTel"),fB=$("#cBairro"),lista=$("#cliLista"),info=$("#cliInfo");let CL=[];
   const abrirDB=()=>new Promise(res=>{try{const r=indexedDB.open("genio-vendas",3);r.onupgradeneeded=()=>{const d=r.result;["orcamentos","sessao"].forEach(n=>{if(!d.objectStoreNames.contains(n))d.createObjectStore(n,{keyPath:"id"});});if(!d.objectStoreNames.contains("clientes"))d.createObjectStore("clientes",{keyPath:"k"});};r.onsuccess=()=>res(r.result);r.onerror=()=>res(null);}catch(e){res(null);}});
-  const lerClientes=async()=>{const db=await abrirDB();if(!db)return[];return new Promise(res=>{const t=db.transaction("orcamentos").objectStore("orcamentos").getAll();t.onsuccess=()=>res(t.result||[]);t.onerror=()=>res([]);});};
-  const sel=$("#cliSel"),bNovo=$("#cliNovo");
-  const mostrar=()=>{const n=ci.value.trim().toLowerCase();const d=CL.find(o=>(o.nome||"").toLowerCase()===n);
-    info.textContent=!n?"":d?(d.n?`${d.n} projeto${d.n>1?"s":""} · ${d.numero||""}${d.status?" · "+d.status:""}`:"Sem projeto ainda"):"Cliente novo";};
-  // lista dos clientes (mais recentes primeiro); "Novo cliente" troca a lista por um campo para digitar
-  const modo=m=>{const novo=m==="novo"||!CL.length;sel.hidden=novo;ci.hidden=!novo;bNovo.hidden=!CL.length;bNovo.textContent=novo?"Escolher da lista":"Novo cliente";if(novo&&m==="novo")setTimeout(()=>ci.focus(),30);};
-  const montarLista=()=>{const atual=ci.value.trim(),L=CL.filter(passa);sel.innerHTML=`<option value="">${L.length?"Escolha o cliente":"Nenhum cliente com esse filtro"}</option>`+L.map(r=>`<option value="${G.esc(r.nome)}">${G.esc(r.nome)}${r.n>1?` · ${r.n} projetos`:""}</option>`).join("");
-    const na=CL.some(r=>r.nome===atual);sel.value=na?atual:"";modo(CL.length&&(na||!atual)?"lista":"novo");};
-  sel.onchange=()=>{ci.value=sel.value;G.ls.set("genio-cliente",ci.value);mostrar();};
-  bNovo.onclick=()=>{if(ci.hidden){ci.value="";G.ls.set("genio-cliente","");sel.value="";mostrar();modo("novo");}else{modo("lista");}};
-  ci.value=G.ls.get("genio-cliente")||"";
-  ci.addEventListener("input",()=>{G.ls.set("genio-cliente",ci.value.trim());mostrar();});
-  // clientes = quem tem projeto (orçamentos) ou identidade visual guardada
-  const lerIdent=async()=>{const db=await abrirDB();if(!db||!db.objectStoreNames.contains("clientes"))return[];return new Promise(res=>{const t=db.transaction("clientes").objectStore("clientes").getAll();t.onsuccess=()=>res(t.result||[]);t.onerror=()=>res([]);});};
-  Promise.all([lerClientes(),lerIdent()]).then(([all,ids])=>{const m=new Map();all.forEach(o=>{const nome=(o.cliente&&o.cliente.nome||"").trim();if(!nome)return;const k=nome.toLowerCase();const r=m.get(k)||{nome,n:0,numero:"",status:"",at:"",tel:"",prod:new Set()};r.n++;if((o.atualizado||"")>r.at){r.at=o.atualizado||"";r.numero=o.numero||"";r.status=o.status||"";}if(o.cliente&&o.cliente.tel)r.tel=o.cliente.tel;r.prod.add(o.modulo||"capacho");m.set(k,r);});
-    ids.forEach(o=>{const nome=(o.nome||"").trim();if(!nome)return;const k=nome.toLowerCase();if(!m.has(k))m.set(k,{nome,n:0,numero:"",status:"",at:o.atualizado||"",tel:"",prod:new Set()});});
-    CL=[...m.values()].sort((a,b)=>b.at.localeCompare(a.at)).map(r=>({nome:r.nome,n:r.n,numero:r.numero,status:r.status,at:r.at,tel:r.tel,prod:[...r.prod].map(id=>(G.MODULOS.find(x=>x.id===id)||{nome:id}).nome).join(", ")}));montarLista();mostrar();});
-  // filtro da lista: nome, produto, telefone ou mês/ano do último contato (ex.: 11/25)
-  const fCampo=$("#fCampo"),fTermo=$("#fTermo"),PH={nome:"Nome ou empresa",produto:"Ex.: capacho",tel:"Ex.: 11 9",data:"Mês/ano, ex.: 11/25"};
+  const lerTudo=async n=>{const db=await abrirDB();if(!db||!db.objectStoreNames.contains(n))return[];return new Promise(res=>{const t=db.transaction(n).objectStore(n).getAll();t.onsuccess=()=>res(t.result||[]);t.onerror=()=>res([]);});};
+  const guardarCli=async()=>{const nome=fN.value.trim(),tel=fT.value.trim(),bairro=fB.value.trim();if(!nome)return;const k=nome.toLowerCase();
+    const r=CL.find(x=>x.k===k);if(r){r.tel=tel;r.bairro=bairro;}else CL.unshift({k,nome,tel,bairro,n:0,numero:"",status:"",at:new Date().toISOString()});montarBairros();
+    const db=await abrirDB();if(!db)return;
+    await new Promise(res=>{const t=db.transaction("clientes","readwrite"),st=t.objectStore("clientes"),g=st.get(k);g.onsuccess=()=>{const o=g.result||{k,nome,logos:[]};o.nome=nome;o.tel=tel;o.bairro=bairro;o.atualizado=new Date().toISOString();st.put(o);};t.oncomplete=res;t.onerror=res;});};
   const norm=t=>(t||"").toString().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
-  const passa=r=>{const t=norm(fTermo.value.trim());if(!t)return true;const c=fCampo.value;
-    if(c==="nome")return norm(r.nome).includes(t);if(c==="produto")return norm(r.prod).includes(t);if(c==="tel")return (r.tel||"").replace(/\D/g,"").includes(t.replace(/\D/g,""));
-    if(c==="data"){const m=t.match(/^(\d{1,2})\s*\/\s*(\d{2,4})$/);if(!m||!r.at)return false;const d=new Date(r.at);const mm=String(d.getMonth()+1).padStart(2,"0"),yy=String(d.getFullYear()).slice(-2);return mm===m[1].padStart(2,"0")&&yy===m[2].slice(-2);}return true;};
-  fCampo.onchange=()=>{fTermo.placeholder=PH[fCampo.value];fTermo.value="";montarLista();};fTermo.addEventListener("input",montarLista);
+  const dig=t=>(t||"").replace(/\D/g,"");
+  const salvar=()=>{G.ls.set("genio-cliente",fN.value.trim());G.ls.set("genio-cliente-dados",JSON.stringify({nome:fN.value.trim(),tel:fT.value.trim(),bairro:fB.value.trim()}));};
+  const mostrar=()=>{const k=fN.value.trim().toLowerCase(),d=CL.find(o=>o.k===k);
+    info.textContent=!k?"":d?(d.n?`${d.n} projeto${d.n>1?"s":""} · ${d.numero||""}${d.status?" · "+d.status:""}`:"Sem projeto ainda"):"Cliente novo";};
+  // lista de clientes que batem com o que foi digitado: começo do nome (qualquer palavra), começo do telefone ou o bairro
+  const linha=r=>`<button type="button" class="cli-it" data-k="${G.esc(r.k)}"><b>${G.esc(r.nome)}</b><span>${[r.tel,r.bairro,r.n?`${r.n} projeto${r.n>1?"s":""}`:""].filter(Boolean).map(G.esc).join(" · ")}</span></button>`;
+  const mostrarLista=(L,vazio)=>{lista.hidden=!L.length&&!vazio;lista.innerHTML=L.length?L.map(linha).join(""):`<p class="muted small" style="margin:6px 4px">${vazio||""}</p>`;
+    $$(".cli-it",lista).forEach(b=>b.onclick=()=>{const r=CL.find(x=>x.k===b.dataset.k);if(!r)return;fN.value=r.nome;fT.value=r.tel||"";fB.value=r.bairro||"";lista.hidden=true;salvar();mostrar();});};
+  const filtrar=()=>{const n=norm(fN.value.trim()),t=dig(fT.value),b=norm(fB.value.trim());if(!n&&!t&&!b){lista.hidden=true;return;}
+    const L=CL.filter(r=>(!n||norm(r.nome).split(/\s+/).some(w=>w.startsWith(n))||norm(r.nome).startsWith(n))&&(!t||dig(r.tel).startsWith(t)||dig(r.tel).includes(t))&&(!b||norm(r.bairro)===b||norm(r.bairro).startsWith(b)));
+    const exato=L.length===1&&norm(L[0].nome)===n;if(exato){lista.hidden=true;return;}
+    mostrarLista(L.slice(0,30),b&&!n&&!t?"Nenhum cliente nesse bairro.":"");};
+  const montarBairros=()=>{const m=new Map();CL.forEach(r=>{const b=(r.bairro||"").trim();if(b)m.set(b,(m.get(b)||0)+1);});
+    $("#bairros").innerHTML=[...m.entries()].sort((a,b)=>b[1]-a[1]).map(([b,n])=>`<option value="${G.esc(b)}">${n} cliente${n>1?"s":""}</option>`).join("");};
+  [fN,fT].forEach(f=>f.addEventListener("input",()=>{salvar();mostrar();filtrar();}));
+  fB.addEventListener("input",()=>{salvar();filtrar();});
+  [fT,fB].forEach(f=>f.addEventListener("change",guardarCli));fN.addEventListener("change",()=>{if(fT.value.trim()||fB.value.trim())guardarCli();});
+  $("#cliTodos").onclick=()=>{if(!lista.hidden&&lista.dataset.todos){lista.hidden=true;delete lista.dataset.todos;return;}mostrarLista(CL,"Nenhum cliente ainda.");lista.dataset.todos="1";};
+  $("#cliNovo").onclick=()=>{fN.value="";fT.value="";fB.value="";lista.hidden=true;salvar();mostrar();fN.focus();};
+  document.addEventListener("click",e=>{if(!e.target.closest(".cli"))lista.hidden=true;});
+  try{const d=JSON.parse(G.ls.get("genio-cliente-dados")||"null");if(d){fN.value=d.nome||"";fT.value=d.tel||"";fB.value=d.bairro||"";}else fN.value=G.ls.get("genio-cliente")||"";}catch(e){}
+  // clientes = quem tem projeto (orçamentos) ou cadastro/identidade guardada
+  Promise.all([lerTudo("orcamentos"),lerTudo("clientes")]).then(([all,ids])=>{const m=new Map();
+    all.forEach(o=>{const nome=(o.cliente&&o.cliente.nome||"").trim();if(!nome)return;const k=nome.toLowerCase();const r=m.get(k)||{k,nome,n:0,numero:"",status:"",at:"",tel:"",bairro:""};r.n++;if((o.atualizado||"")>r.at){r.at=o.atualizado||"";r.numero=o.numero||"";r.status=o.status||"";}if(o.cliente&&o.cliente.tel&&!r.tel)r.tel=o.cliente.tel;m.set(k,r);});
+    ids.forEach(o=>{const nome=(o.nome||"").trim();if(!nome)return;const k=nome.toLowerCase();const r=m.get(k)||{k,nome,n:0,numero:"",status:"",at:o.atualizado||"",tel:"",bairro:""};if(o.tel)r.tel=o.tel;if(o.bairro)r.bairro=o.bairro;if(!r.at)r.at=o.atualizado||"";m.set(k,r);});
+    CL=[...m.values()].sort((a,b)=>b.at.localeCompare(a.at));montarBairros();mostrar();});
   $("#bSair").onclick=()=>G.sair();
   const bi=$("#bInst"),mostra=()=>{bi.hidden=!G.podeInstalar();};mostra();document.addEventListener("genio-instalavel",mostra);
   bi.onclick=async()=>{await G.instalar();mostra();};

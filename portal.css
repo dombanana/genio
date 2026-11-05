@@ -92,18 +92,24 @@ a.mod:active{transform:translateY(1px)}
 .ap span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis}
 .link{display:block;word-break:break-all;background:var(--marfim);border:1px dashed var(--linha);border-radius:10px;padding:10px 12px;font-size:14px;margin:8px 0 12px}
 /* saudação: cópia da referência do dono (04/11/2026): loja inteira à vista, degradê só na esquerda, parceiro em pé no canto direito */
-.saud{position:relative;margin:20px 0 12px;border-radius:18px;overflow:hidden;aspect-ratio:4/1;width:100%;background:#EBE3F5 url(img/loja-saud.jpg) right center/auto 100% no-repeat;border:1px solid #E3DBF2}
-.saud:before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#EBE3F5 0,#EBE3F5 30%,rgba(235,227,245,.85) 41%,rgba(235,227,245,0) 54%)}
-.saud h1{position:absolute;left:5%;top:50%;transform:translateY(-50%);margin:0;font-size:clamp(26px,5.2vw,44px);line-height:1;color:var(--marca)}
+.saud{position:relative;margin:20px 0 12px;border-radius:18px;overflow:hidden;aspect-ratio:4/1;width:100%;background:#DFD3F1 url(img/loja-saud.jpg) right center/auto 100% no-repeat;border:1px solid #D3C5EA}
+.saud:before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#DFD3F1 0,#DFD3F1 30%,rgba(223,211,241,.85) 41%,rgba(223,211,241,0) 54%)}
+.saud h1{position:absolute;left:5%;top:40%;transform:translateY(-50%);margin:0;font-size:clamp(26px,5.2vw,44px);line-height:1;color:var(--marca)}
 .saud-ic{position:absolute;right:2%;bottom:0;height:94%;width:auto}
+.saud-link{position:absolute;left:5%;top:66%;font-weight:600;color:var(--marca);font-size:clamp(13px,1.6vw,16px);text-decoration:underline;text-underline-offset:3px}
+@media (max-width:520px){.saud h1{top:38%}.saud-link{top:68%}}
 @media (max-width:520px){.saud{aspect-ratio:3.2/1}.saud h1{font-size:clamp(22px,6.6vw,30px)}}
 /* contexto: cliente à esquerda, identidade visual à direita (dono, 04/11/2026) */
 .ctx{display:grid;grid-template-columns:1fr;gap:12px;margin-bottom:12px}
 .ctx>div{display:flex;flex-direction:column;gap:6px;background:var(--cartao);border:1px solid var(--linha);border-radius:16px;padding:12px 16px 12px;min-width:0}
-.cli{display:grid!important;grid-template-columns:1.4fr 1fr;gap:16px}
-.cli-l,.cli-r{display:flex;flex-direction:column;gap:6px;min-width:0}
-.cli-r{border-left:1px solid var(--linha);padding-left:16px}
-@media (max-width:480px){.cli{grid-template-columns:1fr}.cli-r{border-left:0;padding-left:0;border-top:1px solid var(--linha);padding-top:10px}}
+.cli{position:relative}
+.cli-campos{display:grid;grid-template-columns:1.6fr 1fr 1fr;gap:8px}
+.cli-campos input{width:100%;min-width:0}
+.cli-lista{display:flex;flex-direction:column;gap:4px;max-height:280px;overflow:auto;border:1px solid var(--linha);border-radius:12px;padding:6px;background:var(--cartao)}
+.cli-it{display:flex;flex-direction:column;align-items:flex-start;gap:2px;text-align:left;border:0;background:#EBE3F5;border-radius:10px;padding:8px 12px;cursor:pointer;font:inherit;color:var(--texto)}
+.cli-it:hover,.cli-it:focus-visible{background:#DCCFF0;outline:none}
+.cli-it span{font-size:13px;color:var(--texto2)}
+@media (max-width:560px){.cli-campos{grid-template-columns:1fr 1fr}.cli-campos #cNome{grid-column:1/-1}}
 .ctx label:first-child{font-size:13px;font-weight:600;color:var(--texto2)}
 .cli select{width:100%;min-height:44px;border:1.5px solid var(--linha);border-radius:10px;padding:0 10px;font:500 16px Rubik,system-ui,sans-serif;background:#EBE3F5;color:var(--texto)}
 .cli .linkbtn{padding:0;font-size:13px}
@@ -114,3 +120,8 @@ a.mod:active{transform:translateY(1px)}
 .vazio{padding:24px;text-align:center;color:var(--texto2)}
 @media (max-width:860px){.hero .grid{grid-template-columns:1fr;gap:24px}.passos,.passos.tres{grid-template-columns:1fr 1fr}}
 @media (max-width:560px){.passos,.passos.tres,.planos,.form2{grid-template-columns:1fr}.sec{padding:40px 0}.hero{padding:32px 0}.card{padding:20px}.top .btn{min-height:44px;padding:0 12px;white-space:nowrap}.btn-ic{width:44px;padding:0;border:1.5px solid var(--linha);color:var(--marca);background:var(--cartao)}.btn-ic:hover{border-color:var(--marca)}.top .wrap{gap:8px}.top .btn-t:not(.btn-sm){display:none}.marca b{font-size:22px}}
+
+.top .btn .sm{display:none}
+@media (max-width:560px){.top .btn .lg{display:none}.top .btn .sm{display:inline}}
+.row{display:flex;align-items:center;gap:8px}.row.between{justify-content:space-between}
+.linkbtn{appearance:none;border:0;background:none;color:var(--marca);text-decoration:underline;text-underline-offset:3px;font:600 14px Rubik,system-ui,sans-serif;cursor:pointer;padding:6px 4px}

@@ -504,6 +504,9 @@ html,body{overscroll-behavior-y:none}
 .stage-pen{position:absolute;right:10px;bottom:10px;display:inline-flex;align-items:center;gap:6px;background:#6933C5;color:#fff;font:600 14px/1 Rubik,system-ui,sans-serif;padding:8px 12px;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,.2)}
 .linkbtn{appearance:none;border:0;background:none;color:#6933C5;text-decoration:underline;font:600 14px Rubik,system-ui,sans-serif;cursor:pointer;padding:6px 4px}
 @media (max-width:420px){.add-tiles{grid-template-columns:repeat(3,1fr);gap:8px}.ftile.add{min-height:96px;font-size:13px}}
+
+.tag-og{display:inline-block;margin-left:8px;font-size:11px;font-weight:600;padding:2px 8px;border-radius:999px;background:#EBE3F5;color:#49258B;vertical-align:middle}
+.tag-og.id{background:#04C6C0;color:#0b3a38}
 </style>
 <div class="top">
   <a class="mod-volta" href="app.html" aria-label="Voltar aos módulos">‹ Módulos</a><div class="brand"><div class="wordmark" id="wordmark" aria-label="GenIO · Capacho"><b>Gen<i>IO</i></b><span>Capacho</span></div><div class="brand-t" id="brandT"></div></div>
@@ -540,6 +543,8 @@ html,body{overscroll-behavior-y:none}
         <p class="hint small ok-t" id="artUndo" aria-live="polite"></p>
         <div class="add-tiles" id="artTile">
           <label class="ftile add main" for="fLogo"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 17l-5-5-9 8"/></svg><span>+ Arte</span></label>
+          <button class="ftile add" id="addIdent" type="button" hidden><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h10"/></svg><span>Manual de identidade</span></button>
+          <button class="ftile add" id="addConj" type="button" hidden><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="8" height="7" rx="1"/><rect x="13" y="4" width="8" height="7" rx="1"/><rect x="3" y="13" width="8" height="7" rx="1"/><rect x="13" y="13" width="8" height="7" rx="1"/></svg><span>Conjunto pelo manual</span></button>
           <button class="ftile add" id="addText1" type="button"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 6V4h14v2M12 4v16M9 20h6"/></svg><span>+ Texto</span></button>
         </div>
       </div>
@@ -1515,8 +1520,8 @@ $("#addLogo").onclick=()=>{let row=$("#logoPick");if(row){row.remove();return;}r
   row.innerHTML=`<b>Logo do cliente</b><span>Fotografe o cartão de visita ou a fachada; o sistema acha o logo, tira o fundo e acerta as cores.</span><div class="row"><label class="btn" for="fLogoCam">Fotografar cartão</label><label class="btn ghost" for="fLogo">Escolher imagem</label></div>`;
   $("#layerList").before(row);};
 // várias imagens de uma vez: o editor abre uma por uma, na fila
-const LOGOQ=[];
-function nextLogoFromQueue(){const f=LOGOQ.shift();if(!f)return;loadFile(f,(src)=>openLogoEditor(null,src,LOGOQ.length),1600);}
+const LOGOQ=[];let LOGO_ORIGEM="";
+function nextLogoFromQueue(){const f=LOGOQ.shift();if(!f){LOGO_ORIGEM="";return;}loadFile(f,(src)=>openLogoEditor(null,src,LOGOQ.length),1600);}
 ["#fLogo","#fLogoCam"].forEach(id=>$(id).addEventListener("change",e=>{const fs=[...(e.target.files||[])];e.target.value="";if(!fs.length)return;const r=$("#logoPick");if(r)r.remove();
   const rp=S.logoReplace?spec().layers.find(l=>l.id===S.logoReplace)||null:null;S.logoReplace=null;
   if(rp){loadFile(fs[0],(src)=>openLogoEditor(rp,src),1600);return;}LOGOQ.push(...fs);nextLogoFromQueue();}));
@@ -1752,11 +1757,11 @@ $("#leUse").onclick=async()=>{const lc=leLabelsCanvas();if(!lc){$("#leMsg").text
   if(L){[...logoCache.keys()].forEach(k=>{if(k.startsWith(L.id+"|"))logoCache.delete(k);});Object.assign(L,data);}
   else{const nl=sp.layers.filter(l=>l.type==="logo").length,cells=[[0,0],[-1,-1],[1,-1],[-1,1],[1,1],[0,-1],[0,1],[-1,0],[1,0]],c=cells[nl%9],k=Math.floor(nl/9),
       wcm=Math.round(Math.min(f.w*(nl?0.28:0.5),(f.h*(nl?0.3:0.6))/data.ar)*10)/10;
-    L=Object.assign({id:uid(),type:"logo",widthCm:wcm,x:Math.round(c[0]*f.w*0.32+k*3),y:Math.round(c[1]*f.h*0.3+k*3),rot:0},data);sp.layers.push(L);}
+    L=Object.assign({id:uid(),type:"logo",origem:LOGO_ORIGEM||"franqueado",widthCm:wcm,x:Math.round(c[0]*f.w*0.32+k*3),y:Math.round(c[1]*f.h*0.3+k*3),rot:0},data);sp.layers.push(L);}
   S.sel=L.id;closeLogoEditor();logoLabels(L);if(S.view!=="arte"&&S.view!=="dados")go("arte");artChanged(true);renderLayers();renderArtTile();track("logo");renderParts();};
 // etapa 1: mostra o logo já preparado no quadro "Sua arte ou logotipo"
 // parte 1: várias artes (logos) e vários textos no mesmo tapete
-function renderArtTile(){const box=$("#artList");if(!box)return;box.replaceChildren();const ls=spec().layers,nt=$("#artNote");
+function renderArtTile(){const box=$("#artList");if(!box)return;box.replaceChildren();const ls=spec().layers,nt=$("#artNote");if(typeof identBotoes==="function")identBotoes();
   const nLogo=ls.filter(l=>l.type==="logo").length,nTxt=ls.filter(l=>l.type==="text").length;
   if(nt)nt.textContent=ls.length?`${nLogo} arte${nLogo===1?"":"s"} e ${nTxt} texto${nTxt===1?"":"s"} neste tapete. Posição e tamanho você acerta em “Arrumar a arte no tapete”.`:"";if(nt)nt.hidden=!nt.textContent;
   ls.forEach((L,i)=>{const row=document.createElement("div");row.className="art-item";
@@ -1768,7 +1773,8 @@ function renderArtTile(){const box=$("#artList");if(!box)return;box.replaceChild
       inp.oninput=()=>{L.text=inp.value;artChanged(false);};inp.onchange=()=>{L.text=inp.value;artChanged(true);track("logo");renderParts();};mid.appendChild(inp);
       const sub=document.createElement("span");sub.className="hint small";sub.textContent=`${L.font} · letra de ${fmtCm(L.sizeCm)} cm · ${colorName(L.color)}`;mid.appendChild(sub);}
     else{const b=document.createElement("b");b.textContent=`Arte ${ls.filter(l=>l.type==="logo").indexOf(L)+1}`;const sub=document.createElement("span");sub.className="hint small";
-      const cs=L.neg&&L.neg.on?colorName(L.neg.color):L.single?colorName(L.single):[...new Set((L.map||[]).filter(Boolean))].map(colorName).join(", ");sub.textContent=`${fmtCm(L.widthCm)} cm de largura · ${cs}`;mid.append(b,sub);}
+      const cs=L.neg&&L.neg.on?colorName(L.neg.color):L.single?colorName(L.single):[...new Set((L.map||[]).filter(Boolean))].map(colorName).join(", ");sub.textContent=`${fmtCm(L.widthCm)} cm de largura · ${cs}`;
+      const og=document.createElement("span");og.className="tag-og"+(L.origem==="identidade"?" id":"");og.textContent=L.origem==="identidade"?"Manual de identidade":"Arte do franqueado";b.appendChild(og);mid.append(b,sub);}
     const acts=document.createElement("div");acts.className="row";
     if(L.type==="logo"){const ed=document.createElement("button");ed.type="button";ed.className="btn ghost";ed.textContent="Editar";ed.onclick=()=>openLogoEditor(L);
       const tr=document.createElement("label");tr.className="btn ghost";tr.htmlFor="fLogo";tr.textContent="Trocar";tr.onclick=()=>{S.logoReplace=L.id;};acts.append(ed,tr);}
@@ -2696,6 +2702,26 @@ function renderQTaps(){const b=$("#qTaps");if(!b)return;tapInit();b.replaceChild
 
 const tapSlug=()=>{tapInit();if(Q.tapetes.length<2)return "";return "-"+tapName(curTap()).normalize("NFD").replace(/[^\w\s-]/g,"").trim().replace(/\s+/g,"-").toLowerCase();};
 
+// ================= manual de identidade → arte e conjunto de tapetes =================
+// A identidade visual guardada na tela de módulos (store "clientes") entra como arte marcada "Manual de identidade".
+async function identDoCliente(){let nome="";try{nome=(localStorage.getItem("genio-cliente")||"").trim();}catch(e){}if(!nome)return null;
+  return new Promise(res=>{DB.open().then(db=>{if(!db||!db.objectStoreNames.contains("clientes"))return res(null);const t=db.transaction("clientes").objectStore("clientes").get(nome.toLowerCase());t.onsuccess=()=>res(t.result&&t.result.logos&&t.result.logos.length?t.result:null);t.onerror=()=>res(null);}).catch(()=>res(null));});}
+async function arteDoManual(){const id=await identDoCliente();if(!id)return false;
+  const fs=await Promise.all(id.logos.map(async l=>{const b=await (await fetch(l.src)).blob();return new File([b],l.nome||"identidade.png",{type:b.type||"image/png"});}));
+  LOGO_ORIGEM="identidade";openPartK("logo");LOGOQ.push(...fs);nextLogoFromQueue();return true;}
+// Conjunto: a partir do tapete atual (com a arte do manual), cria tapetes nos fundos compatíveis — a cor da marca e os neutros do catálogo
+function conjuntoDoManual(){tapInit();const sp=spec(),logo=sp.layers.find(l=>l.type==="logo"&&l.origem==="identidade")||sp.layers.find(l=>l.type==="logo");if(!logo)return 0;
+  const marca=[...new Set((logo.map||[]).filter(Boolean))].filter(c=>!["branco","preto03","grafite","cinza","prata"].includes(c));
+  const fundos=[...new Set([...marca.slice(0,2),"grafite","preto03","cinza"])].filter(c=>c!==sp.fundo);
+  const base=curTap();let n=0;
+  for(const f of fundos){if(Q.tapetes.length>=6)break;const T={id:uid(),nome:`${tapName(base)} · ${colorName(f)}`,qtd:1,spec:deep(base.spec)};T.spec.fundo=f;
+    T.spec.layers.forEach(l=>{l.id=uid();if(l.type==="logo"){const m=(l.map||[]).map(c=>c===f?"branco":c);l.map=m;if(l.single===f)l.single="branco";}else if(l.type==="text"&&l.color===f)l.color="branco";});
+    Q.tapetes.push(T);if(MF(base.id))Q.matFloors[T.id]=Object.assign({},MF(base.id));n++;}
+  if(n){if(typeof cardsInit==="function")cardsInit();setTapete(Q.tapetes.length-1);track("tapete");}return n;}
+async function identBotoes(){const id=await identDoCliente(),bI=$("#addIdent"),bC=$("#addConj");if(!bI)return;const temArte=spec().layers.some(l=>l.type==="logo"),temId=spec().layers.some(l=>l.type==="logo"&&l.origem==="identidade");
+  bI.hidden=!id||temId;bC.hidden=!(id&&temArte);bI.onclick=async()=>{if(!(await arteDoManual()))bI.hidden=true;};
+  bC.onclick=()=>{const n=conjuntoDoManual();const m=$("#artUndo");if(m)m.textContent=n?`${n} tapete${n>1?"s":""} criado${n>1?"s":""} pelo manual de identidade. Veja em Tapete.`:"Este orçamento já tem 6 tapetes.";};}
+
 // ================= fluxo em partes: barra fixa (voltar / desfazer / seguir), até 3 fotos do local =================
 // Partes: 1 logotipo · 2 tapete (medidas, cores, arte) · 3 fotos do local · 4 alinhar no local → orçamento (dados do cliente no fim).
 const PART_ORDER=["logo","tapete","fotos"],PART_NAME={logo:"Arte",tapete:"Tapete",fotos:"Local",local:"Resultado no local"};
@@ -3604,10 +3630,10 @@ async function sessRestore(){let o=null;try{o=await sessRead();}catch(e){}
     let cli=null;try{cli=localStorage.getItem("genio-cliente");}catch(e){}
     if(cli){const nome=cli.trim(),all=await DB.all(),dele=all.filter(o=>o.cliente&&(o.cliente.nome||"").trim().toLowerCase()===nome.toLowerCase()).sort((x,y)=>(y.atualizado||"").localeCompare(x.atualizado||""));
       const atual=(Q.cliente&&Q.cliente.nome||"").trim().toLowerCase()===nome.toLowerCase();
-      if(!atual){if(dele.length)await openQuote(dele[0]);else{$("#newQuote").click();Q.cliente.nome=nome;fillClient();
+      if(!atual){if(dele.length)await openQuote(dele[0]);else{$("#newQuote").click();Q.cliente.nome=nome;try{const d=JSON.parse(localStorage.getItem("genio-cliente-dados")||"null");if(d&&d.tel&&!Q.cliente.tel)Q.cliente.tel=d.tel;}catch(e){}fillClient();
         // identidade visual guardada na tela inicial: já entra como arte do projeto novo
         const id=await new Promise(res=>{DB.open().then(db=>{if(!db||!db.objectStoreNames.contains("clientes"))return res(null);const t=db.transaction("clientes").objectStore("clientes").get(nome.toLowerCase());t.onsuccess=()=>res(t.result||null);t.onerror=()=>res(null);});});
-        if(id&&id.logos&&id.logos.length){const fs=await Promise.all(id.logos.map(async l=>{const b=await (await fetch(l.src)).blob();return new File([b],l.nome||"identidade.png",{type:b.type||"image/png"});}));openPartK("logo");LOGOQ.push(...fs);nextLogoFromQueue();}}}}
+        if(id&&id.logos&&id.logos.length){LOGO_ORIGEM="identidade";const fs=await Promise.all(id.logos.map(async l=>{const b=await (await fetch(l.src)).blob();return new File([b],l.nome||"identidade.png",{type:b.type||"image/png"});}));openPartK("logo");LOGOQ.push(...fs);nextLogoFromQueue();}}}}
   })();
 })();
 

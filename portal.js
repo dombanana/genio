@@ -26,15 +26,15 @@ const G=(()=>{
   const data=s=>{if(!s)return"—";const d=new Date(s+"Z");return d.toLocaleDateString("pt-BR",{day:"2-digit",month:"2-digit",year:"2-digit"})+" "+d.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});};
   // módulos do GenIO: o Capacho funciona; os outros entram aos poucos com a mesma base (fotos, prévia, orçamento, Pix)
   const MODULOS=[
-    {id:"identidade",nome:"Identidade visual",url:"identidade.html",on:true,interno:true,img:"img/cena-identidade.jpg?v=6446732c9b"},
-    {id:"capacho",nome:"Capachos personalizados",url:"capacho.html",on:true,img:"img/cena-capacho.jpg?v=6446732c9b"},
-    {id:"placas",nome:"Placas e sinalização",img:"img/cena-placas.jpg?v=6446732c9b"},
-    {id:"adesivos",nome:"Adesivos e vitrines",img:"img/cena-adesivos.jpg?v=6446732c9b"},
-    {id:"uniformes",nome:"Uniformes e camisetas",img:"img/cena-uniformes.jpg?v=6446732c9b"},
-    {id:"impressos",nome:"Cartões e impressos",img:"img/cena-cartoes.jpg?v=6446732c9b"},
-    {id:"banners",nome:"Banners e faixas",img:"img/cena-banners.jpg?v=6446732c9b"},
-    {id:"brindes",nome:"Brindes e carimbos",img:"img/cat-brindes.jpg?v=6446732c9b"},
-    {id:"parede",nome:"Adesivos de parede",img:"img/cat-parede.jpg?v=6446732c9b"}];
+    {id:"identidade",nome:"Identidade visual",url:"identidade.html",on:true,interno:true,img:"img/cena-identidade.jpg?v=8228d20625"},
+    {id:"capacho",nome:"Capachos personalizados",url:"capacho.html",on:true,img:"img/cena-capacho.jpg?v=8228d20625"},
+    {id:"placas",nome:"Placas e sinalização",img:"img/cena-placas.jpg?v=8228d20625"},
+    {id:"adesivos",nome:"Adesivos e vitrines",img:"img/cena-adesivos.jpg?v=8228d20625"},
+    {id:"uniformes",nome:"Uniformes e camisetas",img:"img/cena-uniformes.jpg?v=8228d20625"},
+    {id:"impressos",nome:"Cartões e impressos",img:"img/cena-cartoes.jpg?v=8228d20625"},
+    {id:"banners",nome:"Banners e faixas",img:"img/cena-banners.jpg?v=8228d20625"},
+    {id:"brindes",nome:"Brindes e carimbos",img:"img/cat-brindes.jpg?v=8228d20625"},
+    {id:"parede",nome:"Adesivos de parede",img:"img/cat-parede.jpg?v=8228d20625"}];
   // fotos: imagens do catálogo GenIO (brand/catalogo no repositório), produto isolado em fundo lavanda; só foto e título
   // cartão do catálogo (referência do dono, 04/11): título à esquerda, cena do produto à direita; o cartão inteiro é o link; sem link, "Em breve" explícito
   const cardMod=(m,link)=>{const d=`<b>${esc(m.nome)}${m.on?"":'<span class="tag">Em breve</span>'}</b><div class="cena" style="background-image:url('${m.img}')"></div>`;
@@ -47,5 +47,13 @@ const G=(()=>{
   if("serviceWorker" in navigator&&(location.protocol==="https:"||location.hostname==="localhost"||location.hostname==="127.0.0.1"))navigator.serviceWorker.register("sw.js").catch(()=>{});
   // WhatsApp da central de atendimento (Dom Banana Tech), só dígitos com DDI e DDD; vazio = botão escondido
   const ATENDIMENTO="";
-  return {api,aparelho,nomeAparelho,eu,sair,guardada,$,$$,msg,olho,esc,data,MODULOS,renderMods,instalar,podeInstalar,ls,ATENDIMENTO};
+  // vídeos de treinamento do franqueado (página treinamento.html lista VIDEOS; vazio = "em gravação")
+  const VIDEOS=[];
+  // kits de franquia: foto (recorte de brand/kits-tres.png), itens e preço — preco null = "a consultar" (o dono ainda não definiu)
+  const KITS=[
+    {n:"01",nome:"Essencial",img:"img/kit-essencial.jpg?v=8228d20625",itens:["Camiseta ou polo e identificação","Acesso ao aplicativo de franqueado","Formação básica de produtos e instalação","Materiais comerciais digitais"],uso:"começar: apresentar, vender e encaminhar.",preco:null},
+    {n:"02",nome:"Comercial",img:"img/kit-comercial.jpg?v=8228d20625",itens:["Tudo do Essencial","Mochila e portfólio de amostras","Trena, caneta e bloco","Organizadores e referências para fotos"],uso:"visitar o comércio, medir e apresentar amostras.",preco:null,dest:true},
+    {n:"03",nome:"Operacional",img:"img/kit-operacional.jpg?v=8228d20625",itens:["Tudo do Comercial","Ferramentas e acessórios de instalação","Proteção adequada às atividades"],uso:"executar os serviços em que tiver capacitação.",preco:null}];
+  const BRL=v=>v==null?"Valor a consultar":"R$ "+Number(v).toLocaleString("pt-BR",{minimumFractionDigits:2,maximumFractionDigits:2});
+  return {api,aparelho,nomeAparelho,eu,sair,guardada,$,$$,msg,olho,esc,data,MODULOS,renderMods,instalar,podeInstalar,ls,ATENDIMENTO,VIDEOS,KITS,BRL};
 })();

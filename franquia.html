@@ -13,7 +13,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&display=swap">
-<link rel="stylesheet" href="portal.css?v=6446732c9b">
+<link rel="stylesheet" href="portal.css?v=8228d20625">
 <style>
 .kits{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:24px}
 .kit{display:flex;flex-direction:column;gap:12px}
@@ -23,8 +23,11 @@
 .kit li{padding:6px 0 6px 26px;position:relative;font-size:15px}
 .kit li:before{content:"";position:absolute;left:3px;top:13px;width:11px;height:6px;border-left:2.5px solid var(--terra);border-bottom:2.5px solid var(--terra);transform:rotate(-45deg)}
 .kit li.mais{color:var(--marca);font-weight:600}
-.kit .uso,.kit .cond{font-size:14px;color:var(--texto2);margin:0}
-.kit .uso b,.kit .cond b{color:var(--texto);font-weight:600}
+.kit .uso{font-size:14px;color:var(--texto2);margin:0}
+.kit .uso b{color:var(--texto);font-weight:600}
+.kit img{width:100%;height:auto;border-radius:12px;background:#fff;display:block}
+.kit .preco{font-size:26px;font-weight:800;color:var(--marca);margin:4px 0 0}
+.kit .preco.cons{font-size:17px;font-weight:600;color:var(--texto2)}
 .kit.dest{border:2px solid var(--marca)}
 .loja{display:grid;grid-template-columns:1.2fr .8fr;gap:24px;align-items:center;margin-top:24px}
 .loja img{width:100%;height:auto;border-radius:16px;display:block}
@@ -41,45 +44,33 @@
 <header class="top"><div class="wrap">
   <a class="marca" href="/?vendas=1" aria-label="GenIO, página inicial"><b>Gen<i>IO</i></b></a>
   <div class="fill"></div>
-  <a class="btn btn-t" href="/?vendas=1#produtos">Produtos</a>
-  <a class="btn btn-s btn-sm" href="/?vendas=1&entrar=1">Entrar</a>
+  <a class="btn btn-s btn-sm" href="/?vendas=1&entrar=1"><span class="lg">Espaço do franqueado</span><span class="sm">Franqueado</span></a>
   <a class="btn btn-p btn-sm" href="#interesse">Tenho interesse</a>
 </div></header>
 
 <main>
 <section class="hero" style="padding-bottom:8px"><div class="wrap">
-  <h1>Três kits. O mesmo catálogo.</h1>
-  <p class="sub">Escolha como começar. Todo parceiro vende os oito produtos; o kit muda o que você leva para a rua.</p>
+  <h1>Seja franqueado GenIO</h1>
+  <p class="sub">A franquia não é a compra de um kit. É entrar numa rede que vende personalização para o comércio com marca, aplicativo, fornecedores e formação prontos.</p>
 </div></section>
 
 <section class="sec" style="padding-top:16px"><div class="wrap">
-  <div class="kits">
-    <div class="card kit">
-      <span class="n">01</span><h3>Essencial</h3>
-      <ul><li>Camiseta ou polo e identificação</li><li>Acesso ao aplicativo de franqueado</li><li>Formação básica de produtos e instalação</li><li>Materiais comerciais digitais</li></ul>
-      <p class="uso"><b>Para</b> começar: apresentar, vender e encaminhar.</p>
-      <p class="cond"><b>Condições</b> a consultar.</p>
-      <a class="btn btn-s" href="#interesse" data-kit="Essencial">Tenho interesse</a>
-    </div>
-    <div class="card kit dest">
-      <span class="n">02</span><h3>Comercial</h3>
-      <ul><li>Tudo do Essencial</li><li class="mais">Mochila e portfólio de amostras</li><li class="mais">Trena, caneta e bloco</li><li class="mais">Organizadores e referências para fotos</li></ul>
-      <p class="uso"><b>Para</b> visitar o comércio, medir e apresentar amostras.</p>
-      <p class="cond"><b>Condições</b> a consultar.</p>
-      <a class="btn btn-p" href="#interesse" data-kit="Comercial">Tenho interesse</a>
-    </div>
-    <div class="card kit">
-      <span class="n">03</span><h3>Operacional</h3>
-      <ul><li>Tudo do Comercial</li><li class="mais">Ferramentas e acessórios de instalação</li><li class="mais">Proteção adequada às atividades</li></ul>
-      <p class="uso"><b>Para</b> executar os serviços em que tiver capacitação.</p>
-      <p class="cond"><b>Condições</b> a consultar.</p>
-      <a class="btn btn-s" href="#interesse" data-kit="Operacional">Tenho interesse</a>
-    </div>
+  <h2>O que a franquia entrega</h2>
+  <div class="passos tres">
+    <div class="card passo"><h3>Marca e catálogo</h3><p class="muted">Você vende os oito produtos GenIO com identidade, preços e fornecedores já negociados.</p></div>
+    <div class="card passo"><h3>Aplicativo</h3><p class="muted">Foto do local, resultado e orçamento na frente do cliente; pedido vai direto para a produção.</p></div>
+    <div class="card passo"><h3>Formação e rede</h3><p class="muted">Vídeos de treinamento, central de atendimento e trilhas por serviço para quem instala.</p></div>
   </div>
+  <p class="muted" style="margin:16px 0 0">Você entra com o seu celular ou tablet e escolhe o kit pelo que quer fazer na rua: apresentar e vender, medir e mostrar amostras, ou também instalar.</p>
+</div></section>
+
+<section class="sec alt" id="os-kits"><div class="wrap">
+  <h2>Os três kits</h2>
+  <div class="kits" id="kits"></div>
   <p class="muted small" style="margin-top:16px">Celular ou tablet: do parceiro. O aplicativo funciona no seu aparelho.</p>
 </div></section>
 
-<section class="sec alt" id="aplicativo"><div class="wrap">
+<section class="sec" id="aplicativo"><div class="wrap">
   <h2>Acesso ao aplicativo de franqueado</h2>
   <p class="sub">Pré-pago, por mês, por aparelho.</p>
   <div class="planos">
@@ -90,15 +81,15 @@
   </div>
 </div></section>
 
-<section class="sec"><div class="wrap">
+<section class="sec alt"><div class="wrap">
   <h2>O que todos podem vender</h2>
   <div class="mods" id="mods"></div>
 </div></section>
 
-<section class="sec alt"><div class="wrap">
+<section class="sec"><div class="wrap">
   <h2>Parceiro em ação</h2>
   <div class="loja">
-    <img src="img/loja.jpg?v=6446732c9b" alt="Loja conceito GenIO: capacho, adesivo no vidro, placa de recepção, uniformes, banner, canecas e carimbo" width="1200" height="675" loading="lazy">
+    <img src="img/loja.jpg?v=8228d20625" alt="Loja conceito GenIO: capacho, adesivo no vidro, placa de recepção, uniformes, banner, canecas e carimbo" width="1200" height="675" loading="lazy">
     <div>
       <ol>
         <li><b>Apresentar</b> — a loja e as amostras mostram o que vendemos.</li>
@@ -111,17 +102,17 @@
   </div>
 </div></section>
 
-<section class="sec"><div class="wrap">
+<section class="sec alt"><div class="wrap">
   <h2>Dúvidas essenciais</h2>
   <div class="duv">
     <div class="card"><b>O kit limita o que eu vendo?</b><p>Não. O catálogo é o mesmo para os três.</p></div>
     <div class="card"><b>Preciso de aparelho?</b><p>Só o seu celular ou tablet. O aplicativo roda nele.</p></div>
-    <div class="card"><b>Quanto custa?</b><p>O aplicativo, a partir de R$ 79 por mês. As condições do kit, a consultar.</p></div>
+    <div class="card"><b>Quanto custa?</b><p>O valor de cada kit está ao lado dele; o aplicativo, a partir de R$ 79 por mês.</p></div>
     <div class="card"><b>Como é a formação?</b><p>Base comum de produtos e instalação; trilhas específicas por serviço.</p></div>
   </div>
 </div></section>
 
-<section class="sec alt" id="interesse"><div class="wrap">
+<section class="sec" id="interesse"><div class="wrap">
   <div class="card" style="max-width:680px">
     <h2>Tenho interesse</h2>
     <form id="fInt" class="form2" novalidate>
@@ -138,10 +129,12 @@
 
 <footer class="rod"><div class="wrap">GenIO · Dom Banana · genio.dombanana.tech</div></footer>
 
-<script src="portal.js?v=6446732c9b"></script>
+<script src="portal.js?v=8228d20625"></script>
 <script>
 (()=>{const {$, $$}=G;
   G.renderMods($("#mods"),false);
+  // os três kits: foto do que acompanha, itens, para que serve, preço e o botão — o cartão inteiro é comparável
+  $("#kits").innerHTML=G.KITS.map(k=>`<div class="card kit${k.dest?" dest":""}"><span class="n">${k.n}</span><h3>${G.esc(k.nome)}</h3><img src="${k.img}" alt="Itens do kit ${G.esc(k.nome)}" loading="lazy"><ul>${k.itens.map(i=>`<li${i.startsWith("Tudo do")?"":k.n==="01"?"":' class="mais"'}>${G.esc(i)}</li>`).join("")}</ul><p class="uso"><b>Para</b> ${G.esc(k.uso)}</p><p class="preco${k.preco==null?" cons":""}">${G.BRL(k.preco)}</p><a class="btn ${k.dest?"btn-p":"btn-s"}" href="#interesse" data-kit="${G.esc(k.nome)}">Tenho interesse</a></div>`).join("");
   $$("[data-kit]").forEach(a=>a.onclick=()=>{$("#iKit").value=a.dataset.kit;});
   $("#fInt").onsubmit=async e=>{e.preventDefault();const out=$("#iOut"),b=$("#fInt button[type=submit]");
     const d={nome:$("#iNome").value.trim(),telefone:$("#iTel").value.trim(),cidade:$("#iCid").value.trim(),mensagem:`[Franquia · ${$("#iKit").value}] ${$("#iMsg").value.trim()}`};
