@@ -26,14 +26,14 @@ const G=(()=>{
   const data=s=>{if(!s)return"—";const d=new Date(s+"Z");return d.toLocaleDateString("pt-BR",{day:"2-digit",month:"2-digit",year:"2-digit"})+" "+d.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});};
   // módulos do GenIO: o Capacho funciona; os outros entram aos poucos com a mesma base (fotos, prévia, orçamento, Pix)
   const MODULOS=[
-    {id:"capacho",nome:"Capachos personalizados",url:"capacho.html",on:true,img:"img/cena-capacho.jpg?v=037450970f"},
-    {id:"placas",nome:"Placas e sinalização",img:"img/cena-placas.jpg?v=037450970f"},
-    {id:"adesivos",nome:"Adesivos e vitrines",img:"img/cena-adesivos.jpg?v=037450970f"},
-    {id:"uniformes",nome:"Uniformes e camisetas",img:"img/cena-uniformes.jpg?v=037450970f"},
-    {id:"impressos",nome:"Cartões e impressos",img:"img/cena-cartoes.jpg?v=037450970f"},
-    {id:"banners",nome:"Banners e faixas",img:"img/cena-banners.jpg?v=037450970f"},
-    {id:"brindes",nome:"Brindes e carimbos",img:"img/cat-brindes.jpg?v=037450970f"},
-    {id:"parede",nome:"Adesivos de parede",img:"img/cat-parede.jpg?v=037450970f"}];
+    {id:"capacho",nome:"Capachos personalizados",url:"capacho.html",on:true,img:"img/cena-capacho.jpg?v=8dc2c4e9a5"},
+    {id:"placas",nome:"Placas e sinalização",img:"img/cena-placas.jpg?v=8dc2c4e9a5"},
+    {id:"adesivos",nome:"Adesivos e vitrines",img:"img/cena-adesivos.jpg?v=8dc2c4e9a5"},
+    {id:"uniformes",nome:"Uniformes e camisetas",img:"img/cena-uniformes.jpg?v=8dc2c4e9a5"},
+    {id:"impressos",nome:"Cartões e impressos",img:"img/cena-cartoes.jpg?v=8dc2c4e9a5"},
+    {id:"banners",nome:"Banners e faixas",img:"img/cena-banners.jpg?v=8dc2c4e9a5"},
+    {id:"brindes",nome:"Brindes e carimbos",img:"img/cat-brindes.jpg?v=8dc2c4e9a5"},
+    {id:"parede",nome:"Adesivos de parede",img:"img/cat-parede.jpg?v=8dc2c4e9a5"}];
   // fotos: imagens do catálogo GenIO (brand/catalogo no repositório), produto isolado em fundo lavanda; só foto e título
   // cartão do catálogo (referência do dono, 04/11): título à esquerda, cena do produto à direita; o cartão inteiro é o link; sem link, "Em breve" explícito
   const cardMod=(m,link)=>{const d=`<b>${esc(m.nome)}${m.on?"":'<span class="tag">Em breve</span>'}</b><div class="cena" style="background-image:url('${m.img}')"></div>`;
