@@ -26,14 +26,14 @@ const G=(()=>{
   const data=s=>{if(!s)return"—";const d=new Date(s+"Z");return d.toLocaleDateString("pt-BR",{day:"2-digit",month:"2-digit",year:"2-digit"})+" "+d.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});};
   // módulos do GenIO: o Capacho funciona; os outros entram aos poucos com a mesma base (fotos, prévia, orçamento, Pix)
   const MODULOS=[
-    {id:"capacho",nome:"Capachos personalizados",url:"capacho.html",on:true,img:"img/cena-capacho.jpg?v=800ca6c890"},
-    {id:"placas",nome:"Placas e sinalização",img:"img/cena-placas.jpg?v=800ca6c890"},
-    {id:"adesivos",nome:"Adesivos e vitrines",img:"img/cena-adesivos.jpg?v=800ca6c890"},
-    {id:"uniformes",nome:"Uniformes e camisetas",img:"img/cena-uniformes.jpg?v=800ca6c890"},
-    {id:"impressos",nome:"Cartões e impressos",img:"img/cena-cartoes.jpg?v=800ca6c890"},
-    {id:"banners",nome:"Banners e faixas",img:"img/cena-banners.jpg?v=800ca6c890"},
-    {id:"brindes",nome:"Brindes e carimbos",img:"img/cat-brindes.jpg?v=800ca6c890"},
-    {id:"parede",nome:"Adesivos de parede",img:"img/cat-parede.jpg?v=800ca6c890"}];
+    {id:"capacho",nome:"Capachos personalizados",url:"capacho.html",on:true,img:"img/cena-capacho.jpg?v=2f10b99c92"},
+    {id:"placas",nome:"Placas e sinalização",img:"img/cena-placas.jpg?v=2f10b99c92"},
+    {id:"adesivos",nome:"Adesivos e vitrines",img:"img/cena-adesivos.jpg?v=2f10b99c92"},
+    {id:"uniformes",nome:"Uniformes e camisetas",img:"img/cena-uniformes.jpg?v=2f10b99c92"},
+    {id:"impressos",nome:"Cartões e impressos",img:"img/cena-cartoes.jpg?v=2f10b99c92"},
+    {id:"banners",nome:"Banners e faixas",img:"img/cena-banners.jpg?v=2f10b99c92"},
+    {id:"brindes",nome:"Brindes e carimbos",img:"img/cat-brindes.jpg?v=2f10b99c92"},
+    {id:"parede",nome:"Adesivos de parede",img:"img/cat-parede.jpg?v=2f10b99c92"}];
   // fotos: imagens do catálogo GenIO (brand/catalogo no repositório), produto isolado em fundo lavanda; só foto e título
   // cartão do catálogo (referência do dono, 04/11): título à esquerda, cena do produto à direita; o cartão inteiro é o link; sem link, "Em breve" explícito
   const cardMod=(m,link)=>{const d=`<b>${esc(m.nome)}${m.on?"":'<span class="tag">Em breve</span>'}</b><div class="cena" style="background-image:url('${m.img}')"></div>`;
@@ -44,5 +44,7 @@ const G=(()=>{
   const instalar=async()=>{if(!inst)return false;inst.prompt();const r=await inst.userChoice.catch(()=>null);inst=null;return r&&r.outcome==="accepted";};
   const podeInstalar=()=>!!inst;
   if("serviceWorker" in navigator&&(location.protocol==="https:"||location.hostname==="localhost"||location.hostname==="127.0.0.1"))navigator.serviceWorker.register("sw.js").catch(()=>{});
-  return {api,aparelho,nomeAparelho,eu,sair,guardada,$,$$,msg,olho,esc,data,MODULOS,renderMods,instalar,podeInstalar,ls};
+  // WhatsApp da central de atendimento (Dom Banana Tech), só dígitos com DDI e DDD; vazio = botão escondido
+  const ATENDIMENTO="";
+  return {api,aparelho,nomeAparelho,eu,sair,guardada,$,$$,msg,olho,esc,data,MODULOS,renderMods,instalar,podeInstalar,ls,ATENDIMENTO};
 })();

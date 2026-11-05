@@ -100,4 +100,4 @@ a.mod:active{transform:translateY(1px)}
 @media (max-width:520px){.saud{min-height:140px;padding:16px 18px;background-position:72% center}.saud-ic{height:124px;right:8px}}
 .vazio{padding:24px;text-align:center;color:var(--texto2)}
 @media (max-width:860px){.hero .grid{grid-template-columns:1fr;gap:24px}.passos,.passos.tres{grid-template-columns:1fr 1fr}}
-@media (max-width:560px){.passos,.passos.tres,.planos,.form2{grid-template-columns:1fr}.sec{padding:40px 0}.hero{padding:32px 0}.card{padding:20px}.top .btn{min-height:44px;padding:0 12px;white-space:nowrap}.top .wrap{gap:8px}.top .btn-t:not(.btn-sm){display:none}.marca b{font-size:22px}}
+@media (max-width:560px){.passos,.passos.tres,.planos,.form2{grid-template-columns:1fr}.sec{padding:40px 0}.hero{padding:32px 0}.card{padding:20px}.top .btn{min-height:44px;padding:0 12px;white-space:nowrap}.btn-ic{width:44px;padding:0;border:1.5px solid var(--linha);color:var(--marca);background:var(--cartao)}.btn-ic:hover{border-color:var(--marca)}.top .wrap{gap:8px}.top .btn-t:not(.btn-sm){display:none}.marca b{font-size:22px}}

@@ -15,25 +15,26 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&display=swap">
-<link rel="stylesheet" href="portal.css?v=800ca6c890">
+<link rel="stylesheet" href="portal.css?v=2f10b99c92">
 </head>
 <body>
 <header class="top"><div class="wrap">
   <span class="marca" aria-label="GenIO, módulos"><b>Gen<i>IO</i></b><span>módulos</span></span>
   <div class="fill"></div>
-  <a class="btn btn-t btn-sm" href="admin.html" id="lAdmin" hidden>Administração</a>
+  <a class="btn btn-ic" href="admin.html" id="lAdmin" hidden aria-label="Configurações" title="Configurações"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></a>
+  <a class="btn btn-ic" id="lAtend" hidden target="_blank" rel="noopener" aria-label="Central de atendimento (WhatsApp)" title="Central de atendimento"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12a8 8 0 0 1 16 0v4a2 2 0 0 1-2 2h-2v-6h4M4 12v4a2 2 0 0 0 2 2h2v-6H4"/><path d="M12 20v1a1 1 0 0 0 1 1h3"/></svg></a>
   <button class="btn btn-s btn-sm" type="button" id="bSair">Sair</button>
 </div></header>
 <main class="wrap">
   <div class="saud">
     <div><h1 id="oi">Olá</h1><p class="muted" id="plano" style="margin:4px 0 0"></p><button class="btn btn-s btn-sm" type="button" id="bInst" hidden style="margin-top:10px">Instalar no aparelho</button></div>
-    <img class="saud-ic" src="img/parceiro.png?v=800ca6c890" alt="" width="77" height="150">
+    <img class="saud-ic" src="img/parceiro.png?v=2f10b99c92" alt="" width="77" height="150">
   </div>
   <div id="off" class="msg info" hidden>Sem internet. O Capacho funciona assim mesmo.</div>
   <div class="mods" id="mods" aria-live="polite"></div>
   <div style="height:48px"></div>
 </main>
-<script src="portal.js?v=800ca6c890"></script>
+<script src="portal.js?v=2f10b99c92"></script>
 <script>
 (async()=>{const {$}=G;
   let c=null;try{c=await G.eu();}catch(e){c=null;}
@@ -41,6 +42,8 @@
   $("#oi").textContent="Olá, "+(c.nome||"").split(" ")[0];
   $("#plano").textContent=c.plano_nome||"";
   $("#lAdmin").hidden=c.papel!=="admin";$("#off").hidden=!c.offline;
+  // central de atendimento: WhatsApp do Dom Banana Tech (número em G.ATENDIMENTO; sem número, o ícone não aparece)
+  if(G.ATENDIMENTO){const at=$("#lAtend");at.href="https://wa.me/"+G.ATENDIMENTO+"?text="+encodeURIComponent("Olá! Sou "+(c.nome||"")+", do GenIO.");at.hidden=false;}
   G.renderMods($("#mods"),true);
   $("#bSair").onclick=()=>G.sair();
   const bi=$("#bInst"),mostra=()=>{bi.hidden=!G.podeInstalar();};mostra();document.addEventListener("genio-instalavel",mostra);
