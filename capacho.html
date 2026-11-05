@@ -1336,7 +1336,7 @@ $("#shoot").onclick=()=>{const vw=video.videoWidth,vh=video.videoHeight;if(!vw)r
   Q.photo={src:cv.toDataURL("image/jpeg",0.9),w:vw,h:vh,example:false};stopLive();const f=$("#flash");f.classList.remove("go");void f.offsetWidth;f.classList.add("go");
   Q.pose.ref=null;Q.pose.plane=null;renderThumb();layout();updateSub();schedule();msg("Foto tirada. Ajuste o tapete se precisar e gere o orçamento.");refAuto();};
 function loadFile(f,cb,max){const r=new FileReader();r.onload=()=>{const f35=exifF35(r.result);const img=new Image();img.onload=()=>{const mx=max||2400,k=Math.min(1,mx/Math.max(img.naturalWidth,img.naturalHeight)),w=Math.round(img.naturalWidth*k),h=Math.round(img.naturalHeight*k);
-  const cv=document.createElement("canvas");cv.width=w;cv.height=h;cv.getContext("2d").drawImage(img,0,0,w,h);cb(cv.toDataURL("image/jpeg",0.9),w,h,cv,f35);};img.onerror=()=>msg("Não consegui abrir essa imagem.");img.src=r.result;};r.readAsDataURL(f);}
+  const cv=document.createElement("canvas");cv.width=w;cv.height=h;cv.getContext("2d").drawImage(img,0,0,w,h);const png=/png|webp|svg|gif/i.test(f.type||"");cb(png?cv.toDataURL("image/png"):cv.toDataURL("image/jpeg",0.9),w,h,cv,f35);};img.onerror=()=>msg("Não consegui abrir essa imagem.");img.src=r.result;};r.readAsDataURL(f);}
 function setPhoto(src,w,h,cv,f35){const wasEx=!Q.photo||Q.photo.example;Q.photo={src,w,h,example:false,f35:f35||null};Q.pose=Object.assign(wasEx?POSE_NEW():Q.pose,{ref:null});if(Q.pose.plane&&!wasEx)Q.pose.plane=null;renderThumb();if(S.view==="local"){layout();syncSliders();schedule();}refAuto();}
 ["#filePhoto","#fileShot"].forEach(id=>$(id).addEventListener("change",e=>{const f=e.target.files&&e.target.files[0];if(!f)return;loadFile(f,onFotoFile);e.target.value="";}));
 // câmera direto, com ajuste (recorte/endireitar) antes de entrar: Local aceita várias fotos
@@ -1550,19 +1550,25 @@ function nextLogoFromQueue(){const f=LOGOQ.shift();if(!f){LOGO_ORIGEM="";return;
 
 // ================= EDITOR DE LOGO =================
 const LE={};const leStage=$("#leStage"),leCanvas=$("#leCanvas"),leHandles=$("#leHandles");
-function imgToCanvas(src){return new Promise(res=>{const i=new Image();i.onload=()=>{const c=document.createElement("canvas");c.width=i.naturalWidth;c.height=i.naturalHeight;c.getContext("2d").drawImage(i,0,0);res(c);};i.onerror=()=>res(null);i.src=src;});}
+// PNG com transparência: o transparente vira um fundo liso (branco, ou preto se o logo for claro) e fica marcado que não há cor de fundo real
+function imgToCanvas(src){return new Promise(res=>{const i=new Image();i.onload=()=>{const c=document.createElement("canvas");c.width=i.naturalWidth;c.height=i.naturalHeight;const x=c.getContext("2d");x.drawImage(i,0,0);
+    const im=x.getImageData(0,0,c.width,c.height),d=im.data;let tr=0,op=0;for(let k=3;k<d.length;k+=16){if(d[k]<128)tr++;else op++;}
+    c.transparente=tr>op*0.02;
+    if(c.transparente){// a transparência do arquivo é o recorte; a cor de cada pixel fica a dele (sem misturar com fundo)
+      const n=c.width*c.height,m=new Uint8Array(n);for(let i=0;i<n;i++){m[i]=d[i*4+3];if(d[i*4+3]<8){d[i*4]=255;d[i*4+1]=255;d[i*4+2]=255;}d[i*4+3]=255;}x.putImageData(im,0,0);c.alphaMask=m;}
+    res(c);};i.onerror=()=>res(null);i.src=src;});}
 async function openLogoEditor(layer,src,rest){const qm=$("#leQueue");if(qm){qm.hidden=!rest;qm.textContent=rest?`Depois desta, ${rest>1?"faltam":"falta"} ${rest} ${rest>1?"imagens":"imagem"}.`:"";}
   const ed=layer&&layer.edit&&(!src||src===layer.edit.src)?layer.edit:null;src=src||(ed&&ed.src);if(!src)return;
   const cv=await imgToCanvas(src);if(!cv)return;
   Object.assign(LE,{layer,src,img:cv,step:1,tool:"blocos",polySel:-1,editMask:null,bgTest:spec().fundo,colors:null,map:null,single:null,neg:null,rot90:ed?ed.rot90||0:0,foto:ed&&ed.foto?Object.assign({},ed.foto):null,fotoCache:null,fotoAuto:false,fotoPolyOk:!!(ed&&ed.foto)});
   if(ed){LE.quad=ed.quad.map(p=>[...p]);LE.tol=ed.tol;LE.soft=ed.soft;LE.blockOn=ed.blockOn||null;LE.poly=ed.poly?ed.poly.map(p=>[...p]):null;LE.map=layer.map?[...layer.map]:null;LE.single=layer.single;LE.neg=layer.neg?deep(layer.neg):null;
     if(ed.edit){const ec=await imgToCanvas(ed.edit);LE.editSrc=ec;}}
-  else{const w=cv.width,h=cv.height;LE.quad=[[0,0],[w,0],[w,h],[0,h]];LE.tol=60;LE.soft=8;LE.blockOn=null;LE.poly=null;LE.editSrc=null;}
+  else{const w=cv.width,h=cv.height;LE.quad=[[0,0],[w,0],[w,h],[0,h]];LE.tol=60;LE.soft=8;LE.tolAuto=true;LE.blockOn=null;LE.poly=null;LE.editSrc=null;}
   $("#leTol").value=LE.tol;$("#leSoft").value=LE.soft;
   $("#logoEditor").hidden=false;document.body.style.overflow="hidden";leStep(1);
 }
 function insetQuad(c){const w=c.width,h=c.height,m=0.06;return [[w*m,h*m],[w*(1-m),h*m],[w*(1-m),h*(1-m)],[w*m,h*(1-m)]];}
-function closeLogoEditor(){$("#logoEditor").hidden=true;document.body.style.overflow="";if(LOGOQ.length)setTimeout(nextLogoFromQueue,120);}
+function closeLogoEditor(){LE.step=0;$("#logoEditor").hidden=true;document.body.style.overflow="";if(LOGOQ.length)setTimeout(nextLogoFromQueue,120);}
 $("#leCancel").onclick=closeLogoEditor;
 // --- achar o cartão (sem IA): cor da borda x resto, maior região perto do centro, cantos extremos ---
 function detectCard(cv){
@@ -1592,7 +1598,7 @@ function detectCard(cv){
 function leSize(aw,ah){const box=Math.min(780,$(".sheet-in").clientWidth-28),maxH=window.innerHeight*0.5,w=Math.min(box,maxH*aw/ah);LE.sw=w;LE.sh=w*ah/aw;
   leStage.style.width=w+"px";leStage.style.height=LE.sh+"px";const dpr=Math.min(2,window.devicePixelRatio||1);leCanvas.width=Math.round(w*dpr);leCanvas.height=Math.round(LE.sh*dpr);}
 function leStep(n){
-  if(n>=2&&LE.step===1){leWarp();LE.A=null;}
+  if(n>=2&&LE.step===1){leWarp();LE.A=null;if(LE.tolAuto){leAutoTol();LE.tolAuto=false;}}
   if(n>=2&&!LE.A)leComputeData(false);
   if(n===3&&LE.step!==3){if(!leFinal()){if(LE.step!==2)leStep(2);return;}leQuantize();}
   LE.step=n;["1","2","3"].forEach(i=>{$("#lePanel"+i).hidden=+i!==n;const b=$("#leS"+i);if(+i===n)b.setAttribute("aria-current","step");else b.removeAttribute("aria-current");});
@@ -1617,25 +1623,35 @@ function leBindQuad(h){h.addEventListener("pointerdown",e=>{e.stopPropagation();
   h.addEventListener("pointermove",e=>{if(!h.hasPointerCapture(e.pointerId)||LE.step!==1)return;const r=leStage.getBoundingClientRect(),s=LE.img.width/LE.sw;LE.quad[+h.dataset.i]=[clamp((e.clientX-r.left)*s,0,LE.img.width),clamp((e.clientY-r.top)*s,0,LE.img.height)];leDraw1();});}
 function leWarp(){const key=JSON.stringify(LE.quad);if(LE.warpKey&&LE.warpKey!==key){LE.blockOn=null;LE.poly=null;LE.editSrc=null;}LE.warpKey=key;const q=LE.quad,d=(a,b)=>Math.hypot(a[0]-b[0],a[1]-b[1]);let w=(d(q[0],q[1])+d(q[3],q[2]))/2,h=(d(q[0],q[3])+d(q[1],q[2]))/2;
   const k=Math.min(1.5,1100/Math.max(w,h));w=Math.max(8,Math.round(w*k));h=Math.max(8,Math.round(h*k));
-  const M=solveH([[0,0],[w,0],[w,h],[0,h]],q),sw=LE.img.width,sh=LE.img.height,src=LE.img.getContext("2d").getImageData(0,0,sw,sh).data,out=new ImageData(w,h),o=out.data;
+  const M=solveH([[0,0],[w,0],[w,h],[0,h]],q),sw=LE.img.width,sh=LE.img.height,src=LE.img.getContext("2d").getImageData(0,0,sw,sh).data,out=new ImageData(w,h),o=out.data,am=LE.img.alphaMask||null,aw=am?new Float32Array(w*h):null;
   for(let y=0;y<h;y++)for(let x=0;x<w;x++){const den=M[6]*(x+.5)+M[7]*(y+.5)+M[8],sx=(M[0]*(x+.5)+M[1]*(y+.5)+M[2])/den-.5,sy=(M[3]*(x+.5)+M[4]*(y+.5)+M[5])/den-.5;
     const x0=clamp(Math.floor(sx),0,sw-1),y0=clamp(Math.floor(sy),0,sh-1),x1=Math.min(x0+1,sw-1),y1=Math.min(y0+1,sh-1),fx=clamp(sx-x0,0,1),fy=clamp(sy-y0,0,1),j=(y*w+x)*4;
-    for(let ch=0;ch<3;ch++){const a=src[(y0*sw+x0)*4+ch],b=src[(y0*sw+x1)*4+ch],c=src[(y1*sw+x0)*4+ch],dd=src[(y1*sw+x1)*4+ch];o[j+ch]=(a*(1-fx)+b*fx)*(1-fy)+(c*(1-fx)+dd*fx)*fy;}o[j+3]=255;}
-  LE.warp=out;LE.ww=w;LE.wh=h;LE.bg=borderColor(out);LE.editMask=new Int8Array(w*h);
+    for(let ch=0;ch<3;ch++){const a=src[(y0*sw+x0)*4+ch],b=src[(y0*sw+x1)*4+ch],c=src[(y1*sw+x0)*4+ch],dd=src[(y1*sw+x1)*4+ch];o[j+ch]=(a*(1-fx)+b*fx)*(1-fy)+(c*(1-fx)+dd*fx)*fy;}o[j+3]=255;
+    if(am){const a=am[y0*sw+x0],b=am[y0*sw+x1],c=am[y1*sw+x0],dd=am[y1*sw+x1];aw[y*w+x]=(a*(1-fx)+b*fx)*(1-fy)+(c*(1-fx)+dd*fx)*fy;}}
+  LE.warp=out;LE.ww=w;LE.wh=h;LE.alphaWarp=aw;LE.bg=borderColor(out);LE.editMask=new Int8Array(w*h);
   if(LE.editSrc&&LE.editSrc.width===w&&LE.editSrc.height===h){const ed=LE.editSrc.getContext("2d").getImageData(0,0,w,h).data;for(let i=0;i<w*h;i++)LE.editMask[i]=ed[i*4]>170?1:ed[i*4]<85?-1:0;}
   LE.editSrc=null;}
 function borderColor(img){const {data,width:w,height:h}=img,b=Math.max(2,Math.round(Math.min(w,h)*0.03)),bins=new Map();
   for(let y=0;y<h;y+=2)for(let x=0;x<w;x+=2){if(x>=b&&x<w-b&&y>=b&&y<h-b)continue;const i=(y*w+x)*4,r=data[i],g=data[i+1],bl=data[i+2],k=((r>>5)<<6)|((g>>5)<<3)|(bl>>5);
     const e=bins.get(k)||{n:0,r:0,g:0,b:0};e.n++;e.r+=r;e.g+=g;e.b+=bl;bins.set(k,e);}
   let best=null;bins.forEach(e=>{if(!best||e.n>best.n)best=e;});return best?[Math.round(best.r/best.n),Math.round(best.g/best.n),Math.round(best.b/best.n)]:[255,255,255];}
+// quanto tirar do fundo, automático: o vale entre "parecido com o fundo" e "diferente do fundo" (Otsu na distância de cor)
+function leAutoTol(){const {data}=LE.warp,n=LE.ww*LE.wh,[br,bg_,bb]=LE.bg,H=new Float64Array(256);let tot=0;
+  for(let i=0;i<n;i+=2){const d=Math.min(255,Math.round(keyDist([data[i*4],data[i*4+1],data[i*4+2]],[br,bg_,bb])));H[d]++;tot++;}
+  let sum=0;for(let i=0;i<256;i++)sum+=i*H[i];let sb=0,wb=0,best=0,thr=60;for(let t=0;t<256;t++){wb+=H[t];if(!wb)continue;const wf=tot-wb;if(!wf)break;sb+=t*H[t];const mb=sb/wb,mf=(sum-sb)/wf,v=wb*wf*(mb-mf)*(mb-mf);if(v>best){best=v;thr=t;}}
+  LE.tol=Math.max(18,Math.min(55,Math.round(thr*0.7)));LE.soft=Math.max(3,Math.min(12,Math.round(LE.tol*0.15)));$("#leTol").value=LE.tol;$("#leSoft").value=LE.soft;}
 // o vendedor toca no fundo da foto: a cor dali vira o fundo a tirar
 function leBgAt(x,y){const {data}=LE.warp,w=LE.ww,h=LE.wh;let r=0,g=0,b=0,n=0;for(let dy=-3;dy<=3;dy++)for(let dx=-3;dx<=3;dx++){const xx=x+dx,yy=y+dy;if(xx<0||yy<0||xx>=w||yy>=h)continue;const i=(yy*w+xx)*4;r+=data[i];g+=data[i+1];b+=data[i+2];n++;}
-  if(n){LE.bg=[Math.round(r/n),Math.round(g/n),Math.round(b/n)];LE.blockOn=null;leCompute(false);}}
+  if(n){LE.bg=[Math.round(r/n),Math.round(g/n),Math.round(b/n)];leAutoTol();LE.blockOn=null;leCompute(false);leHint();}}
 let leRaf=0;["#leTol","#leSoft"].forEach(id=>$(id).addEventListener("input",()=>{LE.tol=+$("#leTol").value;LE.soft=+$("#leSoft").value;if(!leRaf)leRaf=requestAnimationFrame(()=>{leRaf=0;leCompute(true);});}));
 $("#leBrush").addEventListener("input",e=>{$("#leBrushO").textContent=e.target.value+" px";});
 // fundo -> alfa; blocos; proposta de logo
-function leAlpha(){const {data}=LE.warp,n=LE.ww*LE.wh,[br,bg_,bb]=LE.bg,t=LE.tol,s=LE.soft,A=new Float32Array(n);
-  for(let i=0;i<n;i++){const d=cdist([data[i*4],data[i*4+1],data[i*4+2]],[br,bg_,bb]);A[i]=clamp((d-(t-s))/(2*s),0,1);}
+// distância para o fundo: cor + "quanto de cor" (branco sobre amarelo-claro é parecido em RGB, mas um é neutro e o outro não)
+const chromaOf=c=>Math.max(c[0],c[1],c[2])-Math.min(c[0],c[1],c[2]);
+function keyDist(c,bg){return cdist(c,bg)+0.8*Math.abs(chromaOf(c)-chromaOf(bg));}
+function leAlpha(){const {data}=LE.warp,n=LE.ww*LE.wh,bg=LE.bg,t=LE.tol,s=LE.soft,A=new Float32Array(n);
+  if(LE.alphaWarp){for(let i=0;i<n;i++)A[i]=clamp(LE.alphaWarp[i]/255,0,1);return A;}
+  for(let i=0;i<n;i++){const d=keyDist([data[i*4],data[i*4+1],data[i*4+2]],bg);A[i]=clamp((d-(t-s))/(2*s),0,1);}
   // remove poeira de 1-2 px
   return A;}
 function dilate(bin,w,h,r){const tmp=new Uint8Array(w*h),out=new Uint8Array(w*h);
@@ -1652,7 +1668,7 @@ function leBlocks(A){const w=LE.ww,h=LE.wh,n=w*h,bin=new Uint8Array(n);for(let i
     const edge=b.x0<=1||b.y0<=1||b.x1>=w-2||b.y1>=h-2;b.edgeJunk=edge&&b.ink/(b.w*b.h)<0.12;out.push(b);});
   return {lab,blocks:out};}
 function proposeBlocks(blocks){
-  const cand=blocks.filter(b=>!b.edgeJunk);if(!cand.length)return blocks.map(()=>false);
+  let cand=blocks.filter(b=>!b.edgeJunk);if(!cand.length){if(!blocks.length)return [];const m=blocks.reduce((a,b)=>b.ink>a.ink?b:a);return blocks.map(b=>b===m);}
   const score=b=>b.ink*(1+2*b.sat)*Math.sqrt(b.h);const main=cand.reduce((a,b)=>score(b)>score(a)?b:a);
   const gap=(a,b)=>Math.max(0,Math.max(a.x0,b.x0)-Math.min(a.x1,b.x1),Math.max(a.y0,b.y0)-Math.min(a.y1,b.y1));
   // inclui blocos grandes perto do principal (em cadeia); texto pequeno fica de fora
@@ -1729,7 +1745,8 @@ function leFinal(){LE.F=finalMaskFast();let any=false;for(let i=0;i<LE.F.length;
   if(!any){$("#le2Hint").textContent="Nada ficou marcado como logo. Toque nos blocos do logo ou diminua “Quanto tirar do fundo”.";return false;}return true;}
 function leQuantize(){
   const F=LE.F,d=LE.warp.data,n=F.length,pts=[],w=LE.ww;
-  for(let i=0;i<n;i++){if(F[i]<0.95)continue;let core=true;for(const q of [i-2,i+2,i-2*w,i+2*w,i-1,i+1,i-w,i+w]){if(q<0||q>=n||F[q]<0.95){core=false;break;}}if(core)pts.push(i);}
+  // pixels bem dentro da arte; traços finos (letra em script) entram pelo centro do traço, senão a cor deles some
+  for(let i=0;i<n;i++){if(F[i]<0.95)continue;let core=true;for(const q of [i-1,i+1,i-w,i+w]){if(q<0||q>=n||F[q]<0.9){core=false;break;}}if(core||F[i]>=0.995)pts.push(i);}
   if(pts.length<50)for(let i=0;i<n;i++)if(F[i]>0.5)pts.push(i);
   const step=Math.max(1,Math.floor(pts.length/12000)),S2=[];for(let i=0;i<pts.length;i+=step){const p=pts[i];S2.push([d[p*4],d[p*4+1],d[p*4+2]]);}
   const K=Math.min(6,Math.max(1,cfg.maxCores+1));let C=[S2[0]];
@@ -1739,9 +1756,9 @@ function leQuantize(){
   // contagem, junta cores próximas e descarta as raras (borda borrada)
   let cnt=C.map(()=>0);S2.forEach(p=>{let bi=0,bd=1e9;C.forEach((c,i)=>{const dd=cdist(c,p);if(dd<bd){bd=dd;bi=i;}});cnt[bi]++;});
   let groups=C.map((c,i)=>({rgb:c,count:cnt[i]})).filter(g=>g.count>0).sort((a,b)=>b.count-a.count);
-  let merged=true;while(merged){merged=false;outer:for(let i=0;i<groups.length;i++)for(let j=i+1;j<groups.length;j++)if(cdist(groups[i].rgb,groups[j].rgb)<40){const a=groups[i],b=groups[j],t=a.count+b.count;
+  let merged=true;while(merged){merged=false;outer:for(let i=0;i<groups.length;i++)for(let j=i+1;j<groups.length;j++)if(cdist(groups[i].rgb,groups[j].rgb)<48){const a=groups[i],b=groups[j],t=a.count+b.count;
     a.rgb=a.rgb.map((v,k)=>(v*a.count+b.rgb[k]*b.count)/t);a.count=t;groups.splice(j,1);merged=true;break outer;}}
-  const tot=groups.reduce((s,g)=>s+g.count,0);groups=groups.filter((g,i)=>i===0||g.count/tot>=0.008).slice(0,Math.max(1,cfg.maxCores||4));
+  const tot=groups.reduce((s,g)=>s+g.count,0);groups=groups.filter((g,i)=>i===0||g.count/tot>=0.02).slice(0,Math.max(1,cfg.maxCores||4));
   LE.colors=groups.map(g=>({rgb:g.rgb.map(Math.round)}));
   // rótulo por pixel: só os pixels "firmes" (miolo da cor, sem mistura) decidem; os da borda herdam do firme mais perto (até 3 px),
   // assim a mistura de duas cores na borda não vira uma terceira cor em volta das letras
@@ -1753,7 +1770,7 @@ function leQuantize(){
   if(!LE.map||LE.map.length!==LE.colors.length)LE.map=distinctMap(LE.colors);
 }
 function leRenderColors(){const box=$("#leColors");box.replaceChildren();
-  {const lc=leLabelsCanvas();renderVariants($("#leVar"),lc?srcFromLabelsCanvas(lc):null,LE.colors,LE.layer?LE.layer.id:null,LE,v=>{LE.map=v.map?[...v.map]:LE.map;LE.single=v.single||null;if(LE.neg)LE.neg.on=false;leRenderColors();leDraw3();});}
+  {const lc=leLabelsCanvas();renderVariants($("#leVar"),lc?srcFromLabelsCanvas(lc):null,LE.colors,LE.layer?LE.layer.id:null,LE,v=>{LE.map=v.map?[...v.map]:LE.map;LE.single=v.single||null;if(LE.neg)LE.neg.on=false;if(v.fundo){LE.bgTest=v.fundo;LE.fundoSug=v.fundo;}else LE.fundoSug=null;leRenderColors();leDraw3();});}
   if(!LE.single&&!(LE.neg&&LE.neg.on))LE.colors.forEach((c,i)=>box.appendChild(colorMapRow(c,LE.map[i],v=>{LE.map[i]=v;leDraw3();})));
   $("#leSingle").checked=!!LE.single;$("#leSingleBox").hidden=!LE.single;if(LE.single)swatchRow($("#leSingleSw"),LE.single,id=>{LE.single=id;leRenderColors();leDraw3();});
   $("#leNeg").checked=!!(LE.neg&&LE.neg.on);$("#leNegBox").hidden=!(LE.neg&&LE.neg.on);if(LE.neg&&LE.neg.on)swatchRow($("#leNegSw"),LE.neg.color,id=>{LE.neg.color=id;leRenderColors();leDraw3();});
@@ -1785,6 +1802,7 @@ $("#leUse").onclick=async()=>{const lc=leLabelsCanvas();if(!lc){$("#leMsg").text
   else{const nl=sp.layers.filter(l=>l.type==="logo").length,cells=[[0,0],[-1,-1],[1,-1],[-1,1],[1,1],[0,-1],[0,1],[-1,0],[1,0]],c=cells[nl%9],k=Math.floor(nl/9),
       wcm=Math.round(Math.min(f.w*(nl?0.28:0.5),(f.h*(nl?0.3:0.6))/data.ar)*10)/10;
     L=Object.assign({id:uid(),type:"logo",origem:LOGO_ORIGEM||"franqueado",widthCm:wcm,x:Math.round(c[0]*f.w*0.32+k*3),y:Math.round(c[1]*f.h*0.3+k*3),rot:0},data);sp.layers.push(L);}
+  if(LE.fundoSug&&LE.fundoSug!==sp.fundo){sp.fundo=LE.fundoSug;LE.fundoSug=null;specChanged();}
   S.sel=L.id;closeLogoEditor();logoLabels(L);if(S.view!=="arte"&&S.view!=="dados")go("arte");artChanged(true);renderLayers();renderArtTile();track("logo");renderParts();};
 // etapa 1: mostra o logo já preparado no quadro "Sua arte ou logotipo"
 // parte 1: várias artes (logos) e vários textos no mesmo tapete
@@ -2492,9 +2510,17 @@ async function exportWithFicha({base,ext,data,mime,ficha,msgEl}){
 
 // ================= cores do logo: mapeamento sem repetir cor e sugestões de combinação =================
 const lumOf=rgb=>0.2126*rgb[0]+0.7152*rgb[1]+0.0722*rgb[2];
+// bobina mais parecida com uma cor de foto: a foto desbota (vidro, sombra), então o tom (matiz) pesa mais que o brilho.
+// Sem matiz perceptível (cinzas), vale a distância simples.
+function hsl(rgb){const r=rgb[0]/255,g=rgb[1]/255,b=rgb[2]/255,mx=Math.max(r,g,b),mn=Math.min(r,g,b),l=(mx+mn)/2,d=mx-mn;let h=0,s=0;
+  if(d>0){s=d/(1-Math.abs(2*l-1));h=mx===r?((g-b)/d+(g<b?6:0)):mx===g?((b-r)/d+2):((r-g)/d+4);h*=60;}return {h,s,l,c:d*255};}
+function matColorRank(rgb,pal){pal=pal||activePal();const a=hsl(rgb);
+  if(a.c<9)return pal.map(p=>({id:p.id,d:cdist(rgb,rgbOf(p.hex))*0.6})).sort((x,y)=>x.d-y.d);
+  return pal.map(p=>{const b=hsl(rgbOf(p.hex));let dh=Math.abs(a.h-b.h);dh=Math.min(dh,360-dh);if(b.c<9)dh=90;return {id:p.id,d:dh+50*Math.abs(a.l-b.l)+30*Math.abs(a.s-b.s)};}).sort((x,y)=>x.d-y.d);}
+function nearestMatColor(rgb,pal){return matColorRank(rgb,pal)[0].id;}
 // cada cor do cartão vai para a bobina mais próxima que ainda não foi usada (a cor maior escolhe primeiro)
 function distinctMap(colors){const used=new Set(),pal=activePal();
-  return colors.map(c=>{const r=pal.map(p=>({id:p.id,d:cdist(c.rgb,rgbOf(p.hex))})).sort((a,b)=>a.d-b.d);const pick=r.find(x=>!used.has(x.id)&&x.d<r[0].d+60)||r[0];used.add(pick.id);return pick.id;});}
+  return colors.map(c=>{const r=matColorRank(c.rgb,pal);const pick=r.find(x=>!used.has(x.id)&&x.d<r[0].d+30)||r[0];used.add(pick.id);return pick.id;});}
 // cores que o tapete já usa sem contar este logo (para saber quantas cores novas a sugestão traz)
 function matColorsExcept(layerId){const sp=spec(),set=new Set([sp.fundo,sp.flex]);if(sp.intOn)set.add(sp.int);
   sp.layers.forEach(L=>{if(L.id===layerId)return;if(L.type==="text"){set.add(L.color);if(L.outlineOn)set.add(L.outlineColor);}
@@ -2505,6 +2531,10 @@ function logoVariants(colors,layerId){
   const cand=pal.filter(p=>p.id!==fundo&&cdist(rgbOf(p.hex),fr)>=55),out=[],seen=new Set();
   const push=v=>{if(!v)return;if(v.map&&new Set(v.map).size===1&&v.map[0]){v={nome:v.nome,single:v.map[0]};}const key=v.single?"s:"+v.single:"m:"+v.map.join(",");if(seen.has(key))return;seen.add(key);
     const cs=varColors(v);v.total=new Set([...others,...cs]).size;v.novas=cs.filter(c=>!others.has(c)).length;v.some=cs.some(c=>c===fundo||cdist(rgbOf(colorOf(c)),fr)<45);out.push(v);};
+  // fundo da foto do logo (a cor que o sistema tirou): a bobina mais parecida vira a primeira sugestão, já com as cores do logo por cima
+  if(typeof LE!=="undefined"&&LE.bg&&LE.step===3&&!(LE.img&&LE.img.transparente)){const near={id:nearestMatColor(LE.bg,pal)};
+    if(near.id&&near.id!==fundo){const used=new Set([near.id]),map=colors.map(c=>{const r=matColorRank(c.rgb,pal);const pick=r.find(x=>!used.has(x.id)&&x.d<r[0].d+30)||r.find(x=>!used.has(x.id))||r[0];used.add(pick.id);return pick.id;});
+      const v={nome:"Como o logo original",map,fundo:near.id};const cs=[...new Set(map)];v.total=new Set([...others,near.id,...cs]).size-(others.has(fundo)?1:0);v.novas=cs.filter(c=>!others.has(c)).length;v.some=false;seen.add("m:"+map.join(","));out.push(v);}}
   push({nome:"Cores do cartão",map:distinctMap(colors)});
   // só bobinas que o tapete já usa (não aumenta o número de cores; cores parecidas do cartão podem dividir a mesma bobina)
   const own=cand.filter(p=>others.has(p.id)).sort((a,b)=>lumOf(rgbOf(a.hex))-lumOf(rgbOf(b.hex)));
@@ -2538,7 +2568,7 @@ function logoVariants(colors,layerId){
 function variantThumb(src,v,tw){const {w,h,idx,al}=src;let x0=w,y0=h,x1=-1,y1=-1;
   if(!src.bb){for(let i=0;i<w*h;i++)if(idx[i]&&al[i]>40){const x=i%w,y=(i/w)|0;if(x<x0)x0=x;if(x>x1)x1=x;if(y<y0)y0=y;if(y>y1)y1=y;}src.bb=x1<0?[0,0,w-1,h-1]:[x0,y0,x1,y1];}
   [x0,y0,x1,y1]=src.bb;const bw=x1-x0+1,bh=y1-y0+1,pad=0.12,th=Math.round(tw*0.62),s=Math.min(tw*(1-2*pad)/bw,th*(1-2*pad)/bh),ox=(tw-bw*s)/2,oy=(th-bh*s)/2;
-  const c=document.createElement("canvas");c.width=tw;c.height=th;const x=c.getContext("2d"),img=x.createImageData(tw,th),o=img.data,bg=rgbOf(colorOf(spec().fundo));
+  const c=document.createElement("canvas");c.width=tw;c.height=th;const x=c.getContext("2d"),img=x.createImageData(tw,th),o=img.data,bg=rgbOf(colorOf(v.fundo||spec().fundo));
   const cols=(v.map||[]).map(m=>m?rgbOf(colorOf(m)):null),one=v.single?rgbOf(colorOf(v.single)):null;
   for(let yy=0;yy<th;yy++)for(let xx=0;xx<tw;xx++){const j=(yy*tw+xx)*4;let r=bg;const sx=Math.floor((xx-ox)/s)+x0,sy=Math.floor((yy-oy)/s)+y0;
     if(sx>=x0&&sx<=x1&&sy>=y0&&sy<=y1){const i=sy*w+sx,k=idx[i],a=al[i]/255;if(k&&a>0.02){const cc=one||cols[k-1];if(cc){r=[bg[0]+(cc[0]-bg[0])*a,bg[1]+(cc[1]-bg[1])*a,bg[2]+(cc[2]-bg[2])*a];}}}
@@ -2549,7 +2579,7 @@ function renderVariants(box,src,colors,layerId,cur,apply){box.replaceChildren();
   vs.forEach(v=>{const b=document.createElement("button");b.type="button";b.className="var";b.setAttribute("aria-pressed",String(key(v)===ck));
     const cv=variantThumb(src,v,176);cv.setAttribute("aria-hidden","true");const t=document.createElement("b");t.textContent=v.nome;
     const sw=document.createElement("span");sw.className="var-sw";varColors(v).forEach(id=>{const d=document.createElement("i");d.style.background=colorOf(id);d.title=colorName(id);sw.appendChild(d);});
-    const s=document.createElement("span");s.className="hint";s.textContent=`${v.total} cores no tapete`+(v.novas?` · ${v.novas} nova${v.novas>1?"s":""}`:"")+(v.total>(cfg.maxCores||99)?` · passa do limite de ${cfg.maxCores}`:"")+(v.some?" · parte some no fundo":"");if(v.some||v.total>(cfg.maxCores||99))s.classList.add("warn-t");
+    const s=document.createElement("span");s.className="hint";s.textContent=(v.fundo?`fundo ${colorName(v.fundo)} · `:"")+`${v.total} cores no tapete`+(v.novas?` · ${v.novas} nova${v.novas>1?"s":""}`:"")+(v.total>(cfg.maxCores||99)?` · passa do limite de ${cfg.maxCores}`:"")+(v.some?" · parte some no fundo":"");if(v.some||v.total>(cfg.maxCores||99))s.classList.add("warn-t");
     b.title=varColors(v).map(colorName).join(", ");b.append(cv,t,sw,s);b.onclick=()=>apply(v);box.appendChild(b);});}
 function srcFromLabelsCanvas(c){const w=c.width,h=c.height,d=c.getContext("2d").getImageData(0,0,w,h).data,idx=new Uint8Array(w*h),al=new Uint8Array(w*h);for(let i=0;i<w*h;i++){idx[i]=d[i*4];al[i]=d[i*4+1];}return {w,h,idx,al};}
 
