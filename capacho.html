@@ -1906,7 +1906,7 @@ $("#qShare").onclick=async()=>{const L=(Q.previews&&Q.previews.length?Q.previews
   let ok=false;for(let i=0;i<blobs.length;i++)ok=(await saveBlob(blobs[i],names[i],$("#qMsg")))||ok;if(ok)markSent();};
 function markSent(){if(Q.status==="rascunho"){Q.status="enviado";setStatusBadge();}}
 $("#qApprove").onclick=async()=>{Q.status="aprovado";Q.aprovado=new Date().toISOString();await saveWithVersions();renderQuote();qmsg("Aprovado. Vai para o plano de corte quando o sistema do administrador estiver no ar.");};
-const DB={db:null,open(){return new Promise(res=>{if(this.db)return res(this.db);try{const r=indexedDB.open("genio-vendas",2);r.onupgradeneeded=()=>{const d=r.result;if(!d.objectStoreNames.contains("orcamentos"))d.createObjectStore("orcamentos",{keyPath:"id"});if(!d.objectStoreNames.contains("sessao"))d.createObjectStore("sessao",{keyPath:"id"});};r.onsuccess=()=>{this.db=r.result;res(this.db);};r.onerror=()=>res(null);}catch(e){res(null);}});},
+const DB={db:null,open(){return new Promise(res=>{if(this.db)return res(this.db);try{const r=indexedDB.open("genio-vendas",3);r.onupgradeneeded=()=>{const d=r.result;if(!d.objectStoreNames.contains("orcamentos"))d.createObjectStore("orcamentos",{keyPath:"id"});if(!d.objectStoreNames.contains("sessao"))d.createObjectStore("sessao",{keyPath:"id"});if(!d.objectStoreNames.contains("clientes"))d.createObjectStore("clientes",{keyPath:"k"});};r.onsuccess=()=>{this.db=r.result;res(this.db);};r.onerror=()=>res(null);}catch(e){res(null);}});},
   async all(){const db=await this.open();if(!db)return memList.slice();return new Promise(res=>{const t=db.transaction("orcamentos").objectStore("orcamentos").getAll();t.onsuccess=()=>res(t.result||[]);t.onerror=()=>res([]);});},
   async get(id){const db=await this.open();if(!db)return deep(memList.find(x=>x.id===id)||null);return new Promise(res=>{const t=db.transaction("orcamentos").objectStore("orcamentos").get(id);t.onsuccess=()=>res(t.result||null);t.onerror=()=>res(null);});},
   async put(o){const db=await this.open();if(!db){const i=memList.findIndex(x=>x.id===o.id);if(i>=0)memList[i]=o;else memList.push(o);return;}return new Promise(res=>{const t=db.transaction("orcamentos","readwrite");t.objectStore("orcamentos").put(o);t.oncomplete=res;t.onerror=res;});}};
@@ -3599,7 +3599,16 @@ async function sessRestore(){let o=null;try{o=await sessRead();}catch(e){}
   new ResizeObserver(()=>{layout();schedule();}).observe($("#stageWrap"));new ResizeObserver(()=>artLayout()).observe($("#artWrap"));new ResizeObserver(topH).observe($(".top"));topH();
   window.addEventListener("resize",()=>{layout();schedule();artLayout();});
   tapInit();fotosInit();go("dados");buildBase();loadAllFonts();trackInit();renderParts();
-  if(typeof sessRestore==="function")sessRestore();
+  (async()=>{if(typeof sessRestore==="function")await sessRestore();
+    // cliente escolhido na tela de módulos: abre o projeto mais recente dele; se não existe, começa um novo já com o nome
+    let cli=null;try{cli=localStorage.getItem("genio-cliente");}catch(e){}
+    if(cli){const nome=cli.trim(),all=await DB.all(),dele=all.filter(o=>o.cliente&&(o.cliente.nome||"").trim().toLowerCase()===nome.toLowerCase()).sort((x,y)=>(y.atualizado||"").localeCompare(x.atualizado||""));
+      const atual=(Q.cliente&&Q.cliente.nome||"").trim().toLowerCase()===nome.toLowerCase();
+      if(!atual){if(dele.length)await openQuote(dele[0]);else{$("#newQuote").click();Q.cliente.nome=nome;fillClient();
+        // identidade visual guardada na tela inicial: já entra como arte do projeto novo
+        const id=await new Promise(res=>{DB.open().then(db=>{if(!db||!db.objectStoreNames.contains("clientes"))return res(null);const t=db.transaction("clientes").objectStore("clientes").get(nome.toLowerCase());t.onsuccess=()=>res(t.result||null);t.onerror=()=>res(null);});});
+        if(id&&id.logos&&id.logos.length){const fs=await Promise.all(id.logos.map(async l=>{const b=await (await fetch(l.src)).blob();return new File([b],l.nome||"identidade.png",{type:b.type||"image/png"});}));openPartK("logo");LOGOQ.push(...fs);nextLogoFromQueue();}}}}
+  })();
 })();
 
 </script>

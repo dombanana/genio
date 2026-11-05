@@ -15,7 +15,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&display=swap">
-<link rel="stylesheet" href="portal.css?v=2f10b99c92">
+<link rel="stylesheet" href="portal.css?v=a98c8ac8ab">
 </head>
 <body>
 <header class="top"><div class="wrap">
@@ -27,24 +27,53 @@
 </div></header>
 <main class="wrap">
   <div class="saud">
-    <div><h1 id="oi">Olá</h1><p class="muted" id="plano" style="margin:4px 0 0"></p><button class="btn btn-s btn-sm" type="button" id="bInst" hidden style="margin-top:10px">Instalar no aparelho</button></div>
-    <img class="saud-ic" src="img/parceiro.png?v=2f10b99c92" alt="" width="77" height="150">
+    <div class="saud-cli"><h1 id="oi">Olá</h1>
+      <label for="cliente">Cliente</label>
+      <div class="row"><input id="cliente" list="clientes" autocomplete="off" placeholder="Nome ou empresa"><datalist id="clientes"></datalist></div>
+      <p class="muted small" id="cliInfo" aria-live="polite"></p>
+      <button class="btn btn-s btn-sm" type="button" id="bInst" hidden style="margin-top:6px">Instalar no aparelho</button></div>
+    <img class="saud-ic" src="img/parceiro.png?v=a98c8ac8ab" alt="" width="77" height="150">
   </div>
   <div id="off" class="msg info" hidden>Sem internet. O Capacho funciona assim mesmo.</div>
+  <section class="idv" id="idv" hidden>
+    <div class="row between"><b>Identidade visual</b><label class="btn btn-p btn-sm" for="fIdv">+ Adicionar</label><input type="file" id="fIdv" accept="image/*" multiple hidden></div>
+    <div class="idv-list" id="idvList"></div>
+    <p class="muted small" id="idvInfo"></p>
+  </section>
   <div class="mods" id="mods" aria-live="polite"></div>
   <div style="height:48px"></div>
 </main>
-<script src="portal.js?v=2f10b99c92"></script>
+<script src="portal.js?v=a98c8ac8ab"></script>
 <script>
-(async()=>{const {$}=G;
+(async()=>{const {$, $$}=G;
   let c=null;try{c=await G.eu();}catch(e){c=null;}
   if(!c){location.replace("/?entrar=1&volta=app.html");return;}
   $("#oi").textContent="Olá, "+(c.nome||"").split(" ")[0];
-  $("#plano").textContent=c.plano_nome||"";
   $("#lAdmin").hidden=c.papel!=="admin";$("#off").hidden=!c.offline;
   // central de atendimento: WhatsApp do Dom Banana Tech (número em G.ATENDIMENTO; sem número, o ícone não aparece)
   if(G.ATENDIMENTO){const at=$("#lAtend");at.href="https://wa.me/"+G.ATENDIMENTO+"?text="+encodeURIComponent("Olá! Sou "+(c.nome||"")+", do GenIO.");at.hidden=false;}
   G.renderMods($("#mods"),true);
+  // cliente: é o contexto de todos os módulos. Fica guardado neste aparelho e o módulo abre já no projeto dele
+  const ci=$("#cliente"),info=$("#cliInfo");let CL=[];
+  const abrirDB=()=>new Promise(res=>{try{const r=indexedDB.open("genio-vendas",3);r.onupgradeneeded=()=>{const d=r.result;["orcamentos","sessao"].forEach(n=>{if(!d.objectStoreNames.contains(n))d.createObjectStore(n,{keyPath:"id"});});if(!d.objectStoreNames.contains("clientes"))d.createObjectStore("clientes",{keyPath:"k"});};r.onsuccess=()=>res(r.result);r.onerror=()=>res(null);}catch(e){res(null);}});
+  const lerClientes=async()=>{const db=await abrirDB();if(!db)return[];return new Promise(res=>{const t=db.transaction("orcamentos").objectStore("orcamentos").getAll();t.onsuccess=()=>res(t.result||[]);t.onerror=()=>res([]);});};
+  const idvGet=async k=>{const db=await abrirDB();if(!db)return null;return new Promise(res=>{const t=db.transaction("clientes").objectStore("clientes").get(k);t.onsuccess=()=>res(t.result||null);t.onerror=()=>res(null);});};
+  const idvPut=async o=>{const db=await abrirDB();if(!db)return;return new Promise(res=>{const t=db.transaction("clientes","readwrite");t.objectStore("clientes").put(o);t.oncomplete=res;t.onerror=res;});};
+  const mostrar=()=>{const n=ci.value.trim().toLowerCase();const d=CL.filter(o=>(o.nome||"").toLowerCase()===n);
+    info.textContent=!n?"":d.length?`${d.length} projeto${d.length>1?"s":""} · ${d[0].numero||""}${d[0].status?" · "+d[0].status:""}`:"Cliente novo";idvRender();};
+  // identidade visual do cliente: logos guardados uma vez, usados por todos os módulos
+  const idvSec=$("#idv"),idvList=$("#idvList"),idvInfo=$("#idvInfo");
+  async function idvRender(){const nome=ci.value.trim();idvSec.hidden=!nome;if(!nome)return;const o=await idvGet(nome.toLowerCase());const L=o&&o.logos||[];
+    idvList.innerHTML=L.map(l=>`<figure class="idv-it"><img src="${l.src}" alt=""><button type="button" class="x" data-rm="${l.id}" aria-label="Remover">×</button></figure>`).join("");
+    idvInfo.textContent=L.length?"":"Logo, arte ou foto do cartão de visita. Vale para todos os módulos.";
+    $$("[data-rm]",idvList).forEach(b=>b.onclick=async()=>{const o2=await idvGet(nome.toLowerCase());o2.logos=(o2.logos||[]).filter(l=>l.id!==b.dataset.rm);o2.atualizado=new Date().toISOString();await idvPut(o2);idvRender();});}
+  const lerImg=f=>new Promise(res=>{const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const k=Math.min(1,1600/Math.max(im.width,im.height)),c=document.createElement("canvas");c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);c.getContext("2d").drawImage(im,0,0,c.width,c.height);res(c.toDataURL("image/png"));};im.onerror=()=>res(null);im.src=r.result;};r.onerror=()=>res(null);r.readAsDataURL(f);});
+  $("#fIdv").addEventListener("change",async e=>{const fs=[...e.target.files||[]];e.target.value="";const nome=ci.value.trim();if(!nome||!fs.length)return;
+    const o=(await idvGet(nome.toLowerCase()))||{k:nome.toLowerCase(),nome,logos:[]};
+    for(const f of fs){const src=await lerImg(f);if(src)o.logos.push({id:Date.now().toString(36)+Math.random().toString(36).slice(2,6),nome:f.name,src});}
+    o.nome=nome;o.atualizado=new Date().toISOString();await idvPut(o);idvRender();});
+  ci.value=G.ls.get("genio-cliente")||"";
+  ci.addEventListener("input",()=>{G.ls.set("genio-cliente",ci.value.trim());mostrar();});
   $("#bSair").onclick=()=>G.sair();
   const bi=$("#bInst"),mostra=()=>{bi.hidden=!G.podeInstalar();};mostra();document.addEventListener("genio-instalavel",mostra);
   bi.onclick=async()=>{await G.instalar();mostra();};
