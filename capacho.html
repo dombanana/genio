@@ -507,6 +507,16 @@ html,body{overscroll-behavior-y:none}
 
 .tag-og{display:inline-block;margin-left:8px;font-size:11px;font-weight:600;padding:2px 8px;border-radius:999px;background:#EBE3F5;color:#49258B;vertical-align:middle}
 .tag-og.id{background:#04C6C0;color:#0b3a38}
+
+.oferta{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px}
+.switch.of{background:#EBE3F5;border-radius:12px;padding:10px 12px;opacity:.6}.switch.of.on{opacity:1;outline:2px solid #6933C5}
+.nota-prod{background:#EBE3F5;border-radius:14px;padding:10px 12px;display:flex;flex-direction:column;gap:8px}
+.nota-th{display:flex;flex-direction:column;gap:6px;max-height:240px;overflow:auto}
+.nota-m{display:flex;flex-direction:column;gap:2px;max-width:85%;padding:8px 10px;border-radius:12px;background:#fff;align-self:flex-end}
+.nota-m.cliente{align-self:flex-start;background:#D9F5F4}
+.nota-m small{color:#6B6578;font-size:11px}
+.nota-prod.off{opacity:.55}.nota-m img{max-width:220px;max-height:160px;border-radius:8px;display:block}.nota-m a{color:#6933C5;font-weight:600}
+.btn.ic{padding:8px 10px;min-width:0}.switch.small{font-size:13px;font-weight:500}
 </style>
 <div class="top">
   <a class="mod-volta" href="app.html" aria-label="Voltar aos módulos">‹ Módulos</a><div class="brand"><div class="wordmark" id="wordmark" aria-label="GenIO · Capacho"><b>Gen<i>IO</i></b><span>Capacho</span></div><div class="brand-t" id="brandT"></div></div>
@@ -658,12 +668,18 @@ html,body{overscroll-behavior-y:none}
       <div class="row">
         <button class="btn gold" id="qShare" type="button" hidden>Enviar imagens</button>
         <button class="btn ghost" id="qCopy" type="button">Copiar texto para WhatsApp</button>
+        <button class="btn ghost" id="qVer" type="button">Ver como o cliente vê ↗</button>
         <button class="btn" id="qFornecedor" type="button">Pedir ao fornecedor</button>
         <button class="btn ghost" id="qSaveMod" type="button">Salvar como modelo</button>
         <button class="btn ghost" id="qArt" type="button">Baixar arte (SVG)</button>
         <button class="btn" id="qCut" type="button">Arquivo de corte</button>
       </div>
       <p class="msg" id="qMsg" role="status"></p>
+      <section class="panel" aria-labelledby="hNotas">
+        <h2 id="hNotas">Notas para o cliente</h2>
+        <p class="hint">Ligue o que este cliente vai ver. As notas são opcionais: o que vocês combinaram na loja, como está sendo feito. Foto ou arquivo também. O cliente responde pela página dele e a conversa fica aqui.</p>
+        <div id="qNotas" class="col"></div>
+      </section>
     </div>
     <div class="col">
       <section class="panel" aria-labelledby="hCli">
@@ -714,6 +730,18 @@ html,body{overscroll-behavior-y:none}
   <section id="v-config" hidden>
     <div class="col" style="max-width:900px;margin:0 auto">
       <h1>Configurações</h1>
+      <section class="panel" aria-labelledby="hCfgOf">
+        <h2 id="hCfgOf">O que eu ofereço</h2>
+        <p class="hint">Só o que estiver ligado aparece para o cliente. Capacho já funciona; os outros estão prontos para ligar e testar um a um.</p>
+        <div class="oferta" id="cfgOferta"></div>
+        <div class="fields" style="margin-top:10px">
+          <div class="field"><label for="pEscArte">Arte final (R$, por produto)</label><input id="pEscArte" inputmode="decimal"></div>
+          <div class="field"><label for="pEscRev">Revisão do arquivo (R$, por produto)</label><input id="pEscRev" inputmode="decimal"></div>
+          <div class="field"><label for="pEsc3">Desconto com 3 produtos (%)</label><input id="pEsc3" inputmode="decimal"></div>
+          <div class="field"><label for="pEsc4">Desconto com 4 ou mais (%)</label><input id="pEsc4" inputmode="decimal"></div>
+        </div>
+        <p class="hint small">Com 2 produtos, arte e revisão viram cortesia. O desconto nunca passa do valor dos produtos sem arte e revisão.</p>
+      </section>
       <section class="panel" aria-labelledby="hCfgEmp">
         <h2 id="hCfgEmp">Sua empresa</h2>
         <p class="hint">Aparece no orçamento e nas fichas.</p>
@@ -1903,7 +1931,7 @@ function fichaText(){const sp=spec(),a=analyze(sp.w,sp.h),L=[`Medidas: ${fmt(sp.
     else{const cs=Ly.neg&&Ly.neg.on?`negativo em ${colorName(Ly.neg.color)}`:Ly.single?colorName(Ly.single):[...new Set((Ly.map||[]).filter(Boolean))].map(colorName).join(", ");const [lw,lh]=layerSizeCm(Ly);
       L.push(`Logo: ${fmtCm(lw)} × ${fmtCm(lh)} cm · ${cs} · ${pos}`);}});
   L.push(`Cores no tapete: ${usedColors().map(colorName).join(", ")} · guia ${(guias.find(g=>g.id===sp.guia)||guiaAtiva()).nome}`,`Quantidade: ${curQtd()}`);if(Q.tapetes&&Q.tapetes.length>1)L.unshift(`Tapete: ${tapName(curTap())}`);const ac=Q.arte||{};L.push(`Arte: versão ${Q.versao||1}${ac.fin?" · arte-finalista "+ac.fin:""}${ac.data?" · layout de "+dataBR(ac.data):""}`);return L.join("\n");}
-function renderQuote(){tapInit();renderQTaps();const p=computePrice(),G=grandPrice(),multi=Q.tapetes.length>1;Q.preco=G.ready?{total:G.total,pix:G.pix,cartao:G.cartao,parc:G.parc,sinal:G.sinal,m2:p.m2}:null;
+function renderQuote(){tapInit();renderQTaps();renderNotas();const p=computePrice(),G=grandPrice(),multi=Q.tapetes.length>1;Q.preco=G.ready?{total:G.total,pix:G.pix,cartao:G.cartao,parc:G.parc,sinal:G.sinal,m2:p.m2}:null;
   $("#qTitle").textContent=Q.cliente.nome?`Orçamento · ${Q.cliente.nome}`:"Orçamento";$("#qNum").textContent=Q.numero?`${Q.numero} · versão ${Q.versao||1} · ${dataBR(Q.criado)}`:"ainda não salvo";renderVersions();
   $("#qImg").src=Q.preview||"";renderQThumbs();$("#qFicha").textContent=fichaText();setStatusBadge();const box=$("#qPrice");box.replaceChildren();
   if(!p.ready){const n=document.createElement("div");n.className="rule "+(p.a.emenda?"bad":"warn");
@@ -1950,6 +1978,26 @@ function pedirFornecedor(){const g=guiaAtiva(),num=(g.whats||"").replace(/\D/g,"
   const win=window.open(`https://wa.me/${num}?text=${encodeURIComponent(fornecedorText())}`,"_blank","noopener");if(!win)qmsg("O navegador bloqueou a aba. Permita pop-ups ou copie o texto abaixo.");}
 function qmsg(t){$("#qMsg").textContent=t||"";}
 async function copyText(t,ok){try{await navigator.clipboard.writeText(t);qmsg(ok);}catch(e){qmsg("Não deu para copiar aqui; selecione o texto da ficha e copie pelo menu do aparelho.");}}
+// notas por produto: conversa entre vendedor e cliente (Q.notas[produto] = [{de,texto,em}])
+const escN=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function notaHTML(m){const a=m.arquivo;const ax=a?(/^image\//.test(a.tipo)?`<img src="${a.src}" alt="">`:`<a href="${a.src}" download="${escN(a.nome)}">📎 ${escN(a.nome)}</a>`):"";
+  return `<div class="nota-m ${m.de}">${ax}${m.texto?`<span>${escN(m.texto)}</span>`:""}<small>${m.de==="cliente"?"cliente":"você"} · ${dataBR(m.em)}</small></div>`;}
+// arquivo anexado na nota: foto reduzida (até 1600 px) ou qualquer arquivo pequeno (até 4 MB), guardado junto do orçamento
+function lerAnexo(f){return new Promise(res=>{if(/^image\//.test(f.type)){loadFile(f,(src)=>res({nome:f.name,tipo:"image/jpeg",src}),1600);return;}
+  if(f.size>4*1024*1024){msg("Arquivo grande demais (até 4 MB).");return res(null);}const r=new FileReader();r.onload=()=>res({nome:f.name,tipo:f.type||"application/octet-stream",src:r.result});r.onerror=()=>res(null);r.readAsDataURL(f);});}
+function renderNotas(){const box=$("#qNotas");if(!box)return;box.replaceChildren();Q.notas=Q.notas||{};Q.oferta=Q.oferta||{};
+  if(Q.id&&!renderNotas._sync){renderNotas._sync=true;DB.get(Q.id).then(r=>{renderNotas._sync=false;if(!r)return;const a=JSON.stringify(r.notas||{}),b=JSON.stringify(Q.notas||{});
+    if(a!==b||JSON.stringify(r.escolhas||{})!==JSON.stringify(Q.escolhas||{})){const nr=Object.values(r.notas||{}).flat().length,nq=Object.values(Q.notas||{}).flat().length;if(nr>=nq){Q.notas=r.notas||{};Q.escolhas=r.escolhas;Q.pedido=r.pedido;renderNotas();}}}).catch(()=>{renderNotas._sync=false;});}
+  PRODUTOS.filter(p=>ofertaGeral(p.id)).forEach(p=>{const on=ofertaCliente(p.id),th=Q.notas[p.id]||[];const d=document.createElement("div");d.className="nota-prod"+(on?"":" off");
+    d.innerHTML=`<div class="row between"><b>${escN(p.nome)}</b><label class="switch small"><input type="checkbox" ${on?"checked":""}> para este cliente</label></div>`+(on?`<div class="nota-th">${th.map(notaHTML).join("")||'<p class="hint small">Sem notas ainda.</p>'}</div><div class="row"><input placeholder="Escrever para o cliente…" maxlength="500"><button class="btn ghost ic" type="button" title="Fotografar">📷</button><label class="btn ghost ic" title="Anexar arquivo">📎<input type="file" hidden></label><button class="btn gold" type="button">Enviar</button></div>`:"");
+    d.querySelector(".switch input").onchange=e=>{Q.oferta[p.id]=e.target.checked;saveQuote().then(renderNotas);};
+    if(on){const inp=d.querySelector("input[placeholder]"),bs=d.querySelectorAll("button"),cam=bs[0],b=bs[1],fi=d.querySelector("input[type=file]");
+      const push=(texto,arquivo)=>{(Q.notas[p.id]=Q.notas[p.id]||[]).push({de:"vendedor",texto,arquivo:arquivo||null,em:new Date().toISOString()});saveQuote().then(renderNotas);};
+      const send=()=>{const t=inp.value.trim();if(!t)return;inp.value="";push(t);};b.onclick=send;inp.onkeydown=e=>{if(e.key==="Enter")send();};
+      cam.onclick=()=>FotoCrop.abrir({titulo:p.nome,varias:true,onFim:async fs=>{for(const f of fs){const a=await lerAnexo(f);if(a)push(inp.value.trim(),a);inp.value="";}}});
+      fi.onchange=async e=>{const f=e.target.files&&e.target.files[0];e.target.value="";if(!f)return;const a=await lerAnexo(f);if(a)push(inp.value.trim(),a);inp.value="";};}
+    box.appendChild(d);});}
+$("#qVer").onclick=async()=>{await saveQuote();window.open("ver.html?orc="+encodeURIComponent(Q.id),"_blank");};
 $("#qCopy").onclick=()=>{copyText(whatsText(),"Texto copiado. Cole no WhatsApp do cliente.");markSent();};$("#qCopyFicha").onclick=()=>copyText($("#qFicha").textContent,"Ficha copiada.");
 {const b=$("#qFornecedor");if(b)b.onclick=pedirFornecedor;}
 $("#qShare").onclick=async()=>{const L=(Q.previews&&Q.previews.length?Q.previews:[Q.preview]).filter(Boolean);if(!L.length){qmsg("Gere o orçamento no passo “No seu espaço”.");return;}
@@ -1976,8 +2024,16 @@ async function openQuote(o){stopLive();Q=deep(o);tapInit();if(Q.photo&&Q.photo.e
 $("#newQuote").onclick=()=>{stopLive();Q=newQuote();const last=lastSpec();if(last)Q.spec=Object.assign(DEFAULT_SPEC(),last);S.sel=null;S.openPart=null;tapInit();fotosInit();fillClient();fillSpec();renderThumb();loadAllFonts();renderLayers();renderArtTile();trackInit();go("dados");};
 
 // ================= configurações =================
-const PF={pM2v:"m2v",pM2s:"m2s",pBase:"base",pFora:"fora",pCoresInc:"coresInc",pCorExtra:"corExtra",pMin:"min",pPix:"pix",pParc:"parc",pCartao:"cartao",pSinal:"sinal",pVal:"val",pPrazo:"prazo",pVend:"vend",pMargem:"margem",pMaxCores:"maxCores"};
-function fillCfg(){fillEmp();Object.entries(PF).forEach(([id,k])=>{$("#"+id).value=cfg[k]??"";});renderGuias();renderPalTable();renderFontsCfg();}
+const PF={pEscArte:"escArte",pEscRev:"escRev",pEsc3:"esc3",pEsc4:"esc4",pM2v:"m2v",pM2s:"m2s",pBase:"base",pFora:"fora",pCoresInc:"coresInc",pCorExtra:"corExtra",pMin:"min",pPix:"pix",pParc:"parc",pCartao:"cartao",pSinal:"sinal",pVal:"val",pPrazo:"prazo",pVend:"vend",pMargem:"margem",pMaxCores:"maxCores"};
+// produtos do catálogo GenIO (mesma lista da tela de módulos); cfg.oferta diz quais o franqueado oferece
+const PRODUTOS=[{id:"capacho",nome:"Capacho personalizado",img:"img/cena-capacho.jpg"},{id:"placas",nome:"Placas e sinalização",img:"img/cena-placas.jpg"},{id:"adesivos",nome:"Adesivos e vitrines",img:"img/cena-adesivos.jpg"},{id:"uniformes",nome:"Uniformes e camisetas",img:"img/cena-uniformes.jpg"},{id:"impressos",nome:"Cartões e impressos",img:"img/cena-cartoes.jpg"},{id:"banners",nome:"Banners e faixas",img:"img/cena-banners.jpg"},{id:"brindes",nome:"Brindes e carimbos",img:"img/cat-brindes.jpg"},{id:"parede",nome:"Adesivos de parede",img:"img/cat-parede.jpg"},{id:"mostraai",nome:"Mostra Aí · cardápio digital",img:"img/cena-mostraai.jpg",servico:true}];
+const ofertaGeral=id=>id==="capacho"?(cfg.oferta||{}).capacho!==false:!!(cfg.oferta||{})[id];
+// o que este cliente vê: parte do que o franqueado oferece (configuração) e pode ser desligado por cliente (Q.oferta)
+const ofertaCliente=id=>ofertaGeral(id)&&(Q.oferta||{})[id]!==false;
+const ofertados=()=>PRODUTOS.filter(p=>ofertaCliente(p.id));
+function renderOferta(){const box=$("#cfgOferta");if(!box)return;box.replaceChildren();PRODUTOS.forEach(p=>{const on=p.id==="capacho"?(cfg.oferta||{}).capacho!==false:!!(cfg.oferta||{})[p.id];
+  const l=document.createElement("label");l.className="switch of"+(on?" on":"");l.innerHTML=`<input type="checkbox"${on?" checked":""}><span>${p.nome}</span>`;l.querySelector("input").onchange=e=>{cfg.oferta=cfg.oferta||{};cfg.oferta[p.id]=e.target.checked;saveCfg();l.classList.toggle("on",e.target.checked);};box.appendChild(l);});}
+function fillCfg(){renderOferta();fillEmp();Object.entries(PF).forEach(([id,k])=>{$("#"+id).value=cfg[k]??"";});renderGuias();renderPalTable();renderFontsCfg();}
 Object.entries(PF).forEach(([id,k])=>$("#"+id).addEventListener("input",e=>{const v=e.target.value;cfg[k]=(k==="base"||k==="vend")?v:(v===""?null:parseFloat(String(v).replace(",",".")));saveCfg();renderRule();renderWarns();}));
 function renderPalTable(){const tb=$("#palBody");tb.replaceChildren();
   palette.forEach((c,i)=>{const tr=document.createElement("tr");tr.innerHTML=`<td><input type="color" aria-label="Cor de tela"></td><td><input aria-label="Nome"></td><td><input aria-label="Código" placeholder="código"></td><td><input type="number" inputmode="decimal" min="0" step="1" aria-label="Estoque em metros"></td><td><input type="checkbox" aria-label="Ativa"></td><td><button class="mini" type="button" aria-label="Remover cor">×</button></td>`;
