@@ -2952,7 +2952,8 @@ const tapSlug=()=>{tapInit();if(Q.tapetes.length<2)return "";return "-"+tapName(
 async function identDoCliente(){let nome="";try{nome=(localStorage.getItem("genio-cliente")||"").trim();}catch(e){}if(!nome)return null;
   return new Promise(res=>{DB.open().then(db=>{if(!db||!db.objectStoreNames.contains("clientes"))return res(null);const t=db.transaction("clientes").objectStore("clientes").get(nome.toLowerCase());t.onsuccess=()=>res(t.result&&t.result.logos&&t.result.logos.length?t.result:null);t.onerror=()=>res(null);}).catch(()=>res(null));});}
 async function arteDoManual(){const id=await identDoCliente();if(!id)return false;
-  const fs=await Promise.all(id.logos.map(async l=>{const b=await (await fetch(l.src)).blob();return new File([b],l.nome||"identidade.png",{type:b.type||"image/png"});}));
+  const srcs=id.manual&&id.manual.tratado?[{src:id.manual.tratado,nome:"marca-tratada.png"}]:id.logos;
+  const fs=await Promise.all(srcs.map(async l=>{const b=await (await fetch(l.src)).blob();return new File([b],l.nome||"identidade.png",{type:b.type||"image/png"});}));
   LOGO_ORIGEM="identidade";openPartK("logo");LOGOQ.push(...fs);nextLogoFromQueue();return true;}
 // Conjunto: a partir do tapete atual (com a arte do manual), cria tapetes nos fundos compatíveis — a cor da marca e os neutros do catálogo
 function conjuntoDoManual(){tapInit();const sp=spec(),logo=sp.layers.find(l=>l.type==="logo"&&l.origem==="identidade")||sp.layers.find(l=>l.type==="logo");if(!logo)return 0;
@@ -3878,7 +3879,7 @@ async function sessRestore(){let o=null;try{o=await sessRead();}catch(e){}
       if(!atual){if(dele.length)await openQuote(dele[0]);else{$("#newQuote").click();Q.cliente.nome=nome;try{const d=JSON.parse(localStorage.getItem("genio-cliente-dados")||"null");if(d&&d.tel&&!Q.cliente.tel)Q.cliente.tel=d.tel;}catch(e){}fillClient();
         // identidade visual guardada na tela inicial: já entra como arte do projeto novo
         const id=await new Promise(res=>{DB.open().then(db=>{if(!db||!db.objectStoreNames.contains("clientes"))return res(null);const t=db.transaction("clientes").objectStore("clientes").get(nome.toLowerCase());t.onsuccess=()=>res(t.result||null);t.onerror=()=>res(null);});});
-        if(id&&id.logos&&id.logos.length){LOGO_ORIGEM="identidade";const fs=await Promise.all(id.logos.map(async l=>{const b=await (await fetch(l.src)).blob();return new File([b],l.nome||"identidade.png",{type:b.type||"image/png"});}));openPartK("logo");LOGOQ.push(...fs);nextLogoFromQueue();}}}}
+        if(id&&id.manual&&id.manual.tratado)id.logos=[{src:id.manual.tratado,nome:"marca-tratada.png"}];if(id&&id.logos&&id.logos.length){LOGO_ORIGEM="identidade";const fs=await Promise.all(id.logos.map(async l=>{const b=await (await fetch(l.src)).blob();return new File([b],l.nome||"identidade.png",{type:b.type||"image/png"});}));openPartK("logo");LOGOQ.push(...fs);nextLogoFromQueue();}}}}
   })();
 })();
 
