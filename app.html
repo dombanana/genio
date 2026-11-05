@@ -15,7 +15,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&display=swap">
-<link rel="stylesheet" href="portal.css?v=8dc2c4e9a5">
+<link rel="stylesheet" href="portal.css?v=e63b2912d3">
 </head>
 <body>
 <header class="top"><div class="wrap">
@@ -28,19 +28,14 @@
 <main class="wrap">
   <div class="saud">
     <h1 id="oi">Olá</h1>
-    <img class="saud-ic" src="img/parceiro.png?v=8dc2c4e9a5" alt="" width="77" height="150">
+    <img class="saud-ic" src="img/parceiro.png?v=e63b2912d3" alt="" width="77" height="150">
   </div>
   <section class="ctx">
     <div class="cli">
-      <label for="cliente">Cliente</label>
-      <input id="cliente" list="clientes" autocomplete="off" placeholder="Nome ou empresa"><datalist id="clientes"></datalist>
+      <div class="row between"><label for="cliSel">Cliente</label><button class="linkbtn" type="button" id="cliNovo">Novo cliente</button></div>
+      <select id="cliSel"></select>
+      <input id="cliente" autocomplete="off" placeholder="Nome ou empresa" hidden>
       <p class="muted small" id="cliInfo" aria-live="polite"></p>
-    </div>
-    <div class="idv" id="idv">
-      <label for="fIdv">Identidade visual</label>
-      <label class="btn btn-p btn-sm" for="fIdv" id="idvBtn">+ Adicionar</label><input type="file" id="fIdv" accept="image/*" multiple hidden>
-      <div class="idv-list" id="idvList"></div>
-      <p class="muted small" id="idvInfo" aria-live="polite"></p>
     </div>
   </section>
   <div id="off" class="msg info" hidden>Sem internet. O Capacho funciona assim mesmo.</div>
@@ -48,7 +43,7 @@
   <div class="mods" id="mods" aria-live="polite"></div>
   <div style="height:48px"></div>
 </main>
-<script src="portal.js?v=8dc2c4e9a5"></script>
+<script src="portal.js?v=e63b2912d3"></script>
 <script>
 (async()=>{const {$, $$}=G;
   let c=null;try{c=await G.eu();}catch(e){c=null;}
@@ -62,23 +57,22 @@
   const ci=$("#cliente"),info=$("#cliInfo");let CL=[];
   const abrirDB=()=>new Promise(res=>{try{const r=indexedDB.open("genio-vendas",3);r.onupgradeneeded=()=>{const d=r.result;["orcamentos","sessao"].forEach(n=>{if(!d.objectStoreNames.contains(n))d.createObjectStore(n,{keyPath:"id"});});if(!d.objectStoreNames.contains("clientes"))d.createObjectStore("clientes",{keyPath:"k"});};r.onsuccess=()=>res(r.result);r.onerror=()=>res(null);}catch(e){res(null);}});
   const lerClientes=async()=>{const db=await abrirDB();if(!db)return[];return new Promise(res=>{const t=db.transaction("orcamentos").objectStore("orcamentos").getAll();t.onsuccess=()=>res(t.result||[]);t.onerror=()=>res([]);});};
-  const idvGet=async k=>{const db=await abrirDB();if(!db)return null;return new Promise(res=>{const t=db.transaction("clientes").objectStore("clientes").get(k);t.onsuccess=()=>res(t.result||null);t.onerror=()=>res(null);});};
-  const idvPut=async o=>{const db=await abrirDB();if(!db)return;return new Promise(res=>{const t=db.transaction("clientes","readwrite");t.objectStore("clientes").put(o);t.oncomplete=res;t.onerror=res;});};
-  const mostrar=()=>{const n=ci.value.trim().toLowerCase();const d=CL.filter(o=>(o.nome||"").toLowerCase()===n);
-    info.textContent=!n?"":d.length?`${d.length} projeto${d.length>1?"s":""} · ${d[0].numero||""}${d[0].status?" · "+d[0].status:""}`:"Cliente novo";idvRender();};
-  // identidade visual do cliente: logos guardados uma vez, usados por todos os módulos
-  const idvSec=$("#idv"),idvList=$("#idvList"),idvInfo=$("#idvInfo");
-  async function idvRender(){const nome=ci.value.trim();idvSec.classList.toggle("off",!nome);if(!nome){idvList.innerHTML="";idvInfo.textContent="";return;}const o=await idvGet(nome.toLowerCase());const L=o&&o.logos||[];
-    idvList.innerHTML=L.map(l=>`<figure class="idv-it"><img src="${l.src}" alt=""><button type="button" class="x" data-rm="${l.id}" aria-label="Remover">×</button></figure>`).join("");
-    idvInfo.textContent=L.length?`${L.length} arquivo${L.length>1?"s":""}`:"";
-    $$("[data-rm]",idvList).forEach(b=>b.onclick=async()=>{const o2=await idvGet(nome.toLowerCase());o2.logos=(o2.logos||[]).filter(l=>l.id!==b.dataset.rm);o2.atualizado=new Date().toISOString();await idvPut(o2);idvRender();});}
-  const lerImg=f=>new Promise(res=>{const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const k=Math.min(1,1600/Math.max(im.width,im.height)),c=document.createElement("canvas");c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);c.getContext("2d").drawImage(im,0,0,c.width,c.height);res(c.toDataURL("image/png"));};im.onerror=()=>res(null);im.src=r.result;};r.onerror=()=>res(null);r.readAsDataURL(f);});
-  $("#fIdv").addEventListener("change",async e=>{const fs=[...e.target.files||[]];e.target.value="";const nome=ci.value.trim();if(!nome||!fs.length)return;
-    const o=(await idvGet(nome.toLowerCase()))||{k:nome.toLowerCase(),nome,logos:[]};
-    for(const f of fs){const src=await lerImg(f);if(src)o.logos.push({id:Date.now().toString(36)+Math.random().toString(36).slice(2,6),nome:f.name,src});}
-    o.nome=nome;o.atualizado=new Date().toISOString();await idvPut(o);idvRender();});
+  const sel=$("#cliSel"),bNovo=$("#cliNovo");
+  const mostrar=()=>{const n=ci.value.trim().toLowerCase();const d=CL.find(o=>(o.nome||"").toLowerCase()===n);
+    info.textContent=!n?"":d?(d.n?`${d.n} projeto${d.n>1?"s":""} · ${d.numero||""}${d.status?" · "+d.status:""}`:"Sem projeto ainda"):"Cliente novo";};
+  // lista dos clientes (mais recentes primeiro); "Novo cliente" troca a lista por um campo para digitar
+  const modo=m=>{const novo=m==="novo"||!CL.length;sel.hidden=novo;ci.hidden=!novo;bNovo.hidden=!CL.length;bNovo.textContent=novo?"Escolher da lista":"Novo cliente";if(novo&&m==="novo")setTimeout(()=>ci.focus(),30);};
+  const montarLista=()=>{const atual=ci.value.trim();sel.innerHTML='<option value="">Escolha o cliente</option>'+CL.map(r=>`<option value="${G.esc(r.nome)}">${G.esc(r.nome)}${r.n>1?` · ${r.n} projetos`:""}</option>`).join("");
+    const na=CL.some(r=>r.nome===atual);sel.value=na?atual:"";modo(CL.length&&(na||!atual)?"lista":"novo");};
+  sel.onchange=()=>{ci.value=sel.value;G.ls.set("genio-cliente",ci.value);mostrar();};
+  bNovo.onclick=()=>{if(ci.hidden){ci.value="";G.ls.set("genio-cliente","");sel.value="";mostrar();modo("novo");}else{modo("lista");}};
   ci.value=G.ls.get("genio-cliente")||"";
   ci.addEventListener("input",()=>{G.ls.set("genio-cliente",ci.value.trim());mostrar();});
+  // clientes = quem tem projeto (orçamentos) ou identidade visual guardada
+  const lerIdent=async()=>{const db=await abrirDB();if(!db||!db.objectStoreNames.contains("clientes"))return[];return new Promise(res=>{const t=db.transaction("clientes").objectStore("clientes").getAll();t.onsuccess=()=>res(t.result||[]);t.onerror=()=>res([]);});};
+  Promise.all([lerClientes(),lerIdent()]).then(([all,ids])=>{const m=new Map();all.forEach(o=>{const nome=(o.cliente&&o.cliente.nome||"").trim();if(!nome)return;const k=nome.toLowerCase();const r=m.get(k)||{nome,n:0,numero:"",status:"",at:""};r.n++;if((o.atualizado||"")>r.at){r.at=o.atualizado||"";r.numero=o.numero||"";r.status=o.status||"";}m.set(k,r);});
+    ids.forEach(o=>{const nome=(o.nome||"").trim();if(!nome)return;const k=nome.toLowerCase();if(!m.has(k))m.set(k,{nome,n:0,numero:"",status:"",at:o.atualizado||""});});
+    CL=[...m.values()].sort((a,b)=>b.at.localeCompare(a.at)).map(r=>({nome:r.nome,n:r.n,numero:r.numero,status:r.status}));montarLista();mostrar();});
   $("#bSair").onclick=()=>G.sair();
   const bi=$("#bInst"),mostra=()=>{bi.hidden=!G.podeInstalar();};mostra();document.addEventListener("genio-instalavel",mostra);
   bi.onclick=async()=>{await G.instalar();mostra();};

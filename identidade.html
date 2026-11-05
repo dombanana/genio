@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>GenIO · Identidade visual</title>
+<meta name="theme-color" content="#6933C5">
+<meta name="robots" content="noindex,nofollow">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="favicon.png" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-title" content="GenIO">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="portal.css?v=e63b2912d3">
+<style>
+.idv-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;margin-top:16px}
+.idv-it{position:relative;margin:0;aspect-ratio:1;border:1px solid var(--linha);border-radius:14px;background:#fff;display:grid;place-items:center;overflow:hidden}
+.idv-it img{max-width:84%;max-height:84%;object-fit:contain}
+.idv-it .x{position:absolute;top:6px;right:6px;width:28px;height:28px;border-radius:50%;border:0;background:rgba(28,22,53,.75);color:#fff;font-size:18px;line-height:1;cursor:pointer}
+.idv-add{aspect-ratio:1;border:2px dashed var(--linha);border-radius:14px;display:grid;place-items:center;color:var(--marca);font-weight:700;font-size:17px;cursor:pointer;background:var(--cartao)}
+.idv-add:hover{border-color:var(--marca)}
+.sem{color:var(--texto2);margin:8px 0 0}
+.fundos{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-top:14px}
+.fundo{aspect-ratio:4/3;border-radius:14px;display:grid;place-items:center;overflow:hidden;position:relative;border:1px solid var(--linha)}
+.fundo img{max-width:70%;max-height:60%;object-fit:contain}
+.fundo span{position:absolute;left:10px;bottom:8px;font-size:12px;font-weight:600;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.5)}
+.fundo.claro span{color:var(--texto);text-shadow:none}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <a class="btn btn-s btn-sm" href="app.html">‹ Módulos</a>
+  <span class="marca" aria-label="GenIO, identidade visual"><b>Gen<i>IO</i></b><span>identidade visual</span></span>
+  <div class="fill"></div>
+</div></header>
+<main class="wrap">
+  <h1 id="cli" style="margin:20px 0 0">—</h1>
+  <p class="muted" style="margin:4px 0 0">Logo, arte ou foto do cartão de visita. Vale para todos os módulos.</p>
+  <div class="idv-grid" id="grid"></div>
+  <section id="aplic" hidden>
+    <h2 style="margin:28px 0 4px">Resultado da identidade</h2>
+    <p class="muted" style="margin:0">A marca aplicada em fundos: é assim que ela entra nos produtos.</p>
+    <div class="fundos" id="fundos"></div>
+  </section>
+  <p class="sem" id="sem" hidden>Escolha o cliente na tela de módulos.</p>
+  <input type="file" id="fIdv" accept="image/*" multiple hidden>
+</main>
+<script src="portal.js?v=e63b2912d3"></script>
+<script>
+(async()=>{const {$, $$}=G;
+  const c=await G.eu().catch(()=>null);if(!c){location.replace("/?entrar=1&volta=identidade.html");return;}
+  const nome=(G.ls.get("genio-cliente")||"").trim(),k=nome.toLowerCase();
+  $("#cli").textContent=nome||"Identidade visual";
+  if(!nome){$("#sem").hidden=false;return;}
+  const abrirDB=()=>new Promise(res=>{try{const r=indexedDB.open("genio-vendas",3);r.onupgradeneeded=()=>{const d=r.result;["orcamentos","sessao"].forEach(n=>{if(!d.objectStoreNames.contains(n))d.createObjectStore(n,{keyPath:"id"});});if(!d.objectStoreNames.contains("clientes"))d.createObjectStore("clientes",{keyPath:"k"});};r.onsuccess=()=>res(r.result);r.onerror=()=>res(null);}catch(e){res(null);}});
+  const get=async()=>{const db=await abrirDB();if(!db)return null;return new Promise(res=>{const t=db.transaction("clientes").objectStore("clientes").get(k);t.onsuccess=()=>res(t.result||null);t.onerror=()=>res(null);});};
+  const put=async o=>{const db=await abrirDB();if(!db)return;return new Promise(res=>{const t=db.transaction("clientes","readwrite");t.objectStore("clientes").put(o);t.oncomplete=res;t.onerror=res;});};
+  const lerImg=f=>new Promise(res=>{const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const q=Math.min(1,1600/Math.max(im.width,im.height)),cv=document.createElement("canvas");cv.width=Math.round(im.width*q);cv.height=Math.round(im.height*q);cv.getContext("2d").drawImage(im,0,0,cv.width,cv.height);res(cv.toDataURL("image/png"));};im.onerror=()=>res(null);im.src=r.result;};r.onerror=()=>res(null);r.readAsDataURL(f);});
+  // o quadro vazio é o próprio botão de adicionar (o objeto é a referência)
+  async function render(){const o=await get(),L=o&&o.logos||[];
+    $("#grid").innerHTML=L.map(l=>`<figure class="idv-it"><img src="${l.src}" alt=""><button type="button" class="x" data-rm="${l.id}" aria-label="Remover">×</button></figure>`).join("")+'<label class="idv-add" for="fIdv">+ Adicionar</label>';
+    $$("[data-rm]").forEach(b=>b.onclick=async()=>{const o2=await get();o2.logos=(o2.logos||[]).filter(l=>l.id!==b.dataset.rm);o2.atualizado=new Date().toISOString();await put(o2);render();});
+    // a marca aplicada: fundos claro, escuro e as cores mais usadas do catálogo de capachos
+    const F=[["Branco","#FFFFFF",1],["Cinza","#9A9A9A",0],["Grafite","#4A4A4A",0],["Preto 03","#111111",0],["Azul Marinho","#1F2A5A",0],["Verde Musgo","#4C6B3C",0],["Vermelho","#B3261E",0],["Bege","#D9C9A8",1]];
+    $("#aplic").hidden=!L.length;$("#fundos").innerHTML=L.length?F.map(([n,c,claro])=>`<div class="fundo${claro?" claro":""}" style="background:${c}"><img src="${L[0].src}" alt=""><span>${n}</span></div>`).join(""):"";}
+  $("#fIdv").addEventListener("change",async e=>{const fs=[...e.target.files||[]];e.target.value="";if(!fs.length)return;
+    const o=(await get())||{k,nome,logos:[]};
+    for(const f of fs){const src=await lerImg(f);if(src)o.logos.push({id:Date.now().toString(36)+Math.random().toString(36).slice(2,6),nome:f.name,src});}
+    o.nome=nome;o.atualizado=new Date().toISOString();await put(o);render();});
+  render();
+})();
+</script>
+</body>
+</html>
