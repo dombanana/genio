@@ -15,7 +15,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&display=swap">
-<link rel="stylesheet" href="portal.css?v=a98c8ac8ab">
+<link rel="stylesheet" href="portal.css?v=037450970f">
 </head>
 <body>
 <header class="top"><div class="wrap">
@@ -27,13 +27,15 @@
 </div></header>
 <main class="wrap">
   <div class="saud">
-    <div class="saud-cli"><h1 id="oi">Olá</h1>
-      <label for="cliente">Cliente</label>
-      <div class="row"><input id="cliente" list="clientes" autocomplete="off" placeholder="Nome ou empresa"><datalist id="clientes"></datalist></div>
-      <p class="muted small" id="cliInfo" aria-live="polite"></p>
-      <button class="btn btn-s btn-sm" type="button" id="bInst" hidden style="margin-top:6px">Instalar no aparelho</button></div>
-    <img class="saud-ic" src="img/parceiro.png?v=a98c8ac8ab" alt="" width="77" height="150">
+    <h1 id="oi">Olá</h1>
+    <img class="saud-ic" src="img/parceiro.png?v=037450970f" alt="" width="77" height="150">
   </div>
+  <section class="cli">
+    <label for="cliente">Cliente</label>
+    <div class="row"><input id="cliente" list="clientes" autocomplete="off" placeholder="Nome ou empresa"><datalist id="clientes"></datalist></div>
+    <p class="muted small" id="cliInfo" aria-live="polite"></p>
+    <button class="btn btn-s btn-sm" type="button" id="bInst" hidden>Instalar no aparelho</button>
+  </section>
   <div id="off" class="msg info" hidden>Sem internet. O Capacho funciona assim mesmo.</div>
   <section class="idv" id="idv" hidden>
     <div class="row between"><b>Identidade visual</b><label class="btn btn-p btn-sm" for="fIdv">+ Adicionar</label><input type="file" id="fIdv" accept="image/*" multiple hidden></div>
@@ -43,7 +45,7 @@
   <div class="mods" id="mods" aria-live="polite"></div>
   <div style="height:48px"></div>
 </main>
-<script src="portal.js?v=a98c8ac8ab"></script>
+<script src="portal.js?v=037450970f"></script>
 <script>
 (async()=>{const {$, $$}=G;
   let c=null;try{c=await G.eu();}catch(e){c=null;}

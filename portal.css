@@ -90,16 +90,18 @@ a.mod:active{transform:translateY(1px)}
 .ap{display:flex;align-items:center;gap:8px;padding:8px 0;border-top:1px solid var(--linha);font-size:14px}
 .ap span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis}
 .link{display:block;word-break:break-all;background:var(--marfim);border:1px dashed var(--linha);border-radius:10px;padding:10px 12px;font-size:14px;margin:8px 0 12px}
-/* saudação: a loja GenIO ao fundo e o parceiro à direita, apontando para a esquerda (referência do dono, 04/11/2026) */
-.saud{position:relative;display:flex;align-items:center;gap:16px;margin:24px 0 8px;border-radius:18px;overflow:hidden;min-height:190px;padding:20px 24px;background:#EBE3F5 url(img/loja-saud.jpg) right center/cover no-repeat}
-.saud:before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#EBE3F5 0,#EBE3F5 38%,rgba(235,227,245,0) 68%)}
-.saud>*{position:relative}
-.saud h1{font-size:clamp(26px,4.5vw,36px);margin:0}
-.saud-cli{display:flex;flex-direction:column;gap:4px;max-width:360px;width:100%}
-.saud-cli label{font-size:13px;font-weight:600;color:var(--texto2);margin-top:8px}
-.saud-cli input{width:100%;min-height:44px;border:1.5px solid var(--linha);border-radius:10px;padding:0 12px;font:500 16px Rubik,system-ui,sans-serif;background:#fff;color:var(--texto)}
-.saud-cli input:focus{outline:2px solid var(--marca);outline-offset:1px;border-color:var(--marca)}
-.saud-cli .small{margin:0;min-height:18px}
+/* saudação: cópia da referência do dono (04/11/2026): loja inteira à vista, degradê só na esquerda, parceiro em pé no canto direito */
+.saud{position:relative;margin:20px 0 12px;border-radius:18px;overflow:hidden;aspect-ratio:4/1;width:100%;background:#EBE3F5 url(img/loja-saud.jpg) right center/auto 100% no-repeat;border:1px solid #E3DBF2}
+.saud:before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#EBE3F5 0,#EBE3F5 30%,rgba(235,227,245,.85) 41%,rgba(235,227,245,0) 54%)}
+.saud h1{position:absolute;left:5%;top:50%;transform:translateY(-50%);margin:0;font-size:clamp(26px,5.2vw,44px);line-height:1;color:var(--marca)}
+.saud-ic{position:absolute;right:2%;bottom:0;height:94%;width:auto}
+@media (max-width:520px){.saud{aspect-ratio:3.2/1}.saud h1{font-size:clamp(22px,6.6vw,30px)}}
+.cli{display:flex;flex-direction:column;gap:4px;background:var(--cartao);border:1px solid var(--linha);border-radius:16px;padding:12px 18px 14px}
+.cli label{font-size:13px;font-weight:600;color:var(--texto2)}
+.cli input{width:100%;max-width:420px;min-height:44px;border:1.5px solid var(--linha);border-radius:10px;padding:0 12px;font:500 16px Rubik,system-ui,sans-serif;background:#fff;color:var(--texto)}
+.cli input:focus{outline:2px solid var(--marca);outline-offset:1px;border-color:var(--marca)}
+.cli .small{margin:0;min-height:18px}
+.cli .btn{align-self:flex-start;margin-top:6px}
 .idv{background:var(--cartao);border:1px solid var(--linha);border-radius:16px;padding:14px 18px;margin-top:14px}
 .idv>.row>b{font-size:18px;color:var(--marca)}
 .idv-list{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
@@ -108,9 +110,6 @@ a.mod:active{transform:translateY(1px)}
 .idv-it img{max-width:80%;max-height:80%;object-fit:contain}
 .idv-it .x{position:absolute;top:2px;right:2px;width:24px;height:24px;border-radius:50%;border:0;background:rgba(28,22,53,.75);color:#fff;font-size:16px;line-height:1;cursor:pointer}
 .idv .small{margin:8px 0 0}
-.saud .btn{align-self:center}
-.saud-ic{position:absolute;right:16px;bottom:0;height:150px;width:auto}
-@media (max-width:520px){.saud{min-height:150px;padding:16px 18px;background-position:72% center}.saud:before{background:linear-gradient(90deg,#EBE3F5 0,#EBE3F5 50%,rgba(235,227,245,.6) 72%,rgba(235,227,245,0) 100%)}.saud-ic{height:112px;right:4px}.saud-cli{max-width:66%}}
 .vazio{padding:24px;text-align:center;color:var(--texto2)}
 @media (max-width:860px){.hero .grid{grid-template-columns:1fr;gap:24px}.passos,.passos.tres{grid-template-columns:1fr 1fr}}
 @media (max-width:560px){.passos,.passos.tres,.planos,.form2{grid-template-columns:1fr}.sec{padding:40px 0}.hero{padding:32px 0}.card{padding:20px}.top .btn{min-height:44px;padding:0 12px;white-space:nowrap}.btn-ic{width:44px;padding:0;border:1.5px solid var(--linha);color:var(--marca);background:var(--cartao)}.btn-ic:hover{border-color:var(--marca)}.top .wrap{gap:8px}.top .btn-t:not(.btn-sm){display:none}.marca b{font-size:22px}}
