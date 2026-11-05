@@ -15,13 +15,13 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&display=swap">
-<link rel="stylesheet" href="portal.css?v=64606871fe">
+<link rel="stylesheet" href="portal.css?v=dbd704d88a">
 <style>
 .idv-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;margin-top:16px}
 .idv-it{position:relative;margin:0;aspect-ratio:1;border:1px solid var(--linha);border-radius:14px;background:#fff;display:grid;place-items:center;overflow:hidden}
 .idv-it img{max-width:84%;max-height:84%;object-fit:contain}
 .idv-it .x{position:absolute;top:6px;right:6px;width:28px;height:28px;border-radius:50%;border:0;background:rgba(28,22,53,.75);color:#fff;font-size:18px;line-height:1;cursor:pointer}
-.idv-add{aspect-ratio:1;border:2px dashed var(--linha);border-radius:14px;display:grid;place-items:center;color:var(--marca);font-weight:700;font-size:17px;cursor:pointer;background:var(--cartao)}
+.idv-add{font:inherit;font-weight:700;appearance:none;aspect-ratio:1;border:2px dashed var(--linha);border-radius:14px;display:grid;place-items:center;color:var(--marca);font-weight:700;font-size:17px;cursor:pointer;background:var(--cartao)}
 .idv-add:hover{border-color:var(--marca)}
 .sem{color:var(--texto2);margin:8px 0 0}
 .fundos{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-top:14px}
@@ -49,7 +49,8 @@
   <p class="sem" id="sem" hidden>Escolha o cliente na tela de módulos.</p>
   <input type="file" id="fIdv" accept="image/*" multiple hidden>
 </main>
-<script src="portal.js?v=64606871fe"></script>
+<script src="portal.js?v=dbd704d88a"></script>
+<script src="fotocrop.js?v=dbd704d88a"></script>
 <script>
 (async()=>{const {$, $$}=G;
   const c=await G.eu().catch(()=>null);if(!c){location.replace("/?entrar=1&volta=identidade.html");return;}
@@ -62,15 +63,17 @@
   const lerImg=f=>new Promise(res=>{const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const q=Math.min(1,1600/Math.max(im.width,im.height)),cv=document.createElement("canvas");cv.width=Math.round(im.width*q);cv.height=Math.round(im.height*q);cv.getContext("2d").drawImage(im,0,0,cv.width,cv.height);res(cv.toDataURL("image/png"));};im.onerror=()=>res(null);im.src=r.result;};r.onerror=()=>res(null);r.readAsDataURL(f);});
   // o quadro vazio é o próprio botão de adicionar (o objeto é a referência)
   async function render(){const o=await get(),L=o&&o.logos||[];
-    $("#grid").innerHTML=L.map(l=>`<figure class="idv-it"><img src="${l.src}" alt=""><button type="button" class="x" data-rm="${l.id}" aria-label="Remover">×</button></figure>`).join("")+'<label class="idv-add" for="fIdv">+ Adicionar</label>';
+    $("#grid").innerHTML=L.map(l=>`<figure class="idv-it"><img src="${l.src}" alt=""><button type="button" class="x" data-rm="${l.id}" aria-label="Remover">×</button></figure>`).join("")+'<button type="button" class="idv-add" id="idvCam">Fotografar</button><label class="idv-add" for="fIdv">+ Adicionar</label>';
+    $("#idvCam").onclick=()=>FotoCrop.abrir({titulo:"Identidade visual",varias:true,onFim:guardarArquivos});
     $$("[data-rm]").forEach(b=>b.onclick=async()=>{const o2=await get();o2.logos=(o2.logos||[]).filter(l=>l.id!==b.dataset.rm);o2.atualizado=new Date().toISOString();await put(o2);render();});
     // a marca aplicada: fundos claro, escuro e as cores mais usadas do catálogo de capachos
     const F=[["Branco","#FFFFFF",1],["Cinza","#9A9A9A",0],["Grafite","#4A4A4A",0],["Preto 03","#111111",0],["Azul Marinho","#1F2A5A",0],["Verde Musgo","#4C6B3C",0],["Vermelho","#B3261E",0],["Bege","#D9C9A8",1]];
     $("#aplic").hidden=!L.length;$("#fundos").innerHTML=L.length?F.map(([n,c,claro])=>`<div class="fundo${claro?" claro":""}" style="background:${c}"><img src="${L[0].src}" alt=""><span>${n}</span></div>`).join(""):"";}
-  $("#fIdv").addEventListener("change",async e=>{const fs=[...e.target.files||[]];e.target.value="";if(!fs.length)return;
+  const guardarArquivos=async fs=>{if(!fs.length)return;
     const o=(await get())||{k,nome,logos:[]};
     for(const f of fs){const src=await lerImg(f);if(src)o.logos.push({id:Date.now().toString(36)+Math.random().toString(36).slice(2,6),nome:f.name,src});}
-    o.nome=nome;o.atualizado=new Date().toISOString();await put(o);render();});
+    o.nome=nome;o.atualizado=new Date().toISOString();await put(o);render();};
+  $("#fIdv").addEventListener("change",e=>{const fs=[...e.target.files||[]];e.target.value="";guardarArquivos(fs);});
   render();
 })();
 </script>

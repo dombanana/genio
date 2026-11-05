@@ -26,15 +26,15 @@ const G=(()=>{
   const data=s=>{if(!s)return"—";const d=new Date(s+"Z");return d.toLocaleDateString("pt-BR",{day:"2-digit",month:"2-digit",year:"2-digit"})+" "+d.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});};
   // módulos do GenIO: o Capacho funciona; os outros entram aos poucos com a mesma base (fotos, prévia, orçamento, Pix)
   const MODULOS=[
-    {id:"identidade",nome:"Identidade visual",url:"identidade.html",on:true,interno:true,img:"img/cena-identidade.jpg?v=64606871fe"},
-    {id:"capacho",nome:"Capachos personalizados",url:"capacho.html",on:true,img:"img/cena-capacho.jpg?v=64606871fe"},
-    {id:"placas",nome:"Placas e sinalização",img:"img/cena-placas.jpg?v=64606871fe"},
-    {id:"adesivos",nome:"Adesivos e vitrines",img:"img/cena-adesivos.jpg?v=64606871fe"},
-    {id:"uniformes",nome:"Uniformes e camisetas",img:"img/cena-uniformes.jpg?v=64606871fe"},
-    {id:"impressos",nome:"Cartões e impressos",img:"img/cena-cartoes.jpg?v=64606871fe"},
-    {id:"banners",nome:"Banners e faixas",img:"img/cena-banners.jpg?v=64606871fe"},
-    {id:"brindes",nome:"Brindes e carimbos",img:"img/cat-brindes.jpg?v=64606871fe"},
-    {id:"parede",nome:"Adesivos de parede",img:"img/cat-parede.jpg?v=64606871fe"}];
+    {id:"identidade",nome:"Identidade visual",url:"identidade.html",on:true,interno:true,img:"img/cena-identidade.jpg?v=dbd704d88a"},
+    {id:"capacho",nome:"Capachos personalizados",url:"capacho.html",on:true,img:"img/cena-capacho.jpg?v=dbd704d88a"},
+    {id:"placas",nome:"Placas e sinalização",img:"img/cena-placas.jpg?v=dbd704d88a"},
+    {id:"adesivos",nome:"Adesivos e vitrines",img:"img/cena-adesivos.jpg?v=dbd704d88a"},
+    {id:"uniformes",nome:"Uniformes e camisetas",img:"img/cena-uniformes.jpg?v=dbd704d88a"},
+    {id:"impressos",nome:"Cartões e impressos",img:"img/cena-cartoes.jpg?v=dbd704d88a"},
+    {id:"banners",nome:"Banners e faixas",img:"img/cena-banners.jpg?v=dbd704d88a"},
+    {id:"brindes",nome:"Brindes e carimbos",img:"img/cat-brindes.jpg?v=dbd704d88a"},
+    {id:"parede",nome:"Adesivos de parede",img:"img/cat-parede.jpg?v=dbd704d88a"}];
   // fotos: imagens do catálogo GenIO (brand/catalogo no repositório), produto isolado em fundo lavanda; só foto e título
   // cartão do catálogo (referência do dono, 04/11): título à esquerda, cena do produto à direita; o cartão inteiro é o link; sem link, "Em breve" explícito
   const cardMod=(m,link)=>{const d=`<b>${esc(m.nome)}${m.on?"":'<span class="tag">Em breve</span>'}</b><div class="cena" style="background-image:url('${m.img}')"></div>`;
@@ -51,9 +51,9 @@ const G=(()=>{
   const VIDEOS=[];
   // kits de franquia: foto (recorte de brand/kits-tres.png), itens e preço — preco null = "a consultar" (o dono ainda não definiu)
   const KITS=[
-    {n:"01",nome:"Essencial",img:"img/kit-essencial.jpg?v=64606871fe",itens:["Camiseta ou polo e identificação","Acesso ao aplicativo de franqueado","Formação básica de produtos e instalação","Materiais comerciais digitais"],uso:"começar: apresentar, vender e encaminhar.",preco:null},
-    {n:"02",nome:"Comercial",img:"img/kit-comercial.jpg?v=64606871fe",itens:["Tudo do Essencial","Mochila e portfólio de amostras","Trena, caneta e bloco","Organizadores e referências para fotos"],uso:"visitar o comércio, medir e apresentar amostras.",preco:null,dest:true},
-    {n:"03",nome:"Operacional",img:"img/kit-operacional.jpg?v=64606871fe",itens:["Tudo do Comercial","Ferramentas e acessórios de instalação","Proteção adequada às atividades"],uso:"executar os serviços em que tiver capacitação.",preco:null}];
+    {n:"01",nome:"Essencial",img:"img/kit-essencial.jpg?v=dbd704d88a",itens:["Camiseta ou polo e identificação","Acesso ao aplicativo de franqueado","Formação básica de produtos e instalação","Materiais comerciais digitais"],uso:"começar: apresentar, vender e encaminhar.",preco:null},
+    {n:"02",nome:"Comercial",img:"img/kit-comercial.jpg?v=dbd704d88a",itens:["Tudo do Essencial","Mochila e portfólio de amostras","Trena, caneta e bloco","Organizadores e referências para fotos"],uso:"visitar o comércio, medir e apresentar amostras.",preco:null,dest:true},
+    {n:"03",nome:"Operacional",img:"img/kit-operacional.jpg?v=dbd704d88a",itens:["Tudo do Comercial","Ferramentas e acessórios de instalação","Proteção adequada às atividades"],uso:"executar os serviços em que tiver capacitação.",preco:null}];
   const BRL=v=>v==null?"Valor a consultar":"R$ "+Number(v).toLocaleString("pt-BR",{minimumFractionDigits:2,maximumFractionDigits:2});
   return {api,aparelho,nomeAparelho,eu,sair,guardada,$,$$,msg,olho,esc,data,MODULOS,renderMods,instalar,podeInstalar,ls,ATENDIMENTO,VIDEOS,KITS,BRL};
 })();

@@ -1,6 +1,6 @@
 // Gênio: funciona sem internet. Cada página abre do que está guardado no aparelho e se atualiza quando há rede.
-const V="genio-64606871fe",PAGS=["index.html","app.html","capacho.html","convite.html","admin.html","franquia.html","identidade.html","treinamento.html"],
-  CORE=PAGS.concat(["portal.css?v=64606871fe","portal.js?v=64606871fe","manifest.webmanifest","genio-192.png","genio-512.png","genio-touch.png","genio-favicon.png"]);
+const V="genio-dbd704d88a",PAGS=["index.html","app.html","capacho.html","convite.html","admin.html","franquia.html","identidade.html","treinamento.html"],
+  CORE=PAGS.concat(["portal.css?v=dbd704d88a","portal.js?v=dbd704d88a","fotocrop.js?v=dbd704d88a","manifest.webmanifest","genio-192.png","genio-512.png","genio-touch.png","genio-favicon.png"]);
 self.addEventListener("install",e=>{e.waitUntil(caches.open(V).then(c=>c.addAll(CORE)).then(()=>self.skipWaiting()));});
 self.addEventListener("activate",e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==V&&k!=="genio-fontes").map(k=>caches.delete(k)))).then(()=>self.clients.claim()));});
 // endereço → página guardada ("/" e "/?app=1" são a página de vendas e entrar)
