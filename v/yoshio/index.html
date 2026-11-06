@@ -1,0 +1,37 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Yoshio Maurício da Silva Tanaka · parceiro GenIO</title>
+<meta name="robots" content="noindex"><link rel="icon" href="/genio-favicon.png"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&display=swap">
+<style>:root{--marca:#6933C5;--lav:#EBE3F5;--fg:#1C1635;--muted:#6B6578;--line:#D8CCEA;--ok:#1E8E5A}body{margin:0;background:#FFFEFA;color:var(--fg);font:16px/1.5 Rubik,system-ui,sans-serif}
+.top{background:var(--marca);color:#fff;padding:14px 16px;display:flex;align-items:center;justify-content:space-between}.top b{font-weight:800;font-size:20px;letter-spacing:-.5px}.top b i{font-style:normal;color:#34D1BF}.top small{opacity:.85;font-size:12px}
+.w{max-width:620px;margin:0 auto;padding:20px 16px 50px;display:grid;gap:16px}
+.card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:16px}.card.lav{background:var(--lav);border-color:transparent}
+.hero{display:grid;grid-template-columns:96px 1fr;gap:14px;align-items:center}.foto{width:96px;height:96px;border-radius:50%;background:var(--lav);display:grid;place-items:center;overflow:hidden;font-size:34px;font-weight:800;color:var(--marca)}.foto img{width:100%;height:100%;object-fit:cover}
+h1{font-size:22px;margin:0;line-height:1.15}.sub{color:var(--muted);margin:4px 0 0;font-size:14px}
+.kpi{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.kpi div{background:#fff;border:1px solid var(--line);border-radius:14px;padding:10px 12px;text-align:center}.kpi b{display:block;font-size:24px;color:var(--marca)}.kpi span{font-size:12px;color:var(--muted)}
+h2{font-size:14px;letter-spacing:.07em;text-transform:uppercase;color:var(--marca);margin:0 0 8px}ul{margin:0;padding-left:18px}li{margin:4px 0}
+.sel{display:inline-flex;align-items:center;gap:6px;background:#E6F6EE;color:var(--ok);border-radius:999px;padding:4px 10px;font-size:13px;font-weight:600}
+.btn{display:inline-block;background:var(--marca);color:#fff;text-decoration:none;border-radius:12px;padding:12px 16px;font-weight:600}.btn.s{background:#fff;color:var(--marca);border:2px solid var(--marca)}
+.pend{color:var(--muted);font-style:italic}.foot{text-align:center;color:var(--muted);font-size:12px}
+</style></head><body>
+<div class="top"><b>Gen<i>IO</i></b><small>parceiro identificado</small></div>
+<div class="w">
+ <div class="card hero"><div class="foto" id="foto"></div><div><span class="sel">✓ Parceiro GenIO verificado</span><h1 id="nome"></h1><p class="sub" id="desde"></p></div></div>
+ <div class="kpi"><div><b id="vendas">0</b><span>vendas entregues</span></div><div><b id="nota">—</b><span id="notaL">sem avaliações ainda</span></div><div><b id="regs">—</b><span>regiões atendidas</span></div></div>
+ <div class="card"><h2>Quem é</h2><p id="resumo" class="pend">Apresentação em preparação.</p></div>
+ <div class="card"><h2>Experiência</h2><ul id="curriculo"><li class="pend">Em preparação.</li></ul></div>
+ <div class="card"><h2>Formação</h2><ul id="formacao"><li class="pend">Em preparação.</li></ul></div>
+ <div class="card lav"><h2>Como a GenIO funciona</h2><p style="margin:0 0 10px">Personalização para o seu comércio: capacho, placa, cartões, panfletos, adesivo de vitrine, camiseta e banner, a partir da identidade que você já tem. Você vê o resultado no seu espaço antes de pagar; a produção é em até 10 dias.</p><a class="btn s" href="/">Conhecer a GenIO</a></div>
+ <div class="card" id="contato" hidden><h2>Falar com <span id="nome2"></span></h2><a class="btn" id="wa" href="#">WhatsApp</a></div>
+ <p class="foot">Esta página é a identificação oficial do parceiro. Se algo não bater com quem está na sua porta, não siga com a visita.</p>
+</div>
+<script>
+const V={"slug": "yoshio", "nome": "Yoshio Maurício da Silva Tanaka", "desde": "2026-11", "foto": "", "resumo": "", "curriculo": [], "formacao": [], "contato": {"whatsapp": ""}, "vendas": 0, "nota": null, "avaliacoes": 0, "regioes": []};const $=s=>document.querySelector(s);
+$("#nome").textContent=V.nome;$("#nome2").textContent=V.nome.split(" ")[0];
+$("#desde").textContent=V.desde?"Na rede GenIO desde "+new Date(V.desde+"-01T12:00:00").toLocaleDateString("pt-BR",{month:"long",year:"numeric"}):"";
+$("#foto").innerHTML=V.foto?`<img src="${V.foto}" alt="">`:V.nome.split(" ").filter((p,i,a)=>i===0||i===a.length-1).map(p=>p[0]).join("");
+$("#vendas").textContent=V.vendas||0;
+if(V.nota){$("#nota").textContent=Number(V.nota).toFixed(1).replace(".",",")+" ★";$("#notaL").textContent=V.avaliacoes+" avaliações de clientes";}
+$("#regs").textContent=V.regioes&&V.regioes.length?V.regioes.length:"—";
+if(V.resumo){$("#resumo").textContent=V.resumo;$("#resumo").classList.remove("pend");}
+const li=(id,arr)=>{if(arr&&arr.length)$(id).innerHTML=arr.map(x=>`<li>${x}</li>`).join("");};li("#curriculo",V.curriculo);li("#formacao",V.formacao);
+if(V.contato&&V.contato.whatsapp){$("#contato").hidden=false;$("#wa").href="https://wa.me/55"+V.contato.whatsapp.replace(/\D/g,"")+"?text="+encodeURIComponent("Olá "+V.nome.split(" ")[0]+", vi sua página GenIO.");}
+</script></body></html>
