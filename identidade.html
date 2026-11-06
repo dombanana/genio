@@ -15,7 +15,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&display=swap">
-<link rel="stylesheet" href="portal.css?v=20c7f081ef">
+<link rel="stylesheet" href="portal.css?v=3d7a2206ab">
 <style>
 .idv-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;margin-top:16px}
 .idv-it{position:relative;margin:0;aspect-ratio:1;border:1px solid var(--linha);border-radius:14px;background:#fff;display:grid;place-items:center;overflow:hidden}
@@ -64,7 +64,7 @@ h3{font-size:15px;margin:22px 0 8px;color:var(--marca);text-transform:uppercase;
   <div class="idv-grid" id="grid"></div>
   <section id="lacunas" hidden>
     <div class="lac-top"><h2 style="margin:0">Manual de identidade</h2><span class="lac-tag" id="lacN">0 de 0</span></div>
-    <p class="muted" style="margin:0">As caixinhas que o manual preenche, na ordem: público → na porta → derivado → cliente confirma. Toque para preencher.</p>
+    <p class="muted" style="margin:0" id="lacInfo">As caixinhas que o manual preenche, na ordem: público → na porta → derivado → cliente confirma. Toque para preencher.</p>
     <div class="lac-bar"><i id="lacBar" style="width:0"></i></div>
     <div id="lacLista"></div>
   </section>
@@ -83,10 +83,10 @@ h3{font-size:15px;margin:22px 0 8px;color:var(--marca);text-transform:uppercase;
   <p class="sem" id="sem" hidden>Escolha o cliente na tela de módulos.</p>
   <input type="file" id="fIdv" accept="image/*" multiple hidden>
 </main>
-<script src="portal.js?v=20c7f081ef"></script>
-<script src="fotocrop.js?v=20c7f081ef"></script>
-<script src="manual.js?v=20c7f081ef"></script>
-<script src="lacunas.js?v=20c7f081ef"></script>
+<script src="portal.js?v=3d7a2206ab"></script>
+<script src="fotocrop.js?v=3d7a2206ab"></script>
+<script src="manual.js?v=3d7a2206ab"></script>
+<script src="lacunas.js?v=3d7a2206ab"></script>
 <script>
 (async()=>{const {$, $$}=G;
   const c=await G.eu().catch(()=>null);if(!c){location.replace("/?entrar=1&volta=identidade.html");return;}
@@ -126,8 +126,13 @@ h3{font-size:15px;margin:22px 0 8px;color:var(--marca);text-transform:uppercase;
   // ---- lacunas do manual (as caixinhas) ----
   const lerArq=f=>lerImg(f);
   async function setLac(id,e){const o=(await get())||{k,nome,logos:[]};o.lacunas=o.lacunas||{};o.lacunas[id]={...e,em:new Date().toISOString()};o.atualizado=new Date().toISOString();await put(o);render();}
-  function renderLacunas(o){const R=Lacunas.estado(o),n=Lacunas.feitas(R),T=Lacunas.L.length;
-    $("#lacN").textContent=`${n} de ${T}`;$("#lacBar").style.width=Math.round(100*n/T)+"%";
+  // preenchimento público (coleta feita no servidor): entra só nas caixinhas ainda pendentes, uma vez
+  async function puxarPublico(o){if(o._pub)return o;const sl=slug(nome);try{const r=await fetch("clientes/"+sl+".json",{cache:"no-store"});if(!r.ok)return o;const J=await r.json();const o2=(await get())||{k,nome,logos:[]};o2.lacunas=o2.lacunas||{};let n=0;
+      for(const [id,e] of Object.entries(J.lacunas||{})){const cur=o2.lacunas[id];if(cur&&cur.estado&&cur.estado!=="pendente")continue;o2.lacunas[id]={...e,em:new Date().toISOString()};n++;}
+      o2.pub={de:sl,em:J.coletadoEm,fontes:J.fontes};o2.atualizado=new Date().toISOString();if(n)await put(o2);return {...o2,tel:o.tel,_pub:true};}catch(e){return o;}}
+  async function renderLacunas(o){if(!o.pub&&!o._pub){const o2=await puxarPublico(o);if(o2._pub)o=o2;}
+    const R=Lacunas.estado(o),n=Lacunas.feitas(R),T=Lacunas.L.length;
+    $("#lacN").textContent=`${n} de ${T}`;if(o.pub)$("#lacInfo").textContent=`Preenchimento público de ${o.pub.em} (${(o.pub.fontes||[]).join(", ")}) já entrou nas caixinhas. O resto: na porta, derivado, cliente confirma.`;$("#lacBar").style.width=Math.round(100*n/T)+"%";
     const val=(x,e)=>{if(!e||e.estado==="pendente")return "";if(e.estado==="nao")return "<div class=v>não tem</div>";
       if(x.t==="imagem"&&e.valor)return `<div class=v><img src="${e.valor}" alt=""></div>`;
       if(x.t==="cor"&&e.valor)return `<div class=v><i class=sw style="background:${e.valor}"></i>${G.esc(e.nome||e.valor)}</div>`;

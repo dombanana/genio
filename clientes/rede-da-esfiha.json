@@ -1,0 +1,97 @@
+{
+ "nome": "Rede da Esfiha",
+ "aliases": [
+  "rede da esfirra",
+  "rede da esfiha"
+ ],
+ "coletadoEm": "2026-11-05",
+ "fontes": [
+  "foto do cadastro",
+  "Google Places",
+  "facebook.com/RededaEsfiha1"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Rede da Esfiha",
+   "origem": "publico"
+  },
+  "leitura": {
+   "estado": "encontrado",
+   "valor": "Grafia oficial com h: Esfiha (fala-se esfirra)",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "Esfiharia · fast food (pizzas, lanches, delivery)",
+   "origem": "publico"
+  },
+  "redes": {
+   "estado": "encontrado",
+   "valor": "Facebook /RededaEsfiha1",
+   "origem": "publico"
+  },
+  "registro": {
+   "estado": "encontrado",
+   "valor": "Marca registrada ® (consta no logo)",
+   "origem": "publico"
+  },
+  "slogan": {
+   "estado": "encontrado",
+   "valor": "fast food (consta no logo)",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "encontrado",
+   "valor": "Esfihas · pizzas · lanches · delivery 24h em várias unidades",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "encontrado",
+   "valor": "clientes/rede-da-esfiha/logo-original.jpg",
+   "origem": "cadastro"
+  },
+  "corPrincipal": {
+   "estado": "derivado",
+   "valor": "#C8232C",
+   "origem": "derivado",
+   "nome": "Vermelho (círculo do logo) · capacho: Vermelho"
+  },
+  "corApoio": {
+   "estado": "derivado",
+   "valor": "#F3EEE4",
+   "origem": "derivado",
+   "nome": "Creme do lettering e do mascote · capacho: Branco"
+  },
+  "corFundo": {
+   "estado": "derivado",
+   "valor": "Vermelho (o fundo do logo é o círculo vermelho; a marca em creme vai sobre ele)",
+   "origem": "derivado"
+  },
+  "fonteMarca": {
+   "estado": "derivado",
+   "valor": "Lettering próprio (script com contorno duplo) — não há fonte equivalente; manter o traçado vetorizado",
+   "origem": "derivado"
+  },
+  "fonteApoio": {
+   "estado": "derivado",
+   "valor": "Rubik (telefone, endereço, textos)",
+   "origem": "derivado"
+  },
+  "materiais": {
+   "estado": "derivado",
+   "valor": "Vermelho → bobina Vermelho · CMYK C0 M95 Y85 K10 · vinil vermelho · tinta vermelha. Creme → Branco · papel · vinil branco. Ouro (lâmpada, botão) → Ouro Carajás · C0 M25 Y90 K10. Preto (contornos) → Preto 03 · K100",
+   "origem": "derivado"
+  },
+  "combinacoes": {
+   "estado": "derivado",
+   "valor": "Permitido: creme sobre vermelho (principal); vermelho sobre branco; creme sobre preto. Proibido: creme sobre branco; vermelho sobre preto sem contorno",
+   "origem": "derivado"
+  },
+  "removido": {
+   "estado": "derivado",
+   "valor": "Na vetorização: textura e brilho da foto; sombra; a lâmpada e o ® ficam (são parte da marca). Contorno duplo mantido",
+   "origem": "derivado"
+  }
+ }
+}
