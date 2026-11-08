@@ -124,6 +124,10 @@ def aplicar(setor, pid, arte_path, saida, material=None, arte_cor=None, largura=
         raise SystemExit("arte não encontrada: " + arte_path)
     if arte.shape[2] == 3:
         arte = cv2.cvtColor(arte, cv2.COLOR_BGR2BGRA)
+    # recorta as margens transparentes: a proporção da arte é a do desenho, não a da prancheta
+    ys, xs = np.where(arte[..., 3] > 8)
+    if len(xs) > 10:
+        arte = arte[ys.min():ys.max() + 1, xs.min():xs.max() + 1]
     base = img.copy()
     mmat = mascara_material(img, P)
     cor_mat = hex2bgr(material) if (material and P.get("material_recolor")) else None

@@ -6,14 +6,14 @@
 <title>GênIO · Visita</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="rep.css?v=8d669c9e32">
+<link rel="stylesheet" href="rep.css?v=9ecac757b4">
 </head>
 <body>
 <div class="w" id="app"></div>
 <input type="file" accept="image/*" capture="environment" id="cam" hidden>
-<script src="../fotocrop.js?v=8d669c9e32"></script>
-<script src="imagem.js?v=8d669c9e32"></script>
-<script src="rep.js?v=8d669c9e32"></script>
+<script src="../fotocrop.js?v=9ecac757b4"></script>
+<script src="imagem.js?v=9ecac757b4"></script>
+<script src="rep.js?v=9ecac757b4"></script>
 <script>
 (async()=>{
   const {$,$$,esc,qs,nomeLoja,dados,estado,salvar,stLogo,nav,topo,voz,ligarVoz,ouvir,roteiro,CHECK,PROD,setorNome,telFmt,abertaAgora,ZONA}=Rep;
@@ -79,7 +79,9 @@
   // já com o cliente desta visita e o logo encontrado na captação
   async function definirCliente(){const nome=nomeLoja(l.nome);try{localStorage.setItem("genio-cliente",nome);localStorage.setItem("genio-cliente-dados",JSON.stringify({tel:telFmt(l.tel),endereco:l.endereco,slug,setor:l.setor}));}catch(e){}
     const M=Imagem.ler();const src=(M[slug+"/logo"]&&M[slug+"/logo"].dados)||(logo.estado==="encontrado"?location.origin+base+logo.valor:null);
-    if(src){try{await new Promise(res=>{Rep.abrirVendas().then(db=>{if(!db||!db.objectStoreNames.contains("clientes")){if(db)db.close();return res();}const t=db.transaction("clientes","readwrite"),st=t.objectStore("clientes"),g=st.get(nome.toLowerCase());g.onsuccess=()=>{const r=g.result||{k:nome.toLowerCase(),nome,logos:[],criado:new Date().toISOString()};if(!(r.logos&&r.logos.length))r.logos=[{id:"cap"+Date.now().toString(36),src,nome:"logo-captacao.jpg",origem:"captacao"}];r.lacunas=r.lacunas||L;r.atualizado=new Date().toISOString();st.put(r);t.oncomplete=()=>{db.close();res();};t.onerror=()=>res();};g.onerror=()=>res();});});}catch(e){}}
+    if(src){try{await new Promise(res=>{Rep.abrirVendas().then(db=>{if(!db||!db.objectStoreNames.contains("clientes")){if(db)db.close();return res();}const t=db.transaction("clientes","readwrite"),st=t.objectStore("clientes"),g=st.get(nome.toLowerCase());g.onsuccess=()=>{const r=g.result||{k:nome.toLowerCase(),nome,logos:[],criado:new Date().toISOString()};const cap=(r.logos||[]).find(x=>x.origem==="captacao");const outros=(r.logos||[]).filter(x=>x.origem!=="captacao");
+            if(!cap){r.logos=[{id:"cap"+Date.now().toString(36),src,nome:"logo-captacao.jpg",origem:"captacao"},...outros];}
+            else if(cap.src!==src){cap.src=src;cap.atualizado=new Date().toISOString();if(r.manual&&!r.manual.editado&&!outros.length)delete r.manual;} /* captação trocou o logo: substitui e descarta o manual derivado dele (se não houve edição manual) */ r.lacunas=r.lacunas||L;r.atualizado=new Date().toISOString();st.put(r);t.oncomplete=()=>{db.close();res();};t.onerror=()=>res();};g.onerror=()=>res();});});}catch(e){}}
   }
   $("#produtos").onclick=async()=>{await definirCliente();location.href=`produtos.html?l=${encodeURIComponent(slug)}`;};
   (()=>{const lb=$("#logoBox");let t0=0,mv=false;lb.addEventListener("pointerdown",()=>{t0=Date.now();mv=false;});lb.addEventListener("pointermove",()=>{mv=true;});lb.addEventListener("pointerup",async()=>{if(!mv&&Date.now()-t0<450){await definirCliente();location.href="identidade.html";}});})();
