@@ -618,6 +618,11 @@ class H(BaseHTTPRequestHandler):
                         out["python"] = subprocess.run([sys.executable, "-c", "import cv2,skimage,PIL;print(cv2.__version__)"], capture_output=True, text=True, timeout=20).stdout.strip() or "sem cv2/skimage"
                     except Exception as e:
                         out["python"] = str(e)[:100]
+                    try:  # ferramentas da versão limpa
+                        out["ferramentas"] = subprocess.run([sys.executable, "-c", "import importlib,shutil;m={n:bool(importlib.util.find_spec(n)) for n in ('vtracer','rembg','realesrgan','torch')};m.update({'inkscape':bool(shutil.which('inkscape')),'gs':bool(shutil.which('gs'))});print(m)"], capture_output=True, text=True, timeout=20).stdout.strip()
+                        out["marcadores"] = {n: os.path.exists("/var/lib/genio/" + n) for n in ("pacotes3.ok", "pacotes3.rodando", "realesrgan.ok")}
+                    except Exception as e:
+                        out["ferramentas"] = str(e)[:100]
                     return self._send(200, out)
                 if p == "/api/admin/captacao":
                     est = {}

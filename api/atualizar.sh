@@ -37,6 +37,19 @@ if [ ! -f /var/lib/genio/pacotes2.ok ]; then
   python3 -c "import cv2, skimage" >/dev/null 2>&1 || pip3 install -q --break-system-packages opencv-python-headless scikit-image pytesseract >>/var/lib/genio/apt.log 2>&1 || true
   if python3 -c "import cv2, skimage" >/dev/null 2>&1 && command -v rsvg-convert >/dev/null; then touch /var/lib/genio/pacotes2.ok; echo "pacotes do manual ok $(date -Is)" >> /var/lib/genio/esteira.log; else echo "pacotes do manual incompletos $(date -Is)" >> /var/lib/genio/esteira.log; fi
 fi
+if [ ! -f /var/lib/genio/pacotes3.ok ] && [ ! -f /var/lib/genio/pacotes3.rodando ]; then
+  # ferramentas da versão limpa (passada 1 e exportação): em segundo plano, para não travar a esteira
+  touch /var/lib/genio/pacotes3.rodando
+  nohup bash -c '
+    DEBIAN_FRONTEND=noninteractive apt-get install -y -q inkscape ghostscript >>/var/lib/genio/apt.log 2>&1 || echo "apt: falhou inkscape/ghostscript" >>/var/lib/genio/apt.log
+    pip3 install -q --break-system-packages vtracer "rembg[cpu]" >>/var/lib/genio/apt.log 2>&1 || pip3 install -q --break-system-packages vtracer rembg onnxruntime >>/var/lib/genio/apt.log 2>&1 || echo "pip: falhou vtracer/rembg" >>/var/lib/genio/apt.log
+    pip3 install -q --break-system-packages --index-url https://download.pytorch.org/whl/cpu torch torchvision >>/var/lib/genio/apt.log 2>&1 && pip3 install -q --break-system-packages realesrgan >>/var/lib/genio/apt.log 2>&1 || echo "pip: falhou realesrgan" >>/var/lib/genio/apt.log
+    python3 -c "import vtracer, rembg" >/dev/null 2>&1 && command -v inkscape >/dev/null && command -v gs >/dev/null && touch /var/lib/genio/pacotes3.ok
+    python3 -c "import realesrgan" >/dev/null 2>&1 && touch /var/lib/genio/realesrgan.ok
+    echo "pacotes da versão limpa: $( [ -f /var/lib/genio/pacotes3.ok ] && echo ok || echo incompletos ) · realesrgan $( [ -f /var/lib/genio/realesrgan.ok ] && echo ok || echo nao ) $(date -Is)" >> /var/lib/genio/esteira.log
+    rm -f /var/lib/genio/pacotes3.rodando
+  ' >/dev/null 2>&1 &
+fi
 for u in api/*.service api/*.timer; do
   [ -f "$u" ] || continue
   if ! cmp -s "$u" "/etc/systemd/system/$(basename "$u")"; then
