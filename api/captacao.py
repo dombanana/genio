@@ -458,9 +458,20 @@ def identidade(loja, zona, pasta, quota_ok):
 
 # ---------- rota ----------
 def rota(lojas, base, por_dia):
+    """vizinho mais próximo + melhoria 2-opt (tira os cruzamentos e os saltos longos)"""
     pool = lojas[:]; cur = base; ordem = []
     while pool:
         nx = min(pool, key=lambda x: km((x["lat"], x["lng"]), cur)); pool.remove(nx); ordem.append(nx); cur = (nx["lat"], nx["lng"])
+    P = lambda x: (x["lat"], x["lng"])
+    melhorou, passes = True, 0
+    while melhorou and passes < 20:
+        melhorou = False; passes += 1
+        for i in range(0, len(ordem) - 2):
+            a = base if i == 0 else P(ordem[i - 1]); b = P(ordem[i])
+            for j in range(i + 1, len(ordem) - 1):
+                c, d = P(ordem[j]), P(ordem[j + 1])
+                if km(a, c) + km(b, d) < km(a, b) + km(c, d) - 1e-6:
+                    ordem[i:j + 1] = ordem[i:j + 1][::-1]; melhorou = True; b = P(ordem[i])
     for i, x in enumerate(ordem):
         x["dia"] = i // por_dia + 1; x["ordem"] = i % por_dia + 1
     return ordem

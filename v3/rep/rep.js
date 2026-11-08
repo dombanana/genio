@@ -46,7 +46,7 @@ const Rep=(()=>{
       rec.onend=()=>{v.classList.remove("gravando");rec=null;if(txt.trim()){const e=estado();(e.notas=e.notas||[]).push({loja:slug||null,em:new Date().toISOString(),texto:txt.trim()});salvar(e);dica("Nota guardada");}};
       rec.start();}}
   function ouvir(txt,btn){if(!window.speechSynthesis){btn.textContent="Sem voz";return;}speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(txt);u.lang="pt-BR";u.rate=1;speechSynthesis.speak(u);}
-  function roteiro(l){const p=(PROD[l.setor]||PROD["comércio"]);const abre=l.logo==="encontrado"?`A marca da ${l.nome} já está pronta: mostre o capacho com ela na entrada.`:`Apresente o capacho e pergunte pela marca — a foto da placa resolve na hora.`;return `${abre} ${p[0]} primeiro; ${p[1].toLowerCase()} e ${p[2].toLowerCase()} se houver interesse.`;}
+  function roteiro(l){const p=(PROD[l.setor]||PROD["comércio"]);const abre=l.logo==="encontrado"?`A marca da ${nomeLoja(l.nome)} já está pronta: mostre o capacho com ela na entrada.`:`Apresente o capacho e pergunte pela marca — a foto da placa resolve na hora.`;return `${abre} ${p[0]} primeiro; ${p[1].toLowerCase()} e ${p[2].toLowerCase()} se houver interesse.`;}
   const CHECK=[["chuva","Chuva bate"],["degrau","Tem degrau"],["vidro","Porta de vidro"],["piso","Piso irregular"],["fluxo","Fluxo alto"],["sombra","Entrada coberta"]];
   // preço de referência (até o catálogo de fornecedores): custo R$ 250/m² × margem 2,2; borda rebaixada +R$ 25
   const precoCapacho=(wcm,hcm,borda)=>Math.round(((wcm/100)*(hcm/100)*250*2.2+(borda?25:0))/1)*1;
