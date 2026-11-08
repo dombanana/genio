@@ -266,16 +266,19 @@ def curiosidade_nome(nome):
         try:
             body = {"contents": [{"parts": [{"text": f"Em uma frase curta (máx. 30 palavras), em português, qual a origem ou o significado provável da palavra '{palavra}' no nome do comércio '{nome}' (sobrenome, cidade, palavra estrangeira, apelido)? Seja factual. Se não houver base, responda só: sem registro."}]}], "generationConfig": {"temperature": 0.2, "maxOutputTokens": 80}}
             # modelos em ordem de preferência: o Google aposenta versões e a resposta de erro indica a nova
-            r, txt = {}, ""
+            r, txt, erros_g = {}, "", []
             for modelo in ("gemini-3.8-flash", "gemini-flash-latest", "gemini-2.5-flash"):
                 for tent in range(2):  # 503 (sobrecarga) e timeout: espera e tenta de novo, depois passa ao próximo modelo
                     r = tenta(http, f"https://generativelanguage.googleapis.com/v1beta/models/{modelo}:generateContent", body, {"x-goog-api-key": K["GEMINI_KEY"]}, timeout=60)
                     txt = ((((r.get("candidates") or [{}])[0].get("content") or {}).get("parts") or [{}])[0].get("text") or "").strip()
                     if txt:
                         break
+                    erros_g.append(f"{modelo}: {str(r.get('_erro', 'sem texto'))[:90]}")
                     time.sleep(4)
                 if txt:
                     break
+            if not txt:
+                r = {"_erro": " · ".join(erros_g)}
             if txt and "sem registro" not in txt.lower():
                 return {"estado": "derivado", "valor": txt[:220], "origem": "derivado", "nota": "Gemini (uma frase; confirmar com o dono)", "palavra": palavra}
             erro_g = r.get("_erro") or ("resposta vazia" if not txt else "sem registro")
@@ -324,7 +327,8 @@ def _penalidades():
     except Exception:
         pass
     return pen
-PESO_FONTE = {"site-proprio": 70, "instagram-perfil": 70, "facebook-perfil": 65, "places-foto": 45, "serper-instagram": 55, "serper-facebook": 55, "serper-linktree": 60, "serper-diretorio": 40, "serper-imprensa": 25, "serper-outro": 30}
+ANTERIOR = {}  # slug → {ig:[...], fb:[...], site:url} achados em rodadas anteriores (memória entre rodadas)
+PESO_FONTE = {"site-logo": 80, "site-proprio": 55, "instagram-perfil": 70, "facebook-perfil": 65, "places-foto": 45, "serper-instagram": 55, "serper-facebook": 55, "serper-linktree": 60, "serper-diretorio": 40, "serper-imprensa": 25, "serper-outro": 30}
 def classificar_fonte(dominio):
     d = (dominio or "").lower()
     if "instagram" in d or "cdninstagram" in d:
@@ -338,6 +342,46 @@ def classificar_fonte(dominio):
     if any(x in d for x in ("uol", "globo", "r7", "estadao", "folha", "exame", "veja", "istoe", "cnn", "band", "terra", "ig.com", "metropoles")):
         return "serper-imprensa"
     return "serper-outro"
+
+def logo_do_site(url, img_dir):
+    """O logo que o próprio site declara: <img> no <header>/<nav> ou com logo|marca|brand em src/alt/class/id;
+    depois og:image e ícones grandes. Devolve candidatos (arquivo, legenda) na ordem de confiança."""
+    out = []
+    try:
+        req = request.Request(url, headers=dict(UA)); html_ = request.urlopen(req, timeout=20).read(400_000).decode("utf-8", "replace")
+    except Exception:
+        return out
+    from urllib.parse import urljoin
+    def imgs(trecho):
+        return [(m.group(0), (re.search(r'src=["\']([^"\']+)', m.group(0)) or re.search(r'data-src=["\']([^"\']+)', m.group(0)) or [None, None])[1]) for m in re.finditer(r"<img[^>]+>", trecho, re.I)]
+    cab = " ".join(re.findall(r"<(?:header|nav)[^>]*>.*?</(?:header|nav)>", html_, re.I | re.S))
+    vistos = set(); fila = []
+    for tag, src in imgs(cab):
+        if src and re.search(r"logo|marca|brand", tag, re.I):
+            fila.append((src, "logo no cabeçalho do site"))
+    for tag, src in imgs(html_):
+        if src and re.search(r"logo|marca|brand", tag, re.I):
+            fila.append((src, "imagem marcada como logo no site"))
+    for tag, src in imgs(cab):
+        if src:
+            fila.append((src, "imagem do cabeçalho do site"))
+    og = re.search(r'property=["\']og:image["\'][^>]*content=["\']([^"\']+)', html_, re.I) or re.search(r'content=["\']([^"\']+)["\'][^>]*property=["\']og:image', html_, re.I)
+    if og:
+        fila.append((og.group(1), "imagem de compartilhamento (og:image) do site"))
+    for m in re.finditer(r"<link[^>]+rel=[\"'][^\"']*(apple-touch-icon|icon)[^\"']*[\"'][^>]*>", html_, re.I):
+        h = re.search(r'href=["\']([^"\']+)', m.group(0))
+        if h and not h.group(1).endswith(".ico"):
+            fila.append((h.group(1), "ícone do site"))
+    for i, (src, leg) in enumerate(fila):
+        if src.startswith("data:") or src in vistos or len(out) >= 3:
+            continue
+        vistos.add(src); u = urljoin(url, src)
+        if re.search(r"\.svg(\?|$)", u, re.I):
+            continue  # svg entra só pelo pipeline do manual
+        pth = baixar(u, os.path.join(img_dir, f"site-logo-{len(out)+1}" + (".png" if ".png" in u.lower() else ".jpg")))
+        if pth:
+            out.append((pth, leg, u))
+    return out
 
 # ---------- cadastro ----------
 def E(v, origem="publico", **k):
@@ -404,12 +448,14 @@ def identidade(loja, zona, pasta, quota_ok):
     passos.append(f"Google Imagens (Serper) → {len(ri.get('images') or [])} resultados, {n_img} baixadas" + (f" · {ri['_erro']}" if "_erro" in ri else ""))
     rw = serper("search", f'{loja["nome"]} {loja["endereco"]} {zona["cidade"]}', num=10); custo["serper"] += 1
     texto = json.dumps(rw, ensure_ascii=False)
+    ant = ANTERIOR.get(loja["slug"], {})
+    texto += " " + " ".join(f"instagram.com/{h}" for h in ant.get("ig", [])) + " " + " ".join(f"facebook.com/{h}" for h in ant.get("fb", []))
     ig = re.findall(r"instagram\.com/([A-Za-z0-9_.]{3,30})/?", texto)
     ig = [h for h in ig if h.lower() not in ("p", "reel", "explore", "accounts", "stories", "reels")]
     fb = re.findall(r"facebook\.com/([A-Za-z0-9_.\-]{3,60})/?", texto)
     fb = [h for h in fb if h.lower() not in ("profile.php", "pages", "people", "groups", "watch")]
     cnpjs = [c for c in re.findall(r"\d{2}\.?\d{3}\.?\d{3}/?\d{4}-?\d{2}", texto) if cnpj_ok(c)]
-    sites = [r.get("link") for r in (rw.get("organic") or []) if r.get("link") and not re.search(r"instagram|facebook|google|ifood|tripadvisor|foursquare|apontador|guiamais|solutudo|cylex|telelistas|econodata|cnpj|wanderboat|fresha|linktr|youtube|olx|mercadolivre|kekanto|yelp", r["link"])]
+    sites = ([ant["site"]] if ant.get("site") else []) + [r.get("link") for r in (rw.get("organic") or []) if r.get("link") and not re.search(r"instagram|facebook|google|ifood|tripadvisor|foursquare|apontador|guiamais|solutudo|cylex|telelistas|econodata|cnpj|wanderboat|fresha|linktr|youtube|olx|mercadolivre|kekanto|yelp", r["link"])]
     passos.append(f"Google Web (Serper) → {len(rw.get('organic') or [])} páginas; instagram {ig[:2] or '—'}; facebook {fb[:1] or '—'}; cnpj {cnpjs[:1] or '—'}")
     ig_ok = [h for h in dict.fromkeys(ig) if bate_nome(loja["nome"], h)]
     fb_ok = [h for h in dict.fromkeys(fb) if bate_nome(loja["nome"], h)]
@@ -429,6 +475,11 @@ def identidade(loja, zona, pasta, quota_ok):
     proprios = [u for u in sites if bate_nome(loja["nome"], re.sub(r"^https?://(www\.)?", "", u).split("/")[0])]
     if proprios and not L.get("site"):
         L["site"] = E(proprios[0], nota="domínio confere com o nome da loja")
+    site_ok = (L.get("site") or {}).get("estado") == "encontrado" and (L["site"].get("valor") or "")
+    if site_ok:
+        for pth, leg, u in logo_do_site(site_ok, img_dir):
+            cands.append(dict(arq=pth, fonte="site-logo", legenda=f"{re.sub(r'^https?://(www\.)?', '', site_ok).split('/')[0]} · {leg}", url=u))
+        passos.append(f"Logo declarado pelo site → {sum(1 for c in cands if c['fonte']=='site-logo')} candidato(s)")
     elif sites and not L.get("site"):
         L["site"] = {"estado": "pendente", "origem": "publico", "valor": "", "opcoes": [{"valor": u, "legenda": "página que cita a loja; domínio não confere com o nome", "fonte": "web"} for u in sites[:3]], "nota": "nenhum site com o nome da loja — decidir"}
     elif not L.get("site"):
@@ -494,7 +545,7 @@ def identidade(loja, zona, pasta, quota_ok):
         # foto de ambiente: paisagem/retrato grande sem fundo liso e sem ser perfil → Local
         # site próprio: só vira candidato de logo se parecer logo (quadrada com fundo liso, ou "logo" no endereço/legenda); foto de produto vai para Local
         pareceLogo = re.search(r"logo|marca|brand|icon|avatar|perfil", (c.get("url") or "") + " " + (c.get("legenda") or ""), re.I)
-        if c["fonte"] in ("instagram-perfil", "facebook-perfil") or (c["fonte"] == "site-proprio" and (quadrada and liso or pareceLogo)) or (quadrada and liso) or c["repete"] >= 2:
+        if c["fonte"] in ("instagram-perfil", "facebook-perfil", "site-logo") or pareceLogo or c["repete"] >= 2 or (quadrada and liso and c["fonte"] not in ("site-proprio", "serper-outro")):
             logos.append(c)
         else:
             loc.append(c)
@@ -771,6 +822,11 @@ def main():
             cads[x["slug"]] = json.load(open(cp))
             if cads[x["slug"]].get("processado") and not run.get("refazer"):
                 continue
+            try:  # o que já foi confirmado antes entra como pista da rodada nova (a busca do Google varia)
+                La = cads[x["slug"]].get("lacunas", {}); rd = (La.get("redes") or {}).get("valor") or ""
+                ANTERIOR[x["slug"]] = {"ig": re.findall(r"@([A-Za-z0-9_.]{3,30})", rd), "fb": re.findall(r"/([A-Za-z0-9_.\-]{3,60})", rd), "site": (La.get("site") or {}).get("valor") if (La.get("site") or {}).get("estado") == "encontrado" else None}
+            except Exception:
+                pass
         fora = (dias_pedidos and x["dia"] not in dias_pedidos) or feitas >= limite or (not run and usadas + feitas >= 50)  # cota de 50/dia só para a rodada automática
         if fora and x["slug"] in cads:
             continue  # ficha existente (pronta ou não) nunca é sobrescrita por esqueleto
