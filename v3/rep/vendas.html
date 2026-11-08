@@ -7,7 +7,7 @@
 <body><div class="w" id="app"></div>
 <script src="rep.js?v=bbfd9db4f5"></script>
 <script>
-(async()=>{const {$,esc,dados,estado,nav,topo,voz,ligarVoz,money,lojasDoDia,hojeDia}=Rep;const D=await dados();const e=estado();const ped=e.pedidos||[];
+(async()=>{const {$,esc,dados,estado,nav,topo,voz,ligarVoz,money,orcamentos,etapaDe}=Rep;const D=await dados();const e=estado();const Qs=await orcamentos();const ped=Qs.filter(q=>["aprovado"].includes(q.status)||["pagamento","producao","entrega","entregue"].includes(etapaDe(q))).map(q=>({n:q.numero||q.id,nome:(q.cliente&&q.cliente.nome)||"Sem nome",total:(q.preco&&q.preco.total)||0,em:q.aprovado||q.atualizado||q.criado}));
   const mes=new Date().getMonth();const doMes=ped.filter(p=>new Date(p.em).getMonth()===mes);const total=doMes.reduce((s,p)=>s+p.total,0);
   const visitas=(e.feitas||[]).length;const conv=visitas?Math.round(doMes.length/visitas*100):0;const meta=50;
   $("#app").innerHTML=`${topo()}<h1>Vendas</h1><p class="sub">${new Date().toLocaleDateString("pt-BR",{month:"long",year:"numeric"})}</p>

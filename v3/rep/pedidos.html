@@ -25,10 +25,12 @@
 <script src="rep.js?v=bbfd9db4f5"></script>
 <script>
 (async()=>{
-  const {$,$$,esc,qs,dados,estado,salvar,nav,topo,voz,ligarVoz,money}=Rep;
-  await dados();const e=estado();e.pedidos=e.pedidos||[];
-  const ETAPAS=[["arte","Arte"],["pagamento","Pagamento"],["producao","Produção"],["entrega","Entrega"],["entregue","Entregue"]];
-  const ROT={arte:["Aguardando aprovação","dec","Próximo passo: aprovação do cliente"],pagamento:["Aguardando sinal","dec","Próximo passo: Pix do sinal"],producao:["Em produção","ok","Entrega prevista em 7 dias úteis"],entrega:["Entrega agendada","ok","Combinar período com o cliente"],entregue:["Entregue","ok","Pedido concluído"]};
+  const {$,$$,esc,qs,dados,estado,salvar,nav,topo,voz,ligarVoz,money,orcamentos,etapaDe,setEtapa}=Rep;
+  await dados();const Qs=await orcamentos();
+  // pedidos = orçamentos do módulo de capacho (os mesmos que o vendedor monta na visita)
+  const e={pedidos:Qs.map(q=>({id:q.id,n:q.numero||q.id,loja:q.cliente&&q.cliente.nome,nome:(q.cliente&&q.cliente.nome)||"Sem nome",itens:[{id:"capacho",nome:(q.tapetes&&q.tapetes.length>1)?`${q.tapetes.length} tapetes`:"Capacho personalizado",desc:q.spec?`${q.spec.w} × ${q.spec.h} cm`:""}],total:(q.preco&&q.preco.total)||0,em:q.atualizado||q.criado||new Date().toISOString(),etapa:etapaDe(q),previa:q.preview||null,status:q.status}))};
+  const ETAPAS=[["orcamento","Orçamento"],["arte","Arte"],["pagamento","Pagamento"],["producao","Produção"],["entrega","Entrega"],["entregue","Entregue"]];
+  const ROT={orcamento:["Orçamento em aberto","","Próximo passo: enviar ao cliente"],arte:["Aguardando aprovação","dec","Próximo passo: aprovação do cliente"],pagamento:["Aguardando sinal","dec","Próximo passo: Pix do sinal (Asaas)"],producao:["Em produção","ok","Arquivo gerado; pedido no fornecedor"],entrega:["Entrega agendada","ok","Combinar período com o cliente"],entregue:["Entregue","ok","Pedido concluído"]};
   const IMG={capacho:"../img/cat-capacho.jpg",placas:"../img/cat-placas.jpg",adesivos:"../img/cat-adesivos.jpg",cartoes:"../img/cat-cartoes.jpg",banners:"../img/cat-banners.jpg",uniformes:"../img/cat-uniformes.jpg",parede:"../img/cat-parede.jpg",brindes:"../img/cat-brindes.jpg"};
   let aba=qs.get("aba")||"andamento";
   const quando=iso=>{const d=new Date(iso),h=new Date();return d.toDateString()===h.toDateString()?"Hoje":d.toLocaleDateString("pt-BR",{day:"2-digit",month:"short"}).replace(".","");};
@@ -39,14 +41,15 @@
     <div class="seg"><button class="${aba==="andamento"?"on":""}" data-aba="andamento">✓ Em andamento</button><button class="${aba==="entregues"?"on":""}" data-aba="entregues">▣ Entregues</button></div>
     ${lista.length?lista.map(p=>{const r=ROT[p.etapa]||ROT.arte;const idx=ETAPAS.findIndex(x=>x[0]===p.etapa);const nomes=p.itens.map(i=>i.nome.replace(" personalizado","").replace(" de identificação","")).join(" + ");
       return `<article class="ped" id="p${p.n}"><div class="cab"><div><h2>${esc(p.nome)}</h2><div class="meta">#${p.n} · ${money(p.total)} · ${quando(p.em)}</div></div><span class="chip ${r[1]}">${r[1]==="ok"?"✓ ":"◷ "}${r[0]}</span></div>
-      <div class="passos">${ETAPAS.slice(0,4).map(([k,n],i)=>`<div class="p ${i<=idx?"ok":""}">${n}</div>`).join("")}</div>
-      <div class="itens"><img src="${IMG[(p.itens[0]||{}).id]||IMG.capacho}" alt=""><b>${esc(nomes)}</b></div>
-      <div class="rod"><span>📅 ${r[2]}</span>${p.etapa!=="entregue"?`<button data-av="${p.n}">Avançar etapa →</button>`:`<a href="../ver.html?pedido=${p.n}">Ver pedido →</a>`}</div></article>`;}).join(""):`<div class="card vazio">Nenhum pedido ${aba==="andamento"?"em andamento":"entregue"} ainda.</div>`}
-    <p class="ilus">Etapas avançam sozinhas quando o cliente aprova a arte (área do cliente) e o Pix cai (Asaas); até lá o botão avança manualmente.</p>
+      <div class="passos">${ETAPAS.slice(1,5).map(([k,n],i)=>`<div class="p ${i+1<=idx?"ok":""}">${n}</div>`).join("")}</div>
+      <div class="itens">${p.previa?`<img src="${p.previa}" alt="">`:`<img src="${IMG.capacho}" alt="">`}<b>${esc(nomes)}${p.itens[0].desc?` <small class="muted">· ${esc(p.itens[0].desc)}</small>`:""}</b></div>
+      <div class="rod"><span>📅 ${r[2]}</span><span style="display:flex;gap:14px"><a href="capacho.html" data-abrir="${esc(p.loja||"")}">Abrir no módulo →</a>${p.etapa!=="entregue"?`<button data-av="${esc(p.id)}">Avançar etapa →</button>`:""}</span></div></article>`;}).join(""):`<div class="card vazio">${aba==="andamento"?"Nenhum orçamento ainda. Eles nascem na visita, em “Mostrar produtos”.":"Nenhum pedido entregue ainda."}</div>`}
+    <p class="ilus">Os pedidos são os orçamentos do módulo de capacho deste aparelho. Etapas avançam sozinhas quando o cliente aprova a arte e o Pix cai (Asaas); até lá o botão avança manualmente.</p>
     ${voz()}${nav("pedidos")}`;
     ligarVoz(null);
     $$("[data-aba]").forEach(b=>b.onclick=()=>{aba=b.dataset.aba;render();});
-    $$("[data-av]").forEach(b=>b.onclick=()=>{const p=e.pedidos.find(x=>x.n==b.dataset.av);const i=ETAPAS.findIndex(x=>x[0]===p.etapa);p.etapa=ETAPAS[Math.min(ETAPAS.length-1,i+1)][0];salvar(e);render();});
+    $$("[data-av]").forEach(b=>b.onclick=()=>{const p=e.pedidos.find(x=>x.id==b.dataset.av);const i=ETAPAS.findIndex(x=>x[0]===p.etapa);p.etapa=ETAPAS[Math.min(ETAPAS.length-1,i+1)][0];setEtapa(p.id,p.etapa);render();});
+    $$("[data-abrir]").forEach(a=>a.onclick=()=>{try{if(a.dataset.abrir)localStorage.setItem("genio-cliente",a.dataset.abrir);}catch(e){}});
     const novo=qs.get("novo");if(novo){const el=$("#p"+novo);if(el)el.scrollIntoView({behavior:"smooth",block:"center"});}}
   render();
 })();

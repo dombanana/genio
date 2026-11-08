@@ -51,5 +51,9 @@ const Rep=(()=>{
   // preço de referência (até o catálogo de fornecedores): custo R$ 250/m² × margem 2,2; borda rebaixada +R$ 25
   const precoCapacho=(wcm,hcm,borda)=>Math.round(((wcm/100)*(hcm/100)*250*2.2+(borda?25:0))/1)*1;
   const money=v=>"R$ "+v.toLocaleString("pt-BR",{minimumFractionDigits:2,maximumFractionDigits:2});
-  return {$,$$,esc,qs,ZONA,nomeLoja,estado,salvar,vendedor,dados,hojeDia,lojasDoDia,vizinhos,abertaAgora,stLogo,nav,topo,voz,ligarVoz,ouvir,roteiro,CHECK,PROD,setorNome,telFmt,dist,precoCapacho,money};
+  // orçamentos reais do módulo de capacho (IndexedDB genio-vendas · orcamentos) + etapa operacional guardada à parte
+  function orcamentos(){return new Promise(res=>{try{const rq=indexedDB.open("genio-vendas");rq.onsuccess=()=>{const db=rq.result;if(!db.objectStoreNames.contains("orcamentos")){db.close();return res([]);}const t=db.transaction("orcamentos").objectStore("orcamentos").getAll();t.onsuccess=()=>{db.close();res(t.result||[]);};t.onerror=()=>res([]);};rq.onerror=()=>res([]);rq.onupgradeneeded=()=>{};}catch(e){res([]);}});}
+  const etapaDe=q=>{const e=estado();const op=(e.oper||{})[q.id];if(op&&op.etapa)return op.etapa;return q.status==="aprovado"?"pagamento":q.status==="enviado"?"arte":"orcamento";};
+  const setEtapa=(id,et)=>{const e=estado();e.oper=e.oper||{};e.oper[id]={...(e.oper[id]||{}),etapa:et,em:new Date().toISOString()};salvar(e);};
+  return {$,$$,esc,qs,ZONA,nomeLoja,orcamentos,etapaDe,setEtapa,estado,salvar,vendedor,dados,hojeDia,lojasDoDia,vizinhos,abertaAgora,stLogo,nav,topo,voz,ligarVoz,ouvir,roteiro,CHECK,PROD,setorNome,telFmt,dist,precoCapacho,money};
 })();
