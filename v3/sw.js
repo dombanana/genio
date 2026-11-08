@@ -1,12 +1,12 @@
 // Gênio: funciona sem internet. Cada página abre do que está guardado no aparelho e se atualiza quando há rede.
-const V="genio-3d3b800db6",PAGS=["index.html","app.html","capacho.html","convite.html","admin.html","franquia.html","identidade.html","treinamento.html","ver.html"],
-  CORE=PAGS.concat(["portal.css?v=3d3b800db6","portal.js?v=3d3b800db6","fotocrop.js?v=3d3b800db6","manual.js?v=3d3b800db6","lacunas.js?v=3d3b800db6","manifest.webmanifest","genio-192.png","genio-512.png","genio-touch.png","genio-favicon.png"]);
+const V="genio-9a673f2f02",PAGS=["index.html","app.html","capacho.html","convite.html","admin.html","franquia.html","identidade.html","treinamento.html","ver.html"],
+  CORE=PAGS.concat(["portal.css?v=9a673f2f02","portal.js?v=9a673f2f02","fotocrop.js?v=9a673f2f02","manual.js?v=9a673f2f02","lacunas.js?v=9a673f2f02","manifest.webmanifest","genio-192.png","genio-512.png","genio-touch.png","genio-favicon.png"]);
 self.addEventListener("install",e=>{e.waitUntil(caches.open(V).then(c=>c.addAll(CORE)).then(()=>self.skipWaiting()));});
 self.addEventListener("activate",e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==V&&k!=="genio-fontes").map(k=>caches.delete(k)))).then(()=>self.clients.claim()));});
 // endereço → página guardada ("/" e "/?app=1" são a página de vendas e entrar)
 const pag=u=>{const n=u.pathname.replace(/^\//,"");return n===""?"index.html":n;};
 self.addEventListener("fetch",e=>{const r=e.request;if(r.method!=="GET")return;const u=new URL(r.url);
-  if(u.origin===location.origin&&(u.pathname.startsWith("/api/")||u.pathname.startsWith("/t/")))return;   // dados do servidor: nunca do guardado
+  if(u.origin===location.origin&&(u.pathname.startsWith("/api/")||u.pathname.startsWith("/t/")||u.pathname.startsWith("/dados/")))return;   // dados do servidor: nunca do guardado
   // página: rede primeiro (sempre confere a versão nova), sem rede usa a guardada
   if(r.mode==="navigate"){const k=pag(u);e.respondWith(fetch(r,{cache:"no-cache"}).then(res=>{if(res.ok&&PAGS.includes(k)){const cp=res.clone();caches.open(V).then(c=>c.put(k,cp));}return res;})
       .catch(()=>caches.match(k).then(x=>x||caches.match("app.html"))));return;}
