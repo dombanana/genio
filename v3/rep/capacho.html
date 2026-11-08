@@ -15,7 +15,7 @@
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <script>(function(){var c=null;try{c=JSON.parse(localStorage.getItem("genio-conta")||"null")}catch(e){}var V="/?entrar=1&volta=capacho.html";fetch("/api/eu",{credentials:"same-origin",cache:"no-store"}).then(function(r){if(r.status===401||r.status===403){try{localStorage.removeItem("genio-conta")}catch(e){}location.replace(V);return null}return r.ok?r.json():null}).then(function(d){if(d)try{localStorage.setItem("genio-conta",JSON.stringify({id:d.id,nome:d.nome,email:d.email,papel:d.papel,plano:d.plano,plano_nome:d.plano_nome,em:Date.now()}))}catch(e){}}).catch(function(){if(!c)location.replace(V)})})();</script>
 <style>.mod-volta{display:inline-flex;align-items:center;gap:4px;min-height:40px;padding:0 12px 0 8px;margin-right:8px;border-radius:10px;color:#6933C5;font:600 15px/1 Rubik,system-ui,sans-serif;text-decoration:none;border:1.5px solid #E3DDF0;background:#fff}.mod-volta:hover{border-color:#6933C5}</style>
-<base href="../"><link rel="stylesheet" href="rep/rep.css?v=bbfd9db4f5"><style>
+<base href="../"><link rel="stylesheet" href="rep/rep.css?v=3d3b800db6"><style>
 :root{--bg:#F1EEF8;--surface:#FFFFFF;--surface-2:#E6DDF6;--line:#E0DAEE;--field:#F1EEF8;--soft:#F7F3FD;--stage:#E9E6F0}
 body{padding-bottom:calc(96px + env(safe-area-inset-bottom,0))!important;font-size:16px}
 .top{background:var(--bg);border-bottom:0;padding-block:12px 6px}

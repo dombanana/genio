@@ -1,0 +1,9 @@
+.camp{background:#fff;border:1px solid #D8CCEA;border-radius:18px;padding:14px 14px 12px;display:grid;gap:10px}
+.camp-top{display:flex;justify-content:space-between;align-items:center}.camp-top b{font-size:17px}.camp-prog{background:#6933C5;color:#fff;border-radius:999px;padding:3px 12px;font-weight:700;font-size:14px}
+.camp-arte{width:100%;max-width:360px;margin:0 auto;display:block}.camp-arte .raio{fill:#F3EEF9;stroke:#D8CCEA;stroke-width:2}.camp-arte .raio.fina{fill:none;stroke-dasharray:4 6}.camp-arte .leg{font:600 11px Rubik,sans-serif;fill:#6B6578}
+.camp-arte .vz circle{fill:#fff;stroke:#B9A6DC;stroke-width:2}.camp-arte .vz text{font:700 9px Rubik,sans-serif;fill:#6933C5}.camp-arte .vz.fechou circle{fill:#1E8E5A;stroke:#1E8E5A}.camp-arte .vz.fechou text{fill:#fff}
+.camp-arte .eu circle{fill:#6933C5;stroke:#fff;stroke-width:3}.camp-arte .eu text{font:800 12px Rubik,sans-serif;fill:#fff}.camp-arte .eu.fechou circle{fill:#1E8E5A}
+.camp-arte .ok{font:800 12px Rubik,sans-serif;fill:#1E8E5A;stroke:#fff;stroke-width:3;paint-order:stroke}
+.camp-txt{font-size:14px;text-align:center}.camp-rel{text-align:center;font-weight:700;color:#C8552B;font-variant-numeric:tabular-nums}.camp-rel.fim{color:#6B6578}
+.camp-lista{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}.camp-lista span{font-size:12px;background:#F3EEF9;border-radius:999px;padding:3px 9px}.camp-lista span i{font-style:normal;color:#6B6578}.camp-lista span.fechou{background:#E6F6EE;color:#1E8E5A;font-weight:600}
+.camp-acts{text-align:center}

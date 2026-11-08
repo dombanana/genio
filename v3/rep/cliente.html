@@ -6,7 +6,8 @@
 <title>GênIO · Área do cliente</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="rep.css?v=bbfd9db4f5">
+<link rel="stylesheet" href="rep.css?v=3d3b800db6">
+<link rel="stylesheet" href="../campanha.css?v=3d3b800db6">
 <style>
 .nav{grid-template-columns:repeat(3,1fr)}
 .arte{border-radius:14px;overflow:hidden;background:var(--lav);aspect-ratio:16/9;display:grid;place-items:center;color:var(--texto2);margin:10px 0}
@@ -20,9 +21,10 @@
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="../fotocrop.js?v=bbfd9db4f5"></script>
-<script src="imagem.js?v=bbfd9db4f5"></script>
-<script src="rep.js?v=bbfd9db4f5"></script>
+<script src="../fotocrop.js?v=3d3b800db6"></script>
+<script src="imagem.js?v=3d3b800db6"></script>
+<script src="../campanha.js?v=3d3b800db6"></script>
+<script src="rep.js?v=3d3b800db6"></script>
 <script>
 (async()=>{
   const {$,$$,esc,qs,nomeLoja,dados,estado,salvar,vizinhos,money,ZONA}=Rep;
@@ -44,8 +46,7 @@
       <div class="lin2" style="grid-template-columns:1fr auto"><b style="font-size:18px">${esc(ped.itens.map(i=>i.nome.replace(" personalizado","").replace(" de identificação","")).join(" + "))}</b><span style="border-left:1.5px solid var(--linha);padding-left:14px"><b>Total · ${money(ped.total)}</b></span></div>
       ${ped.etapa==="arte"?`<button class="btn" id="aprovar" style="margin-top:14px">Revisar e aprovar arte</button>`:`<a class="btn sec" style="margin-top:14px" href="?l=${encodeURIComponent(slug)}&aba=pedidos">Acompanhar pedido →</a>`}</section>`:`<section class="card"><h2>Seu orçamento</h2><p class="sub2" style="margin:0">O representante está preparando a proposta para a ${esc(nome)}. Ela aparece aqui para você aprovar.</p></section>`}
     <a class="card lin2" href="../identidade.html?cliente=${encodeURIComponent(slug)}" style="display:grid;color:inherit"><div class="logo-box" style="width:96px;height:64px;border-radius:12px;background:var(--lav);display:grid;place-items:center;overflow:hidden">${logoSrc?`<img src="${esc(logoSrc)}" alt="" style="max-width:100%;max-height:100%;object-fit:contain">`:"◌"}</div><div><b style="font-size:19px">Sua identidade visual</b><br><span class="sub2">Marca, cores e aplicações</span></div><span style="color:var(--texto2);font-size:22px">›</span></a>
-    ${viz.length?`<section class="card"><div class="lin2" style="grid-template-columns:1fr auto"><div><h2 style="margin:0">Vizinhos juntos</h2><span class="sub2">${fech} de 3 lojas confirmadas</span></div><div class="lojas">${[0,1,2].map(i=>`<span class="${i<fech?"ok":""}">🏪</span>`).join("")}</div></div>
-      <div class="lin2" style="grid-template-columns:1fr auto;margin-top:12px"><span>🏷 <b>15%</b> quando a condição for atingida</span><button class="btn linha sm" id="convidar">Convidar vizinho</button></div></section>`:""}
+    ${viz.length?`<section class="card" id="camp"></section>`:""}
     <a class="card lin2" href="?l=${encodeURIComponent(slug)}&aba=atendimento" style="display:grid;color:inherit"><span style="font-size:28px;color:var(--marca);border-right:1.5px solid var(--linha);padding-right:14px">✦</span><div><b style="font-size:19px">Peça ao Gênio</b><br><span class="sub2">Conte o que sua loja precisa</span></div><span style="color:var(--texto2);font-size:22px">›</span></a>`;
   }else if(aba==="pedidos"){
     const todos=(e.pedidos||[]).filter(p=>p.loja===slug).slice().reverse();
@@ -58,6 +59,11 @@
   }
   $("#app").innerHTML=topo+corpo+`<p class="ilus">${cad?"Dados públicos e do seu pedido":"Área de demonstração com os dados públicos da loja"}</p>`+navc;
   Imagem.ligar(document);
+  // campanha "Vizinhos juntos": arte do raio de 200 m com prazo real (hora do servidor)
+  const campEl=$("#camp");if(campEl){let agora=new Date().toISOString();try{const r=await fetch("/api/saude",{cache:"no-store"});const dh=r.headers.get("Date");if(dh)agora=new Date(dh).toISOString();}catch(e){}
+    e.camp=e.camp||{};const chave=slug;if(!e.camp[chave]){e.camp[chave]={prazo:new Date(Date.now()+7*864e5).toISOString()};salvar(e);}
+    const prazo=e.camp[chave].prazo;const M2=Imagem.ler();
+    Campanha.arte(campEl,{eu:{nome},euFechei:(e.fechadas||[]).includes(slug),vizinhos:viz.map(v=>({slug:v.slug,nome:nomeLoja(v.nome),m:Rep.dist(l,v),dx:(v.lng-l.lng)*102000,dy:(v.lat-l.lat)*111000,fechou:(e.fechadas||[]).includes(v.slug),logo:(M2[v.slug+"/logo"]&&M2[v.slug+"/logo"].dados)||null})),meta:3,desconto:15,prazo,agora,raio_m:200,link:location.href});}
   const ap=$("#aprovar");if(ap)ap.onclick=()=>{ped.etapa="pagamento";ped.aprovadoEm=new Date().toISOString();salvar(e);location.reload();};
   const cv=$("#convidar");if(cv)cv.onclick=()=>{const txt=`Oi! Estou fechando a ${nome} com a GênIO (capacho e placas com a nossa marca). Se 3 lojas aqui da rua fecharem, todas ganham 15%: ${location.origin}/v3/rep/cliente.html`;if(navigator.share)navigator.share({text:txt}).catch(()=>{});else location.href="https://wa.me/?text="+encodeURIComponent(txt);};
   const en=$("#enviar");if(en){en.onclick=()=>{const t=$("#msg").value.trim();if(!t)return;e.genio=e.genio||{};(e.genio[slug]=e.genio[slug]||[]).push({texto:t,em:new Date().toISOString()});salvar(e);location.reload();};
