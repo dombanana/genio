@@ -15,7 +15,7 @@ Regras  : só entra como logo o que a fonte identifica como marca (perfil de red
           imagem repetida em 2+ fontes). Foto de ambiente vai para Local. Dúvida → opções para decidir. Nada inventado.
 Cota    : 50 lojas por noite (reserva de 50 para refazer); "limite" no captacao.run manda.
 """
-import json, os, re, sys, math, time, hashlib, unicodedata, io, csv, html, datetime as dt
+import json, os, re, sys, math, time, hashlib, unicodedata, io, csv, html, subprocess, datetime as dt
 from urllib import request, parse, error
 
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -456,6 +456,26 @@ def identidade(loja, zona, pasta, quota_ok):
     L.setdefault("sobre", {"estado": "pendente", "origem": "cliente", "valor": "", "nota": "sem texto público sobre a casa"})
     return L, custo, passos, fontes, logos, loc
 
+# ---------- manual de identidade (pipeline sem IA) para logo encontrado ----------
+def gerar_manual(slug_, cad_path, logo_path, pasta):
+    out = os.path.join(pasta, "manual", slug_)
+    try:
+        import shutil
+        if os.path.exists(os.path.join(out, "manual.html")) and os.path.getmtime(os.path.join(out, "manual.html")) > os.path.getmtime(logo_path):
+            return {"estado": "encontrado", "valor": f"manual/{slug_}/manual.html", "origem": "derivado", "nota": "manual já gerado"}
+        os.makedirs(out, exist_ok=True)
+        r = subprocess.run([sys.executable, "-I", os.path.join(RAIZ, "api", "manual", "pipeline.py"), logo_path, cad_path, out], capture_output=True, text=True, timeout=240)
+        if r.returncode != 0:
+            return {"estado": "pendente", "valor": "", "origem": "derivado", "nota": "pipeline falhou: " + (r.stderr or r.stdout)[-300:].strip()}
+        res = {}
+        try:
+            res = json.load(open(os.path.join(out, "relatorio.json")))
+        except Exception:
+            pass
+        fid = res.get("fidelidade")
+        return {"estado": "encontrado" if (fid or 0) >= 0.85 else "pendente", "valor": f"manual/{slug_}/manual.html", "origem": "derivado", "fidelidade": fid, "cores": res.get("cores"), "nota": f"fidelidade {fid} · {res.get('camadas')} camadas · mínimo {res.get('minimo_cm')} cm" + ("" if (fid or 0) >= 0.85 else " — conferir antes de usar")}
+    except Exception as e:
+        return {"estado": "pendente", "valor": "", "origem": "derivado", "nota": "manual não gerado: " + str(e)[:160]}
 # ---------- rota ----------
 def rota(lojas, base, por_dia):
     """vizinho mais próximo + melhoria 2-opt (tira os cruzamentos e os saltos longos)"""
@@ -668,6 +688,10 @@ def main():
         cads[x["slug"]] = {"nome": x["nome"], "slug": x["slug"], "rota": {"centro": zslug, "dia": x["dia"], "ordem": x["ordem"], "place_id": x["place_id"], "lat": x["lat"], "lng": x["lng"], "nota": x.get("nota"), "aval": x.get("aval")},
                            "coletadoEm": hoje, "fontes": fontes, "processado": x["slug"] in detalhes, "lacunas": L}
         json.dump(cads[x["slug"]], open(cp, "w"), ensure_ascii=False, indent=1)
+        if x["slug"] in detalhes and L.get("logoOriginal", {}).get("estado") == "encontrado":
+            lp = os.path.join(pasta, L["logoOriginal"]["valor"])
+            L["manual"] = gerar_manual(x["slug"], cp, lp, pasta); detalhes[x["slug"]]["passos"].append("Manual de identidade → " + L["manual"]["nota"])
+            json.dump(cads[x["slug"]], open(cp, "w"), ensure_ascii=False, indent=1)
     quota[hoje] = usadas + feitas; json.dump(quota, open(qp, "w"))
     json.dump([{"slug": s, "nome": c["nome"], "dia": c["rota"]["dia"], "ordem": c["rota"]["ordem"], "logo": c["lacunas"].get("logoOriginal", {}).get("estado")} for s, c in cads.items()], open(os.path.join(pasta, "clientes", "index.json"), "w"), ensure_ascii=False)
     enc = sum(1 for s in detalhes if cads[s]["lacunas"]["logoOriginal"]["estado"] == "encontrado"); dec = sum(1 for s in detalhes if cads[s]["lacunas"]["logoOriginal"].get("opcoes") and cads[s]["lacunas"]["logoOriginal"]["estado"] != "encontrado")

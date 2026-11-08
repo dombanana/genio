@@ -39,7 +39,8 @@
   <section class="card"><h2>Identidade da loja</h2>
     <div class="ident"><div class="logo-box" data-img="logo" data-loja="${esc(slug)}" data-nome="Logo" ${logo.nome?`data-fonte="${esc(logo.nome)}"`:""}>${logo.estado==="encontrado"?`<img src="${esc(base+logo.valor)}" alt="">`:`<span style="font-size:30px">◌</span>`}</div>
       <div><span class="chip ${st.c}">${st.c==="ok"?"✓ ":""}${st.t}</span>${cores.length?`<div class="cores">Cores da loja ${cores.map(c=>`<span class="cor" style="background:${esc(c)}"></span>`).join("")}</div>`:""}</div>
-      <a class="acao-link" style="margin:0" href="../identidade.html?cliente=${encodeURIComponent(slug)}">Ver identidade →</a></div>
+      <a class="acao-link" style="margin:0" href="${L.manual&&L.manual.valor?esc(base+L.manual.valor):`../identidade.html?cliente=${encodeURIComponent(slug)}`}">${L.manual&&L.manual.valor?"Ver manual de identidade →":"Ver identidade →"}</a></div>
+    ${L.manual&&L.manual.nota?`<p class="ilus" style="margin-top:8px">Manual: ${esc(L.manual.nota)}</p>`:""}
     ${logo.estado!=="encontrado"&&logo.opcoes&&logo.opcoes.length?`<p class="ilus" style="margin-top:10px">${logo.opcoes.length} opções encontradas na rede — decidir com o cliente na tela de identidade.</p>`:""}</section>
   <section class="card"><h2>Antes de entrar</h2>
     <div class="roteiro"><span class="ic">💬</span><p>${esc(txtRoteiro)}</p><button class="btn sec sm" id="ouvir" type="button">▶ Ouvir roteiro</button></div></section>
