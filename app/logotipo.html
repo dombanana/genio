@@ -6,7 +6,7 @@
 <title>GênIO · Logotipo</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="app.css?v=2428f8d129">
+<link rel="stylesheet" href="app.css?v=ed18653760">
 <style>
 body.com-acoes{padding-bottom:calc(150px + env(safe-area-inset-bottom,0))}
 .palco{position:relative;height:min(50vh,480px);background:repeating-conic-gradient(#e9e5f3 0 25%,#fff 0 50%) 0 0/18px 18px;border-radius:16px;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
@@ -27,7 +27,7 @@ body.com-acoes{padding-bottom:calc(150px + env(safe-area-inset-bottom,0))}
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=2428f8d129"></script>
+<script src="app.js?v=ed18653760"></script>
 <script>
 (async()=>{
   const {$,$$,esc,qs,sessao,dados,nav,topo,voltar,nomeLoja,cliente,gravarCliente,definirCliente}=App;
@@ -47,7 +47,7 @@ body.com-acoes{padding-bottom:calc(150px + env(safe-area-inset-bottom,0))}
   <div class="acoes"><div class="w"><button class="btn sec" id="desfazer" type="button" style="flex:0 0 auto;width:auto;padding:0 14px">↶</button><button class="btn" id="salvar" type="button" disabled>Salvar logotipo →</button></div></div>
   ${nav("rota")}`;document.body.classList.add("com-acoes");
   const palco=$("#palco"),cv=$("#cv"),cx=cv.getContext("2d",{willReadFrequently:true}),sel=$("#sel"),sx=sel.getContext("2d"),caixa=$("#caixa"),alcas=$$(".alca");
-  let W,H,base=null,hist=[],modo="ver",ferr="varinha",tol=28,pincel=18,contiguo=false,selMask=null,R=null;
+  let W,H,base=null,hist=[],modo="ver",ferr="varinha",tol=28,pincel=18,contiguo=true,selMask=null,nSel=0,R=null;
   let z=1,px=0,py=0;  // zoom e deslocamento
   const encaixe=()=>{const pw=palco.clientWidth,ph=palco.clientHeight;const s=Math.min(pw/W,ph/H)*z;[cv,sel].forEach(c=>{c.style.width=W+"px";c.style.height=H+"px";c.style.transform=`translate(${px+(pw-W*s)/2}px,${py+(ph-H*s)/2}px) scale(${s})`;});desenharCaixa();};
   function carregar(src){return new Promise(res=>{const im=new Image();im.crossOrigin="anonymous";im.onload=()=>{const s=Math.min(1,1400/Math.max(im.width,im.height));W=Math.round(im.width*s);H=Math.round(im.height*s);cv.width=sel.width=W;cv.height=sel.height=H;cx.drawImage(im,0,0,W,H);
@@ -69,7 +69,7 @@ body.com-acoes{padding-bottom:calc(150px + env(safe-area-inset-bottom,0))}
     if(modo==="ver"){drag={x:ev.clientX,y:ev.clientY,px,py};return;}
     if(modo==="area"){press=posPalco(ev);timer=setTimeout(()=>{const p=pos(ev);R={x0:p.x,y0:p.y,x1:p.x,y1:p.y};caixa.style.display="block";alcas.forEach(x=>x.style.display="none");desenharCaixa();if(navigator.vibrate)navigator.vibrate(15);},300);return;}
     if(modo==="fundo"){const p=pos(ev);if(p.x<0||p.y<0||p.x>=W||p.y>=H)return;
-      if(ferr==="varinha"){const m=similares(p.x,p.y,contiguo);guardar();let n=0;for(let i=0;i<W*H;i++)if(m[i]){base.data[i*4+3]=0;n++;}aplicar();$("#st").textContent=`Apagado ${Math.round(n*100/(W*H))}% da imagem${contiguo?" (só a área tocada)":" (essa cor na imagem toda)"} · ↶ desfaz`;}
+      if(ferr==="varinha"){const m=similares(p.x,p.y,contiguo);if(!selMask)selMask=m;else for(let i=0;i<W*H;i++)if(m[i])selMask[i]=1;nSel++;mostrarSel(selMask);renderOpc();$("#st").textContent=`${nSel} área(s) marcada(s) · continue tocando ou apague`;}
       if(ferr==="borracha"||ferr==="recuperar"){guardar();pint=true;pincelar(p);}
       if(ferr==="gotas"){const i=(p.y*W+p.x)*4;$("#st").textContent=`Cor tocada: #${[base.data[i],base.data[i+1],base.data[i+2]].map(v=>v.toString(16).padStart(2,"0")).join("")}`;}}});
   palco.addEventListener("pointermove",ev=>{if(!ptrs.has(ev.pointerId))return;ptrs.set(ev.pointerId,ev);
@@ -94,11 +94,11 @@ body.com-acoes{padding-bottom:calc(150px + env(safe-area-inset-bottom,0))}
     if(modo==="area"){o.innerHTML=`<div class="painel"><div class="linha"><button type="button" class="btn sm" id="aplicarArea" ${R?"":"disabled"} style="min-height:42px;width:auto;padding:0 14px">Recortar para a área</button><button type="button" class="btn sec sm" id="limparArea" style="min-height:42px;width:auto;padding:0 14px">Limpar</button></div><small class="muted">Segure e arraste sobre o logotipo; ajuste pelas bolinhas.</small></div>`;
       $("#aplicarArea").onclick=()=>{if(!R)return;recortar(Math.min(R.x0,R.x1),Math.min(R.y0,R.y1),Math.max(R.x0,R.x1),Math.max(R.y0,R.y1));R=null;caixa.style.display="none";alcas.forEach(x=>x.style.display="none");renderOpc();};$("#limparArea").onclick=()=>{R=null;caixa.style.display="none";alcas.forEach(x=>x.style.display="none");renderOpc();};return;}
     o.innerHTML=`<div class="ferr">${[["varinha","✨","Por cor"],["borracha","🧽","Borracha"],["recuperar","↩","Recuperar"],["enquadrar","⌗","Enquadrar"],["gotas","💧","Ver cor"]].map(([id,ic,n])=>`<button type="button" data-f="${id}" class="${ferr===id?"on":""}"><span class="ic">${ic}</span>${n}</button>`).join("")}</div>
-      <div class="painel">${ferr==="varinha"?`<div class="linha"><small class="muted">Tolerância</small><input type="range" id="tol" min="4" max="90" value="${tol}"><button type="button" class="btn sec sm" id="contig" style="min-height:36px;width:auto;padding:0 10px;font-size:13px">${contiguo?"Só a área tocada":"Na imagem toda"}</button></div><small class="muted">Toque numa cor para apagá-la${contiguo?" só onde tocou":" em toda a imagem (inclusive dentro das letras)"}. Toque de novo em restos; ↶ desfaz.</small>`:ferr==="enquadrar"?`<button type="button" class="btn sm" id="autoCorte" style="min-height:40px;width:auto;padding:0 14px">Cortar margens transparentes</button>`:ferr==="gotas"?`<small class="muted">Toque na imagem para ver o código da cor.</small>`:`<div class="linha"><small class="muted">Tamanho</small><input type="range" id="pincel" min="4" max="80" value="${pincel}"></div>`}</div>`;
-    $$(".ferr button").forEach(b=>b.onclick=()=>{ferr=b.dataset.f;selMask=null;mostrarSel(null);renderOpc();});
+      <div class="painel">${ferr==="varinha"?`<div class="linha"><small class="muted">Tolerância</small><input type="range" id="tol" min="4" max="90" value="${tol}"><button type="button" class="btn sec sm" id="contig" style="min-height:36px;width:auto;padding:0 10px;font-size:13px">${contiguo?"Só a área tocada":"Na imagem toda"}</button></div><div class="linha" style="margin-top:8px"><button type="button" class="btn sm" id="apagarSel" ${selMask?"":"disabled"} style="min-height:40px;width:auto;padding:0 14px">Apagar ${nSel?nSel+" área(s)":"seleção"}</button><button type="button" class="btn sec sm" id="limparSel" style="min-height:40px;width:auto;padding:0 14px">Limpar</button></div><small class="muted">Cada toque soma uma área à seleção; depois apague tudo de uma vez.</small>`:ferr==="enquadrar"?`<button type="button" class="btn sm" id="autoCorte" style="min-height:40px;width:auto;padding:0 14px">Cortar margens transparentes</button>`:ferr==="gotas"?`<small class="muted">Toque na imagem para ver o código da cor.</small>`:`<div class="linha"><small class="muted">Tamanho</small><input type="range" id="pincel" min="4" max="80" value="${pincel}"></div>`}</div>`;
+    $$(".ferr button").forEach(b=>b.onclick=()=>{ferr=b.dataset.f;selMask=null;nSel=0;mostrarSel(null);renderOpc();});
     const t=$("#tol");if(t)t.oninput=()=>tol=+t.value;const pz=$("#pincel");if(pz)pz.oninput=()=>pincel=+pz.value;const cg=$("#contig");if(cg)cg.onclick=()=>{contiguo=!contiguo;renderOpc();};
-    const ap=$("#apagarSel");if(ap)ap.onclick=()=>{if(!selMask)return;guardar();for(let i=0;i<W*H;i++)if(selMask[i])base.data[i*4+3]=0;aplicar();selMask=null;mostrarSel(null);renderOpc();};
-    const ls=$("#limparSel");if(ls)ls.onclick=()=>{selMask=null;mostrarSel(null);renderOpc();};const ac=$("#autoCorte");if(ac)ac.onclick=enquadrar;}
+    const ap=$("#apagarSel");if(ap)ap.onclick=()=>{if(!selMask)return;guardar();for(let i=0;i<W*H;i++)if(selMask[i])base.data[i*4+3]=0;aplicar();selMask=null;nSel=0;mostrarSel(null);renderOpc();$("#st").textContent="Apagado · ↶ desfaz";};
+    const ls=$("#limparSel");if(ls)ls.onclick=()=>{selMask=null;nSel=0;mostrarSel(null);renderOpc();};const ac=$("#autoCorte");if(ac)ac.onclick=enquadrar;}
   $$(".modos button").forEach(b=>b.onclick=()=>{modo=b.dataset.m;$$(".modos button").forEach(x=>x.classList.toggle("on",x===b));selMask=null;mostrarSel(null);if(modo!=="area"){R=null;caixa.style.display="none";alcas.forEach(x=>x.style.display="none");}renderOpc();});
   renderOpc();
   $("#desfazer").onclick=()=>{const h=hist.pop();if(!h)return;base=h;if(base.width!==W){W=base.width;H=base.height;cv.width=sel.width=W;cv.height=sel.height=H;z=1;px=py=0;encaixe();}aplicar();};
