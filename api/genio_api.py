@@ -421,7 +421,7 @@ def chaves_gravar(d):
         v = str(v).strip()
         if v == "":
             c.pop(n, None)
-        elif re.fullmatch(r"[A-Za-z0-9_\-\.:]{8,200}", v):
+        elif re.fullmatch(r"[A-Za-z0-9_\-\.:$=/+]{8,400}", v):
             c[n] = v
         else:
             raise ValueError(f"{n}: valor inválido")
