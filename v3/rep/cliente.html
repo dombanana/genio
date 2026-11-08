@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>GênIO · Área do cliente</title>
+<meta name="theme-color" content="#F1EEF8">
+<link rel="icon" href="../genio-favicon.png">
+<link rel="stylesheet" href="rep.css?v=bbfd9db4f5">
+<style>
+.nav{grid-template-columns:repeat(3,1fr)}
+.arte{border-radius:14px;overflow:hidden;background:var(--lav);aspect-ratio:16/9;display:grid;place-items:center;color:var(--texto2);margin:10px 0}
+.arte img{width:100%;height:100%;object-fit:cover}
+.lin2{display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:center}
+.lojas{display:flex;gap:8px}
+.lojas span{width:40px;height:34px;border-radius:8px;border:2px solid #B9B1CC;display:grid;place-items:center;color:#B9B1CC;font-size:18px}
+.lojas span.ok{border-color:var(--marca);color:var(--marca)}
+.sub2{color:var(--texto2);font-size:15px}
+</style>
+</head>
+<body>
+<div class="w" id="app"></div>
+<script src="../fotocrop.js?v=bbfd9db4f5"></script>
+<script src="imagem.js?v=bbfd9db4f5"></script>
+<script src="rep.js?v=bbfd9db4f5"></script>
+<script>
+(async()=>{
+  const {$,$$,esc,qs,nomeLoja,dados,estado,salvar,vizinhos,money,ZONA}=Rep;
+  const D=await dados();const slug=qs.get("l")||(JSON.parse(localStorage.getItem("genio-cliente")||"null")||{}).slug;const l=D.lojas.find(x=>x.slug===slug);
+  if(!l){$("#app").innerHTML=`<header class="topo"><div class="logo">Gên<i>IO</i></div><div class="papel">Área do cliente</div></header><p>Abra pelo QR do seu cartão GênIO ou pelo link que o representante enviou.</p>`;return;}
+  let cad=null;try{const r=await fetch(`../dados/captacao/${ZONA}/clientes/${slug}.json`);if(r.ok)cad=await r.json();}catch(e){}
+  const base=`../dados/captacao/${ZONA}/`;const logo=cad&&cad.lacunas.logoOriginal||{};const M=Imagem.ler();const logoSrc=(M[slug+"/logo"]&&M[slug+"/logo"].dados)||(logo.estado==="encontrado"?base+logo.valor:null);
+  const e=estado();const ped=(e.pedidos||[]).filter(p=>p.loja===slug).slice(-1)[0];const viz=vizinhos(D,l);const fech=viz.filter(v=>(e.fechadas||[]).includes(v.slug)).length+((e.fechadas||[]).includes(slug)?1:0);
+  const nome=nomeLoja(l.nome);const ini=nome.split(/\s+/).filter((p,i,a)=>i===0||i===a.length-1).map(p=>p[0]||"").join("").toUpperCase();
+  const ROT={arte:["Aguardando sua aprovação","dec"],pagamento:["Aguardando o sinal","dec"],producao:["Em produção","ok"],entrega:["Entrega agendada","ok"],entregue:["Entregue","ok"]};
+  const aba=qs.get("aba")||"inicio";
+  const navc=`<nav class="nav"><a href="?l=${encodeURIComponent(slug)}" class="${aba==="inicio"?"on":""}"><span class="ic">⌂</span>Início</a><a href="?l=${encodeURIComponent(slug)}&aba=pedidos" class="${aba==="pedidos"?"on":""}"><span class="ic">▤</span>Pedidos</a><a href="?l=${encodeURIComponent(slug)}&aba=atendimento" class="${aba==="atendimento"?"on":""}"><span class="ic">💬</span>Atendimento</a></nav>`;
+  const topo=`<header class="topo"><div class="logo">Gên<i>IO</i></div><div class="papel">Área do cliente</div><div class="fill"></div><div class="avatar">${esc(ini)}</div></header>`;
+  let corpo="";
+  if(aba==="inicio"){
+    corpo=`<h1>Olá, ${esc(nome)}</h1><p class="sub">Sua marca, em cada detalhe</p>
+    ${ped?`<section class="card"><div style="display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap"><h2 style="margin:0;font-size:24px">Seu pedido #${ped.n}</h2><span class="chip ${ROT[ped.etapa][1]}">${ROT[ped.etapa][1]==="ok"?"✓ ":"◷ "}${ROT[ped.etapa][0]}</span></div>
+      <div class="arte" data-img="arte" data-loja="${esc(slug)}" data-nome="Arte do pedido">${logoSrc?`<img src="${esc(logoSrc)}" alt="" style="object-fit:contain;padding:20px;background:#2f3a22;filter:grayscale(1) brightness(1.7) contrast(1.2)">`:`<div>Prévia da arte entra quando a identidade estiver pronta</div>`}</div>
+      <div class="lin2" style="grid-template-columns:1fr auto"><b style="font-size:18px">${esc(ped.itens.map(i=>i.nome.replace(" personalizado","").replace(" de identificação","")).join(" + "))}</b><span style="border-left:1.5px solid var(--linha);padding-left:14px"><b>Total · ${money(ped.total)}</b></span></div>
+      ${ped.etapa==="arte"?`<button class="btn" id="aprovar" style="margin-top:14px">Revisar e aprovar arte</button>`:`<a class="btn sec" style="margin-top:14px" href="?l=${encodeURIComponent(slug)}&aba=pedidos">Acompanhar pedido →</a>`}</section>`:`<section class="card"><h2>Seu orçamento</h2><p class="sub2" style="margin:0">O representante está preparando a proposta para a ${esc(nome)}. Ela aparece aqui para você aprovar.</p></section>`}
+    <a class="card lin2" href="../identidade.html?cliente=${encodeURIComponent(slug)}" style="display:grid;color:inherit"><div class="logo-box" style="width:96px;height:64px;border-radius:12px;background:var(--lav);display:grid;place-items:center;overflow:hidden">${logoSrc?`<img src="${esc(logoSrc)}" alt="" style="max-width:100%;max-height:100%;object-fit:contain">`:"◌"}</div><div><b style="font-size:19px">Sua identidade visual</b><br><span class="sub2">Marca, cores e aplicações</span></div><span style="color:var(--texto2);font-size:22px">›</span></a>
+    ${viz.length?`<section class="card"><div class="lin2" style="grid-template-columns:1fr auto"><div><h2 style="margin:0">Vizinhos juntos</h2><span class="sub2">${fech} de 3 lojas confirmadas</span></div><div class="lojas">${[0,1,2].map(i=>`<span class="${i<fech?"ok":""}">🏪</span>`).join("")}</div></div>
+      <div class="lin2" style="grid-template-columns:1fr auto;margin-top:12px"><span>🏷 <b>15%</b> quando a condição for atingida</span><button class="btn linha sm" id="convidar">Convidar vizinho</button></div></section>`:""}
+    <a class="card lin2" href="?l=${encodeURIComponent(slug)}&aba=atendimento" style="display:grid;color:inherit"><span style="font-size:28px;color:var(--marca);border-right:1.5px solid var(--linha);padding-right:14px">✦</span><div><b style="font-size:19px">Peça ao Gênio</b><br><span class="sub2">Conte o que sua loja precisa</span></div><span style="color:var(--texto2);font-size:22px">›</span></a>`;
+  }else if(aba==="pedidos"){
+    const todos=(e.pedidos||[]).filter(p=>p.loja===slug).slice().reverse();
+    corpo=`<h1>Pedidos</h1><p class="sub">${todos.length?todos.length+" pedido(s)":"Nenhum pedido ainda"}</p>${todos.map(p=>`<section class="card"><div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap"><b style="font-size:19px">#${p.n} · ${money(p.total)}</b><span class="chip ${ROT[p.etapa][1]}">${ROT[p.etapa][0]}</span></div><div class="passos">${["arte","pagamento","producao","entrega"].map((k,i)=>`<div class="p ${i<=["arte","pagamento","producao","entrega","entregue"].indexOf(p.etapa)?"ok":""}">${["Arte","Pagamento","Produção","Entrega"][i]}</div>`).join("")}</div><p class="sub2" style="margin:8px 0 0">${p.itens.map(i=>esc(i.nome)+" × "+(i.qtd||1)).join(" · ")}</p></section>`).join("")}`;
+  }else{
+    const msgs=((e.genio||{})[slug])||[];
+    corpo=`<h1>Peça ao Gênio</h1><p class="sub">Conte o que sua loja precisa — cai direto com o seu representante.</p>
+    <section class="card"><textarea id="msg" rows="4" style="width:100%;border:1.5px solid var(--linha);border-radius:12px;padding:12px;font:inherit;background:var(--lav)" placeholder="Ex.: quero um banner para a promoção de dezembro"></textarea><div style="display:flex;gap:10px;margin-top:10px"><button class="btn sm" id="enviar">Enviar</button><button class="btn sec sm" id="audio">🎙 Falar</button></div></section>
+    ${msgs.slice().reverse().map(m=>`<div class="card" style="padding:12px 16px"><b>Você</b> · <small class="muted">${new Date(m.em).toLocaleString("pt-BR",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"})}</small><br>${esc(m.texto)}<br><small class="muted">→ encaminhado ao representante</small></div>`).join("")}`;
+  }
+  $("#app").innerHTML=topo+corpo+`<p class="ilus">${cad?"Dados públicos e do seu pedido":"Área de demonstração com os dados públicos da loja"}</p>`+navc;
+  Imagem.ligar(document);
+  const ap=$("#aprovar");if(ap)ap.onclick=()=>{ped.etapa="pagamento";ped.aprovadoEm=new Date().toISOString();salvar(e);location.reload();};
+  const cv=$("#convidar");if(cv)cv.onclick=()=>{const txt=`Oi! Estou fechando a ${nome} com a GênIO (capacho e placas com a nossa marca). Se 3 lojas aqui da rua fecharem, todas ganham 15%: ${location.origin}/v3/rep/cliente.html`;if(navigator.share)navigator.share({text:txt}).catch(()=>{});else location.href="https://wa.me/?text="+encodeURIComponent(txt);};
+  const en=$("#enviar");if(en){en.onclick=()=>{const t=$("#msg").value.trim();if(!t)return;e.genio=e.genio||{};(e.genio[slug]=e.genio[slug]||[]).push({texto:t,em:new Date().toISOString()});salvar(e);location.reload();};
+    $("#audio").onclick=()=>{const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){$("#audio").textContent="Sem voz neste aparelho";return;}const r=new SR();r.lang="pt-BR";$("#audio").textContent="Ouvindo…";r.onresult=ev=>{$("#msg").value=[...ev.results].map(x=>x[0].transcript).join(" ");};r.onend=()=>{$("#audio").textContent="🎙 Falar";};r.start();};}
+})();
+</script>
+</body>
+</html>

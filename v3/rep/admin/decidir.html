@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GênIO · Qual é a marca da loja?</title>
+<link rel="icon" href="../../genio-favicon.png">
+<link rel="stylesheet" href="admin.css?v=bbfd9db4f5">
+</head>
+<body>
+<div id="side"></div>
+<main id="main"></main>
+<script src="_menu.js?v=bbfd9db4f5"></script>
+<script>
+(async()=>{
+  const esc=Adm.esc;document.getElementById("side").outerHTML=Adm.menu("identidades");
+  const ZONA=new URLSearchParams(location.search).get("zona")||"zona-cerealista";const base=`../../dados/captacao/${ZONA}/`;
+  let idx=[];try{const r=await fetch(base+"clientes/index.json");if(r.ok)idx=await r.json();}catch(e){}
+  const decididas=JSON.parse(localStorage.getItem("adm-decisoes")||"{}");
+  const fila=idx.filter(x=>x.logo==="pendente"&&!decididas[x.slug]);
+  const main=document.getElementById("main");
+  if(!fila.length){main.innerHTML=`<p class="mig">Identidades / <b>Para decidir</b></p><h1>Qual é a marca da loja?</h1><p class="sub">Nada para decidir agora</p><div class="card">${idx.length?`Todas as ${idx.length} lojas da captação estão resolvidas (prontas, decididas ou marcadas para a visita).`:`A captação ainda não rodou nesta zona. Quando rodar (madrugada, 50 lojas), as marcas com confiança média aparecem aqui com as opções reais encontradas.`}</div>`;return;}
+  let i=0;
+  async function render(){const it=fila[i];const cad=await fetch(base+`clientes/${it.slug}.json`).then(r=>r.json());const L=cad.lacunas;const lg=L.logoOriginal;const ops=lg.opcoes||[];let sel=0;
+    const cores=(L.cores&&L.cores.valor||"").split(" ").filter(Boolean).slice(0,3);
+    main.innerHTML=`<p class="mig">Identidades / <b>Para decidir</b></p><h1>Qual é a marca da loja?</h1><p class="sub">${esc(cad.nome)} · escolha entre as referências encontradas</p>
+    <div class="rod" style="margin:0 0 18px"><b>☑ ${fila.length-i} decisões pendentes</b><span class="sep"></span><span>⚠ Confiança ${lg.nota_conf||"?"}/100 · revisão necessária</span><span style="flex:1"></span><a href="${base}index.html#${it.slug}">Ver caminho percorrido →</a></div>
+    <div class="grid"><section class="card"><h2>Referências da marca</h2><div class="ops" id="ops">${ops.map((o,k)=>`<div class="op ${k===0?"sel":""}" data-k="${k}"><img src="${base+o.img}" alt=""><b>Opção ${k+1} · ${o.nota}/100</b><small>${esc(o.legenda)}</small></div>`).join("")}</div></section>
+    <aside class="card esc"><h2>Sua escolha</h2><img id="prev" src="${ops[0]?base+ops[0].img:""}" alt="">
+      ${cores.length?`<div class="cores">${cores.map(c=>`<span><i style="background:${esc(c)}"></i>${esc(c)}</span>`).join("")}</div>`:""}
+      <p style="color:var(--texto2);margin:6px 0 14px">Confira se esta é a versão atual da loja.</p>
+      <button class="btn" id="confirmar">Confirmar marca</button>
+      <button class="btn sec" id="porta" style="margin-top:6px">📷 Resolver na visita</button>
+      <p style="color:var(--texto2);font-size:13px;margin:12px 0 0">ⓘ Sem referência confiável? A marca será fotografada na porta.</p></aside></div>
+    <div class="aviso">✓ A identidade será preparada após a confirmação</div>`;
+    document.querySelectorAll(".op").forEach(el=>el.onclick=()=>{document.querySelectorAll(".op").forEach(x=>x.classList.remove("sel"));el.classList.add("sel");sel=+el.dataset.k;document.getElementById("prev").src=base+ops[sel].img;});
+    const fim=(d)=>{decididas[it.slug]=d;localStorage.setItem("adm-decisoes",JSON.stringify(decididas));fetch("../../api/correcoes",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({correcoes:[{loja:it.slug,campo:"logo",acao:d.acao,escolhida:d.escolhida,fonte:d.fonte||null}]})}).catch(()=>{});i++;if(i<fila.length)render();else main.innerHTML=`<p class="mig">Identidades / <b>Para decidir</b></p><h1>Pronto</h1><p class="sub">Todas as decisões desta zona foram tomadas.</p>`;};
+    document.getElementById("confirmar").onclick=()=>fim({acao:"confirmada",escolhida:sel,fonte:ops[sel]&&ops[sel].fonte});
+    document.getElementById("porta").onclick=()=>fim({acao:"na-porta"});}
+  render();
+})();
+</script>
+</body>
+</html>
