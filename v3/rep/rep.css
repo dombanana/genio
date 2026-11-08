@@ -87,9 +87,10 @@ h2{font-size:20px;margin:0 0 10px;font-weight:700}
 .check label:has(input:checked){background:var(--teal2);border-color:transparent;color:#0E6E6A}
 .acao-link{display:inline-flex;align-items:center;gap:10px;color:var(--marca);font-weight:700;margin-top:12px}
 /* notas de voz */
-.voz{position:fixed;right:16px;bottom:calc(92px + env(safe-area-inset-bottom,0));display:flex;align-items:center;gap:0;z-index:20}
+.voz{position:fixed;right:16px;bottom:calc(92px + env(safe-area-inset-bottom,0));z-index:20}
 .voz button{width:64px;height:64px;border-radius:50%;border:0;background:var(--marca);color:#fff;font-size:26px;box-shadow:0 6px 18px rgba(105,51,197,.4);cursor:pointer}
-.voz span{background:#fff;border-radius:0 999px 999px 0;padding:10px 16px 10px 40px;margin-left:-28px;font-weight:700;color:var(--marca);box-shadow:var(--sombra)}
+.voz .dica{position:absolute;right:72px;top:50%;transform:translateY(-50%);background:#fff;border-radius:999px;padding:8px 14px;font-weight:700;color:var(--marca);box-shadow:var(--sombra);white-space:nowrap;font-size:14px}
+.voz button{touch-action:none;cursor:grab}
 .voz.gravando button{background:#C8552B;animation:p 1s infinite}
 @keyframes p{50%{transform:scale(1.06)}}
 /* barra inferior */

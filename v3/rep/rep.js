@@ -27,12 +27,20 @@ const Rep=(()=>{
   const stLogo=l=>l.logo==="encontrado"?{t:"Marca pronta",c:"ok"}:(l.logo==="pendente"?{t:"Decidir marca",c:"dec"}:{t:"Marca na porta",c:""});
   const nav=on=>`<nav class="nav"><a href="index.html" class="${on==="rota"?"on":""}"><span class="ic">📍</span>Rota</a><a href="pedidos.html" class="${on==="pedidos"?"on":""}"><span class="ic">📄</span>Pedidos</a><a href="vendas.html" class="${on==="vendas"?"on":""}"><span class="ic">📊</span>Vendas</a><a href="perfil.html" class="${on==="perfil"?"on":""}"><span class="ic">👤</span>Perfil</a></nav>`;
   const topo=()=>`<header class="topo"><div class="logo">Gên<i>IO</i></div><div class="papel">Representante</div><div class="fill"></div><div class="avatar" title="${esc(vendedor().nome)}">${esc(ini(vendedor().nome))}</div></header>`;
-  const voz=()=>`<div class="voz" id="voz"><button type="button" aria-label="Nota de voz">🎙</button><span>Nota de voz</span></div>`;
-  function ligarVoz(slug){const v=$("#voz");if(!v)return;const b=$("button",v),s=$("span",v);const SR=window.SpeechRecognition||window.webkitSpeechRecognition;let rec=null;
-    b.onclick=()=>{if(!SR){s.textContent="Sem voz neste aparelho";return;}if(rec){rec.stop();return;}rec=new SR();rec.lang="pt-BR";rec.interimResults=false;v.classList.add("gravando");s.textContent="Ouvindo…";let txt="";
+  // microfone: só o botão; arrasta para qualquer lugar (posição guardada), toque liga/desliga a gravação
+  const voz=()=>`<div class="voz" id="voz"><button type="button" aria-label="Nota de voz">🎙</button><span class="dica" hidden></span></div>`;
+  function ligarVoz(slug){const v=$("#voz");if(!v)return;const b=$("button",v),s=$(".dica",v);const SR=window.SpeechRecognition||window.webkitSpeechRecognition;let rec=null;
+    try{const p=JSON.parse(localStorage.getItem("rep-mic")||"null");if(p){v.style.left=p.x+"px";v.style.top=p.y+"px";v.style.right="auto";v.style.bottom="auto";}}catch(e){}
+    const dica=t=>{s.textContent=t;s.hidden=!t;if(t)setTimeout(()=>{s.hidden=true;},1800);};
+    let d=null;
+    b.onpointerdown=ev=>{d={x:ev.clientX,y:ev.clientY,moved:false,r:v.getBoundingClientRect()};b.setPointerCapture(ev.pointerId);};
+    b.onpointermove=ev=>{if(!d)return;const dx=ev.clientX-d.x,dy=ev.clientY-d.y;if(!d.moved&&Math.hypot(dx,dy)<8)return;d.moved=true;const x=Math.max(4,Math.min(innerWidth-d.r.width-4,d.r.left+dx)),y=Math.max(4,Math.min(innerHeight-d.r.height-4,d.r.top+dy));v.style.left=x+"px";v.style.top=y+"px";v.style.right="auto";v.style.bottom="auto";};
+    b.onpointerup=ev=>{if(!d)return;const foi=d.moved;if(foi){const r=v.getBoundingClientRect();localStorage.setItem("rep-mic",JSON.stringify({x:r.left,y:r.top}));}d=null;if(!foi)gravar();};
+    b.onpointercancel=()=>{d=null;};
+    function gravar(){if(!SR){dica("Sem voz neste aparelho");return;}if(rec){rec.stop();return;}rec=new SR();rec.lang="pt-BR";rec.interimResults=false;v.classList.add("gravando");let txt="";
       rec.onresult=e=>{txt=[...e.results].map(r=>r[0].transcript).join(" ");};
-      rec.onend=()=>{v.classList.remove("gravando");rec=null;if(txt.trim()){const e=estado();(e.notas=e.notas||[]).push({loja:slug||null,em:new Date().toISOString(),texto:txt.trim()});salvar(e);s.textContent="Nota guardada";setTimeout(()=>s.textContent="Nota de voz",1800);}else s.textContent="Nota de voz";};
-      rec.start();};}
+      rec.onend=()=>{v.classList.remove("gravando");rec=null;if(txt.trim()){const e=estado();(e.notas=e.notas||[]).push({loja:slug||null,em:new Date().toISOString(),texto:txt.trim()});salvar(e);dica("Nota guardada");}};
+      rec.start();}}
   function ouvir(txt,btn){if(!window.speechSynthesis){btn.textContent="Sem voz";return;}speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(txt);u.lang="pt-BR";u.rate=1;speechSynthesis.speak(u);}
   function roteiro(l){const p=(PROD[l.setor]||PROD["comércio"]);const abre=l.logo==="encontrado"?`A marca da ${l.nome} já está pronta: mostre o capacho com ela na entrada.`:`Apresente o capacho e pergunte pela marca — a foto da placa resolve na hora.`;return `${abre} ${p[0]} primeiro; ${p[1].toLowerCase()} e ${p[2].toLowerCase()} se houver interesse.`;}
   const CHECK=[["chuva","Chuva bate"],["degrau","Tem degrau"],["vidro","Porta de vidro"],["piso","Piso irregular"],["fluxo","Fluxo alto"],["sombra","Entrada coberta"]];
