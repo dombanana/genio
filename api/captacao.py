@@ -392,12 +392,18 @@ def identidade(loja, zona, pasta, quota_ok):
             L["site"] = E(pr["externalUrl"])
         passos.append(f"Instagram @{ig[0]} (Apify) → " + ("perfil lido" if isinstance(pr, dict) and not pr.get("_erro") else f"falhou: {pr.get('_erro') if isinstance(pr, dict) else pr}"))
     # --- Receita
-    if cnpjs:
-        rc = receita(cnpjs[0]); custo["receita"] += 1
+    cn_ops = []
+    for c in list(dict.fromkeys(re.sub(r"\D", "", x) for x in cnpjs))[:3]:
+        rc = receita(c); custo["receita"] += 1
         if "_erro" not in rc and (rc.get("razao_social") or rc.get("nome")):
             ab = rc.get("data_inicio_atividade") or rc.get("abertura") or ""
-            L["leitura"] = E(f"Razão social: {rc.get('razao_social') or rc.get('nome')} · CNPJ {cnpjs[0]}" + (f" · desde {ab}" if ab else ""), nota="Receita Federal (minhareceita/BrasilAPI)")
-            fontes.append("Receita Federal")
+            rz = rc.get("razao_social") or rc.get("nome") or ""
+            cn_ops.append({"valor": f"Razão social: {rz} · CNPJ {c}" + (f" · desde {ab}" if ab else ""), "legenda": "Receita Federal", "fonte": "Receita", "bate": bate_nome(loja["nome"], rz)})
+    if len(cn_ops) == 1 or (cn_ops and sum(1 for o in cn_ops if o["bate"]) == 1):
+        esc_ = next((o for o in cn_ops if o["bate"]), cn_ops[0])
+        L["leitura"] = E(esc_["valor"], nota="Receita Federal (minhareceita/BrasilAPI)" + ("" if esc_["bate"] else " · razão social não confere com o nome; confirmar na porta")); fontes.append("Receita Federal")
+    elif cn_ops:
+        L["leitura"] = {"estado": "pendente", "origem": "publico", "valor": "", "opcoes": cn_ops, "nota": "mais de um CNPJ citado para este nome — decidir"}
     if "leitura" not in L:
         L["leitura"] = {"estado": "pendente", "origem": "publico", "valor": "", "nota": "CNPJ não apareceu em fonte pública aberta"}
     # --- análise das imagens e notas
