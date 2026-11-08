@@ -65,3 +65,11 @@ if [ -f api/captacao.run ]; then
     systemctl start --no-block genio-captacao.service
   fi
 fi
+# (d) backup diário dos dados do servidor (estado, chaves, captação, kits): /var/backups/genio, guarda 14 dias
+hoje=$(date +%F)
+if [ ! -f /var/backups/genio/genio-$hoje.tar.gz ]; then
+  mkdir -p /var/backups/genio
+  tar -czf /var/backups/genio/genio-$hoje.tar.gz.tmp -C / var/lib/genio opt/genio/dados 2>/dev/null && mv /var/backups/genio/genio-$hoje.tar.gz.tmp /var/backups/genio/genio-$hoje.tar.gz
+  find /var/backups/genio -name 'genio-*.tar.gz' -mtime +14 -delete
+  echo "backup $hoje ok $(date -Is)" >> /var/lib/genio/esteira.log
+fi
