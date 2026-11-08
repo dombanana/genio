@@ -545,7 +545,16 @@ def ia_fundo(d):
     K = chaves_ler(); erros = []
     prompt_full = prompt + " Sem texto, sem letras, sem logotipos, sem marcas d'água; imagem de fundo limpa, com área de respiro para aplicar uma marca por cima. Alta qualidade, impressão gráfica."
     if K.get("GEMINI_KEY"):
-        for modelo in ("gemini-3.8-flash-image", "gemini-2.5-flash-image", "gemini-2.0-flash-preview-image-generation"):
+        modelos = ["gemini-2.5-flash-image"]
+        try:  # modelos de imagem realmente disponíveis para esta chave (a lista muda; o Google aposenta nomes)
+            r = _rq.urlopen(_rq.Request("https://generativelanguage.googleapis.com/v1beta/models?pageSize=200", headers={"x-goog-api-key": K["GEMINI_KEY"]}), timeout=20)
+            lst = json.loads(r.read().decode("utf-8", "replace")).get("models", [])
+            disp = [m["name"].split("/", 1)[1] for m in lst if "image" in m.get("name", "") and "generateContent" in (m.get("supportedGenerationMethods") or [])]
+            if disp:
+                modelos = sorted(disp, key=lambda n: (("preview" in n), n), reverse=True)[:3]
+        except Exception:
+            pass
+        for modelo in modelos:
             try:
                 body = json.dumps({"contents": [{"parts": [{"text": prompt_full}]}], "generationConfig": {"responseModalities": ["IMAGE"], "imageConfig": {"aspectRatio": ar}}}).encode()
                 r = _rq.urlopen(_rq.Request(f"https://generativelanguage.googleapis.com/v1beta/models/{modelo}:generateContent", data=body, headers={"x-goog-api-key": K["GEMINI_KEY"], "Content-Type": "application/json"}), timeout=90)
