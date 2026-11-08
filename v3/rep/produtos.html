@@ -6,7 +6,7 @@
 <title>GênIO · Produtos e serviços</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="rep.css?v=71ff04c17c">
+<link rel="stylesheet" href="rep.css?v=5803544771">
 <style>
 .grade{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .prod{background:#fff;border-radius:18px;box-shadow:0 2px 10px rgba(28,22,53,.06);overflow:hidden;display:flex;flex-direction:column;position:relative}
@@ -38,9 +38,9 @@
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="../manual.js?v=71ff04c17c"></script>
-<script src="imagem.js?v=71ff04c17c"></script>
-<script src="rep.js?v=71ff04c17c"></script>
+<script src="../manual.js?v=5803544771"></script>
+<script src="imagem.js?v=5803544771"></script>
+<script src="rep.js?v=5803544771"></script>
 <script>
 (async()=>{
   const {$,$$,esc,qs,nomeLoja,dados,estado,salvar,nav,topo,voz,ligarVoz,PROD,setorNome,telFmt,ZONA}=Rep;
@@ -72,7 +72,7 @@
     {id:"parede",nome:"Adesivos de parede",apl:"panfleto",img:"../img/cat-parede.jpg"},
     {id:"brindes",nome:"Brindes e carimbos",apl:null,img:"../img/cat-brindes.jpg"}];
   const SERV=[
-    {id:"identidade",nome:"Identidade visual",desc:"Manual, versões da marca e arquivos",ic:"✦",link:"identidade.html"},
+    {id:"identidade",nome:"Identidade visual",desc:"Manual: cores nomeadas e camadas da marca",ic:"✦",link:`manual.html?l=${encodeURIComponent(slug)}`},
     {id:"mostraai",nome:"Mostra Aí · cardápio digital",desc:"Serviço mensal (AI Negócios)",ic:"📱",tog:true},
     {id:"postaai",nome:"Posta Aí · postagens",desc:"Conteúdo para as redes (AI Negócios)",ic:"📣",tog:true},
     {id:"inpi",nome:"Registro de marca (INPI)",desc:"Proteção do nome e do logo",ic:"®",tog:true},
@@ -89,7 +89,7 @@
     $("#app").innerHTML=`${topo()}
     <div class="faixa"><a href="visita.html?l=${encodeURIComponent(slug)}">Visita</a></div>
     <h1>Produtos e serviços</h1><p class="sub">${esc(nome)} · ${esc(setorNome(l.setor))}</p>
-    <div class="resumo"><div><b>${n?`${n} item(ns) no orçamento`:"Nada escolhido ainda"}</b><br><small class="gerando" id="st">${KIT?`Marca aplicada no ambiente ${KIT.kit}${KIT.ambiente_de_referencia?" (referência — o do setor ainda não existe)":""}`:logoSrc?(A.capacho?"Arte da loja aplicada":"Aplicando a arte da loja…"):"Sem arte ainda — toque no logo na visita para arrumar"}</small></div>${logoSrc?`<img src="${esc(logoSrc)}" alt="" style="width:56px;height:40px;object-fit:contain;background:#fff;border-radius:8px">`:""}</div>
+    <div class="resumo"><div><b>${n?`${n} item(ns) no orçamento`:"Nada escolhido ainda"}</b><br><small class="gerando" id="st">${fic&&fic.manual&&fic.manual.editado?`Manual pronto: ${(fic.manual.camadas||[]).length} camada(s), ${(fic.manual.cores||[]).length} cor(es) nomeada(s)`:KIT?`Marca aplicada no ambiente ${KIT.kit}${KIT.ambiente_de_referencia?" (referência — o do setor ainda não existe)":""}`:logoSrc?(A.capacho?"Arte da loja aplicada":"Aplicando a arte da loja…"):"Sem arte ainda — toque no logo na visita para arrumar"}</small></div>${logoSrc?`<img src="${esc(logoSrc)}" alt="" style="width:56px;height:40px;object-fit:contain;background:#fff;border-radius:8px">`:""}</div>
     <div class="grade">${CAT.map(p=>{const s=S[p.id]||{q:0};const cp=capas(p.id);const mock=cp.length?cp[0].src:(p.apl&&A[p.apl]);return `<div class="prod ${s.q>0?"sel":""}" data-p="${p.id}">${eSug(p)?'<span class="sug">Entrada sugerida</span>':""}${cp.length>1?`<span class="sug" style="left:auto;right:8px;background:var(--navy)">${cp.length} capas</span>`:""}
       <div class="cena ${!mock&&logoSrc&&!p.apl?"logo":""}" ${mock?"":`style="background-image:url('${p.img}')"`} data-capas="${p.id}" data-img="prod-${p.id}" data-loja="${esc(slug)}" data-nome="${esc(p.nome)}">${mock?`<img src="${mock}" alt="">`:(!p.apl&&logoSrc?`<img src="${esc(logoSrc)}" alt="">`:"")}</div>
       <b>${esc(p.nome)}</b>
@@ -111,7 +111,8 @@
   }
   render();
   // aplicações da marca: usa o manual já gerado na identidade; senão gera agora (mesmo código do módulo) e guarda na ficha
-  if(logoSrc&&!(fic&&fic.manual&&fic.manual.aplicacoes)&&typeof Manual!=="undefined"){try{const src=abs(logoSrc);const man=await Promise.race([Manual.gerar(src,nome,telFmt(l.tel)),new Promise((_,rej)=>setTimeout(()=>rej(new Error("demorou demais")),20000))]);fic={...(fic||{k,nome,logos:[{id:"captacao",src,nome:"Logo (captação)",origem:"captacao"}]}),manual:man,atualizado:new Date().toISOString()};await putC(fic);render();}catch(err){const st=$("#st");if(st)st.textContent="Não consegui aplicar a arte automaticamente ("+err.message+") — arrume na identidade";}}
+  // manual editado pelo representante (camadas/cores nomeadas) nunca é sobrescrito pelo gerador automático
+  if(logoSrc&&!(fic&&fic.manual&&(fic.manual.aplicacoes||fic.manual.editado))&&typeof Manual!=="undefined"){try{const src=abs(logoSrc);const man=await Promise.race([Manual.gerar(src,nome,telFmt(l.tel)),new Promise((_,rej)=>setTimeout(()=>rej(new Error("demorou demais")),20000))]);fic={...(fic||{k,nome,logos:[{id:"captacao",src,nome:"Logo (captação)",origem:"captacao"}]}),manual:man,atualizado:new Date().toISOString()};await putC(fic);render();}catch(err){const st=$("#st");if(st)st.textContent="Não consegui aplicar a arte automaticamente ("+err.message+") — arrume na identidade";}}
 })();
 </script>
 </body>

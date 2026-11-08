@@ -6,14 +6,14 @@
 <title>GênIO · Visita</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="rep.css?v=71ff04c17c">
+<link rel="stylesheet" href="rep.css?v=5803544771">
 </head>
 <body>
 <div class="w" id="app"></div>
 <input type="file" accept="image/*" capture="environment" id="cam" hidden>
-<script src="../fotocrop.js?v=71ff04c17c"></script>
-<script src="imagem.js?v=71ff04c17c"></script>
-<script src="rep.js?v=71ff04c17c"></script>
+<script src="../fotocrop.js?v=5803544771"></script>
+<script src="imagem.js?v=5803544771"></script>
+<script src="rep.js?v=5803544771"></script>
 <script>
 (async()=>{
   const {$,$$,esc,qs,nomeLoja,dados,estado,salvar,stLogo,nav,topo,voz,ligarVoz,ouvir,roteiro,CHECK,PROD,setorNome,telFmt,abertaAgora,ZONA}=Rep;
@@ -70,7 +70,7 @@
   <section class="card"><h2>Identidade da loja</h2>
     <div class="ident"><div class="logo-box" id="logoBox" data-img="logo" data-loja="${esc(slug)}" data-nome="Logo" ${logo.nome?`data-fonte="${esc(logo.nome)}"`:""} title="Toque para arrumar a arte">${logoSrc?`<img src="${esc(logoSrc)}" alt="">`:`<span style="font-size:30px">◌</span>`}</div>
       <div><span class="chip ${arteVinc?"ok":st.c}">${arteVinc?(M0[slug+"/logo"]&&M0[slug+"/logo"].acao==="captura"&&arteVinc===M0[slug+"/logo"].dados?"✓ Logotipo marcado · tratar no manual":"✓ Arte tratada"):(st.c==="ok"?"✓ ":"")+(arteVinc?"":st.t)}</span>${cores.length?`<div class="cores">Cores da loja ${cores.map(c=>`<span class="cor" style="background:${esc(c)}"></span>`).join("")}</div>`:""}</div>
-      <a class="acao-link" style="margin:0" id="verIdent" href="${L.manual&&L.manual.valor?esc(base+L.manual.valor):`identidade.html`}">${L.manual&&L.manual.valor?"Ver manual de identidade →":"Arrumar a arte →"}</a></div>
+      <a class="acao-link" style="margin:0" id="verIdent" href="manual.html?l=${encodeURIComponent(slug)}">${arteVinc?"Abrir o manual de identidade →":"Tratar o logotipo →"}</a></div>
     ${L.manual&&L.manual.nota&&!/pipeline falhou/.test(L.manual.nota)?`<p class="ilus" style="margin-top:8px">Manual: ${esc(L.manual.nota.replace(/menor largura no capacho (\d+) cm/,"traço fino: no capacho a arte precisaria ter $1 cm de largura"))}</p>`:L.manual&&L.manual.nota?`<p class="ilus" style="margin-top:8px">Manual automático ainda não gerado — entra na próxima rodada.</p>`:""}
     ${logo.estado!=="encontrado"&&logo.opcoes&&logo.opcoes.length?`<p class="ilus" style="margin-top:10px">${logo.opcoes.length} opções encontradas na rede — decidir com o cliente na tela de identidade.</p>`:""}</section>
   ${(cn&&cn.valor)||(L.sobre&&L.sobre.valor)?`<section class="card" style="border-left:5px solid var(--teal)"><h2>Curiosidade</h2>${cn&&cn.valor?`<p style="margin:0 0 6px">${esc(cn.valor)}</p><small class="muted">${esc(cn.nota||"")}</small>`:""}${L.sobre&&L.sobre.valor?`<p style="margin:${cn&&cn.valor?"10px":"0"} 0 0">${esc(L.sobre.valor)}</p>`:""}</section>`:""}
@@ -93,8 +93,8 @@
             else if(cap.src!==src){cap.src=src;cap.atualizado=new Date().toISOString();if(r.manual&&!r.manual.editado&&!outros.length)delete r.manual;} /* captação trocou o logo: substitui e descarta o manual derivado dele (se não houve edição manual) */ r.lacunas=r.lacunas||L;r.atualizado=new Date().toISOString();st.put(r);t.oncomplete=()=>{db.close();res();};t.onerror=()=>res();};g.onerror=()=>res();});});}catch(e){}}
   }
   $("#produtos").onclick=async()=>{await definirCliente();location.href=`produtos.html?l=${encodeURIComponent(slug)}`;};
-  (()=>{const lb=$("#logoBox");let t0=0,mv=false;lb.addEventListener("pointerdown",()=>{t0=Date.now();mv=false;});lb.addEventListener("pointermove",()=>{mv=true;});lb.addEventListener("pointerup",async()=>{if(!mv&&Date.now()-t0<450){await definirCliente();location.href="identidade.html";}});})();
-  $("#verIdent").onclick=async ev=>{if(L.manual&&L.manual.valor)return;ev.preventDefault();await definirCliente();location.href="identidade.html";};
+  (()=>{const lb=$("#logoBox");let t0=0,mv=false;lb.addEventListener("pointerdown",()=>{t0=Date.now();mv=false;});lb.addEventListener("pointermove",()=>{mv=true;});lb.addEventListener("pointerup",async()=>{if(!mv&&Date.now()-t0<450){await definirCliente();location.href=`manual.html?l=${encodeURIComponent(slug)}`;}});})();
+  $("#verIdent").onclick=async ev=>{ev.preventDefault();await definirCliente();location.href=`manual.html?l=${encodeURIComponent(slug)}`;};
   const bA=$("#avals");if(bA)bA.onclick=()=>{const lista=(AV.lista||[]).slice().sort((a,b)=>(a.nota||5)-(b.nota||5));const f=document.createElement("div");f.className="im-fundo";const sh=document.createElement("div");sh.className="im-sheet on";sh.style.maxHeight="80vh";sh.style.overflow="auto";
     sh.innerHTML=`<h3>Avaliações · ★ ${String(l.nota).replace(".",",")} · ${l.aval||0} no Google</h3>${lista.length?lista.map(a=>{const g=(AV.gatilhos||[]).find(x=>x.autor===a.autor&&x.nota===a.nota);return `<div style="padding:10px 0;border-bottom:1px solid #E0DAEE"><b style="color:${(a.nota||5)<=3?"#C8552B":"#1C1635"}">★ ${a.nota||"?"}</b> <small class="muted">${esc(a.autor||"")} · ${esc(a.quando||"")}</small><div>${esc(a.texto||"")}</div>${g?`<div style="margin-top:6px;color:#6933C5;font-weight:600">→ ${esc(g.argumento)}</div>`:""}</div>`;}).join(""):`<p class="muted">As avaliações entram na próxima captação desta loja${AV.nota?` (${esc(AV.nota)})`:""}.</p>`}<p class="muted" style="font-size:13px">Negativas primeiro. Só as que tocam no nosso serviço viram argumento.</p><button data-a="x" class="fechar" style="display:block;width:100%;border:0;background:none;color:#6B6578;font:600 16px Rubik,sans-serif;padding:12px;cursor:pointer">Fechar</button>`;
     document.body.append(f,sh);const fechar=()=>{sh.remove();f.remove();};f.onclick=fechar;sh.querySelector("[data-a=x]").onclick=fechar;};
