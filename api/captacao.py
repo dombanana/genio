@@ -237,7 +237,7 @@ def ham(a, b):
     return bin(int(a, 16) ^ int(b, 16)).count("1")
 
 # ---------- curiosidade do nome (Wikipédia pt; Gemini só se a Wikipédia não tiver) ----------
-GENERICAS = {"famiglia","familia","família","central","grande","pequeno","pequena","novo","nova","velho","velha","bom","boa","santo","santa","sao","são","casa","mundo","brasil","paulista","paulistana","paulistano","real","nacional","popular","imperial","express","premium","gourmet","delicia","delícia","sabor","sabores","arte","artes","ponto","cantinho","recanto","espaco","espaço","super","mega","hiper","top","plus","mais","best"}
+GENERICAS = {"carnes","carne","acougue","açougue","padaria","emporio","empório","loja","lojas","distribuidora","comercial","industria","indústria","atacado","varejo","alimentos","bebidas","embalagens","utilidades","equipamentos","cosmeticos","cosméticos","suplementos","graos","grãos","cereais","temperos","especiarias","castanhas","frutas","secas","famiglia","familia","família","central","grande","pequeno","pequena","novo","nova","velho","velha","bom","boa","santo","santa","sao","são","casa","mundo","brasil","paulista","paulistana","paulistano","real","nacional","popular","imperial","express","premium","gourmet","delicia","delícia","sabor","sabores","arte","artes","ponto","cantinho","recanto","espaco","espaço","super","mega","hiper","top","plus","mais","best"}
 def curiosidade_nome(nome):
     """origem da palavra marcante do nome: Wikipédia só quando o artigo é claramente lugar, sobrenome ou palavra (título exato);
     senão Gemini numa frase; senão vira pergunta para o dono"""
@@ -268,9 +268,12 @@ def curiosidade_nome(nome):
             txt = ((((r.get("candidates") or [{}])[0].get("content") or {}).get("parts") or [{}])[0].get("text") or "").strip()
             if txt and "sem registro" not in txt.lower():
                 return {"estado": "derivado", "valor": txt[:220], "origem": "derivado", "nota": "Gemini (uma frase; confirmar com o dono)", "palavra": palavra}
-        except Exception:
-            pass
-    return {"estado": "pendente", "valor": "", "origem": "cliente", "nota": f"origem do nome não encontrada — perguntar ao dono (“{palavra}” é de família ou de lugar?)", "palavra": palavra}
+            erro_g = r.get("_erro") or ("resposta vazia" if not txt else "sem registro")
+        except Exception as e:
+            erro_g = str(e)[:120]
+    else:
+        erro_g = "sem GEMINI_KEY"
+    return {"estado": "pendente", "valor": "", "origem": "cliente", "nota": f"origem do nome não encontrada — perguntar ao dono (“{palavra}” é de família ou de lugar?) · {erro_g}", "palavra": palavra}
 # ---------- o @ / domínio bate com o nome da loja? ----------
 STOP={"natural","temperos","tempero","padaria","cafe","bar","restaurante","barbearia","salao","salão","otica","ótica","pet","farmacia","farmácia","doces","doce","loja","lojas","casa","comercio","comércio","ltda","me","mei","eireli","sa","s/a","e","de","da","do","das","dos","the","zona","cerealista","brás","bras","sao","são","paulo","sp","centro","oficial","store","shop","br","com","www","emporio","empório","distribuidora","produtos","naturais","mercado","mercadao","mercadão"}
 def tokens(s_):
