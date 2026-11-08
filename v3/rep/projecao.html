@@ -6,7 +6,7 @@
 <title>GênIO · O capacho na entrada</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="rep.css?v=9578193ff7">
+<link rel="stylesheet" href="rep.css?v=8d669c9e32">
 <style>
 .cena{position:relative;border-radius:var(--r);overflow:hidden;background:var(--lav2);aspect-ratio:4/3;touch-action:none}
 .cena img.fundo{width:100%;height:100%;object-fit:cover;display:block}
@@ -32,14 +32,14 @@
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="../fotocrop.js?v=9578193ff7"></script>
-<script src="imagem.js?v=9578193ff7"></script>
-<script src="rep.js?v=9578193ff7"></script>
+<script src="../fotocrop.js?v=8d669c9e32"></script>
+<script src="imagem.js?v=8d669c9e32"></script>
+<script src="rep.js?v=8d669c9e32"></script>
 <script>
 (async()=>{
   const {$,$$,esc,qs,nomeLoja,dados,estado,salvar,nav,topo,voz,ligarVoz,precoCapacho,money,ZONA,PROD}=Rep;
   const D=await dados();const slug=qs.get("l");const l=D.lojas.find(x=>x.slug===slug);if(!l){location.href="index.html";return;}
-  let cad=null;try{const r=await fetch(`/dados/captacao/${ZONA}/clientes/${slug}.json`);if(r.ok)cad=await r.json();}catch(e){}
+  let cad=null;try{const r=await fetch(`/dados/captacao/${ZONA}/clientes/${slug}.json?t=${Date.now()}`);if(r.ok)cad=await r.json();}catch(e){}
   const base=`/dados/captacao/${ZONA}/`;const logo=cad&&cad.lacunas.logoOriginal||{};
   const M=Imagem.ler();const fotoLocal=(M[slug+"/local"]&&M[slug+"/local"].dados)||null;
   const logoSrc=(M[slug+"/logo"]&&M[slug+"/logo"].dados)||(logo.estado==="encontrado"?base+logo.valor:null);

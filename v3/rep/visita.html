@@ -6,21 +6,21 @@
 <title>GênIO · Visita</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="rep.css?v=9578193ff7">
+<link rel="stylesheet" href="rep.css?v=8d669c9e32">
 </head>
 <body>
 <div class="w" id="app"></div>
 <input type="file" accept="image/*" capture="environment" id="cam" hidden>
-<script src="../fotocrop.js?v=9578193ff7"></script>
-<script src="imagem.js?v=9578193ff7"></script>
-<script src="rep.js?v=9578193ff7"></script>
+<script src="../fotocrop.js?v=8d669c9e32"></script>
+<script src="imagem.js?v=8d669c9e32"></script>
+<script src="rep.js?v=8d669c9e32"></script>
 <script>
 (async()=>{
   const {$,$$,esc,qs,nomeLoja,dados,estado,salvar,stLogo,nav,topo,voz,ligarVoz,ouvir,roteiro,CHECK,PROD,setorNome,telFmt,abertaAgora,ZONA}=Rep;
   const D=await dados();const slug=qs.get("l");const l=D.lojas.find(x=>x.slug===slug);
   if(!l){$("#app").innerHTML=`${topo()}<div class="faixa"><a href="index.html">Rota</a></div><p>Loja não encontrada.</p>${nav("rota")}`;return;}
   // cadastro da captação (fotos, logo, cores) quando existir
-  let cad=null;try{const r=await fetch(`/dados/captacao/${ZONA}/clientes/${slug}.json`,{cache:"no-store"});if(r.ok)cad=await r.json();}catch(e){}
+  let cad=null;try{const r=await fetch(`/dados/captacao/${ZONA}/clientes/${slug}.json?t=${Date.now()}`,{cache:"no-store"});if(r.ok)cad=await r.json();}catch(e){}
   const L=cad?cad.lacunas:{};const logo=L.logoOriginal||{};const AV=L.avaliacoes||{};const base=`/dados/captacao/${ZONA}/`;
   const e=estado();const fotos=(e.fotos||{})[slug]||{};const ck=(e.check||{})[slug]||{};
   const st=stLogo({logo:logo.estado==="encontrado"?"encontrado":(logo.opcoes&&logo.opcoes.length?"pendente":null)});

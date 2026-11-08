@@ -6,8 +6,8 @@
 <title>GênIO · Área do cliente</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="rep.css?v=9578193ff7">
-<link rel="stylesheet" href="../campanha.css?v=9578193ff7">
+<link rel="stylesheet" href="rep.css?v=8d669c9e32">
+<link rel="stylesheet" href="../campanha.css?v=8d669c9e32">
 <style>
 .nav{grid-template-columns:repeat(3,1fr)}
 .arte{border-radius:14px;overflow:hidden;background:var(--lav);aspect-ratio:16/9;display:grid;place-items:center;color:var(--texto2);margin:10px 0}
@@ -21,16 +21,16 @@
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="../fotocrop.js?v=9578193ff7"></script>
-<script src="imagem.js?v=9578193ff7"></script>
-<script src="../campanha.js?v=9578193ff7"></script>
-<script src="rep.js?v=9578193ff7"></script>
+<script src="../fotocrop.js?v=8d669c9e32"></script>
+<script src="imagem.js?v=8d669c9e32"></script>
+<script src="../campanha.js?v=8d669c9e32"></script>
+<script src="rep.js?v=8d669c9e32"></script>
 <script>
 (async()=>{
   const {$,$$,esc,qs,nomeLoja,dados,estado,salvar,vizinhos,money,ZONA}=Rep;
   const D=await dados();const slug=qs.get("l")||(JSON.parse(localStorage.getItem("genio-cliente")||"null")||{}).slug;const l=D.lojas.find(x=>x.slug===slug);
   if(!l){$("#app").innerHTML=`<header class="topo"><div class="logo">Gên<i>IO</i></div><div class="papel">Área do cliente</div></header><p>Abra pelo QR do seu cartão GênIO ou pelo link que o representante enviou.</p>`;return;}
-  let cad=null;try{const r=await fetch(`/dados/captacao/${ZONA}/clientes/${slug}.json`,{cache:"no-store"});if(r.ok)cad=await r.json();}catch(e){}
+  let cad=null;try{const r=await fetch(`/dados/captacao/${ZONA}/clientes/${slug}.json?t=${Date.now()}`,{cache:"no-store"});if(r.ok)cad=await r.json();}catch(e){}
   const base=`/dados/captacao/${ZONA}/`;const logo=cad&&cad.lacunas.logoOriginal||{};const M=Imagem.ler();const logoSrc=(await Rep.arteDoCliente(nomeLoja(l.nome)))||(M[slug+"/logo"]&&M[slug+"/logo"].dados)||(logo.estado==="encontrado"?base+logo.valor:null);
   const e=estado();const ped=(e.pedidos||[]).filter(p=>p.loja===slug).slice(-1)[0];const viz=vizinhos(D,l);const fech=viz.filter(v=>(e.fechadas||[]).includes(v.slug)).length+((e.fechadas||[]).includes(slug)?1:0);
   const nome=nomeLoja(l.nome);const ini=nome.split(/\s+/).filter((p,i,a)=>i===0||i===a.length-1).map(p=>p[0]||"").join("").toUpperCase();

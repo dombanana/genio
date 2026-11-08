@@ -6,7 +6,7 @@
 <title>GênIO · Produtos e serviços</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="rep.css?v=9578193ff7">
+<link rel="stylesheet" href="rep.css?v=8d669c9e32">
 <style>
 .grade{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .prod{background:#fff;border-radius:18px;box-shadow:0 2px 10px rgba(28,22,53,.06);overflow:hidden;display:flex;flex-direction:column;position:relative}
@@ -38,21 +38,21 @@
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="../manual.js?v=9578193ff7"></script>
-<script src="imagem.js?v=9578193ff7"></script>
-<script src="rep.js?v=9578193ff7"></script>
+<script src="../manual.js?v=8d669c9e32"></script>
+<script src="imagem.js?v=8d669c9e32"></script>
+<script src="rep.js?v=8d669c9e32"></script>
 <script>
 (async()=>{
   const {$,$$,esc,qs,nomeLoja,dados,estado,salvar,nav,topo,voz,ligarVoz,PROD,setorNome,telFmt,ZONA}=Rep;
   const D=await dados();const slug=qs.get("l")||(JSON.parse(localStorage.getItem("genio-cliente-dados")||"null")||{}).slug;const l=D.lojas.find(x=>x.slug===slug);
   if(!l){$("#app").innerHTML=`${topo()}<p>Loja não encontrada.</p>${nav("rota")}`;return;}
   const nome=nomeLoja(l.nome),k=nome.toLowerCase();
-  let cad=null;try{const r=await fetch(`/dados/captacao/${ZONA}/clientes/${slug}.json`,{cache:"no-store"});if(r.ok)cad=await r.json();}catch(e){}
+  let cad=null;try{const r=await fetch(`/dados/captacao/${ZONA}/clientes/${slug}.json?t=${Date.now()}`,{cache:"no-store"});if(r.ok)cad=await r.json();}catch(e){}
   const L=(cad&&cad.lacunas)||{};const base=`/dados/captacao/${ZONA}/`;
   // kit de ambiente do setor com a marca aplicada (gerado no servidor a partir do manual)
-  let KIT=null;if(L.kit&&L.kit.estado==="encontrado"){try{const r=await fetch(base+L.kit.valor,{cache:"no-store"});if(r.ok)KIT=await r.json();}catch(e){}}
+  let KIT=null;if(L.kit&&L.kit.estado==="encontrado"){try{const r=await fetch(base+L.kit.valor+"?t="+Date.now(),{cache:"no-store"});if(r.ok)KIT=await r.json();}catch(e){}}
   const KMAP={capacho:["01"],placas:["02"],adesivos:["03"],uniformes:["04"],impressos:["05","06"],banners:["07"],parede:["08"],brindes:["09","10"]};
-  const capas=id=>KIT?(KMAP[id]||[]).map(k=>(KIT.itens||[]).find(i=>i.id===k&&i.arquivo)).filter(Boolean).map(i=>({src:base+i.arquivo,nome:i.produto})):[];const logo=L.logoOriginal||{};const M0=Imagem.ler();
+  const capas=id=>KIT?(KMAP[id]||[]).map(k=>(KIT.itens||[]).find(i=>i.id===k&&i.arquivo)).filter(Boolean).map(i=>({src:base+i.arquivo+"?m="+(KIT.marca||""),nome:i.produto})):[];const logo=L.logoOriginal||{};const M0=Imagem.ler();
   // ficha do cliente no módulo de identidade (fonte única da arte e do manual)
   const abrirDB=Rep.abrirVendas;
   const getC=async()=>{const db=await abrirDB();if(!db||!db.objectStoreNames.contains("clientes"))return null;return new Promise(res=>{const t=db.transaction("clientes").objectStore("clientes").get(k);t.onsuccess=()=>{res(t.result||null);db.close();};t.onerror=()=>res(null);});};

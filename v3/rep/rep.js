@@ -18,11 +18,11 @@ const Rep=(()=>{
   let D=null;
   async function dados(){if(D)return D;
     // lojas reais da captação do servidor; se ainda não houver, a lista local da zona
-    try{const r=await fetch(`/dados/captacao/${ZONA}/lojas.json`,{cache:"no-cache"});if(r.ok){const j=await r.json();D={zona:{slug:ZONA,nome:j.zona.nome.split(" (")[0],base:j.zona.base},gerado:j.gerado,lojas:j.lojas};}}catch(e){}
+    try{const r=await fetch(`/dados/captacao/${ZONA}/lojas.json?t=${Date.now()}`,{cache:"no-cache"});if(r.ok){const j=await r.json();D={zona:{slug:ZONA,nome:j.zona.nome.split(" (")[0],base:j.zona.base},gerado:j.gerado,lojas:j.lojas};}}catch(e){}
     if(!D){const r=await fetch(`dados/${ZONA}.json`);D=await r.json();}
     localStorage.setItem("rep-zona",ZONA);
     // cadastro da captação (quando existir): estado do logo por loja
-    try{const c=await fetch(`/dados/captacao/${ZONA}/clientes/index.json`);if(c.ok){const idx=await c.json();const m={};idx.forEach(x=>m[x.slug]=x.logo);D.lojas.forEach(l=>l.logo=m[l.slug]||null);}}catch(e){}
+    try{const c=await fetch(`/dados/captacao/${ZONA}/clientes/index.json?t=${Date.now()}`);if(c.ok){const idx=await c.json();const m={};idx.forEach(x=>m[x.slug]=x.logo);D.lojas.forEach(l=>l.logo=m[l.slug]||null);}}catch(e){}
     return D;}
   const hojeDia=D=>{const e=estado();return e.dia||1;};
   const lojasDoDia=(D,dia)=>D.lojas.filter(l=>l.dia===dia).sort((a,b)=>a.ordem-b.ordem);
