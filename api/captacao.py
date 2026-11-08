@@ -738,19 +738,43 @@ def main():
              "nota": p.get("rating"), "aval": p.get("userRatingCount"), "types": p.get("types", []), "maps": p.get("googleMapsUri", ""), "horario": horario_txt((p.get("regularOpeningHours") or {}).get("weekdayDescriptions"))}
         x["setor"] = setor(x); lojas.append(x)
     vistos = set(); lojas = [x for x in lojas if not (x["slug"] in vistos or vistos.add(x["slug"]))]
-    lojas = rota(lojas, zona["base"], zona.get("por_dia", 25))
+    lj_ant = None
+    try:
+        lj_ant = json.load(open(os.path.join(pasta, "lojas.json")))["lojas"]
+    except Exception:
+        pass
+    if lj_ant and not run.get("rota_nova"):
+        # rota estável: o percurso publicado não muda entre rodadas (as fichas, o app e o vendedor dependem de dia/ordem);
+        # lojas novas que o filtro trouxer entram em dias depois do último; lojas que saíram do filtro continuam onde estavam
+        pos = {x["slug"]: (x["dia"], x["ordem"]) for x in lj_ant}
+        novas = [x for x in lojas if x["slug"] not in pos]
+        por_slug = {x["slug"]: x for x in lojas}
+        base_l = []
+        for a in lj_ant:
+            x = por_slug.get(a["slug"], a); x["dia"], x["ordem"] = pos[a["slug"]]; base_l.append(x)
+        if novas:
+            ult = max(d for d, _ in pos.values()); novas = rota(novas, zona["base"], zona.get("por_dia", 25))
+            for x in novas:
+                x["dia"] += ult
+        lojas = base_l + novas
+    else:
+        lojas = rota(lojas, zona["base"], zona.get("por_dia", 25))
     from collections import Counter
     resumo_passos.append(f"2. Filtro (redes, tipos fora do alvo, raio {zona['raio_m']} m) → {len(lojas)} lojas independentes · {len(set(x['dia'] for x in lojas))} dias de visita · setores: " + ", ".join(f"{s} {n}" for s, n in Counter(x['setor'] for x in lojas).most_common(6)))
     json.dump({"zona": zona, "gerado": hoje, "lojas": lojas}, open(os.path.join(pasta, "lojas.json"), "w"), ensure_ascii=False, indent=0)
     # 3. identidade (ordem da rota; pula quem já tem cadastro completo)
     cads, detalhes = {}, {}; feitas = 0; reais = 0.0
+    dias_pedidos = set(run.get("dias") or [])
     for x in lojas:
         cp = os.path.join(pasta, "clientes", x["slug"] + ".json")
         if os.path.exists(cp):
             cads[x["slug"]] = json.load(open(cp))
             if cads[x["slug"]].get("processado") and not run.get("refazer"):
                 continue
-        if feitas >= limite or (not run and usadas + feitas >= 50):  # cota de 50/dia só para a rodada automática; pedido explícito vale o limite pedido
+        fora = (dias_pedidos and x["dia"] not in dias_pedidos) or feitas >= limite or (not run and usadas + feitas >= 50)  # cota de 50/dia só para a rodada automática
+        if fora and x["slug"] in cads:
+            continue  # ficha existente (pronta ou não) nunca é sobrescrita por esqueleto
+        if fora:
             L, custo, passos, fontes, lg, lc = identidade(x, zona, pasta, False)
         else:
             log(pasta, f"identidade {feitas+1}/{limite}: {x['nome']}"); status(pasta, fase="identidade", loja=x["nome"], feitas=feitas)
