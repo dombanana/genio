@@ -741,7 +741,7 @@ def main():
             cads[x["slug"]] = json.load(open(cp))
             if cads[x["slug"]].get("processado") and not run.get("refazer"):
                 continue
-        if feitas >= limite or usadas + feitas >= 50:
+        if feitas >= limite or (not run and usadas + feitas >= 50):  # cota de 50/dia só para a rodada automática; pedido explícito vale o limite pedido
             L, custo, passos, fontes, lg, lc = identidade(x, zona, pasta, False)
         else:
             log(pasta, f"identidade {feitas+1}/{limite}: {x['nome']}"); status(pasta, fase="identidade", loja=x["nome"], feitas=feitas)
@@ -758,7 +758,7 @@ def main():
     quota[hoje] = usadas + feitas; json.dump(quota, open(qp, "w"))
     json.dump([{"slug": s, "nome": c["nome"], "dia": c["rota"]["dia"], "ordem": c["rota"]["ordem"], "logo": c["lacunas"].get("logoOriginal", {}).get("estado")} for s, c in cads.items()], open(os.path.join(pasta, "clientes", "index.json"), "w"), ensure_ascii=False)
     enc = sum(1 for s in detalhes if cads[s]["lacunas"]["logoOriginal"]["estado"] == "encontrado"); dec = sum(1 for s in detalhes if cads[s]["lacunas"]["logoOriginal"].get("opcoes") and cads[s]["lacunas"]["logoOriginal"]["estado"] != "encontrado")
-    resumo_passos.append(f"3. Identidade pública de {feitas} lojas (cota do dia {quota[hoje]}/50): logo encontrado {enc} · decidir {dec} · na porta {feitas-enc-dec} · custo ≈ R$ {reais:.2f}")
+    resumo_passos.append(f"3. Identidade pública de {feitas} lojas (cota do dia {quota[hoje]}/50{" · pedido manual" if run else ""}): logo encontrado {enc} · decidir {dec} · na porta {feitas-enc-dec} · custo ≈ R$ {reais:.2f}")
     # 4. exportação e revisão
     exportar(zona, lojas, cads, pasta)
     resumo_passos.append("4. Exportado: visitas.csv, visitas.kml, roteiro.html, lojas.json, clientes/*.json")
