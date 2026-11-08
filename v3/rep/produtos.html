@@ -6,7 +6,7 @@
 <title>GênIO · Produtos e serviços</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="rep.css?v=5803544771">
+<link rel="stylesheet" href="rep.css?v=63b24cc156">
 <style>
 .grade{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .prod{background:#fff;border-radius:18px;box-shadow:0 2px 10px rgba(28,22,53,.06);overflow:hidden;display:flex;flex-direction:column;position:relative}
@@ -22,6 +22,7 @@
 .prod .qtd span{flex:1;text-align:center;font-weight:700;font-size:16px}
 .prod .qtd span.zero{color:var(--texto2);font-weight:500;font-size:13px}
 .prod.sel{outline:2.5px solid var(--marca)}
+.prod .ir.sec-ir{background:var(--lav);color:var(--marca);margin-bottom:8px}
 .prod .ir{margin:0 12px 12px;min-height:40px;border-radius:12px;background:var(--navy);color:#fff;font-weight:700;display:grid;place-items:center;text-decoration:none;font-size:15px}
 .serv{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;padding:12px 16px}
 .serv .ic{width:44px;height:44px;border-radius:12px;background:var(--lav);display:grid;place-items:center;font-size:22px}
@@ -38,9 +39,9 @@
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="../manual.js?v=5803544771"></script>
-<script src="imagem.js?v=5803544771"></script>
-<script src="rep.js?v=5803544771"></script>
+<script src="../manual.js?v=63b24cc156"></script>
+<script src="imagem.js?v=63b24cc156"></script>
+<script src="rep.js?v=63b24cc156"></script>
 <script>
 (async()=>{
   const {$,$$,esc,qs,nomeLoja,dados,estado,salvar,nav,topo,voz,ligarVoz,PROD,setorNome,telFmt,ZONA}=Rep;
@@ -90,10 +91,11 @@
     <div class="faixa"><a href="visita.html?l=${encodeURIComponent(slug)}">Visita</a></div>
     <h1>Produtos e serviços</h1><p class="sub">${esc(nome)} · ${esc(setorNome(l.setor))}</p>
     <div class="resumo"><div><b>${n?`${n} item(ns) no orçamento`:"Nada escolhido ainda"}</b><br><small class="gerando" id="st">${fic&&fic.manual&&fic.manual.editado?`Manual pronto: ${(fic.manual.camadas||[]).length} camada(s), ${(fic.manual.cores||[]).length} cor(es) nomeada(s)`:KIT?`Marca aplicada no ambiente ${KIT.kit}${KIT.ambiente_de_referencia?" (referência — o do setor ainda não existe)":""}`:logoSrc?(A.capacho?"Arte da loja aplicada":"Aplicando a arte da loja…"):"Sem arte ainda — toque no logo na visita para arrumar"}</small></div>${logoSrc?`<img src="${esc(logoSrc)}" alt="" style="width:56px;height:40px;object-fit:contain;background:#fff;border-radius:8px">`:""}</div>
-    <div class="grade">${CAT.map(p=>{const s=S[p.id]||{q:0};const cp=capas(p.id);const mock=cp.length?cp[0].src:(p.apl&&A[p.apl]);return `<div class="prod ${s.q>0?"sel":""}" data-p="${p.id}">${eSug(p)?'<span class="sug">Entrada sugerida</span>':""}${cp.length>1?`<span class="sug" style="left:auto;right:8px;background:var(--navy)">${cp.length} capas</span>`:""}
+    <div class="grade">${CAT.map(p=>{const s=S[p.id]||{q:0};const cp=capas(p.id);const arteFeita=fic&&fic.artes&&fic.artes[p.id]&&fic.artes[p.id].png;const mock=cp.length?cp[0].src:(arteFeita||(p.apl&&A[p.apl]));return `<div class="prod ${s.q>0?"sel":""}" data-p="${p.id}">${eSug(p)?'<span class="sug">Entrada sugerida</span>':""}${cp.length>1?`<span class="sug" style="left:auto;right:8px;background:var(--navy)">${cp.length} capas</span>`:""}
       <div class="cena ${!mock&&logoSrc&&!p.apl?"logo":""}" ${mock?"":`style="background-image:url('${p.img}')"`} data-capas="${p.id}" data-img="prod-${p.id}" data-loja="${esc(slug)}" data-nome="${esc(p.nome)}">${mock?`<img src="${mock}" alt="">`:(!p.apl&&logoSrc?`<img src="${esc(logoSrc)}" alt="">`:"")}</div>
       <b>${esc(p.nome)}</b>
       <div class="st ${s.q>0?"ok":""}">${p.motor?(s.q>0?"✓ no orçamento · medidas no motor":"Preço na hora, pelo motor"):(s.q>0?"✓ no orçamento · preço a confirmar":"Produção Printi · preço a confirmar")}</div>
+      <a class="ir sec-ir" href="editor.html?l=${encodeURIComponent(slug)}&p=${p.id}" data-editar>${(fic&&fic.artes&&fic.artes[p.id])?"✓ Arte feita · editar":"Editar arte"}</a>
       ${p.motor?`<a class="ir" href="capacho.html" data-motor>${s.q>0?"Abrir no motor →":"Montar capacho →"}</a>`:`<div class="qtd"><button data-m="-">−</button><span class="${s.q>0?"":"zero"}">${s.q>0?s.q+" un.":"não quero"}</span><button data-m="+">+</button></div>`}
     </div>`;}).join("")}</div>
     <h2 style="margin:22px 0 10px">Serviços</h2>
@@ -106,6 +108,7 @@
       const g=document.createElement("div");g.className="galeria";g.innerHTML=`<div class="gal-topo"><b>${esc(CAT.find(c=>c.id===el.dataset.capas).nome)}</b><button class="btn sec sm" id="galFechar">Fechar</button></div><div class="gal-rolo">${cp.map(c=>`<figure><img src="${c.src}" alt=""><figcaption>${esc(c.nome)}</figcaption></figure>`).join("")}</div>`;document.body.appendChild(g);g.querySelector("#galFechar").onclick=()=>g.remove();});});
     $$(".prod .qtd button").forEach(b=>b.onclick=()=>{const id=b.closest(".prod").dataset.p;const s=S[id]=S[id]||{q:0,nome:CAT.find(c=>c.id===id).nome};s.q=Math.max(0,s.q+(b.dataset.m==="+"?1:-1));s.em=new Date().toISOString();salvarSel();render();});
     $$(".tog").forEach(b=>b.onclick=()=>{const id=b.dataset.t;const s=S[id]=S[id]||{q:0,nome:SERV.find(c=>c.id===id).nome,servico:true};s.q=s.q>0?0:1;s.em=new Date().toISOString();salvarSel();render();});
+    $$("[data-editar]").forEach(a=>a.onclick=async ev=>{ev.preventDefault();await definirCliente();location.href=a.getAttribute("href");});
     $$("[data-motor],[data-serv=identidade]").forEach(a=>a.onclick=async ev=>{ev.preventDefault();if(a.dataset.motor){S.capacho={q:1,nome:"Capacho personalizado",em:new Date().toISOString()};salvarSel();}await definirCliente();location.href=a.getAttribute("href");});
     $("#seguir").onclick=async()=>{await definirCliente();location.href=n?`pedidos.html?l=${encodeURIComponent(slug)}`:"capacho.html";};
   }

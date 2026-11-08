@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<title>GênIO · Edição do produto</title>
+<meta name="theme-color" content="#F1EEF8">
+<link rel="icon" href="../genio-favicon.png">
+<link rel="stylesheet" href="rep.css?v=63b24cc156">
+<style>
+body.com-acoes{padding-bottom:calc(250px + env(safe-area-inset-bottom,0))}
+.prancheta{position:relative;background:repeating-conic-gradient(#e9e5f3 0 25%,#fff 0 50%) 0 0/18px 18px;border-radius:16px;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none;display:grid;place-items:center;height:min(70vw,440px);margin:0 0 8px}
+.prancheta canvas{display:block;box-shadow:0 2px 14px rgba(28,22,53,.18)}
+.medida{display:flex;justify-content:space-between;color:var(--texto2);font-size:13px;margin:0 0 10px}
+.ferr{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin:0 0 10px}
+.ferr button{border:0;background:#fff;border-radius:12px;min-height:58px;font:inherit;font-size:12px;color:var(--texto);display:grid;place-items:center;gap:2px;padding:6px 2px}
+.ferr button .ic{font-size:20px}
+.painel{background:#fff;border-radius:16px;padding:12px 14px;margin:0 0 10px}
+.painel h3{margin:0 0 8px;font-size:15px;display:flex;justify-content:space-between;align-items:center}
+.linha{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.linha label{font-size:13px;color:var(--texto2)}
+.linha input[type=range]{flex:1;min-width:100px}
+.linha input[type=text],.linha input[type=number],.linha select,.linha textarea{font:inherit;font-size:15px;border:1.5px solid var(--linha);border-radius:10px;padding:8px 10px;background:#fff;min-width:0}
+.paleta{display:flex;gap:6px;flex-wrap:wrap}
+.paleta button{width:34px;height:34px;border-radius:10px;border:2px solid #fff;box-shadow:0 0 0 1px rgba(0,0,0,.12);padding:0}
+.paleta button.on{outline:3px solid var(--marca)}
+.paleta button.mais{background:#fff;font-size:16px;font-weight:700;color:var(--marca);border:1.5px dashed var(--marca)}
+.lista{display:flex;flex-direction:column;gap:6px}
+.lista .it{display:grid;grid-template-columns:28px 1fr auto;gap:8px;align-items:center;background:var(--lav);border-radius:10px;padding:6px 10px;font-size:14px}
+.lista .it.on{outline:2px solid var(--marca)}
+.lista .it .ic{text-align:center}
+.lista .it button{border:0;background:transparent;font-size:16px;color:var(--texto2)}
+.btn.mini{min-height:36px;padding:0 12px;font-size:13px;width:auto;flex:0 0 auto}
+.campos{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.campos label{display:block;font-size:12px;color:var(--texto2)}
+.campos input{width:100%;font:inherit;font-size:14px;border:1.5px solid var(--linha);border-radius:10px;padding:8px 10px;background:#fff}
+</style>
+</head>
+<body>
+<div class="w" id="app"></div>
+<script src="rep.js?v=63b24cc156"></script>
+<script>
+(async()=>{
+  const {$,$$,esc,qs,nomeLoja,dados,nav,topo,telFmt,ZONA}=Rep;
+  const D=await dados();const slug=qs.get("l");const pid=qs.get("p")||"capacho";const l=D.lojas.find(x=>x.slug===slug);
+  if(!l){$("#app").innerHTML=`${topo()}<p>Loja não encontrada.</p>${nav("rota")}`;return;}
+  const nome=nomeLoja(l.nome),k=nome.toLowerCase();
+  // produtos editáveis: medida física padrão (cm) e tipo de superfície (define a paleta de cores do produto)
+  const PRODUTOS={
+    capacho:{nome:"Capacho",w:120,h:60,superf:"capacho",fundo:"#2B2B2D"},
+    placas:{nome:"Placa",w:60,h:40,superf:"rigido",fundo:"#F4F1EA"},
+    adesivos:{nome:"Adesivo de vitrine",w:100,h:60,superf:"vinil",fundo:null},
+    uniformes:{nome:"Camisa polo · peito",w:12,h:12,superf:"tecido",fundo:"#F4F1EA"},
+    impressos:{nome:"Cartão de visita",w:9,h:5,superf:"papel",fundo:"#FFFFFF",cartao:true},
+    panfleto:{nome:"Panfleto A5",w:14.8,h:21,superf:"papel",fundo:"#FFFFFF"},
+    banners:{nome:"Banner retrátil",w:85,h:200,superf:"lona",fundo:"#FFFFFF"},
+    parede:{nome:"Adesivo de parede",w:100,h:60,superf:"vinil",fundo:null},
+    brindes:{nome:"Sacola",w:35,h:40,superf:"tecido",fundo:"#EDE6D6"},
+    carimbo:{nome:"Carimbo",w:6,h:4,superf:"carimbo",fundo:null}};
+  const P=PRODUTOS[pid]||PRODUTOS.capacho;
+  // paletas reais por superfície (cores de produção; a paleta do cliente vem do manual)
+  const PALETAS={
+    capacho:[["#2B2B2D","Preto"],["#9A9B9D","Cinza"],["#1F3A5F","Azul marinho"],["#7A1E1E","Vinho"],["#2E5E3A","Verde"],["#EE6A1D","Laranja"],["#C8A95B","Bege"],["#5B3A29","Marrom"]],
+    rigido:[["#F4F1EA","Branco"],["#141C3A","Navy"],["#2B2B2D","Preto"],["#B8B8B8","Alumínio"],["#D4AF37","Dourado"]],
+    vinil:[["#2B2B2D","Preto"],["#FFFFFF","Branco"],["#C62828","Vermelho"],["#1565C0","Azul"],["#2E7D32","Verde"],["#F9A825","Amarelo"],["#6A1B9A","Roxo"],["#FF6F00","Laranja"],["#B8B8B8","Prata"],["#D4AF37","Dourado"]],
+    tecido:[["#F4F1EA","Branco"],["#2B2B2D","Preto"],["#1F3A5F","Marinho"],["#9A9B9D","Cinza"],["#C62828","Vermelho"],["#2E7D32","Verde"],["#14B8B0","Verde-água"],["#EDE6D6","Cru"]],
+    papel:[["#FFFFFF","Branco"],["#EDE6D6","Kraft claro"],["#141C3A","Navy"],["#2B2B2D","Preto"]],
+    lona:[["#FFFFFF","Branco"],["#141C3A","Navy"],["#2B2B2D","Preto"],["#F4F1EA","Creme"]],
+    carimbo:[["#2B2B2D","Preto"],["#1565C0","Azul"],["#C62828","Vermelho"]]};
+  // ficha do cliente
+  const db=await Rep.abrirVendas();
+  const getC=()=>new Promise(res=>{if(!db)return res(null);const t=db.transaction("clientes").objectStore("clientes").get(k);t.onsuccess=()=>res(t.result||null);t.onerror=()=>res(null);});
+  const putC=o=>new Promise(res=>{if(!db)return res(false);const t=db.transaction("clientes","readwrite");t.objectStore("clientes").put(o);t.oncomplete=()=>res(true);t.onerror=()=>res(false);});
+  let fic=await getC();const man=fic&&fic.manual;
+  const coresMarca=(man&&man.cores)||[];
+  let cad=null;try{const r=await fetch(`/dados/captacao/${ZONA}/clientes/${slug}.json?t=${Date.now()}`,{cache:"no-store"});if(r.ok)cad=await r.json();}catch(e){}
+  const L=(cad&&cad.lacunas)||{};
+  // ---- documento da arte
+  const PX=Math.round(1400/Math.max(P.w,P.h));  // px por cm (prancheta interna)
+  const W=Math.round(P.w*PX),H=Math.round(P.h*PX);
+  let doc=(fic&&fic.artes&&fic.artes[pid])?JSON.parse(JSON.stringify(fic.artes[pid].doc)):null;
+  const IMGS={};  // cache de imagens das camadas (dataURL → Image)
+  const img=src=>new Promise(res=>{if(IMGS[src])return res(IMGS[src]);const i=new Image();i.onload=()=>{IMGS[src]=i;res(i);};i.onerror=()=>res(null);i.src=src;});
+  function novoDoc(){
+    const el=[];const camadas=(man&&man.camadas&&man.camadas.length)?man.camadas:null;
+    const lw=man?man.largura:1,lh=man?man.altura:1;const esc_=Math.min(W*0.6/lw,H*0.6/lh);const gw=lw*esc_,gh=lh*esc_;const gx=(W-gw)/2,gy=(H-gh)/2;
+    if(camadas){camadas.forEach((c,i)=>{if(!c.pixels)return;el.push({tipo:"camada",id:"c"+i,nome:c.nome,src:c.png,chapada:c.chapada,cor:c.cor||null,usarCor:!!c.cor,x:gx,y:gy,w:gw,h:gh,borda:0,bordaCor:"#FFFFFF",grupo:"logo"});});}
+    else if(man&&man.tratado){el.push({tipo:"imagem",id:"logo",nome:"Logotipo",src:man.tratado,x:gx,y:gy,w:gw,h:gh,borda:0,bordaCor:"#FFFFFF",grupo:"logo"});}
+    const d={fundo:P.fundo,el,campos:null};
+    if(P.cartao){d.campos={nome:nome,cargo:"",tel:l.tel?telFmt(l.tel):"",email:"",endereco:l.endereco||"",site:(L.site&&L.site.estado==="encontrado"?L.site.valor:"")||""};
+      // layout padrão do cartão: logo à esquerda, dados à direita, QR no canto
+      d.el.forEach(e=>{e.x=W*0.06;e.y=H*0.2;const r=e.w/e.h;e.h=H*0.6;e.w=e.h*r;if(e.w>W*0.36){e.w=W*0.36;e.h=e.w/r;}});
+      d.el.push({tipo:"campos",id:"campos",nome:"Dados do cartão",x:W*0.46,y:H*0.16,w:W*0.5,h:H*0.6,cor:"#1C1635",tam:Math.round(H*0.075),fonte:"Rubik, system-ui, sans-serif"});
+      d.el.push({tipo:"qr",id:"qr",nome:"QR Code (genérico)",x:W*0.80,y:H*0.62,w:H*0.3,h:H*0.3,cor:"#1C1635"});}
+    return d;}
+  if(!doc)doc=novoDoc();
+  let sel=null,cv,cx,escala=1;
+  function render(){
+    $("#app").innerHTML=`${topo()}
+    <div class="faixa"><a href="produtos.html?l=${encodeURIComponent(slug)}">Produtos</a></div>
+    <h1 style="font-size:24px;margin-bottom:2px">${esc(P.nome)}</h1><p class="sub">${esc(nome)}</p>
+    <div class="prancheta" id="pr"><canvas id="cv"></canvas></div>
+    <div class="medida"><span>${P.w} × ${P.h} cm</span><span id="selnome">${sel?esc(sel.nome||sel.tipo):"toque num elemento para editar"}</span></div>
+    <div class="ferr">
+      ${[["ret","▭","Retângulo"],["qua","◻","Quadrado"],["tri","△","Triângulo"],["cir","○","Círculo"],["txt","T","Texto"],["logo","✦","Marca"]].map(([id,ic,n])=>`<button type="button" data-add="${id}"><span class="ic">${ic}</span>${n}</button>`).join("")}
+    </div>
+    <div class="painel"><h3>Cor do ${P.fundo===null&&!doc.fundo?"material (sem fundo)":"produto"} <small class="muted" style="font-weight:400">${P.superf==="vinil"||P.superf==="carimbo"?"· vinil/tinta recortados: só a arte tem cor":""}</small></h3>
+      <div class="paleta" id="palFundo">${P.fundo===null?'<button type="button" data-c="" class="'+(!doc.fundo?"on":"")+'" style="background:repeating-conic-gradient(#ccc 0 25%,#fff 0 50%) 0 0/10px 10px" title="sem fundo"></button>':""}${(PALETAS[P.superf]||[]).map(([h,n])=>`<button type="button" data-c="${h}" class="${doc.fundo===h?"on":""}" style="background:${h}" title="${n}"></button>`).join("")}${coresMarca.map(c=>`<button type="button" data-c="${c.hex}" class="${doc.fundo===c.hex?"on":""}" style="background:${c.hex}" title="${esc(c.nome)} (marca)"></button>`).join("")}<button type="button" class="mais" id="fundoMais">+</button></div></div>
+    <div class="painel" id="props"></div>
+    <div class="painel"><h3>Elementos <small class="muted" style="font-weight:400">· o último fica por cima</small></h3><div class="lista" id="lista"></div></div>
+    <div class="acoes"><div class="w"><a class="btn sec" href="produtos.html?l=${encodeURIComponent(slug)}">← Produtos</a><button class="btn" id="salvar" type="button">Salvar arte →</button></div></div>
+    ${nav("rota")}`;document.body.classList.add("com-acoes");
+    cv=$("#cv");cx=cv.getContext("2d");cv.width=W;cv.height=H;encaixe();ligar();renderLista();renderProps();desenhar();
+  }
+  function encaixe(){const pr=$("#pr");const s=Math.min((pr.clientWidth-16)/W,(pr.clientHeight-16)/H);escala=s;cv.style.width=Math.round(W*s)+"px";cv.style.height=Math.round(H*s)+"px";}
+  const hex2=(h,a)=>{const r=parseInt(h.slice(1,3),16),g=parseInt(h.slice(3,5),16),b=parseInt(h.slice(5,7),16);return `rgba(${r},${g},${b},${a})`;};
+  function tintar(im,cor,w,h){const c=document.createElement("canvas");c.width=Math.max(1,Math.round(w));c.height=Math.max(1,Math.round(h));const g=c.getContext("2d");g.drawImage(im,0,0,c.width,c.height);g.globalCompositeOperation="source-in";g.fillStyle=cor;g.fillRect(0,0,c.width,c.height);return c;}
+  function qrGenerico(g,x,y,s,cor){ // padrão fixo (determinístico) só para ilustrar o lugar do QR — o QR real entra no arquivo de produção
+    const n=21,m=s/n;g.fillStyle=cor;let seed=7;const rnd=()=>{seed=(seed*9301+49297)%233280;return seed/233280;};
+    const finder=(fx,fy)=>{g.fillRect(x+fx*m,y+fy*m,7*m,7*m);g.fillStyle="#fff";g.fillRect(x+(fx+1)*m,y+(fy+1)*m,5*m,5*m);g.fillStyle=cor;g.fillRect(x+(fx+2)*m,y+(fy+2)*m,3*m,3*m);};
+    for(let i=0;i<n;i++)for(let j=0;j<n;j++){const inF=(i<8&&j<8)||(i<8&&j>=n-8)||(i>=n-8&&j<8);if(!inF&&rnd()>0.55)g.fillRect(x+j*m,y+i*m,m,m);}
+    finder(0,0);finder(n-7,0);finder(0,n-7);}
+  async function desenhar(){
+    cx.clearRect(0,0,W,H);if(doc.fundo){cx.fillStyle=doc.fundo;cx.fillRect(0,0,W,H);}
+    for(const e of doc.el){
+      cx.save();
+      if(e.tipo==="camada"||e.tipo==="imagem"){const im=await img(e.usarCor&&e.chapada?e.chapada:e.src);if(im){
+          if(e.borda>0){const t=tintar(im,e.bordaCor||"#fff",e.w,e.h);const b=e.borda;for(let a=0;a<360;a+=30){cx.drawImage(t,e.x+Math.cos(a*Math.PI/180)*b,e.y+Math.sin(a*Math.PI/180)*b,e.w,e.h);}}
+          if(e.usarCor&&e.cor&&!e.chapada){cx.drawImage(tintar(im,e.cor,e.w,e.h),e.x,e.y,e.w,e.h);}else cx.drawImage(im,e.x,e.y,e.w,e.h);}}
+      else if(e.tipo==="forma"){cx.fillStyle=e.cor;cx.strokeStyle=e.bordaCor||"#000";cx.lineWidth=e.borda||0;cx.beginPath();
+        if(e.forma==="cir"){cx.ellipse(e.x+e.w/2,e.y+e.h/2,e.w/2,e.h/2,0,0,Math.PI*2);}else if(e.forma==="tri"){cx.moveTo(e.x+e.w/2,e.y);cx.lineTo(e.x+e.w,e.y+e.h);cx.lineTo(e.x,e.y+e.h);cx.closePath();}else{cx.rect(e.x,e.y,e.w,e.h);}
+        if(e.cor!=="transparent")cx.fill();if(e.borda>0)cx.stroke();}
+      else if(e.tipo==="texto"){cx.fillStyle=e.cor;cx.font=`${e.peso||700} ${e.tam}px ${e.fonte}`;cx.textBaseline="top";const linhas=String(e.texto||"").split("\n");linhas.forEach((t,i)=>cx.fillText(t,e.x,e.y+i*e.tam*1.2));
+        e.w=Math.max(...linhas.map(t=>cx.measureText(t).width),10);e.h=linhas.length*e.tam*1.2;}
+      else if(e.tipo==="campos"&&doc.campos){cx.fillStyle=e.cor;cx.textBaseline="top";const c=doc.campos;const li=[[c.nome,1.25,700],[c.cargo,0.9,400],[c.tel,1,500],[c.email,0.9,400],[c.endereco,0.85,400],[c.site,0.85,400]].filter(x=>x[0]);let y=e.y;
+        for(const [t,f,p] of li){cx.font=`${p} ${Math.round(e.tam*f)}px ${e.fonte}`;cx.fillText(t,e.x,y,e.w);y+=e.tam*f*1.35;}e.h=Math.max(y-e.y,10);}
+      else if(e.tipo==="qr"){cx.fillStyle="#fff";cx.fillRect(e.x-e.w*0.06,e.y-e.w*0.06,e.w*1.12,e.w*1.12);qrGenerico(cx,e.x,e.y,e.w,e.cor);e.h=e.w;}
+      cx.restore();}
+    if(sel){cx.save();cx.strokeStyle="#14B8B0";cx.lineWidth=Math.max(2,W/300);cx.setLineDash([W/80,W/120]);cx.strokeRect(sel.x,sel.y,sel.w,sel.h);cx.setLineDash([]);cx.fillStyle="#14B8B0";const r=Math.max(10,W/45);cx.beginPath();cx.arc(sel.x+sel.w,sel.y+sel.h,r,0,Math.PI*2);cx.fill();cx.fillStyle="#fff";cx.font=`bold ${r*1.1}px sans-serif`;cx.textAlign="center";cx.textBaseline="middle";cx.fillText("⤡",sel.x+sel.w,sel.y+sel.h);cx.restore();}
+  }
+  function renderLista(){const li=$("#lista");li.innerHTML=doc.el.length?doc.el.slice().reverse().map(e=>`<div class="it ${e===sel?"on":""}" data-id="${e.id}"><span class="ic">${{camada:"▣",imagem:"✦",forma:"◆",texto:"T",campos:"≡",qr:"▦"}[e.tipo]||"•"}</span><span>${esc(e.nome||e.tipo)}</span><span><button type="button" data-up="${e.id}" title="trazer para frente">⬆</button><button type="button" data-del="${e.id}" title="remover">✕</button></span></div>`).join(""):'<small class="muted">nada ainda — adicione formas, texto ou a marca</small>';
+    $$("#lista .it").forEach(d=>d.onclick=ev=>{if(ev.target.dataset.up){const e=doc.el.find(x=>x.id===ev.target.dataset.up);doc.el.splice(doc.el.indexOf(e),1);doc.el.push(e);renderLista();desenhar();return;}if(ev.target.dataset.del){doc.el=doc.el.filter(x=>x.id!==ev.target.dataset.del);if(sel&&sel.id===ev.target.dataset.del)sel=null;renderLista();renderProps();desenhar();return;}sel=doc.el.find(x=>x.id===d.dataset.id);$("#selnome").textContent=sel.nome||sel.tipo;renderLista();renderProps();desenhar();});}
+  function paleta(id,atual,extra){return `<div class="paleta" data-pal="${id}">${(PALETAS.vinil).map(([h,n])=>`<button type="button" data-c="${h}" class="${atual===h?"on":""}" style="background:${h}" title="${n}"></button>`).join("")}${coresMarca.map(c=>`<button type="button" data-c="${c.hex}" class="${atual===c.hex?"on":""}" style="background:${c.hex}" title="${esc(c.nome)} (marca)"></button>`).join("")}${extra||""}<button type="button" class="mais" data-mais="${id}">+</button></div>`;}
+  function renderProps(){const p=$("#props");if(!sel){p.innerHTML=`<h3>Elemento</h3><small class="muted">Toque num elemento da prancheta (ou na lista) para mudar cor, tamanho, borda e texto.</small>`;return;}
+    const e=sel;let h=`<h3>${esc(e.nome||e.tipo)} <button type="button" class="btn sec mini" id="centrar">Centralizar</button></h3>`;
+    h+=`<div class="linha"><label>Tamanho</label><input type="range" id="tam" min="2" max="100" value="${Math.round(e.w/W*100)}"><label id="tamv">${Math.round(e.w/PX*10)/10} cm</label></div>`;
+    if(e.tipo==="camada"){h+=`<div class="linha" style="margin-top:8px"><label>Cor desta camada</label></div>${paleta("cor",e.usarCor?e.cor:null,'<button type="button" data-c="__orig" class="'+(!e.usarCor?"on":"")+'" style="background:linear-gradient(135deg,#f33,#3f3,#33f)" title="cores originais"></button>')}`;}
+    if(e.tipo==="forma"||e.tipo==="texto"||e.tipo==="campos"||e.tipo==="qr"){h+=`<div class="linha" style="margin-top:8px"><label>Cor</label></div>${paleta("cor",e.cor,e.tipo==="forma"?'<button type="button" data-c="transparent" style="background:repeating-conic-gradient(#ccc 0 25%,#fff 0 50%) 0 0/10px 10px" title="sem preenchimento"></button>':"")}`;}
+    if(e.tipo==="camada"||e.tipo==="imagem"||e.tipo==="forma"){h+=`<div class="linha" style="margin-top:10px"><label>Borda</label><input type="range" id="borda" min="0" max="${Math.round(W/25)}" value="${e.borda||0}"><label>${e.borda?Math.round(e.borda/PX*10)/10+" cm":"sem"}</label></div>${paleta("bordaCor",e.bordaCor)}`;}
+    if(e.tipo==="texto"){h+=`<div class="linha" style="margin-top:10px"><textarea id="txt" rows="2" style="flex:1">${esc(e.texto||"")}</textarea></div><div class="linha" style="margin-top:8px"><select id="fonte"><option ${/Rubik/.test(e.fonte)?"selected":""} value="Rubik, system-ui, sans-serif">Rubik</option><option ${/Georgia/.test(e.fonte)?"selected":""} value="Georgia, serif">Serifa</option><option ${/Courier/.test(e.fonte)?"selected":""} value="'Courier New', monospace">Mono</option><option ${/Impact/.test(e.fonte)?"selected":""} value="Impact, sans-serif">Impacto</option></select><select id="peso"><option value="400" ${e.peso==400?"selected":""}>Normal</option><option value="700" ${!e.peso||e.peso==700?"selected":""}>Negrito</option></select><label>Tam.</label><input type="range" id="ttam" min="${Math.round(H/40)}" max="${Math.round(H/2)}" value="${e.tam}"></div>`;}
+    if(e.tipo==="campos"){const c=doc.campos;h+=`<div class="campos" style="margin-top:10px">${[["nome","Nome"],["cargo","Cargo"],["tel","Telefone"],["email","E-mail"],["endereco","Endereço"],["site","Site"]].map(([k_,n])=>`<div><label>${n}</label><input data-campo="${k_}" value="${esc(c[k_]||"")}"></div>`).join("")}</div><div class="linha" style="margin-top:8px"><label>Letra</label><input type="range" id="ttam" min="${Math.round(H/40)}" max="${Math.round(H/6)}" value="${e.tam}"></div>`;}
+    if(e.tipo==="qr"){h+=`<small class="muted">QR genérico para marcar o lugar; o QR real (site, cardápio ou WhatsApp) entra no arquivo de produção.</small>`;}
+    p.innerHTML=h;
+    $("#centrar").onclick=()=>{e.x=(W-e.w)/2;e.y=(H-e.h)/2;desenhar();};
+    $("#tam").oninput=ev=>{const nw=W*ev.target.value/100;const f=nw/e.w;const cxm=e.x+e.w/2,cym=e.y+e.h/2;
+      if(e.grupo==="logo"){doc.el.filter(x=>x.grupo==="logo").forEach(x=>{x.w*=f;x.h*=f;x.x=cxm+(x.x-cxm)*f;x.y=cym+(x.y-cym)*f;});}
+      else{if(e.tipo==="texto")e.tam=Math.max(8,Math.round(e.tam*f));e.w=nw;e.h=(e.tipo==="texto"||e.tipo==="campos")?e.h:e.h*f;e.x=cxm-e.w/2;e.y=cym-e.h/2;}
+      $("#tamv").textContent=Math.round(e.w/PX*10)/10+" cm";desenhar();};
+    const b=$("#borda");if(b)b.oninput=ev=>{e.borda=+ev.target.value;b.nextElementSibling.textContent=e.borda?Math.round(e.borda/PX*10)/10+" cm":"sem";desenhar();};
+    const t=$("#txt");if(t)t.oninput=()=>{e.texto=t.value;desenhar();};const f=$("#fonte");if(f)f.onchange=()=>{e.fonte=f.value;desenhar();};const pe=$("#peso");if(pe)pe.onchange=()=>{e.peso=+pe.value;desenhar();};
+    const tt=$("#ttam");if(tt)tt.oninput=()=>{e.tam=+tt.value;desenhar();};
+    $$("[data-campo]").forEach(i=>i.oninput=()=>{doc.campos[i.dataset.campo]=i.value;desenhar();});
+    $$("[data-pal] button").forEach(bt=>bt.onclick=()=>{const pal=bt.closest("[data-pal]").dataset.pal;if(bt.dataset.mais!==undefined){const v=prompt("Cor em hexadecimal (ex.: #1C1635)");if(v&&/^#[0-9a-fA-F]{6}$/.test(v.trim()))aplicarCor(pal,v.trim());return;}aplicarCor(pal,bt.dataset.c);});
+    function aplicarCor(pal,c){if(pal==="cor"&&e.tipo==="camada"){if(c==="__orig"){e.usarCor=false;}else{e.usarCor=true;e.cor=c;if(e.chapada){/* chapada já é da cor do manual; para outra cor, tinge os pixels */e.chapada=e.cor===(man.camadas.find(x=>x.nome===e.nome)||{}).cor?e.chapada:null;}}}else e[pal]=c;renderProps();desenhar();}
+  }
+  function ligar(){
+    $$("[data-add]").forEach(b=>b.onclick=async()=>{const t=b.dataset.add;const s=Math.min(W,H)*0.3;let e=null;
+      if(t==="txt")e={tipo:"texto",id:"t"+Date.now().toString(36),nome:"Texto",texto:nome,x:W*0.1,y:H*0.1,w:W*0.5,h:H*0.1,cor:doc.fundo&&luz(doc.fundo)<128?"#FFFFFF":"#1C1635",tam:Math.round(H/8),fonte:"Rubik, system-ui, sans-serif",peso:700};
+      else if(t==="logo"){const base=novoDoc().el.filter(x=>x.grupo==="logo");if(!base.length){alert("Esta loja ainda não tem marca tratada no manual.");return;}base.forEach(x=>{x.id=x.id+"_"+Date.now().toString(36);doc.el.push(x);});sel=doc.el[doc.el.length-1];renderLista();renderProps();desenhar();return;}
+      else e={tipo:"forma",forma:t==="qua"?"ret":t,id:"f"+Date.now().toString(36),nome:{ret:"Retângulo",qua:"Quadrado",tri:"Triângulo",cir:"Círculo"}[t],x:(W-s)/2,y:(H-s)/2,w:t==="ret"?s*1.6:s,h:s,cor:coresMarca[0]?coresMarca[0].hex:"#6933C5",borda:0,bordaCor:"#1C1635"};
+      doc.el.push(e);sel=e;renderLista();renderProps();desenhar();});
+    $("#palFundo").onclick=ev=>{const b=ev.target.closest("button");if(!b)return;if(b.id==="fundoMais"){const v=prompt("Cor em hexadecimal (ex.: #1C1635)");if(v&&/^#[0-9a-fA-F]{6}$/.test(v.trim())){doc.fundo=v.trim();}}else doc.fundo=b.dataset.c||null;$$("#palFundo button").forEach(x=>x.classList.toggle("on",x.dataset.c===(doc.fundo||"")));desenhar();};
+    const pr=$("#pr");let drag=null;
+    const pos=ev=>{const b=cv.getBoundingClientRect();return {x:(ev.clientX-b.left)/b.width*W,y:(ev.clientY-b.top)/b.height*H};};
+    pr.addEventListener("pointerdown",ev=>{pr.setPointerCapture(ev.pointerId);const p=pos(ev);
+      if(sel){const r=Math.max(14,W/35);if(Math.hypot(p.x-(sel.x+sel.w),p.y-(sel.y+sel.h))<r*1.6){drag={modo:"red",p,w:sel.w,h:sel.h,x0:sel.x,y0:sel.y,grupo:sel.grupo==="logo"?doc.el.filter(e=>e.grupo==="logo").map(e=>({e,x:e.x,y:e.y,w:e.w,h:e.h})):null};return;}}
+      const hit=doc.el.slice().reverse().find(e=>p.x>=e.x&&p.x<=e.x+e.w&&p.y>=e.y&&p.y<=e.y+e.h);
+      if(hit!==sel){sel=hit||null;renderLista();renderProps();$("#selnome").textContent=sel?(sel.nome||sel.tipo):"toque num elemento para editar";}
+      drag=sel?{modo:"mov",p,x:sel.x,y:sel.y,grupo:sel.grupo==="logo"?doc.el.filter(e=>e.grupo==="logo").map(e=>({e,x:e.x,y:e.y})):null}:null;desenhar();});
+    pr.addEventListener("pointermove",ev=>{if(!drag||!sel)return;const p=pos(ev);const dx=p.x-drag.p.x,dy=p.y-drag.p.y;
+      if(drag.modo==="mov"){if(drag.grupo){drag.grupo.forEach(g=>{g.e.x=g.x+dx;g.e.y=g.y+dy;});}else{sel.x=drag.x+dx;sel.y=drag.y+dy;}}
+      else{const r=drag.w/drag.h;let nw=Math.max(W*0.03,drag.w+dx);
+        if(drag.grupo){const f=nw/drag.w;drag.grupo.forEach(g=>{g.e.w=g.w*f;g.e.h=g.h*f;g.e.x=drag.x0+(g.x-drag.x0)*f;g.e.y=drag.y0+(g.y-drag.y0)*f;});}
+        else if(sel.tipo==="texto"){sel.tam=Math.max(8,Math.round(sel.tam*nw/sel.w));}else if(sel.tipo==="campos"){sel.w=nw;}else{sel.w=nw;sel.h=nw/r;}}
+      desenhar();});
+    const fim=()=>{drag=null;};pr.addEventListener("pointerup",fim);pr.addEventListener("pointercancel",fim);
+    $("#salvar").onclick=async()=>{sel=null;await desenhar();const png=cv.toDataURL("image/png");fic=fic||{k,nome,logos:[],criado:new Date().toISOString()};fic.artes=fic.artes||{};fic.artes[pid]={doc,png,w_cm:P.w,h_cm:P.h,em:new Date().toISOString()};fic.atualizado=new Date().toISOString();$("#salvar").disabled=true;$("#salvar").textContent="Salvando…";await putC(fic);location.href=`produtos.html?l=${encodeURIComponent(slug)}`;};
+  }
+  const luz=h=>{const r=parseInt(h.slice(1,3),16),g=parseInt(h.slice(3,5),16),b=parseInt(h.slice(5,7),16);return 0.299*r+0.587*g+0.114*b;};
+  window.__editor=()=>({doc,sel,W,H});
+  render();
+})();
+</script>
+</body>
+</html>
