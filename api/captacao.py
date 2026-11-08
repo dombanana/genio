@@ -238,7 +238,7 @@ def ham(a, b):
     return bin(int(a, 16) ^ int(b, 16)).count("1")
 
 # ---------- curiosidade do nome (Wikipédia pt; Gemini só se a Wikipédia não tiver) ----------
-GENERICAS = {"carnes","carne","acougue","açougue","padaria","emporio","empório","loja","lojas","distribuidora","comercial","industria","indústria","atacado","varejo","alimentos","bebidas","embalagens","utilidades","equipamentos","cosmeticos","cosméticos","suplementos","graos","grãos","cereais","temperos","especiarias","castanhas","frutas","secas","famiglia","familia","família","central","grande","pequeno","pequena","novo","nova","velho","velha","bom","boa","santo","santa","sao","são","casa","mundo","brasil","paulista","paulistana","paulistano","real","nacional","popular","imperial","express","premium","gourmet","delicia","delícia","sabor","sabores","arte","artes","ponto","cantinho","recanto","espaco","espaço","super","mega","hiper","top","plus","mais","best"}
+GENERICAS = {"melhor","melhores","galeria","barraca","barracao","central","mercado","mercadao","natural","naturais","oficial","grande","pequeno","pequena","novo","nova","velho","velha","bom","boa","super","mega","ponto","cantinho","casa","paulo","paulista","paulistana","paulistano","brasil","brasileiro","brasileiros","brasileira","bacalhau","temperos","tempero","linguica","queijos","queijo","doces","frutas","castanhas","graos","cereais","azeites","conservas","ervas","chas","suplementos","perfumes","perfumaria","celulares","acessorios","bijuterias","bijouterias","calcados","roupas","brutos","beleza","cutelaria","marco","importacao","exportacao","comercio","servicos","auxiliares","bolsas","aviamentos","armarinho","armarinhos","artesanato","pedrarias","cristais","importadora","atacadista","cozinha","arabe","home","shop","store","fast","ativa","carnes","carne","acougue","açougue","padaria","emporio","empório","loja","lojas","distribuidora","comercial","industria","indústria","atacado","varejo","alimentos","bebidas","embalagens","utilidades","equipamentos","cosmeticos","cosméticos","suplementos","graos","grãos","cereais","temperos","especiarias","castanhas","frutas","secas","famiglia","familia","família","central","grande","pequeno","pequena","novo","nova","velho","velha","bom","boa","santo","santa","sao","são","casa","mundo","brasil","paulista","paulistana","paulistano","real","nacional","popular","imperial","express","premium","gourmet","delicia","delícia","sabor","sabores","arte","artes","ponto","cantinho","recanto","espaco","espaço","super","mega","hiper","top","plus","mais","best"}
 def curiosidade_nome(nome):
     """origem da palavra marcante do nome: Wikipédia só quando o artigo é claramente lugar, sobrenome ou palavra (título exato);
     senão Gemini numa frase; senão vira pergunta para o dono"""
@@ -267,10 +267,14 @@ def curiosidade_nome(nome):
             body = {"contents": [{"parts": [{"text": f"Em uma frase curta (máx. 30 palavras), em português, qual a origem ou o significado provável da palavra '{palavra}' no nome do comércio '{nome}' (sobrenome, cidade, palavra estrangeira, apelido)? Seja factual. Se não houver base, responda só: sem registro."}]}], "generationConfig": {"temperature": 0.2, "maxOutputTokens": 80}}
             # modelos em ordem de preferência: o Google aposenta versões e a resposta de erro indica a nova
             r, txt = {}, ""
-            for modelo in ("gemini-3.8-flash", "gemini-2.5-flash", "gemini-flash-latest"):
-                r = tenta(http, f"https://generativelanguage.googleapis.com/v1beta/models/{modelo}:generateContent", body, {"x-goog-api-key": K["GEMINI_KEY"]})
-                txt = ((((r.get("candidates") or [{}])[0].get("content") or {}).get("parts") or [{}])[0].get("text") or "").strip()
-                if txt or "404" not in str(r.get("_erro", "")):
+            for modelo in ("gemini-3.8-flash", "gemini-flash-latest", "gemini-2.5-flash"):
+                for tent in range(2):  # 503 (sobrecarga) e timeout: espera e tenta de novo, depois passa ao próximo modelo
+                    r = tenta(http, f"https://generativelanguage.googleapis.com/v1beta/models/{modelo}:generateContent", body, {"x-goog-api-key": K["GEMINI_KEY"]}, timeout=60)
+                    txt = ((((r.get("candidates") or [{}])[0].get("content") or {}).get("parts") or [{}])[0].get("text") or "").strip()
+                    if txt:
+                        break
+                    time.sleep(4)
+                if txt:
                     break
             if txt and "sem registro" not in txt.lower():
                 return {"estado": "derivado", "valor": txt[:220], "origem": "derivado", "nota": "Gemini (uma frase; confirmar com o dono)", "palavra": palavra}
@@ -394,6 +398,8 @@ def identidade(loja, zona, pasta, quota_ok):
         if p:
             n_img += 1; dom = it.get("domain") or it.get("source") or it.get("link") or ""
             cl = "site-proprio" if bate_nome(loja["nome"], re.sub(r"^https?://(www\.)?", "", dom).split("/")[0]) else classificar_fonte(dom)
+            if re.search(r"\b\d+\s?(g|kg|ml|l|un|und|unid|cx|caixa|pct|pacote)\b|\b(tipo|sabor|kit|promo[cç][aã]o|oferta)\b", it.get("title", ""), re.I):
+                continue  # título de produto (ex.: "LINGUICA TIPO CHISTORRA 200G CAIXA 10 UND") — foto de produto, não logo
             cands.append(dict(arq=p, fonte=cl, legenda=f"{it.get('source') or it.get('domain','')} · {it.get('title','')[:60]}", url=it.get("link") or url))
     passos.append(f"Google Imagens (Serper) → {len(ri.get('images') or [])} resultados, {n_img} baixadas" + (f" · {ri['_erro']}" if "_erro" in ri else ""))
     rw = serper("search", f'{loja["nome"]} {loja["endereco"]} {zona["cidade"]}', num=10); custo["serper"] += 1
@@ -521,7 +527,10 @@ def gerar_manual(slug_, cad_path, logo_path, pasta):
         if os.path.exists(os.path.join(out, "manual.html")) and os.path.getmtime(os.path.join(out, "manual.html")) > os.path.getmtime(logo_path):
             return {"estado": "encontrado", "valor": f"manual/{slug_}/manual.html", "origem": "derivado", "nota": "manual já gerado"}
         os.makedirs(out, exist_ok=True)
-        r = subprocess.run([sys.executable, "-I", os.path.join(RAIZ, "api", "manual", "pipeline.py"), logo_path, cad_path, out], capture_output=True, text=True, timeout=240)
+        r = subprocess.run([sys.executable, os.path.join(RAIZ, "api", "manual", "pipeline.py"), logo_path, cad_path, out], capture_output=True, text=True, timeout=240)
+        if r.returncode != 0 and "No module named" in (r.stderr or ""):
+            time.sleep(20)  # esteira pode estar instalando pacotes neste instante
+            r = subprocess.run(["python3", os.path.join(RAIZ, "api", "manual", "pipeline.py"), logo_path, cad_path, out], capture_output=True, text=True, timeout=240)
         if r.returncode != 0:
             return {"estado": "pendente", "valor": "", "origem": "derivado", "nota": "pipeline falhou: " + (r.stderr or r.stdout)[-300:].strip()}
         res = {}
@@ -531,7 +540,7 @@ def gerar_manual(slug_, cad_path, logo_path, pasta):
             pass
         fid = res.get("fidelidade")
         mn = res.get("minimo_cm"); mn = (mn.get("capacho (8 mm)") if isinstance(mn, dict) else mn)
-        return {"estado": "encontrado" if (fid or 0) >= 0.85 else "pendente", "valor": f"manual/{slug_}/manual.html", "origem": "derivado", "fidelidade": fid, "cores": res.get("cores"), "nota": f"fidelidade {round(fid, 2) if fid else '?'} · {res.get('camadas')} cores/camadas" + (f" · menor largura no capacho {round(mn)} cm" if isinstance(mn, (int, float)) and mn > 0 else "") + ("" if (fid or 0) >= 0.85 else " — conferir antes de usar")}
+        return {"estado": "encontrado" if (fid or 0) >= 0.85 else "pendente", "valor": f"manual/{slug_}/manual.html", "origem": "derivado", "fidelidade": fid, "cores": res.get("cores"), "nota": f"fidelidade {round(fid, 2) if fid else '?'} · {res.get('camadas')} cores/camadas" + (f" · traço fino: no capacho a arte precisaria ter {round(mn)} cm de largura" + (" — simplificar o desenho" if mn > 120 else "") if isinstance(mn, (int, float)) and mn > 0 else "") + ("" if (fid or 0) >= 0.85 else " — conferir antes de usar")}
     except Exception as e:
         return {"estado": "pendente", "valor": "", "origem": "derivado", "nota": "manual não gerado: " + str(e)[:160]}
 # ---------- rota ----------
