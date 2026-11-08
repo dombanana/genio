@@ -231,7 +231,7 @@ def ham(a, b):
     return bin(int(a, 16) ^ int(b, 16)).count("1")
 
 # ---------- o @ / domínio bate com o nome da loja? ----------
-STOP={"loja","lojas","casa","comercio","comércio","ltda","me","mei","eireli","sa","s/a","e","de","da","do","das","dos","the","zona","cerealista","brás","bras","sao","são","paulo","sp","centro","oficial","store","shop","br","com","www","emporio","empório","distribuidora","produtos","naturais","mercado","mercadao","mercadão"}
+STOP={"natural","temperos","tempero","padaria","cafe","bar","restaurante","barbearia","salao","salão","otica","ótica","pet","farmacia","farmácia","doces","doce","loja","lojas","casa","comercio","comércio","ltda","me","mei","eireli","sa","s/a","e","de","da","do","das","dos","the","zona","cerealista","brás","bras","sao","são","paulo","sp","centro","oficial","store","shop","br","com","www","emporio","empório","distribuidora","produtos","naturais","mercado","mercadao","mercadão"}
 def tokens(s_):
     s_ = unicodedata.normalize("NFKD", s_ or "").encode("ascii", "ignore").decode().lower()
     return [t for t in re.split(r"[^a-z0-9]+", s_) if len(t) >= 3 and t not in STOP]
@@ -244,7 +244,8 @@ def bate_nome(nome, alvo):
         return False
     if "".join(ts) in a or a in "".join(ts):
         return True
-    return sum(1 for t in ts if len(t) >= 4 and t in a) >= 1
+    hits = sum(1 for t in ts if len(t) >= 4 and t in a)
+    return hits >= min(2, len([t for t in ts if len(t) >= 4]))  # nome com 2+ palavras: as duas têm de aparecer
 def cnpj_ok(c):
     d = re.sub(r"\D", "", c)
     if len(d) != 14 or d == d[0] * 14:
