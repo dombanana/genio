@@ -399,6 +399,39 @@ def admin_interesse():
 def codigo_ok(c):
     return 4 <= len(c) <= 12 and all(ch in ALFA for ch in c)
 
+# ---------- chaves de serviços externos (Places, Serper, Apify, ZapSign…) ----------
+CHAVES_ARQ = os.environ.get("GENIO_CHAVES", "/var/lib/genio/chaves.json")
+CHAVES_NOMES = ["GOOGLE_PLACES_KEY", "SERPER_KEY", "APIFY_TOKEN", "ZAPSIGN_TOKEN", "MERCADOPAGO_TOKEN", "OPENAI_KEY", "GEMINI_KEY"]
+def chaves_ler():
+    try:
+        with open(CHAVES_ARQ) as f:
+            return json.load(f)
+    except Exception:
+        return {}
+def chaves_estado():
+    c = chaves_ler()
+    return [{"nome": n, "definida": bool(c.get(n)), "fim": (c.get(n) or "")[-4:]} for n in CHAVES_NOMES]
+def chaves_gravar(d):
+    c = chaves_ler()
+    for n in CHAVES_NOMES:
+        v = d.get(n)
+        if v is None:
+            continue
+        v = str(v).strip()
+        if v == "":
+            c.pop(n, None)
+        elif re.fullmatch(r"[A-Za-z0-9_\-\.:]{8,200}", v):
+            c[n] = v
+        else:
+            raise ValueError(f"{n}: valor inválido")
+    os.makedirs(os.path.dirname(CHAVES_ARQ), exist_ok=True)
+    tmp = CHAVES_ARQ + ".tmp"
+    with open(tmp, "w") as f:
+        json.dump(c, f)
+    os.chmod(tmp, 0o600)
+    os.replace(tmp, CHAVES_ARQ)
+    return chaves_estado()
+
 class H(BaseHTTPRequestHandler):
     server_version = "genio-api/1"
 
@@ -476,6 +509,8 @@ class H(BaseHTTPRequestHandler):
                     return self._send(200, {"contas": admin_contas(), "planos": PLANOS})
                 if p == "/api/admin/interesse":
                     return self._send(200, {"interesse": admin_interesse()})
+                if p == "/api/admin/chaves":
+                    return self._send(200, {"chaves": chaves_estado()})
                 return self._erro(404, "não encontrado")
             parts = p.split("/")
             if len(parts) == 4 and parts[1:3] == ["api", "t"] and codigo_ok(parts[3]):
@@ -543,6 +578,8 @@ class H(BaseHTTPRequestHandler):
                 if p == "/api/admin/interesse/visto":
                     q("UPDATE interesse SET visto=1", commit=True)
                     return self._send(200, {"ok": True})
+                if p == "/api/admin/chaves":
+                    return self._send(200, {"chaves": chaves_gravar(d)})
                 return self._erro(404, "não encontrado")
             if p in ("/api/tapetes", "/api/status"):
                 if not self._autorizado():
