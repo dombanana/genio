@@ -1,1 +1,106 @@
-<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>GênIO · Produtos</title><link rel="stylesheet" href="rep.css?v=bbfd9db4f5"></head><body><div class="w" id="app"></div><script src="rep.js?v=bbfd9db4f5"></script><script>document.getElementById("app").innerHTML=Rep.topo()+'<div class="faixa"><a href="index.html">Rota</a></div><h1>Produtos</h1><p class="sub">Esta tela entra na próxima fase.</p>'+Rep.nav("projecao");</script></body></html>
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>GênIO · O capacho na entrada</title>
+<meta name="theme-color" content="#F1EEF8">
+<link rel="icon" href="../genio-favicon.png">
+<link rel="stylesheet" href="rep.css?v=bbfd9db4f5">
+<style>
+.cena{position:relative;border-radius:var(--r);overflow:hidden;background:var(--lav2);aspect-ratio:4/3;touch-action:none}
+.cena img.fundo{width:100%;height:100%;object-fit:cover;display:block}
+.cena .vazio{position:absolute;inset:0;display:grid;place-items:center;text-align:center;color:var(--texto2);padding:20px}
+.cena .selo{position:absolute;left:12px;top:12px;background:#fff;border-radius:999px;padding:6px 12px;font-weight:600;font-size:14px;z-index:2}
+.cena svg.tap{position:absolute;inset:0;width:100%;height:100%}
+.cena .alca{fill:#fff;stroke:#6933C5;stroke-width:3;cursor:grab}
+.cena .med{font:700 14px Rubik,sans-serif;fill:#fff;paint-order:stroke;stroke:rgba(0,0,0,.55);stroke-width:4px}
+.opts{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0}
+.opts button{border:1.5px solid var(--linha);background:#fff;border-radius:999px;padding:9px 14px;font-weight:600;cursor:pointer;font-size:15px}
+.opts button.on{background:var(--lav2);border-color:transparent;color:var(--marca)}
+.linha2{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;margin:8px 0 12px}
+.preco{font-size:30px;font-weight:800;border-left:1.5px solid var(--linha);padding-left:14px}
+.preco small{display:block;font-size:13px;color:var(--texto2);font-weight:500}
+.prods{display:grid;gap:12px}
+.prod{display:grid;grid-template-columns:96px 1fr auto;gap:12px;align-items:center;background:#fff;border-radius:var(--r);padding:12px;box-shadow:var(--sombra)}
+.prod img{width:96px;height:72px;object-fit:cover;border-radius:12px}
+.prod b{display:block;font-size:16px}
+.prod small{color:var(--texto2)}
+.prod .add{width:44px;height:44px;border-radius:50%;border:0;background:var(--lav2);color:var(--marca);font-size:24px;font-weight:700;cursor:pointer}
+.prod .add.on{background:var(--teal);color:#fff}
+</style>
+</head>
+<body>
+<div class="w" id="app"></div>
+<script src="../fotocrop.js?v=bbfd9db4f5"></script>
+<script src="imagem.js?v=bbfd9db4f5"></script>
+<script src="rep.js?v=bbfd9db4f5"></script>
+<script>
+(async()=>{
+  const {$,$$,esc,qs,nomeLoja,dados,estado,salvar,nav,topo,voz,ligarVoz,precoCapacho,money,ZONA,PROD}=Rep;
+  const D=await dados();const slug=qs.get("l");const l=D.lojas.find(x=>x.slug===slug);if(!l){location.href="index.html";return;}
+  let cad=null;try{const r=await fetch(`../dados/captacao/${ZONA}/clientes/${slug}.json`);if(r.ok)cad=await r.json();}catch(e){}
+  const base=`../dados/captacao/${ZONA}/`;const logo=cad&&cad.lacunas.logoOriginal||{};
+  const M=Imagem.ler();const fotoLocal=(M[slug+"/local"]&&M[slug+"/local"].dados)||null;
+  const logoSrc=(M[slug+"/logo"]&&M[slug+"/logo"].dados)||(logo.estado==="encontrado"?base+logo.valor:null);
+  const e=estado();e.orc=e.orc||{};const O=e.orc[slug]=e.orc[slug]||{tam:"120x60",borda:true,estilo:"classico",itens:[]};
+  const TAM={"60x40":[60,40],"90x60":[90,60],"120x60":[120,60],"120x80":[120,80],"150x90":[150,90]};
+  const CAT=[["capacho","Capacho personalizado","../img/cat-capacho.jpg"],["placas","Placa de identificação","../img/cat-placas.jpg"],["adesivos","Adesivo de vitrine","../img/cat-adesivos.jpg"],["cartoes","Cartões de visita","../img/cat-cartoes.jpg"],["banners","Banner","../img/cat-banners.jpg"],["uniformes","Uniforme","../img/cat-uniformes.jpg"],["parede","Adesivo de parede","../img/cat-parede.jpg"],["brindes","Brindes e carimbos","../img/cat-brindes.jpg"]];
+  const sugeridos=(PROD[l.setor]||PROD["comércio"]).map(s=>s.toLowerCase());
+  const aba=qs.get("aba")||"local";
+  function preco(){const [w,h]=TAM[O.tam];return precoCapacho(w,h,O.borda);}
+  function render(){
+    const [w,h]=TAM[O.tam];
+    $("#app").innerHTML=`${topo()}
+    <div class="faixa"><a href="visita.html?l=${encodeURIComponent(slug)}">${esc(nomeLoja(l.nome))}</a></div>
+    <h1>O capacho na entrada</h1><p class="sub">Veja a marca no espaço do cliente</p>
+    <div class="seg"><button class="${aba==="local"?"on":""}" data-aba="local">🏪 No local</button><button class="${aba==="produtos"?"on":""}" data-aba="produtos">◈ Produtos</button></div>
+    <div id="pane"></div>
+    ${voz()}${nav("rota")}`;
+    $$("[data-aba]").forEach(b=>b.onclick=()=>{history.replaceState(null,"",`?l=${encodeURIComponent(slug)}&aba=${b.dataset.aba}`);location.reload();});
+    if(aba==="local")local();else produtos();ligarVoz(slug);Imagem.ligar(document);}
+  function local(){
+    const [w,h]=TAM[O.tam];const P=O.pos||{x:.5,y:.8,larg:.55,ang:0};
+    $("#pane").innerHTML=`<div class="cena" id="cena" data-img="local" data-loja="${esc(slug)}" data-nome="Foto do local">
+      ${fotoLocal?`<img class="fundo" src="${fotoLocal}" alt=""><span class="selo">Simulação</span>`:`<div class="vazio"><div><div style="font-size:40px">📷</div>Tire a foto da entrada para ver o capacho no lugar<br><small>toque e segure aqui, ou use o botão abaixo</small></div></div>`}
+      <svg class="tap" viewBox="0 0 400 300" preserveAspectRatio="none" id="tap"></svg></div>
+    ${fotoLocal?"":`<button class="btn sec" id="tirar" style="margin:10px 0">📷 Fotografar a entrada</button>`}
+    <section class="card" style="margin-top:12px"><h2>Capacho personalizado</h2>
+      <div class="opts" id="tams">${Object.keys(TAM).map(t=>`<button class="${O.tam===t?"on":""}" data-tam="${t}">${t.replace("x"," × ")} cm</button>`).join("")}</div>
+      <div class="opts"><button class="${O.borda?"on":""}" id="borda">${O.borda?"✓ ":""}Borda rebaixada</button><button class="${O.estilo==="classico"?"on":""}" data-est="classico">Clássico</button><button class="${O.estilo==="artesanal"?"on":""}" data-est="artesanal">Artesanal</button></div>
+      <div class="linha2"><div>${logoSrc?"🏪 Arte com a identidade da loja":"◌ Arte com o nome da loja (logo na porta)"}<br><small class="muted">${(w/100).toFixed(2).replace(".",",")} × ${(h/100).toFixed(2).replace(".",",")} m · ${(w*h/1e4).toFixed(2).replace(".",",")} m²</small></div><div class="preco">${money(preco())}<small>estimativa · catálogo de fornecedores em breve</small></div></div>
+      <button class="btn" id="add">${O.itens.find(i=>i.id==="capacho")?"✓ No orçamento · ver":"Adicionar ao orçamento →"}</button></section>`;
+    desenhar();
+    $$("[data-tam]").forEach(b=>b.onclick=()=>{O.tam=b.dataset.tam;salvar(e);render();});
+    $("#borda").onclick=()=>{O.borda=!O.borda;salvar(e);render();};
+    $$("[data-est]").forEach(b=>b.onclick=()=>{O.estilo=b.dataset.est;salvar(e);render();});
+    const tirar=$("#tirar");if(tirar)tirar.onclick=()=>Imagem.menu($("#cena"));
+    $("#cena").addEventListener("imagem",()=>location.reload());
+    $("#add").onclick=()=>{const [w,h]=TAM[O.tam];const it={id:"capacho",nome:"Capacho personalizado",desc:`${(w/100).toFixed(2).replace(".",",")} × ${(h/100).toFixed(2).replace(".",",")} m · ${O.borda?"borda rebaixada":"sem borda"} · ${O.estilo}`,qtd:1,preco:preco()};O.itens=O.itens.filter(i=>i.id!=="capacho").concat([it]);salvar(e);location.href=`orcamento.html?l=${encodeURIComponent(slug)}`;};}
+  // tapete arrastável/redimensionável sobre a foto, em perspectiva simples (trapézio) com as medidas
+  function desenhar(){const svg=$("#tap");const [w,h]=TAM[O.tam];const P=O.pos||(O.pos={x:.5,y:.8,larg:.55});const W=400,H=300;
+    const cx=P.x*W,cy=P.y*H,lw=P.larg*W,prof=lw*(h/w)*0.62,top=lw*0.78;
+    const pts=[[cx-lw/2,cy],[cx+lw/2,cy],[cx+top/2,cy-prof],[cx-top/2,cy-prof]];
+    const cor=O.estilo==="artesanal"?"#6b4f2a":"#2f3a22",tex=O.estilo==="artesanal"?"#e9d8b0":"#e8e3c4";
+    const texto=(cad&&cad.nome)||nomeLoja(l.nome);
+    svg.innerHTML=`<defs><clipPath id="cp"><polygon points="${pts.map(p=>p.join(",")).join(" ")}"/></clipPath><pattern id="fibra" width="4" height="4" patternUnits="userSpaceOnUse"><rect width="4" height="4" fill="${cor}"/><circle cx="1" cy="1" r=".7" fill="rgba(255,255,255,.12)"/><circle cx="3" cy="3" r=".7" fill="rgba(0,0,0,.18)"/></pattern></defs>
+      ${fotoLocal?`<polygon points="${pts.map(p=>p.join(",")).join(" ")}" fill="url(#fibra)" stroke="${O.borda?"#1b1b1b":"none"}" stroke-width="${O.borda?4:0}"/>
+      <g clip-path="url(#cp)">${logoSrc?`<image href="${logoSrc}" x="${cx-top*0.32}" y="${cy-prof*0.92}" width="${top*0.64}" height="${prof*0.84}" preserveAspectRatio="xMidYMid meet" style="filter:grayscale(1) brightness(1.7) contrast(1.3) sepia(.4)" opacity=".92"/>`:`<text x="${cx}" y="${cy-prof*0.42}" text-anchor="middle" font-family="Rubik,sans-serif" font-weight="800" font-size="${Math.max(10,Math.min(26,top/Math.max(6,texto.length)*1.6))}" fill="${tex}" letter-spacing="1">${esc(texto.toUpperCase())}</text>`}</g>
+      <line x1="${cx-lw/2}" y1="${cy+10}" x2="${cx+lw/2}" y2="${cy+10}" stroke="#fff" stroke-width="2"/><text class="med" x="${cx}" y="${cy+26}" text-anchor="middle">${(w/100).toFixed(2).replace(".",",")} m</text>
+      <line x1="${cx+lw/2+10}" y1="${cy}" x2="${cx+top/2+10}" y2="${cy-prof}" stroke="#fff" stroke-width="2"/><text class="med" x="${cx+lw/2+16}" y="${cy-prof/2}" >${(h/100).toFixed(2).replace(".",",")} m</text>
+      <circle class="alca" id="mover" cx="${cx}" cy="${cy-prof-16}" r="12"/><text x="${cx}" y="${cy-prof-12}" text-anchor="middle" font-size="12" fill="#6933C5" font-weight="800" style="pointer-events:none">✥</text><circle class="alca" id="tam" cx="${cx+lw/2}" cy="${cy}" r="10"/>`:""}`;
+    if(!fotoLocal)return;
+    const r=()=>svg.getBoundingClientRect();let modo=null;
+    svg.onpointerdown=ev=>{const t=ev.target.id;if(t==="mover"||t==="tam"){modo=t;svg.setPointerCapture(ev.pointerId);}};
+    svg.onpointermove=ev=>{if(!modo)return;const b=r();const x=(ev.clientX-b.left)/b.width,y=(ev.clientY-b.top)/b.height;if(modo==="mover"){P.x=Math.min(.95,Math.max(.05,x));P.y=Math.min(.98,Math.max(.2,y+(prof+16)/H));}else{P.larg=Math.min(.95,Math.max(.15,(x-P.x)*2));}desenhar();};
+    svg.onpointerup=()=>{modo=null;salvar(e);};}
+  function produtos(){
+    $("#pane").innerHTML=`<div class="prods">${CAT.map(([id,n,img])=>{const sug=sugeridos.some(s=>n.toLowerCase().includes(s.split(" ")[0]));const no=O.itens.find(i=>i.id===id);return `<div class="prod"><img src="${img}" alt=""><div><b>${n}</b><small>${sug?"Sugerido para "+esc(Rep.setorNome(l.setor).toLowerCase()):"Catálogo"}${no?" · no orçamento":""}</small></div><button class="add ${no?"on":""}" data-add="${id}" aria-label="adicionar">${no?"✓":"+"}</button></div>`;}).join("")}</div>
+    <a class="btn" style="margin-top:14px" href="orcamento.html?l=${encodeURIComponent(slug)}">Ver orçamento (${O.itens.length}) →</a>`;
+    $$("[data-add]").forEach(b=>b.onclick=()=>{const id=b.dataset.add;if(id==="capacho"){history.replaceState(null,"",`?l=${encodeURIComponent(slug)}&aba=local`);location.reload();return;}
+      if(O.itens.find(i=>i.id===id))O.itens=O.itens.filter(i=>i.id!==id);else{const n=CAT.find(c=>c[0]===id)[1];O.itens.push({id,nome:n,desc:"medida e arte definidas na identidade",qtd:1,preco:null});}salvar(e);produtos();});}
+  render();
+})();
+</script>
+</body>
+</html>

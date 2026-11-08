@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>GênIO · Orçamento</title>
+<meta name="theme-color" content="#F1EEF8">
+<link rel="icon" href="../genio-favicon.png">
+<link rel="stylesheet" href="rep.css?v=bbfd9db4f5">
+<style>
+.item .qtd{display:flex;align-items:center;gap:6px;margin-top:6px}
+.item .qtd button{width:30px;height:30px;border-radius:50%;border:1.5px solid var(--linha);background:#fff;font-weight:700;cursor:pointer}
+.item .rm{border:0;background:none;color:var(--texto2);font-size:13px;cursor:pointer;padding:0;margin-top:4px}
+.add-prod{display:inline-block;margin:0 0 14px;font-weight:700}
+.resumo{background:#fff;border-radius:var(--r);padding:16px 18px;box-shadow:var(--sombra)}
+.prazo{display:flex;gap:10px;align-items:center;background:#EDEAF3;border-radius:12px;padding:12px 14px;font-weight:600;margin:12px 0}
+.vz{border:1.5px solid var(--marca);border-radius:14px;padding:12px 14px;display:flex;gap:12px;align-items:center;margin:0 0 14px}
+.vz b{color:var(--marca)}
+.vz small{display:block;color:var(--texto2)}
+.sem{color:var(--texto2);font-size:14px}
+</style>
+</head>
+<body>
+<div class="w" id="app"></div>
+<script src="rep.js?v=bbfd9db4f5"></script>
+<script>
+(async()=>{
+  const {$,$$,esc,qs,nomeLoja,dados,estado,salvar,vizinhos,nav,topo,voz,ligarVoz,money}=Rep;
+  const D=await dados();const slug=qs.get("l");const l=D.lojas.find(x=>x.slug===slug);if(!l){location.href="index.html";return;}
+  const e=estado();e.orc=e.orc||{};const O=e.orc[slug]=e.orc[slug]||{itens:[]};O.pag=O.pag||"pix";
+  const viz=vizinhos(D,l);const fech=viz.filter(v=>(e.fechadas||[]).includes(v.slug)).length;
+  const IMG={capacho:"../img/cat-capacho.jpg",placas:"../img/cat-placas.jpg",adesivos:"../img/cat-adesivos.jpg",cartoes:"../img/cat-cartoes.jpg",banners:"../img/cat-banners.jpg",uniformes:"../img/cat-uniformes.jpg",parede:"../img/cat-parede.jpg",brindes:"../img/cat-brindes.jpg"};
+  const DESC_SINAL=0.30, CARTAO_X=3;
+  function totais(){const prod=O.itens.reduce((s,i)=>s+(i.preco||0)*(i.qtd||1),0);const semPreco=O.itens.filter(i=>i.preco==null).length;const desc=fech>=3?Math.round(prod*0.15):0;const total=prod-desc;return {prod,semPreco,desc,total,sinal:Math.round(total*DESC_SINAL*100)/100,saldo:Math.round(total*(1-DESC_SINAL)*100)/100,parcela:Math.round(total/CARTAO_X*100)/100};}
+  function render(){const T=totais();
+    $("#app").innerHTML=`${topo()}
+    <div class="faixa"><a href="visita.html?l=${encodeURIComponent(slug)}">${esc(nomeLoja(l.nome))}</a></div>
+    <h1>Orçamento</h1><p class="sub">Personalização para ${esc(nomeLoja(l.nome))}</p>
+    ${O.itens.length?O.itens.map((i,k)=>`<div class="item"><img src="${IMG[i.id]||IMG.capacho}" alt=""><div><b>${esc(i.nome)}</b><small>${esc(i.desc||"")}</small><div class="qtd"><button data-q="${k}:-1">−</button><span>${i.qtd||1} unidade${(i.qtd||1)>1?"s":""}</span><button data-q="${k}:1">+</button></div><button class="rm" data-rm="${k}">remover</button></div><div class="preco">${i.preco!=null?money(i.preco*(i.qtd||1)):"<span class=sem>na identidade</span>"}</div></div>`).join(""):`<div class="card"><p class="sem" style="margin:0">Nenhum item ainda. Adicione o capacho pela projeção ou outros produtos pelo catálogo.</p></div>`}
+    <a class="add-prod" href="projecao.html?l=${encodeURIComponent(slug)}&aba=produtos">+ Adicionar produto</a>
+    <section class="resumo">
+      <div class="tot"><span>Produtos</span><span>${money(T.prod)}</span></div>
+      ${T.desc?`<div class="tot"><span>Vizinhos juntos · 15%</span><span>− ${money(T.desc)}</span></div>`:""}
+      <div class="tot"><span>Frete</span><span>Incluído</span></div>
+      <div class="tot big"><span>Total</span><span>${money(T.total)}</span></div>
+      ${T.semPreco?`<p class="sem">${T.semPreco} item(ns) sem preço ainda: medida e arte saem da identidade; o valor entra antes da aprovação.</p>`:""}
+      <div class="seg"><button class="${O.pag==="pix"?"on":""}" data-pag="pix">✓ Pix</button><button class="${O.pag==="cartao"?"on":""}" data-pag="cartao">▭ Cartão</button></div>
+      ${O.pag==="pix"?`<div class="tot"><span>Sinal de 30%</span><span>${money(T.sinal)}</span></div><div class="tot" style="border:0"><span>Saldo na entrega</span><span>${money(T.saldo)}</span></div>`:`<div class="tot" style="border:0"><span>${CARTAO_X}× sem juros</span><span>${money(T.parcela)}</span></div>`}
+      <div class="prazo">📅 Prazo confirmado antes do pagamento</div>
+      ${viz.length?`<div class="vz">👥<div><b>Vizinhos juntos</b><small>${fech} de 3 lojas no raio de 200 m · ${fech>=3?"15% aplicado":"condição ainda não atingida"}</small></div></div>`:""}
+      <button class="btn" id="enviar" ${O.itens.length?"":"disabled"}>Enviar para aprovação →</button>
+    </section>
+    <p class="ilus">Preços de referência (R$ 250/m² × margem) até o catálogo de fornecedores entrar · Pix e cartão pelo Asaas quando a chave estiver no servidor</p>
+    ${voz()}${nav("rota")}`;
+    ligarVoz(slug);
+    $$("[data-q]").forEach(b=>b.onclick=()=>{const [k,d]=b.dataset.q.split(":").map(Number);O.itens[k].qtd=Math.max(1,(O.itens[k].qtd||1)+d);salvar(e);render();});
+    $$("[data-rm]").forEach(b=>b.onclick=()=>{O.itens.splice(+b.dataset.rm,1);salvar(e);render();});
+    $$("[data-pag]").forEach(b=>b.onclick=()=>{O.pag=b.dataset.pag;salvar(e);render();});
+    $("#enviar").onclick=()=>{const T=totais();e.pedidos=e.pedidos||[];const n=1000+e.pedidos.length+1;e.pedidos.push({n,loja:slug,nome:nomeLoja(l.nome),itens:O.itens,total:T.total,pag:O.pag,em:new Date().toISOString(),etapa:"arte"});(e.feitas=e.feitas||[]).push(slug);(e.fechadas=e.fechadas||[]).push(slug);salvar(e);location.href=`pedidos.html?novo=${n}`;};}
+  render();
+})();
+</script>
+</body>
+</html>
