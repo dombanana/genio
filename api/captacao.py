@@ -267,14 +267,14 @@ def curiosidade_nome(nome):
             body = {"contents": [{"parts": [{"text": f"Em uma frase curta (máx. 30 palavras), em português, qual a origem ou o significado provável da palavra '{palavra}' no nome do comércio '{nome}' (sobrenome, cidade, palavra estrangeira, apelido)? Seja factual. Se não houver base, responda só: sem registro."}]}], "generationConfig": {"temperature": 0.2, "maxOutputTokens": 80}}
             # modelos em ordem de preferência: o Google aposenta versões e a resposta de erro indica a nova
             r, txt, erros_g = {}, "", []
-            for modelo in ("gemini-3.8-flash", "gemini-flash-latest", "gemini-2.5-flash"):
+            for modelo in ("gemini-3.8-flash", "gemini-flash-latest"):
                 for tent in range(2):  # 503 (sobrecarga) e timeout: espera e tenta de novo, depois passa ao próximo modelo
                     r = tenta(http, f"https://generativelanguage.googleapis.com/v1beta/models/{modelo}:generateContent", body, {"x-goog-api-key": K["GEMINI_KEY"]}, timeout=60)
                     txt = ((((r.get("candidates") or [{}])[0].get("content") or {}).get("parts") or [{}])[0].get("text") or "").strip()
                     if txt:
                         break
                     erros_g.append(f"{modelo}: {str(r.get('_erro', 'sem texto'))[:90]}")
-                    time.sleep(4)
+                    time.sleep(35 if "429" in str(r.get("_erro", "")) else 4)  # 429 = cota por minuto da faixa grátis
                 if txt:
                     break
             if not txt:
@@ -458,6 +458,12 @@ def identidade(loja, zona, pasta, quota_ok):
     sites = ([ant["site"]] if ant.get("site") else []) + [r.get("link") for r in (rw.get("organic") or []) if r.get("link") and not re.search(r"instagram|facebook|google|ifood|tripadvisor|foursquare|apontador|guiamais|solutudo|cylex|telelistas|econodata|cnpj|wanderboat|fresha|linktr|youtube|olx|mercadolivre|kekanto|yelp", r["link"])]
     passos.append(f"Google Web (Serper) → {len(rw.get('organic') or [])} páginas; instagram {ig[:2] or '—'}; facebook {fb[:1] or '—'}; cnpj {cnpjs[:1] or '—'}")
     ig_ok = [h for h in dict.fromkeys(ig) if bate_nome(loja["nome"], h)]
+    if not ig_ok:  # segunda busca, dirigida: "<nome>" instagram (1 crédito)
+        rw2 = serper("search", f'"{loja["nome"]}" instagram {zona["cidade"]}', num=10); custo["serper"] += 1
+        ig2 = [h for h in re.findall(r"instagram\.com/([A-Za-z0-9_.]{3,30})/?", json.dumps(rw2, ensure_ascii=False)) if h.lower() not in ("p", "reel", "explore", "accounts", "stories", "reels")]
+        ig_ok = [h for h in dict.fromkeys(ig2) if bate_nome(loja["nome"], h)]
+        if ig_ok:
+            passos.append(f"Busca dirigida ao Instagram → @{ig_ok[0]}")
     fb_ok = [h for h in dict.fromkeys(fb) if bate_nome(loja["nome"], h)]
     ig_dup = [h for h in dict.fromkeys(ig) if h not in ig_ok][:3]
     redes = []
