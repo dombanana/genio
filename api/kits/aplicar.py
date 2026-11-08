@@ -62,7 +62,7 @@ def recolorir(img, mask, cor_bgr):
     out[..., 0] = L * (1 - a) + Ln * a; out[..., 1] = lab[..., 1] * (1 - a) + alvo[1] * a; out[..., 2] = lab[..., 2] * (1 - a) + alvo[2] * a
     return cv2.cvtColor(np.clip(out, 0, 255).astype(np.uint8), cv2.COLOR_LAB2BGR)
 
-def layout_frontal(arte_bgra, P, largura_rel=0.7, cor_fundo=None):
+def layout_frontal(arte_bgra, P, largura_rel=0.7, cor_fundo=None, cheio=False):
     """Plano frontal do produto em pixels (sem perspectiva): proporção física quando conhecida; a arte entra
     em 'contain' ocupando largura_rel da largura útil, centralizada; margem de segurança 6%."""
     prop = P.get("proporcao_fisica"); plano = np.array(P["plano"], np.float32)
@@ -75,7 +75,7 @@ def layout_frontal(arte_bgra, P, largura_rel=0.7, cor_fundo=None):
     tela = np.zeros((H, W, 4), np.uint8)
     if cor_fundo is not None:
         tela[..., :3] = cor_fundo.astype(np.uint8); tela[..., 3] = 255
-    ah, aw = arte_bgra.shape[:2]; mw, mh = W * 0.88 * largura_rel, H * 0.88
+    ah, aw = arte_bgra.shape[:2]; mw, mh = (W, H) if cheio else (W * 0.88 * largura_rel, H * 0.88)
     s = min(mw / aw, mh / ah); nw, nh = max(1, int(aw * s)), max(1, int(ah * s))
     arte = cv2.resize(arte_bgra, (nw, nh), interpolation=cv2.INTER_AREA)
     x0, y0 = (W - nw) // 2, (H - nh) // 2
@@ -117,7 +117,7 @@ def oclusoes(img, P):
                 cv2.circle(m, (int(cen[i][0]), int(cen[i][1])), int(max(bw, bh) * 0.62) + 3, 255, -1)
     return m
 
-def aplicar(setor, pid, arte_path, saida, material=None, arte_cor=None, largura=0.7):
+def aplicar(setor, pid, arte_path, saida, material=None, arte_cor=None, largura=0.7, cheio=False):
     pasta, P, img = carregar(setor, pid)
     arte = cv2.imread(arte_path, cv2.IMREAD_UNCHANGED)
     if arte is None:
@@ -126,7 +126,7 @@ def aplicar(setor, pid, arte_path, saida, material=None, arte_cor=None, largura=
         arte = cv2.cvtColor(arte, cv2.COLOR_BGR2BGRA)
     # recorta as margens transparentes: a proporção da arte é a do desenho, não a da prancheta
     ys, xs = np.where(arte[..., 3] > 8)
-    if len(xs) > 10:
+    if len(xs) > 10 and not cheio:
         arte = arte[ys.min():ys.max() + 1, xs.min():xs.max() + 1]
     base = img.copy()
     mmat = mascara_material(img, P)
@@ -134,7 +134,7 @@ def aplicar(setor, pid, arte_path, saida, material=None, arte_cor=None, largura=
     if cor_mat is not None:
         base = recolorir(base, mmat, cor_mat)
     aplic = P.get("aplicacao")
-    if aplic in ("vinil_recortado", "impressao_carimbo", "bordado_peito", "serigrafia"):
+    if aplic in ("vinil_recortado", "impressao_carimbo", "bordado_peito", "serigrafia") and not cheio:
         # arte monocromática: só a forma (alpha) importa; a cor vem do vinil/tinta/linha
         cor = hex2bgr(arte_cor or "#1C1635")
         mono = np.zeros_like(arte); mono[..., :3] = cor; mono[..., 3] = arte[..., 3]
@@ -145,7 +145,7 @@ def aplicar(setor, pid, arte_path, saida, material=None, arte_cor=None, largura=
     fundo = cor_mat if (aplic == "impressao_total" and P.get("fundo_arte") == "cor_material" and cor_mat is not None) else None
     if aplic == "impressao_carimbo":
         largura = min(largura, 0.32)
-    tela = layout_frontal(arte, P, largura, fundo)
+    tela = layout_frontal(arte, P, largura, fundo, cheio)
     proj = projetar(tela, P, img.shape)
     a = (proj[..., 3].astype(np.float32) / 255.0)
     if aplic == "vinil_recortado" and P["superficie"] == "vidro":

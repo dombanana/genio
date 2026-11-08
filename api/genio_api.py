@@ -453,6 +453,33 @@ def proxy_img(u):
         raise ValueError("não é imagem")
     return ct, r.read(8_000_000)
 
+RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+ESTADO_DIR = os.path.dirname(CHAVES_ARQ) if os.path.dirname(CHAVES_ARQ) else "/var/lib/genio"
+KIT_IDS = {"capacho": "01", "placas": "02", "adesivos": "03", "uniformes": "04", "impressos": "05", "panfleto": "06", "banners": "07", "parede": "08", "brindes": "09", "carimbo": "10"}
+def kit_aplicar(d):
+    """Contextualização: a arte feita no editor (PNG transparente, base64) aplicada na capa calibrada do kit do setor."""
+    import hashlib, tempfile
+    sys.path.insert(0, os.path.join(RAIZ, "api", "kits")); import aplicar, gerar_kit
+    setor = (d.get("setor") or "").split("/")[0]; kit, ref = gerar_kit.kit_para(setor)
+    pid = KIT_IDS.get(d.get("produto"), d.get("produto")); png = d.get("png") or ""
+    if "," in png[:40]:
+        png = png.split(",", 1)[1]
+    raw = base64.b64decode(png)
+    if len(raw) > 6_000_000:
+        raise ValueError("arte grande demais")
+    material = d.get("material") if re.match(r"^#[0-9a-fA-F]{6}$", d.get("material") or "") else None
+    h = hashlib.sha256(raw + f"|{kit}|{pid}|{material}|v2".encode()).hexdigest()[:20]
+    pasta = os.path.join(ESTADO_DIR, "kits"); os.makedirs(pasta, exist_ok=True); saida = os.path.join(pasta, h + ".jpg")
+    if not os.path.exists(saida):
+        with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as f:
+            f.write(raw); tmp = f.name
+        try:
+            aplicar.aplicar(kit, pid, tmp, saida, material, None, 1.0, cheio=True)
+        finally:
+            try: os.remove(tmp)
+            except Exception: pass
+    return {"kit": kit, "produto": pid, "referencia": ref, "jpg": "data:image/jpeg;base64," + base64.b64encode(open(saida, "rb").read()).decode()}
+
 CHAVES_NOMES = ["GOOGLE_PLACES_KEY", "SERPER_KEY", "APIFY_TOKEN", "ZAPSIGN_TOKEN", "ASAAS_TOKEN", "OPENAI_KEY", "GEMINI_KEY", "GOOGLE_MAPS_KEY",
                 "MELHORENVIO_TOKEN", "TELEGRAM_BOT_TOKEN", "TELEGRAM_CHAT_ID", "ML_APP_ID", "ML_SECRET"]
 def chaves_ler():
@@ -618,6 +645,13 @@ class H(BaseHTTPRequestHandler):
     def do_POST(self):
         p = urlparse(self.path).path.rstrip("/")
         try:
+            if p == "/api/kit/aplicar":
+                if not self._eu():
+                    return self._erro(401, "entre com a sua conta")
+                try:
+                    return self._send(200, kit_aplicar(self._json()))
+                except Exception as e:
+                    return self._erro(500, "contextualização falhou: " + str(e)[:160])
             if p == "/api/correcoes":
                 # correções de imagem feitas no aparelho (trocada, ajustada, apagada, errada) — alimentam a captação
                 if not self._origem_ok():
