@@ -115,7 +115,9 @@ def places_busca(texto, centro, raio):
     return out, None
 def places_fotos(pid):
     r = tenta(http, PL + f"places/{pid}", None, {"X-Goog-Api-Key": K["GOOGLE_PLACES_KEY"], "X-Goog-FieldMask": "photos"})
-    return [] if "_erro" in r else r.get("photos", [])[:5]
+    if "_erro" in r:
+        return {"_erro": r["_erro"]}
+    return r.get("photos", [])[:5]
 def places_foto_bytes(nome, w=900):
     return tenta(http, PL + f"{nome}/media?maxWidthPx={w}&skipHttpRedirect=false&key={K['GOOGLE_PLACES_KEY']}", binario=True)
 
@@ -150,10 +152,10 @@ def baixar(url, destino, maxb=6_000_000):
         req = request.Request(url, headers=dict(UA, Referer="https://www.google.com/"))
         with request.urlopen(req, timeout=25) as r:
             ct = r.headers.get("Content-Type", "")
-            if "image" not in ct and not url.lower().split("?")[0].endswith((".jpg", ".jpeg", ".png", ".webp")):
+            if "text/html" in ct:
                 return None
             b = r.read(maxb + 1)
-        if len(b) > maxb or len(b) < 1500:
+        if len(b) > maxb or len(b) < 1500 or not (b[:3] == b"\xff\xd8\xff" or b[:4] == b"\x89PNG" or b[:4] == b"RIFF" or b[:3] == b"GIF"):
             return None
         with open(destino, "wb") as f:
             f.write(b)
@@ -188,6 +190,30 @@ def analisar(caminho):
 def ham(a, b):
     return bin(int(a, 16) ^ int(b, 16)).count("1")
 
+# ---------- o @ / domínio bate com o nome da loja? ----------
+STOP={"loja","lojas","casa","comercio","comércio","ltda","me","mei","eireli","sa","s/a","e","de","da","do","das","dos","the","zona","cerealista","brás","bras","sao","são","paulo","sp","centro","oficial","store","shop","br","com","www","emporio","empório","distribuidora","produtos","naturais","mercado","mercadao","mercadão"}
+def tokens(s_):
+    s_ = unicodedata.normalize("NFKD", s_ or "").encode("ascii", "ignore").decode().lower()
+    return [t for t in re.split(r"[^a-z0-9]+", s_) if len(t) >= 3 and t not in STOP]
+def bate_nome(nome, alvo):
+    """True se um token significativo do nome da loja aparece no @ ou no domínio (ou o nome colado inteiro)"""
+    a = unicodedata.normalize("NFKD", alvo or "").encode("ascii", "ignore").decode().lower()
+    a = re.sub(r"[^a-z0-9]", "", a)
+    ts = tokens(nome)
+    if not ts or not a:
+        return False
+    if "".join(ts) in a or a in "".join(ts):
+        return True
+    return sum(1 for t in ts if len(t) >= 4 and t in a) >= 1
+def cnpj_ok(c):
+    d = re.sub(r"\D", "", c)
+    if len(d) != 14 or d == d[0] * 14:
+        return False
+    def dv(nums, pesos):
+        r = sum(int(n) * p for n, p in zip(nums, pesos)) % 11
+        return "0" if r < 2 else str(11 - r)
+    p1 = [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2]; p2 = [6] + p1
+    return d[12] == dv(d[:12], p1) and d[13] == dv(d[:13], p2)
 # ---------- notas ----------
 def _penalidades():
     """fontes que o vendedor marcou como erradas no aparelho: -8 por marcação (até -30)"""
@@ -203,7 +229,7 @@ def _penalidades():
     except Exception:
         pass
     return pen
-PESO_FONTE = {"instagram-perfil": 70, "facebook-perfil": 65, "places-foto": 45, "serper-instagram": 55, "serper-facebook": 55, "serper-linktree": 60, "serper-diretorio": 40, "serper-imprensa": 25, "serper-outro": 30}
+PESO_FONTE = {"site-proprio": 70, "instagram-perfil": 70, "facebook-perfil": 65, "places-foto": 45, "serper-instagram": 55, "serper-facebook": 55, "serper-linktree": 60, "serper-diretorio": 40, "serper-imprensa": 25, "serper-outro": 30}
 def classificar_fonte(dominio):
     d = (dominio or "").lower()
     if "instagram" in d or "cdninstagram" in d:
@@ -249,13 +275,15 @@ def identidade(loja, zona, pasta, quota_ok):
         return L, custo, passos, fontes, cands, locais
     # --- Places Photos (fotos do perfil do Google: dono + clientes)
     fotos = places_fotos(loja["place_id"]); custo["places_detalhe"] += 1
+    erro_fotos = fotos.get("_erro") if isinstance(fotos, dict) else None
+    fotos = [] if isinstance(fotos, dict) else fotos
     for i, f in enumerate(fotos):
         b = places_foto_bytes(f["name"]); custo["places_foto"] += 1
         if isinstance(b, (bytes, bytearray)) and len(b) > 1500:
             p = os.path.join(img_dir, f"places-{i+1}.jpg"); open(p, "wb").write(b)
             autor = (f.get("authorAttributions") or [{}])[0].get("displayName", "")
             cands.append(dict(arq=p, fonte="places-foto", legenda=f"Google Places · foto {i+1}" + (f" · por {autor}" if autor else ""), url=loja.get("maps", ""), dono=(slug(autor)[:12] in s or s[:12] in slug(autor))))
-    passos.append(f"Places Photos → {len(fotos)} fotos do perfil do Google")
+    passos.append(f"Places Photos → {len(fotos)} fotos do perfil do Google" + (f" · erro: {erro_fotos}" if erro_fotos else ""))
     # --- Serper imagens + web
     q = f'"{loja["nome"]}" {zona["bairro"]} {zona["cidade"]}'
     ri = serper("images", q, num=10); custo["serper"] += 1
@@ -264,7 +292,8 @@ def identidade(loja, zona, pasta, quota_ok):
         url = it.get("imageUrl") or ""
         p = baixar(url, os.path.join(img_dir, f"web-{i+1}" + (".png" if url.lower().split("?")[0].endswith(".png") else ".jpg")))
         if p:
-            n_img += 1; cl = classificar_fonte(it.get("domain") or it.get("source") or it.get("link"))
+            n_img += 1; dom = it.get("domain") or it.get("source") or it.get("link") or ""
+            cl = "site-proprio" if bate_nome(loja["nome"], re.sub(r"^https?://(www\.)?", "", dom).split("/")[0]) else classificar_fonte(dom)
             cands.append(dict(arq=p, fonte=cl, legenda=f"{it.get('source') or it.get('domain','')} · {it.get('title','')[:60]}", url=it.get("link") or url))
     passos.append(f"Google Imagens (Serper) → {len(ri.get('images') or [])} resultados, {n_img} baixadas" + (f" · {ri['_erro']}" if "_erro" in ri else ""))
     rw = serper("search", f'{loja["nome"]} {loja["endereco"]} {zona["cidade"]}', num=10); custo["serper"] += 1
@@ -273,20 +302,29 @@ def identidade(loja, zona, pasta, quota_ok):
     ig = [h for h in ig if h.lower() not in ("p", "reel", "explore", "accounts", "stories", "reels")]
     fb = re.findall(r"facebook\.com/([A-Za-z0-9_.\-]{3,60})/?", texto)
     fb = [h for h in fb if h.lower() not in ("profile.php", "pages", "people", "groups", "watch")]
-    cnpjs = re.findall(r"\d{2}\.?\d{3}\.?\d{3}/?\d{4}-?\d{2}", texto)
+    cnpjs = [c for c in re.findall(r"\d{2}\.?\d{3}\.?\d{3}/?\d{4}-?\d{2}", texto) if cnpj_ok(c)]
     sites = [r.get("link") for r in (rw.get("organic") or []) if r.get("link") and not re.search(r"instagram|facebook|google|ifood|tripadvisor|foursquare|apontador|guiamais|solutudo|cylex|telelistas|econodata|cnpj|wanderboat|fresha|linktr|youtube|olx|mercadolivre|kekanto|yelp", r["link"])]
     passos.append(f"Google Web (Serper) → {len(rw.get('organic') or [])} páginas; instagram {ig[:2] or '—'}; facebook {fb[:1] or '—'}; cnpj {cnpjs[:1] or '—'}")
+    ig_ok = [h for h in dict.fromkeys(ig) if bate_nome(loja["nome"], h)]
+    fb_ok = [h for h in dict.fromkeys(fb) if bate_nome(loja["nome"], h)]
+    ig_dup = [h for h in dict.fromkeys(ig) if h not in ig_ok][:3]
     redes = []
-    if ig:
-        redes.append("Instagram @" + ig[0]); fontes.append("Instagram")
-    if fb:
-        redes.append("Facebook /" + fb[0]); fontes.append("Facebook")
+    if ig_ok:
+        redes.append("Instagram @" + ig_ok[0]); fontes.append("Instagram")
+    if fb_ok:
+        redes.append("Facebook /" + fb_ok[0]); fontes.append("Facebook")
     if redes:
-        L["redes"] = E(" · ".join(redes), nota="achado na busca pública; confirmar na porta")
+        L["redes"] = E(" · ".join(redes), nota="o @ confere com o nome da loja; confirmar na porta")
+    elif ig_dup:
+        L["redes"] = {"estado": "pendente", "origem": "publico", "valor": "", "opcoes": [{"valor": "@" + h, "legenda": "apareceu na busca, mas o nome não confere", "fonte": "Instagram"} for h in ig_dup], "nota": "nenhum @ que confira com o nome — decidir ou perguntar na porta"}
     else:
         L["redes"] = {"estado": "pendente", "origem": "publico", "valor": "", "nota": "nenhum @ encontrado na busca pública — perguntar na porta"}
-    if sites and not L.get("site"):
-        L["site"] = E(sites[0])
+    ig = ig_ok
+    proprios = [u for u in sites if bate_nome(loja["nome"], re.sub(r"^https?://(www\.)?", "", u).split("/")[0])]
+    if proprios and not L.get("site"):
+        L["site"] = E(proprios[0], nota="domínio confere com o nome da loja")
+    elif sites and not L.get("site"):
+        L["site"] = {"estado": "pendente", "origem": "publico", "valor": "", "opcoes": [{"valor": u, "legenda": "página que cita a loja; domínio não confere com o nome", "fonte": "web"} for u in sites[:3]], "nota": "nenhum site com o nome da loja — decidir"}
     elif not L.get("site"):
         L["site"] = {"estado": "nao", "origem": "publico", "valor": "nenhum site próprio encontrado"}
     # --- Apify: foto de perfil do Instagram (a marca como o dono a usa)
@@ -338,9 +376,9 @@ def identidade(loja, zona, pasta, quota_ok):
         if liso:
             nota += 10
         nota += 12 * min(c["repete"], 3)    # principal = o que mais se repete
-        c["nota"] = min(100, nota)
+        c["nota"] = min(100 if c["repete"] else 85, nota)
         # foto de ambiente: paisagem/retrato grande sem fundo liso e sem ser perfil → Local
-        if c["fonte"] in ("instagram-perfil", "facebook-perfil") or (quadrada and liso) or c["repete"] >= 2:
+        if c["fonte"] in ("instagram-perfil", "facebook-perfil", "site-proprio") or (quadrada and liso) or c["repete"] >= 2:
             logos.append(c)
         else:
             loc.append(c)
@@ -501,7 +539,7 @@ def main():
         cp = os.path.join(pasta, "clientes", x["slug"] + ".json")
         if os.path.exists(cp):
             cads[x["slug"]] = json.load(open(cp))
-            if cads[x["slug"]].get("processado"):
+            if cads[x["slug"]].get("processado") and not run.get("refazer"):
                 continue
         if feitas >= limite or usadas + feitas >= 50:
             L, custo, passos, fontes, lg, lc = identidade(x, zona, pasta, False)
