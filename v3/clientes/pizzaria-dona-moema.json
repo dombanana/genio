@@ -1,0 +1,55 @@
+{
+ "nome": "Pizzaria Dona Moema",
+ "slug": "pizzaria-dona-moema",
+ "rota": {
+  "centro": "moema",
+  "dia": 1,
+  "ordem": 15,
+  "place_id": "ChIJ91v-VhBazpQRNdkk7TInoz4",
+  "lat": -23.6057867,
+  "lng": -46.6584092,
+  "nota": 4.0,
+  "aval": 202
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Pizzaria Dona Moema",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "restaurante",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Alameda dos Nhambiquaras, 740 · moema",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · cardápio de parede · Mostra Aí",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 96548-0461",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Pizzaria Dona Moema logo",
+    "Pizzaria Dona Moema moema instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

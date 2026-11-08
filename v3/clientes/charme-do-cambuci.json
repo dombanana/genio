@@ -1,0 +1,55 @@
+{
+ "nome": "Charme do Cambuci",
+ "slug": "charme-do-cambuci",
+ "rota": {
+  "centro": "cambuci-aclimacao",
+  "dia": 1,
+  "ordem": 20,
+  "place_id": "ChIJgw6AxfNZzpQRfGcnSNGd-2s",
+  "lat": -23.563540099999997,
+  "lng": -46.620477,
+  "nota": 4.3,
+  "aval": 423
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Charme do Cambuci",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "restaurante",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. da Independência, 11 · cambuci-aclimacao",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · cardápio de parede · Mostra Aí",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 2365-0003",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Charme do Cambuci logo",
+    "Charme do Cambuci cambuci-aclimacao instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

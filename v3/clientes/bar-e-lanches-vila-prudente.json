@@ -1,0 +1,50 @@
+{
+ "nome": "Bar e Lanches Vila Prudente",
+ "slug": "bar-e-lanches-vila-prudente",
+ "rota": {
+  "centro": "vila-prudente",
+  "dia": 1,
+  "ordem": 14,
+  "place_id": "ChIJ8adeRQ5czpQR-8nRfVFp8HA",
+  "lat": -23.581847399999997,
+  "lng": -46.5854326,
+  "nota": 4.2,
+  "aval": 41
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Bar e Lanches Vila Prudente",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "restaurante",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Ibitirama, 07 · vila-prudente",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · cardápio de parede · Mostra Aí",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Bar e Lanches Vila Prudente logo",
+    "Bar e Lanches Vila Prudente vila-prudente instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

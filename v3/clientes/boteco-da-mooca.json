@@ -1,0 +1,55 @@
+{
+ "nome": "Boteco Da Mooca",
+ "slug": "boteco-da-mooca",
+ "rota": {
+  "centro": "mooca",
+  "dia": 1,
+  "ordem": 5,
+  "place_id": "ChIJMeLMis9ZzpQRtxY2nVxI7Sg",
+  "lat": -23.5601359,
+  "lng": -46.5984237,
+  "nota": 5.0,
+  "aval": 20
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Boteco Da Mooca",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "bar",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Me. de Deus, 340 · mooca",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · cardápio · banner",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 93000-5003",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Boteco Da Mooca logo",
+    "Boteco Da Mooca mooca instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

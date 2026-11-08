@@ -1,0 +1,55 @@
+{
+ "nome": "WE odontologia",
+ "slug": "we-odontologia",
+ "rota": {
+  "centro": "saude-jabaquara",
+  "dia": 1,
+  "ordem": 10,
+  "place_id": "ChIJqxh4jLNbzpQRZDA5OYOC1bc",
+  "lat": -23.6201881,
+  "lng": -46.6399513,
+  "nota": 4.9,
+  "aval": 49
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "WE odontologia",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "clínica/consultório",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Av. Jabaquara, 1812 · saude-jabaquara",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "placa de recepção · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 2361-9310",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "WE odontologia logo",
+    "WE odontologia saude-jabaquara instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

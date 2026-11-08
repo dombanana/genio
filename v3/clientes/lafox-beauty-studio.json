@@ -1,0 +1,55 @@
+{
+ "nome": "LA’FOX BEAUTY STUDIO",
+ "slug": "lafox-beauty-studio",
+ "rota": {
+  "centro": "vila-mariana",
+  "dia": 2,
+  "ordem": 5,
+  "place_id": "ChIJqVAZemlZzpQRjAhgwkDMTyw",
+  "lat": -23.5802862,
+  "lng": -46.6401767,
+  "nota": 5.0,
+  "aval": 53
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "LA’FOX BEAUTY STUDIO",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "academia/estúdio",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Domingos de Morais, 348 · vila-mariana",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "placa · adesivo de parede · uniformes",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 99159-7264",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "LA’FOX BEAUTY STUDIO logo",
+    "LA’FOX BEAUTY STUDIO vila-mariana instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

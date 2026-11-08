@@ -1,0 +1,55 @@
+{
+ "nome": "Estética e Saúde Dra Nathalia Dumbrovsky",
+ "slug": "estetica-e-saude-dra-nathalia-dumbrovsky",
+ "rota": {
+  "centro": "vila-prudente",
+  "dia": 2,
+  "ordem": 17,
+  "place_id": "ChIJrSAn9gFdzpQRV8CpDo2f9Z0",
+  "lat": -23.5914069,
+  "lng": -46.5806159,
+  "nota": 5.0,
+  "aval": 18
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Estética e Saúde Dra Nathalia Dumbrovsky",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "comércio",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Ibitirama, 1310 · vila-prudente",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · placa · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 96195-2171",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Estética e Saúde Dra Nathalia Dumbrovsky logo",
+    "Estética e Saúde Dra Nathalia Dumbrovsky vila-prudente instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

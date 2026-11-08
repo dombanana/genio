@@ -1,0 +1,55 @@
+{
+ "nome": "D.r Barbearia",
+ "slug": "d-r-barbearia",
+ "rota": {
+  "centro": "vila-prudente",
+  "dia": 2,
+  "ordem": 7,
+  "place_id": "ChIJm8C69MxdzpQRJwAKftZhNe0",
+  "lat": -23.59032,
+  "lng": -46.582156499999996,
+  "nota": 4.8,
+  "aval": 100
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "D.r Barbearia",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "salão/barbearia",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Ibitirama, 1076 · vila-prudente",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · adesivo de vitrine · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 99572-8187",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "D.r Barbearia logo",
+    "D.r Barbearia vila-prudente instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

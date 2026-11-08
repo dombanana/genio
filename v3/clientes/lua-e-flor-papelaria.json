@@ -1,0 +1,55 @@
+{
+ "nome": "Lua e Flor Papelaria",
+ "slug": "lua-e-flor-papelaria",
+ "rota": {
+  "centro": "cambuci-aclimacao",
+  "dia": 2,
+  "ordem": 20,
+  "place_id": "ChIJS0htsHpZzpQRL_Qg8A9h2NI",
+  "lat": -23.572406599999997,
+  "lng": -46.6226226,
+  "nota": 4.6,
+  "aval": 17
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Lua e Flor Papelaria",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "floricultura/presentes",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Av. Lins de Vasconcelos, 1029 A · cambuci-aclimacao",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 99683-8239",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Lua e Flor Papelaria logo",
+    "Lua e Flor Papelaria cambuci-aclimacao instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

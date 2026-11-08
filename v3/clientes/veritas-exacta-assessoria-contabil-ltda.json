@@ -1,0 +1,55 @@
+{
+ "nome": "Veritas Exacta Assessoria Contábil Ltda",
+ "slug": "veritas-exacta-assessoria-contabil-ltda",
+ "rota": {
+  "centro": "tatuape",
+  "dia": 1,
+  "ordem": 16,
+  "place_id": "ChIJ0RI3LVFdzpQR_S6e4l_RYbs",
+  "lat": -23.5355928,
+  "lng": -46.575354499999996,
+  "nota": 5.0,
+  "aval": 35
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Veritas Exacta Assessoria Contábil Ltda",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "escritório/imobiliária",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Tuiuti, 1161 · tatuape",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "placa de recepção · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 2059-3032",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Veritas Exacta Assessoria Contábil Ltda logo",
+    "Veritas Exacta Assessoria Contábil Ltda tatuape instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

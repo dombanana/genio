@@ -1,0 +1,55 @@
+{
+ "nome": "Confeitaria Cristal Saúde",
+ "slug": "confeitaria-cristal-saude",
+ "rota": {
+  "centro": "saude-jabaquara",
+  "dia": 2,
+  "ordem": 1,
+  "place_id": "ChIJjxXzzFFazpQRVpQQ68zBTmQ",
+  "lat": -23.6171253,
+  "lng": -46.638371,
+  "nota": 4.8,
+  "aval": 57
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Confeitaria Cristal Saúde",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "padaria",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Av. Jabaquara, 1469 · saude-jabaquara",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · adesivo de vitrine · cardápio de parede",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 2361-0729",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Confeitaria Cristal Saúde logo",
+    "Confeitaria Cristal Saúde saude-jabaquara instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

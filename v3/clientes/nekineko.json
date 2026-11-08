@@ -1,0 +1,55 @@
+{
+ "nome": "Nekineko",
+ "slug": "nekineko",
+ "rota": {
+  "centro": "liberdade",
+  "dia": 1,
+  "ordem": 17,
+  "place_id": "ChIJ3XiJEXlZzpQR-EBBD4MWSsQ",
+  "lat": -23.557325499999997,
+  "lng": -46.634965,
+  "nota": 3.7,
+  "aval": 31
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Nekineko",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "floricultura/presentes",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Galvão Bueno, 199 · liberdade",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 3399-3565",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Nekineko logo",
+    "Nekineko liberdade instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

@@ -1,0 +1,55 @@
+{
+ "nome": "Cheirin Bão - São Caetano",
+ "slug": "cheirin-bao-sao-caetano",
+ "rota": {
+  "centro": "sao-caetano",
+  "dia": 2,
+  "ordem": 1,
+  "place_id": "ChIJq_RsBPhdzpQRkz4rZpVGU7g",
+  "lat": -23.6148073,
+  "lng": -46.572313699999995,
+  "nota": 4.2,
+  "aval": 132
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Cheirin Bão - São Caetano",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "restaurante",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Manoel Coelho, 607 · sao-caetano",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · cardápio de parede · Mostra Aí",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 92524-4428",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Cheirin Bão - São Caetano logo",
+    "Cheirin Bão - São Caetano sao-caetano instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

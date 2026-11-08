@@ -1,0 +1,50 @@
+{
+ "nome": "Kallan Calçados Femininos e Masculinos - São Caetano",
+ "slug": "kallan-calcados-femininos-e-masculinos-sao-caetano",
+ "rota": {
+  "centro": "sao-caetano",
+  "dia": 2,
+  "ordem": 18,
+  "place_id": "ChIJkfY3hfJczpQRkMizMnn7AwI",
+  "lat": -23.611876,
+  "lng": -46.572145,
+  "nota": 4.4,
+  "aval": 575
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Kallan Calçados Femininos e Masculinos - São Caetano",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "loja de roupas/calçados",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Manoel Coelho, 255 · sao-caetano",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · banner · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Kallan Calçados Femininos e Masculinos - São Caetano logo",
+    "Kallan Calçados Femininos e Masculinos - São Caetano sao-caetano instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

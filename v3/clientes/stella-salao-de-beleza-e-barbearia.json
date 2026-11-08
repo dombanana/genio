@@ -1,0 +1,55 @@
+{
+ "nome": "Stella | Salão de Beleza e Barbearia",
+ "slug": "stella-salao-de-beleza-e-barbearia",
+ "rota": {
+  "centro": "tatuape",
+  "dia": 2,
+  "ordem": 6,
+  "place_id": "ChIJYUg2xMFezpQRYDWDR7WMQzg",
+  "lat": -23.541311699999998,
+  "lng": -46.5741233,
+  "nota": 4.8,
+  "aval": 404
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Stella | Salão de Beleza e Barbearia",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "salão/barbearia",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Praça Cel. Sandoval de Figueiredo, De · tatuape",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · adesivo de vitrine · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 96114-4999",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Stella | Salão de Beleza e Barbearia logo",
+    "Stella | Salão de Beleza e Barbearia tatuape instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

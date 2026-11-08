@@ -1,0 +1,55 @@
+{
+ "nome": "UseReuse Ateliê",
+ "slug": "usereuse-atelie",
+ "rota": {
+  "centro": "cambuci-aclimacao",
+  "dia": 2,
+  "ordem": 8,
+  "place_id": "ChIJTa8fwHVZzpQR1svyU_TaVcs",
+  "lat": -23.565095499999998,
+  "lng": -46.6192006,
+  "nota": 4.4,
+  "aval": 233
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "UseReuse Ateliê",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "floricultura/presentes",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. da Independência, 231 · cambuci-aclimacao",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 98965-6557",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "UseReuse Ateliê logo",
+    "UseReuse Ateliê cambuci-aclimacao instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

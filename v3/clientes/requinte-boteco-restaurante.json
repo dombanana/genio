@@ -1,0 +1,55 @@
+{
+ "nome": "Requinte Boteco & Restaurante",
+ "slug": "requinte-boteco-restaurante",
+ "rota": {
+  "centro": "ipiranga",
+  "dia": 2,
+  "ordem": 17,
+  "place_id": "ChIJqVJUqF9bzpQRLlA2CWvynAo",
+  "lat": -23.5989357,
+  "lng": -46.6004734,
+  "nota": 3.3,
+  "aval": 201
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Requinte Boteco & Restaurante",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "restaurante",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Silva Bueno, 2309 · ipiranga",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · cardápio de parede · Mostra Aí",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 4306-5888",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Requinte Boteco & Restaurante logo",
+    "Requinte Boteco & Restaurante ipiranga instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

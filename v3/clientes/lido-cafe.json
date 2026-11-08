@@ -1,0 +1,55 @@
+{
+ "nome": "Lido Café",
+ "slug": "lido-cafe",
+ "rota": {
+  "centro": "sao-caetano",
+  "dia": 2,
+  "ordem": 6,
+  "place_id": "ChIJ-yJDpO5dzpQREzwHDjRHgvg",
+  "lat": -23.6141392,
+  "lng": -46.5727373,
+  "nota": 5.0,
+  "aval": 64
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Lido Café",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "cafeteria",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Manoel Coelho, 506 · sao-caetano",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · cardápio de parede · Mostra Aí",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 2376-8739",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Lido Café logo",
+    "Lido Café sao-caetano instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

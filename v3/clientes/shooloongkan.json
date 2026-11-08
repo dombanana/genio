@@ -1,0 +1,55 @@
+{
+ "nome": "SHOOLOONGKAN",
+ "slug": "shooloongkan",
+ "rota": {
+  "centro": "liberdade",
+  "dia": 2,
+  "ordem": 11,
+  "place_id": "ChIJ8UqnFwBZzpQRJ1T49Z8Ku7A",
+  "lat": -23.558385599999998,
+  "lng": -46.6339267,
+  "nota": 4.7,
+  "aval": 185
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "SHOOLOONGKAN",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "restaurante",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. da Glória, 589 · liberdade",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · cardápio de parede · Mostra Aí",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 98128-3528",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "SHOOLOONGKAN logo",
+    "SHOOLOONGKAN liberdade instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

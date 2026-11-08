@@ -1,0 +1,55 @@
+{
+ "nome": "Marisbel",
+ "slug": "marisbel",
+ "rota": {
+  "centro": "sao-caetano",
+  "dia": 1,
+  "ordem": 9,
+  "place_id": "ChIJs0i7luxczpQRExnr-L8-wJI",
+  "lat": -23.616564699999998,
+  "lng": -46.572558,
+  "nota": 4.9,
+  "aval": 17
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Marisbel",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "restaurante",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Manoel Coelho, 790 · sao-caetano",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · cardápio de parede · Mostra Aí",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 4227-2519",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Marisbel logo",
+    "Marisbel sao-caetano instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

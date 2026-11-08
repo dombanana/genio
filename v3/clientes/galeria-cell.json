@@ -1,0 +1,55 @@
+{
+ "nome": "Galeria Cell",
+ "slug": "galeria-cell",
+ "rota": {
+  "centro": "bras-belem",
+  "dia": 1,
+  "ordem": 19,
+  "place_id": "ChIJq6raWidZzpQRKXHGb1Izlrw",
+  "lat": -23.5391935,
+  "lng": -46.6071988,
+  "nota": 5.0,
+  "aval": 512
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Galeria Cell",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "comércio",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Av. Celso Garcia, 528 · bras-belem",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · placa · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 94641-4962",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Galeria Cell logo",
+    "Galeria Cell bras-belem instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

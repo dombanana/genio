@@ -1,0 +1,55 @@
+{
+ "nome": "You Offices Ibitirama",
+ "slug": "you-offices-ibitirama",
+ "rota": {
+  "centro": "vila-prudente",
+  "dia": 1,
+  "ordem": 17,
+  "place_id": "ChIJMUoQDg5czpQR0YNFIGW8nlE",
+  "lat": -23.582775899999998,
+  "lng": -46.5841485,
+  "nota": 4.4,
+  "aval": 269
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "You Offices Ibitirama",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "escritório/imobiliária",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Ingaí, 156 · vila-prudente",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "placa de recepção · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 2579-0707",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "You Offices Ibitirama logo",
+    "You Offices Ibitirama vila-prudente instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

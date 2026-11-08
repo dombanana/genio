@@ -1,0 +1,55 @@
+{
+ "nome": "O RANCHO",
+ "slug": "o-rancho",
+ "rota": {
+  "centro": "sao-caetano",
+  "dia": 1,
+  "ordem": 14,
+  "place_id": "ChIJzdP47uxczpQRufeKwRnjam8",
+  "lat": -23.6155491,
+  "lng": -46.572384299999996,
+  "nota": 4.6,
+  "aval": 119
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "O RANCHO",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "restaurante",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Manoel Coelho, 683 · sao-caetano",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · cardápio de parede · Mostra Aí",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 99487-0356",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "O RANCHO logo",
+    "O RANCHO sao-caetano instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

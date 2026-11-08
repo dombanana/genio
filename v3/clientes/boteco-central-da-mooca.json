@@ -1,0 +1,50 @@
+{
+ "nome": "Boteco Central da Mooca",
+ "slug": "boteco-central-da-mooca",
+ "rota": {
+  "centro": "bras-belem",
+  "dia": 2,
+  "ordem": 24,
+  "place_id": "ChIJPWa0m5VZzpQRmny4q9coS48",
+  "lat": -23.5475727,
+  "lng": -46.6073418,
+  "nota": 4.4,
+  "aval": 878
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Boteco Central da Mooca",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "bar",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Ipanema, 494 · bras-belem",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · cardápio · banner",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Boteco Central da Mooca logo",
+    "Boteco Central da Mooca bras-belem instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

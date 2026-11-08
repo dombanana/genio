@@ -1,0 +1,55 @@
+{
+ "nome": "Espaço Livre Açaí Tatuapé",
+ "slug": "espaco-livre-acai-tatuape",
+ "rota": {
+  "centro": "tatuape",
+  "dia": 1,
+  "ordem": 21,
+  "place_id": "ChIJ9-Gf4t1ezpQRcTXuQwxwxDw",
+  "lat": -23.5334531,
+  "lng": -46.575449,
+  "nota": 4.8,
+  "aval": 520
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Espaço Livre Açaí Tatuapé",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "restaurante",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Tuiuti, 925 · tatuape",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · cardápio de parede · Mostra Aí",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 3360-8125",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Espaço Livre Açaí Tatuapé logo",
+    "Espaço Livre Açaí Tatuapé tatuape instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

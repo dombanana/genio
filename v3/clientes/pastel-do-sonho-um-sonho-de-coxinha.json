@@ -1,0 +1,55 @@
+{
+ "nome": "Pastel do Sonho (Um Sonho de Coxinha)",
+ "slug": "pastel-do-sonho-um-sonho-de-coxinha",
+ "rota": {
+  "centro": "liberdade",
+  "dia": 2,
+  "ordem": 15,
+  "place_id": "ChIJOaGbcaJZzpQR0HWo3xaa4vU",
+  "lat": -23.558795099999998,
+  "lng": -46.6338898,
+  "nota": 4.4,
+  "aval": 183
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Pastel do Sonho (Um Sonho de Coxinha)",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "restaurante",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. da Glória, 629 · liberdade",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · cardápio de parede · Mostra Aí",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 94375-2572",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Pastel do Sonho (Um Sonho de Coxinha) logo",
+    "Pastel do Sonho (Um Sonho de Coxinha) liberdade instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

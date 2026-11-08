@@ -1,0 +1,55 @@
+{
+ "nome": "SVM Negócios Imobiliários",
+ "slug": "svm-negocios-imobiliarios",
+ "rota": {
+  "centro": "saude-jabaquara",
+  "dia": 2,
+  "ordem": 3,
+  "place_id": "ChIJh_c911FazpQRGQGeGboNfaA",
+  "lat": -23.617144900000003,
+  "lng": -46.6386687,
+  "nota": 5.0,
+  "aval": 3
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "SVM Negócios Imobiliários",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "escritório/imobiliária",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Av. Jabaquara, 1469 · saude-jabaquara",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "placa de recepção · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 2275-9435",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "SVM Negócios Imobiliários logo",
+    "SVM Negócios Imobiliários saude-jabaquara instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

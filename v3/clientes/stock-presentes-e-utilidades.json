@@ -1,0 +1,55 @@
+{
+ "nome": "Stock Presentes e Utilidades",
+ "slug": "stock-presentes-e-utilidades",
+ "rota": {
+  "centro": "saude-jabaquara",
+  "dia": 2,
+  "ordem": 19,
+  "place_id": "ChIJY_zRvk5azpQRbMLLZib2df0",
+  "lat": -23.6121087,
+  "lng": -46.6377142,
+  "nota": 4.2,
+  "aval": 18
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Stock Presentes e Utilidades",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "floricultura/presentes",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Av. Jabaquara, 901 · saude-jabaquara",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 5066-7402",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Stock Presentes e Utilidades logo",
+    "Stock Presentes e Utilidades saude-jabaquara instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

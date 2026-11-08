@@ -1,0 +1,55 @@
+{
+ "nome": "Ótica Vila Prudente | Especialista em Lentes Multifocais | +50 Anos no Mercado Ótico",
+ "slug": "otica-vila-prudente-especialista-em-lentes-multifocais-50-anos-no-mercado-otico",
+ "rota": {
+  "centro": "vila-prudente",
+  "dia": 1,
+  "ordem": 16,
+  "place_id": "ChIJwcWHRA5czpQRySFDFRfTb54",
+  "lat": -23.5820181,
+  "lng": -46.5852977,
+  "nota": 4.9,
+  "aval": 222
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Ótica Vila Prudente | Especialista em Lentes Multifocais | +50 Anos no Mercado Ótico",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "ótica",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Ibitirama, 27 · vila-prudente",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · placa · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 2273-0308",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Ótica Vila Prudente | Especialista em Lentes Multifocais | +50 Anos no Mercado Ótico logo",
+    "Ótica Vila Prudente | Especialista em Lentes Multifocais | +50 Anos no Mercado Ótico vila-prudente instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

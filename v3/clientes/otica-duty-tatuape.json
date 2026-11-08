@@ -1,0 +1,55 @@
+{
+ "nome": "Ótica Duty - Tatuapé",
+ "slug": "otica-duty-tatuape",
+ "rota": {
+  "centro": "tatuape",
+  "dia": 2,
+  "ordem": 23,
+  "place_id": "ChIJcXCGhJdfzpQRaaKSQbYkeuU",
+  "lat": -23.5465472,
+  "lng": -46.5741723,
+  "nota": 4.9,
+  "aval": 76
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Ótica Duty - Tatuapé",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "ótica",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Tuiuti, 2390 · tatuape",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · placa · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 91546-5025",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Ótica Duty - Tatuapé logo",
+    "Ótica Duty - Tatuapé tatuape instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

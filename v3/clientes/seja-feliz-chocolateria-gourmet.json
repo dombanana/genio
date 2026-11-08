@@ -1,0 +1,55 @@
+{
+ "nome": "Seja Feliz Chocolateria Gourmet",
+ "slug": "seja-feliz-chocolateria-gourmet",
+ "rota": {
+  "centro": "sao-caetano",
+  "dia": 2,
+  "ordem": 3,
+  "place_id": "ChIJV05KzBZDzpQRTI8OD1tkz6k",
+  "lat": -23.6143803,
+  "lng": -46.5723038,
+  "nota": 4.9,
+  "aval": 220
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Seja Feliz Chocolateria Gourmet",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "padaria",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Manoel Coelho, 551 · sao-caetano",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · adesivo de vitrine · cardápio de parede",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 97179-5009",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Seja Feliz Chocolateria Gourmet logo",
+    "Seja Feliz Chocolateria Gourmet sao-caetano instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

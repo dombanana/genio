@@ -1,0 +1,55 @@
+{
+ "nome": "CT Assistência Técnica Especializada",
+ "slug": "ct-assistencia-tecnica-especializada",
+ "rota": {
+  "centro": "tatuape",
+  "dia": 2,
+  "ordem": 25,
+  "place_id": "ChIJJwpZtu9ezpQRi2qkVu1u4iM",
+  "lat": -23.5469008,
+  "lng": -46.574265,
+  "nota": 4.8,
+  "aval": 232
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "CT Assistência Técnica Especializada",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "celular/assistência",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Tuiuti, 2416 · tatuape",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · placa · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 94110-5088",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "CT Assistência Técnica Especializada logo",
+    "CT Assistência Técnica Especializada tatuape instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

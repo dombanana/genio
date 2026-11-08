@@ -1,0 +1,55 @@
+{
+ "nome": "Guenki by SOHO - Unidade Saúde Salão de Beleza",
+ "slug": "guenki-by-soho-unidade-saude-salao-de-beleza",
+ "rota": {
+  "centro": "saude-jabaquara",
+  "dia": 1,
+  "ordem": 11,
+  "place_id": "ChIJUXf29ApbzpQRK2o3yin_qs8",
+  "lat": -23.620250799999997,
+  "lng": -46.6399403,
+  "nota": 4.3,
+  "aval": 460
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Guenki by SOHO - Unidade Saúde Salão de Beleza",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "salão/barbearia",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Av. Jabaquara, 1820 · saude-jabaquara",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · adesivo de vitrine · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 5595-8681",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Guenki by SOHO - Unidade Saúde Salão de Beleza logo",
+    "Guenki by SOHO - Unidade Saúde Salão de Beleza saude-jabaquara instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

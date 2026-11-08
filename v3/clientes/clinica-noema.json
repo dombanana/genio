@@ -1,0 +1,55 @@
+{
+ "nome": "Clinica Noema",
+ "slug": "clinica-noema",
+ "rota": {
+  "centro": "vila-mariana",
+  "dia": 2,
+  "ordem": 13,
+  "place_id": "ChIJOdirPA5ZzpQRIxym0_GaIcs",
+  "lat": -23.587441,
+  "lng": -46.644733599999995,
+  "nota": 5.0,
+  "aval": 3
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Clinica Noema",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "clínica/consultório",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Joaquim Távora · vila-mariana",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "placa de recepção · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 94979-7070",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Clinica Noema logo",
+    "Clinica Noema vila-mariana instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

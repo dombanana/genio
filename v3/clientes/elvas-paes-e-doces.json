@@ -1,0 +1,55 @@
+{
+ "nome": "Elvas Pães e Doces",
+ "slug": "elvas-paes-e-doces",
+ "rota": {
+  "centro": "ipiranga",
+  "dia": 1,
+  "ordem": 13,
+  "place_id": "ChIJQd4CiPFbzpQRObvpTCzyDkI",
+  "lat": -23.589185,
+  "lng": -46.6013865,
+  "nota": 4.3,
+  "aval": 3052
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Elvas Pães e Doces",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "padaria",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Rua Dom Lucas Obes, 608 · ipiranga",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · adesivo de vitrine · cardápio de parede",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 2063-5695",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Elvas Pães e Doces logo",
+    "Elvas Pães e Doces ipiranga instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

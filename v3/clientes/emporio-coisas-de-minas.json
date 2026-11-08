@@ -1,0 +1,55 @@
+{
+ "nome": "Empório Coisas de Minas",
+ "slug": "emporio-coisas-de-minas",
+ "rota": {
+  "centro": "mooca",
+  "dia": 1,
+  "ordem": 15,
+  "place_id": "ChIJ6V7qMTZZzpQRFSuvpp_a8AM",
+  "lat": -23.5547666,
+  "lng": -46.600188499999994,
+  "nota": 4.7,
+  "aval": 2516
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Empório Coisas de Minas",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "restaurante",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Temos uma Bicicleta Amarela Na Calçada · mooca",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · cardápio de parede · Mostra Aí",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 2639-9137",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Empório Coisas de Minas logo",
+    "Empório Coisas de Minas mooca instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

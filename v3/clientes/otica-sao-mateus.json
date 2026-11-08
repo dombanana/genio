@@ -1,0 +1,55 @@
+{
+ "nome": "Ótica São Mateus",
+ "slug": "otica-sao-mateus",
+ "rota": {
+  "centro": "bras-belem",
+  "dia": 1,
+  "ordem": 12,
+  "place_id": "ChIJ0_g3oCBZzpQRHJjr3eMXfe0",
+  "lat": -23.539475,
+  "lng": -46.6087242,
+  "nota": null,
+  "aval": null
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Ótica São Mateus",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "ótica",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Av. Celso Garcia, 378 · bras-belem",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · placa · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 2694-8023",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Ótica São Mateus logo",
+    "Ótica São Mateus bras-belem instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

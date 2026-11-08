@@ -1,0 +1,55 @@
+{
+ "nome": "ana rosa packaging",
+ "slug": "ana-rosa-packaging",
+ "rota": {
+  "centro": "vila-mariana",
+  "dia": 1,
+  "ordem": 22,
+  "place_id": "ChIJBU37l4ZZzpQRgAqz3xc-3lY",
+  "lat": -23.5836036,
+  "lng": -46.638067199999995,
+  "nota": 4.7,
+  "aval": 166
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "ana rosa packaging",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "floricultura/presentes",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Domingos de Morais, 770 · vila-mariana",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 5573-4347",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "ana rosa packaging logo",
+    "ana rosa packaging vila-mariana instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

@@ -1,0 +1,55 @@
+{
+ "nome": "ContSmart Contabilidade Digital",
+ "slug": "contsmart-contabilidade-digital",
+ "rota": {
+  "centro": "santo-andre",
+  "dia": 1,
+  "ordem": 9,
+  "place_id": "ChIJCQ1KdqRCzpQR-SbO0Sp6-BI",
+  "lat": -23.6625996,
+  "lng": -46.5242538,
+  "nota": 5.0,
+  "aval": 74
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "ContSmart Contabilidade Digital",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "escritório/imobiliária",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Cel. Abílio Soares, 261 · santo-andre",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "placa de recepção · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 98865-3631",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "ContSmart Contabilidade Digital logo",
+    "ContSmart Contabilidade Digital santo-andre instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

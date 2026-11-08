@@ -1,0 +1,55 @@
+{
+ "nome": "Ótica e Foto Manan",
+ "slug": "otica-e-foto-manan",
+ "rota": {
+  "centro": "vila-prudente",
+  "dia": 2,
+  "ordem": 11,
+  "place_id": "ChIJiW-jZW1czpQRIITAE9mUEhs",
+  "lat": -23.5908589,
+  "lng": -46.5812136,
+  "nota": 4.5,
+  "aval": 6
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Ótica e Foto Manan",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "ótica",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Ibitirama, 1183 · vila-prudente",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · placa · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 94060-9728",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Ótica e Foto Manan logo",
+    "Ótica e Foto Manan vila-prudente instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

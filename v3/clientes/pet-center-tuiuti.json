@@ -1,0 +1,55 @@
+{
+ "nome": "Pet Center Tuiuti",
+ "slug": "pet-center-tuiuti",
+ "rota": {
+  "centro": "tatuape",
+  "dia": 1,
+  "ordem": 24,
+  "place_id": "ChIJB6qy2N1ezpQRWgUUa6tLRGQ",
+  "lat": -23.5326319,
+  "lng": -46.575496799999996,
+  "nota": 4.7,
+  "aval": 6
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Pet Center Tuiuti",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "pet",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Tuiuti, 833 · tatuape",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · placa · adesivo de vitrine",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 98862-6284",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Pet Center Tuiuti logo",
+    "Pet Center Tuiuti tatuape instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

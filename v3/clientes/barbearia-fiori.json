@@ -1,0 +1,130 @@
+{
+ "nome": "Barbearia Fiori",
+ "slug": "barbearia-fiori",
+ "rota": {
+  "centro": "ipiranga",
+  "dia": 2,
+  "ordem": 6,
+  "place_id": "ChIJdwrpBI1bzpQR37WJ31h4V8E",
+  "lat": -23.595669899999997,
+  "lng": -46.6010393,
+  "nota": 4.7,
+  "aval": 312
+ },
+ "coletadoEm": "2026-11-07",
+ "fontes": [
+  "Google Places (rota)",
+  "Fresha",
+  "Linktree oficial",
+  "Estadão Conteúdo / IstoÉ Dinheiro / Exame (07/2020)",
+  "negocio.site e InBarber (não abriram daqui)",
+  "Avaliações Brasil (não abriu)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Barbearia Fiori",
+   "origem": "publico",
+   "fontes": [
+    "Fresha",
+    "Linktree",
+    "Estadão"
+   ]
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "Barbearia tradicional · cortes tradicionais a modernos, barba, barba com toalha quente",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Silva Bueno, 1940 · Ipiranga · 04208-001 · São Paulo",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "encontrado",
+   "valor": "Corte masculino · barba · barba com toalha quente",
+   "origem": "publico",
+   "nota": "Fresha; sem preços públicos"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 2591-6403",
+   "origem": "publico",
+   "nota": "Fresha; WhatsApp não encontrado — agendamento pelo InBarber"
+  },
+  "logoOriginal": {
+   "estado": "encontrado",
+   "origem": "publico",
+   "valor": "https://ugc.production.linktr.ee/1a196ae8-5422-4505-a7d8-3d266b80913f_IMG-1963.jpeg?io=true&size=avatar-v3_0",
+   "nome": "Imagem de perfil do Linktree oficial",
+   "opcoes": [
+    {
+     "img": "https://ugc.production.linktr.ee/1a196ae8-5422-4505-a7d8-3d266b80913f_IMG-1963.jpeg?io=true&size=avatar-v3_0",
+     "legenda": "Imagem de perfil · Linktree oficial (linktr.ee/barbeariafiori)",
+     "fonte": "Linktree"
+    }
+   ],
+   "escolhida": 0,
+   "nota": "Único candidato: é a imagem que a própria barbearia usa como perfil. Arquivo chama IMG-1963.jpeg (upload de celular) — pode ser foto, não arte; confirmar ao abrir."
+  },
+  "horario": {
+   "estado": "encontrado",
+   "valor": "seg–sex 8h–18h30 · sáb 8h–18h · dom fechado",
+   "origem": "publico",
+   "nota": "Fresha (única fonte com horário)"
+  },
+  "site": {
+   "estado": "encontrado",
+   "valor": "barbearia-fiori.negocio.site (Google Meu Negócio) · linktr.ee/barbeariafiori",
+   "origem": "publico"
+  },
+  "redes": {
+   "estado": "pendente",
+   "origem": "publico",
+   "valor": "",
+   "nota": "Linktree não lista Instagram/Facebook; nenhum @ encontrado nas buscas — perguntar na porta"
+  },
+  "leitura": {
+   "estado": "pendente",
+   "origem": "publico",
+   "valor": "",
+   "nota": "Razão social/CNPJ não encontrados em fonte pública aberta"
+  },
+  "registro": {
+   "estado": "nao",
+   "origem": "publico",
+   "valor": "nenhum registro/selo encontrado (candidata ao selo cultural da Prefeitura: +75 anos)"
+  },
+  "sobre": {
+   "estado": "encontrado",
+   "valor": "Fundada por volta de 1917, na mesma Silva Bueno, por um barbeiro italiano chamado Fiori, cujo nome a casa ainda carrega. Sobreviveu à Gripe Espanhola e, há mais de 30 anos, pertence à família Rodrigues Silva — Adílson e hoje o filho Caíque. Quatro cadeiras, cortes tradicionais a modernos.",
+   "origem": "publico",
+   "nota": "Estadão Conteúdo (07/2020) + Linktree (\"106 anos\")"
+  },
+  "slogan": {
+   "estado": "pendente",
+   "origem": "cliente",
+   "valor": "",
+   "opcoes": [
+    {
+     "valor": "106 anos",
+     "legenda": "título do Linktree",
+     "fonte": "Linktree"
+    },
+    {
+     "valor": "Cortes tradicionais a modernos",
+     "legenda": "bio do Linktree",
+     "fonte": "Linktree"
+    }
+   ],
+   "nota": "nenhum slogan declarado; duas frases que a casa usa — escolher ou perguntar"
+  },
+  "fachada": {
+   "estado": "pendente",
+   "origem": "porta",
+   "referencias": [],
+   "nota": "nenhuma foto do local em fonte aberta (Fresha usa imagem genérica; Exame usa foto de banco Getty — descartadas). Tirar na porta."
+  }
+ }
+}

@@ -1,0 +1,55 @@
+{
+ "nome": "Fily Flores",
+ "slug": "fily-flores",
+ "rota": {
+  "centro": "ipiranga",
+  "dia": 1,
+  "ordem": 25,
+  "place_id": "ChIJtSjRpAFbzpQR-3tZdHgYAHc",
+  "lat": -23.593548,
+  "lng": -46.601325,
+  "nota": 4.9,
+  "aval": 90
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Fily Flores",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "floricultura/presentes",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Silva Bueno, 1698/1702 · ipiranga",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 99824-9982",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Fily Flores logo",
+    "Fily Flores ipiranga instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

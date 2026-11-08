@@ -1,0 +1,55 @@
+{
+ "nome": "Você Sorrindo Implantes Vila Prudente (Unidade 1) | Dentista em Vila Prudente | Implantes Dentários | Próteses Dentárias",
+ "slug": "voce-sorrindo-implantes-vila-prudente-unidade-1-dentista-em-vila-prudente-implantes-dentarios-proteses-dentarias",
+ "rota": {
+  "centro": "vila-prudente",
+  "dia": 1,
+  "ordem": 12,
+  "place_id": "ChIJi1rQ4BxdzpQR5NpbQEH2LpQ",
+  "lat": -23.5819492,
+  "lng": -46.585574799999996,
+  "nota": 4.9,
+  "aval": 78
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Você Sorrindo Implantes Vila Prudente (Unidade 1) | Dentista em Vila Prudente | Implantes Dentários | Próteses Dentárias",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "clínica/consultório",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Ibitirama, 8 · vila-prudente",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "placa de recepção · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 94598-1400",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Você Sorrindo Implantes Vila Prudente (Unidade 1) | Dentista em Vila Prudente | Implantes Dentários | Próteses Dentárias logo",
+    "Você Sorrindo Implantes Vila Prudente (Unidade 1) | Dentista em Vila Prudente | Implantes Dentários | Próteses Dentárias vila-prudente instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

@@ -1,0 +1,55 @@
+{
+ "nome": "Presentes Comestíveis",
+ "slug": "presentes-comestiveis",
+ "rota": {
+  "centro": "cambuci-aclimacao",
+  "dia": 1,
+  "ordem": 1,
+  "place_id": "ChIJX8RpBa1ZzpQRNL80hpltzTE",
+  "lat": -23.5668635,
+  "lng": -46.6207291,
+  "nota": 5.0,
+  "aval": 60
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Presentes Comestíveis",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "padaria",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Backer, 86 · cambuci-aclimacao",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · adesivo de vitrine · cardápio de parede",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 97405-1460",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Presentes Comestíveis logo",
+    "Presentes Comestíveis cambuci-aclimacao instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

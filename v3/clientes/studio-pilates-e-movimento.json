@@ -1,0 +1,55 @@
+{
+ "nome": "Studio Pilates e Movimento",
+ "slug": "studio-pilates-e-movimento",
+ "rota": {
+  "centro": "ipiranga",
+  "dia": 2,
+  "ordem": 23,
+  "place_id": "ChIJ50E-OpNbzpQRt5e6uo0_65M",
+  "lat": -23.5962303,
+  "lng": -46.60651980000001,
+  "nota": 5.0,
+  "aval": 24
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Studio Pilates e Movimento",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "academia/estúdio",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Bom Pastor, 2224 · ipiranga",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "placa · adesivo de parede · uniformes",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 98909-0220",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Studio Pilates e Movimento logo",
+    "Studio Pilates e Movimento ipiranga instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

@@ -1,0 +1,55 @@
+{
+ "nome": "Moema Cell",
+ "slug": "moema-cell",
+ "rota": {
+  "centro": "moema",
+  "dia": 1,
+  "ordem": 16,
+  "place_id": "ChIJh19eH2pbzpQR6D1Dyx9knHc",
+  "lat": -23.6062726,
+  "lng": -46.6584131,
+  "nota": 4.8,
+  "aval": 62
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Moema Cell",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "comércio",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Alameda dos Nhambiquaras, 781 · moema",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · placa · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 99601-0003",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Moema Cell logo",
+    "Moema Cell moema instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

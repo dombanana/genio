@@ -1,0 +1,55 @@
+{
+ "nome": "Cafeteria Sinhá Maria - Café & Cia",
+ "slug": "cafeteria-sinha-maria-cafe-cia",
+ "rota": {
+  "centro": "sao-caetano",
+  "dia": 1,
+  "ordem": 24,
+  "place_id": "ChIJLbBZB91dzpQRigDP3PDC6d8",
+  "lat": -23.6149491,
+  "lng": -46.57373,
+  "nota": 4.8,
+  "aval": 59
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Cafeteria Sinhá Maria - Café & Cia",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "cafeteria",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Manoel Coelho, n° 600 · sao-caetano",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · cardápio de parede · Mostra Aí",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 95044-1810",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Cafeteria Sinhá Maria - Café & Cia logo",
+    "Cafeteria Sinhá Maria - Café & Cia sao-caetano instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

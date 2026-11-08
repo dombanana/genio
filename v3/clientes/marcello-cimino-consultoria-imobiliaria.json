@@ -1,0 +1,55 @@
+{
+ "nome": "Marcello Cimino Consultoria Imobiliária",
+ "slug": "marcello-cimino-consultoria-imobiliaria",
+ "rota": {
+  "centro": "vila-prudente",
+  "dia": 2,
+  "ordem": 10,
+  "place_id": "ChIJSZWsNBBczpQRnoVYk1fKFm8",
+  "lat": -23.5908233,
+  "lng": -46.5811886,
+  "nota": 4.9,
+  "aval": 108
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Marcello Cimino Consultoria Imobiliária",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "escritório/imobiliária",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Ibitirama, 1183 · vila-prudente",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "placa de recepção · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 2533-7590",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Marcello Cimino Consultoria Imobiliária logo",
+    "Marcello Cimino Consultoria Imobiliária vila-prudente instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

@@ -1,0 +1,55 @@
+{
+ "nome": "BEMAC Imóveis",
+ "slug": "bemac-imoveis",
+ "rota": {
+  "centro": "cambuci-aclimacao",
+  "dia": 1,
+  "ordem": 4,
+  "place_id": "ChIJXeyYO3JZzpQRDWYABlgNKOc",
+  "lat": -23.5675797,
+  "lng": -46.6238515,
+  "nota": 4.6,
+  "aval": 27
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "BEMAC Imóveis",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "escritório/imobiliária",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Hermínio Lemos, 66 · cambuci-aclimacao",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "placa de recepção · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 2268-4528",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "BEMAC Imóveis logo",
+    "BEMAC Imóveis cambuci-aclimacao instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

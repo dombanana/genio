@@ -1,0 +1,55 @@
+{
+ "nome": "Óticas Digimax | Loja Saúde",
+ "slug": "oticas-digimax-loja-saude",
+ "rota": {
+  "centro": "saude-jabaquara",
+  "dia": 1,
+  "ordem": 9,
+  "place_id": "ChIJg6EIKyRbzpQRXVb76_5ngDw",
+  "lat": -23.620069500000003,
+  "lng": -46.6399257,
+  "nota": 4.9,
+  "aval": 340
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Óticas Digimax | Loja Saúde",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "ótica",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Av. Jabaquara, 1798 · saude-jabaquara",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · placa · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 94562-6308",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Óticas Digimax | Loja Saúde logo",
+    "Óticas Digimax | Loja Saúde saude-jabaquara instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

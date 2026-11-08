@@ -1,0 +1,55 @@
+{
+ "nome": "Odonto Braga",
+ "slug": "odonto-braga",
+ "rota": {
+  "centro": "vila-prudente",
+  "dia": 1,
+  "ordem": 4,
+  "place_id": "ChIJ708B8A1czpQRaU4n70c6sIo",
+  "lat": -23.5838216,
+  "lng": -46.584283,
+  "nota": 4.9,
+  "aval": 145
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Odonto Braga",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "clínica/consultório",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Ibitirama, número 257 · vila-prudente",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "placa de recepção · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 98678-6677",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Odonto Braga logo",
+    "Odonto Braga vila-prudente instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

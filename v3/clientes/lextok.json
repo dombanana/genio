@@ -1,0 +1,55 @@
+{
+ "nome": "Lextok",
+ "slug": "lextok",
+ "rota": {
+  "centro": "moema",
+  "dia": 2,
+  "ordem": 3,
+  "place_id": "ChIJ7-Jr1g9azpQRmNofvLpj8Lc",
+  "lat": -23.6070487,
+  "lng": -46.6609756,
+  "nota": 4.5,
+  "aval": 17
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Lextok",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "floricultura/presentes",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Alameda dos Maracatins, 722 · moema",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 99276-8616",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Lextok logo",
+    "Lextok moema instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

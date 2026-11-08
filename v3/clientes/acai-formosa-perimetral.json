@@ -1,0 +1,55 @@
+{
+ "nome": "Açai Formosa (Perimetral)",
+ "slug": "acai-formosa-perimetral",
+ "rota": {
+  "centro": "santo-andre",
+  "dia": 2,
+  "ordem": 18,
+  "place_id": "ChIJXScBN75DzpQRwT4k6f0z1sU",
+  "lat": -23.660826,
+  "lng": -46.5288539,
+  "nota": 4.4,
+  "aval": 17
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Açai Formosa (Perimetral)",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "padaria",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Cel. Fernando Prestes, 216 · santo-andre",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · adesivo de vitrine · cardápio de parede",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 95195-9066",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Açai Formosa (Perimetral) logo",
+    "Açai Formosa (Perimetral) santo-andre instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

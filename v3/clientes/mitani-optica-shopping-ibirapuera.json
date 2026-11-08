@@ -1,0 +1,55 @@
+{
+ "nome": "Mitani Óptica | Shopping Ibirapuera",
+ "slug": "mitani-optica-shopping-ibirapuera",
+ "rota": {
+  "centro": "moema",
+  "dia": 2,
+  "ordem": 18,
+  "place_id": "ChIJJZF-IQlazpQR6ockXgCjhHQ",
+  "lat": -23.6098623,
+  "lng": -46.6668011,
+  "nota": 4.9,
+  "aval": 240
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Mitani Óptica | Shopping Ibirapuera",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "clínica/consultório",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Av. Ibirapuera, 3103 · moema",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "placa de recepção · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 99709-6185",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Mitani Óptica | Shopping Ibirapuera logo",
+    "Mitani Óptica | Shopping Ibirapuera moema instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

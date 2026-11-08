@@ -1,0 +1,55 @@
+{
+ "nome": "Óticas Ultra Técnica",
+ "slug": "oticas-ultra-tecnica",
+ "rota": {
+  "centro": "santo-andre",
+  "dia": 2,
+  "ordem": 8,
+  "place_id": "ChIJLaKkDOlDzpQR1iQT2bb7YfU",
+  "lat": -23.6547126,
+  "lng": -46.5268446,
+  "nota": 5.0,
+  "aval": 246
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Óticas Ultra Técnica",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "ótica",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Cel. Oliveira Lima, 78 · santo-andre",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · placa · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 91526-6763",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Óticas Ultra Técnica logo",
+    "Óticas Ultra Técnica santo-andre instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

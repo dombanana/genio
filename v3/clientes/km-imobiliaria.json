@@ -1,0 +1,55 @@
+{
+ "nome": "KM Imobiliária",
+ "slug": "km-imobiliaria",
+ "rota": {
+  "centro": "mooca",
+  "dia": 1,
+  "ordem": 12,
+  "place_id": "ChIJLTht1TdZzpQRzedaFhjZp_A",
+  "lat": -23.5556468,
+  "lng": -46.600691999999995,
+  "nota": 3.8,
+  "aval": 19
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "KM Imobiliária",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "escritório/imobiliária",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. da Mooca, 2518 · mooca",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "placa de recepção · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 2693-2897",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "KM Imobiliária logo",
+    "KM Imobiliária mooca instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

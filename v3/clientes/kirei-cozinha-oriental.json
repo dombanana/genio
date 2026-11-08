@@ -1,0 +1,55 @@
+{
+ "nome": "Kirei Cozinha Oriental",
+ "slug": "kirei-cozinha-oriental",
+ "rota": {
+  "centro": "liberdade",
+  "dia": 1,
+  "ordem": 6,
+  "place_id": "ChIJu1OQIQBZzpQRHBcJ-5Y-qZU",
+  "lat": -23.558814299999998,
+  "lng": -46.634938299999995,
+  "nota": 4.5,
+  "aval": 79
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Kirei Cozinha Oriental",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "restaurante",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Galvão Bueno, 365 · liberdade",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · cardápio de parede · Mostra Aí",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 94527-3395",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Kirei Cozinha Oriental logo",
+    "Kirei Cozinha Oriental liberdade instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

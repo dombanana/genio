@@ -1,0 +1,55 @@
+{
+ "nome": "Barbearia Yahiro",
+ "slug": "barbearia-yahiro",
+ "rota": {
+  "centro": "liberdade",
+  "dia": 1,
+  "ordem": 10,
+  "place_id": "ChIJuxmTJKZZzpQRbvZxsr1R5RE",
+  "lat": -23.5585333,
+  "lng": -46.6352006,
+  "nota": 4.8,
+  "aval": 188
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Barbearia Yahiro",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "salão/barbearia",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Rua Barão de Iguape, 180A · liberdade",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · adesivo de vitrine · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 99296-2969",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Barbearia Yahiro logo",
+    "Barbearia Yahiro liberdade instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

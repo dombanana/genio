@@ -1,0 +1,55 @@
+{
+ "nome": "Ótica Notre Vision Mooca",
+ "slug": "otica-notre-vision-mooca",
+ "rota": {
+  "centro": "mooca",
+  "dia": 2,
+  "ordem": 8,
+  "place_id": "ChIJu339Xq5ZzpQR0QjbrjsDqPE",
+  "lat": -23.554992199999997,
+  "lng": -46.6062847,
+  "nota": 4.9,
+  "aval": 715
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Ótica Notre Vision Mooca",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "ótica",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. da Mooca, 1944 · mooca",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · placa · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 4508-4585",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Ótica Notre Vision Mooca logo",
+    "Ótica Notre Vision Mooca mooca instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

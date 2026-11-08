@@ -1,0 +1,55 @@
+{
+ "nome": "Raffaello Presentes e Decorações",
+ "slug": "raffaello-presentes-e-decoracoes",
+ "rota": {
+  "centro": "sao-caetano",
+  "dia": 1,
+  "ordem": 4,
+  "place_id": "ChIJLyJ6gcJczpQROHPcgOZdI8Q",
+  "lat": -23.6200859,
+  "lng": -46.5665611,
+  "nota": 4.5,
+  "aval": 112
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Raffaello Presentes e Decorações",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "floricultura/presentes",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Rafael Corrêa Sampaio, 688 · sao-caetano",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 2376-6162",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Raffaello Presentes e Decorações logo",
+    "Raffaello Presentes e Decorações sao-caetano instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

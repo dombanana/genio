@@ -1,0 +1,55 @@
+{
+ "nome": "Maria Cestas",
+ "slug": "maria-cestas",
+ "rota": {
+  "centro": "sao-caetano",
+  "dia": 2,
+  "ordem": 9,
+  "place_id": "ChIJA-_9JRxdzpQRSHs3nqL1IWg",
+  "lat": -23.6131437,
+  "lng": -46.572295200000006,
+  "nota": 5.0,
+  "aval": 3
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Maria Cestas",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "comércio",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Manoel Coelho, 389 · sao-caetano",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · placa · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 94671-0545",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Maria Cestas logo",
+    "Maria Cestas sao-caetano instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

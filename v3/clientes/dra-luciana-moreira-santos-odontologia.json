@@ -1,0 +1,55 @@
+{
+ "nome": "Dra. Luciana Moreira Santos - Odontologia",
+ "slug": "dra-luciana-moreira-santos-odontologia",
+ "rota": {
+  "centro": "santo-andre",
+  "dia": 1,
+  "ordem": 13,
+  "place_id": "ChIJ2-7ugYhCzpQRLUJ2DnUw5xU",
+  "lat": -23.6602277,
+  "lng": -46.5259778,
+  "nota": 4.9,
+  "aval": 72
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Dra. Luciana Moreira Santos - Odontologia",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "clínica/consultório",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Sen. Flaquer, 153 · santo-andre",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "placa de recepção · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 99423-6416",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Dra. Luciana Moreira Santos - Odontologia logo",
+    "Dra. Luciana Moreira Santos - Odontologia santo-andre instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

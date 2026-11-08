@@ -1,0 +1,55 @@
+{
+ "nome": "Consultório Odontológico",
+ "slug": "consultorio-odontologico",
+ "rota": {
+  "centro": "saude-jabaquara",
+  "dia": 2,
+  "ordem": 11,
+  "place_id": "ChIJN5iYSlBazpQRz3i7O6ay3A4",
+  "lat": -23.617377299999998,
+  "lng": -46.6392375,
+  "nota": null,
+  "aval": null
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Consultório Odontológico",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "clínica/consultório",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Av. Jabaquara, 1546 · saude-jabaquara",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "placa de recepção · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 5594-4407",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Consultório Odontológico logo",
+    "Consultório Odontológico saude-jabaquara instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

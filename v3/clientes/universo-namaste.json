@@ -1,0 +1,55 @@
+{
+ "nome": "Universo Namastê",
+ "slug": "universo-namaste",
+ "rota": {
+  "centro": "tatuape",
+  "dia": 1,
+  "ordem": 11,
+  "place_id": "ChIJyQq3a1NfzpQReqZqrpy0Ttk",
+  "lat": -23.536691899999997,
+  "lng": -46.5756118,
+  "nota": 4.5,
+  "aval": 12
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Universo Namastê",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "floricultura/presentes",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Tuiuti, nº 1284 · tatuape",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 97736-0760",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Universo Namastê logo",
+    "Universo Namastê tatuape instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

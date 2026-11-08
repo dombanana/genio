@@ -1,0 +1,55 @@
+{
+ "nome": "Padaria Famalicense",
+ "slug": "padaria-famalicense",
+ "rota": {
+  "centro": "cambuci-aclimacao",
+  "dia": 1,
+  "ordem": 23,
+  "place_id": "ChIJk8K4H21ZzpQRu6LsDwpb04E",
+  "lat": -23.5635335,
+  "lng": -46.619982799999995,
+  "nota": 4.4,
+  "aval": 4081
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Padaria Famalicense",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "padaria",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Clímaco Barbosa, 46 · cambuci-aclimacao",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · adesivo de vitrine · cardápio de parede",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 99804-1804",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Padaria Famalicense logo",
+    "Padaria Famalicense cambuci-aclimacao instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

@@ -1,0 +1,55 @@
+{
+ "nome": "Dr. Alexandre C. Ozaki",
+ "slug": "dr-alexandre-c-ozaki",
+ "rota": {
+  "centro": "saude-jabaquara",
+  "dia": 2,
+  "ordem": 16,
+  "place_id": "ChIJS77uy1FazpQRl0_1GCJs8GY",
+  "lat": -23.61663,
+  "lng": -46.638591,
+  "nota": 3.8,
+  "aval": 13
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Dr. Alexandre C. Ozaki",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "clínica/consultório",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Av. Jabaquara, 1397 · saude-jabaquara",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "placa de recepção · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 94517-7712",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Dr. Alexandre C. Ozaki logo",
+    "Dr. Alexandre C. Ozaki saude-jabaquara instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

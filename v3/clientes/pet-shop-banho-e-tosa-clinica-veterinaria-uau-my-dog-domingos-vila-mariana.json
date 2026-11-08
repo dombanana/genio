@@ -1,0 +1,55 @@
+{
+ "nome": "Pet Shop | Banho e tosa | Clínica Veterinária | Uau My Dog Domingos Vila Mariana",
+ "slug": "pet-shop-banho-e-tosa-clinica-veterinaria-uau-my-dog-domingos-vila-mariana",
+ "rota": {
+  "centro": "vila-mariana",
+  "dia": 1,
+  "ordem": 11,
+  "place_id": "ChIJgyxrsYBZzpQRLzs4Mkgc0Ug",
+  "lat": -23.586213,
+  "lng": -46.63646000000001,
+  "nota": 4.5,
+  "aval": 400
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Pet Shop | Banho e tosa | Clínica Veterinária | Uau My Dog Domingos Vila Mariana",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "pet",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Domingos de Morais, 1110 · vila-mariana",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · placa · adesivo de vitrine",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 5572-9831",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Pet Shop | Banho e tosa | Clínica Veterinária | Uau My Dog Domingos Vila Mariana logo",
+    "Pet Shop | Banho e tosa | Clínica Veterinária | Uau My Dog Domingos Vila Mariana vila-mariana instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

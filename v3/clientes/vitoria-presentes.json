@@ -1,0 +1,50 @@
+{
+ "nome": "Vitória Presentes",
+ "slug": "vitoria-presentes",
+ "rota": {
+  "centro": "sao-caetano",
+  "dia": 2,
+  "ordem": 20,
+  "place_id": "ChIJ3RjOkfJczpQR9P90YHrPG3M",
+  "lat": -23.6115879,
+  "lng": -46.5722971,
+  "nota": 4.0,
+  "aval": 3
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Vitória Presentes",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "floricultura/presentes",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Manoel Coelho, 229 · sao-caetano",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Vitória Presentes logo",
+    "Vitória Presentes sao-caetano instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

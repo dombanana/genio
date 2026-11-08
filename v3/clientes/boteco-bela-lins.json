@@ -1,0 +1,55 @@
+{
+ "nome": "Boteco Bela Lins",
+ "slug": "boteco-bela-lins",
+ "rota": {
+  "centro": "cambuci-aclimacao",
+  "dia": 2,
+  "ordem": 12,
+  "place_id": "ChIJXV46mG1ZzpQRJukuM8L_f9E",
+  "lat": -23.565580699999998,
+  "lng": -46.621174599999996,
+  "nota": 4.3,
+  "aval": 102
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Boteco Bela Lins",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "bar",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Av. Lins de Vasconcelos, 261 · cambuci-aclimacao",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · cardápio · banner",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 96276-5606",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Boteco Bela Lins logo",
+    "Boteco Bela Lins cambuci-aclimacao instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

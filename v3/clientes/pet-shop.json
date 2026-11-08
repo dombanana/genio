@@ -1,0 +1,50 @@
+{
+ "nome": "PET SHOP",
+ "slug": "pet-shop",
+ "rota": {
+  "centro": "moema",
+  "dia": 1,
+  "ordem": 17,
+  "place_id": "ChIJMarzVBBazpQRodyb8aByLwI",
+  "lat": -23.6064927,
+  "lng": -46.6586807,
+  "nota": 5.0,
+  "aval": 1
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "PET SHOP",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "pet",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Alameda dos Nhambiquaras, 817 · moema",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · placa · adesivo de vitrine",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "PET SHOP logo",
+    "PET SHOP moema instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

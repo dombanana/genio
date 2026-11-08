@@ -1,0 +1,55 @@
+{
+ "nome": "Floricultura Frutaflor",
+ "slug": "floricultura-frutaflor",
+ "rota": {
+  "centro": "santo-andre",
+  "dia": 2,
+  "ordem": 14,
+  "place_id": "ChIJpxqR4YhCzpQRQSChwIxSmD8",
+  "lat": -23.660671999999998,
+  "lng": -46.527843,
+  "nota": 4.7,
+  "aval": 541
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Floricultura Frutaflor",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "floricultura/presentes",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Rua Coronel Alfredo Flaquer, 61 · santo-andre",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 4436-3466",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Floricultura Frutaflor logo",
+    "Floricultura Frutaflor santo-andre instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

@@ -1,0 +1,55 @@
+{
+ "nome": "LevelzCut Moema by FioNavalha",
+ "slug": "levelzcut-moema-by-fionavalha",
+ "rota": {
+  "centro": "moema",
+  "dia": 2,
+  "ordem": 9,
+  "place_id": "ChIJk3v_jyZbzpQRv_Pu-DSIpO4",
+  "lat": -23.6091645,
+  "lng": -46.6629735,
+  "nota": 4.9,
+  "aval": 164
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "LevelzCut Moema by FioNavalha",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "bar",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Alameda dos Maracatins, 1036 · moema",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · cardápio · banner",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 5535-8755",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "LevelzCut Moema by FioNavalha logo",
+    "LevelzCut Moema by FioNavalha moema instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

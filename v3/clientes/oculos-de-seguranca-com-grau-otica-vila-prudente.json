@@ -1,0 +1,55 @@
+{
+ "nome": "Óculos de Segurança com Grau - Ótica Vila Prudente",
+ "slug": "oculos-de-seguranca-com-grau-otica-vila-prudente",
+ "rota": {
+  "centro": "vila-prudente",
+  "dia": 1,
+  "ordem": 15,
+  "place_id": "ChIJSV4LQsZdzpQRJAaElEKG__Q",
+  "lat": -23.582017999999998,
+  "lng": -46.5852976,
+  "nota": 5.0,
+  "aval": 1
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Óculos de Segurança com Grau - Ótica Vila Prudente",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "ótica",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "óculos de segurança · vila-prudente",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · placa · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 96569-4680",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Óculos de Segurança com Grau - Ótica Vila Prudente logo",
+    "Óculos de Segurança com Grau - Ótica Vila Prudente vila-prudente instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

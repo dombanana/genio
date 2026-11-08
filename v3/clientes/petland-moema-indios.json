@@ -1,0 +1,55 @@
+{
+ "nome": "Petland - Moema Índios",
+ "slug": "petland-moema-indios",
+ "rota": {
+  "centro": "moema",
+  "dia": 1,
+  "ordem": 18,
+  "place_id": "ChIJ5Z8SVBBazpQRHqm7FiGRhts",
+  "lat": -23.6064948,
+  "lng": -46.658680499999996,
+  "nota": 4.5,
+  "aval": 196
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Petland - Moema Índios",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "pet",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Alameda dos Nhambiquaras, 817 · moema",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · placa · adesivo de vitrine",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 5055-0813",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Petland - Moema Índios logo",
+    "Petland - Moema Índios moema instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

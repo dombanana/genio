@@ -1,0 +1,55 @@
+{
+ "nome": "Barbearia BrunOliver BarberShop",
+ "slug": "barbearia-brunoliver-barbershop",
+ "rota": {
+  "centro": "moema",
+  "dia": 2,
+  "ordem": 10,
+  "place_id": "ChIJywMNwYZbzpQRBfOenC2GvXI",
+  "lat": -23.6097955,
+  "lng": -46.662141399999996,
+  "nota": 5.0,
+  "aval": 75
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Barbearia BrunOliver BarberShop",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "salão/barbearia",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Alameda dos Nhambiquaras, 1326 · moema",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · adesivo de vitrine · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 99287-6398",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Barbearia BrunOliver BarberShop logo",
+    "Barbearia BrunOliver BarberShop moema instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

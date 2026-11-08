@@ -1,0 +1,55 @@
+{
+ "nome": "KaPi Bake and Coffee",
+ "slug": "kapi-bake-and-coffee",
+ "rota": {
+  "centro": "saude-jabaquara",
+  "dia": 1,
+  "ordem": 21,
+  "place_id": "ChIJpQA2rX5bzpQRFQDPry7v53c",
+  "lat": -23.6202909,
+  "lng": -46.6375944,
+  "nota": 4.9,
+  "aval": 106
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "KaPi Bake and Coffee",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "padaria",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Av. Miguel Estefno, 210 · saude-jabaquara",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · adesivo de vitrine · cardápio de parede",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 98735-8742",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "KaPi Bake and Coffee logo",
+    "KaPi Bake and Coffee saude-jabaquara instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

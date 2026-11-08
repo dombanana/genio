@@ -1,0 +1,55 @@
+{
+ "nome": "Leven Academies - Vila Nova Conceição",
+ "slug": "leven-academies-vila-nova-conceicao",
+ "rota": {
+  "centro": "moema",
+  "dia": 1,
+  "ordem": 9,
+  "place_id": "ChIJX-YBiAFazpQRN7ujDOgPksM",
+  "lat": -23.601022999999998,
+  "lng": -46.661537599999996,
+  "nota": 4.9,
+  "aval": 105
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Leven Academies - Vila Nova Conceição",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "clínica/consultório",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Alameda dos Arapanés, 255 · moema",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "placa de recepção · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 96481-4844",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Leven Academies - Vila Nova Conceição logo",
+    "Leven Academies - Vila Nova Conceição moema instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

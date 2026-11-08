@@ -1,0 +1,55 @@
+{
+ "nome": "Tina Calçados",
+ "slug": "tina-calcados",
+ "rota": {
+  "centro": "tatuape",
+  "dia": 2,
+  "ordem": 21,
+  "place_id": "ChIJ5aAX-cxZzpQR633gbvOE3S0",
+  "lat": -23.544630899999998,
+  "lng": -46.574665599999996,
+  "nota": 4.6,
+  "aval": 9
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Tina Calçados",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "loja de roupas/calçados",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Tuiuti, 1926 · tatuape",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · banner · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 91343-4556",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Tina Calçados logo",
+    "Tina Calçados tatuape instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

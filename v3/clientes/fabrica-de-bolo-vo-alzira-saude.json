@@ -1,0 +1,55 @@
+{
+ "nome": "Fábrica de Bolo Vó Alzira - Saúde",
+ "slug": "fabrica-de-bolo-vo-alzira-saude",
+ "rota": {
+  "centro": "saude-jabaquara",
+  "dia": 2,
+  "ordem": 7,
+  "place_id": "ChIJn9Ji8FlbzpQRLPxvrL9vjTw",
+  "lat": -23.6176712,
+  "lng": -46.638863900000004,
+  "nota": 3.4,
+  "aval": 27
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Fábrica de Bolo Vó Alzira - Saúde",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "padaria",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Av. Jabaquara, 1519 · saude-jabaquara",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · adesivo de vitrine · cardápio de parede",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 2577-9304",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Fábrica de Bolo Vó Alzira - Saúde logo",
+    "Fábrica de Bolo Vó Alzira - Saúde saude-jabaquara instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

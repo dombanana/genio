@@ -1,0 +1,55 @@
+{
+ "nome": "Felix cell conserto celulares",
+ "slug": "felix-cell-conserto-celulares",
+ "rota": {
+  "centro": "santo-andre",
+  "dia": 2,
+  "ordem": 3,
+  "place_id": "ChIJ51kUBk5DzpQRGeG5EdXOTN0",
+  "lat": -23.6571598,
+  "lng": -46.527348700000005,
+  "nota": 4.8,
+  "aval": 33
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Felix cell conserto celulares",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "celular/assistência",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Rua Monte casseros · santo-andre",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · placa · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 97369-3204",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Felix cell conserto celulares logo",
+    "Felix cell conserto celulares santo-andre instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

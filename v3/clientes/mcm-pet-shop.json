@@ -1,0 +1,55 @@
+{
+ "nome": "MCM PET SHOP",
+ "slug": "mcm-pet-shop",
+ "rota": {
+  "centro": "saude-jabaquara",
+  "dia": 1,
+  "ordem": 8,
+  "place_id": "ChIJwdpkZVBazpQRJsiDyberIM4",
+  "lat": -23.618844,
+  "lng": -46.640853899999996,
+  "nota": 4.8,
+  "aval": 148
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "MCM PET SHOP",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "pet",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Décio, 140 · saude-jabaquara",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · placa · adesivo de vitrine",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 95427-3222",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "MCM PET SHOP logo",
+    "MCM PET SHOP saude-jabaquara instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

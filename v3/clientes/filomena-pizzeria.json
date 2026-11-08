@@ -1,0 +1,55 @@
+{
+ "nome": "Filomena Pizzeria",
+ "slug": "filomena-pizzeria",
+ "rota": {
+  "centro": "sao-caetano",
+  "dia": 1,
+  "ordem": 1,
+  "place_id": "ChIJ1zactFJdzpQRmaJUlRazBSc",
+  "lat": -23.617372099999997,
+  "lng": -46.5644882,
+  "nota": 4.8,
+  "aval": 327
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Filomena Pizzeria",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "restaurante",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Mal. Deodoro, 349 · sao-caetano",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · cardápio de parede · Mostra Aí",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 4221-4993",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Filomena Pizzeria logo",
+    "Filomena Pizzeria sao-caetano instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

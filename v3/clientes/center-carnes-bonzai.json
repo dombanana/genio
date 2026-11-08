@@ -1,0 +1,55 @@
+{
+ "nome": "Center Carnes Bonzai",
+ "slug": "center-carnes-bonzai",
+ "rota": {
+  "centro": "cambuci-aclimacao",
+  "dia": 2,
+  "ordem": 13,
+  "place_id": "ChIJe3bBNltZzpQRcLOLGxlMGWc",
+  "lat": -23.5631053,
+  "lng": -46.6199922,
+  "nota": 3.8,
+  "aval": 262
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Center Carnes Bonzai",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "restaurante",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Clímaco Barbosa, 21 · cambuci-aclimacao",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · cardápio de parede · Mostra Aí",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 3208-8976",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Center Carnes Bonzai logo",
+    "Center Carnes Bonzai cambuci-aclimacao instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

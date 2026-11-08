@@ -1,0 +1,55 @@
+{
+ "nome": "Maestrello Consertos - Assistência Técnica de Celulares e Acessórios",
+ "slug": "maestrello-consertos-assistencia-tecnica-de-celulares-e-acessorios",
+ "rota": {
+  "centro": "santo-andre",
+  "dia": 2,
+  "ordem": 15,
+  "place_id": "ChIJiYzTaIRDzpQRv_AxyxAxF4I",
+  "lat": -23.660192799999997,
+  "lng": -46.527530299999995,
+  "nota": 5.0,
+  "aval": 290
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Maestrello Consertos - Assistência Técnica de Celulares e Acessórios",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "celular/assistência",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Gertrúdes de Lima, 33 · santo-andre",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · placa · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 95410-8532",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Maestrello Consertos - Assistência Técnica de Celulares e Acessórios logo",
+    "Maestrello Consertos - Assistência Técnica de Celulares e Acessórios santo-andre instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

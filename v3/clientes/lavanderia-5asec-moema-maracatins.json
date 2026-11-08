@@ -1,0 +1,55 @@
+{
+ "nome": "Lavanderia 5àsec Moema Maracatins",
+ "slug": "lavanderia-5asec-moema-maracatins",
+ "rota": {
+  "centro": "moema",
+  "dia": 2,
+  "ordem": 7,
+  "place_id": "ChIJi_QSNA5azpQRgKehWc65cz4",
+  "lat": -23.607872699999998,
+  "lng": -46.6619056,
+  "nota": 4.9,
+  "aval": 225
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Lavanderia 5àsec Moema Maracatins",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "comércio",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Alameda dos Maracatins, 848 · moema",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · placa · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 94151-5838",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Lavanderia 5àsec Moema Maracatins logo",
+    "Lavanderia 5àsec Moema Maracatins moema instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

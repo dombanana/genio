@@ -1,0 +1,55 @@
+{
+ "nome": "Clínica FisioArt | Fisioterapia no Tatuapé - SP",
+ "slug": "clinica-fisioart-fisioterapia-no-tatuape-sp",
+ "rota": {
+  "centro": "tatuape",
+  "dia": 2,
+  "ordem": 4,
+  "place_id": "ChIJpS7GY-lezpQRTQR207a-a7g",
+  "lat": -23.5402478,
+  "lng": -46.570811299999995,
+  "nota": 3.8,
+  "aval": 8
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Clínica FisioArt | Fisioterapia no Tatuapé - SP",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "clínica/consultório",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Tijuco Preto, 1248 · tatuape",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "placa de recepção · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 2296-1025",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Clínica FisioArt | Fisioterapia no Tatuapé - SP logo",
+    "Clínica FisioArt | Fisioterapia no Tatuapé - SP tatuape instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

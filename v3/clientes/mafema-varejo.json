@@ -1,0 +1,55 @@
+{
+ "nome": "Mafema Varejo",
+ "slug": "mafema-varejo",
+ "rota": {
+  "centro": "vila-prudente",
+  "dia": 2,
+  "ordem": 14,
+  "place_id": "ChIJAfZk5NxdzpQRZOlBdNFLHbQ",
+  "lat": -23.5909886,
+  "lng": -46.5809664,
+  "nota": 4.3,
+  "aval": 24
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Mafema Varejo",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "floricultura/presentes",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Ibitirama, 1211 · vila-prudente",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 2364-6818",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Mafema Varejo logo",
+    "Mafema Varejo vila-prudente instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

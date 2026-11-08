@@ -1,0 +1,55 @@
+{
+ "nome": "Bessa Garcias Restaurante",
+ "slug": "bessa-garcias-restaurante",
+ "rota": {
+  "centro": "bras-belem",
+  "dia": 2,
+  "ordem": 12,
+  "place_id": "ChIJM_HlCDRZzpQRy7IiXM358f0",
+  "lat": -23.5379777,
+  "lng": -46.617397600000004,
+  "nota": 4.5,
+  "aval": 32
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Bessa Garcias Restaurante",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "restaurante",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Oriente, 490 · bras-belem",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · cardápio de parede · Mostra Aí",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 2694-3716",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Bessa Garcias Restaurante logo",
+    "Bessa Garcias Restaurante bras-belem instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

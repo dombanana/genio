@@ -1,0 +1,55 @@
+{
+ "nome": "Manga & Açaí",
+ "slug": "manga-acai",
+ "rota": {
+  "centro": "tatuape",
+  "dia": 1,
+  "ordem": 9,
+  "place_id": "ChIJ9xLHNt1ezpQRII5942OtrII",
+  "lat": -23.536738399999997,
+  "lng": -46.575291299999996,
+  "nota": 4.4,
+  "aval": 2421
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Manga & Açaí",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "restaurante",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Tuiuti, 1287 · tatuape",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · cardápio de parede · Mostra Aí",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 2091-8762",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Manga & Açaí logo",
+    "Manga & Açaí tatuape instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

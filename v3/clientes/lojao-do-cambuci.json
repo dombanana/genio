@@ -1,0 +1,55 @@
+{
+ "nome": "LOJÃO DO CAMBUCI",
+ "slug": "lojao-do-cambuci",
+ "rota": {
+  "centro": "cambuci-aclimacao",
+  "dia": 1,
+  "ordem": 24,
+  "place_id": "ChIJpxYuIG1ZzpQR7tovCfywAJY",
+  "lat": -23.5635354,
+  "lng": -46.619726299999996,
+  "nota": 4.5,
+  "aval": 68
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "LOJÃO DO CAMBUCI",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "floricultura/presentes",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Clímaco Barbosa, Nº64 · cambuci-aclimacao",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 3209-2220",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "LOJÃO DO CAMBUCI logo",
+    "LOJÃO DO CAMBUCI cambuci-aclimacao instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

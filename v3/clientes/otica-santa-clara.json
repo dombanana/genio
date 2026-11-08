@@ -1,0 +1,55 @@
+{
+ "nome": "Otica Santa Clara",
+ "slug": "otica-santa-clara",
+ "rota": {
+  "centro": "mooca",
+  "dia": 1,
+  "ordem": 9,
+  "place_id": "ChIJBRbz2TdZzpQRuUWRvElA5XQ",
+  "lat": -23.555489599999998,
+  "lng": -46.6012278,
+  "nota": 4.9,
+  "aval": 64
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Otica Santa Clara",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "ótica",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. da Mooca, 2462 · mooca",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · placa · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 2693-4548",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Otica Santa Clara logo",
+    "Otica Santa Clara mooca instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

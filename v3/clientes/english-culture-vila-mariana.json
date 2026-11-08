@@ -1,0 +1,55 @@
+{
+ "nome": "English Culture Vila Mariana",
+ "slug": "english-culture-vila-mariana",
+ "rota": {
+  "centro": "vila-mariana",
+  "dia": 2,
+  "ordem": 16,
+  "place_id": "ChIJtymaNSlazpQRYBALm22n3nk",
+  "lat": -23.5922506,
+  "lng": -46.637757799999996,
+  "nota": 4.6,
+  "aval": 142
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "English Culture Vila Mariana",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "escola/curso",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Me. Cabrini, 413 · vila-mariana",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "placa · adesivo de parede · uniformes",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 4040-8692",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "English Culture Vila Mariana logo",
+    "English Culture Vila Mariana vila-mariana instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

@@ -1,0 +1,55 @@
+{
+ "nome": "Ótica Digimax | Loja Brás",
+ "slug": "otica-digimax-loja-bras",
+ "rota": {
+  "centro": "bras-belem",
+  "dia": 1,
+  "ordem": 10,
+  "place_id": "ChIJL3lCYN9YzpQRSy6Xd6UuXs4",
+  "lat": -23.539285,
+  "lng": -46.6090934,
+  "nota": 4.9,
+  "aval": 923
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Ótica Digimax | Loja Brás",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "ótica",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Av. Celso Garcia, 345 · bras-belem",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · placa · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 94125-3174",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Ótica Digimax | Loja Brás logo",
+    "Ótica Digimax | Loja Brás bras-belem instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

@@ -1,0 +1,55 @@
+{
+ "nome": "JPrime Assistência e Acessorios",
+ "slug": "jprime-assistencia-e-acessorios",
+ "rota": {
+  "centro": "cambuci-aclimacao",
+  "dia": 2,
+  "ordem": 23,
+  "place_id": "ChIJScDmr3pZzpQR8wFNRQ1x-MI",
+  "lat": -23.5733171,
+  "lng": -46.6228142,
+  "nota": 4.9,
+  "aval": 105
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "JPrime Assistência e Acessorios",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "celular/assistência",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Av. Lins de Vasconcelos, 1129 · cambuci-aclimacao",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · placa · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 3209-5534",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "JPrime Assistência e Acessorios logo",
+    "JPrime Assistência e Acessorios cambuci-aclimacao instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

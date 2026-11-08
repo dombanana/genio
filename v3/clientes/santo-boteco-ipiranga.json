@@ -1,0 +1,55 @@
+{
+ "nome": "Santo Boteco Ipiranga",
+ "slug": "santo-boteco-ipiranga",
+ "rota": {
+  "centro": "ipiranga",
+  "dia": 1,
+  "ordem": 19,
+  "place_id": "ChIJsQPTef5bzpQRX3LTniJAEl0",
+  "lat": -23.592768,
+  "lng": -46.601405,
+  "nota": 4.2,
+  "aval": 147
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Santo Boteco Ipiranga",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "bar",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Bar Ipiranga Restaurante Lanchonete Boteco · ipiranga",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · cardápio · banner",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 4328-5777",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Santo Boteco Ipiranga logo",
+    "Santo Boteco Ipiranga ipiranga instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

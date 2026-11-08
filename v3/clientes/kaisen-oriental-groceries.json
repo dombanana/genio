@@ -1,0 +1,55 @@
+{
+ "nome": "Kaisen Oriental Groceries",
+ "slug": "kaisen-oriental-groceries",
+ "rota": {
+  "centro": "liberdade",
+  "dia": 1,
+  "ordem": 14,
+  "place_id": "ChIJcW9rJ6ZZzpQRaoF7Nnm6Tjo",
+  "lat": -23.5580243,
+  "lng": -46.6351466,
+  "nota": 4.4,
+  "aval": 526
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Kaisen Oriental Groceries",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "restaurante",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Galvão Bueno, 270 · liberdade",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · cardápio de parede · Mostra Aí",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 93414-7225",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Kaisen Oriental Groceries logo",
+    "Kaisen Oriental Groceries liberdade instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

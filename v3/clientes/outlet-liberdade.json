@@ -1,0 +1,50 @@
+{
+ "nome": "Outlet Liberdade",
+ "slug": "outlet-liberdade",
+ "rota": {
+  "centro": "liberdade",
+  "dia": 1,
+  "ordem": 7,
+  "place_id": "ChIJS_iocQRZzpQRH5N2-uyAkk0",
+  "lat": -23.5587958,
+  "lng": -46.63509270000001,
+  "nota": 3.8,
+  "aval": 16
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Outlet Liberdade",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "comércio",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Galvão Bueno, 358 · liberdade",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · placa · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Outlet Liberdade logo",
+    "Outlet Liberdade liberdade instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

@@ -1,0 +1,55 @@
+{
+ "nome": "Barxaréu",
+ "slug": "barxareu",
+ "rota": {
+  "centro": "vila-mariana",
+  "dia": 2,
+  "ordem": 11,
+  "place_id": "ChIJJdr_V4hZzpQRuUN4_aJrrKI",
+  "lat": -23.5868938,
+  "lng": -46.6434964,
+  "nota": 4.2,
+  "aval": 1235
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Barxaréu",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "bar",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Joaquim Távora, 1150 · vila-mariana",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · cardápio · banner",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 2096-4076",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Barxaréu logo",
+    "Barxaréu vila-mariana instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

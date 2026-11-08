@@ -1,0 +1,55 @@
+{
+ "nome": "Voll Studios Ipiranga",
+ "slug": "voll-studios-ipiranga",
+ "rota": {
+  "centro": "ipiranga",
+  "dia": 2,
+  "ordem": 24,
+  "place_id": "ChIJs1XvTL5bzpQRLcXs-FbXR48",
+  "lat": -23.595538299999998,
+  "lng": -46.6062659,
+  "nota": 5.0,
+  "aval": 28
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Voll Studios Ipiranga",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "academia/estúdio",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Bom Pastor, 2151 · ipiranga",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "placa · adesivo de parede · uniformes",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 94522-8350",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Voll Studios Ipiranga logo",
+    "Voll Studios Ipiranga ipiranga instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

@@ -1,0 +1,55 @@
+{
+ "nome": "Outlet Das Marcas",
+ "slug": "outlet-das-marcas",
+ "rota": {
+  "centro": "bras-belem",
+  "dia": 2,
+  "ordem": 9,
+  "place_id": "ChIJt-HZSuFYzpQRCHCp1nGCbu4",
+  "lat": -23.5372092,
+  "lng": -46.6166056,
+  "nota": 4.0,
+  "aval": 130
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Outlet Das Marcas",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "loja de roupas/calçados",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Maria Marcolina, 539 · bras-belem",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · banner · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 2698-6590",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Outlet Das Marcas logo",
+    "Outlet Das Marcas bras-belem instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

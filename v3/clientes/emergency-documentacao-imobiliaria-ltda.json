@@ -1,0 +1,55 @@
+{
+ "nome": "Emergency Documentação Imobiliária LTDA",
+ "slug": "emergency-documentacao-imobiliaria-ltda",
+ "rota": {
+  "centro": "mooca",
+  "dia": 2,
+  "ordem": 12,
+  "place_id": "ChIJLQSXTE9ZzpQRZcRWs3Sfloo",
+  "lat": -23.561038999999997,
+  "lng": -46.6021481,
+  "nota": 4.7,
+  "aval": 14
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Emergency Documentação Imobiliária LTDA",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "escritório/imobiliária",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Curupacê, 76 · mooca",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "placa de recepção · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 3318-3318",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Emergency Documentação Imobiliária LTDA logo",
+    "Emergency Documentação Imobiliária LTDA mooca instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

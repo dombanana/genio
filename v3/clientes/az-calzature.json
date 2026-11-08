@@ -1,0 +1,55 @@
+{
+ "nome": "AZ CALZATURE",
+ "slug": "az-calzature",
+ "rota": {
+  "centro": "moema",
+  "dia": 2,
+  "ordem": 17,
+  "place_id": "ChIJoyAHOQlazpQRig4d33Mn8hE",
+  "lat": -23.6102158,
+  "lng": -46.6666532,
+  "nota": 4.1,
+  "aval": 35
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "AZ CALZATURE",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "loja de roupas/calçados",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Av. Ibirapuera, 3103 · moema",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · banner · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 5561-9764",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "AZ CALZATURE logo",
+    "AZ CALZATURE moema instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

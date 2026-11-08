@@ -1,0 +1,55 @@
+{
+ "nome": "J.S. Barbearia",
+ "slug": "j-s-barbearia",
+ "rota": {
+  "centro": "bras-belem",
+  "dia": 1,
+  "ordem": 8,
+  "place_id": "ChIJ4xgAgN9YzpQRsa7THLDrNOQ",
+  "lat": -23.5397945,
+  "lng": -46.610216199999996,
+  "nota": 4.0,
+  "aval": 4
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "J.S. Barbearia",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "salão/barbearia",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Av. Celso Garcia, 220 · bras-belem",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · adesivo de vitrine · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 91206-6764",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "J.S. Barbearia logo",
+    "J.S. Barbearia bras-belem instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

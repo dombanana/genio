@@ -1,0 +1,55 @@
+{
+ "nome": "Três Estrelas Decorações",
+ "slug": "tres-estrelas-decoracoes",
+ "rota": {
+  "centro": "cambuci-aclimacao",
+  "dia": 2,
+  "ordem": 16,
+  "place_id": "ChIJydVWGxNZzpQRhYltlgD7iB0",
+  "lat": -23.5603056,
+  "lng": -46.6195394,
+  "nota": 4.9,
+  "aval": 20
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Três Estrelas Decorações",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "floricultura/presentes",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Silveira da Mota, 387 · cambuci-aclimacao",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 96588-4288",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Três Estrelas Decorações logo",
+    "Três Estrelas Decorações cambuci-aclimacao instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

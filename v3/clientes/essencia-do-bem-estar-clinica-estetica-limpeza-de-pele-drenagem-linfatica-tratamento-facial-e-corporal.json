@@ -1,0 +1,55 @@
+{
+ "nome": "Essência do Bem Estar | Clínica estética - limpeza de pele, drenagem linfática, tratamento facial e corporal",
+ "slug": "essencia-do-bem-estar-clinica-estetica-limpeza-de-pele-drenagem-linfatica-tratamento-facial-e-corporal",
+ "rota": {
+  "centro": "vila-mariana",
+  "dia": 1,
+  "ordem": 25,
+  "place_id": "ChIJ0wInFIdZzpQRO4ODwylY2i4",
+  "lat": -23.5834089,
+  "lng": -46.637932899999996,
+  "nota": 5.0,
+  "aval": 118
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Essência do Bem Estar | Clínica estética - limpeza de pele, drenagem linfática, tratamento facial e corporal",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "clínica/consultório",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Domingos de Morais, 770 · vila-mariana",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "placa de recepção · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 99911-5297",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Essência do Bem Estar | Clínica estética - limpeza de pele, drenagem linfática, tratamento facial e corporal logo",
+    "Essência do Bem Estar | Clínica estética - limpeza de pele, drenagem linfática, tratamento facial e corporal vila-mariana instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

@@ -1,0 +1,113 @@
+{
+ "nome": "Panificadora e Confeitaria 22 de Julho",
+ "slug": "panificadora-e-confeitaria-22-de-julho",
+ "rota": {
+  "centro": "ipiranga",
+  "dia": 2,
+  "ordem": 7,
+  "place_id": "ChIJWw_DBo1bzpQRi4FQ4oeCrcQ",
+  "lat": -23.595958400000004,
+  "lng": -46.6009744,
+  "nota": 4.2,
+  "aval": 1920
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)",
+  "BaresSP",
+  "Locais do Brasil",
+  "Econodata",
+  "Foursquare/Facebook (não abriram)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Panificadora e Confeitaria 22 de Julho",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "Padaria e confeitaria · restaurante a quilo, doces, pizzas, delivery",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Silva Bueno, 1974 · Ipiranga · 04208-001 · São Paulo",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "encontrado",
+   "valor": "Pão francês · rosca de torresmo · pão doce Vanderléia · comida a quilo · doces · pizzas · delivery",
+   "origem": "publico"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 3019-2010 · WhatsApp (11) 91305-6735",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "encontrado",
+   "valor": "https://www.baressp.com.br/bares/logos3/22deHulhoLOGO.jpeg",
+   "origem": "BaresSP",
+   "nome": "Logo do estabelecimento (BaresSP) · confirmar com a foto de perfil do @panificadora22dejulho"
+  },
+  "leitura": {
+   "estado": "encontrado",
+   "valor": "Razão social: Panificadora 22 de Julho Ltda · CNPJ 61.922.118/0001-61 (Econodata)",
+   "origem": "publico"
+  },
+  "site": {
+   "estado": "nao",
+   "origem": "publico",
+   "nota": "nenhum site próprio encontrado"
+  },
+  "redes": {
+   "estado": "encontrado",
+   "valor": "Instagram @panificadora22dejulho · Facebook /panificadora22DeJulho",
+   "origem": "publico"
+  },
+  "registro": {
+   "estado": "encontrado",
+   "valor": "Selo de valor cultural da Prefeitura de São Paulo (estabelecimento com mais de 75 anos)",
+   "origem": "publico"
+  },
+  "sobre": {
+   "estado": "encontrado",
+   "valor": "Fundada em 1934 como Padaria Globo e administrada por descendentes de portugueses, é referência no Ipiranga pelo pão francês fresco, pela rosca de torresmo e pelo pão doce Vanderléia, de creme de coco.",
+   "origem": "publico"
+  },
+  "slogan": {
+   "estado": "pendente",
+   "origem": "cliente",
+   "nota": "nenhum slogan público encontrado; perguntar na porta"
+  },
+  "horario": {
+   "estado": "pendente",
+   "origem": "porta",
+   "opcoes": [
+    {
+     "valor": "seg–sáb 5h–22h · dom e feriados 6h–22h",
+     "legenda": "BaresSP (05/2025)",
+     "fonte": "BaresSP"
+    },
+    {
+     "valor": "seg–sáb 5h–21h30 · dom 6h–21h30",
+     "legenda": "Locais do Brasil",
+     "fonte": "Locais do Brasil"
+    }
+   ]
+  },
+  "fachada": {
+   "estado": "pendente",
+   "origem": "porta",
+   "referencias": [
+    "https://www.baressp.com.br/bares/fotos3/Panificadora22deJulho1.jpeg",
+    "https://www.baressp.com.br/bares/fotos3/Panificadora22deJulho2.jpeg",
+    "https://www.baressp.com.br/bares/fotos3/Panificadora22deJulho3.jpeg",
+    "https://www.baressp.com.br/bares/fotos3/Panificadora22deJulho4.jpeg",
+    "https://www.baressp.com.br/bares/fotos3/Panificadora22deJulho5.jpeg"
+   ],
+   "nota": "5 fotos do local no BaresSP como referência; a foto com o cartão-régua é na porta"
+  }
+ }
+}

@@ -1,0 +1,55 @@
+{
+ "nome": "Taquari Flores",
+ "slug": "taquari-flores",
+ "rota": {
+  "centro": "mooca",
+  "dia": 1,
+  "ordem": 14,
+  "place_id": "ChIJCctjLjZZzpQRilvuSkARpEk",
+  "lat": -23.554935,
+  "lng": -46.6002163,
+  "nota": 4.8,
+  "aval": 444
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Taquari Flores",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "floricultura/presentes",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Rua Taquari, 67/69 · mooca",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 3476-5792",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Taquari Flores logo",
+    "Taquari Flores mooca instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

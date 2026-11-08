@@ -1,0 +1,55 @@
+{
+ "nome": "Óticas Cambuci",
+ "slug": "oticas-cambuci",
+ "rota": {
+  "centro": "cambuci-aclimacao",
+  "dia": 1,
+  "ordem": 17,
+  "place_id": "ChIJ37GMtBJZzpQRQZi75nsArSM",
+  "lat": -23.562797699999997,
+  "lng": -46.620720999999996,
+  "nota": 4.3,
+  "aval": 56
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Óticas Cambuci",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "ótica",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Largo do Cambuci, 105 · cambuci-aclimacao",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · placa · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 3209-5020",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Óticas Cambuci logo",
+    "Óticas Cambuci cambuci-aclimacao instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

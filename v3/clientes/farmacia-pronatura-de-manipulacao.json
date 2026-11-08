@@ -1,0 +1,55 @@
+{
+ "nome": "Farmácia Pronatura de Manipulação",
+ "slug": "farmacia-pronatura-de-manipulacao",
+ "rota": {
+  "centro": "cambuci-aclimacao",
+  "dia": 1,
+  "ordem": 2,
+  "place_id": "ChIJNzUiYW5ZzpQR8qe7qN-AzHQ",
+  "lat": -23.567826099999998,
+  "lng": -46.621462,
+  "nota": 4.7,
+  "aval": 41
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Farmácia Pronatura de Manipulação",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "clínica/consultório",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Hermínio Lemos, 323 · cambuci-aclimacao",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "placa de recepção · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 3209-5266",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Farmácia Pronatura de Manipulação logo",
+    "Farmácia Pronatura de Manipulação cambuci-aclimacao instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

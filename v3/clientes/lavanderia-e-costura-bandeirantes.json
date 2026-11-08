@@ -1,0 +1,55 @@
+{
+ "nome": "Lavanderia e Costura Bandeirantes",
+ "slug": "lavanderia-e-costura-bandeirantes",
+ "rota": {
+  "centro": "moema",
+  "dia": 1,
+  "ordem": 2,
+  "place_id": "ChIJSTKshAZazpQRRKl1cFBIDrc",
+  "lat": -23.603879499999998,
+  "lng": -46.66602650000001,
+  "nota": 4.9,
+  "aval": 15
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Lavanderia e Costura Bandeirantes",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "comércio",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Alameda Jauaperi, 795 · moema",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · placa · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 5055-0693",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Lavanderia e Costura Bandeirantes logo",
+    "Lavanderia e Costura Bandeirantes moema instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

@@ -1,0 +1,55 @@
+{
+ "nome": "SkyCell. Conserto e Assistência Técnica de Celulares",
+ "slug": "skycell-conserto-e-assistencia-tecnica-de-celulares",
+ "rota": {
+  "centro": "sao-caetano",
+  "dia": 2,
+  "ordem": 5,
+  "place_id": "ChIJy4XfL0pdzpQRG5c7NuDaTmw",
+  "lat": -23.61429,
+  "lng": -46.5725159,
+  "nota": 5.0,
+  "aval": 9
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "SkyCell. Conserto e Assistência Técnica de Celulares",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "celular/assistência",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Manoel Coelho, 540 · sao-caetano",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · placa · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 93399-9777",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "SkyCell. Conserto e Assistência Técnica de Celulares logo",
+    "SkyCell. Conserto e Assistência Técnica de Celulares sao-caetano instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

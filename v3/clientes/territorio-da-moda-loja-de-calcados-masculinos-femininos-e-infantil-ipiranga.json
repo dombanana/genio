@@ -1,0 +1,55 @@
+{
+ "nome": "Território da Moda | Loja de Calçados Masculinos, Femininos e Infantil Ipiranga",
+ "slug": "territorio-da-moda-loja-de-calcados-masculinos-femininos-e-infantil-ipiranga",
+ "rota": {
+  "centro": "ipiranga",
+  "dia": 2,
+  "ordem": 15,
+  "place_id": "ChIJ__tYfo5bzpQRlSyTmBnaPPE",
+  "lat": -23.5986874,
+  "lng": -46.600812999999995,
+  "nota": 4.8,
+  "aval": 158
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Território da Moda | Loja de Calçados Masculinos, Femininos e Infantil Ipiranga",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "loja de roupas/calçados",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Silva Bueno, 2272 · ipiranga",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · banner · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 94748-0533",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Território da Moda | Loja de Calçados Masculinos, Femininos e Infantil Ipiranga logo",
+    "Território da Moda | Loja de Calçados Masculinos, Femininos e Infantil Ipiranga ipiranga instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

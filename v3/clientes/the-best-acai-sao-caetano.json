@@ -1,0 +1,55 @@
+{
+ "nome": "The Best Açaí - São Caetano",
+ "slug": "the-best-acai-sao-caetano",
+ "rota": {
+  "centro": "sao-caetano",
+  "dia": 1,
+  "ordem": 7,
+  "place_id": "ChIJsULEe7tdzpQRTBEfi5s3h2U",
+  "lat": -23.6191548,
+  "lng": -46.569559,
+  "nota": 4.8,
+  "aval": 441
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "The Best Açaí - São Caetano",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "padaria",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Amazonas, 932 · sao-caetano",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · adesivo de vitrine · cardápio de parede",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 91342-3361",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "The Best Açaí - São Caetano logo",
+    "The Best Açaí - São Caetano sao-caetano instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

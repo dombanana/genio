@@ -1,0 +1,55 @@
+{
+ "nome": "Óticas Bria",
+ "slug": "oticas-bria",
+ "rota": {
+  "centro": "bras-belem",
+  "dia": 1,
+  "ordem": 3,
+  "place_id": "ChIJfb5DnolZzpQR5mmov8Zv7d4",
+  "lat": -23.540083199999998,
+  "lng": -46.612084599999996,
+  "nota": 4.9,
+  "aval": 37
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Óticas Bria",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "ótica",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Av. Celso Garcia, 31 · bras-belem",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · placa · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 91663-6724",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Óticas Bria logo",
+    "Óticas Bria bras-belem instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

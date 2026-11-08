@@ -1,0 +1,55 @@
+{
+ "nome": "TKC Informática - Assistência Especializada em Celulares e Notebook, HP, Asus, Acer, Dell, Iphone, Samsung, Xiaomi, Motorola.",
+ "slug": "tkc-informatica-assistencia-especializada-em-celulares-e-notebook-hp-asus-acer-dell-iphone-samsung-xiaomi-motorola",
+ "rota": {
+  "centro": "cambuci-aclimacao",
+  "dia": 1,
+  "ordem": 5,
+  "place_id": "ChIJb78Y06VZzpQRjr35Gn0LVvs",
+  "lat": -23.5684343,
+  "lng": -46.624738,
+  "nota": 4.9,
+  "aval": 210
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "TKC Informática - Assistência Especializada em Celulares e Notebook, HP, Asus, Acer, Dell, Iphone, Samsung, Xiaomi, Motorola.",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "celular/assistência",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Paulo Orozimbo, 120 · cambuci-aclimacao",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · placa · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 98332-9205",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "TKC Informática - Assistência Especializada em Celulares e Notebook, HP, Asus, Acer, Dell, Iphone, Samsung, Xiaomi, Motorola. logo",
+    "TKC Informática - Assistência Especializada em Celulares e Notebook, HP, Asus, Acer, Dell, Iphone, Samsung, Xiaomi, Motorola. cambuci-aclimacao instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

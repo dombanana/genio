@@ -1,0 +1,55 @@
+{
+ "nome": "Salão Beauty Kojo (Liberdade)",
+ "slug": "salao-beauty-kojo-liberdade",
+ "rota": {
+  "centro": "liberdade",
+  "dia": 2,
+  "ordem": 17,
+  "place_id": "ChIJ8zvY-qZZzpQR4eDnfVhp3KY",
+  "lat": -23.5607714,
+  "lng": -46.634792,
+  "nota": 4.8,
+  "aval": 117
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Salão Beauty Kojo (Liberdade)",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "salão/barbearia",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Galvão Bueno, 581 · liberdade",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · adesivo de vitrine · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 99212-7055",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Salão Beauty Kojo (Liberdade) logo",
+    "Salão Beauty Kojo (Liberdade) liberdade instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

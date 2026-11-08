@@ -1,0 +1,55 @@
+{
+ "nome": "Padaria Garoto",
+ "slug": "padaria-garoto",
+ "rota": {
+  "centro": "bras-belem",
+  "dia": 1,
+  "ordem": 17,
+  "place_id": "ChIJA2oMqCBZzpQR-AqLg5VHJMA",
+  "lat": -23.539031299999998,
+  "lng": -46.6082137,
+  "nota": 4.1,
+  "aval": 2842
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Padaria Garoto",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "padaria",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Av. Celso Garcia, 437 · bras-belem",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · adesivo de vitrine · cardápio de parede",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 97801-0320",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Padaria Garoto logo",
+    "Padaria Garoto bras-belem instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

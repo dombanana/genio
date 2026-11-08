@@ -1,0 +1,55 @@
+{
+ "nome": "Gil Assistência Técnica e Acessórios Celulares",
+ "slug": "gil-assistencia-tecnica-e-acessorios-celulares",
+ "rota": {
+  "centro": "moema",
+  "dia": 1,
+  "ordem": 22,
+  "place_id": "ChIJwTYxFPFbzpQRQiuDDurkTSY",
+  "lat": -23.605948599999998,
+  "lng": -46.6599504,
+  "nota": 2.6,
+  "aval": 36
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Gil Assistência Técnica e Acessórios Celulares",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "celular/assistência",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Alameda dos Maracatins, 562 · moema",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · placa · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 5052-3590",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Gil Assistência Técnica e Acessórios Celulares logo",
+    "Gil Assistência Técnica e Acessórios Celulares moema instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

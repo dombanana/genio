@@ -1,0 +1,55 @@
+{
+ "nome": "UPPER HOME NEGOCIOS IMOBILIARIOS",
+ "slug": "upper-home-negocios-imobiliarios",
+ "rota": {
+  "centro": "tatuape",
+  "dia": 1,
+  "ordem": 18,
+  "place_id": "ChIJrbM7V4tezpQRqcLZxtS6N-g",
+  "lat": -23.5345187,
+  "lng": -46.5756878,
+  "nota": 3.9,
+  "aval": 32
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "UPPER HOME NEGOCIOS IMOBILIARIOS",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "escritório/imobiliária",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Tuiuti, 1044 · tatuape",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "placa de recepção · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 98902-3680",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "UPPER HOME NEGOCIOS IMOBILIARIOS logo",
+    "UPPER HOME NEGOCIOS IMOBILIARIOS tatuape instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

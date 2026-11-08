@@ -1,0 +1,55 @@
+{
+ "nome": "Classik Imóveis Ipiranga",
+ "slug": "classik-imoveis-ipiranga",
+ "rota": {
+  "centro": "ipiranga",
+  "dia": 1,
+  "ordem": 2,
+  "place_id": "ChIJJ4cHpu5bzpQR-MQrrdICoLM",
+  "lat": -23.5908309,
+  "lng": -46.607181,
+  "nota": 4.5,
+  "aval": 72
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Classik Imóveis Ipiranga",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "escritório/imobiliária",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Bom Pastor, 1620 · ipiranga",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "placa de recepção · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 2273-1000",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Classik Imóveis Ipiranga logo",
+    "Classik Imóveis Ipiranga ipiranga instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

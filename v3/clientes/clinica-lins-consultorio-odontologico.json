@@ -1,0 +1,55 @@
+{
+ "nome": "Clínica Lins | Consultório Odontológico",
+ "slug": "clinica-lins-consultorio-odontologico",
+ "rota": {
+  "centro": "cambuci-aclimacao",
+  "dia": 2,
+  "ordem": 10,
+  "place_id": "ChIJRb1yFW1ZzpQRB2cHtI4SW98",
+  "lat": -23.5638218,
+  "lng": -46.621016399999995,
+  "nota": 4.7,
+  "aval": 27
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Clínica Lins | Consultório Odontológico",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "clínica/consultório",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Av. Lins de Vasconcelos, 70 · cambuci-aclimacao",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "placa de recepção · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 99516-9248",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Clínica Lins | Consultório Odontológico logo",
+    "Clínica Lins | Consultório Odontológico cambuci-aclimacao instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

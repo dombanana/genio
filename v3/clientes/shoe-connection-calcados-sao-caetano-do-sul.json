@@ -1,0 +1,55 @@
+{
+ "nome": "Shoe Connection | Calçados | São Caetano do Sul",
+ "slug": "shoe-connection-calcados-sao-caetano-do-sul",
+ "rota": {
+  "centro": "sao-caetano",
+  "dia": 2,
+  "ordem": 16,
+  "place_id": "ChIJdRGdVXddzpQRZOBhoslu8HY",
+  "lat": -23.6124634,
+  "lng": -46.572282,
+  "nota": 4.0,
+  "aval": 31
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Shoe Connection | Calçados | São Caetano do Sul",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "loja de roupas/calçados",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Manoel Coelho, 323 · sao-caetano",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · banner · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 94048-0679",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Shoe Connection | Calçados | São Caetano do Sul logo",
+    "Shoe Connection | Calçados | São Caetano do Sul sao-caetano instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

@@ -1,0 +1,55 @@
+{
+ "nome": "Clínica BN odontologia estética",
+ "slug": "clinica-bn-odontologia-estetica",
+ "rota": {
+  "centro": "moema",
+  "dia": 1,
+  "ordem": 5,
+  "place_id": "ChIJ8VoRj11XzpQRZFzBtcOsWEk",
+  "lat": -23.602677699999997,
+  "lng": -46.6618832,
+  "nota": 4.7,
+  "aval": 35
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Clínica BN odontologia estética",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "clínica/consultório",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Av. Ibirapuera, 2120 · moema",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "placa de recepção · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 99113-4223",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Clínica BN odontologia estética logo",
+    "Clínica BN odontologia estética moema instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

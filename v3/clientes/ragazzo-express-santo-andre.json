@@ -1,0 +1,55 @@
+{
+ "nome": "Ragazzo Express - Santo André",
+ "slug": "ragazzo-express-santo-andre",
+ "rota": {
+  "centro": "santo-andre",
+  "dia": 1,
+  "ordem": 17,
+  "place_id": "ChIJY2_Jy4hCzpQRAEP8cr3Yumw",
+  "lat": -23.6589243,
+  "lng": -46.527199599999996,
+  "nota": 3.8,
+  "aval": 275
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Ragazzo Express - Santo André",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "restaurante",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Cel. Oliveira Lima, 534 · santo-andre",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · cardápio de parede · Mostra Aí",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(55) 3003-3838",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Ragazzo Express - Santo André logo",
+    "Ragazzo Express - Santo André santo-andre instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

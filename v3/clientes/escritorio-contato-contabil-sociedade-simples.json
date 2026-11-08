@@ -1,0 +1,55 @@
+{
+ "nome": "Escritório Contato Contábil Sociedade Simples",
+ "slug": "escritorio-contato-contabil-sociedade-simples",
+ "rota": {
+  "centro": "bras-belem",
+  "dia": 1,
+  "ordem": 20,
+  "place_id": "ChIJ2ybJUCdZzpQRII8LaS0pY3Q",
+  "lat": -23.539273899999998,
+  "lng": -46.6070875,
+  "nota": null,
+  "aval": null
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Escritório Contato Contábil Sociedade Simples",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "escritório/imobiliária",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Av. Celso Garcia, 528 · bras-belem",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "placa de recepção · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 2692-5499",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Escritório Contato Contábil Sociedade Simples logo",
+    "Escritório Contato Contábil Sociedade Simples bras-belem instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

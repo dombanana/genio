@@ -1,0 +1,55 @@
+{
+ "nome": "The Doctors Cell",
+ "slug": "the-doctors-cell",
+ "rota": {
+  "centro": "liberdade",
+  "dia": 2,
+  "ordem": 21,
+  "place_id": "ChIJoxI1wKBZzpQRPa8iWBG3gws",
+  "lat": -23.5632351,
+  "lng": -46.634521899999996,
+  "nota": 5.0,
+  "aval": 137
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "The Doctors Cell",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "clínica/consultório",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Galvão Bueno, 859 · liberdade",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "placa de recepção · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 98414-8923",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "The Doctors Cell logo",
+    "The Doctors Cell liberdade instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

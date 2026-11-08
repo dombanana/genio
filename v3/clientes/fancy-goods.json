@@ -1,0 +1,55 @@
+{
+ "nome": "Fancy Goods",
+ "slug": "fancy-goods",
+ "rota": {
+  "centro": "liberdade",
+  "dia": 1,
+  "ordem": 15,
+  "place_id": "ChIJ37TYm6hZzpQRpPAdkXzH_bY",
+  "lat": -23.5575692,
+  "lng": -46.635225299999995,
+  "nota": 4.4,
+  "aval": 566
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Fancy Goods",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "comércio",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Galvão Bueno, 224 · liberdade",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · placa · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 93339-2121",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Fancy Goods logo",
+    "Fancy Goods liberdade instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

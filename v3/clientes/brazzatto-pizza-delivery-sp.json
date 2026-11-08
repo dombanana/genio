@@ -1,0 +1,55 @@
+{
+ "nome": "BRAZZATTO PIZZA DELIVERY SP",
+ "slug": "brazzatto-pizza-delivery-sp",
+ "rota": {
+  "centro": "vila-prudente",
+  "dia": 2,
+  "ordem": 25,
+  "place_id": "ChIJAQBMdUJczpQRfxZ_i2DTH-c",
+  "lat": -23.5903764,
+  "lng": -46.5740015,
+  "nota": 4.5,
+  "aval": 489
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "BRAZZATTO PIZZA DELIVERY SP",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "restaurante",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Av. Zelina, 1032 · vila-prudente",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · cardápio de parede · Mostra Aí",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 2084-7084",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "BRAZZATTO PIZZA DELIVERY SP logo",
+    "BRAZZATTO PIZZA DELIVERY SP vila-prudente instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

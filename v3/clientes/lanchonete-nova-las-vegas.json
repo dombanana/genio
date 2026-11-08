@@ -1,0 +1,55 @@
+{
+ "nome": "Lanchonete Nova Las Vegas",
+ "slug": "lanchonete-nova-las-vegas",
+ "rota": {
+  "centro": "sao-caetano",
+  "dia": 2,
+  "ordem": 14,
+  "place_id": "ChIJH6gHY-1czpQRrfXQEtFHqNg",
+  "lat": -23.6126404,
+  "lng": -46.5722932,
+  "nota": 4.5,
+  "aval": 104
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Lanchonete Nova Las Vegas",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "restaurante",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Manoel Coelho, 335 · sao-caetano",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · cardápio de parede · Mostra Aí",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 4226-3698",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Lanchonete Nova Las Vegas logo",
+    "Lanchonete Nova Las Vegas sao-caetano instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

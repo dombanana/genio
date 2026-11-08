@@ -1,0 +1,55 @@
+{
+ "nome": "Monte Rei Casa de Pães - Saúde",
+ "slug": "monte-rei-casa-de-paes-saude",
+ "rota": {
+  "centro": "saude-jabaquara",
+  "dia": 1,
+  "ordem": 25,
+  "place_id": "ChIJ1w3fkFFazpQRMPKT4fSo6Sk",
+  "lat": -23.6177562,
+  "lng": -46.637467099999995,
+  "nota": 4.4,
+  "aval": 8487
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Monte Rei Casa de Pães - Saúde",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "padaria",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Fiação da Saúde, 269 · saude-jabaquara",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · adesivo de vitrine · cardápio de parede",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 2276-7663",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Monte Rei Casa de Pães - Saúde logo",
+    "Monte Rei Casa de Pães - Saúde saude-jabaquara instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

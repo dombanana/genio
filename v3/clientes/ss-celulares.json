@@ -1,0 +1,55 @@
+{
+ "nome": "Ss celulares",
+ "slug": "ss-celulares",
+ "rota": {
+  "centro": "mooca",
+  "dia": 1,
+  "ordem": 16,
+  "place_id": "ChIJxzF16ElZzpQRVGzS7PScEIY",
+  "lat": -23.5556822,
+  "lng": -46.599336799999996,
+  "nota": 4.2,
+  "aval": 15
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Ss celulares",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "celular/assistência",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. da Mooca, 2658 · mooca",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · placa · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 94555-1616",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Ss celulares logo",
+    "Ss celulares mooca instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

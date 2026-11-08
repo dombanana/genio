@@ -1,0 +1,55 @@
+{
+ "nome": "Mundial Calçados",
+ "slug": "mundial-calcados",
+ "rota": {
+  "centro": "tatuape",
+  "dia": 2,
+  "ordem": 15,
+  "place_id": "ChIJ9YiZxcFezpQRg9-WDxyodBI",
+  "lat": -23.5436004,
+  "lng": -46.574891699999995,
+  "nota": 4.4,
+  "aval": 1772
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Mundial Calçados",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "loja de roupas/calçados",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Tuiuti, 2046 · tatuape",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · banner · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 2294-3024",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Mundial Calçados logo",
+    "Mundial Calçados tatuape instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

@@ -1,0 +1,55 @@
+{
+ "nome": "Castro Barber",
+ "slug": "castro-barber",
+ "rota": {
+  "centro": "vila-prudente",
+  "dia": 1,
+  "ordem": 19,
+  "place_id": "ChIJVchj9RZdzpQRIbPZtGa7FKo",
+  "lat": -23.5855575,
+  "lng": -46.584325799999995,
+  "nota": 4.8,
+  "aval": 126
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Castro Barber",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "salão/barbearia",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Ibitirama, 440 · vila-prudente",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · adesivo de vitrine · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 93218-2786",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Castro Barber logo",
+    "Castro Barber vila-prudente instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

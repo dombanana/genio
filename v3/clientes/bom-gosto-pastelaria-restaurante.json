@@ -1,0 +1,55 @@
+{
+ "nome": "Bom Gosto Pastelaria Restaurante",
+ "slug": "bom-gosto-pastelaria-restaurante",
+ "rota": {
+  "centro": "sao-caetano",
+  "dia": 1,
+  "ordem": 25,
+  "place_id": "ChIJg9U1HO1czpQRru7ejpb3UIY",
+  "lat": -23.6146626,
+  "lng": -46.5725135,
+  "nota": 4.0,
+  "aval": 44
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Bom Gosto Pastelaria Restaurante",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "restaurante",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Manoel Coelho, 586 · sao-caetano",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · cardápio de parede · Mostra Aí",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 97297-9930",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Bom Gosto Pastelaria Restaurante logo",
+    "Bom Gosto Pastelaria Restaurante sao-caetano instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

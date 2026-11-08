@@ -1,0 +1,55 @@
+{
+ "nome": "VILA DOCE",
+ "slug": "vila-doce",
+ "rota": {
+  "centro": "vila-mariana",
+  "dia": 1,
+  "ordem": 13,
+  "place_id": "ChIJAym0LYdZzpQRLotfmyazNKg",
+  "lat": -23.5853014,
+  "lng": -46.6369292,
+  "nota": 4.6,
+  "aval": 1440
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "VILA DOCE",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "padaria",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Domingos de Morais, 1000 · vila-mariana",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · adesivo de vitrine · cardápio de parede",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 5575-1177",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "VILA DOCE logo",
+    "VILA DOCE vila-mariana instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

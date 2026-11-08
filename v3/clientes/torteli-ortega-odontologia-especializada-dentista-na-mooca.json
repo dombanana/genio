@@ -1,0 +1,55 @@
+{
+ "nome": "Torteli & Ortega - Odontologia Especializada - Dentista na Mooca",
+ "slug": "torteli-ortega-odontologia-especializada-dentista-na-mooca",
+ "rota": {
+  "centro": "mooca",
+  "dia": 1,
+  "ordem": 24,
+  "place_id": "ChIJEaEJgIdZzpQRJU50D3DZTx4",
+  "lat": -23.5565413,
+  "lng": -46.600100999999995,
+  "nota": 4.9,
+  "aval": 57
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Torteli & Ortega - Odontologia Especializada - Dentista na Mooca",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "clínica/consultório",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Av. Paes de Barros, 117 · mooca",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "placa de recepção · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 91940-7995",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Torteli & Ortega - Odontologia Especializada - Dentista na Mooca logo",
+    "Torteli & Ortega - Odontologia Especializada - Dentista na Mooca mooca instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

@@ -1,0 +1,55 @@
+{
+ "nome": "HAP Contabilidade",
+ "slug": "hap-contabilidade",
+ "rota": {
+  "centro": "saude-jabaquara",
+  "dia": 1,
+  "ordem": 17,
+  "place_id": "ChIJT2yTM1dazpQRAN934GbJhKw",
+  "lat": -23.6217969,
+  "lng": -46.6400924,
+  "nota": 4.9,
+  "aval": 102
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "HAP Contabilidade",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "escritório/imobiliária",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Av. Jabaquara, 2002 · saude-jabaquara",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "placa de recepção · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 5594-7399",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "HAP Contabilidade logo",
+    "HAP Contabilidade saude-jabaquara instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

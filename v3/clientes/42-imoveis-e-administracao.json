@@ -1,0 +1,55 @@
+{
+ "nome": "42 Imóveis e Administração",
+ "slug": "42-imoveis-e-administracao",
+ "rota": {
+  "centro": "ipiranga",
+  "dia": 1,
+  "ordem": 3,
+  "place_id": "ChIJnRaxoe5bzpQRPoBtpWbp81I",
+  "lat": -23.590549799999998,
+  "lng": -46.6071556,
+  "nota": 4.5,
+  "aval": 48
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "42 Imóveis e Administração",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "escritório/imobiliária",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Bom Pastor, 1592-A · ipiranga",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "placa de recepção · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 4279-8742",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "42 Imóveis e Administração logo",
+    "42 Imóveis e Administração ipiranga instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

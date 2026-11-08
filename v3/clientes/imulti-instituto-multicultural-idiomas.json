@@ -1,0 +1,55 @@
+{
+ "nome": "IMULTI - Instituto Multicultural & Idiomas",
+ "slug": "imulti-instituto-multicultural-idiomas",
+ "rota": {
+  "centro": "liberdade",
+  "dia": 1,
+  "ordem": 12,
+  "place_id": "ChIJG5pObTP2zpQRS6op5J1mTks",
+  "lat": -23.5583071,
+  "lng": -46.635659700000005,
+  "nota": 4.8,
+  "aval": 26
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "IMULTI - Instituto Multicultural & Idiomas",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "escola/curso",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Rua Barão de Iguape, n°135 · liberdade",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "placa · adesivo de parede · uniformes",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 99662-9996",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "IMULTI - Instituto Multicultural & Idiomas logo",
+    "IMULTI - Instituto Multicultural & Idiomas liberdade instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>GenIO · Administração</title>
+<meta name="theme-color" content="#6933C5">
+<meta name="robots" content="noindex,nofollow">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="genio-favicon.png" type="image/png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="portal.css?v=4fcf9d8a7e">
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <a class="marca" href="app.html"><b>Gen<i>IO</i></b><span>administração</span></a>
+  <div class="fill"></div>
+  <a class="btn btn-s btn-sm" href="app.html">Módulos</a>
+</div></header>
+<main class="wrap" style="padding-bottom:48px">
+  <div class="saud"><div><h1 style="margin:0">Administração</h1></div></div>
+  <div id="top" class="msg" hidden></div>
+
+  <section class="card" style="margin:16px 0 24px">
+    <h2>Novo vendedor</h2>
+    <form id="fNovo" class="form2" novalidate>
+      <div class="campo"><label for="nNome">Nome</label><input id="nNome" autocomplete="off"></div>
+      <div class="campo"><label for="nEmail">E-mail (vai ser o login)</label><input id="nEmail" type="email" inputmode="email" autocapitalize="none" spellcheck="false" autocomplete="off"></div>
+      <div class="campo"><label for="nPlano">Plano</label><select id="nPlano"></select></div>
+      <div class="campo" style="display:flex;align-items:flex-end"><button class="btn btn-p" type="submit" style="width:100%">Criar e gerar convite</button></div>
+    </form>
+    <div id="nOut" class="msg" hidden></div>
+    <div id="convBox" hidden></div>
+  </section>
+
+  <section style="margin-bottom:24px">
+    <div class="linha" style="justify-content:space-between;margin-bottom:12px"><h2 style="margin:0">Contas</h2><span class="muted small" id="nContas"></span></div>
+    <div class="lista" id="contas"><div class="vazio">Carregando…</div></div>
+  </section>
+
+  <section>
+    <div class="linha" style="justify-content:space-between;margin-bottom:12px"><h2 style="margin:0">Contatos do site</h2><span class="muted small">Orçamentos e interesse na franquia</span></div>
+    <div class="lista" id="interesse"><div class="vazio">Carregando…</div></div>
+  </section>
+</main>
+<script src="portal.js?v=4fcf9d8a7e"></script>
+<script>
+(async()=>{const {$,esc}=G;let PL={},EU=null;
+  try{EU=await G.eu();}catch(e){}
+  if(!EU){location.replace("/?entrar=1&volta=admin.html");return;}
+  if(EU.papel!=="admin"){location.replace("app.html");return;}
+  const top=$("#top");
+  const linkDe=t=>location.origin+"/convite.html?c="+encodeURIComponent(t);
+  function mostraConvite(box,nome,url){const txt=`Olá, ${nome.split(" ")[0]}! O seu acesso ao GenIO está pronto. Abra o link, crie a sua senha e comece a usar: ${url} (o link vale 7 dias)`;
+    box.hidden=false;box.innerHTML=`<div class="msg ok">Convite de <b>${esc(nome)}</b> pronto. Mande o link pelo WhatsApp:</div><span class="link">${esc(url)}</span>
+      <div class="linha"><a class="btn btn-p btn-sm" target="_blank" rel="noopener" href="https://wa.me/?text=${encodeURIComponent(txt)}">Mandar no WhatsApp</a><button class="btn btn-s btn-sm" type="button" data-cp>Copiar link</button></div>`;
+    box.querySelector("[data-cp]").onclick=async e=>{try{await navigator.clipboard.writeText(url);e.target.textContent="Copiado";}catch(x){e.target.textContent="Selecione e copie";}};}
+  async function carregar(){
+    let d;try{d=await G.api("admin/contas");}catch(e){G.msg(top,e.message);return;}
+    PL=d.planos;$("#nPlano").innerHTML=Object.entries(PL).map(([k,v])=>`<option value="${k}">${esc(v.nome)}${v.aparelhos?` · ${v.aparelhos} aparelho${v.aparelhos>1?"s":""}`:" · sem limite de aparelhos"}</option>`).join("");
+    $("#nContas").textContent=`${d.contas.length} conta${d.contas.length===1?"":"s"}`;
+    $("#contas").innerHTML=d.contas.map(c=>`<div class="card conta" data-id="${c.id}">
+      <div class="cab"><b>${esc(c.nome)}</b><span class="muted small">${esc(c.email)}</span></div>
+      <div class="linha" style="margin-bottom:8px">
+        <span class="chip">${esc(c.plano_nome)}</span>
+        ${c.ativo?'<span class="chip ok">Ativa</span>':'<span class="chip no">Desativada</span>'}
+        ${c.tem_senha?"":'<span class="chip">Aguardando criar a senha</span>'}
+        <span class="muted small">Último acesso: ${G.data(c.ultimo_acesso)}</span></div>
+      ${c.aparelhos.length?c.aparelhos.map(a=>`<div class="ap"><span>${esc(a.nome||"Aparelho")} · visto ${G.data(a.visto)}</span>${c.id===EU.id&&a.id===EU.aparelho_id?'<span class="chip">este aparelho</span>':`<button class="btn btn-t btn-sm" type="button" data-tirar="${a.id}" data-nome="${esc(c.nome)}">Liberar</button>`}</div>`).join(""):'<div class="ap"><span class="muted">Nenhum aparelho ligado</span></div>'}
+      <div class="linha" style="margin-top:12px">
+        <button class="btn btn-s btn-sm" type="button" data-conv="${c.id}" data-nome="${esc(c.nome)}">${c.tem_senha?"Novo convite (trocar senha)":"Novo convite"}</button>
+        ${c.papel==="admin"?"":`<select data-plano="${c.id}" style="width:auto;min-height:40px">${Object.entries(PL).filter(([k])=>k!=="admin").map(([k,v])=>`<option value="${k}"${k===c.plano?" selected":""}>${esc(v.nome)}</option>`).join("")}</select>`}
+        ${c.id===EU.id?"":`<button class="btn btn-t btn-sm" type="button" data-ativo="${c.id}" data-v="${c.ativo?0:1}">${c.ativo?"Desativar":"Ativar"}</button>`}
+      </div><div data-box hidden style="margin-top:12px"></div></div>`).join("")||'<div class="vazio">Nenhuma conta ainda.</div>';
+    document.querySelectorAll("[data-conv]").forEach(b=>b.onclick=async()=>{b.disabled=true;try{const r=await G.api(`admin/contas/${b.dataset.conv}/convite`,{});mostraConvite(b.closest(".conta").querySelector("[data-box]"),b.dataset.nome,linkDe(r.convite));}catch(e){G.msg(top,e.message);}b.disabled=false;});
+    document.querySelectorAll("[data-tirar]").forEach(b=>b.onclick=async()=>{if(!confirm(`Liberar este aparelho de ${b.dataset.nome}? A pessoa sai da conta nele e pode entrar em outro.`))return;try{await G.api(`admin/aparelhos/${b.dataset.tirar}/tirar`,{});carregar();}catch(e){G.msg(top,e.message);}});
+    document.querySelectorAll("[data-ativo]").forEach(b=>b.onclick=async()=>{const on=b.dataset.v==="1";if(!on&&!confirm("Desativar esta conta? A pessoa sai de todos os aparelhos."))return;try{await G.api(`admin/contas/${b.dataset.ativo}`,{ativo:on});carregar();}catch(e){G.msg(top,e.message);}});
+    document.querySelectorAll("[data-plano]").forEach(s=>s.onchange=async()=>{try{await G.api(`admin/contas/${s.dataset.plano}`,{plano:s.value});G.msg(top,"Plano alterado.","ok");}catch(e){G.msg(top,e.message);carregar();}});
+    try{const r=await G.api("admin/interesse");$("#interesse").innerHTML=r.interesse.map(i=>{const n=i.telefone.replace(/\D/g,""),w=n.length<=11?"55"+n:n;
+      return `<div class="card conta"><div class="cab"><b>${esc(i.nome)}</b><span class="muted small">${esc(i.cidade||"")} · ${G.data(i.criado)}</span></div>${i.mensagem?`<p class="muted">${esc(i.mensagem)}</p>`:""}
+        <div class="linha"><a class="btn btn-p btn-sm" target="_blank" rel="noopener" href="https://wa.me/${w}">Chamar ${esc(i.telefone)}</a><button class="btn btn-s btn-sm" type="button" data-criar="${esc(i.nome)}">Criar conta</button></div></div>`;}).join("")||'<div class="vazio">Nenhum contato ainda.</div>';
+      document.querySelectorAll("[data-criar]").forEach(b=>b.onclick=()=>{$("#nNome").value=b.dataset.criar;$("#nEmail").focus();scrollTo({top:0,behavior:"smooth"});});}catch(e){}
+  }
+  $("#fNovo").onsubmit=async e=>{e.preventDefault();const out=$("#nOut"),b=$("#fNovo button[type=submit]"),nome=$("#nNome").value.trim(),email=$("#nEmail").value.trim();
+    if(!nome||!/^\S+@\S+\.\S+$/.test(email)){G.msg(out,"Preencha o nome e um e-mail válido.");return;}
+    b.disabled=true;G.msg(out,"");try{const r=await G.api("admin/contas",{nome,email,plano:$("#nPlano").value});mostraConvite($("#convBox"),nome,linkDe(r.convite));$("#fNovo").reset();carregar();}
+    catch(err){G.msg(out,err.message);}b.disabled=false;};
+  carregar();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,55 @@
+{
+ "nome": "Envy Ótica",
+ "slug": "envy-otica",
+ "rota": {
+  "centro": "moema",
+  "dia": 2,
+  "ordem": 15,
+  "place_id": "ChIJ-_gKGQlazpQRPj9MsWWwl5g",
+  "lat": -23.610066099999997,
+  "lng": -46.6665798,
+  "nota": 4.5,
+  "aval": 87
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Envy Ótica",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "ótica",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Avenida Ibirapuera, 3.103 · moema",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · placa · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 96604-0966",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Envy Ótica logo",
+    "Envy Ótica moema instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

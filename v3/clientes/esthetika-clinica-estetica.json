@@ -1,0 +1,55 @@
+{
+ "nome": "Esthetika - Clinica Estética",
+ "slug": "esthetika-clinica-estetica",
+ "rota": {
+  "centro": "saude-jabaquara",
+  "dia": 2,
+  "ordem": 20,
+  "place_id": "ChIJTYj1PipbzpQRUEf-0IIZX0E",
+  "lat": -23.6120417,
+  "lng": -46.6376766,
+  "nota": 5.0,
+  "aval": 19
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Esthetika - Clinica Estética",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "clínica/consultório",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Av. Jabaquara, 891 · saude-jabaquara",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "placa de recepção · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 94931-0520",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Esthetika - Clinica Estética logo",
+    "Esthetika - Clinica Estética saude-jabaquara instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

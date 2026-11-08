@@ -1,0 +1,55 @@
+{
+ "nome": "Ichiban Cell",
+ "slug": "ichiban-cell",
+ "rota": {
+  "centro": "liberdade",
+  "dia": 1,
+  "ordem": 25,
+  "place_id": "ChIJEeIFfX5ZzpQR6hr_JZ5jEFA",
+  "lat": -23.555956,
+  "lng": -46.635577,
+  "nota": 4.3,
+  "aval": 107
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Ichiban Cell",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "celular/assistência",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Galvão Bueno, 40 · liberdade",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · placa · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 93488-9179",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Ichiban Cell logo",
+    "Ichiban Cell liberdade instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

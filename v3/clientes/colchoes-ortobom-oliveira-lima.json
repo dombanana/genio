@@ -1,0 +1,55 @@
+{
+ "nome": "Colchões Ortobom Oliveira Lima",
+ "slug": "colchoes-ortobom-oliveira-lima",
+ "rota": {
+  "centro": "santo-andre",
+  "dia": 1,
+  "ordem": 25,
+  "place_id": "ChIJQyP1ZI9DzpQRtxTMEeqS04w",
+  "lat": -23.6578312,
+  "lng": -46.5271167,
+  "nota": 4.2,
+  "aval": 48
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Colchões Ortobom Oliveira Lima",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "floricultura/presentes",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Cel. Oliveira Lima, 411 · santo-andre",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 93705-8238",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Colchões Ortobom Oliveira Lima logo",
+    "Colchões Ortobom Oliveira Lima santo-andre instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

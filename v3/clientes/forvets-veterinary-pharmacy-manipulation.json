@@ -1,0 +1,55 @@
+{
+ "nome": "Forvets - Veterinary Pharmacy Manipulation",
+ "slug": "forvets-veterinary-pharmacy-manipulation",
+ "rota": {
+  "centro": "saude-jabaquara",
+  "dia": 2,
+  "ordem": 15,
+  "place_id": "ChIJkUuS1FFazpQRchnkN9EZHpo",
+  "lat": -23.6166289,
+  "lng": -46.6386131,
+  "nota": 4.0,
+  "aval": 188
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Forvets - Veterinary Pharmacy Manipulation",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "pet",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Av. Jabaquara, 1405 · saude-jabaquara",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · placa · adesivo de vitrine",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 2577-3344",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Forvets - Veterinary Pharmacy Manipulation logo",
+    "Forvets - Veterinary Pharmacy Manipulation saude-jabaquara instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

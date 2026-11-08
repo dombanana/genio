@@ -1,0 +1,55 @@
+{
+ "nome": "UPGrade Celulares",
+ "slug": "upgrade-celulares",
+ "rota": {
+  "centro": "vila-prudente",
+  "dia": 1,
+  "ordem": 10,
+  "place_id": "ChIJUdYrWw5czpQRfvyEj6HQ1ms",
+  "lat": -23.5820407,
+  "lng": -46.5855452,
+  "nota": 4.0,
+  "aval": 27
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "UPGrade Celulares",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "celular/assistência",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Ibitirama, 18 · vila-prudente",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · placa · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 99549-3292",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "UPGrade Celulares logo",
+    "UPGrade Celulares vila-prudente instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

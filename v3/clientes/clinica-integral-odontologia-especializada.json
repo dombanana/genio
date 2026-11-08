@@ -1,0 +1,55 @@
+{
+ "nome": "Clínica Integral Odontologia Especializada",
+ "slug": "clinica-integral-odontologia-especializada",
+ "rota": {
+  "centro": "vila-mariana",
+  "dia": 2,
+  "ordem": 9,
+  "place_id": "ChIJ7UOl5YZZzpQR_CpXqgV5ZVo",
+  "lat": -23.584812799999998,
+  "lng": -46.6383438,
+  "nota": 5.0,
+  "aval": 11
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Clínica Integral Odontologia Especializada",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "clínica/consultório",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Joaquim Távora, 573 · vila-mariana",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "placa de recepção · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 98522-1188",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Clínica Integral Odontologia Especializada logo",
+    "Clínica Integral Odontologia Especializada vila-mariana instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

@@ -1,0 +1,55 @@
+{
+ "nome": "Fast Cell",
+ "slug": "fast-cell",
+ "rota": {
+  "centro": "tatuape",
+  "dia": 2,
+  "ordem": 19,
+  "place_id": "ChIJ0ZaS-h1fzpQR0tvYVtyDq6o",
+  "lat": -23.5441601,
+  "lng": -46.5747357,
+  "nota": 4.3,
+  "aval": 52
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Fast Cell",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "celular/assistência",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Tuiuti, 2116 · tatuape",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · placa · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 95556-6440",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Fast Cell logo",
+    "Fast Cell tatuape instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

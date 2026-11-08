@@ -1,0 +1,55 @@
+{
+ "nome": "Óticas Maxpole Vila Mariana - Ótica Vila Mariana",
+ "slug": "oticas-maxpole-vila-mariana-otica-vila-mariana",
+ "rota": {
+  "centro": "vila-mariana",
+  "dia": 2,
+  "ordem": 19,
+  "place_id": "ChIJWfCzeC5azpQRIp9HRJySH9k",
+  "lat": -23.594551400000004,
+  "lng": -46.636843899999995,
+  "nota": 5.0,
+  "aval": 998
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Óticas Maxpole Vila Mariana - Ótica Vila Mariana",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "ótica",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Domingos de Morais, 2098 · vila-mariana",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · placa · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 96362-1845",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Óticas Maxpole Vila Mariana - Ótica Vila Mariana logo",
+    "Óticas Maxpole Vila Mariana - Ótica Vila Mariana vila-mariana instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

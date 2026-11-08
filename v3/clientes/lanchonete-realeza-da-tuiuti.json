@@ -1,0 +1,55 @@
+{
+ "nome": "Lanchonete realeza da tuiuti",
+ "slug": "lanchonete-realeza-da-tuiuti",
+ "rota": {
+  "centro": "tatuape",
+  "dia": 1,
+  "ordem": 15,
+  "place_id": "ChIJD4P5Et1ezpQRO-ILSnH1QNo",
+  "lat": -23.5356491,
+  "lng": -46.5753968,
+  "nota": 4.4,
+  "aval": 28
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Lanchonete realeza da tuiuti",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "restaurante",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Tuiuti, 1167 · tatuape",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · cardápio de parede · Mostra Aí",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 2091-6187",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Lanchonete realeza da tuiuti logo",
+    "Lanchonete realeza da tuiuti tatuape instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

@@ -1,0 +1,55 @@
+{
+ "nome": "Padaria Tuiuti",
+ "slug": "padaria-tuiuti",
+ "rota": {
+  "centro": "tatuape",
+  "dia": 2,
+  "ordem": 16,
+  "place_id": "ChIJA5KZxMFezpQRETj8gaT86ug",
+  "lat": -23.5433083,
+  "lng": -46.574735399999994,
+  "nota": 4.0,
+  "aval": 1838
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Padaria Tuiuti",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "padaria",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Tuiuti, 2025 · tatuape",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · adesivo de vitrine · cardápio de parede",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 2941-6406",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Padaria Tuiuti logo",
+    "Padaria Tuiuti tatuape instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

@@ -1,0 +1,55 @@
+{
+ "nome": "Lanchonete e Pizzaria Ki Gostoso",
+ "slug": "lanchonete-e-pizzaria-ki-gostoso",
+ "rota": {
+  "centro": "vila-prudente",
+  "dia": 1,
+  "ordem": 22,
+  "place_id": "ChIJQ3ijRQ1czpQRgbgoiUiw6bg",
+  "lat": -23.5873703,
+  "lng": -46.584475399999995,
+  "nota": 4.3,
+  "aval": 267
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Lanchonete e Pizzaria Ki Gostoso",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "restaurante",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Ibitirama, 651 · vila-prudente",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · cardápio de parede · Mostra Aí",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 2341-1783",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Lanchonete e Pizzaria Ki Gostoso logo",
+    "Lanchonete e Pizzaria Ki Gostoso vila-prudente instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

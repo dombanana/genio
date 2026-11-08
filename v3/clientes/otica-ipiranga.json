@@ -1,0 +1,55 @@
+{
+ "nome": "ÓTICA IPIRANGA",
+ "slug": "otica-ipiranga",
+ "rota": {
+  "centro": "ipiranga",
+  "dia": 2,
+  "ordem": 5,
+  "place_id": "ChIJpwdpA41bzpQRqeO3IuN_cxA",
+  "lat": -23.5956027,
+  "lng": -46.6007774,
+  "nota": 4.9,
+  "aval": 104
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "ÓTICA IPIRANGA",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "ótica",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Silva Bueno, 1941 · ipiranga",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · placa · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 2063-1965",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "ÓTICA IPIRANGA logo",
+    "ÓTICA IPIRANGA ipiranga instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

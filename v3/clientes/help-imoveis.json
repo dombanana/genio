@@ -1,0 +1,55 @@
+{
+ "nome": "Help Imóveis",
+ "slug": "help-imoveis",
+ "rota": {
+  "centro": "ipiranga",
+  "dia": 1,
+  "ordem": 1,
+  "place_id": "ChIJGW0up-5bzpQRVnfe9TQzoG0",
+  "lat": -23.590934200000003,
+  "lng": -46.6068539,
+  "nota": 4.7,
+  "aval": 13
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Help Imóveis",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "escritório/imobiliária",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Bom Pastor, 1635 · ipiranga",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "placa de recepção · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 2738-9005",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Help Imóveis logo",
+    "Help Imóveis ipiranga instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

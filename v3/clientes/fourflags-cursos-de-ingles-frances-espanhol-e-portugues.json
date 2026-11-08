@@ -1,0 +1,55 @@
+{
+ "nome": "Fourflags - Cursos de Inglês, Francês, Espanhol e Português",
+ "slug": "fourflags-cursos-de-ingles-frances-espanhol-e-portugues",
+ "rota": {
+  "centro": "sao-caetano",
+  "dia": 2,
+  "ordem": 24,
+  "place_id": "ChIJ88iRTdtczpQRj7ipcqq2-60",
+  "lat": -23.6196079,
+  "lng": -46.5594265,
+  "nota": 5.0,
+  "aval": 154
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Fourflags - Cursos de Inglês, Francês, Espanhol e Português",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "salão/barbearia",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Gen. Osório, 397 · sao-caetano",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · adesivo de vitrine · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 4228-4046",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Fourflags - Cursos de Inglês, Francês, Espanhol e Português logo",
+    "Fourflags - Cursos de Inglês, Francês, Espanhol e Português sao-caetano instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

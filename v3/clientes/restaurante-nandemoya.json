@@ -1,0 +1,55 @@
+{
+ "nome": "Restaurante Nandemoyá",
+ "slug": "restaurante-nandemoya",
+ "rota": {
+  "centro": "liberdade",
+  "dia": 1,
+  "ordem": 1,
+  "place_id": "ChIJMd8utqhZzpQRuaSA-eTnYBQ",
+  "lat": -23.5596529,
+  "lng": -46.634727899999994,
+  "nota": 4.5,
+  "aval": 7723
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Restaurante Nandemoyá",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "restaurante",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Galvão Bueno, 451 · liberdade",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · cardápio de parede · Mostra Aí",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 3207-4822",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Restaurante Nandemoyá logo",
+    "Restaurante Nandemoyá liberdade instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

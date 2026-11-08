@@ -1,0 +1,55 @@
+{
+ "nome": "Ótica Kaizen",
+ "slug": "otica-kaizen",
+ "rota": {
+  "centro": "saude-jabaquara",
+  "dia": 1,
+  "ordem": 12,
+  "place_id": "ChIJjaia6uNbzpQRYA_LfFCg5-s",
+  "lat": -23.6202947,
+  "lng": -46.639941099999994,
+  "nota": 5.0,
+  "aval": 826
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Ótica Kaizen",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "ótica",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Av. Jabaquara, 1826 · saude-jabaquara",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · placa · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 95168-3654",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Ótica Kaizen logo",
+    "Ótica Kaizen saude-jabaquara instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

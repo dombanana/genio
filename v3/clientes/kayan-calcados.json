@@ -1,0 +1,55 @@
+{
+ "nome": "Kayan Calçados",
+ "slug": "kayan-calcados",
+ "rota": {
+  "centro": "mooca",
+  "dia": 1,
+  "ordem": 21,
+  "place_id": "ChIJP6XFRbtlzpQRbUX0yCgGQlU",
+  "lat": -23.5564398,
+  "lng": -46.6000502,
+  "nota": 4.5,
+  "aval": 25
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Kayan Calçados",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "loja de roupas/calçados",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Av. Paes de Barros, 99 · mooca",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · banner · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 3582-3448",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Kayan Calçados logo",
+    "Kayan Calçados mooca instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

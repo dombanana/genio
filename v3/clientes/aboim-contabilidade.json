@@ -1,0 +1,55 @@
+{
+ "nome": "Aboim Contabilidade",
+ "slug": "aboim-contabilidade",
+ "rota": {
+  "centro": "ipiranga",
+  "dia": 2,
+  "ordem": 22,
+  "place_id": "ChIJnxCFN5NbzpQRUUDzyfFrThY",
+  "lat": -23.596235999999998,
+  "lng": -46.606494,
+  "nota": 4.5,
+  "aval": 24
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Aboim Contabilidade",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "escritório/imobiliária",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Bom Pastor, 2224 · ipiranga",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "placa de recepção · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 2892-5150",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Aboim Contabilidade logo",
+    "Aboim Contabilidade ipiranga instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

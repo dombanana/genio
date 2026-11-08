@@ -1,0 +1,55 @@
+{
+ "nome": "XT Ótica Santo André | Óculos Prontos Na Hora",
+ "slug": "xt-otica-santo-andre-oculos-prontos-na-hora",
+ "rota": {
+  "centro": "santo-andre",
+  "dia": 1,
+  "ordem": 22,
+  "place_id": "ChIJBbFmKMtDzpQRkTR2VzSX8os",
+  "lat": -23.6583491,
+  "lng": -46.5269149,
+  "nota": 4.9,
+  "aval": 2206
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "XT Ótica Santo André | Óculos Prontos Na Hora",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "ótica",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Cel. Oliveira Lima, 471 · santo-andre",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · placa · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 4435-3581",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "XT Ótica Santo André | Óculos Prontos Na Hora logo",
+    "XT Ótica Santo André | Óculos Prontos Na Hora santo-andre instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

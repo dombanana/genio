@@ -1,0 +1,55 @@
+{
+ "nome": "Empório Villa Verde",
+ "slug": "emporio-villa-verde",
+ "rota": {
+  "centro": "cambuci-aclimacao",
+  "dia": 2,
+  "ordem": 2,
+  "place_id": "ChIJ3w9LJLhZzpQReX5tJHn_K58",
+  "lat": -23.5637164,
+  "lng": -46.618936399999996,
+  "nota": 4.0,
+  "aval": 349
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Empório Villa Verde",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "restaurante",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Clímaco Barbosa, 145 · cambuci-aclimacao",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · cardápio de parede · Mostra Aí",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 3271-1486",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Empório Villa Verde logo",
+    "Empório Villa Verde cambuci-aclimacao instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

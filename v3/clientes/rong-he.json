@@ -1,0 +1,55 @@
+{
+ "nome": "Rong He",
+ "slug": "rong-he",
+ "rota": {
+  "centro": "liberdade",
+  "dia": 2,
+  "ordem": 14,
+  "place_id": "ChIJAw8StqdZzpQRBpZ57GrkIh4",
+  "lat": -23.558835,
+  "lng": -46.6341575,
+  "nota": 4.5,
+  "aval": 7764
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Rong He",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "restaurante",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. da Glória, 622 · liberdade",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · cardápio de parede · Mostra Aí",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 3207-1206",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Rong He logo",
+    "Rong He liberdade instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

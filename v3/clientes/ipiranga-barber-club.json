@@ -1,0 +1,55 @@
+{
+ "nome": "Ipiranga Barber Club",
+ "slug": "ipiranga-barber-club",
+ "rota": {
+  "centro": "ipiranga",
+  "dia": 1,
+  "ordem": 8,
+  "place_id": "ChIJcSBPoPpbzpQRibM5PTmhkNo",
+  "lat": -23.5844272,
+  "lng": -46.6018742,
+  "nota": 4.8,
+  "aval": 344
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Ipiranga Barber Club",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "salão/barbearia",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Silva Bueno, 691 · ipiranga",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · adesivo de vitrine · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 2658-4879",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Ipiranga Barber Club logo",
+    "Ipiranga Barber Club ipiranga instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

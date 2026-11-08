@@ -1,0 +1,50 @@
+{
+ "nome": "DAJI Malatang & Guioza",
+ "slug": "daji-malatang-guioza",
+ "rota": {
+  "centro": "liberdade",
+  "dia": 2,
+  "ordem": 25,
+  "place_id": "ChIJbfXyAwBZzpQRNIj_RivP1bg",
+  "lat": -23.553712599999997,
+  "lng": -46.6344553,
+  "nota": 4.4,
+  "aval": 45
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "DAJI Malatang & Guioza",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "restaurante",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. da Glória, 58 · liberdade",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · cardápio de parede · Mostra Aí",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "DAJI Malatang & Guioza logo",
+    "DAJI Malatang & Guioza liberdade instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

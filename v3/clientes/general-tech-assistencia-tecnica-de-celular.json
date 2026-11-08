@@ -1,0 +1,55 @@
+{
+ "nome": "General Tech | Assistência Técnica de Celular",
+ "slug": "general-tech-assistencia-tecnica-de-celular",
+ "rota": {
+  "centro": "bras-belem",
+  "dia": 2,
+  "ordem": 23,
+  "place_id": "ChIJX7BqrYBZzpQRzCMjsuBLR94",
+  "lat": -23.545192,
+  "lng": -46.6085266,
+  "nota": 4.8,
+  "aval": 69
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "General Tech | Assistência Técnica de Celular",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "celular/assistência",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "General Tech · bras-belem",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · placa · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 97477-3781",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "General Tech | Assistência Técnica de Celular logo",
+    "General Tech | Assistência Técnica de Celular bras-belem instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

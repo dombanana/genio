@@ -1,0 +1,55 @@
+{
+ "nome": "Samsung Smart Center Moema",
+ "slug": "samsung-smart-center-moema",
+ "rota": {
+  "centro": "moema",
+  "dia": 2,
+  "ordem": 2,
+  "place_id": "ChIJ-8LiKNBbzpQRm3GinGNkrns",
+  "lat": -23.604749899999998,
+  "lng": -46.659051,
+  "nota": 3.9,
+  "aval": 3804
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Samsung Smart Center Moema",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "floricultura/presentes",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Alameda dos Maracatins, 398 · moema",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 5197-9464",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Samsung Smart Center Moema logo",
+    "Samsung Smart Center Moema moema instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

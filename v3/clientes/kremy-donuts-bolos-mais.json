@@ -1,0 +1,55 @@
+{
+ "nome": "Kremy Donuts , Bolos & Mais",
+ "slug": "kremy-donuts-bolos-mais",
+ "rota": {
+  "centro": "sao-caetano",
+  "dia": 2,
+  "ordem": 4,
+  "place_id": "ChIJebX5rFBdzpQRkT7a3xCg0aM",
+  "lat": -23.61429,
+  "lng": -46.5725159,
+  "nota": 4.8,
+  "aval": 144
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Kremy Donuts , Bolos & Mais",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "padaria",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Manoel Coelho, 540 · sao-caetano",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · adesivo de vitrine · cardápio de parede",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 98989-2560",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Kremy Donuts , Bolos & Mais logo",
+    "Kremy Donuts , Bolos & Mais sao-caetano instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

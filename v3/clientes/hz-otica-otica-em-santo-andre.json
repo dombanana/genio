@@ -1,0 +1,55 @@
+{
+ "nome": "Hz Ótica - Ótica em Santo André",
+ "slug": "hz-otica-otica-em-santo-andre",
+ "rota": {
+  "centro": "santo-andre",
+  "dia": 1,
+  "ordem": 20,
+  "place_id": "ChIJI4bjM1lDzpQR-sxfTM4L4N8",
+  "lat": -23.6585036,
+  "lng": -46.5272402,
+  "nota": 5.0,
+  "aval": 96
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Hz Ótica - Ótica em Santo André",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "ótica",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Cel. Oliveira Lima, 486 · santo-andre",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · placa · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 91279-7378",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Hz Ótica - Ótica em Santo André logo",
+    "Hz Ótica - Ótica em Santo André santo-andre instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

@@ -1,0 +1,55 @@
+{
+ "nome": "Imobiliária Nova São Paulo - Unidade Saúde I",
+ "slug": "imobiliaria-nova-sao-paulo-unidade-saude-i",
+ "rota": {
+  "centro": "saude-jabaquara",
+  "dia": 1,
+  "ordem": 15,
+  "place_id": "ChIJSYZ0YuVEzpQRxgg5GjZs0jo",
+  "lat": -23.6214168,
+  "lng": -46.639670699999996,
+  "nota": 4.6,
+  "aval": 2105
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Imobiliária Nova São Paulo - Unidade Saúde I",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "escritório/imobiliária",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Av. Jabaquara, 1947 · saude-jabaquara",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "placa de recepção · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 97489-2840",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Imobiliária Nova São Paulo - Unidade Saúde I logo",
+    "Imobiliária Nova São Paulo - Unidade Saúde I saude-jabaquara instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

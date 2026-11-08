@@ -1,0 +1,55 @@
+{
+ "nome": "Avicultura Pardal",
+ "slug": "avicultura-pardal",
+ "rota": {
+  "centro": "vila-prudente",
+  "dia": 2,
+  "ordem": 2,
+  "place_id": "ChIJ-xqiZW1czpQRc9WRRebVzOE",
+  "lat": -23.5892689,
+  "lng": -46.583065500000004,
+  "nota": 4.6,
+  "aval": 18
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Avicultura Pardal",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "pet",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Ibitirama, 919 · vila-prudente",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · placa · adesivo de vitrine",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 2341-7026",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Avicultura Pardal logo",
+    "Avicultura Pardal vila-prudente instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

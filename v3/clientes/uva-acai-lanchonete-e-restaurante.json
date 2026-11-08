@@ -1,0 +1,55 @@
+{
+ "nome": "Uva & Açai Lanchonete e Restaurante",
+ "slug": "uva-acai-lanchonete-e-restaurante",
+ "rota": {
+  "centro": "saude-jabaquara",
+  "dia": 1,
+  "ordem": 5,
+  "place_id": "ChIJu0SzFD1bzpQRbhZPtYW8oaM",
+  "lat": -23.618620999999997,
+  "lng": -46.639423799999996,
+  "nota": 4.4,
+  "aval": 698
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Uva & Açai Lanchonete e Restaurante",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "restaurante",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Av. Jabaquara, 1640 · saude-jabaquara",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · cardápio de parede · Mostra Aí",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 2386-0282",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Uva & Açai Lanchonete e Restaurante logo",
+    "Uva & Açai Lanchonete e Restaurante saude-jabaquara instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

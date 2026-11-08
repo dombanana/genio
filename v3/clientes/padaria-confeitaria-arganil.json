@@ -1,0 +1,55 @@
+{
+ "nome": "Padaria Confeitaria Arganil",
+ "slug": "padaria-confeitaria-arganil",
+ "rota": {
+  "centro": "bras-belem",
+  "dia": 1,
+  "ordem": 2,
+  "place_id": "ChIJORAutSFZzpQRk-n8bD1IHGY",
+  "lat": -23.542882799999997,
+  "lng": -46.611179799999995,
+  "nota": 4.0,
+  "aval": 227
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Padaria Confeitaria Arganil",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "padaria",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Rua Hipódromo, 302 · bras-belem",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · adesivo de vitrine · cardápio de parede",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 2292-9923",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Padaria Confeitaria Arganil logo",
+    "Padaria Confeitaria Arganil bras-belem instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

@@ -1,0 +1,55 @@
+{
+ "nome": "Barbearia Reinaldo - Mooca",
+ "slug": "barbearia-reinaldo-mooca",
+ "rota": {
+  "centro": "mooca",
+  "dia": 2,
+  "ordem": 18,
+  "place_id": "ChIJMfGLcZZZzpQR4B33iI7nQb4",
+  "lat": -23.553860699999998,
+  "lng": -46.5968064,
+  "nota": 5.0,
+  "aval": 51
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Barbearia Reinaldo - Mooca",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "salão/barbearia",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Rua dos Trilhos, 1324 · mooca",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · adesivo de vitrine · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 97968-3949",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Barbearia Reinaldo - Mooca logo",
+    "Barbearia Reinaldo - Mooca mooca instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

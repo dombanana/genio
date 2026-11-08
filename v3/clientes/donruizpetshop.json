@@ -1,0 +1,55 @@
+{
+ "nome": "Donruizpetshop",
+ "slug": "donruizpetshop",
+ "rota": {
+  "centro": "sao-caetano",
+  "dia": 1,
+  "ordem": 3,
+  "place_id": "ChIJdcsBg8JczpQRzBz4sZUWie4",
+  "lat": -23.619897,
+  "lng": -46.566401899999995,
+  "nota": 4.9,
+  "aval": 161
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Donruizpetshop",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "pet",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Rafael Corrêa Sampaio, 705 · sao-caetano",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · placa · adesivo de vitrine",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 93031-9730",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Donruizpetshop logo",
+    "Donruizpetshop sao-caetano instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

@@ -1,0 +1,55 @@
+{
+ "nome": "Form Elegance - Unidade Saúde",
+ "slug": "form-elegance-unidade-saude",
+ "rota": {
+  "centro": "saude-jabaquara",
+  "dia": 1,
+  "ordem": 3,
+  "place_id": "ChIJC9pjvuZbzpQRtRfPClJUazY",
+  "lat": -23.618184100000004,
+  "lng": -46.6389354,
+  "nota": 4.4,
+  "aval": 38
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Form Elegance - Unidade Saúde",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "clínica/consultório",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Av. Jabaquara, 1581 · saude-jabaquara",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "placa de recepção · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 96579-2481",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Form Elegance - Unidade Saúde logo",
+    "Form Elegance - Unidade Saúde saude-jabaquara instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

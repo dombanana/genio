@@ -1,0 +1,55 @@
+{
+ "nome": "Estação da Pizza TOP",
+ "slug": "estacao-da-pizza-top",
+ "rota": {
+  "centro": "vila-mariana",
+  "dia": 1,
+  "ordem": 15,
+  "place_id": "ChIJmx-EzoZZzpQRnM4UAlGPF3E",
+  "lat": -23.5841076,
+  "lng": -46.6370721,
+  "nota": 4.5,
+  "aval": 43
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Estação da Pizza TOP",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "restaurante",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Joaquim Távora, 417 · vila-mariana",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · cardápio de parede · Mostra Aí",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 5082-1919",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Estação da Pizza TOP logo",
+    "Estação da Pizza TOP vila-mariana instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

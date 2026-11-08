@@ -1,0 +1,55 @@
+{
+ "nome": "Amora Fruitt Restaurante e Lanchonete",
+ "slug": "amora-fruitt-restaurante-e-lanchonete",
+ "rota": {
+  "centro": "tatuape",
+  "dia": 1,
+  "ordem": 17,
+  "place_id": "ChIJ6UISDt1ezpQRlkMON-lTQbA",
+  "lat": -23.5353821,
+  "lng": -46.575390399999996,
+  "nota": 4.0,
+  "aval": 127
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Amora Fruitt Restaurante e Lanchonete",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "restaurante",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Tuiuti, 1136 · tatuape",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · cardápio de parede · Mostra Aí",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 2737-6661",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Amora Fruitt Restaurante e Lanchonete logo",
+    "Amora Fruitt Restaurante e Lanchonete tatuape instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

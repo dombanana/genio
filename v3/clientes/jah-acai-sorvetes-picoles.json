@@ -1,0 +1,55 @@
+{
+ "nome": "Jah | Açaí, Sorvetes, Picolés",
+ "slug": "jah-acai-sorvetes-picoles",
+ "rota": {
+  "centro": "santo-andre",
+  "dia": 1,
+  "ordem": 4,
+  "place_id": "ChIJ6w1lb-RDzpQRp8c_7v2-gLg",
+  "lat": -23.6677966,
+  "lng": -46.53356360000001,
+  "nota": 5.0,
+  "aval": 1154
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Jah | Açaí, Sorvetes, Picolés",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "padaria",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Av. Pereira Barreto, 42 · santo-andre",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · adesivo de vitrine · cardápio de parede",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 95362-0559",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Jah | Açaí, Sorvetes, Picolés logo",
+    "Jah | Açaí, Sorvetes, Picolés santo-andre instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

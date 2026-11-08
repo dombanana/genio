@@ -1,0 +1,55 @@
+{
+ "nome": "Cell Evolution",
+ "slug": "cell-evolution",
+ "rota": {
+  "centro": "ipiranga",
+  "dia": 2,
+  "ordem": 9,
+  "place_id": "ChIJAzSKqo9bzpQR1F8nNKK6nHg",
+  "lat": -23.5963468,
+  "lng": -46.6007532,
+  "nota": 5.0,
+  "aval": 200
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Cell Evolution",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "celular/assistência",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Silva Bueno, 2021 · ipiranga",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · placa · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 98719-5980",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Cell Evolution logo",
+    "Cell Evolution ipiranga instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

@@ -1,0 +1,55 @@
+{
+ "nome": "Companny Shop",
+ "slug": "companny-shop",
+ "rota": {
+  "centro": "sao-caetano",
+  "dia": 2,
+  "ordem": 7,
+  "place_id": "ChIJNXPxEu1czpQR6d2qH4xWbQU",
+  "lat": -23.613717599999998,
+  "lng": -46.572349599999995,
+  "nota": 5.0,
+  "aval": 35
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Companny Shop",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "loja de roupas/calçados",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Manoel Coelho, 447 · sao-caetano",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · banner · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 94491-7707",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Companny Shop logo",
+    "Companny Shop sao-caetano instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

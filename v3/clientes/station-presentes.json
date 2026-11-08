@@ -1,0 +1,55 @@
+{
+ "nome": "Station Presentes",
+ "slug": "station-presentes",
+ "rota": {
+  "centro": "liberdade",
+  "dia": 2,
+  "ordem": 3,
+  "place_id": "ChIJ9-S016hZzpQR0JihP0ZrDCs",
+  "lat": -23.555743699999997,
+  "lng": -46.6351383,
+  "nota": 4.5,
+  "aval": 301
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Station Presentes",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "comércio",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Galvão Bueno, 17 · liberdade",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · placa · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 96468-6655",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Station Presentes logo",
+    "Station Presentes liberdade instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

@@ -1,0 +1,55 @@
+{
+ "nome": "Restaurante Campeão",
+ "slug": "restaurante-campeao",
+ "rota": {
+  "centro": "saude-jabaquara",
+  "dia": 1,
+  "ordem": 1,
+  "place_id": "ChIJe8DprFFazpQR1ehQYA1LjrE",
+  "lat": -23.6184928,
+  "lng": -46.6390418,
+  "nota": 4.3,
+  "aval": 230
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Restaurante Campeão",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "restaurante",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Av. Jabaquara, 1619 · saude-jabaquara",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · cardápio de parede · Mostra Aí",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 3205-4999",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Restaurante Campeão logo",
+    "Restaurante Campeão saude-jabaquara instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

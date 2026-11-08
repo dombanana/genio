@@ -1,0 +1,55 @@
+{
+ "nome": "Braza Barbearia - Bairro da Saúde",
+ "slug": "braza-barbearia-bairro-da-saude",
+ "rota": {
+  "centro": "saude-jabaquara",
+  "dia": 2,
+  "ordem": 18,
+  "place_id": "ChIJMxD1mP9bzpQRkqJ5x4KptAY",
+  "lat": -23.6144952,
+  "lng": -46.6385353,
+  "nota": 5.0,
+  "aval": 137
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Braza Barbearia - Bairro da Saúde",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "salão/barbearia",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Av. Jabaquara, 1174 · saude-jabaquara",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · adesivo de vitrine · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 2359-7126",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Braza Barbearia - Bairro da Saúde logo",
+    "Braza Barbearia - Bairro da Saúde saude-jabaquara instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

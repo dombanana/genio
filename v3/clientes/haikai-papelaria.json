@@ -1,0 +1,55 @@
+{
+ "nome": "Haikai Papelaria",
+ "slug": "haikai-papelaria",
+ "rota": {
+  "centro": "liberdade",
+  "dia": 2,
+  "ordem": 4,
+  "place_id": "ChIJGw414qhZzpQRVYeHuy-5FpQ",
+  "lat": -23.555753799999998,
+  "lng": -46.6351447,
+  "nota": 4.5,
+  "aval": 1172
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Haikai Papelaria",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "floricultura/presentes",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Galvão Bueno, 17 · liberdade",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 3341-3086",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Haikai Papelaria logo",
+    "Haikai Papelaria liberdade instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

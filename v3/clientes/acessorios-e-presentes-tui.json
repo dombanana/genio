@@ -1,0 +1,55 @@
+{
+ "nome": "Acessórios e Presentes Tui",
+ "slug": "acessorios-e-presentes-tui",
+ "rota": {
+  "centro": "tatuape",
+  "dia": 1,
+  "ordem": 5,
+  "place_id": "ChIJ-yjZc6dfzpQRgAb1DKm2tGU",
+  "lat": -23.5375935,
+  "lng": -46.5753998,
+  "nota": 4.0,
+  "aval": 1
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Acessórios e Presentes Tui",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "floricultura/presentes",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Tuiuti, 1379 · tatuape",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 97777-4466",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Acessórios e Presentes Tui logo",
+    "Acessórios e Presentes Tui tatuape instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

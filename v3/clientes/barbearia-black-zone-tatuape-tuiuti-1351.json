@@ -1,0 +1,55 @@
+{
+ "nome": "Barbearia Black Zone Tatuapé Tuiuti 1351",
+ "slug": "barbearia-black-zone-tatuape-tuiuti-1351",
+ "rota": {
+  "centro": "tatuape",
+  "dia": 1,
+  "ordem": 7,
+  "place_id": "ChIJJ81SHfpfzpQRXy-44iC09jA",
+  "lat": -23.537309999999998,
+  "lng": -46.575399,
+  "nota": 4.9,
+  "aval": 54
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Barbearia Black Zone Tatuapé Tuiuti 1351",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "salão/barbearia",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Tuiuti, 1351 · tatuape",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · adesivo de vitrine · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 2942-0330",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Barbearia Black Zone Tatuapé Tuiuti 1351 logo",
+    "Barbearia Black Zone Tatuapé Tuiuti 1351 tatuape instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

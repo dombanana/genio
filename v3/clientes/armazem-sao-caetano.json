@@ -1,0 +1,55 @@
+{
+ "nome": "Armazém São Caetano",
+ "slug": "armazem-sao-caetano",
+ "rota": {
+  "centro": "sao-caetano",
+  "dia": 1,
+  "ordem": 5,
+  "place_id": "ChIJE1w9KOpczpQRUvVNJDbFHU4",
+  "lat": -23.619146999999998,
+  "lng": -46.569195199999996,
+  "nota": 4.4,
+  "aval": 4884
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Armazém São Caetano",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "restaurante",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Piauí, 248 · sao-caetano",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · cardápio de parede · Mostra Aí",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 4228-3292",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Armazém São Caetano logo",
+    "Armazém São Caetano sao-caetano instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

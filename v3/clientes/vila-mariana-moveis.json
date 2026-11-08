@@ -1,0 +1,55 @@
+{
+ "nome": "Vila Mariana Móveis",
+ "slug": "vila-mariana-moveis",
+ "rota": {
+  "centro": "vila-mariana",
+  "dia": 1,
+  "ordem": 6,
+  "place_id": "ChIJk5xiSCpazpQRyS7HmaPCszo",
+  "lat": -23.588511,
+  "lng": -46.6355335,
+  "nota": 4.4,
+  "aval": 22
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Vila Mariana Móveis",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "floricultura/presentes",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Domingos de Morais, 1392 · vila-mariana",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 5572-2142",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Vila Mariana Móveis logo",
+    "Vila Mariana Móveis vila-mariana instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

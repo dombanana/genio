@@ -1,0 +1,55 @@
+{
+ "nome": "Doutor do Povo Clínicas Odontológicas - Santo André II",
+ "slug": "doutor-do-povo-clinicas-odontologicas-santo-andre-ii",
+ "rota": {
+  "centro": "santo-andre",
+  "dia": 1,
+  "ordem": 11,
+  "place_id": "ChIJFUrzWTlDzpQRzFfyZcTFtv0",
+  "lat": -23.6611337,
+  "lng": -46.525382199999996,
+  "nota": 3.2,
+  "aval": 78
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Doutor do Povo Clínicas Odontológicas - Santo André II",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "clínica/consultório",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Sen. Flaquer, 250 · santo-andre",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "placa de recepção · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 91501-3933",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Doutor do Povo Clínicas Odontológicas - Santo André II logo",
+    "Doutor do Povo Clínicas Odontológicas - Santo André II santo-andre instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

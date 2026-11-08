@@ -1,0 +1,55 @@
+{
+ "nome": "Sapataria do Futuro - SP, Santo André - Shopping ABC",
+ "slug": "sapataria-do-futuro-sp-santo-andre-shopping-abc",
+ "rota": {
+  "centro": "santo-andre",
+  "dia": 1,
+  "ordem": 5,
+  "place_id": "ChIJS_C5V2BCzpQRbVhQvTLk6xw",
+  "lat": -23.6686002,
+  "lng": -46.534096,
+  "nota": 4.1,
+  "aval": 126
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Sapataria do Futuro - SP, Santo André - Shopping ABC",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "comércio",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Av. Pereira Barreto, 42 · santo-andre",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · placa · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 4990-1289",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Sapataria do Futuro - SP, Santo André - Shopping ABC logo",
+    "Sapataria do Futuro - SP, Santo André - Shopping ABC santo-andre instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

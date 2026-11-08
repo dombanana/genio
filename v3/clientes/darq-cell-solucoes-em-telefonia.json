@@ -1,0 +1,55 @@
+{
+ "nome": "Darq Cell_ Soluções em Telefonia",
+ "slug": "darq-cell-solucoes-em-telefonia",
+ "rota": {
+  "centro": "tatuape",
+  "dia": 2,
+  "ordem": 22,
+  "place_id": "ChIJU4xKiJBfzpQRcnn2gkmZxrw",
+  "lat": -23.5451206,
+  "lng": -46.574303199999996,
+  "nota": 4.8,
+  "aval": 728
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Darq Cell_ Soluções em Telefonia",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "celular/assistência",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Tuiuti, 2743 · tatuape",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · placa · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 95774-7421",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Darq Cell_ Soluções em Telefonia logo",
+    "Darq Cell_ Soluções em Telefonia tatuape instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

@@ -1,0 +1,55 @@
+{
+ "nome": "Acquacel Celulares Assistência Técnica",
+ "slug": "acquacel-celulares-assistencia-tecnica",
+ "rota": {
+  "centro": "ipiranga",
+  "dia": 1,
+  "ordem": 15,
+  "place_id": "ChIJASIIWPJbzpQR7Y0kFeqc59E",
+  "lat": -23.5906174,
+  "lng": -46.601073,
+  "nota": 4.6,
+  "aval": 228
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Acquacel Celulares Assistência Técnica",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "celular/assistência",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Silva Bueno, 1387 · ipiranga",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · placa · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 2274-7055",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Acquacel Celulares Assistência Técnica logo",
+    "Acquacel Celulares Assistência Técnica ipiranga instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

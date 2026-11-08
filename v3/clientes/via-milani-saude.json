@@ -1,0 +1,55 @@
+{
+ "nome": "Via Milani - Saúde",
+ "slug": "via-milani-saude",
+ "rota": {
+  "centro": "saude-jabaquara",
+  "dia": 2,
+  "ordem": 14,
+  "place_id": "ChIJjx7_2Z1bzpQR_knyjn0NsdY",
+  "lat": -23.616919199999998,
+  "lng": -46.638662499999995,
+  "nota": 4.4,
+  "aval": 14
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Via Milani - Saúde",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "loja de roupas/calçados",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Av. Jabaquara, 1441 · saude-jabaquara",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · banner · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 91604-0000",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Via Milani - Saúde logo",
+    "Via Milani - Saúde saude-jabaquara instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

@@ -1,0 +1,50 @@
+{
+ "nome": "Elegance Presentes E Bijuterias",
+ "slug": "elegance-presentes-e-bijuterias",
+ "rota": {
+  "centro": "santo-andre",
+  "dia": 2,
+  "ordem": 2,
+  "place_id": "ChIJdXTbao9CzpQRdKnkDguI4Pw",
+  "lat": -23.6574353,
+  "lng": -46.526999599999996,
+  "nota": 2.6,
+  "aval": 23
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Elegance Presentes E Bijuterias",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "comércio",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Cel. Oliveira Lima · santo-andre",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · placa · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Elegance Presentes E Bijuterias logo",
+    "Elegance Presentes E Bijuterias santo-andre instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

@@ -1,0 +1,55 @@
+{
+ "nome": "La Pet Cuisine",
+ "slug": "la-pet-cuisine",
+ "rota": {
+  "centro": "vila-mariana",
+  "dia": 2,
+  "ordem": 18,
+  "place_id": "ChIJPZHKQUJBzpQReLc2gl5X7U4",
+  "lat": -23.594093599999997,
+  "lng": -46.636834,
+  "nota": 4.5,
+  "aval": 73
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "La Pet Cuisine",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "pet",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Domingos de Morais, 2036A · vila-mariana",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · placa · adesivo de vitrine",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 4328-6777",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "La Pet Cuisine logo",
+    "La Pet Cuisine vila-mariana instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

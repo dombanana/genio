@@ -1,0 +1,55 @@
+{
+ "nome": "T•Beauty | Salão de Beleza, Cabeleireiro, Estética, Manicure & Pedicure",
+ "slug": "tbeauty-salao-de-beleza-cabeleireiro-estetica-manicure-pedicure",
+ "rota": {
+  "centro": "santo-andre",
+  "dia": 2,
+  "ordem": 12,
+  "place_id": "ChIJ4T6D3I5CzpQRf_hBJexih6s",
+  "lat": -23.6577937,
+  "lng": -46.5286305,
+  "nota": 4.7,
+  "aval": 244
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "T•Beauty | Salão de Beleza, Cabeleireiro, Estética, Manicure & Pedicure",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "salão/barbearia",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Álvares de Azevedo, 99 · santo-andre",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · adesivo de vitrine · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 4990-4986",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "T•Beauty | Salão de Beleza, Cabeleireiro, Estética, Manicure & Pedicure logo",
+    "T•Beauty | Salão de Beleza, Cabeleireiro, Estética, Manicure & Pedicure santo-andre instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

@@ -1,0 +1,55 @@
+{
+ "nome": "Calçados Colúmbia",
+ "slug": "calcados-columbia",
+ "rota": {
+  "centro": "vila-prudente",
+  "dia": 1,
+  "ordem": 11,
+  "place_id": "ChIJUygpUw5czpQRXUesstbXwGk",
+  "lat": -23.5820625,
+  "lng": -46.5856395,
+  "nota": null,
+  "aval": null
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Calçados Colúmbia",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "loja de roupas/calçados",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Ibitirama, 18 · vila-prudente",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · banner · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 2061-2858",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Calçados Colúmbia logo",
+    "Calçados Colúmbia vila-prudente instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

@@ -1,0 +1,55 @@
+{
+ "nome": "GRUPO NACEF",
+ "slug": "grupo-nacef",
+ "rota": {
+  "centro": "saude-jabaquara",
+  "dia": 1,
+  "ordem": 14,
+  "place_id": "ChIJZ8cd0YZZzpQR0Fy1qP3zmZM",
+  "lat": -23.621102099999998,
+  "lng": -46.6393288,
+  "nota": 4.6,
+  "aval": 25
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "GRUPO NACEF",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "escritório/imobiliária",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Av. Jabaquara, 1909 · saude-jabaquara",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "placa de recepção · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 3205-4123",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "GRUPO NACEF logo",
+    "GRUPO NACEF saude-jabaquara instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

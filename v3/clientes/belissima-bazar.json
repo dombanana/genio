@@ -1,0 +1,50 @@
+{
+ "nome": "Belíssima Bazar",
+ "slug": "belissima-bazar",
+ "rota": {
+  "centro": "tatuape",
+  "dia": 2,
+  "ordem": 9,
+  "place_id": "ChIJ-6fJfs5fzpQRTChNHhy3Ck8",
+  "lat": -23.5423395,
+  "lng": -46.5749803,
+  "nota": 4.1,
+  "aval": 35
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Belíssima Bazar",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "floricultura/presentes",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Tuiuti, 1913 · tatuape",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Belíssima Bazar logo",
+    "Belíssima Bazar tatuape instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

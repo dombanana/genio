@@ -1,0 +1,55 @@
+{
+ "nome": "Vinho No Boteco Vila Mariana",
+ "slug": "vinho-no-boteco-vila-mariana",
+ "rota": {
+  "centro": "vila-mariana",
+  "dia": 2,
+  "ordem": 14,
+  "place_id": "ChIJkzX3gatZzpQRjx-Fjis8gPc",
+  "lat": -23.5873655,
+  "lng": -46.6449624,
+  "nota": 4.9,
+  "aval": 615
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Vinho No Boteco Vila Mariana",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "bar",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Joaquim Távora, 1306 · vila-mariana",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · cardápio · banner",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 91651-3234",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Vinho No Boteco Vila Mariana logo",
+    "Vinho No Boteco Vila Mariana vila-mariana instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

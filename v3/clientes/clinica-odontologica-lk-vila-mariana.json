@@ -1,0 +1,55 @@
+{
+ "nome": "Clínica Odontológica LK | Vila Mariana",
+ "slug": "clinica-odontologica-lk-vila-mariana",
+ "rota": {
+  "centro": "vila-mariana",
+  "dia": 1,
+  "ordem": 1,
+  "place_id": "ChIJs6eRuPWjlaMR7bs7o9X6OnE",
+  "lat": -23.5890192,
+  "lng": -46.6350985,
+  "nota": 5.0,
+  "aval": 47
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Clínica Odontológica LK | Vila Mariana",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "clínica/consultório",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Domingos de Morais, 1457 · vila-mariana",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "placa de recepção · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 94764-7807",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Clínica Odontológica LK | Vila Mariana logo",
+    "Clínica Odontológica LK | Vila Mariana vila-mariana instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

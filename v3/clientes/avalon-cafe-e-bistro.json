@@ -1,0 +1,55 @@
+{
+ "nome": "Avalon Cafe e Bistro",
+ "slug": "avalon-cafe-e-bistro",
+ "rota": {
+  "centro": "sao-caetano",
+  "dia": 1,
+  "ordem": 12,
+  "place_id": "ChIJ9c7bwc1dzpQRbYQNfhebMoE",
+  "lat": -23.617889599999998,
+  "lng": -46.572372,
+  "nota": 4.0,
+  "aval": 36
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Avalon Cafe e Bistro",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "restaurante",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Manoel Coelho, 933 · sao-caetano",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · cardápio de parede · Mostra Aí",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 99900-6330",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Avalon Cafe e Bistro logo",
+    "Avalon Cafe e Bistro sao-caetano instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

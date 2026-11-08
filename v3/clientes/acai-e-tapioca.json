@@ -1,0 +1,50 @@
+{
+ "nome": "Açaí e tapioca",
+ "slug": "acai-e-tapioca",
+ "rota": {
+  "centro": "bras-belem",
+  "dia": 1,
+  "ordem": 24,
+  "place_id": "ChIJJVLCOgBZzpQRWdobgHj5lCk",
+  "lat": -23.5384952,
+  "lng": -46.609867799999996,
+  "nota": 5.0,
+  "aval": 1
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Açaí e tapioca",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "padaria",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Dr. Carlos Botelho, 203 · bras-belem",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · adesivo de vitrine · cardápio de parede",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Açaí e tapioca logo",
+    "Açaí e tapioca bras-belem instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

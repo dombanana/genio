@@ -1,0 +1,55 @@
+{
+ "nome": "Nova Perfil",
+ "slug": "nova-perfil",
+ "rota": {
+  "centro": "ipiranga",
+  "dia": 2,
+  "ordem": 11,
+  "place_id": "ChIJzeGrto1bzpQRmfNo_8Ww2dE",
+  "lat": -23.597027999999998,
+  "lng": -46.600890199999995,
+  "nota": 4.3,
+  "aval": 1017
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Nova Perfil",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "padaria",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Silva Bueno, 2102 · ipiranga",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · adesivo de vitrine · cardápio de parede",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 2272-8087",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Nova Perfil logo",
+    "Nova Perfil ipiranga instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

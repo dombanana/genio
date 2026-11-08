@@ -1,0 +1,55 @@
+{
+ "nome": "Pitty e Milly",
+ "slug": "pitty-e-milly",
+ "rota": {
+  "centro": "mooca",
+  "dia": 1,
+  "ordem": 18,
+  "place_id": "ChIJMz0d7klZzpQR5KSARf6HTeY",
+  "lat": -23.5557905,
+  "lng": -46.5989082,
+  "nota": 5.0,
+  "aval": 64
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Pitty e Milly",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "pet",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. da Mooca, 2704 · mooca",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · placa · adesivo de vitrine",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 99502-4868",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Pitty e Milly logo",
+    "Pitty e Milly mooca instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

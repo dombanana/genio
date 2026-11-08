@@ -1,0 +1,55 @@
+{
+ "nome": "Shoe Connection | Calçados | Santo André",
+ "slug": "shoe-connection-calcados-santo-andre",
+ "rota": {
+  "centro": "santo-andre",
+  "dia": 2,
+  "ordem": 9,
+  "place_id": "ChIJZ2uO6ENDzpQRuR645tc1rcI",
+  "lat": -23.6578072,
+  "lng": -46.5277215,
+  "nota": 4.5,
+  "aval": 11
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Shoe Connection | Calçados | Santo André",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "loja de roupas/calçados",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Cel. Oliveira Lima, 410 · santo-andre",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · banner · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 98944-1816",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Shoe Connection | Calçados | Santo André logo",
+    "Shoe Connection | Calçados | Santo André santo-andre instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

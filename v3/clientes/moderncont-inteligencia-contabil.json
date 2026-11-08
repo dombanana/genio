@@ -1,0 +1,55 @@
+{
+ "nome": "ModernCont Inteligência Contabil",
+ "slug": "moderncont-inteligencia-contabil",
+ "rota": {
+  "centro": "santo-andre",
+  "dia": 2,
+  "ordem": 17,
+  "place_id": "ChIJte41N9VrzpQRgRkY9hjz2cQ",
+  "lat": -23.6602592,
+  "lng": -46.52726070000001,
+  "nota": 5.0,
+  "aval": 546
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "ModernCont Inteligência Contabil",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "escritório/imobiliária",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Gertrúdes de Lima, 53 · santo-andre",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "placa de recepção · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 94302-0607",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "ModernCont Inteligência Contabil logo",
+    "ModernCont Inteligência Contabil santo-andre instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

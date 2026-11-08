@@ -1,0 +1,55 @@
+{
+ "nome": "Ótica Retinal",
+ "slug": "otica-retinal",
+ "rota": {
+  "centro": "santo-andre",
+  "dia": 1,
+  "ordem": 21,
+  "place_id": "ChIJLSMuNo9CzpQRV-DBWzgFjQA",
+  "lat": -23.658559,
+  "lng": -46.52692,
+  "nota": 4.4,
+  "aval": 56
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Ótica Retinal",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "ótica",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Cel. Oliveira Lima, 499 · santo-andre",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · placa · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 94398-8805",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Ótica Retinal logo",
+    "Ótica Retinal santo-andre instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

@@ -1,0 +1,55 @@
+{
+ "nome": "Lanchonete tradição",
+ "slug": "lanchonete-tradicao",
+ "rota": {
+  "centro": "bras-belem",
+  "dia": 2,
+  "ordem": 6,
+  "place_id": "ChIJu67Q5qVZzpQRwbfaEwiBTRI",
+  "lat": -23.5375984,
+  "lng": -46.6138463,
+  "nota": 4.2,
+  "aval": 137
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Lanchonete tradição",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "restaurante",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Maria Joaquina, 12 · bras-belem",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · cardápio de parede · Mostra Aí",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 2692-6865",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Lanchonete tradição logo",
+    "Lanchonete tradição bras-belem instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

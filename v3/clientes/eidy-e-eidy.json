@@ -1,0 +1,55 @@
+{
+ "nome": "Eidy e Eidy",
+ "slug": "eidy-e-eidy",
+ "rota": {
+  "centro": "ipiranga",
+  "dia": 1,
+  "ordem": 20,
+  "place_id": "ChIJ-c89w_JbzpQRc84By2w0C40",
+  "lat": -23.5928839,
+  "lng": -46.601272699999996,
+  "nota": 4.5,
+  "aval": 56
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Eidy e Eidy",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "floricultura/presentes",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Silva Bueno, 1634 · ipiranga",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 98282-8287",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Eidy e Eidy logo",
+    "Eidy e Eidy ipiranga instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

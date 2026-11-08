@@ -1,0 +1,55 @@
+{
+ "nome": "Yes Pet Store",
+ "slug": "yes-pet-store",
+ "rota": {
+  "centro": "cambuci-aclimacao",
+  "dia": 1,
+  "ordem": 7,
+  "place_id": "ChIJx9DQDHRZzpQR6Xgp2csjhcQ",
+  "lat": -23.568452999999998,
+  "lng": -46.627528,
+  "nota": 4.8,
+  "aval": 1537
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Yes Pet Store",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "pet",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Almeida Torres, 229 · cambuci-aclimacao",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · placa · adesivo de vitrine",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 3207-0647",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Yes Pet Store logo",
+    "Yes Pet Store cambuci-aclimacao instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

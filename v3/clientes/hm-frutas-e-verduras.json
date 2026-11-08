@@ -1,0 +1,55 @@
+{
+ "nome": "HM Frutas e Verduras",
+ "slug": "hm-frutas-e-verduras",
+ "rota": {
+  "centro": "ipiranga",
+  "dia": 2,
+  "ordem": 13,
+  "place_id": "ChIJS0A6tY1bzpQRINNfMWPvflA",
+  "lat": -23.597039499999998,
+  "lng": -46.6002309,
+  "nota": 4.4,
+  "aval": 9
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "HM Frutas e Verduras",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "restaurante",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Rua Silva Bueno, 2109 · ipiranga",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · cardápio de parede · Mostra Aí",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 2272-0098",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "HM Frutas e Verduras logo",
+    "HM Frutas e Verduras ipiranga instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

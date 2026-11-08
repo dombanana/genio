@@ -1,0 +1,55 @@
+{
+ "nome": "Kaskata's Lanches",
+ "slug": "kaskata-s-lanches",
+ "rota": {
+  "centro": "ipiranga",
+  "dia": 1,
+  "ordem": 16,
+  "place_id": "ChIJP0SMzfJbzpQR1ORkENY8D48",
+  "lat": -23.591013699999998,
+  "lng": -46.6010353,
+  "nota": 4.5,
+  "aval": 2613
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Kaskata's Lanches",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "restaurante",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Silva Bueno, 1427 · ipiranga",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · cardápio de parede · Mostra Aí",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 2272-0203",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Kaskata's Lanches logo",
+    "Kaskata's Lanches ipiranga instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

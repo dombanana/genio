@@ -1,0 +1,55 @@
+{
+ "nome": "Royal Face Clínica de Estética - Vila Prudente",
+ "slug": "royal-face-clinica-de-estetica-vila-prudente",
+ "rota": {
+  "centro": "vila-prudente",
+  "dia": 1,
+  "ordem": 24,
+  "place_id": "ChIJ9yeKlzRdzpQRgCemTIT8-Fg",
+  "lat": -23.5885812,
+  "lng": -46.5838893,
+  "nota": 4.7,
+  "aval": 94
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Royal Face Clínica de Estética - Vila Prudente",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "clínica/consultório",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Ibitirama, 807 · vila-prudente",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "placa de recepção · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 99791-7748",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Royal Face Clínica de Estética - Vila Prudente logo",
+    "Royal Face Clínica de Estética - Vila Prudente vila-prudente instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

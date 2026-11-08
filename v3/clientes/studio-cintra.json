@@ -1,0 +1,55 @@
+{
+ "nome": "Studio Cintra",
+ "slug": "studio-cintra",
+ "rota": {
+  "centro": "mooca",
+  "dia": 1,
+  "ordem": 7,
+  "place_id": "ChIJRahVa0hZzpQR6h3uj6N03MY",
+  "lat": -23.5571895,
+  "lng": -46.602109899999995,
+  "nota": 4.8,
+  "aval": 46
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Studio Cintra",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "academia/estúdio",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Leocádia Cintra, 136 · mooca",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "placa · adesivo de parede · uniformes",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 2339-2921",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Studio Cintra logo",
+    "Studio Cintra mooca instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

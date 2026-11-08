@@ -1,0 +1,55 @@
+{
+ "nome": "Cepam",
+ "slug": "cepam",
+ "rota": {
+  "centro": "vila-prudente",
+  "dia": 2,
+  "ordem": 20,
+  "place_id": "ChIJeTjLuW5czpQRHIppkUnGYVA",
+  "lat": -23.5922312,
+  "lng": -46.579375999999996,
+  "nota": 4.6,
+  "aval": 46969
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Cepam",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "padaria",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Ibitirama, 1409 · vila-prudente",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · adesivo de vitrine · cardápio de parede",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 4750-1306",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Cepam logo",
+    "Cepam vila-prudente instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

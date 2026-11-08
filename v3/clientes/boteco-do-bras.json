@@ -1,0 +1,55 @@
+{
+ "nome": "Boteco do Brás",
+ "slug": "boteco-do-bras",
+ "rota": {
+  "centro": "bras-belem",
+  "dia": 1,
+  "ordem": 6,
+  "place_id": "ChIJae7Pwt9YzpQRl8Ypz2Ivb5I",
+  "lat": -23.539147699999997,
+  "lng": -46.6121408,
+  "nota": 4.4,
+  "aval": 332
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Boteco do Brás",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "bar",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Dr. Manoel Vitorino, 99 · bras-belem",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · cardápio · banner",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(22) 95847-4180",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Boteco do Brás logo",
+    "Boteco do Brás bras-belem instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

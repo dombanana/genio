@@ -1,0 +1,55 @@
+{
+ "nome": "Ótica Relux",
+ "slug": "otica-relux",
+ "rota": {
+  "centro": "tatuape",
+  "dia": 2,
+  "ordem": 13,
+  "place_id": "ChIJV08w8sFezpQRPjNO_vIsKmk",
+  "lat": -23.5426689,
+  "lng": -46.5751348,
+  "nota": 4.9,
+  "aval": 104
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Ótica Relux",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "ótica",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Tuiuti, 1950 · tatuape",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · placa · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 2098-2520",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Ótica Relux logo",
+    "Ótica Relux tatuape instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

@@ -1,0 +1,55 @@
+{
+ "nome": "Óticas Tokyo - Ipiranga",
+ "slug": "oticas-tokyo-ipiranga",
+ "rota": {
+  "centro": "ipiranga",
+  "dia": 2,
+  "ordem": 18,
+  "place_id": "ChIJp-TKiMJbzpQRZ1ipf-V_zZ0",
+  "lat": -23.5993164,
+  "lng": -46.600420799999995,
+  "nota": 4.9,
+  "aval": 1539
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Óticas Tokyo - Ipiranga",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "ótica",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Silva Bueno, 2345 · ipiranga",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · placa · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 2061-2811",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Óticas Tokyo - Ipiranga logo",
+    "Óticas Tokyo - Ipiranga ipiranga instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

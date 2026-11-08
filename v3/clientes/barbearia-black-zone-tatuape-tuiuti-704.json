@@ -1,0 +1,55 @@
+{
+ "nome": "Barbearia Black Zone Tatuapé Tuiuti 704",
+ "slug": "barbearia-black-zone-tatuape-tuiuti-704",
+ "rota": {
+  "centro": "tatuape",
+  "dia": 1,
+  "ordem": 25,
+  "place_id": "ChIJj9RDZuNfzpQRdJNNp44P5vI",
+  "lat": -23.5314767,
+  "lng": -46.575914999999995,
+  "nota": 4.9,
+  "aval": 90
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Barbearia Black Zone Tatuapé Tuiuti 704",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "salão/barbearia",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Tuiuti, 704 · tatuape",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · adesivo de vitrine · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 2093-7392",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Barbearia Black Zone Tatuapé Tuiuti 704 logo",
+    "Barbearia Black Zone Tatuapé Tuiuti 704 tatuape instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

@@ -1,0 +1,55 @@
+{
+ "nome": "Ótica MIWA Vila Mariana",
+ "slug": "otica-miwa-vila-mariana",
+ "rota": {
+  "centro": "vila-mariana",
+  "dia": 1,
+  "ordem": 21,
+  "place_id": "ChIJ3yY3vIZZzpQRlGBoNbkkpPU",
+  "lat": -23.5835992,
+  "lng": -46.637909500000006,
+  "nota": 4.2,
+  "aval": 25
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Ótica MIWA Vila Mariana",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "ótica",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Domingos de Morais, 788 · vila-mariana",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · placa · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 5579-0043",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Ótica MIWA Vila Mariana logo",
+    "Ótica MIWA Vila Mariana vila-mariana instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

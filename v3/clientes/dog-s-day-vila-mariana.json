@@ -1,0 +1,55 @@
+{
+ "nome": "Dog's Day - Vila Mariana",
+ "slug": "dog-s-day-vila-mariana",
+ "rota": {
+  "centro": "vila-mariana",
+  "dia": 2,
+  "ordem": 17,
+  "place_id": "ChIJDyDoojVbzpQR9EFV5r5fGAY",
+  "lat": -23.593563,
+  "lng": -46.6367927,
+  "nota": 4.1,
+  "aval": 95
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Dog's Day - Vila Mariana",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "pet",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Domingos de Morais, 1996 · vila-mariana",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · placa · adesivo de vitrine",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 94535-2046",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Dog's Day - Vila Mariana logo",
+    "Dog's Day - Vila Mariana vila-mariana instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

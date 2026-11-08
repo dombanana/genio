@@ -1,0 +1,55 @@
+{
+ "nome": "Espaço Oriente Shopping Brás",
+ "slug": "espaco-oriente-shopping-bras",
+ "rota": {
+  "centro": "bras-belem",
+  "dia": 2,
+  "ordem": 15,
+  "place_id": "ChIJV7BZluRYzpQR4PBt59CRq0o",
+  "lat": -23.537687899999998,
+  "lng": -46.620803099999996,
+  "nota": 4.6,
+  "aval": 33
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Espaço Oriente Shopping Brás",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "salão/barbearia",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Oriente, 139 · bras-belem",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · adesivo de vitrine · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 98802-6840",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Espaço Oriente Shopping Brás logo",
+    "Espaço Oriente Shopping Brás bras-belem instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

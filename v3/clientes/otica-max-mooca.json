@@ -1,0 +1,55 @@
+{
+ "nome": "Ótica Max - Mooca",
+ "slug": "otica-max-mooca",
+ "rota": {
+  "centro": "mooca",
+  "dia": 1,
+  "ordem": 13,
+  "place_id": "ChIJZY6SKjZZzpQRMaFWRxpLBRg",
+  "lat": -23.5553246,
+  "lng": -46.6004505,
+  "nota": 4.9,
+  "aval": 455
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Ótica Max - Mooca",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "ótica",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. da Mooca, 2541 · mooca",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · placa · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 2533-9636",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Ótica Max - Mooca logo",
+    "Ótica Max - Mooca mooca instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

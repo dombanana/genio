@@ -1,0 +1,55 @@
+{
+ "nome": "Bar do Renato",
+ "slug": "bar-do-renato",
+ "rota": {
+  "centro": "cambuci-aclimacao",
+  "dia": 1,
+  "ordem": 6,
+  "place_id": "ChIJuTelxnNZzpQRF1gfN7YVIm4",
+  "lat": -23.5680035,
+  "lng": -46.6255088,
+  "nota": 4.8,
+  "aval": 282
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Bar do Renato",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "bar",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Miguel Teles Júnior, 595 · cambuci-aclimacao",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · cardápio · banner",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 3277-3406",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Bar do Renato logo",
+    "Bar do Renato cambuci-aclimacao instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

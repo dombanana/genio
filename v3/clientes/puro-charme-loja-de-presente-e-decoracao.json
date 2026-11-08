@@ -1,0 +1,55 @@
+{
+ "nome": "Puro Charme - Loja de Presente e Decoração",
+ "slug": "puro-charme-loja-de-presente-e-decoracao",
+ "rota": {
+  "centro": "santo-andre",
+  "dia": 1,
+  "ordem": 14,
+  "place_id": "ChIJRXELy4dCzpQRD5zXSaW1za0",
+  "lat": -23.660301,
+  "lng": -46.524904,
+  "nota": 4.8,
+  "aval": 18
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Puro Charme - Loja de Presente e Decoração",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "floricultura/presentes",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Xavier de Toledo, 226 · santo-andre",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 4316-6356",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Puro Charme - Loja de Presente e Decoração logo",
+    "Puro Charme - Loja de Presente e Decoração santo-andre instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

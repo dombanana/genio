@@ -1,0 +1,55 @@
+{
+ "nome": "Afetti",
+ "slug": "afetti",
+ "rota": {
+  "centro": "sao-caetano",
+  "dia": 1,
+  "ordem": 18,
+  "place_id": "ChIJbZpj3exczpQRmyBjo9iO0pI",
+  "lat": -23.6154612,
+  "lng": -46.572868799999995,
+  "nota": 5.0,
+  "aval": 82
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Afetti",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "clínica/consultório",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Manoel Coelho, 676 · sao-caetano",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "placa de recepção · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 99103-0364",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Afetti logo",
+    "Afetti sao-caetano instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

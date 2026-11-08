@@ -1,0 +1,55 @@
+{
+ "nome": "ESTOU Quituteria Portuguesa Vila Mariana",
+ "slug": "estou-quituteria-portuguesa-vila-mariana",
+ "rota": {
+  "centro": "vila-mariana",
+  "dia": 2,
+  "ordem": 8,
+  "place_id": "ChIJPXXnir1ZzpQRHFR5z4FPwfc",
+  "lat": -23.5800743,
+  "lng": -46.6401951,
+  "nota": 4.9,
+  "aval": 178
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "ESTOU Quituteria Portuguesa Vila Mariana",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "padaria",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Domingos de Morais, 336 · vila-mariana",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · adesivo de vitrine · cardápio de parede",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 95395-3504",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "ESTOU Quituteria Portuguesa Vila Mariana logo",
+    "ESTOU Quituteria Portuguesa Vila Mariana vila-mariana instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

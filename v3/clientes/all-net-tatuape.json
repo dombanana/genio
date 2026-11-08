@@ -1,0 +1,55 @@
+{
+ "nome": "All Net Tatuapé",
+ "slug": "all-net-tatuape",
+ "rota": {
+  "centro": "tatuape",
+  "dia": 2,
+  "ordem": 7,
+  "place_id": "ChIJp9lW0X5fzpQRUYdklimnnmQ",
+  "lat": -23.541372000000003,
+  "lng": -46.575191499999995,
+  "nota": 4.8,
+  "aval": 185
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "All Net Tatuapé",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "escola/curso",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Tuiuti, 1811 · tatuape",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "placa · adesivo de parede · uniformes",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 4233-9018",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "All Net Tatuapé logo",
+    "All Net Tatuapé tatuape instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

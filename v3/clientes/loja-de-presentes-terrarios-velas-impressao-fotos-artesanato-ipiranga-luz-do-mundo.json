@@ -1,0 +1,55 @@
+{
+ "nome": "Loja de Presentes Terrários Velas impressão fotos Artesanato Ipiranga | Luz do Mundo",
+ "slug": "loja-de-presentes-terrarios-velas-impressao-fotos-artesanato-ipiranga-luz-do-mundo",
+ "rota": {
+  "centro": "ipiranga",
+  "dia": 1,
+  "ordem": 23,
+  "place_id": "ChIJHafP_otbzpQRcZPDLJAdY00",
+  "lat": -23.5936147,
+  "lng": -46.601010599999995,
+  "nota": 5.0,
+  "aval": 21
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Loja de Presentes Terrários Velas impressão fotos Artesanato Ipiranga | Luz do Mundo",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "floricultura/presentes",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Silva Bueno, 1717 · ipiranga",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 97664-5173",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Loja de Presentes Terrários Velas impressão fotos Artesanato Ipiranga | Luz do Mundo logo",
+    "Loja de Presentes Terrários Velas impressão fotos Artesanato Ipiranga | Luz do Mundo ipiranga instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

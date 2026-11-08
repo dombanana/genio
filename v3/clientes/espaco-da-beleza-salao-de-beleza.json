@@ -1,0 +1,55 @@
+{
+ "nome": "Espaço da Beleza | Salão de Beleza",
+ "slug": "espaco-da-beleza-salao-de-beleza",
+ "rota": {
+  "centro": "sao-caetano",
+  "dia": 2,
+  "ordem": 2,
+  "place_id": "ChIJk8yXqVpdzpQR6SjEyJgJ_ak",
+  "lat": -23.615185999999998,
+  "lng": -46.572361900000004,
+  "nota": 5.0,
+  "aval": 70
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Espaço da Beleza | Salão de Beleza",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "salão/barbearia",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Manoel Coelho, 641 · sao-caetano",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · adesivo de vitrine · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 95477-1224",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Espaço da Beleza | Salão de Beleza logo",
+    "Espaço da Beleza | Salão de Beleza sao-caetano instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

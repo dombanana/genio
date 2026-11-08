@@ -1,0 +1,55 @@
+{
+ "nome": "Caneca Café Show (Açaí,Sorvetes e Almoços)",
+ "slug": "caneca-cafe-show-acai-sorvetes-e-almocos",
+ "rota": {
+  "centro": "ipiranga",
+  "dia": 1,
+  "ordem": 9,
+  "place_id": "ChIJM6NDCABbzpQRe0hqSExpytM",
+  "lat": -23.582051600000003,
+  "lng": -46.6020855,
+  "nota": 2.6,
+  "aval": 5
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Caneca Café Show (Açaí,Sorvetes e Almoços)",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "cafeteria",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Silva Bueno, 427 · ipiranga",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · cardápio de parede · Mostra Aí",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 96330-3835",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Caneca Café Show (Açaí,Sorvetes e Almoços) logo",
+    "Caneca Café Show (Açaí,Sorvetes e Almoços) ipiranga instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

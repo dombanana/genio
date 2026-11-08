@@ -1,0 +1,55 @@
+{
+ "nome": "Estúdio Bem Viver",
+ "slug": "estudio-bem-viver",
+ "rota": {
+  "centro": "santo-andre",
+  "dia": 2,
+  "ordem": 23,
+  "place_id": "ChIJQ8WHKwNDzpQRy6KXhGU6oJY",
+  "lat": -23.659485699999998,
+  "lng": -46.531326899999996,
+  "nota": 5.0,
+  "aval": 4
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Estúdio Bem Viver",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "clínica/consultório",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Av. Portugal, 397 · santo-andre",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "placa de recepção · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 98154-7428",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Estúdio Bem Viver logo",
+    "Estúdio Bem Viver santo-andre instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

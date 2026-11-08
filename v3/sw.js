@@ -1,0 +1,15 @@
+// Gênio: funciona sem internet. Cada página abre do que está guardado no aparelho e se atualiza quando há rede.
+const V="genio-4fcf9d8a7e",PAGS=["index.html","app.html","capacho.html","convite.html","admin.html","franquia.html","identidade.html","treinamento.html","ver.html"],
+  CORE=PAGS.concat(["portal.css?v=4fcf9d8a7e","portal.js?v=4fcf9d8a7e","fotocrop.js?v=4fcf9d8a7e","manual.js?v=4fcf9d8a7e","lacunas.js?v=4fcf9d8a7e","manifest.webmanifest","genio-192.png","genio-512.png","genio-touch.png","genio-favicon.png"]);
+self.addEventListener("install",e=>{e.waitUntil(caches.open(V).then(c=>c.addAll(CORE)).then(()=>self.skipWaiting()));});
+self.addEventListener("activate",e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==V&&k!=="genio-fontes").map(k=>caches.delete(k)))).then(()=>self.clients.claim()));});
+// endereço → página guardada ("/" e "/?app=1" são a página de vendas e entrar)
+const pag=u=>{const n=u.pathname.replace(/^\//,"");return n===""?"index.html":n;};
+self.addEventListener("fetch",e=>{const r=e.request;if(r.method!=="GET")return;const u=new URL(r.url);
+  if(u.origin===location.origin&&(u.pathname.startsWith("/api/")||u.pathname.startsWith("/t/")))return;   // dados do servidor: nunca do guardado
+  // página: rede primeiro (sempre confere a versão nova), sem rede usa a guardada
+  if(r.mode==="navigate"){const k=pag(u);e.respondWith(fetch(r,{cache:"no-cache"}).then(res=>{if(res.ok&&PAGS.includes(k)){const cp=res.clone();caches.open(V).then(c=>c.put(k,cp));}return res;})
+      .catch(()=>caches.match(k).then(x=>x||caches.match("app.html"))));return;}
+  // fontes do Google: guarda e usa a guardada, atualizando por trás
+  if(/fonts\.(googleapis|gstatic)\.com$/.test(u.hostname)){e.respondWith(caches.open("genio-fontes").then(c=>c.match(r).then(hit=>{const net=fetch(r).then(res=>{c.put(r,res.clone());return res;}).catch(()=>hit);return hit||net;})));return;}
+  if(u.origin===location.origin)e.respondWith(caches.match(r).then(hit=>hit||fetch(r).then(res=>{if(res.ok){const cp=res.clone();caches.open(V).then(c=>c.put(r,cp));}return res;})));});

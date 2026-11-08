@@ -1,0 +1,55 @@
+{
+ "nome": "Barbearia Lacerda - Barbearia na mooca",
+ "slug": "barbearia-lacerda-barbearia-na-mooca",
+ "rota": {
+  "centro": "mooca",
+  "dia": 2,
+  "ordem": 22,
+  "place_id": "ChIJ3-I7M7JezpQRSqbdgAM69cE",
+  "lat": -23.5588138,
+  "lng": -46.5893137,
+  "nota": 4.7,
+  "aval": 87
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Barbearia Lacerda - Barbearia na mooca",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "salão/barbearia",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. da Mooca, 3753 · mooca",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · adesivo de vitrine · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 98031-8438",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Barbearia Lacerda - Barbearia na mooca logo",
+    "Barbearia Lacerda - Barbearia na mooca mooca instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

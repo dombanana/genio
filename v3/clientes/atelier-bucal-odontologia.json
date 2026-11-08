@@ -1,0 +1,55 @@
+{
+ "nome": "Atelier Bucal Odontologia",
+ "slug": "atelier-bucal-odontologia",
+ "rota": {
+  "centro": "ipiranga",
+  "dia": 2,
+  "ordem": 25,
+  "place_id": "ChIJPdoGtuxbzpQRsl3bSvlnigo",
+  "lat": -23.595408799999998,
+  "lng": -46.6066272,
+  "nota": 4.7,
+  "aval": 307
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Atelier Bucal Odontologia",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "clínica/consultório",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Bom Pastor, 2100 · ipiranga",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "placa de recepção · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 95569-4428",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Atelier Bucal Odontologia logo",
+    "Atelier Bucal Odontologia ipiranga instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

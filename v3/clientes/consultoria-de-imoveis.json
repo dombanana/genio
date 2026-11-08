@@ -1,0 +1,55 @@
+{
+ "nome": "Consultoria de Imóveis",
+ "slug": "consultoria-de-imoveis",
+ "rota": {
+  "centro": "moema",
+  "dia": 2,
+  "ordem": 6,
+  "place_id": "ChIJ04S16K5bzpQRjuaHcJ1_q3w",
+  "lat": -23.6072106,
+  "lng": -46.6614213,
+  "nota": null,
+  "aval": null
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Consultoria de Imóveis",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "escritório/imobiliária",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Alameda dos Maracatins, 780 · moema",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "placa de recepção · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 98199-4896",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Consultoria de Imóveis logo",
+    "Consultoria de Imóveis moema instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

@@ -1,0 +1,55 @@
+{
+ "nome": "Don Pepe Di Napoli",
+ "slug": "don-pepe-di-napoli",
+ "rota": {
+  "centro": "cambuci-aclimacao",
+  "dia": 2,
+  "ordem": 18,
+  "place_id": "ChIJ2ZJkvFRZzpQRUgTBcqBkUb8",
+  "lat": -23.5603618,
+  "lng": -46.6295654,
+  "nota": 3.5,
+  "aval": 11
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Don Pepe Di Napoli",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "restaurante",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. do Lavapés, 226 · cambuci-aclimacao",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · cardápio de parede · Mostra Aí",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 3208-4758",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Don Pepe Di Napoli logo",
+    "Don Pepe Di Napoli cambuci-aclimacao instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

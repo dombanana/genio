@@ -1,0 +1,55 @@
+{
+ "nome": "Cel.Lep Idiomas - Santo André",
+ "slug": "cel-lep-idiomas-santo-andre",
+ "rota": {
+  "centro": "santo-andre",
+  "dia": 1,
+  "ordem": 2,
+  "place_id": "ChIJLS3kpotCzpQRMn3_b4HOwfY",
+  "lat": -23.6641335,
+  "lng": -46.534512799999995,
+  "nota": 4.5,
+  "aval": 44
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Cel.Lep Idiomas - Santo André",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "escola/curso",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Laura, 654 · santo-andre",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "placa · adesivo de parede · uniformes",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 4293-0990",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Cel.Lep Idiomas - Santo André logo",
+    "Cel.Lep Idiomas - Santo André santo-andre instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

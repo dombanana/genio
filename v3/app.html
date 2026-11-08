@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>GenIO · Módulos</title>
+<meta name="theme-color" content="#6933C5">
+<meta name="robots" content="noindex,nofollow">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="genio-favicon.png" type="image/png">
+<link rel="apple-touch-icon" href="genio-touch.png">
+<meta name="apple-mobile-web-app-title" content="GenIO">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="portal.css?v=4fcf9d8a7e">
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <span class="marca" aria-label="GenIO, módulos"><b>Gen<i>IO</i></b><span>módulos</span></span>
+  <div class="fill"></div>
+  <a class="btn btn-ic" href="admin.html" id="lAdmin" hidden aria-label="Configurações" title="Configurações"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></a>
+  <a class="btn btn-ic" id="lAtend" hidden target="_blank" rel="noopener" aria-label="Central de atendimento (WhatsApp)" title="Central de atendimento"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12a8 8 0 0 1 16 0v4a2 2 0 0 1-2 2h-2v-6h4M4 12v4a2 2 0 0 0 2 2h2v-6H4"/><path d="M12 20v1a1 1 0 0 0 1 1h3"/></svg></a>
+  <button class="btn btn-s btn-sm" type="button" id="bSair">Sair</button>
+</div></header>
+<main class="wrap">
+  <div class="saud">
+    <h1 id="oi">Olá</h1>
+    <a class="saud-link" href="treinamento.html">▶ Vídeos de treinamento</a>
+    <img class="saud-ic" src="img/parceiro.png?v=4fcf9d8a7e" alt="" width="77" height="150">
+  </div>
+  <section class="ctx">
+    <div class="cli">
+      <div class="row between"><label for="cNome">Cliente</label><span class="row" style="gap:14px"><button class="linkbtn" type="button" id="cliTodos">Ver todos</button><button class="linkbtn" type="button" id="cliNovo">Cliente novo</button></span></div>
+      <div class="cli-campos">
+        <input id="cNome" autocomplete="off" placeholder="Nome ou empresa">
+        <input id="cTel" type="tel" inputmode="tel" autocomplete="off" placeholder="Telefone">
+        <button class="btn btn-s btn-sm" type="button" id="cliPerto" title="Clientes mais próximos de onde você está"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg> Por perto</button>
+      </div>
+      <div class="cli-lista" id="cliLista" hidden></div>
+      <p class="muted small" id="cliInfo" aria-live="polite"></p>
+    </div>
+  </section>
+  <div id="off" class="msg info" hidden>Sem internet. O Capacho funciona assim mesmo.</div>
+  <button class="btn btn-s btn-sm" type="button" id="bInst" hidden style="margin:0 0 12px">Instalar no aparelho</button>
+  <div class="mods" id="mods" aria-live="polite"></div>
+  <div style="height:48px"></div>
+</main>
+<div class="modal" id="mCli" hidden role="dialog" aria-modal="true" aria-labelledby="tCli">
+  <div class="card">
+    <button class="x" type="button" aria-label="Fechar" data-fechar>×</button>
+    <h2 id="tCli">Clientes</h2>
+    <p class="muted small" id="mCliSub"></p>
+    <div class="cli-lista" id="mCliLista"></div>
+  </div>
+</div>
+<script src="portal.js?v=4fcf9d8a7e"></script>
+<script>
+(async()=>{const {$, $$}=G;
+  let c=null;try{c=await G.eu();}catch(e){c=null;}
+  if(!c){location.replace("/?entrar=1&volta=app.html");return;}
+  $("#oi").textContent="Olá, "+(c.nome||"").split(" ")[0];
+  $("#lAdmin").hidden=c.papel!=="admin";$("#off").hidden=!c.offline;
+  // central de atendimento: WhatsApp do Dom Banana Tech (número em G.ATENDIMENTO; sem número, o ícone não aparece)
+  if(G.ATENDIMENTO){const at=$("#lAtend");at.href="https://wa.me/"+G.ATENDIMENTO+"?text="+encodeURIComponent("Olá! Sou "+(c.nome||"")+", do GenIO.");at.hidden=false;}
+  G.renderMods($("#mods"),true);
+  // cliente: é o contexto de todos os módulos. Fica guardado neste aparelho e o módulo abre já no projeto dele
+  const fN=$("#cNome"),fT=$("#cTel"),lista=$("#cliLista"),info=$("#cliInfo");let CL=[];
+  const abrirDB=()=>new Promise(res=>{try{const r=indexedDB.open("genio-vendas",3);r.onupgradeneeded=()=>{const d=r.result;["orcamentos","sessao"].forEach(n=>{if(!d.objectStoreNames.contains(n))d.createObjectStore(n,{keyPath:"id"});});if(!d.objectStoreNames.contains("clientes"))d.createObjectStore("clientes",{keyPath:"k"});};r.onsuccess=()=>res(r.result);r.onerror=()=>res(null);}catch(e){res(null);}});
+  const lerTudo=async n=>{const db=await abrirDB();if(!db||!db.objectStoreNames.contains(n))return[];return new Promise(res=>{const t=db.transaction(n).objectStore(n).getAll();t.onsuccess=()=>res(t.result||[]);t.onerror=()=>res([]);});};
+  // onde o aparelho está (o cadastro do cliente costuma ser feito no local dele; a posição fica guardada para "Por perto")
+  const ondeEstou=(rapido)=>new Promise(res=>{if(!navigator.geolocation)return res(null);navigator.geolocation.getCurrentPosition(p=>res({lat:p.coords.latitude,lng:p.coords.longitude,em:new Date().toISOString()}),()=>res(null),{enableHighAccuracy:!rapido,timeout:rapido?4000:12000,maximumAge:60000});});
+  const guardarCli=async()=>{const nome=fN.value.trim(),tel=fT.value.trim();if(!nome)return;const k=nome.toLowerCase();
+    const r=CL.find(x=>x.k===k)||(CL.unshift({k,nome,tel,n:0,numero:"",status:"",at:new Date().toISOString()}),CL[0]);r.tel=tel;
+    const loc=r.loc||await ondeEstou(true);if(loc)r.loc=loc;
+    const db=await abrirDB();if(!db)return;
+    await new Promise(res=>{const t=db.transaction("clientes","readwrite"),st=t.objectStore("clientes"),g=st.get(k);g.onsuccess=()=>{const o=g.result||{k,nome,logos:[]};o.nome=nome;o.tel=tel;if(loc&&!o.loc)o.loc=loc;o.atualizado=new Date().toISOString();st.put(o);};t.oncomplete=res;t.onerror=res;});};
+  // pop-up de resultados (Ver todos e Por perto)
+  const mC=$("#mCli"),fecharM=()=>{mC.hidden=true;};$$("[data-fechar]",mC).forEach(b=>b.onclick=fecharM);mC.addEventListener("click",e=>{if(e.target===mC)fecharM();});document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!mC.hidden)fecharM();});
+  const escolher=r=>{fN.value=r.nome;fT.value=r.tel||"";lista.hidden=true;fecharM();salvar();mostrar();};
+  const popup=(titulo,sub,L,vazio)=>{$("#tCli").textContent=titulo;$("#mCliSub").textContent=sub||"";$("#mCliSub").hidden=!sub;
+    $("#mCliLista").innerHTML=L.length?L.map(linha).join(""):`<p class="muted small" style="margin:6px 4px">${vazio}</p>`;$$(".cli-it","#mCliLista".length?$("#mCliLista"):document).forEach(b=>b.onclick=()=>{const r=CL.find(x=>x.k===b.dataset.k);if(r)escolher(r);});mC.hidden=false;};
+  const km=(a,b)=>{const R=6371,dLat=(b.lat-a.lat)*Math.PI/180,dLng=(b.lng-a.lng)*Math.PI/180,x=Math.sin(dLat/2)**2+Math.cos(a.lat*Math.PI/180)*Math.cos(b.lat*Math.PI/180)*Math.sin(dLng/2)**2;return 2*R*Math.asin(Math.sqrt(x));};
+  const fmtKm=d=>d<1?`${Math.round(d*1000)} m`:`${d.toFixed(1).replace(".",",")} km`;
+  $("#cliPerto").onclick=async()=>{const b=$("#cliPerto");b.disabled=true;const eu=await ondeEstou(false);b.disabled=false;
+    if(!eu){popup("Por perto","",[],"Não consegui pegar a localização do aparelho. Libere a localização para o GenIO e tente de novo.");return;}
+    const L=CL.filter(r=>r.loc).map(r=>Object.assign({},r,{dist:km(eu,r.loc)})).sort((a,b)=>a.dist-b.dist).slice(0,30);
+    popup("Por perto",L.length?`Os ${L.length} clientes mais próximos de onde você está`:"",L,"Nenhum cliente com localização guardada ainda. A posição é guardada quando o cliente é cadastrado no local.");};
+  const norm=t=>(t||"").toString().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+  const dig=t=>(t||"").replace(/\D/g,"");
+  const salvar=()=>{G.ls.set("genio-cliente",fN.value.trim());G.ls.set("genio-cliente-dados",JSON.stringify({nome:fN.value.trim(),tel:fT.value.trim()}));};
+  const mostrar=()=>{const k=fN.value.trim().toLowerCase(),d=CL.find(o=>o.k===k);
+    info.textContent=!k?"":d?(d.n?`${d.n} projeto${d.n>1?"s":""} · ${d.numero||""}${d.status?" · "+d.status:""}`:"Sem projeto ainda"):"Cliente novo";};
+  // lista de clientes que batem com o que foi digitado: começo do nome (qualquer palavra), começo do telefone ou o bairro
+  const linha=r=>`<button type="button" class="cli-it" data-k="${G.esc(r.k)}"><b>${G.esc(r.nome)}</b><span>${[r.dist!=null?fmtKm(r.dist):"",r.tel,r.n?`${r.n} projeto${r.n>1?"s":""}`:""].filter(Boolean).map(G.esc).join(" · ")}</span></button>`;
+  const mostrarLista=(L,vazio)=>{lista.hidden=!L.length&&!vazio;lista.innerHTML=L.length?L.map(linha).join(""):`<p class="muted small" style="margin:6px 4px">${vazio||""}</p>`;
+    $$(".cli-it",lista).forEach(b=>b.onclick=()=>{const r=CL.find(x=>x.k===b.dataset.k);if(r)escolher(r);});};
+  const filtrar=()=>{const n=norm(fN.value.trim()),t=dig(fT.value);if(!n&&!t){lista.hidden=true;return;}
+    const L=CL.filter(r=>(!n||norm(r.nome).split(/\s+/).some(w=>w.startsWith(n))||norm(r.nome).startsWith(n))&&(!t||dig(r.tel).startsWith(t)||dig(r.tel).includes(t)));
+    const exato=L.length===1&&norm(L[0].nome)===n;if(exato){lista.hidden=true;return;}
+    mostrarLista(L.slice(0,30),"");};
+  [fN,fT].forEach(f=>f.addEventListener("input",()=>{salvar();mostrar();filtrar();}));
+  fT.addEventListener("change",guardarCli);fN.addEventListener("change",()=>{if(fT.value.trim())guardarCli();});
+  $("#cliTodos").onclick=()=>popup("Todos os clientes",CL.length?`${CL.length} cliente${CL.length>1?"s":""}`:"",CL,"Nenhum cliente ainda.");
+  $("#cliNovo").onclick=()=>{fN.value="";fT.value="";lista.hidden=true;salvar();mostrar();fN.focus();};
+  document.addEventListener("click",e=>{if(!e.target.closest(".cli"))lista.hidden=true;});
+  try{const d=JSON.parse(G.ls.get("genio-cliente-dados")||"null");if(d){fN.value=d.nome||"";fT.value=d.tel||"";}else fN.value=G.ls.get("genio-cliente")||"";}catch(e){}
+  // clientes = quem tem projeto (orçamentos) ou cadastro/identidade guardada
+  Promise.all([lerTudo("orcamentos"),lerTudo("clientes")]).then(([all,ids])=>{const m=new Map();
+    all.forEach(o=>{const nome=(o.cliente&&o.cliente.nome||"").trim();if(!nome)return;const k=nome.toLowerCase();const r=m.get(k)||{k,nome,n:0,numero:"",status:"",at:"",tel:""};r.n++;if((o.atualizado||"")>r.at){r.at=o.atualizado||"";r.numero=o.numero||"";r.status=o.status||"";}if(o.cliente&&o.cliente.tel&&!r.tel)r.tel=o.cliente.tel;m.set(k,r);});
+    ids.forEach(o=>{const nome=(o.nome||"").trim();if(!nome)return;const k=nome.toLowerCase();const r=m.get(k)||{k,nome,n:0,numero:"",status:"",at:o.atualizado||"",tel:""};if(o.tel)r.tel=o.tel;if(o.loc)r.loc=o.loc;if(!r.at)r.at=o.atualizado||"";m.set(k,r);});
+    CL=[...m.values()].sort((a,b)=>b.at.localeCompare(a.at));mostrar();});
+  $("#bSair").onclick=()=>G.sair();
+  const bi=$("#bInst"),mostra=()=>{bi.hidden=!G.podeInstalar();};mostra();document.addEventListener("genio-instalavel",mostra);
+  bi.onclick=async()=>{await G.instalar();mostra();};
+  G.ls.set("genio-ultimo","app.html");
+})();
+</script>
+</body>
+</html>

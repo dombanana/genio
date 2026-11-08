@@ -1,0 +1,55 @@
+{
+ "nome": "Vitta Clean Estética Corporal e Facial - ZONA SUL SAÚDE",
+ "slug": "vitta-clean-estetica-corporal-e-facial-zona-sul-saude",
+ "rota": {
+  "centro": "saude-jabaquara",
+  "dia": 2,
+  "ordem": 21,
+  "place_id": "ChIJ0X00SJdbzpQRLpcbVYBpm9k",
+  "lat": -23.6120417,
+  "lng": -46.6376766,
+  "nota": 4.7,
+  "aval": 44
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Vitta Clean Estética Corporal e Facial - ZONA SUL SAÚDE",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "comércio",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Av. Jabaquara, 891 · saude-jabaquara",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · placa · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 2667-1027",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Vitta Clean Estética Corporal e Facial - ZONA SUL SAÚDE logo",
+    "Vitta Clean Estética Corporal e Facial - ZONA SUL SAÚDE saude-jabaquara instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

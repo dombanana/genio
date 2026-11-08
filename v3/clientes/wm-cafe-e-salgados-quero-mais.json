@@ -1,0 +1,55 @@
+{
+ "nome": "WM Café e Salgados Quero Mais",
+ "slug": "wm-cafe-e-salgados-quero-mais",
+ "rota": {
+  "centro": "tatuape",
+  "dia": 1,
+  "ordem": 2,
+  "place_id": "ChIJs_pU6sJezpQRlFVAdfO_iFY",
+  "lat": -23.538608399999998,
+  "lng": -46.575424899999994,
+  "nota": 4.5,
+  "aval": 139
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "WM Café e Salgados Quero Mais",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "cafeteria",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Tuiuti, 1495 · tatuape",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · cardápio de parede · Mostra Aí",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 2093-3362",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "WM Café e Salgados Quero Mais logo",
+    "WM Café e Salgados Quero Mais tatuape instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

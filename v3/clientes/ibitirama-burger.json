@@ -1,0 +1,55 @@
+{
+ "nome": "Ibitirama Burger",
+ "slug": "ibitirama-burger",
+ "rota": {
+  "centro": "vila-prudente",
+  "dia": 1,
+  "ordem": 3,
+  "place_id": "ChIJAQAE8A1czpQRokqIm0f0Ajw",
+  "lat": -23.583832899999997,
+  "lng": -46.5842591,
+  "nota": 4.4,
+  "aval": 1658
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Ibitirama Burger",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "restaurante",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Ibitirama, 257 · vila-prudente",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · cardápio de parede · Mostra Aí",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 2597-0327",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Ibitirama Burger logo",
+    "Ibitirama Burger vila-prudente instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

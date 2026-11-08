@@ -1,0 +1,55 @@
+{
+ "nome": "Bar e Restaurante Gaúcho da Galeria",
+ "slug": "bar-e-restaurante-gaucho-da-galeria",
+ "rota": {
+  "centro": "bras-belem",
+  "dia": 2,
+  "ordem": 10,
+  "place_id": "ChIJb7L1VuFYzpQRfmUW-Y7_CXs",
+  "lat": -23.5377217,
+  "lng": -46.6172858,
+  "nota": 4.1,
+  "aval": 8
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Bar e Restaurante Gaúcho da Galeria",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "restaurante",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Oriente, 505 · bras-belem",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · cardápio de parede · Mostra Aí",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 2692-1640",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Bar e Restaurante Gaúcho da Galeria logo",
+    "Bar e Restaurante Gaúcho da Galeria bras-belem instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

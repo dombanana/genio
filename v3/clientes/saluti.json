@@ -1,0 +1,55 @@
+{
+ "nome": "Saluti",
+ "slug": "saluti",
+ "rota": {
+  "centro": "saude-jabaquara",
+  "dia": 1,
+  "ordem": 20,
+  "place_id": "ChIJ472OS1FazpQRHIO92g-5VwA",
+  "lat": -23.6205875,
+  "lng": -46.6376841,
+  "nota": 5.0,
+  "aval": 17
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Saluti",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "salão/barbearia",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Pereira Estéfano, 158 · saude-jabaquara",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · adesivo de vitrine · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 4329-1934",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Saluti logo",
+    "Saluti saude-jabaquara instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

@@ -1,0 +1,50 @@
+{
+ "nome": "House Moema",
+ "slug": "house-moema",
+ "rota": {
+  "centro": "moema",
+  "dia": 2,
+  "ordem": 1,
+  "place_id": "ChIJVVXp0Q9azpQRkl4JUCmlEvg",
+  "lat": -23.6050899,
+  "lng": -46.659333800000006,
+  "nota": 4.9,
+  "aval": 204
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "House Moema",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "escritório/imobiliária",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Alameda dos Maracatins, 426 · moema",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "placa de recepção · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "House Moema logo",
+    "House Moema moema instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

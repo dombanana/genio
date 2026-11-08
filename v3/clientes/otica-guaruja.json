@@ -1,0 +1,55 @@
+{
+ "nome": "Ótica Guarujá",
+ "slug": "otica-guaruja",
+ "rota": {
+  "centro": "ipiranga",
+  "dia": 1,
+  "ordem": 14,
+  "place_id": "ChIJIcitR_JbzpQRgNNjGBSw6ao",
+  "lat": -23.590436200000003,
+  "lng": -46.601293399999996,
+  "nota": 5.0,
+  "aval": 293
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Ótica Guarujá",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "ótica",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Silva Bueno, 1365 · ipiranga",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · placa · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 96616-1207",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Ótica Guarujá logo",
+    "Ótica Guarujá ipiranga instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

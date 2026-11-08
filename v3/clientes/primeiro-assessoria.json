@@ -1,0 +1,55 @@
+{
+ "nome": "Primeiro Assessoria",
+ "slug": "primeiro-assessoria",
+ "rota": {
+  "centro": "tatuape",
+  "dia": 2,
+  "ordem": 24,
+  "place_id": "ChIJJx2HFtlfzpQRdbfVkL5kQug",
+  "lat": -23.5467229,
+  "lng": -46.573954199999996,
+  "nota": 5.0,
+  "aval": 2
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Primeiro Assessoria",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "escritório/imobiliária",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Tuiuti, 2409 · tatuape",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "placa de recepção · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 3552-4444",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Primeiro Assessoria logo",
+    "Primeiro Assessoria tatuape instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

@@ -1,0 +1,55 @@
+{
+ "nome": "Óticas Wanny",
+ "slug": "oticas-wanny",
+ "rota": {
+  "centro": "moema",
+  "dia": 2,
+  "ordem": 16,
+  "place_id": "ChIJZSeYXdFbzpQRAW2OxRXcNzs",
+  "lat": -23.6101368,
+  "lng": -46.666647999999995,
+  "nota": 4.1,
+  "aval": 20
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Óticas Wanny",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "ótica",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Av. Ibirapuera, 3103 · moema",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · placa · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 5561-9533",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Óticas Wanny logo",
+    "Óticas Wanny moema instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

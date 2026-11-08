@@ -1,0 +1,55 @@
+{
+ "nome": "Optica Saúde",
+ "slug": "optica-saude",
+ "rota": {
+  "centro": "saude-jabaquara",
+  "dia": 2,
+  "ordem": 17,
+  "place_id": "ChIJEyptOU5azpQRlcl7IYTJhK0",
+  "lat": -23.6152886,
+  "lng": -46.638337899999996,
+  "nota": 4.9,
+  "aval": 40
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Optica Saúde",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "clínica/consultório",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Av. Jabaquara, 1251 · saude-jabaquara",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "placa de recepção · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 2578-9295",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Optica Saúde logo",
+    "Optica Saúde saude-jabaquara instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

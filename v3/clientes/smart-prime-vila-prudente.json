@@ -1,0 +1,55 @@
+{
+ "nome": "Smart Prime Vila Prudente",
+ "slug": "smart-prime-vila-prudente",
+ "rota": {
+  "centro": "vila-prudente",
+  "dia": 1,
+  "ordem": 2,
+  "place_id": "ChIJfXJhlVNdzpQRdZgAM6b6fFQ",
+  "lat": -23.583490899999997,
+  "lng": -46.5825077,
+  "nota": 5.0,
+  "aval": 3
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Smart Prime Vila Prudente",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "comércio",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Itamumbuca, 148 · vila-prudente",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · placa · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 2273-7861",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Smart Prime Vila Prudente logo",
+    "Smart Prime Vila Prudente vila-prudente instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

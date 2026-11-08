@@ -1,0 +1,55 @@
+{
+ "nome": "OPEN Studio Hair",
+ "slug": "open-studio-hair",
+ "rota": {
+  "centro": "liberdade",
+  "dia": 1,
+  "ordem": 9,
+  "place_id": "ChIJl36310dZzpQRL6ehV3Fwfq4",
+  "lat": -23.558570300000003,
+  "lng": -46.635124,
+  "nota": 4.8,
+  "aval": 130
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "OPEN Studio Hair",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "academia/estúdio",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Galvão Bueno, 338 · liberdade",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "placa · adesivo de parede · uniformes",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 3277-6223",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "OPEN Studio Hair logo",
+    "OPEN Studio Hair liberdade instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

@@ -1,0 +1,55 @@
+{
+ "nome": "Definity Pilates Tatuapé",
+ "slug": "definity-pilates-tatuape",
+ "rota": {
+  "centro": "tatuape",
+  "dia": 2,
+  "ordem": 5,
+  "place_id": "ChIJ06LS3utezpQRlaNheJAVVRQ",
+  "lat": -23.540268,
+  "lng": -46.5706244,
+  "nota": 4.9,
+  "aval": 42
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Definity Pilates Tatuapé",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "academia/estúdio",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Praça Santa Terezinha, 51 · tatuape",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "placa · adesivo de parede · uniformes",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 97690-1047",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Definity Pilates Tatuapé logo",
+    "Definity Pilates Tatuapé tatuape instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

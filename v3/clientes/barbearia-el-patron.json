@@ -1,0 +1,55 @@
+{
+ "nome": "Barbearia El Patron",
+ "slug": "barbearia-el-patron",
+ "rota": {
+  "centro": "ipiranga",
+  "dia": 1,
+  "ordem": 11,
+  "place_id": "ChIJmWiYi_FbzpQRwddCjjZqqu0",
+  "lat": -23.5889182,
+  "lng": -46.6016469,
+  "nota": 4.8,
+  "aval": 388
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Barbearia El Patron",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "salão/barbearia",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Silva Bueno, 1190 · ipiranga",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · adesivo de vitrine · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 3876-5787",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Barbearia El Patron logo",
+    "Barbearia El Patron ipiranga instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

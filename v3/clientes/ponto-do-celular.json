@@ -1,0 +1,55 @@
+{
+ "nome": "Ponto do Celular",
+ "slug": "ponto-do-celular",
+ "rota": {
+  "centro": "mooca",
+  "dia": 2,
+  "ordem": 23,
+  "place_id": "ChIJRa66rORfzpQRZfpCM443Z5I",
+  "lat": -23.5592524,
+  "lng": -46.5883154,
+  "nota": 4.7,
+  "aval": 40
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Ponto do Celular",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "celular/assistência",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. da Mooca, 3859 · mooca",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · placa · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 2605-5804",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Ponto do Celular logo",
+    "Ponto do Celular mooca instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

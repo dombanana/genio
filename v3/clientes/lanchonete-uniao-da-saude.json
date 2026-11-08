@@ -1,0 +1,50 @@
+{
+ "nome": "Lanchonete União da Saúde",
+ "slug": "lanchonete-uniao-da-saude",
+ "rota": {
+  "centro": "saude-jabaquara",
+  "dia": 2,
+  "ordem": 12,
+  "place_id": "ChIJkQrSh1NbzpQRh6E6y9GZfTk",
+  "lat": -23.616906000000004,
+  "lng": -46.6390696,
+  "nota": 4.7,
+  "aval": 13
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Lanchonete União da Saúde",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "restaurante",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Av. Jabaquara, 1446 · saude-jabaquara",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · cardápio de parede · Mostra Aí",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Lanchonete União da Saúde logo",
+    "Lanchonete União da Saúde saude-jabaquara instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

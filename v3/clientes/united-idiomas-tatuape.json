@@ -1,0 +1,55 @@
+{
+ "nome": "United Idiomas - Tatuapé",
+ "slug": "united-idiomas-tatuape",
+ "rota": {
+  "centro": "tatuape",
+  "dia": 1,
+  "ordem": 10,
+  "place_id": "ChIJo2D_S91ezpQRJzOLnlZuaiI",
+  "lat": -23.5367197,
+  "lng": -46.5749971,
+  "nota": 4.8,
+  "aval": 138
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "United Idiomas - Tatuapé",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "escola/curso",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Padre Antônio de Sá, 205 · tatuape",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "placa · adesivo de parede · uniformes",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 2227-2711",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "United Idiomas - Tatuapé logo",
+    "United Idiomas - Tatuapé tatuape instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

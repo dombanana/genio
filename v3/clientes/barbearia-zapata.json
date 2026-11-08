@@ -1,0 +1,55 @@
+{
+ "nome": "Barbearia Zapata",
+ "slug": "barbearia-zapata",
+ "rota": {
+  "centro": "santo-andre",
+  "dia": 1,
+  "ordem": 23,
+  "place_id": "ChIJZzfweIZCzpQRHRYTQJs6zd8",
+  "lat": -23.6588219,
+  "lng": -46.526706399999995,
+  "nota": 4.9,
+  "aval": 154
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Barbearia Zapata",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "salão/barbearia",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Dr. Cesário Mota, 262 · santo-andre",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · adesivo de vitrine · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 4427-4082",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Barbearia Zapata logo",
+    "Barbearia Zapata santo-andre instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

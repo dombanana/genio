@@ -1,0 +1,55 @@
+{
+ "nome": "Dentista 24HS São Caetano",
+ "slug": "dentista-24hs-sao-caetano",
+ "rota": {
+  "centro": "sao-caetano",
+  "dia": 2,
+  "ordem": 22,
+  "place_id": "ChIJvd1d8ZddzpQRhto2kkGhbf4",
+  "lat": -23.6166293,
+  "lng": -46.561816099999994,
+  "nota": 4.5,
+  "aval": 93
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Dentista 24HS São Caetano",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "clínica/consultório",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Av. Goiás, 1488 · sao-caetano",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "placa de recepção · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 2311-4741",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Dentista 24HS São Caetano logo",
+    "Dentista 24HS São Caetano sao-caetano instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

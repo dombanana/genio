@@ -1,0 +1,55 @@
+{
+ "nome": "New Mimatsu",
+ "slug": "new-mimatsu",
+ "rota": {
+  "centro": "liberdade",
+  "dia": 1,
+  "ordem": 3,
+  "place_id": "ChIJpbICUaZZzpQRHKMVlK-Gpmo",
+  "lat": -23.559803499999997,
+  "lng": -46.6347835,
+  "nota": 4.5,
+  "aval": 915
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "New Mimatsu",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "restaurante",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Galvão Bueno, 475 · liberdade",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · cardápio de parede · Mostra Aí",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 3207-0187",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "New Mimatsu logo",
+    "New Mimatsu liberdade instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

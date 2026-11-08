@@ -1,0 +1,55 @@
+{
+ "nome": "Central Latina",
+ "slug": "central-latina",
+ "rota": {
+  "centro": "bras-belem",
+  "dia": 1,
+  "ordem": 21,
+  "place_id": "ChIJ-QkVHTlZzpQRi12iKtgfWH4",
+  "lat": -23.5400727,
+  "lng": -46.6059008,
+  "nota": 4.9,
+  "aval": 199
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Central Latina",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "escritório/imobiliária",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Coimbra, 435 · bras-belem",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "placa de recepção · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 93029-8450",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Central Latina logo",
+    "Central Latina bras-belem instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

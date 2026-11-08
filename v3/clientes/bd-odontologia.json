@@ -1,0 +1,55 @@
+{
+ "nome": "BD Odontologia",
+ "slug": "bd-odontologia",
+ "rota": {
+  "centro": "ipiranga",
+  "dia": 2,
+  "ordem": 21,
+  "place_id": "ChIJ3brQrWpbzpQRMsr_mw3LKsI",
+  "lat": -23.596274599999997,
+  "lng": -46.6063896,
+  "nota": 5.0,
+  "aval": 38
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "BD Odontologia",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "clínica/consultório",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Bom Pastor, 2224 · ipiranga",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "placa de recepção · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 97305-8848",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "BD Odontologia logo",
+    "BD Odontologia ipiranga instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

@@ -1,0 +1,55 @@
+{
+ "nome": "Sorria Vila Prudente | Clínico Geral | Implantes Dentários | Próteses Dentárias | E muito mais",
+ "slug": "sorria-vila-prudente-clinico-geral-implantes-dentarios-proteses-dentarias-e-muito-mais",
+ "rota": {
+  "centro": "vila-prudente",
+  "dia": 2,
+  "ordem": 3,
+  "place_id": "ChIJH7h0nm1czpQRIv5Z1oB00mw",
+  "lat": -23.589909199999997,
+  "lng": -46.582778999999995,
+  "nota": 4.5,
+  "aval": 268
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Sorria Vila Prudente | Clínico Geral | Implantes Dentários | Próteses Dentárias | E muito mais",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "clínica/consultório",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Ibitirama, 996 · vila-prudente",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "placa de recepção · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 2574-1989",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Sorria Vila Prudente | Clínico Geral | Implantes Dentários | Próteses Dentárias | E muito mais logo",
+    "Sorria Vila Prudente | Clínico Geral | Implantes Dentários | Próteses Dentárias | E muito mais vila-prudente instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

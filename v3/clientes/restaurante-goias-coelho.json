@@ -1,0 +1,55 @@
+{
+ "nome": "Restaurante Goiás Coelho",
+ "slug": "restaurante-goias-coelho",
+ "rota": {
+  "centro": "sao-caetano",
+  "dia": 1,
+  "ordem": 10,
+  "place_id": "ChIJ-cAkk-xczpQRTQ2KcxgaLd8",
+  "lat": -23.6163728,
+  "lng": -46.5725639,
+  "nota": 4.2,
+  "aval": 734
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Restaurante Goiás Coelho",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "restaurante",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Manoel Coelho, 770 · sao-caetano",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · cardápio de parede · Mostra Aí",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 93928-1096",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Restaurante Goiás Coelho logo",
+    "Restaurante Goiás Coelho sao-caetano instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

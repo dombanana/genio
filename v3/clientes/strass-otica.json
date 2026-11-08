@@ -1,0 +1,55 @@
+{
+ "nome": "Strass Ótica",
+ "slug": "strass-otica",
+ "rota": {
+  "centro": "sao-caetano",
+  "dia": 2,
+  "ordem": 8,
+  "place_id": "ChIJcaFIbu1czpQRxSamsE3tOUA",
+  "lat": -23.6131805,
+  "lng": -46.5723123,
+  "nota": 4.1,
+  "aval": 65
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Strass Ótica",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "ótica",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Manoel Coelho, 407 · sao-caetano",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · placa · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 4224-3268",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Strass Ótica logo",
+    "Strass Ótica sao-caetano instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

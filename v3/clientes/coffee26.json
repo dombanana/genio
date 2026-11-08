@@ -1,0 +1,50 @@
+{
+ "nome": "Coffee26",
+ "slug": "coffee26",
+ "rota": {
+  "centro": "vila-prudente",
+  "dia": 1,
+  "ordem": 21,
+  "place_id": "ChIJZ9wQ6mhdzpQRnh8csRqltq0",
+  "lat": -23.5870927,
+  "lng": -46.5849359,
+  "nota": 4.0,
+  "aval": 1
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Coffee26",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "restaurante",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Ibitirama, 614 · vila-prudente",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · cardápio de parede · Mostra Aí",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Coffee26 logo",
+    "Coffee26 vila-prudente instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

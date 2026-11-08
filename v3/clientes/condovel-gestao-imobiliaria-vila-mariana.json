@@ -1,0 +1,55 @@
+{
+ "nome": "Condovel Gestão Imobiliária / Vila Mariana",
+ "slug": "condovel-gestao-imobiliaria-vila-mariana",
+ "rota": {
+  "centro": "vila-mariana",
+  "dia": 2,
+  "ordem": 23,
+  "place_id": "ChIJ13GisIFazpQRh6qbJ-6_VGc",
+  "lat": -23.595496699999998,
+  "lng": -46.6362695,
+  "nota": 3.8,
+  "aval": 21
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Condovel Gestão Imobiliária / Vila Mariana",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "escritório/imobiliária",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Bloco Xangai · vila-mariana",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "placa de recepção · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 5031-1000",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Condovel Gestão Imobiliária / Vila Mariana logo",
+    "Condovel Gestão Imobiliária / Vila Mariana vila-mariana instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

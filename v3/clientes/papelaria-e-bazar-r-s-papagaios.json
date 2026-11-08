@@ -1,0 +1,55 @@
+{
+ "nome": "PAPELARIA E BAZAR R&S PAPAGAIOS",
+ "slug": "papelaria-e-bazar-r-s-papagaios",
+ "rota": {
+  "centro": "bras-belem",
+  "dia": 1,
+  "ordem": 16,
+  "place_id": "ChIJ3wlv_GFZzpQRmSzdTaZdzM8",
+  "lat": -23.5390484,
+  "lng": -46.608425,
+  "nota": 4.9,
+  "aval": 33
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "PAPELARIA E BAZAR R&S PAPAGAIOS",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "floricultura/presentes",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Av. Celso Garcia, N° 417 · bras-belem",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 95436-4470",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "PAPELARIA E BAZAR R&S PAPAGAIOS logo",
+    "PAPELARIA E BAZAR R&S PAPAGAIOS bras-belem instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

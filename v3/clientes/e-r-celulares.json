@@ -1,0 +1,55 @@
+{
+ "nome": "E.R.Celulares",
+ "slug": "e-r-celulares",
+ "rota": {
+  "centro": "tatuape",
+  "dia": 1,
+  "ordem": 14,
+  "place_id": "ChIJDwGBEd1ezpQRQFu2LLb0cLo",
+  "lat": -23.5356806,
+  "lng": -46.5755741,
+  "nota": 3.9,
+  "aval": 75
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "E.R.Celulares",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "celular/assistência",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Tuiuti, 1174 · tatuape",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · placa · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 2097-8732",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "E.R.Celulares logo",
+    "E.R.Celulares tatuape instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

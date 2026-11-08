@@ -1,0 +1,55 @@
+{
+ "nome": "Espaço Corpo & Saúde",
+ "slug": "espaco-corpo-saude",
+ "rota": {
+  "centro": "sao-caetano",
+  "dia": 2,
+  "ordem": 17,
+  "place_id": "ChIJ_w4VZPJczpQR-WNAxzQUMGc",
+  "lat": -23.6123169,
+  "lng": -46.572043699999995,
+  "nota": 4.9,
+  "aval": 84
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Espaço Corpo & Saúde",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "salão/barbearia",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Manoel Coelho, 303 · sao-caetano",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · adesivo de vitrine · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 97356-8627",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Espaço Corpo & Saúde logo",
+    "Espaço Corpo & Saúde sao-caetano instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

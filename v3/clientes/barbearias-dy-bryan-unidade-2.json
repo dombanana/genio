@@ -1,0 +1,55 @@
+{
+ "nome": "Barbearia’s Dy Bryan unidade 2",
+ "slug": "barbearias-dy-bryan-unidade-2",
+ "rota": {
+  "centro": "vila-prudente",
+  "dia": 2,
+  "ordem": 19,
+  "place_id": "ChIJCzF4u25czpQR5IXCpCSX200",
+  "lat": -23.5918714,
+  "lng": -46.5797368,
+  "nota": 4.3,
+  "aval": 186
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Barbearia’s Dy Bryan unidade 2",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "salão/barbearia",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Ibitirama, 1381 · vila-prudente",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · adesivo de vitrine · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 99524-1227",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Barbearia’s Dy Bryan unidade 2 logo",
+    "Barbearia’s Dy Bryan unidade 2 vila-prudente instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

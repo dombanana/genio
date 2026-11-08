@@ -1,0 +1,55 @@
+{
+ "nome": "Ponto de Apoio - Lavanderia e Passanderia",
+ "slug": "ponto-de-apoio-lavanderia-e-passanderia",
+ "rota": {
+  "centro": "santo-andre",
+  "dia": 2,
+  "ordem": 20,
+  "place_id": "ChIJhaZzvmJCzpQR8ojl5SBTmZQ",
+  "lat": -23.663511399999997,
+  "lng": -46.528617499999996,
+  "nota": 4.0,
+  "aval": 13
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Ponto de Apoio - Lavanderia e Passanderia",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "comércio",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Santo André, 114 · santo-andre",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · placa · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 94877-7872",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Ponto de Apoio - Lavanderia e Passanderia logo",
+    "Ponto de Apoio - Lavanderia e Passanderia santo-andre instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

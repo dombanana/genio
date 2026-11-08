@@ -1,0 +1,55 @@
+{
+ "nome": "Action 360° - Vila da Saúde",
+ "slug": "action-360-vila-da-saude",
+ "rota": {
+  "centro": "saude-jabaquara",
+  "dia": 1,
+  "ordem": 22,
+  "place_id": "ChIJ03cL5lNazpQRt27b_oBZF9U",
+  "lat": -23.6193223,
+  "lng": -46.6362775,
+  "nota": 4.7,
+  "aval": 150
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Action 360° - Vila da Saúde",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "clínica/consultório",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Rua Engeneiro · saude-jabaquara",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "placa de recepção · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 94239-2771",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Action 360° - Vila da Saúde logo",
+    "Action 360° - Vila da Saúde saude-jabaquara instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

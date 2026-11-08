@@ -1,0 +1,55 @@
+{
+ "nome": "Casa Clemente Padaria",
+ "slug": "casa-clemente-padaria",
+ "rota": {
+  "centro": "tatuape",
+  "dia": 2,
+  "ordem": 17,
+  "place_id": "ChIJ4x2B0f5fzpQRdzLifpAMys8",
+  "lat": -23.5433083,
+  "lng": -46.574735399999994,
+  "nota": 3.8,
+  "aval": 20
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Casa Clemente Padaria",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "padaria",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Tuiuti, 2025 · tatuape",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · adesivo de vitrine · cardápio de parede",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 2092-3378",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Casa Clemente Padaria logo",
+    "Casa Clemente Padaria tatuape instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

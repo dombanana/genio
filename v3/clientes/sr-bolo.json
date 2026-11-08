@@ -1,0 +1,55 @@
+{
+ "nome": "Sr Bolo",
+ "slug": "sr-bolo",
+ "rota": {
+  "centro": "vila-prudente",
+  "dia": 1,
+  "ordem": 9,
+  "place_id": "ChIJo1cf9WhdzpQRDCCq28EqQaY",
+  "lat": -23.582117600000004,
+  "lng": -46.5855155,
+  "nota": 4.5,
+  "aval": 62
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Sr Bolo",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "padaria",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Ibitirama, 26 · vila-prudente",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · adesivo de vitrine · cardápio de parede",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 98305-8352",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Sr Bolo logo",
+    "Sr Bolo vila-prudente instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

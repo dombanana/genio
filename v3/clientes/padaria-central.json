@@ -1,0 +1,55 @@
+{
+ "nome": "Padaria Central",
+ "slug": "padaria-central",
+ "rota": {
+  "centro": "santo-andre",
+  "dia": 2,
+  "ordem": 13,
+  "place_id": "ChIJ83XzGolCzpQRVVCeON3m3xE",
+  "lat": -23.6602058,
+  "lng": -46.5283445,
+  "nota": 4.4,
+  "aval": 8639
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Padaria Central",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "padaria",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Cel. Fernando Prestes, 140 · santo-andre",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · adesivo de vitrine · cardápio de parede",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 4427-5749",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Padaria Central logo",
+    "Padaria Central santo-andre instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

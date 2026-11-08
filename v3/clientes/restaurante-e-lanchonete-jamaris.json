@@ -1,0 +1,55 @@
+{
+ "nome": "Restaurante e Lanchonete Jamaris",
+ "slug": "restaurante-e-lanchonete-jamaris",
+ "rota": {
+  "centro": "moema",
+  "dia": 1,
+  "ordem": 21,
+  "place_id": "ChIJLxmRPhBazpQRiEcggU0YuJs",
+  "lat": -23.6060075,
+  "lng": -46.660083199999995,
+  "nota": 4.2,
+  "aval": 93
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Restaurante e Lanchonete Jamaris",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "restaurante",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Alameda dos Maracatins · moema",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · cardápio de parede · Mostra Aí",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 95344-6722",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Restaurante e Lanchonete Jamaris logo",
+    "Restaurante e Lanchonete Jamaris moema instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

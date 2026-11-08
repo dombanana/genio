@@ -1,0 +1,55 @@
+{
+ "nome": "Instituto Desco Language / Idiomas & Intercâmbio",
+ "slug": "instituto-desco-language-idiomas-intercambio",
+ "rota": {
+  "centro": "santo-andre",
+  "dia": 1,
+  "ordem": 12,
+  "place_id": "ChIJsXrM_CMdr4oRoIrvKBGLu4I",
+  "lat": -23.660943,
+  "lng": -46.5261297,
+  "nota": 4.8,
+  "aval": 219
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Instituto Desco Language / Idiomas & Intercâmbio",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "escola/curso",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Siqueira Campos, 668 · santo-andre",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "placa · adesivo de parede · uniformes",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 91228-7272",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Instituto Desco Language / Idiomas & Intercâmbio logo",
+    "Instituto Desco Language / Idiomas & Intercâmbio santo-andre instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

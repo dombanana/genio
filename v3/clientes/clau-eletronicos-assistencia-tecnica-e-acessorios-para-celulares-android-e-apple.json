@@ -1,0 +1,55 @@
+{
+ "nome": "Clau Eletrônicos Assistência Técnica e Acessórios para Celulares Android e Apple",
+ "slug": "clau-eletronicos-assistencia-tecnica-e-acessorios-para-celulares-android-e-apple",
+ "rota": {
+  "centro": "mooca",
+  "dia": 2,
+  "ordem": 5,
+  "place_id": "ChIJUSmnPDhZzpQRqKZJUeAqK_k",
+  "lat": -23.555083399999997,
+  "lng": -46.603586899999996,
+  "nota": 4.6,
+  "aval": 177
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Clau Eletrônicos Assistência Técnica e Acessórios para Celulares Android e Apple",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "celular/assistência",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. da Mooca, 2223 · mooca",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · placa · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 2694-5257",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Clau Eletrônicos Assistência Técnica e Acessórios para Celulares Android e Apple logo",
+    "Clau Eletrônicos Assistência Técnica e Acessórios para Celulares Android e Apple mooca instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

@@ -1,0 +1,55 @@
+{
+ "nome": "Bacio di latte - Jauaperi",
+ "slug": "bacio-di-latte-jauaperi",
+ "rota": {
+  "centro": "moema",
+  "dia": 1,
+  "ordem": 1,
+  "place_id": "ChIJqxBLMwBbzpQRZjpBY7zMOeE",
+  "lat": -23.6025623,
+  "lng": -46.664714,
+  "nota": 4.6,
+  "aval": 283
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Bacio di latte - Jauaperi",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "padaria",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Alameda Jauaperi, 597 · moema",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · adesivo de vitrine · cardápio de parede",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 95470-6282",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Bacio di latte - Jauaperi logo",
+    "Bacio di latte - Jauaperi moema instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

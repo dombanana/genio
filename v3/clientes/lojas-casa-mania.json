@@ -1,0 +1,55 @@
+{
+ "nome": "Lojas Casa Mania",
+ "slug": "lojas-casa-mania",
+ "rota": {
+  "centro": "saude-jabaquara",
+  "dia": 2,
+  "ordem": 22,
+  "place_id": "ChIJjzwct05azpQRJ5cuSINuhiM",
+  "lat": -23.6116921,
+  "lng": -46.6375404,
+  "nota": 4.3,
+  "aval": 550
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Lojas Casa Mania",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "comércio",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Av. Jabaquara, 853 · saude-jabaquara",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · placa · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 5594-0888",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Lojas Casa Mania logo",
+    "Lojas Casa Mania saude-jabaquara instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

@@ -1,0 +1,55 @@
+{
+ "nome": "Arte Shoes",
+ "slug": "arte-shoes",
+ "rota": {
+  "centro": "liberdade",
+  "dia": 2,
+  "ordem": 2,
+  "place_id": "ChIJqVnddQBZzpQR3RfoEfsk-f0",
+  "lat": -23.555710200000004,
+  "lng": -46.635176699999995,
+  "nota": 5.0,
+  "aval": 2
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Arte Shoes",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "loja de roupas/calçados",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Galvão Bueno, 17 · liberdade",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · banner · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 93923-2655",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Arte Shoes logo",
+    "Arte Shoes liberdade instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

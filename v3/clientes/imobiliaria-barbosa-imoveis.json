@@ -1,0 +1,55 @@
+{
+ "nome": "Imobiliária Barbosa Imóveis",
+ "slug": "imobiliaria-barbosa-imoveis",
+ "rota": {
+  "centro": "cambuci-aclimacao",
+  "dia": 2,
+  "ordem": 11,
+  "place_id": "ChIJYS-0b21ZzpQRWav5fCqIwFQ",
+  "lat": -23.564494,
+  "lng": -46.621545999999995,
+  "nota": 3.8,
+  "aval": 72
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Imobiliária Barbosa Imóveis",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "escritório/imobiliária",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Rua Albuquerque Maranhão, 110 · cambuci-aclimacao",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "placa de recepção · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 3341-5856",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Imobiliária Barbosa Imóveis logo",
+    "Imobiliária Barbosa Imóveis cambuci-aclimacao instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

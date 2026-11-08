@@ -1,0 +1,55 @@
+{
+ "nome": "Botequim Saúde",
+ "slug": "botequim-saude",
+ "rota": {
+  "centro": "saude-jabaquara",
+  "dia": 1,
+  "ordem": 24,
+  "place_id": "ChIJL55mgVFazpQRehHku4iO5tY",
+  "lat": -23.6179563,
+  "lng": -46.6370491,
+  "nota": 4.6,
+  "aval": 451
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Botequim Saúde",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "bar",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Pereira Estéfano, 211 · saude-jabaquara",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · cardápio · banner",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 98738-7405",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Botequim Saúde logo",
+    "Botequim Saúde saude-jabaquara instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

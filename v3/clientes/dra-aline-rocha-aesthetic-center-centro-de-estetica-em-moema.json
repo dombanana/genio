@@ -1,0 +1,55 @@
+{
+ "nome": "Dra. Aline Rocha - Aesthetic Center (Centro de Estética em Moema)",
+ "slug": "dra-aline-rocha-aesthetic-center-centro-de-estetica-em-moema",
+ "rota": {
+  "centro": "moema",
+  "dia": 1,
+  "ordem": 6,
+  "place_id": "ChIJ4TRfRhvloiURZlca90hrP24",
+  "lat": -23.6023773,
+  "lng": -46.66155,
+  "nota": 4.9,
+  "aval": 43
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Dra. Aline Rocha - Aesthetic Center (Centro de Estética em Moema)",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "comércio",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Av. Ibirapuera, 2064 · moema",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · placa · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 91893-0093",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Dra. Aline Rocha - Aesthetic Center (Centro de Estética em Moema) logo",
+    "Dra. Aline Rocha - Aesthetic Center (Centro de Estética em Moema) moema instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

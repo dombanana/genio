@@ -1,0 +1,55 @@
+{
+ "nome": "Supermercado Kanazawa",
+ "slug": "supermercado-kanazawa",
+ "rota": {
+  "centro": "liberdade",
+  "dia": 1,
+  "ordem": 5,
+  "place_id": "ChIJb5Z_N6ZZzpQRXxOWbkWDz3Y",
+  "lat": -23.558985699999997,
+  "lng": -46.634943199999995,
+  "nota": 4.3,
+  "aval": 656
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Supermercado Kanazawa",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "restaurante",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Galvão Bueno, 377 · liberdade",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · cardápio de parede · Mostra Aí",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 3207-1801",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Supermercado Kanazawa logo",
+    "Supermercado Kanazawa liberdade instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

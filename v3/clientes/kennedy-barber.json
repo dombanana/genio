@@ -1,0 +1,55 @@
+{
+ "nome": "Kennedy Barber",
+ "slug": "kennedy-barber",
+ "rota": {
+  "centro": "liberdade",
+  "dia": 2,
+  "ordem": 20,
+  "place_id": "ChIJK_kYtVxZzpQRCC1SGiTgiy4",
+  "lat": -23.561629,
+  "lng": -46.6347009,
+  "nota": 4.0,
+  "aval": 1
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Kennedy Barber",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "salão/barbearia",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Galvão Bueno, 671 · liberdade",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · adesivo de vitrine · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 96369-7741",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Kennedy Barber logo",
+    "Kennedy Barber liberdade instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

@@ -1,0 +1,55 @@
+{
+ "nome": "Supermercados Preço & Cia.",
+ "slug": "supermercados-preco-cia",
+ "rota": {
+  "centro": "tatuape",
+  "dia": 1,
+  "ordem": 23,
+  "place_id": "ChIJV3ovxd1ezpQRU95_ebAC3hY",
+  "lat": -23.5332774,
+  "lng": -46.5758954,
+  "nota": 4.5,
+  "aval": 4168
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Supermercados Preço & Cia.",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "padaria",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Tuiuti, 904 · tatuape",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · adesivo de vitrine · cardápio de parede",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 2501-4800",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Supermercados Preço & Cia. logo",
+    "Supermercados Preço & Cia. tatuape instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

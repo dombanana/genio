@@ -1,0 +1,55 @@
+{
+ "nome": "Super Lanches 1218",
+ "slug": "super-lanches-1218",
+ "rota": {
+  "centro": "ipiranga",
+  "dia": 1,
+  "ordem": 12,
+  "place_id": "ChIJLf13IPJbzpQRYd8ieyxAS-8",
+  "lat": -23.5892382,
+  "lng": -46.601662,
+  "nota": 4.3,
+  "aval": 268
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Super Lanches 1218",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "restaurante",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Silva Bueno, 1218 · ipiranga",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · cardápio de parede · Mostra Aí",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 2063-6416",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Super Lanches 1218 logo",
+    "Super Lanches 1218 ipiranga instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

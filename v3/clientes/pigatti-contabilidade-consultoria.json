@@ -1,0 +1,55 @@
+{
+ "nome": "Pigatti Contabilidade & Consultoria",
+ "slug": "pigatti-contabilidade-consultoria",
+ "rota": {
+  "centro": "cambuci-aclimacao",
+  "dia": 2,
+  "ordem": 19,
+  "place_id": "ChIJB5xFOHBZzpQR_M739Qj0ZVU",
+  "lat": -23.5712509,
+  "lng": -46.6232185,
+  "nota": 4.8,
+  "aval": 97
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Pigatti Contabilidade & Consultoria",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "escritório/imobiliária",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Av. Lins de Vasconcelos, 898 · cambuci-aclimacao",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "placa de recepção · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 3340-6655",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Pigatti Contabilidade & Consultoria logo",
+    "Pigatti Contabilidade & Consultoria cambuci-aclimacao instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

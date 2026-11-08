@@ -1,0 +1,55 @@
+{
+ "nome": "Petland Mooca",
+ "slug": "petland-mooca",
+ "rota": {
+  "centro": "mooca",
+  "dia": 1,
+  "ordem": 6,
+  "place_id": "ChIJZ85hHUlZzpQRJbAiHvFGTG8",
+  "lat": -23.5585755,
+  "lng": -46.6005585,
+  "nota": 4.5,
+  "aval": 656
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Petland Mooca",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "pet",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Av. Paes de Barros, 342 · mooca",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · placa · adesivo de vitrine",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 2693-6633",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Petland Mooca logo",
+    "Petland Mooca mooca instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

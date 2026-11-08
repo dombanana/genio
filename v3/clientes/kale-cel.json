@@ -1,0 +1,55 @@
+{
+ "nome": "Kale Cel",
+ "slug": "kale-cel",
+ "rota": {
+  "centro": "tatuape",
+  "dia": 2,
+  "ordem": 20,
+  "place_id": "ChIJB9pvMsBezpQRkFZ10l_e39w",
+  "lat": -23.544374299999998,
+  "lng": -46.574673499999996,
+  "nota": 4.5,
+  "aval": 28
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Kale Cel",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "comércio",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Tuiuti, 2142 · tatuape",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · placa · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 97443-0745",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Kale Cel logo",
+    "Kale Cel tatuape instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

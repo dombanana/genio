@@ -1,0 +1,55 @@
+{
+ "nome": "Maison 4 paws",
+ "slug": "maison-4-paws",
+ "rota": {
+  "centro": "santo-andre",
+  "dia": 2,
+  "ordem": 25,
+  "place_id": "ChIJXfzBlYxCzpQRYm7gk6PrUWw",
+  "lat": -23.6599769,
+  "lng": -46.5342969,
+  "nota": 4.7,
+  "aval": 150
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Maison 4 paws",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "restaurante",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Laura, 196 · santo-andre",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · cardápio de parede · Mostra Aí",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 4436-7618",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Maison 4 paws logo",
+    "Maison 4 paws santo-andre instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

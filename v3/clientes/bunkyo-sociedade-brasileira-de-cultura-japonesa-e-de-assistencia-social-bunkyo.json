@@ -1,0 +1,55 @@
+{
+ "nome": "Bunkyo Sociedade Brasileira de Cultura Japonesa e de Assistência Social (Bunkyo) ブラジル日本文化福祉協会",
+ "slug": "bunkyo-sociedade-brasileira-de-cultura-japonesa-e-de-assistencia-social-bunkyo",
+ "rota": {
+  "centro": "liberdade",
+  "dia": 2,
+  "ordem": 18,
+  "place_id": "ChIJARoB76ZZzpQRYgdptxUAsZY",
+  "lat": -23.561058,
+  "lng": -46.635073600000005,
+  "nota": 4.6,
+  "aval": 1754
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Bunkyo Sociedade Brasileira de Cultura Japonesa e de Assistência Social (Bunkyo) ブラジル日本文化福祉協会",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "celular/assistência",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. São Joaquim, 381 · liberdade",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · placa · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 3208-1755",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Bunkyo Sociedade Brasileira de Cultura Japonesa e de Assistência Social (Bunkyo) ブラジル日本文化福祉協会 logo",
+    "Bunkyo Sociedade Brasileira de Cultura Japonesa e de Assistência Social (Bunkyo) ブラジル日本文化福祉協会 liberdade instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

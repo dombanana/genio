@@ -1,0 +1,55 @@
+{
+ "nome": "Clínica Brentzel Odontologia & Estética",
+ "slug": "clinica-brentzel-odontologia-estetica",
+ "rota": {
+  "centro": "vila-prudente",
+  "dia": 1,
+  "ordem": 5,
+  "place_id": "ChIJZ3yK-9pdzpQRMQ27Ur9vbl8",
+  "lat": -23.583325,
+  "lng": -46.585046,
+  "nota": 4.9,
+  "aval": 363
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Clínica Brentzel Odontologia & Estética",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "clínica/consultório",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Ibitirama, 166 · vila-prudente",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "placa de recepção · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 2548-0857",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Clínica Brentzel Odontologia & Estética logo",
+    "Clínica Brentzel Odontologia & Estética vila-prudente instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

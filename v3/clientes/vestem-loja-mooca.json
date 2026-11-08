@@ -1,0 +1,55 @@
+{
+ "nome": "Vestem Loja Mooca",
+ "slug": "vestem-loja-mooca",
+ "rota": {
+  "centro": "mooca",
+  "dia": 1,
+  "ordem": 19,
+  "place_id": "ChIJf8mZ_01ZzpQRsQ14O8CN4Co",
+  "lat": -23.556096999999998,
+  "lng": -46.5999732,
+  "nota": 4.4,
+  "aval": 260
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Vestem Loja Mooca",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "loja de roupas/calçados",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Av. Paes de Barros, 55 · mooca",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · banner · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 3054-3434",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Vestem Loja Mooca logo",
+    "Vestem Loja Mooca mooca instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

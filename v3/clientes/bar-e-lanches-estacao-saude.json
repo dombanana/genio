@@ -1,0 +1,55 @@
+{
+ "nome": "Bar e Lanches Estação Saúde",
+ "slug": "bar-e-lanches-estacao-saude",
+ "rota": {
+  "centro": "saude-jabaquara",
+  "dia": 2,
+  "ordem": 6,
+  "place_id": "ChIJH14AtlFazpQR3LqPv4FPIQc",
+  "lat": -23.6176955,
+  "lng": -46.6386985,
+  "nota": 4.6,
+  "aval": 35
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Bar e Lanches Estação Saúde",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "restaurante",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Av. Jabaquara, 1515 · saude-jabaquara",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · cardápio de parede · Mostra Aí",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 5071-4271",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Bar e Lanches Estação Saúde logo",
+    "Bar e Lanches Estação Saúde saude-jabaquara instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

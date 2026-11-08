@@ -1,0 +1,55 @@
+{
+ "nome": "Boteco Bate Papo",
+ "slug": "boteco-bate-papo",
+ "rota": {
+  "centro": "vila-mariana",
+  "dia": 1,
+  "ordem": 16,
+  "place_id": "ChIJ-1QlCQBZzpQR44h9Uf7jJfM",
+  "lat": -23.583951199999998,
+  "lng": -46.637723099999995,
+  "nota": 4.4,
+  "aval": 57
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Boteco Bate Papo",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "bar",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Domingos de Morais, 830 · vila-mariana",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · cardápio · banner",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 91864-1794",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Boteco Bate Papo logo",
+    "Boteco Bate Papo vila-mariana instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

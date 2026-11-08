@@ -1,0 +1,55 @@
+{
+ "nome": "1900 Pizzeria - Moema",
+ "slug": "1900-pizzeria-moema",
+ "rota": {
+  "centro": "moema",
+  "dia": 1,
+  "ordem": 14,
+  "place_id": "ChIJyQ3cuxBazpQRaNz-GXKM8JE",
+  "lat": -23.6048938,
+  "lng": -46.657082800000005,
+  "nota": 4.6,
+  "aval": 2394
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "1900 Pizzeria - Moema",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "restaurante",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Alameda dos Nhambiquaras, 573 · moema",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · cardápio de parede · Mostra Aí",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 5575-1900",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "1900 Pizzeria - Moema logo",
+    "1900 Pizzeria - Moema moema instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

@@ -1,0 +1,55 @@
+{
+ "nome": "Mobilità Fisioterapia",
+ "slug": "mobilita-fisioterapia",
+ "rota": {
+  "centro": "moema",
+  "dia": 1,
+  "ordem": 8,
+  "place_id": "ChIJO0m-qP9ZzpQRhIaoxXcVi78",
+  "lat": -23.6024229,
+  "lng": -46.660709499999996,
+  "nota": 5.0,
+  "aval": 277
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Mobilità Fisioterapia",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "clínica/consultório",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Av. Ibirapuera, 2033 · moema",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "placa de recepção · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 3045-6521",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Mobilità Fisioterapia logo",
+    "Mobilità Fisioterapia moema instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

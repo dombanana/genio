@@ -1,0 +1,55 @@
+{
+ "nome": "ClauMixx Presentes Criativos, tudo com muito amor e carinho para você e seu lar.",
+ "slug": "claumixx-presentes-criativos-tudo-com-muito-amor-e-carinho-para-voce-e-seu-lar",
+ "rota": {
+  "centro": "mooca",
+  "dia": 2,
+  "ordem": 3,
+  "place_id": "ChIJl8LMjIZZzpQRbSm2mbTR-xk",
+  "lat": -23.555065,
+  "lng": -46.603094399999996,
+  "nota": 4.9,
+  "aval": 204
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "ClauMixx Presentes Criativos, tudo com muito amor e carinho para você e seu lar.",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "floricultura/presentes",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. da Mooca, 2267 · mooca",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 2691-0363",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "ClauMixx Presentes Criativos, tudo com muito amor e carinho para você e seu lar. logo",
+    "ClauMixx Presentes Criativos, tudo com muito amor e carinho para você e seu lar. mooca instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

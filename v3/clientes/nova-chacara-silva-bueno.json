@@ -1,0 +1,55 @@
+{
+ "nome": "Nova chácara Silva bueno",
+ "slug": "nova-chacara-silva-bueno",
+ "rota": {
+  "centro": "ipiranga",
+  "dia": 2,
+  "ordem": 19,
+  "place_id": "ChIJA-bIfFxbzpQRkRB1oFclNNE",
+  "lat": -23.599435099999997,
+  "lng": -46.6004598,
+  "nota": 4.8,
+  "aval": 25
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Nova chácara Silva bueno",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "mercado/hortifruti",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Silva Bueno · ipiranga",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "banner · placa · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 96141-5364",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Nova chácara Silva bueno logo",
+    "Nova chácara Silva bueno ipiranga instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

@@ -1,0 +1,55 @@
+{
+ "nome": "Himeya",
+ "slug": "himeya",
+ "rota": {
+  "centro": "liberdade",
+  "dia": 1,
+  "ordem": 20,
+  "place_id": "ChIJk7DN5ahZzpQRwHlUS3TIS_4",
+  "lat": -23.5560635,
+  "lng": -46.6352826,
+  "nota": 4.0,
+  "aval": 270
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Himeya",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "floricultura/presentes",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Galvão Bueno, 54 · liberdade",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 3341-4678",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Himeya logo",
+    "Himeya liberdade instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

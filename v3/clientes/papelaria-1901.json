@@ -1,0 +1,55 @@
+{
+ "nome": "Papelaria 1901",
+ "slug": "papelaria-1901",
+ "rota": {
+  "centro": "ipiranga",
+  "dia": 2,
+  "ordem": 4,
+  "place_id": "ChIJM-gJHI1bzpQRNZqXAyvHpjE",
+  "lat": -23.5952728,
+  "lng": -46.6007617,
+  "nota": 4.5,
+  "aval": 512
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Papelaria 1901",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "floricultura/presentes",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Silva Bueno, 1901 · ipiranga",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 2914-6185",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Papelaria 1901 logo",
+    "Papelaria 1901 ipiranga instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

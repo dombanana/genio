@@ -1,0 +1,55 @@
+{
+ "nome": "Studio e Barbearia vj",
+ "slug": "studio-e-barbearia-vj",
+ "rota": {
+  "centro": "saude-jabaquara",
+  "dia": 2,
+  "ordem": 23,
+  "place_id": "ChIJm2zpMc1bzpQR9cmvqCWoHrQ",
+  "lat": -23.6126579,
+  "lng": -46.635936799999996,
+  "nota": 5.0,
+  "aval": 80
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Studio e Barbearia vj",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "salão/barbearia",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Rua Caramuru, 980 · saude-jabaquara",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · adesivo de vitrine · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 5594-7270",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Studio e Barbearia vj logo",
+    "Studio e Barbearia vj saude-jabaquara instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

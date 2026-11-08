@@ -1,0 +1,55 @@
+{
+ "nome": "Armarinhos e Aviamentos Alfa",
+ "slug": "armarinhos-e-aviamentos-alfa",
+ "rota": {
+  "centro": "bras-belem",
+  "dia": 2,
+  "ordem": 2,
+  "place_id": "ChIJNbxwJ95YzpQRU7MBawwv5kc",
+  "lat": -23.537512099999997,
+  "lng": -46.6125116,
+  "nota": 4.8,
+  "aval": 199
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Armarinhos e Aviamentos Alfa",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "comércio",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Alm. Barroso, 192 · bras-belem",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · placa · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 2612-6200",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Armarinhos e Aviamentos Alfa logo",
+    "Armarinhos e Aviamentos Alfa bras-belem instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

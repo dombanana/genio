@@ -1,0 +1,55 @@
+{
+ "nome": "Frei Gi Contabilidade Planejamento",
+ "slug": "frei-gi-contabilidade-planejamento",
+ "rota": {
+  "centro": "moema",
+  "dia": 1,
+  "ordem": 19,
+  "place_id": "ChIJ08BttBFazpQRsdmdsPnVhNM",
+  "lat": -23.607027499999997,
+  "lng": -46.6595799,
+  "nota": 5.0,
+  "aval": 3
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Frei Gi Contabilidade Planejamento",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "escritório/imobiliária",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Alameda dos Nhambiquaras, 920 · moema",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "placa de recepção · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 5052-2662",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Frei Gi Contabilidade Planejamento logo",
+    "Frei Gi Contabilidade Planejamento moema instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

@@ -1,0 +1,55 @@
+{
+ "nome": "JASF Contabilidade",
+ "slug": "jasf-contabilidade",
+ "rota": {
+  "centro": "vila-mariana",
+  "dia": 2,
+  "ordem": 22,
+  "place_id": "ChIJpW2l6C1azpQRhfTbmQ15NBk",
+  "lat": -23.595512799999998,
+  "lng": -46.6364544,
+  "nota": 5.0,
+  "aval": 12
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "JASF Contabilidade",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "escritório/imobiliária",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Rua Domingos de Morais, 2187 Conj. 122 Torre · vila-mariana",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "placa de recepção · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 5084-4238",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "JASF Contabilidade logo",
+    "JASF Contabilidade vila-mariana instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

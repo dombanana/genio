@@ -1,0 +1,55 @@
+{
+ "nome": "Pedaços de Sonhos",
+ "slug": "pedacos-de-sonhos",
+ "rota": {
+  "centro": "ipiranga",
+  "dia": 1,
+  "ordem": 21,
+  "place_id": "ChIJT3ZjsupbzpQRHiK_HkFWOSw",
+  "lat": -23.5932206,
+  "lng": -46.601031,
+  "nota": 4.6,
+  "aval": 278
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Pedaços de Sonhos",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "padaria",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Silva Bueno, 1673 · ipiranga",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · adesivo de vitrine · cardápio de parede",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 91796-6476",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Pedaços de Sonhos logo",
+    "Pedaços de Sonhos ipiranga instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

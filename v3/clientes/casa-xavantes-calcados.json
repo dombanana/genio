@@ -1,0 +1,55 @@
+{
+ "nome": "Casa Xavantes Calçados",
+ "slug": "casa-xavantes-calcados",
+ "rota": {
+  "centro": "ipiranga",
+  "dia": 2,
+  "ordem": 16,
+  "place_id": "ChIJ387dh45bzpQRU351Qovp5mI",
+  "lat": -23.5989003,
+  "lng": -46.6005086,
+  "nota": 5.0,
+  "aval": 12
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Casa Xavantes Calçados",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "loja de roupas/calçados",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Silva Bueno, 2303 · ipiranga",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · banner · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 2063-5421",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Casa Xavantes Calçados logo",
+    "Casa Xavantes Calçados ipiranga instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

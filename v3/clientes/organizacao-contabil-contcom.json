@@ -1,0 +1,55 @@
+{
+ "nome": "Organização Contábil Contcom",
+ "slug": "organizacao-contabil-contcom",
+ "rota": {
+  "centro": "ipiranga",
+  "dia": 1,
+  "ordem": 4,
+  "place_id": "ChIJ63ozY3BbzpQRgYexeClysr0",
+  "lat": -23.589969999999997,
+  "lng": -46.6069575,
+  "nota": 4.7,
+  "aval": 13
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Organização Contábil Contcom",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "escritório/imobiliária",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Bom Pastor, 1527 · ipiranga",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "placa de recepção · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 94151-3212",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Organização Contábil Contcom logo",
+    "Organização Contábil Contcom ipiranga instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

@@ -1,0 +1,55 @@
+{
+ "nome": "Café Terapia - Lanchonete e Cafeteria - Cafés, Lanches, Refeições, Sucos e Salgados",
+ "slug": "cafe-terapia-lanchonete-e-cafeteria-cafes-lanches-refeicoes-sucos-e-salgados",
+ "rota": {
+  "centro": "moema",
+  "dia": 2,
+  "ordem": 8,
+  "place_id": "ChIJ8fbQ4hBbzpQRU-g8tc2eOBU",
+  "lat": -23.6083731,
+  "lng": -46.6622818,
+  "nota": 4.6,
+  "aval": 88
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Café Terapia - Lanchonete e Cafeteria - Cafés, Lanches, Refeições, Sucos e Salgados",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "cafeteria",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Alameda dos Maracatins, 924 · moema",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · cardápio de parede · Mostra Aí",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 5056-1660",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Café Terapia - Lanchonete e Cafeteria - Cafés, Lanches, Refeições, Sucos e Salgados logo",
+    "Café Terapia - Lanchonete e Cafeteria - Cafés, Lanches, Refeições, Sucos e Salgados moema instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

@@ -1,0 +1,55 @@
+{
+ "nome": "La Boulange - A Padoca Francesa",
+ "slug": "la-boulange-a-padoca-francesa",
+ "rota": {
+  "centro": "vila-mariana",
+  "dia": 1,
+  "ordem": 18,
+  "place_id": "ChIJXRRQpS1ZzpQRDXGIYlNyndk",
+  "lat": -23.583676999999998,
+  "lng": -46.6378607,
+  "nota": 4.6,
+  "aval": 404
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "La Boulange - A Padoca Francesa",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "padaria",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Domingos de Morais, 800 · vila-mariana",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · adesivo de vitrine · cardápio de parede",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 97771-0221",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "La Boulange - A Padoca Francesa logo",
+    "La Boulange - A Padoca Francesa vila-mariana instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

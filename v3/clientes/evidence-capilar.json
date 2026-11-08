@@ -1,0 +1,55 @@
+{
+ "nome": "Evidence Capilar",
+ "slug": "evidence-capilar",
+ "rota": {
+  "centro": "vila-mariana",
+  "dia": 1,
+  "ordem": 9,
+  "place_id": "ChIJX1sB6zlbzpQROANs3x1Xh48",
+  "lat": -23.587987400000003,
+  "lng": -46.635667299999994,
+  "nota": 4.8,
+  "aval": 37
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Evidence Capilar",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "bar",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Domingos de Morais, 1334 · vila-mariana",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · cardápio · banner",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 97557-0294",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Evidence Capilar logo",
+    "Evidence Capilar vila-mariana instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

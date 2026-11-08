@@ -1,0 +1,55 @@
+{
+ "nome": "MR. BUENO BARBEARIA",
+ "slug": "mr-bueno-barbearia",
+ "rota": {
+  "centro": "ipiranga",
+  "dia": 1,
+  "ordem": 7,
+  "place_id": "ChIJAQDsOfBbzpQR39UxU6JBAKo",
+  "lat": -23.5864965,
+  "lng": -46.6016439,
+  "nota": 4.9,
+  "aval": 217
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "MR. BUENO BARBEARIA",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "salão/barbearia",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Silva Bueno, 925 · ipiranga",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · adesivo de vitrine · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 91860-2625",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "MR. BUENO BARBEARIA logo",
+    "MR. BUENO BARBEARIA ipiranga instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

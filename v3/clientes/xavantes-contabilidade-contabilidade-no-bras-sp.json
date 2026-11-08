@@ -1,0 +1,55 @@
+{
+ "nome": "Xavantes Contabilidade | Contabilidade no Brás - SP",
+ "slug": "xavantes-contabilidade-contabilidade-no-bras-sp",
+ "rota": {
+  "centro": "bras-belem",
+  "dia": 1,
+  "ordem": 5,
+  "place_id": "ChIJAyb3LCdZzpQRSC7J9XtzFFw",
+  "lat": -23.5392099,
+  "lng": -46.6119092,
+  "nota": 5.0,
+  "aval": 48
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Xavantes Contabilidade | Contabilidade no Brás - SP",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "escritório/imobiliária",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. José Kauer, 28 · bras-belem",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "placa de recepção · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 95047-3905",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Xavantes Contabilidade | Contabilidade no Brás - SP logo",
+    "Xavantes Contabilidade | Contabilidade no Brás - SP bras-belem instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

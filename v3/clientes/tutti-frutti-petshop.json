@@ -1,0 +1,55 @@
+{
+ "nome": "Tutti Frutti Petshop",
+ "slug": "tutti-frutti-petshop",
+ "rota": {
+  "centro": "santo-andre",
+  "dia": 1,
+  "ordem": 3,
+  "place_id": "ChIJ82jvuYNDzpQRUz8PZ5lvkW8",
+  "lat": -23.6677966,
+  "lng": -46.53356360000001,
+  "nota": 3.8,
+  "aval": 120
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Tutti Frutti Petshop",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "pet",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Av. Pereira Barreto, 42 · santo-andre",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · placa · adesivo de vitrine",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 99347-0378",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Tutti Frutti Petshop logo",
+    "Tutti Frutti Petshop santo-andre instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

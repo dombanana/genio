@@ -1,0 +1,55 @@
+{
+ "nome": "1001 Aviamentos para Confecções",
+ "slug": "1001-aviamentos-para-confeccoes",
+ "rota": {
+  "centro": "bras-belem",
+  "dia": 2,
+  "ordem": 5,
+  "place_id": "ChIJBTRkjuBYzpQRVmTrcqUol-8",
+  "lat": -23.5380926,
+  "lng": -46.613493399999996,
+  "nota": 4.8,
+  "aval": 63
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "1001 Aviamentos para Confecções",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "comércio",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Rua Rubino de Oliveira, 311 · bras-belem",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · placa · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 2100-2100",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "1001 Aviamentos para Confecções logo",
+    "1001 Aviamentos para Confecções bras-belem instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

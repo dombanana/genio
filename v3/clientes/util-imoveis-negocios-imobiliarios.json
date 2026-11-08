@@ -1,0 +1,55 @@
+{
+ "nome": "Útil Imóveis Negócios Imobiliarios",
+ "slug": "util-imoveis-negocios-imobiliarios",
+ "rota": {
+  "centro": "vila-prudente",
+  "dia": 2,
+  "ordem": 13,
+  "place_id": "ChIJcwVpMmxczpQRV_74H9XZXlY",
+  "lat": -23.5909294,
+  "lng": -46.581053399999995,
+  "nota": 3.3,
+  "aval": 21
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Útil Imóveis Negócios Imobiliarios",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "escritório/imobiliária",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Ibitirama, 1207 · vila-prudente",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "placa de recepção · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 2341-4455",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Útil Imóveis Negócios Imobiliarios logo",
+    "Útil Imóveis Negócios Imobiliarios vila-prudente instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

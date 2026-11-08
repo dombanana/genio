@@ -1,0 +1,55 @@
+{
+ "nome": "Balta Variedades",
+ "slug": "balta-variedades",
+ "rota": {
+  "centro": "tatuape",
+  "dia": 2,
+  "ordem": 12,
+  "place_id": "ChIJD_2XBPJfzpQRnjPRq-bIgxM",
+  "lat": -23.5428554,
+  "lng": -46.574832900000004,
+  "nota": 4.8,
+  "aval": 36
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Balta Variedades",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "comércio",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Tuiuti, 1975 · tatuape",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · placa · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 99554-1975",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Balta Variedades logo",
+    "Balta Variedades tatuape instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

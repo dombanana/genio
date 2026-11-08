@@ -1,0 +1,55 @@
+{
+ "nome": "Óticas Oliva - Saúde",
+ "slug": "oticas-oliva-saude",
+ "rota": {
+  "centro": "saude-jabaquara",
+  "dia": 1,
+  "ordem": 4,
+  "place_id": "ChIJXa6BTFBazpQRu-_J3G6SuT8",
+  "lat": -23.6180979,
+  "lng": -46.639344699999995,
+  "nota": 5.0,
+  "aval": 2016
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Óticas Oliva - Saúde",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "ótica",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Av. Jabaquara, 1576 · saude-jabaquara",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · placa · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 2533-1325",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Óticas Oliva - Saúde logo",
+    "Óticas Oliva - Saúde saude-jabaquara instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

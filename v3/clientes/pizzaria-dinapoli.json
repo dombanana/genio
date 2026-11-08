@@ -1,0 +1,55 @@
+{
+ "nome": "pizzaria Dinapoli",
+ "slug": "pizzaria-dinapoli",
+ "rota": {
+  "centro": "bras-belem",
+  "dia": 2,
+  "ordem": 25,
+  "place_id": "ChIJp1DCbChZzpQR3IpQ0IqNDgs",
+  "lat": -23.5381769,
+  "lng": -46.602132399999995,
+  "nota": 3.8,
+  "aval": 28
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "pizzaria Dinapoli",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "restaurante",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Av. Celso Garcia · bras-belem",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · cardápio de parede · Mostra Aí",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 2359-5932",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "pizzaria Dinapoli logo",
+    "pizzaria Dinapoli bras-belem instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

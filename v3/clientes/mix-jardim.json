@@ -1,0 +1,55 @@
+{
+ "nome": "Mix Jardim",
+ "slug": "mix-jardim",
+ "rota": {
+  "centro": "vila-prudente",
+  "dia": 1,
+  "ordem": 23,
+  "place_id": "ChIJkcLMjipdzpQRmtvSqTgqz64",
+  "lat": -23.588180899999998,
+  "lng": -46.5842338,
+  "nota": 4.7,
+  "aval": 49
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Mix Jardim",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "comércio",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Ibitirama, 751 · vila-prudente",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · placa · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 95952-1000",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Mix Jardim logo",
+    "Mix Jardim vila-prudente instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

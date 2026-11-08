@@ -1,0 +1,55 @@
+{
+ "nome": "Ótica Prevent Tatuapé",
+ "slug": "otica-prevent-tatuape",
+ "rota": {
+  "centro": "tatuape",
+  "dia": 2,
+  "ordem": 10,
+  "place_id": "ChIJDQVatNFfzpQRI01NvLYE4O8",
+  "lat": -23.5423734,
+  "lng": -46.5749889,
+  "nota": 4.9,
+  "aval": 4557
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Ótica Prevent Tatuapé",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "ótica",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Tuiuti, 1925 · tatuape",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · placa · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 93337-9450",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Ótica Prevent Tatuapé logo",
+    "Ótica Prevent Tatuapé tatuape instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

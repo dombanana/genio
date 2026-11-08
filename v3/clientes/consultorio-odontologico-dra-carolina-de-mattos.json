@@ -1,0 +1,55 @@
+{
+ "nome": "Consultório Odontológico Dra Carolina de Mattos",
+ "slug": "consultorio-odontologico-dra-carolina-de-mattos",
+ "rota": {
+  "centro": "moema",
+  "dia": 1,
+  "ordem": 4,
+  "place_id": "ChIJOSTwMQJbzpQR2WwJfPyTLe8",
+  "lat": -23.602677699999997,
+  "lng": -46.6618832,
+  "nota": 3.7,
+  "aval": 3
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Consultório Odontológico Dra Carolina de Mattos",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "clínica/consultório",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Av. Ibirapuera, 2120 · moema",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "placa de recepção · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 5051-4024",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Consultório Odontológico Dra Carolina de Mattos logo",
+    "Consultório Odontológico Dra Carolina de Mattos moema instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

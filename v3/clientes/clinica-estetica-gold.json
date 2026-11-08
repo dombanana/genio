@@ -1,0 +1,55 @@
+{
+ "nome": "Clínica Estética Gold",
+ "slug": "clinica-estetica-gold",
+ "rota": {
+  "centro": "tatuape",
+  "dia": 1,
+  "ordem": 12,
+  "place_id": "ChIJwTalMN1ezpQRAWsTwegNBr8",
+  "lat": -23.5367669,
+  "lng": -46.575665799999996,
+  "nota": 4.5,
+  "aval": 126
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Clínica Estética Gold",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "clínica/consultório",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Tuiuti, 1292 · tatuape",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "placa de recepção · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 98181-1302",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Clínica Estética Gold logo",
+    "Clínica Estética Gold tatuape instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

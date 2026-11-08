@@ -1,0 +1,55 @@
+{
+ "nome": "The Coffee",
+ "slug": "the-coffee",
+ "rota": {
+  "centro": "vila-mariana",
+  "dia": 1,
+  "ordem": 24,
+  "place_id": "ChIJvV_LKG5ZzpQRlH15VCLsHc8",
+  "lat": -23.5834336,
+  "lng": -46.637973099999996,
+  "nota": 4.5,
+  "aval": 320
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "The Coffee",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "restaurante",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Domingos de Morais, 774 · vila-mariana",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · cardápio de parede · Mostra Aí",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(41) 99279-7895",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "The Coffee logo",
+    "The Coffee vila-mariana instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

@@ -1,0 +1,55 @@
+{
+ "nome": "VOLL Pilates Studios Vila Prudente",
+ "slug": "voll-pilates-studios-vila-prudente",
+ "rota": {
+  "centro": "vila-prudente",
+  "dia": 1,
+  "ordem": 7,
+  "place_id": "ChIJuR0Lp2FdzpQRAtL49jvXA0M",
+  "lat": -23.583436199999998,
+  "lng": -46.5852381,
+  "nota": 4.9,
+  "aval": 30
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "VOLL Pilates Studios Vila Prudente",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "academia/estúdio",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Ibitirama, 166 · vila-prudente",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "placa · adesivo de parede · uniformes",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 92199-9244",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "VOLL Pilates Studios Vila Prudente logo",
+    "VOLL Pilates Studios Vila Prudente vila-prudente instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

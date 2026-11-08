@@ -1,0 +1,55 @@
+{
+ "nome": "Sr. Grego | Santo André",
+ "slug": "sr-grego-santo-andre",
+ "rota": {
+  "centro": "santo-andre",
+  "dia": 1,
+  "ordem": 18,
+  "place_id": "ChIJ_08_iGdDzpQRj4WgmD3icX4",
+  "lat": -23.6588796,
+  "lng": -46.5271878,
+  "nota": 4.8,
+  "aval": 674
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Sr. Grego | Santo André",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "restaurante",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Cel. Oliveira Lima, 526 · santo-andre",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · cardápio de parede · Mostra Aí",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(62) 99671-6779",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Sr. Grego | Santo André logo",
+    "Sr. Grego | Santo André santo-andre instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

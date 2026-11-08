@@ -1,0 +1,55 @@
+{
+ "nome": "Bonatti Store - Assistência Técnica em Iphone a Domicílio",
+ "slug": "bonatti-store-assistencia-tecnica-em-iphone-a-domicilio",
+ "rota": {
+  "centro": "vila-mariana",
+  "dia": 1,
+  "ordem": 3,
+  "place_id": "ChIJcxJwastbzpQRrfCLnh5MtQ0",
+  "lat": -23.589522799999997,
+  "lng": -46.6350923,
+  "nota": 5.0,
+  "aval": 52
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Bonatti Store - Assistência Técnica em Iphone a Domicílio",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "celular/assistência",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Domingos de Morais, 1507 · vila-mariana",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · placa · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 91333-0383",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Bonatti Store - Assistência Técnica em Iphone a Domicílio logo",
+    "Bonatti Store - Assistência Técnica em Iphone a Domicílio vila-mariana instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

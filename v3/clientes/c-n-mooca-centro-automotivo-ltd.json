@@ -1,0 +1,55 @@
+{
+ "nome": "C & N Mooca Centro Automotivo Ltd",
+ "slug": "c-n-mooca-centro-automotivo-ltd",
+ "rota": {
+  "centro": "mooca",
+  "dia": 2,
+  "ordem": 21,
+  "place_id": "ChIJSRhU8a9ezpQRA0gTmHtIPWc",
+  "lat": -23.558373099999997,
+  "lng": -46.5900804,
+  "nota": 4.8,
+  "aval": 194
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "C & N Mooca Centro Automotivo Ltd",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "celular/assistência",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. da Mooca, 3655 · mooca",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · placa · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 2601-8596",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "C & N Mooca Centro Automotivo Ltd logo",
+    "C & N Mooca Centro Automotivo Ltd mooca instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

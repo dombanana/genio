@@ -1,0 +1,55 @@
+{
+ "nome": "Barbearia Mr. Gump Mooca",
+ "slug": "barbearia-mr-gump-mooca",
+ "rota": {
+  "centro": "mooca",
+  "dia": 1,
+  "ordem": 2,
+  "place_id": "ChIJkWL-dhlZzpQRyWg--WuxRYc",
+  "lat": -23.5579629,
+  "lng": -46.596520899999994,
+  "nota": 5.0,
+  "aval": 2288
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Barbearia Mr. Gump Mooca",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "salão/barbearia",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. do Oratório, 454 · mooca",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · adesivo de vitrine · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 99014-0028",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Barbearia Mr. Gump Mooca logo",
+    "Barbearia Mr. Gump Mooca mooca instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

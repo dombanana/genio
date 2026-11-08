@@ -1,0 +1,55 @@
+{
+ "nome": "Ótica Indaiá Conceito Santo André",
+ "slug": "otica-indaia-conceito-santo-andre",
+ "rota": {
+  "centro": "santo-andre",
+  "dia": 2,
+  "ordem": 5,
+  "place_id": "ChIJU4yyCo9CzpQR2AY6SgIyXyM",
+  "lat": -23.6567121,
+  "lng": -46.5270526,
+  "nota": 5.0,
+  "aval": 1390
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Ótica Indaiá Conceito Santo André",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "ótica",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Cel. Oliveira Lima, 289 · santo-andre",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · placa · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 4993-8800",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Ótica Indaiá Conceito Santo André logo",
+    "Ótica Indaiá Conceito Santo André santo-andre instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

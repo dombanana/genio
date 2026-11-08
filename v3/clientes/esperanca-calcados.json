@@ -1,0 +1,55 @@
+{
+ "nome": "Esperança Calçados",
+ "slug": "esperanca-calcados",
+ "rota": {
+  "centro": "vila-prudente",
+  "dia": 1,
+  "ordem": 8,
+  "place_id": "ChIJJ7oYQw5czpQRivrK-ZA-Rpk",
+  "lat": -23.5823316,
+  "lng": -46.585403500000005,
+  "nota": 4.5,
+  "aval": 35
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Esperança Calçados",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "loja de roupas/calçados",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Ibitirama, 50 · vila-prudente",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · banner · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 2063-7642",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Esperança Calçados logo",
+    "Esperança Calçados vila-prudente instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

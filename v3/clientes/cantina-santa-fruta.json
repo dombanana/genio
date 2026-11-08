@@ -1,0 +1,55 @@
+{
+ "nome": "Cantina Santa Fruta",
+ "slug": "cantina-santa-fruta",
+ "rota": {
+  "centro": "mooca",
+  "dia": 2,
+  "ordem": 19,
+  "place_id": "ChIJ3cZQ_2BZzpQRmyiLdF_G3FQ",
+  "lat": -23.552577499999998,
+  "lng": -46.5968784,
+  "nota": null,
+  "aval": null
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Cantina Santa Fruta",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "restaurante",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Marcial, 161 · mooca",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · cardápio de parede · Mostra Aí",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 95333-5101",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Cantina Santa Fruta logo",
+    "Cantina Santa Fruta mooca instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

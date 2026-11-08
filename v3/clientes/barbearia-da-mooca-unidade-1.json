@@ -1,0 +1,55 @@
+{
+ "nome": "Barbearia da Mooca - Unidade 1",
+ "slug": "barbearia-da-mooca-unidade-1",
+ "rota": {
+  "centro": "mooca",
+  "dia": 1,
+  "ordem": 1,
+  "place_id": "ChIJn_GE0UtZzpQRSZLr2E1h3_Q",
+  "lat": -23.557264,
+  "lng": -46.5977263,
+  "nota": 4.9,
+  "aval": 582
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Barbearia da Mooca - Unidade 1",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "salão/barbearia",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. do Oratório, 308a · mooca",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · adesivo de vitrine · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 98900-7390",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Barbearia da Mooca - Unidade 1 logo",
+    "Barbearia da Mooca - Unidade 1 mooca instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

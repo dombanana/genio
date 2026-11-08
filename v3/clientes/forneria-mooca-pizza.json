@@ -1,0 +1,55 @@
+{
+ "nome": "Forneria Mooca Pizza",
+ "slug": "forneria-mooca-pizza",
+ "rota": {
+  "centro": "mooca",
+  "dia": 2,
+  "ordem": 16,
+  "place_id": "ChIJ_SuUhI5ZzpQR5ze_igIuJ0s",
+  "lat": -23.555596299999998,
+  "lng": -46.5949221,
+  "nota": 4.8,
+  "aval": 384
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Forneria Mooca Pizza",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "restaurante",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. dos Campineiros, 350 · mooca",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · cardápio de parede · Mostra Aí",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 2605-6056",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Forneria Mooca Pizza logo",
+    "Forneria Mooca Pizza mooca instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

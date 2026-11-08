@@ -1,0 +1,55 @@
+{
+ "nome": "Conserta Cell",
+ "slug": "conserta-cell",
+ "rota": {
+  "centro": "santo-andre",
+  "dia": 1,
+  "ordem": 16,
+  "place_id": "ChIJRQ76pbhDzpQRJ330oJ6TEnY",
+  "lat": -23.6592004,
+  "lng": -46.5271888,
+  "nota": 4.9,
+  "aval": 60
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Conserta Cell",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "comércio",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Praça Emb. Pedro de Tolêdo · santo-andre",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · placa · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 93933-0227",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Conserta Cell logo",
+    "Conserta Cell santo-andre instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

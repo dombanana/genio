@@ -1,0 +1,55 @@
+{
+ "nome": "Padaria Manuella",
+ "slug": "padaria-manuella",
+ "rota": {
+  "centro": "mooca",
+  "dia": 2,
+  "ordem": 10,
+  "place_id": "ChIJAYQiLjlZzpQRfm3tthX7v80",
+  "lat": -23.554897999999998,
+  "lng": -46.607381,
+  "nota": 4.2,
+  "aval": 1516
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Padaria Manuella",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "padaria",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. da Mooca, 1834 · mooca",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · adesivo de vitrine · cardápio de parede",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 2097-9292",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Padaria Manuella logo",
+    "Padaria Manuella mooca instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

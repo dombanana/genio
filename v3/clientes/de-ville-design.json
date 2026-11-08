@@ -1,0 +1,55 @@
+{
+ "nome": "De Ville Design",
+ "slug": "de-ville-design",
+ "rota": {
+  "centro": "mooca",
+  "dia": 2,
+  "ordem": 1,
+  "place_id": "ChIJw-S2UJRbzpQRf4JgOZtQ78A",
+  "lat": -23.556017699999998,
+  "lng": -46.600436300000005,
+  "nota": 4.9,
+  "aval": 75
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "De Ville Design",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "floricultura/presentes",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Av. Paes de Barros, 56 · mooca",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 96527-2015",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "De Ville Design logo",
+    "De Ville Design mooca instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

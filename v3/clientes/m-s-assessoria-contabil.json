@@ -1,0 +1,55 @@
+{
+ "nome": "M&S Assessoria Contábil",
+ "slug": "m-s-assessoria-contabil",
+ "rota": {
+  "centro": "mooca",
+  "dia": 1,
+  "ordem": 8,
+  "place_id": "ChIJ3d_12jdZzpQRPDQbsMdidYA",
+  "lat": -23.5554755,
+  "lng": -46.601378499999996,
+  "nota": 5.0,
+  "aval": 3
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "M&S Assessoria Contábil",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "escritório/imobiliária",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. da Mooca, 2448 · mooca",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "placa de recepção · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 2692-9531",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "M&S Assessoria Contábil logo",
+    "M&S Assessoria Contábil mooca instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

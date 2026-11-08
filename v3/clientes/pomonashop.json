@@ -1,0 +1,55 @@
+{
+ "nome": "PomonaShop",
+ "slug": "pomonashop",
+ "rota": {
+  "centro": "liberdade",
+  "dia": 1,
+  "ordem": 18,
+  "place_id": "ChIJWxNrkahZzpQRxDVTILI_3nU",
+  "lat": -23.5571092,
+  "lng": -46.6352325,
+  "nota": 4.3,
+  "aval": 71
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "PomonaShop",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "floricultura/presentes",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Galvão Bueno, 174 · liberdade",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 3271-1074",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "PomonaShop logo",
+    "PomonaShop liberdade instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

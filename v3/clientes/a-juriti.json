@@ -1,0 +1,55 @@
+{
+ "nome": "A Juriti",
+ "slug": "a-juriti",
+ "rota": {
+  "centro": "cambuci-aclimacao",
+  "dia": 2,
+  "ordem": 22,
+  "place_id": "ChIJZ7OPrnpZzpQRnozBA0DU5LQ",
+  "lat": -23.5730739,
+  "lng": -46.6225496,
+  "nota": 4.6,
+  "aval": 1402
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "A Juriti",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "restaurante",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Amarante, 31 · cambuci-aclimacao",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · cardápio de parede · Mostra Aí",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 3207-3908",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "A Juriti logo",
+    "A Juriti cambuci-aclimacao instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

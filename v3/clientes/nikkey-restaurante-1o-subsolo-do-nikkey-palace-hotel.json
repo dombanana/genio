@@ -1,0 +1,55 @@
+{
+ "nome": "Nikkey Restaurante - 1º Subsolo do Nikkey Palace Hotel",
+ "slug": "nikkey-restaurante-1o-subsolo-do-nikkey-palace-hotel",
+ "rota": {
+  "centro": "liberdade",
+  "dia": 1,
+  "ordem": 2,
+  "place_id": "ChIJORGddNNZzpQRzhxHzJWK4gI",
+  "lat": -23.5595475,
+  "lng": -46.6347963,
+  "nota": 4.6,
+  "aval": 1470
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Nikkey Restaurante - 1º Subsolo do Nikkey Palace Hotel",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "restaurante",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Galvão Bueno, 425 · liberdade",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · cardápio de parede · Mostra Aí",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 3540-0698",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Nikkey Restaurante - 1º Subsolo do Nikkey Palace Hotel logo",
+    "Nikkey Restaurante - 1º Subsolo do Nikkey Palace Hotel liberdade instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

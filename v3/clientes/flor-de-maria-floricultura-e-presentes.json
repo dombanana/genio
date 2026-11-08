@@ -1,0 +1,55 @@
+{
+ "nome": "Flor de Maria · Floricultura e Presentes",
+ "slug": "flor-de-maria-floricultura-e-presentes",
+ "rota": {
+  "centro": "cambuci-aclimacao",
+  "dia": 2,
+  "ordem": 24,
+  "place_id": "ChIJIxEjBKVZzpQRPH0KgDm492c",
+  "lat": -23.573456099999998,
+  "lng": -46.622709199999996,
+  "nota": 5.0,
+  "aval": 41
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Flor de Maria · Floricultura e Presentes",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "floricultura/presentes",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Robertson, 429 · cambuci-aclimacao",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 91326-0473",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Flor de Maria · Floricultura e Presentes logo",
+    "Flor de Maria · Floricultura e Presentes cambuci-aclimacao instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

@@ -1,0 +1,55 @@
+{
+ "nome": "Açaí Formosa",
+ "slug": "acai-formosa",
+ "rota": {
+  "centro": "sao-caetano",
+  "dia": 2,
+  "ordem": 25,
+  "place_id": "ChIJT2N34DNdzpQRRXJLZZ4e0vk",
+  "lat": -23.6220359,
+  "lng": -46.5602479,
+  "nota": 4.5,
+  "aval": 183
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Açaí Formosa",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "padaria",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. São Paulo, 2160 · sao-caetano",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · adesivo de vitrine · cardápio de parede",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 2376-1410",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Açaí Formosa logo",
+    "Açaí Formosa sao-caetano instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

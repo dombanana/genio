@@ -1,0 +1,55 @@
+{
+ "nome": "Atividade Academia",
+ "slug": "atividade-academia",
+ "rota": {
+  "centro": "liberdade",
+  "dia": 2,
+  "ordem": 16,
+  "place_id": "ChIJsxpUaadZzpQRO85pyPRoJ-g",
+  "lat": -23.560532199999997,
+  "lng": -46.6330111,
+  "nota": 4.4,
+  "aval": 274
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Atividade Academia",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "academia/estúdio",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Conselheiro Furtado, 834 · liberdade",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "placa · adesivo de parede · uniformes",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 2083-4849",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Atividade Academia logo",
+    "Atividade Academia liberdade instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

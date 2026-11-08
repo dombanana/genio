@@ -1,0 +1,55 @@
+{
+ "nome": "Bazar Unibes | Brás",
+ "slug": "bazar-unibes-bras",
+ "rota": {
+  "centro": "bras-belem",
+  "dia": 1,
+  "ordem": 7,
+  "place_id": "ChIJDSTOiN9YzpQRHxI8sKLRXG4",
+  "lat": -23.5394948,
+  "lng": -46.6108137,
+  "nota": 3.9,
+  "aval": 656
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Bazar Unibes | Brás",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "loja de roupas/calçados",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Av. Celso Garcia, 165 · bras-belem",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · banner · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 3326-0029",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Bazar Unibes | Brás logo",
+    "Bazar Unibes | Brás bras-belem instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

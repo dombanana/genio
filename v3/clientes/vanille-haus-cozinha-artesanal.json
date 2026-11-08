@@ -1,0 +1,55 @@
+{
+ "nome": "Vanille Haus Cozinha Artesanal",
+ "slug": "vanille-haus-cozinha-artesanal",
+ "rota": {
+  "centro": "sao-caetano",
+  "dia": 2,
+  "ordem": 19,
+  "place_id": "ChIJWSeuJbxdzpQR25nNz25qOwc",
+  "lat": -23.6117809,
+  "lng": -46.5722367,
+  "nota": 4.8,
+  "aval": 258
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Vanille Haus Cozinha Artesanal",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "restaurante",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Manoel Coelho, 251 · sao-caetano",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · cardápio de parede · Mostra Aí",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 2668-5150",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Vanille Haus Cozinha Artesanal logo",
+    "Vanille Haus Cozinha Artesanal sao-caetano instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

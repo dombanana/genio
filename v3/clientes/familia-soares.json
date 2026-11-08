@@ -1,0 +1,55 @@
+{
+ "nome": "Família Soares",
+ "slug": "familia-soares",
+ "rota": {
+  "centro": "cambuci-aclimacao",
+  "dia": 1,
+  "ordem": 22,
+  "place_id": "ChIJy8YpIG1ZzpQRo46PgEB_WSw",
+  "lat": -23.5634262,
+  "lng": -46.6199868,
+  "nota": 4.8,
+  "aval": 4
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Família Soares",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "restaurante",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Clímaco Barbosa, 40 · cambuci-aclimacao",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · cardápio de parede · Mostra Aí",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 3271-5705",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Família Soares logo",
+    "Família Soares cambuci-aclimacao instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

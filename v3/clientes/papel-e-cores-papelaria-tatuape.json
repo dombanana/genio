@@ -1,0 +1,55 @@
+{
+ "nome": "Papel e Cores - Papelaria Tatuapé",
+ "slug": "papel-e-cores-papelaria-tatuape",
+ "rota": {
+  "centro": "tatuape",
+  "dia": 1,
+  "ordem": 6,
+  "place_id": "ChIJ4-vhysJezpQR6n37QMBYzmE",
+  "lat": -23.537360099999997,
+  "lng": -46.575409799999996,
+  "nota": 4.5,
+  "aval": 205
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Papel e Cores - Papelaria Tatuapé",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "floricultura/presentes",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Tuiuti, 1355 · tatuape",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 2941-5381",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Papel e Cores - Papelaria Tatuapé logo",
+    "Papel e Cores - Papelaria Tatuapé tatuape instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

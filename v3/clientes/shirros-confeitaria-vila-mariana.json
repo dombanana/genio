@@ -1,0 +1,55 @@
+{
+ "nome": "Shirros Confeitaria, Vila Mariana.",
+ "slug": "shirros-confeitaria-vila-mariana",
+ "rota": {
+  "centro": "vila-mariana",
+  "dia": 1,
+  "ordem": 23,
+  "place_id": "ChIJXY_F9E1ZzpQR-ipj-52dsYE",
+  "lat": -23.5834273,
+  "lng": -46.6380056,
+  "nota": 4.5,
+  "aval": 23
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Shirros Confeitaria, Vila Mariana.",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "padaria",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Dentro da Galeria · vila-mariana",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · adesivo de vitrine · cardápio de parede",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 94314-9064",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Shirros Confeitaria, Vila Mariana. logo",
+    "Shirros Confeitaria, Vila Mariana. vila-mariana instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

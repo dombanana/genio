@@ -1,0 +1,55 @@
+{
+ "nome": "Elika Festas",
+ "slug": "elika-festas",
+ "rota": {
+  "centro": "moema",
+  "dia": 1,
+  "ordem": 13,
+  "place_id": "ChIJWxZSzjVazpQRu33OVADCpAI",
+  "lat": -23.6030762,
+  "lng": -46.6573612,
+  "nota": 4.4,
+  "aval": 787
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Elika Festas",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "floricultura/presentes",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Alameda dos Maracatins, 144 · moema",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 96844-9670",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Elika Festas logo",
+    "Elika Festas moema instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

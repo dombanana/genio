@@ -1,0 +1,55 @@
+{
+ "nome": "Yoka",
+ "slug": "yoka",
+ "rota": {
+  "centro": "liberdade",
+  "dia": 2,
+  "ordem": 5,
+  "place_id": "ChIJkRpY_ahZzpQRq5q1oqsN4nU",
+  "lat": -23.555446099999998,
+  "lng": -46.6348276,
+  "nota": 4.6,
+  "aval": 3887
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Yoka",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "restaurante",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. dos Estudantes, 37 · liberdade",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · cardápio de parede · Mostra Aí",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 97188-8992",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Yoka logo",
+    "Yoka liberdade instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

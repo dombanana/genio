@@ -1,0 +1,55 @@
+{
+ "nome": "AUTÊNTICO l ASSISTÊNCIA E ACESSÓRIOS CELULAR",
+ "slug": "autentico-l-assistencia-e-acessorios-celular",
+ "rota": {
+  "centro": "cambuci-aclimacao",
+  "dia": 1,
+  "ordem": 18,
+  "place_id": "ChIJpT6noyFZzpQRke9DqxUz-Uo",
+  "lat": -23.5631419,
+  "lng": -46.6210952,
+  "nota": 4.9,
+  "aval": 54
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "AUTÊNTICO l ASSISTÊNCIA E ACESSÓRIOS CELULAR",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "celular/assistência",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Largo do Cambuci, 106 · cambuci-aclimacao",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · placa · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 96623-0677",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "AUTÊNTICO l ASSISTÊNCIA E ACESSÓRIOS CELULAR logo",
+    "AUTÊNTICO l ASSISTÊNCIA E ACESSÓRIOS CELULAR cambuci-aclimacao instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

@@ -1,0 +1,55 @@
+{
+ "nome": "Gohara Assessoria & Negócios Imobiliários",
+ "slug": "gohara-assessoria-negocios-imobiliarios",
+ "rota": {
+  "centro": "vila-mariana",
+  "dia": 2,
+  "ordem": 6,
+  "place_id": "ChIJ-Yt1FIVZzpQRNzdmm1h4p9I",
+  "lat": -23.5802862,
+  "lng": -46.6401767,
+  "nota": 5.0,
+  "aval": 121
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Gohara Assessoria & Negócios Imobiliários",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "escritório/imobiliária",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Domingos de Morais, 348 · vila-mariana",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "placa de recepção · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 2924-6717",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Gohara Assessoria & Negócios Imobiliários logo",
+    "Gohara Assessoria & Negócios Imobiliários vila-mariana instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

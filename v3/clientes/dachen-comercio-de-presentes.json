@@ -1,0 +1,55 @@
+{
+ "nome": "Dachen Comércio de Presentes",
+ "slug": "dachen-comercio-de-presentes",
+ "rota": {
+  "centro": "liberdade",
+  "dia": 1,
+  "ordem": 19,
+  "place_id": "ChIJU07n5ahZzpQR4bprj-4ufKQ",
+  "lat": -23.5561094,
+  "lng": -46.6352824,
+  "nota": 4.1,
+  "aval": 14
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Dachen Comércio de Presentes",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "floricultura/presentes",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Galvão Bueno, 60 · liberdade",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 3341-4678",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Dachen Comércio de Presentes logo",
+    "Dachen Comércio de Presentes liberdade instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

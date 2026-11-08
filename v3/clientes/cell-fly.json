@@ -1,0 +1,55 @@
+{
+ "nome": "Cell Fly",
+ "slug": "cell-fly",
+ "rota": {
+  "centro": "mooca",
+  "dia": 2,
+  "ordem": 15,
+  "place_id": "ChIJay5newBZzpQRUWc-Artfkps",
+  "lat": -23.5561629,
+  "lng": -46.5951806,
+  "nota": 4.5,
+  "aval": 51
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Cell Fly",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "comércio",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. da Mooca, 3085 · mooca",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · placa · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 99353-1881",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Cell Fly logo",
+    "Cell Fly mooca instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

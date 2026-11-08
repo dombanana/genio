@@ -1,0 +1,55 @@
+{
+ "nome": "NW Papelaria",
+ "slug": "nw-papelaria",
+ "rota": {
+  "centro": "cambuci-aclimacao",
+  "dia": 1,
+  "ordem": 19,
+  "place_id": "ChIJSXQHOW1ZzpQRgtntgS3dcFo",
+  "lat": -23.563292000000004,
+  "lng": -46.620906000000005,
+  "nota": 4.1,
+  "aval": 69
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "NW Papelaria",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "floricultura/presentes",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Largo do Cambuci, 126 · cambuci-aclimacao",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 3341-7905",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "NW Papelaria logo",
+    "NW Papelaria cambuci-aclimacao instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

@@ -1,0 +1,55 @@
+{
+ "nome": "Bar e Lanches O Batidão",
+ "slug": "bar-e-lanches-o-batidao",
+ "rota": {
+  "centro": "vila-mariana",
+  "dia": 1,
+  "ordem": 4,
+  "place_id": "ChIJVxhyuytazpQRdjWG2kycbSM",
+  "lat": -23.589659299999997,
+  "lng": -46.6350616,
+  "nota": 4.1,
+  "aval": 546
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Bar e Lanches O Batidão",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "restaurante",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Domingos de Morais, 1527 · vila-mariana",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · cardápio de parede · Mostra Aí",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 5539-4354",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Bar e Lanches O Batidão logo",
+    "Bar e Lanches O Batidão vila-mariana instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

@@ -1,0 +1,55 @@
+{
+ "nome": "FioNavalha Saúde",
+ "slug": "fionavalha-saude",
+ "rota": {
+  "centro": "saude-jabaquara",
+  "dia": 2,
+  "ordem": 13,
+  "place_id": "ChIJKeH0RyNbzpQRH9byANQNH2k",
+  "lat": -23.616819900000003,
+  "lng": -46.638675899999996,
+  "nota": 4.8,
+  "aval": 122
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "FioNavalha Saúde",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "bar",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Av. Jabaquara, 1431 · saude-jabaquara",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · cardápio · banner",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 3459-9989",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "FioNavalha Saúde logo",
+    "FioNavalha Saúde saude-jabaquara instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

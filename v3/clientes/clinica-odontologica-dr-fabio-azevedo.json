@@ -1,0 +1,55 @@
+{
+ "nome": "Clinica Odontológica | Dr. Fabio Azevedo",
+ "slug": "clinica-odontologica-dr-fabio-azevedo",
+ "rota": {
+  "centro": "moema",
+  "dia": 2,
+  "ordem": 20,
+  "place_id": "ChIJz18ujgZbzpQRrfo5kALq2Js",
+  "lat": -23.6085931,
+  "lng": -46.6662994,
+  "nota": 5.0,
+  "aval": 19
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Clinica Odontológica | Dr. Fabio Azevedo",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "clínica/consultório",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Av. Ibirapuera, 2907 · moema",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "placa de recepção · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 99241-2652",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Clinica Odontológica | Dr. Fabio Azevedo logo",
+    "Clinica Odontológica | Dr. Fabio Azevedo moema instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

@@ -1,0 +1,55 @@
+{
+ "nome": "Floricutura Reine",
+ "slug": "floricutura-reine",
+ "rota": {
+  "centro": "ipiranga",
+  "dia": 1,
+  "ordem": 22,
+  "place_id": "ChIJ10vhLI1bzpQRhJdq6SvsjdU",
+  "lat": -23.593560399999998,
+  "lng": -46.6010193,
+  "nota": 4.7,
+  "aval": 67
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Floricutura Reine",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "floricultura/presentes",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Silva Bueno, 1709 · ipiranga",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "adesivo de vitrine · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 3368-6394",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Floricutura Reine logo",
+    "Floricutura Reine ipiranga instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

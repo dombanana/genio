@@ -1,0 +1,55 @@
+{
+ "nome": "Pet Patas Quentinhas",
+ "slug": "pet-patas-quentinhas",
+ "rota": {
+  "centro": "vila-mariana",
+  "dia": 2,
+  "ordem": 7,
+  "place_id": "ChIJcY91FIVZzpQRJPwxHS_YHXs",
+  "lat": -23.5802384,
+  "lng": -46.640150999999996,
+  "nota": 4.8,
+  "aval": 54
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Pet Patas Quentinhas",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "pet",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Domingos de Morais, 348 · vila-mariana",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · placa · adesivo de vitrine",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 2768-6575",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Pet Patas Quentinhas logo",
+    "Pet Patas Quentinhas vila-mariana instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

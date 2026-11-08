@@ -1,0 +1,55 @@
+{
+ "nome": "Koa Food Market",
+ "slug": "koa-food-market",
+ "rota": {
+  "centro": "moema",
+  "dia": 1,
+  "ordem": 23,
+  "place_id": "ChIJT_40XyVbzpQRzLmbq-oG_gk",
+  "lat": -23.6057208,
+  "lng": -46.6597885,
+  "nota": 4.5,
+  "aval": 1094
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Koa Food Market",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "restaurante",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Alameda dos Maracatins, 528 · moema",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · cardápio de parede · Mostra Aí",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 3796-5602",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Koa Food Market logo",
+    "Koa Food Market moema instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

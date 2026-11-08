@@ -1,0 +1,55 @@
+{
+ "nome": "Estação Coruja",
+ "slug": "estacao-coruja",
+ "rota": {
+  "centro": "saude-jabaquara",
+  "dia": 1,
+  "ordem": 18,
+  "place_id": "ChIJd60SN1dazpQRhT1RdA95zdA",
+  "lat": -23.622127199999998,
+  "lng": -46.640220199999995,
+  "nota": 4.6,
+  "aval": 329
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Estação Coruja",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "comércio",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Av. Jabaquara, 2012 · saude-jabaquara",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · placa · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 5071-2373",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Estação Coruja logo",
+    "Estação Coruja saude-jabaquara instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

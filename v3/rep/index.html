@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>GênIO · Rota</title>
+<meta name="theme-color" content="#F1EEF8">
+<link rel="icon" href="../genio-favicon.png">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<link rel="stylesheet" href="rep.css?v=4fcf9d8a7e">
+<style>.leaflet-div-icon{background:transparent;border:0}</style>
+</head>
+<body>
+<div class="w" id="app"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="rep.js?v=4fcf9d8a7e"></script>
+<script>
+(async()=>{
+  const {$,esc,nomeLoja,dados,estado,salvar,hojeDia,lojasDoDia,vizinhos,stLogo,nav,topo,voz,ligarVoz,vendedor,dist,PROD}=Rep;
+  const D=await dados();const e=estado();const dia=hojeDia(D);const lojas=lojasDoDia(D,dia);
+  const feitas=new Set(e.feitas||[]);const prox=lojas.find(l=>!feitas.has(l.slug))||lojas[lojas.length-1];
+  const sauda=()=>{const h=new Date().getHours();return h<12?"Bom dia":h<18?"Boa tarde":"Boa noite";};
+  const primeiro=vendedor().nome.split(" ")[0];
+  const viz=prox?vizinhos(D,prox):[];const fech=viz.filter(v=>(e.fechadas||[]).includes(v.slug)).length+((e.fechadas||[]).includes(prox&&prox.slug)?1:0);
+  const st=prox?stLogo(prox):null;
+  const prods=prox?(PROD[prox.setor]||PROD["comércio"]).join(" · "):"";
+  $("#app").innerHTML=`${topo()}
+  <div class="faixa"><span class="ic">✓</span>Rota salva no aparelho</div>
+  <h1>${sauda()}, ${esc(primeiro)}</h1>
+  <p class="sub">${esc(D.zona.nome)} · Dia ${dia}</p>
+  <div class="kpis"><div class="kpi"><span class="ic">📍</span>${lojas.length} paradas</div><div class="kpi"><span class="ic ok">✓</span>${lojas.filter(l=>feitas.has(l.slug)).length} concluídas</div></div>
+  <div class="mapa" id="mapa"></div>
+  ${prox?`<section class="card prox"><span class="tag">Próxima visita · Parada ${prox.ordem}</span>
+    <div class="cab"><h2>${esc(nomeLoja(prox.nome))}</h2><span class="chip ${st.c}">${st.c==="ok"?"✓ ":""}${st.t}</span></div>
+    <div class="linha-ic"><span class="ic">📍</span>${esc(prox.endereco)}${e.pos?` · ${dist(e.pos,prox)} m`:""}</div>
+    <div class="linha-ic"><span class="ic">◈</span>${esc(prods)}</div>
+    ${viz.length?`<div class="viz">👥 Vizinhos juntos · ${fech} de 3 lojas <small style="font-weight:400;color:var(--texto2)">· ${viz.length} no raio de 200 m</small></div>`:""}
+    <a class="btn" href="visita.html?l=${encodeURIComponent(prox.slug)}">Abrir visita →</a></section>`:""}
+  <h2 style="margin-top:6px">Paradas do dia</h2>
+  <div class="paradas">${lojas.map(l=>{const s=stLogo(l);const f=feitas.has(l.slug);return `<a class="parada ${f?"feita":""} ${l===prox?"prox":""}" href="visita.html?l=${encodeURIComponent(l.slug)}"><span class="n">${f?"✓":l.ordem}</span><span><b>${esc(nomeLoja(l.nome))}</b><small>${esc(Rep.setorNome(l.setor))} · ${esc(l.endereco)}</small></span><span class="st ${s.c}">${s.t}</span></a>`;}).join("")}</div>
+  <p class="ilus">Lojas da captação pública de ${esc(D.gerado)} · ordem da rota calculada pelo sistema</p>
+  ${voz()}${nav("rota")}`;
+  ligarVoz(null);
+  // mapa: base clara, paradas numeradas, trajeto do dia, posição do vendedor
+  if(typeof L==="undefined"){const xs=lojas.map(l=>l.lng),ys=lojas.map(l=>l.lat);const x0=Math.min(...xs),x1=Math.max(...xs),y0=Math.min(...ys),y1=Math.max(...ys);const X=v=>30+(v-x0)/((x1-x0)||1)*340,Y=v=>270-(v-y0)/((y1-y0)||1)*240;$("#mapa").innerHTML=`<svg class="esq" viewBox="0 0 400 300"><polyline fill="none" stroke="#6933C5" stroke-width="5" stroke-linejoin="round" points="${lojas.map(l=>X(l.lng)+","+Y(l.lat)).join(" ")}"/>${lojas.map(l=>`<g><circle cx="${X(l.lng)}" cy="${Y(l.lat)}" r="${l===prox?17:14}" fill="${l===prox?"#141C3A":feitas.has(l.slug)?"#B9B1CC":"#6933C5"}" stroke="#fff" stroke-width="3"/><text x="${X(l.lng)}" y="${Y(l.lat)+5}" text-anchor="middle" fill="#fff" font-size="13" font-weight="700">${feitas.has(l.slug)?"✓":l.ordem}</text></g>`).join("")}</svg>`;return;}
+  const map=L.map("mapa",{zoomControl:false,attributionControl:false});
+  L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",{maxZoom:19,subdomains:"abcd"}).addTo(map);
+  const pts=lojas.map(l=>[l.lat,l.lng]);
+  L.polyline(pts,{color:"#6933C5",weight:5,opacity:.9,lineJoin:"round"}).addTo(map);
+  lojas.forEach(l=>{const f=feitas.has(l.slug);const ic=L.divIcon({className:"",html:`<div class="mk ${l===prox?"prox":""} ${f?"feita":""}">${f?"✓":l.ordem}</div>`,iconSize:[34,34],iconAnchor:[17,17]});L.marker([l.lat,l.lng],{icon:ic}).addTo(map).on("click",()=>location.href=`visita.html?l=${encodeURIComponent(l.slug)}`);});
+  map.fitBounds(L.latLngBounds(pts).pad(.15));
+  if(navigator.geolocation)navigator.geolocation.getCurrentPosition(p=>{const pos={lat:p.coords.latitude,lng:p.coords.longitude};const ee=estado();ee.pos=pos;salvar(ee);L.marker([pos.lat,pos.lng],{icon:L.divIcon({className:"",html:'<div class="mk eu"></div>',iconSize:[18,18],iconAnchor:[9,9]})}).addTo(map);},()=>{},{timeout:6000,maximumAge:60000});
+})();
+</script>
+</body>
+</html>

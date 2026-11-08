@@ -1,0 +1,50 @@
+{
+ "nome": "Café Com Pernas",
+ "slug": "cafe-com-pernas",
+ "rota": {
+  "centro": "bras-belem",
+  "dia": 1,
+  "ordem": 9,
+  "place_id": "ChIJDyEXgCBZzpQR5YWCfRf9et4",
+  "lat": -23.539822899999997,
+  "lng": -46.610154099999995,
+  "nota": 2.3,
+  "aval": 3
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Café Com Pernas",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "cafeteria",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Av. Celso Garcia, 220 · bras-belem",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · cardápio de parede · Mostra Aí",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Café Com Pernas logo",
+    "Café Com Pernas bras-belem instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

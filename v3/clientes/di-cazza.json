@@ -1,0 +1,55 @@
+{
+ "nome": "Di Cazza",
+ "slug": "di-cazza",
+ "rota": {
+  "centro": "cambuci-aclimacao",
+  "dia": 1,
+  "ordem": 11,
+  "place_id": "ChIJycS22GxZzpQRH-3oTnFrMWQ",
+  "lat": -23.5626799,
+  "lng": -46.623787300000004,
+  "nota": 4.0,
+  "aval": 58
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Di Cazza",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "restaurante",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Francisco Justino de Azevedo, 81 · cambuci-aclimacao",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · cardápio de parede · Mostra Aí",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 98483-7784",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Di Cazza logo",
+    "Di Cazza cambuci-aclimacao instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

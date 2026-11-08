@@ -1,0 +1,55 @@
+{
+ "nome": "Toque do Chef Açaí, Lanches e Porções",
+ "slug": "toque-do-chef-acai-lanches-e-porcoes",
+ "rota": {
+  "centro": "santo-andre",
+  "dia": 1,
+  "ordem": 6,
+  "place_id": "ChIJebvbdGNCzpQRw3HhQtXjk4k",
+  "lat": -23.6677207,
+  "lng": -46.527246999999996,
+  "nota": 4.5,
+  "aval": 281
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Toque do Chef Açaí, Lanches e Porções",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "restaurante",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Av. Dr. Alberto Benedetti, 417 · santo-andre",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · cardápio de parede · Mostra Aí",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 99989-5827",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Toque do Chef Açaí, Lanches e Porções logo",
+    "Toque do Chef Açaí, Lanches e Porções santo-andre instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

@@ -1,0 +1,55 @@
+{
+ "nome": "Pizzaria São Pedro - A melhor pizzaria da Mooca",
+ "slug": "pizzaria-sao-pedro-a-melhor-pizzaria-da-mooca",
+ "rota": {
+  "centro": "mooca",
+  "dia": 2,
+  "ordem": 6,
+  "place_id": "ChIJeR5vtzdZzpQRPTo6OuQhXW0",
+  "lat": -23.5540892,
+  "lng": -46.602849299999995,
+  "nota": 4.5,
+  "aval": 3928
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Pizzaria São Pedro - A melhor pizzaria da Mooca",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "restaurante",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Rua Javari, 333 · mooca",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · cardápio de parede · Mostra Aí",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 2291-8771",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Pizzaria São Pedro - A melhor pizzaria da Mooca logo",
+    "Pizzaria São Pedro - A melhor pizzaria da Mooca mooca instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

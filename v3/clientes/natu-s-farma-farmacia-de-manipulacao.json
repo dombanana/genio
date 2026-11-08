@@ -1,0 +1,55 @@
+{
+ "nome": "Natu's Farma - Farmácia de Manipulação",
+ "slug": "natu-s-farma-farmacia-de-manipulacao",
+ "rota": {
+  "centro": "vila-prudente",
+  "dia": 2,
+  "ordem": 15,
+  "place_id": "ChIJCWX8LWxczpQROehNxnh033M",
+  "lat": -23.591077,
+  "lng": -46.5808696,
+  "nota": 4.5,
+  "aval": 25
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Natu's Farma - Farmácia de Manipulação",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "clínica/consultório",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Ibitirama, 1225 · vila-prudente",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "placa de recepção · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 93356-0139",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Natu's Farma - Farmácia de Manipulação logo",
+    "Natu's Farma - Farmácia de Manipulação vila-prudente instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

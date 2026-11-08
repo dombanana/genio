@@ -1,0 +1,55 @@
+{
+ "nome": "Mariana - Bar & Restaurante",
+ "slug": "mariana-bar-restaurante",
+ "rota": {
+  "centro": "vila-mariana",
+  "dia": 1,
+  "ordem": 5,
+  "place_id": "ChIJRZiJkCtazpQRaHYXCpsO2HM",
+  "lat": -23.5905292,
+  "lng": -46.6349632,
+  "nota": 4.3,
+  "aval": 1259
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Mariana - Bar & Restaurante",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "restaurante",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Domingos de Morais, 1613 · vila-mariana",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · cardápio de parede · Mostra Aí",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 95334-5668",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Mariana - Bar & Restaurante logo",
+    "Mariana - Bar & Restaurante vila-mariana instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

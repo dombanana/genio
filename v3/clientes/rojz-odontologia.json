@@ -1,0 +1,55 @@
+{
+ "nome": "Rojz Odontologia",
+ "slug": "rojz-odontologia",
+ "rota": {
+  "centro": "santo-andre",
+  "dia": 1,
+  "ordem": 15,
+  "place_id": "ChIJBb0LvohCzpQRRBLIF_Tg120",
+  "lat": -23.6595783,
+  "lng": -46.5268063,
+  "nota": 3.6,
+  "aval": 29
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Rojz Odontologia",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "clínica/consultório",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Sen. Flaquer, 25 · santo-andre",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "placa de recepção · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 98588-4480",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Rojz Odontologia logo",
+    "Rojz Odontologia santo-andre instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

@@ -1,0 +1,55 @@
+{
+ "nome": "CEMAO",
+ "slug": "cemao",
+ "rota": {
+  "centro": "mooca",
+  "dia": 2,
+  "ordem": 24,
+  "place_id": "ChIJCxR9sKxezpQRbOu0mE96CW8",
+  "lat": -23.5663326,
+  "lng": -46.5927262,
+  "nota": 3.6,
+  "aval": 132
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "CEMAO",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "clínica/consultório",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Av. Paes de Barros, 1537 · mooca",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "placa de recepção · cartões · capacho",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 94120-3072",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "CEMAO logo",
+    "CEMAO mooca instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

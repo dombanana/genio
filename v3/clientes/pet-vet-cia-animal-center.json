@@ -1,0 +1,55 @@
+{
+ "nome": "Pet Vet & Cia Animal Center",
+ "slug": "pet-vet-cia-animal-center",
+ "rota": {
+  "centro": "cambuci-aclimacao",
+  "dia": 1,
+  "ordem": 10,
+  "place_id": "ChIJpw_wax1ZzpQRwFmciqieqfs",
+  "lat": -23.563332,
+  "lng": -46.622679299999994,
+  "nota": 4.5,
+  "aval": 576
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Pet Vet & Cia Animal Center",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "pet",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "Av. Lacerda Franco, 92 · cambuci-aclimacao",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · placa · adesivo de vitrine",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 3399-6291",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Pet Vet & Cia Animal Center logo",
+    "Pet Vet & Cia Animal Center cambuci-aclimacao instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

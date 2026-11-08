@@ -1,0 +1,55 @@
+{
+ "nome": "Dra. Gabriela Lucas | Fisioterapeuta Pélvica e Obstétrica | Esteticista | Kinesio Taping",
+ "slug": "dra-gabriela-lucas-fisioterapeuta-pelvica-e-obstetrica-esteticista-kinesio-taping",
+ "rota": {
+  "centro": "sao-caetano",
+  "dia": 1,
+  "ordem": 8,
+  "place_id": "ChIJUVpXhIldzpQRC1yeVM5F9NY",
+  "lat": -23.6167576,
+  "lng": -46.569352,
+  "nota": 5.0,
+  "aval": 59
+ },
+ "coletadoEm": "2026-11-06",
+ "fontes": [
+  "Google Places (rota)"
+ ],
+ "lacunas": {
+  "nome": {
+   "estado": "encontrado",
+   "valor": "Dra. Gabriela Lucas | Fisioterapeuta Pélvica e Obstétrica | Esteticista | Kinesio Taping",
+   "origem": "publico"
+  },
+  "setor": {
+   "estado": "encontrado",
+   "valor": "salão/barbearia",
+   "origem": "publico"
+  },
+  "endereco": {
+   "estado": "encontrado",
+   "valor": "R. Amazonas, 669 · sao-caetano",
+   "origem": "publico"
+  },
+  "servicos": {
+   "estado": "derivado",
+   "valor": "capacho · adesivo de vitrine · cartões",
+   "origem": "derivado",
+   "nota": "produtos sugeridos pelo setor; o cliente confirma"
+  },
+  "tel": {
+   "estado": "encontrado",
+   "valor": "(11) 96292-1540",
+   "origem": "publico"
+  },
+  "logoOriginal": {
+   "estado": "pendente",
+   "opcoes": [],
+   "busca": [
+    "Dra. Gabriela Lucas | Fisioterapeuta Pélvica e Obstétrica | Esteticista | Kinesio Taping logo",
+    "Dra. Gabriela Lucas | Fisioterapeuta Pélvica e Obstétrica | Esteticista | Kinesio Taping sao-caetano instagram"
+   ],
+   "origem": "publico"
+  }
+ }
+}

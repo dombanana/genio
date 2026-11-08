@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>GenIO · Seu projeto</title>
+<meta name="theme-color" content="#6933C5">
+<meta name="robots" content="noindex,nofollow">
+<link rel="icon" href="genio-favicon.png" type="image/png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="portal.css?v=4fcf9d8a7e">
+<style>
+main.wrap{padding:16px 16px 120px;max-width:720px}
+.oi{display:flex;align-items:center;gap:14px;margin:8px 0 4px}.oi img{height:84px;width:auto}.oi h1{margin:0;font-size:clamp(22px,6vw,30px)}
+.conta{background:#1C1635;color:#fff;border-radius:16px;padding:14px 16px;margin:12px 0;display:grid;grid-template-columns:auto 1fr;gap:4px 16px;align-items:center}
+.conta b{font-size:34px;font-variant-numeric:tabular-nums;letter-spacing:.02em}.conta small{opacity:.8}
+.conta ul{grid-column:1/-1;margin:6px 0 0;padding:0;list-style:none;display:flex;flex-wrap:wrap;gap:6px 14px;font-size:13px}
+.conta li.ok{color:#04C6C0;font-weight:600}.conta li{opacity:.75}
+.prod{background:#EBE3F5;border-radius:18px;overflow:hidden;margin:12px 0}
+.prod .capa{aspect-ratio:16/9;background:#DFD3F1 center/cover no-repeat;position:relative}
+.prod .capa .tag{position:absolute;left:12px;top:12px;background:#1C1635;color:#fff;border-radius:999px;padding:4px 10px;font-size:12px;font-weight:600}
+.prod .corpo{padding:12px 14px;display:flex;flex-direction:column;gap:10px}
+.prod h2{margin:0;font-size:19px}
+.prod .linha{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.preco{font-weight:800;color:#6933C5;font-size:20px}.preco small{font-weight:500;color:#6B6578;font-size:13px}
+.qtd{display:inline-flex;align-items:center;border:1.5px solid #6933C5;border-radius:12px;overflow:hidden;background:#fff}
+.qtd button{appearance:none;border:0;background:none;width:42px;height:42px;font-size:22px;color:#6933C5;cursor:pointer}
+.qtd input{width:58px;text-align:center;border:0;font:700 17px Rubik,sans-serif;background:#fff;padding:0}
+.qtd-l{font-size:13px;color:#6B6578}
+.notas{border-top:1px solid #D8CCEA;padding-top:10px;display:flex;flex-direction:column;gap:6px}
+.notas .th{display:flex;flex-direction:column;gap:6px;max-height:260px;overflow:auto}
+.m{max-width:85%;padding:8px 10px;border-radius:12px;background:#fff;align-self:flex-start;display:flex;flex-direction:column;gap:3px}
+.m.cliente{align-self:flex-end;background:#D9F5F4}.m small{font-size:11px;color:#6B6578}.m img{max-width:220px;max-height:160px;border-radius:8px}.m a{color:#6933C5;font-weight:600}
+.notas .row input[type=text]{flex:1;min-width:0}
+.btn.ic{padding:8px 10px;min-width:0}
+.total{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid #D8CCEA;padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px));box-shadow:0 -8px 24px rgba(28,22,53,.08)}
+.total .wrap{max-width:720px;margin:0 auto;display:flex;flex-direction:column;gap:6px}
+.total .l{display:flex;justify-content:space-between;font-size:14px;color:#6B6578}.total .l.g{font-size:18px;color:#1C1635;font-weight:800}
+.total .esc{font-size:13px;color:#6933C5;font-weight:600}
+.pag{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:4px}
+.pag div{background:#EBE3F5;border-radius:10px;padding:6px 8px;font-size:12px;color:#6B6578}.pag b{display:block;color:#1C1635;font-size:14px}
+.ver{text-align:center;color:#6B6578;font-size:13px;margin:4px 0}
+.card.erro{margin-top:20px}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <span class="marca"><b>Gen<i>IO</i></b></span>
+  <div class="fill"></div>
+  <a class="btn btn-t" id="lZap" href="#" hidden>Falar com o vendedor</a>
+</div></header>
+<main class="wrap">
+  <div class="oi"><img src="img/genio.png?v=4fcf9d8a7e" alt=""><h1 id="oi">Olá</h1></div>
+  <p class="muted" id="sub">Este é o seu projeto GenIO. Veja, escolha quantos quer e fale com a gente por aqui.</p>
+  <div class="conta" id="conta" hidden><b id="ct">05:00</b><small id="ctT">Estamos preparando o seu material. Enquanto isso, veja o que já está pronto.</small><ul id="ctL"></ul></div>
+  <div id="prods"></div>
+  <p class="ver" id="verInfo"></p>
+  <div class="card erro" id="erro" hidden><h2>Não achei o seu projeto</h2><p class="muted">Confira o endereço com o vendedor.</p></div>
+</main>
+<div class="total" id="total" hidden><div class="wrap">
+  <div class="l"><span id="tItens">Nada escolhido ainda</span><span id="tSub"></span></div>
+  <div class="l" id="tDescL" hidden><span id="tDescT"></span><span id="tDesc"></span></div>
+  <div class="l g"><span>Total</span><span id="tTot">R$ 0,00</span></div>
+  <div class="esc" id="esc"></div>
+  <div class="pag" id="pag" hidden></div>
+  <button class="btn btn-p" id="bQuero" type="button" disabled>Quero estes</button>
+</div></div>
+<script src="portal.js?v=4fcf9d8a7e"></script>
+<script src="fotocrop.js?v=4fcf9d8a7e"></script>
+<script>
+(()=>{const {$,$$,esc}=G,qs=new URLSearchParams(location.search),id=qs.get("orc");
+  const BRL=v=>"R$ "+Number(v||0).toLocaleString("pt-BR",{minimumFractionDigits:2,maximumFractionDigits:2});
+  const PRODUTOS=[{id:"capacho",nome:"Capacho personalizado",img:"img/cena-capacho.jpg"},{id:"placas",nome:"Placas e sinalização",img:"img/cena-placas.jpg"},{id:"adesivos",nome:"Adesivos e vitrines",img:"img/cena-adesivos.jpg"},{id:"uniformes",nome:"Uniformes e camisetas",img:"img/cena-uniformes.jpg"},{id:"impressos",nome:"Cartões e impressos",img:"img/cena-cartoes.jpg"},{id:"banners",nome:"Banners e faixas",img:"img/cena-banners.jpg"},{id:"brindes",nome:"Brindes e carimbos",img:"img/cat-brindes.jpg"},{id:"parede",nome:"Adesivos de parede",img:"img/cat-parede.jpg"},{id:"mostraai",nome:"Mostra Aí · cardápio digital",img:"img/cena-mostraai.jpg",servico:true}];
+  // por enquanto o projeto é lido do aparelho do vendedor (pré-visualização); a publicação para o cliente lê do servidor
+  const abrirDB=()=>new Promise(res=>{try{const r=indexedDB.open("genio-vendas",3);r.onsuccess=()=>res(r.result);r.onerror=()=>res(null);}catch(e){res(null);}});
+  const ler=async()=>{const db=await abrirDB();if(!db||!db.objectStoreNames.contains("orcamentos"))return null;return new Promise(res=>{const t=db.transaction("orcamentos").objectStore("orcamentos").get(id);t.onsuccess=()=>res(t.result||null);t.onerror=()=>res(null);});};
+  const gravar=async o=>{const db=await abrirDB();if(!db)return;await new Promise(res=>{const t=db.transaction("orcamentos","readwrite");t.objectStore("orcamentos").put(o);t.oncomplete=res;t.onerror=res;});};
+  let cfg={};try{cfg=JSON.parse(localStorage.getItem("gc.cfg")||"{}")||{};}catch(e){}
+  const ofertaGeral=p=>p==="capacho"?(cfg.oferta||{}).capacho!==false:!!(cfg.oferta||{})[p];
+  const dataBR=iso=>{if(!iso)return"";const d=new Date(iso);return d.toLocaleDateString("pt-BR",{day:"2-digit",month:"2-digit"})+" "+d.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});};
+  let O=null;
+  const prontos=()=>({capacho:!!(O.preview&&O.preco)});
+  const precoUnit=p=>{if(p==="capacho"&&O.preco){const q=(O.tapetes||[]).reduce((s,t)=>s+(t.qtd||1),0)||1;return O.preco.total/q;}return null;};
+  const qtdIni=p=>{const e=(O.escolhas||{})[p];if(e!=null)return e;return p==="capacho"?((O.tapetes||[]).reduce((s,t)=>s+(t.qtd||1),0)||1):0;};
+  const notaHTML=m=>{const a=m.arquivo;const ax=a?(/^image\//.test(a.tipo)?`<img src="${a.src}" alt="">`:`<a href="${a.src}" download="${esc(a.nome)}">📎 ${esc(a.nome)}</a>`):"";
+    return `<div class="m ${m.de}">${ax}${m.texto?`<span>${esc(m.texto)}</span>`:""}<small>${m.de==="cliente"?"você":"GenIO"} · ${dataBR(m.em)}</small></div>`;};
+  const lerAnexo=f=>new Promise(res=>{if(/^image\//.test(f.type)){const u=URL.createObjectURL(f),im=new Image();im.onload=()=>{const k=Math.min(1,1600/Math.max(im.width,im.height)),c=document.createElement("canvas");c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);c.getContext("2d").drawImage(im,0,0,c.width,c.height);URL.revokeObjectURL(u);res({nome:f.name,tipo:"image/jpeg",src:c.toDataURL("image/jpeg",.88)});};im.onerror=()=>res(null);im.src=u;return;}
+    if(f.size>4*1024*1024){alert("Arquivo grande demais (até 4 MB).");return res(null);}const r=new FileReader();r.onload=()=>res({nome:f.name,tipo:f.type||"application/octet-stream",src:r.result});r.onerror=()=>res(null);r.readAsDataURL(f);});
+  function render(){const box=$("#prods");box.replaceChildren();const pr=prontos();O.escolhas=O.escolhas||{};O.notas=O.notas||{};
+    PRODUTOS.forEach(p=>{if(O.escolhas[p.id]==null)O.escolhas[p.id]=qtdIni(p.id);});
+    PRODUTOS.filter(p=>ofertaGeral(p.id)&&(O.oferta||{})[p.id]!==false).forEach(p=>{const ok=!!pr[p.id],un=precoUnit(p.id),q=qtdIni(p.id),th=O.notas[p.id]||[];
+      const d=document.createElement("section");d.className="prod";d.dataset.p=p.id;
+      d.innerHTML=`<div class="capa" style="background-image:url('${p.id==="capacho"&&O.preview?O.preview:p.img}')"><span class="tag">${ok?"Pronto para ver":"Em preparo"}</span></div>
+        <div class="corpo"><h2>${esc(p.nome)}</h2>
+        <div class="linha"><span class="preco">${un!=null?BRL(un)+"<small> cada</small>":"<small>preço em preparo</small>"}</span>
+          <span class="row" style="gap:10px"><span class="qtd-l">${p.servico?"Quero":"Quantos?"}</span><span class="qtd"><button type="button" data-d="-1" aria-label="Menos">−</button><input inputmode="numeric" value="${q}"><button type="button" data-d="1" aria-label="Mais">+</button></span></span></div>
+        <div class="notas"><div class="th">${th.map(notaHTML).join("")||'<p class="muted small" style="margin:0">Combinações sobre este item aparecem aqui. Escreva ou mande uma foto.</p>'}</div>
+          <div class="row"><input type="text" placeholder="Escrever para o vendedor…" maxlength="500"><button class="btn btn-s ic" type="button" title="Fotografar">📷</button><label class="btn btn-s ic" title="Anexar"><span>📎</span><input type="file" hidden></label><button class="btn btn-p" type="button">Enviar</button></div></div></div>`;
+      const inp=d.querySelector(".qtd input");const setQ=v=>{v=Math.max(0,Math.min(p.servico?1:9999,parseInt(v)||0));inp.value=v;O.escolhas[p.id]=v;gravar(O);totais();};
+      $$(".qtd button",d).forEach(b=>b.onclick=()=>setQ((parseInt(inp.value)||0)+(+b.dataset.d)));inp.onchange=()=>setQ(inp.value);
+      const ti=d.querySelector(".notas input[type=text]"),bs=d.querySelectorAll(".notas button"),cam=bs[0],env=bs[1],fi=d.querySelector(".notas input[type=file]");
+      const push=(texto,arquivo)=>{(O.notas[p.id]=O.notas[p.id]||[]).push({de:"cliente",texto,arquivo:arquivo||null,em:new Date().toISOString()});gravar(O).then(render);};
+      const send=()=>{const t=ti.value.trim();if(!t)return;push(t);};env.onclick=send;ti.onkeydown=e=>{if(e.key==="Enter")send();};
+      cam.onclick=()=>FotoCrop.abrir({titulo:p.nome,varias:true,onFim:async fs=>{for(const f of fs){const a=await lerAnexo(f);if(a)push(ti.value.trim(),a);}}});
+      fi.onchange=async e=>{const f=e.target.files&&e.target.files[0];e.target.value="";if(!f)return;const a=await lerAnexo(f);if(a)push(ti.value.trim(),a);};
+      box.appendChild(d);});
+    totais();}
+  // total com a escada: 2 itens = arte e revisão de cortesia; 3 = desconto %; 4+ = desconto maior; nunca passa do valor dos produtos
+  function totais(){const esc3=+cfg.esc3||0,esc4=+cfg.esc4||0,arte=+cfg.escArte||0,rev=+cfg.escRev||0;
+    const itens=PRODUTOS.filter(p=>(O.escolhas||{})[p.id]>0&&ofertaGeral(p.id)&&(O.oferta||{})[p.id]!==false);const n=itens.length;
+    let sub=0,prodVal=0;itens.forEach(p=>{const u=precoUnit(p.id);if(u!=null){sub+=u*O.escolhas[p.id];prodVal+=u*O.escolhas[p.id];}});
+    const servicos=n*(arte+rev);let desc=0,txt="";
+    if(n>=2){desc+=servicos;txt="Arte final e revisão: cortesia";}else sub+=servicos;
+    if(n>=3){const pct=n>=4?esc4:esc3;const d2=Math.min(prodVal*pct/100,prodVal-(n>=2?0:0));desc+=d2;txt+=` · ${pct}% de desconto nos produtos`;}
+    if(n>=2)sub+=servicos;const tot=Math.max(0,sub-desc);
+    $("#total").hidden=false;$("#tItens").textContent=n?`${n} ${n>1?"itens":"item"}`:"Nada escolhido ainda";$("#tSub").textContent=n?BRL(sub):"";
+    $("#tDescL").hidden=!desc;$("#tDescT").textContent="Descontos";$("#tDesc").textContent="− "+BRL(desc);$("#tTot").textContent=BRL(tot);
+    const prox=n===0?"":n===1?`Mais 1 item e a arte final${rev?" e a revisão":""} saem de graça`:n===2&&esc3?`Mais 1 item e você ganha ${esc3}% nos produtos`:n===3&&esc4>esc3?`Mais 1 item e o desconto sobe para ${esc4}%`:"";
+    $("#esc").textContent=txt?txt+(prox?" · "+prox:""):prox;
+    const pag=$("#pag");if(tot>0){const pix=tot*(1-(+cfg.pix||0)/100),parc=+cfg.parc||1,cart=tot*(1+(+cfg.cartao||0)/100),sin=tot*((+cfg.sinal||50)/100);
+      pag.hidden=false;pag.innerHTML=`<div>Pix à vista<b>${BRL(pix)}</b></div><div>Cartão<b>${parc}× ${BRL(cart/parc)}</b></div><div>Com sinal<b>${BRL(sin)}</b>+ ${BRL(tot-sin)} na entrega</div>`;}else pag.hidden=true;
+    $("#bQuero").disabled=!n;$("#bQuero").onclick=()=>{const L=[`Olá! Quero fechar o projeto ${O.numero||""}:`,...itens.map(p=>`• ${O.escolhas[p.id]}× ${p.nome}`),`Total: ${BRL(tot)}`];O.pedido={em:new Date().toISOString(),itens:itens.map(p=>({id:p.id,qtd:O.escolhas[p.id]})),total:tot};gravar(O);
+      const tel=(cfg.emp&&cfg.emp.tel||"").replace(/\D/g,"");location.href=`https://wa.me/${tel?(tel.length<=11?"55"+tel:tel):""}?text=${encodeURIComponent(L.join("\n"))}`;};}
+  function contagem(){const ini=new Date(O.criado||O.atualizado||Date.now()).getTime(),fim=ini+5*60*1000,el=$("#conta"),pr=prontos();
+    $("#ctL").innerHTML=PRODUTOS.filter(p=>ofertaGeral(p.id)&&(O.oferta||{})[p.id]!==false).map(p=>`<li class="${pr[p.id]?"ok":""}">${pr[p.id]?"✓ ":"… "}${esc(p.nome)}</li>`).join("");
+    const tick=()=>{const r=Math.max(0,fim-Date.now());if(!r){el.hidden=true;return;}el.hidden=false;const m=Math.floor(r/60000),s=Math.floor(r/1000)%60;$("#ct").textContent=`${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`;setTimeout(tick,1000);};tick();}
+  (async()=>{O=id?await ler():null;if(!O){$("#erro").hidden=false;$("#sub").hidden=true;return;}
+    $("#oi").textContent="Olá, "+(O.cliente&&O.cliente.nome||"");document.title="GenIO · "+(O.cliente&&O.cliente.nome||"Seu projeto");
+    const tel=(cfg.emp&&cfg.emp.tel||"").replace(/\D/g,"");if(tel){const a=$("#lZap");a.hidden=false;a.href=`https://wa.me/${tel.length<=11?"55"+tel:tel}`;}
+    $("#verInfo").textContent=`${O.numero||""} · versão ${O.versao||1} · ${dataBR(O.atualizado||O.criado)}`;
+    render();contagem();})();
+})();
+</script>
+</body>
+</html>
