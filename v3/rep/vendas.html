@@ -1,1 +1,19 @@
-<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>GênIO · Vendas</title><link rel="stylesheet" href="rep.css?v=bbfd9db4f5"></head><body><div class="w" id="app"></div><script src="rep.js?v=bbfd9db4f5"></script><script>document.getElementById("app").innerHTML=Rep.topo()+'<div class="faixa"><a href="index.html">Rota</a></div><h1>Vendas</h1><p class="sub">Esta tela entra na próxima fase.</p>'+Rep.nav("vendas");</script></body></html>
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>GênIO · Vendas</title><meta name="theme-color" content="#F1EEF8"><link rel="icon" href="../genio-favicon.png"><link rel="stylesheet" href="rep.css?v=bbfd9db4f5">
+<style>.big{font-size:34px;font-weight:800;letter-spacing:-.02em}.lin{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--linha)}.lin:last-child{border:0}.barra{height:10px;border-radius:999px;background:var(--lav2);overflow:hidden;margin:6px 0 2px}.barra i{display:block;height:100%;background:var(--marca)}</style>
+</head>
+<body><div class="w" id="app"></div>
+<script src="rep.js?v=bbfd9db4f5"></script>
+<script>
+(async()=>{const {$,esc,dados,estado,nav,topo,voz,ligarVoz,money,lojasDoDia,hojeDia}=Rep;const D=await dados();const e=estado();const ped=e.pedidos||[];
+  const mes=new Date().getMonth();const doMes=ped.filter(p=>new Date(p.em).getMonth()===mes);const total=doMes.reduce((s,p)=>s+p.total,0);
+  const visitas=(e.feitas||[]).length;const conv=visitas?Math.round(doMes.length/visitas*100):0;const meta=50;
+  $("#app").innerHTML=`${topo()}<h1>Vendas</h1><p class="sub">${new Date().toLocaleDateString("pt-BR",{month:"long",year:"numeric"})}</p>
+  <div class="kpis"><div class="kpi" style="flex-direction:column;align-items:flex-start;gap:2px"><span class="big">${doMes.length}</span><small class="muted">fechamentos</small></div><div class="kpi" style="flex-direction:column;align-items:flex-start;gap:2px"><span class="big" style="font-size:24px">${money(total)}</span><small class="muted">vendido</small></div></div>
+  <section class="card"><h2>Meta do mês · ${meta} contratos</h2><div class="barra"><i style="width:${Math.min(100,doMes.length/meta*100)}%"></i></div><small class="muted">${doMes.length} de ${meta} · ${Math.max(0,meta-doMes.length)} faltam</small></section>
+  <section class="card"><h2>Hoje</h2><div class="lin"><span>Visitas feitas</span><b>${visitas}</b></div><div class="lin"><span>Fechamentos</span><b>${ped.filter(p=>new Date(p.em).toDateString()===new Date().toDateString()).length}</b></div><div class="lin"><span>Conversão</span><b>${conv}%</b></div></section>
+  <section class="card"><h2>Últimas vendas</h2>${ped.slice().reverse().slice(0,8).map(p=>`<div class="lin"><span>${esc(p.nome)}<br><small class="muted">#${p.n}</small></span><b>${money(p.total)}</b></div>`).join("")||'<p class="muted" style="margin:0">Nenhuma venda ainda.</p>'}</section>
+  <p class="ilus">Números deste aparelho; o consolidado (todos os representantes, comissão, nota) vem do servidor.</p>${voz()}${nav("vendas")}`;ligarVoz(null);})();
+</script></body></html>

@@ -1,1 +1,55 @@
-<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>GênIO · Pedidos</title><link rel="stylesheet" href="rep.css?v=bbfd9db4f5"></head><body><div class="w" id="app"></div><script src="rep.js?v=bbfd9db4f5"></script><script>document.getElementById("app").innerHTML=Rep.topo()+'<div class="faixa"><a href="index.html">Rota</a></div><h1>Pedidos</h1><p class="sub">Esta tela entra na próxima fase.</p>'+Rep.nav("pedidos");</script></body></html>
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>GênIO · Pedidos</title>
+<meta name="theme-color" content="#F1EEF8">
+<link rel="icon" href="../genio-favicon.png">
+<link rel="stylesheet" href="rep.css?v=bbfd9db4f5">
+<style>
+.ped{background:#fff;border-radius:var(--r);padding:16px 18px;box-shadow:var(--sombra);margin:0 0 14px}
+.ped .cab{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;flex-wrap:wrap}
+.ped h2{font-size:22px;margin:0}
+.ped .meta{color:var(--texto2);font-size:15px}
+.ped .itens{display:flex;gap:10px;align-items:center;margin:12px 0}
+.ped .itens img{width:96px;height:72px;border-radius:12px;object-fit:cover}
+.ped .itens b{font-size:18px}
+.ped .rod{display:flex;justify-content:space-between;align-items:center;gap:10px;border-top:1px solid var(--linha);padding-top:12px;margin-top:6px}
+.ped .rod a,.ped .rod button{color:var(--marca);font-weight:700;background:none;border:0;cursor:pointer;font:inherit}
+.vazio{color:var(--texto2);text-align:center;padding:30px 10px}
+</style>
+</head>
+<body>
+<div class="w" id="app"></div>
+<script src="rep.js?v=bbfd9db4f5"></script>
+<script>
+(async()=>{
+  const {$,$$,esc,qs,dados,estado,salvar,nav,topo,voz,ligarVoz,money}=Rep;
+  await dados();const e=estado();e.pedidos=e.pedidos||[];
+  const ETAPAS=[["arte","Arte"],["pagamento","Pagamento"],["producao","Produção"],["entrega","Entrega"],["entregue","Entregue"]];
+  const ROT={arte:["Aguardando aprovação","dec","Próximo passo: aprovação do cliente"],pagamento:["Aguardando sinal","dec","Próximo passo: Pix do sinal"],producao:["Em produção","ok","Entrega prevista em 7 dias úteis"],entrega:["Entrega agendada","ok","Combinar período com o cliente"],entregue:["Entregue","ok","Pedido concluído"]};
+  const IMG={capacho:"../img/cat-capacho.jpg",placas:"../img/cat-placas.jpg",adesivos:"../img/cat-adesivos.jpg",cartoes:"../img/cat-cartoes.jpg",banners:"../img/cat-banners.jpg",uniformes:"../img/cat-uniformes.jpg",parede:"../img/cat-parede.jpg",brindes:"../img/cat-brindes.jpg"};
+  let aba=qs.get("aba")||"andamento";
+  const quando=iso=>{const d=new Date(iso),h=new Date();return d.toDateString()===h.toDateString()?"Hoje":d.toLocaleDateString("pt-BR",{day:"2-digit",month:"short"}).replace(".","");};
+  function render(){
+    const lista=e.pedidos.filter(p=>aba==="andamento"?p.etapa!=="entregue":p.etapa==="entregue").slice().reverse();
+    $("#app").innerHTML=`${topo()}
+    <h1>Pedidos</h1><p class="sub">Da aprovação à entrega</p>
+    <div class="seg"><button class="${aba==="andamento"?"on":""}" data-aba="andamento">✓ Em andamento</button><button class="${aba==="entregues"?"on":""}" data-aba="entregues">▣ Entregues</button></div>
+    ${lista.length?lista.map(p=>{const r=ROT[p.etapa]||ROT.arte;const idx=ETAPAS.findIndex(x=>x[0]===p.etapa);const nomes=p.itens.map(i=>i.nome.replace(" personalizado","").replace(" de identificação","")).join(" + ");
+      return `<article class="ped" id="p${p.n}"><div class="cab"><div><h2>${esc(p.nome)}</h2><div class="meta">#${p.n} · ${money(p.total)} · ${quando(p.em)}</div></div><span class="chip ${r[1]}">${r[1]==="ok"?"✓ ":"◷ "}${r[0]}</span></div>
+      <div class="passos">${ETAPAS.slice(0,4).map(([k,n],i)=>`<div class="p ${i<=idx?"ok":""}">${n}</div>`).join("")}</div>
+      <div class="itens"><img src="${IMG[(p.itens[0]||{}).id]||IMG.capacho}" alt=""><b>${esc(nomes)}</b></div>
+      <div class="rod"><span>📅 ${r[2]}</span>${p.etapa!=="entregue"?`<button data-av="${p.n}">Avançar etapa →</button>`:`<a href="../ver.html?pedido=${p.n}">Ver pedido →</a>`}</div></article>`;}).join(""):`<div class="card vazio">Nenhum pedido ${aba==="andamento"?"em andamento":"entregue"} ainda.</div>`}
+    <p class="ilus">Etapas avançam sozinhas quando o cliente aprova a arte (área do cliente) e o Pix cai (Asaas); até lá o botão avança manualmente.</p>
+    ${voz()}${nav("pedidos")}`;
+    ligarVoz(null);
+    $$("[data-aba]").forEach(b=>b.onclick=()=>{aba=b.dataset.aba;render();});
+    $$("[data-av]").forEach(b=>b.onclick=()=>{const p=e.pedidos.find(x=>x.n==b.dataset.av);const i=ETAPAS.findIndex(x=>x[0]===p.etapa);p.etapa=ETAPAS[Math.min(ETAPAS.length-1,i+1)][0];salvar(e);render();});
+    const novo=qs.get("novo");if(novo){const el=$("#p"+novo);if(el)el.scrollIntoView({behavior:"smooth",block:"center"});}}
+  render();
+})();
+</script>
+</body>
+</html>

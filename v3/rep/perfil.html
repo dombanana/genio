@@ -1,1 +1,22 @@
-<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>GênIO · Perfil</title><link rel="stylesheet" href="rep.css?v=bbfd9db4f5"></head><body><div class="w" id="app"></div><script src="rep.js?v=bbfd9db4f5"></script><script>document.getElementById("app").innerHTML=Rep.topo()+'<div class="faixa"><a href="index.html">Rota</a></div><h1>Perfil</h1><p class="sub">Esta tela entra na próxima fase.</p>'+Rep.nav("perfil");</script></body></html>
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>GênIO · Perfil</title><meta name="theme-color" content="#F1EEF8"><link rel="icon" href="../genio-favicon.png"><link rel="stylesheet" href="rep.css?v=bbfd9db4f5">
+<style>.lin{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--linha)}.lin:last-child{border:0}.av{width:64px;height:64px;border-radius:50%;background:var(--marca);color:#fff;display:grid;place-items:center;font-weight:800;font-size:22px}select{min-height:48px;border-radius:12px;border:1.5px solid var(--linha);padding:0 12px;font:inherit;background:#fff}</style>
+</head>
+<body><div class="w" id="app"></div>
+<script src="rep.js?v=bbfd9db4f5"></script>
+<script>
+(async()=>{const {$,$$,esc,dados,estado,salvar,nav,topo,voz,ligarVoz,vendedor,ZONA}=Rep;const D=await dados();const e=estado();const v=vendedor();const ini=v.nome.split(/\s+/).filter((p,i,a)=>i===0||i===a.length-1).map(p=>p[0]).join("").toUpperCase();
+  const notas=(e.notas||[]).slice().reverse();const dias=[...new Set(D.lojas.map(l=>l.dia))].sort((a,b)=>a-b);
+  $("#app").innerHTML=`${topo()}<h1>Perfil</h1>
+  <section class="card" style="display:flex;gap:14px;align-items:center"><div class="av">${esc(ini)}</div><div><b style="font-size:20px">${esc(v.nome)}</b><br><small class="muted">Representante · ${esc(D.zona.nome)}</small><br><a href="../v/${v.nome.toLowerCase().startsWith("thiago")?"thiago":"yoshio"}/" target="_blank">Página pública e QR do crachá →</a></div></section>
+  <section class="card"><h2>Rota</h2><div class="lin"><span>Zona</span><b>${esc(D.zona.nome)}</b></div><div class="lin"><span>Dia da rota</span><select id="dia">${dias.map(d=>`<option value="${d}" ${(e.dia||1)===d?"selected":""}>Dia ${d}</option>`).join("")}</select></div><div class="lin"><span>Visitas concluídas</span><b>${(e.feitas||[]).length}</b></div><div class="lin"><span></span><button class="btn linha sm" id="zerar">Reiniciar dia</button></div></section>
+  <section class="card"><h2>Notas de voz 🎙 <small class="muted" style="font-weight:400">· ${notas.length}</small></h2>${notas.slice(0,10).map(n=>`<div class="lin" style="align-items:flex-start"><span>${esc(n.texto)}<br><small class="muted">${n.loja?esc((D.lojas.find(l=>l.slug===n.loja)||{}).nome||n.loja)+" · ":""}${new Date(n.em).toLocaleString("pt-BR",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"})}</small></span></div>`).join("")||'<p class="muted" style="margin:0">Nenhuma nota ainda. Toque no microfone em qualquer tela.</p>'}</section>
+  <section class="card"><h2>Aparelho</h2><div class="lin"><span>Correções de imagem pendentes de envio</span><b>${(Imagem&&Imagem.fila?Imagem.fila().length:0)}</b></div><div class="lin"><span>Painel antigo</span><a href="../app.html?antigo=1">abrir</a></div><div class="lin"><span>Sair</span><a href="../index.html?sair=1">sair da conta</a></div></section>
+  ${voz()}${nav("perfil")}`;ligarVoz(null);
+  $("#dia").onchange=()=>{e.dia=+$("#dia").value;salvar(e);};
+  $("#zerar").onclick=()=>{if(confirm("Zerar as visitas concluídas de hoje neste aparelho?")){e.feitas=[];salvar(e);location.reload();}};})();
+</script>
+<script src="imagem.js?v=bbfd9db4f5"></script>
+</body></html>
