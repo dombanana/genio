@@ -237,26 +237,33 @@ def ham(a, b):
     return bin(int(a, 16) ^ int(b, 16)).count("1")
 
 # ---------- curiosidade do nome (Wikipédia pt; Gemini só se a Wikipédia não tiver) ----------
+GENERICAS = {"famiglia","familia","família","central","grande","pequeno","pequena","novo","nova","velho","velha","bom","boa","santo","santa","sao","são","casa","mundo","brasil","paulista","paulistana","paulistano","real","nacional","popular","imperial","express","premium","gourmet","delicia","delícia","sabor","sabores","arte","artes","ponto","cantinho","recanto","espaco","espaço","super","mega","hiper","top","plus","mais","best"}
 def curiosidade_nome(nome):
-    ts = [t for t in tokens(nome) if len(t) >= 4]
+    """origem da palavra marcante do nome: Wikipédia só quando o artigo é claramente lugar, sobrenome ou palavra (título exato);
+    senão Gemini numa frase; senão vira pergunta para o dono"""
+    ts = [t for t in tokens(nome) if len(t) >= 4 and t not in GENERICAS]
     if not ts:
         return None
-    palavra = max(ts, key=len)
-    try:
-        r = tenta(http, "https://pt.wikipedia.org/w/api.php?action=query&list=search&format=json&srlimit=1&srsearch=" + parse.quote(palavra), headers={"User-Agent": "GenIO/1.0 (captacao)"})
-        hit = (r.get("query") or {}).get("search") or []
-        if hit:
-            titulo = hit[0]["title"]
-            r2 = tenta(http, "https://pt.wikipedia.org/api/rest_v1/page/summary/" + parse.quote(titulo.replace(" ", "_")), headers={"User-Agent": "GenIO/1.0 (captacao)"})
-            ext = (r2.get("extract") or "").strip()
-            if ext and palavra.lower() in unicodedata.normalize("NFKD", (titulo + " " + ext)).encode("ascii", "ignore").decode().lower():
-                frase = re.split(r"(?<=[.!?])\s", ext)[0][:220]
-                return {"estado": "encontrado", "valor": frase, "origem": "publico", "nota": f"Wikipédia · {titulo}", "palavra": palavra}
-    except Exception:
-        pass
+    ACEITA = re.compile(r"\b(sobrenome|apelido de fam[ií]lia|nome de fam[ií]lia|munic[ií]pio|cidade|comuna|vila|aldeia|bairro|distrito|regi[aã]o|prov[ií]ncia|pa[ií]s|rio|serra|ilha|palavra|termo|express[aã]o|significa|nome pr[oó]prio|prenome|deusa?|mitologia)\b", re.I)
+    REJEITA = re.compile(r"(pode referir-se|pode se referir|desambigua|esp[eé]cie|g[eê]nero de|fam[ií]lia [A-Z][a-z]+idae|escola de samba|pintor|cantor|ator|atriz|futebolista|jogador|pol[ií]tico|banda|álbum|filme|telenovela)", re.I)
+    for palavra in ts[:3]:
+        try:
+            r = tenta(http, "https://pt.wikipedia.org/w/api.php?action=query&list=search&format=json&srlimit=3&srsearch=" + parse.quote(palavra), headers={"User-Agent": "GenIO/1.0 (captacao)"})
+            for hit in (r.get("query") or {}).get("search") or []:
+                titulo = hit["title"]
+                if unicodedata.normalize("NFKD", titulo.split(" (")[0]).encode("ascii", "ignore").decode().lower() != palavra:
+                    continue
+                r2 = tenta(http, "https://pt.wikipedia.org/api/rest_v1/page/summary/" + parse.quote(titulo.replace(" ", "_")), headers={"User-Agent": "GenIO/1.0 (captacao)"})
+                ext = (r2.get("extract") or "").strip()
+                if ext and ACEITA.search(ext) and not REJEITA.search(ext):
+                    frase = re.split(r"(?<=[.!?])\s", ext)[0][:220]
+                    return {"estado": "encontrado", "valor": frase, "origem": "publico", "nota": f"Wikipédia · {titulo}", "palavra": palavra}
+        except Exception:
+            pass
+    palavra = ts[0]
     if K.get("GEMINI_KEY"):
         try:
-            body = {"contents": [{"parts": [{"text": f"Em uma frase curta (máx. 30 palavras), em português, qual a origem ou o significado provável da palavra '{palavra}' no nome do comércio '{nome}' (sobrenome, cidade, palavra estrangeira, apelido)? Se não houver base, responda só: sem registro."}]}], "generationConfig": {"temperature": 0.2, "maxOutputTokens": 80}}
+            body = {"contents": [{"parts": [{"text": f"Em uma frase curta (máx. 30 palavras), em português, qual a origem ou o significado provável da palavra '{palavra}' no nome do comércio '{nome}' (sobrenome, cidade, palavra estrangeira, apelido)? Seja factual. Se não houver base, responda só: sem registro."}]}], "generationConfig": {"temperature": 0.2, "maxOutputTokens": 80}}
             r = tenta(http, "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent", body, {"x-goog-api-key": K["GEMINI_KEY"]})
             txt = ((((r.get("candidates") or [{}])[0].get("content") or {}).get("parts") or [{}])[0].get("text") or "").strip()
             if txt and "sem registro" not in txt.lower():
