@@ -71,8 +71,9 @@ h2{font-size:20px;margin:0 0 10px;font-weight:700}
 .foto .sel{position:absolute;left:12px;top:12px;background:#fff;border-radius:999px;padding:6px 12px;font-weight:600;font-size:14px}
 .ident{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:center}
 .ident .acao-link{grid-column:1/-1;margin-top:4px}
-.ident .logo-box{width:120px;height:80px;border-radius:12px;background:var(--lav);display:grid;place-items:center;overflow:hidden;border-right:1.5px solid var(--linha);padding-right:12px}
-.ident .logo-box img{width:100%;height:100%;object-fit:contain;display:block;background:#fff;border-radius:8px}
+.ident .logo-box{width:132px;height:88px;border-radius:12px;background:#fff;border:1.5px solid var(--linha);position:relative;overflow:hidden;flex:0 0 auto}
+.ident .logo-box img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;padding:6px;box-sizing:border-box;display:block}
+.ident .logo-box>span{position:absolute;inset:0;display:grid;place-items:center;color:var(--texto2)}
 .ident .logo-box{cursor:pointer}
 .cores{display:flex;align-items:center;gap:8px;margin-top:8px;color:var(--texto2)}
 .cor{width:34px;height:34px;border-radius:10px;border:1px solid rgba(0,0,0,.08)}

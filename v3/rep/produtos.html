@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>GênIO · Produtos e serviços</title>
+<meta name="theme-color" content="#F1EEF8">
+<link rel="icon" href="../genio-favicon.png">
+<link rel="stylesheet" href="rep.css?v=b161d0e842">
+<style>
+.grade{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.prod{background:#fff;border-radius:18px;box-shadow:0 2px 10px rgba(28,22,53,.06);overflow:hidden;display:flex;flex-direction:column;position:relative}
+.prod .cena{aspect-ratio:4/3;background:var(--lav) center/cover no-repeat;display:grid;place-items:center;overflow:hidden}
+.prod .cena img{width:100%;height:100%;object-fit:cover;display:block}
+.prod .cena.logo img{object-fit:contain;padding:14px;background:#fff}
+.prod b{display:block;padding:10px 12px 2px;font-size:16px;line-height:1.2}
+.prod .st{padding:0 12px 10px;color:var(--texto2);font-size:13px;min-height:28px}
+.prod .st.ok{color:#0E8A84;font-weight:600}
+.prod .sug{position:absolute;top:8px;left:8px;background:var(--teal);color:#fff;font-size:11px;font-weight:700;padding:3px 8px;border-radius:999px}
+.prod .qtd{display:flex;align-items:center;gap:0;margin:0 12px 12px;border:1.5px solid var(--linha);border-radius:12px;overflow:hidden}
+.prod .qtd button{flex:0 0 42px;height:40px;border:0;background:var(--lav);font-size:20px;font-weight:700;color:var(--marca);cursor:pointer}
+.prod .qtd span{flex:1;text-align:center;font-weight:700;font-size:16px}
+.prod .qtd span.zero{color:var(--texto2);font-weight:500;font-size:13px}
+.prod.sel{outline:2.5px solid var(--marca)}
+.prod .ir{margin:0 12px 12px;min-height:40px;border-radius:12px;background:var(--navy);color:#fff;font-weight:700;display:grid;place-items:center;text-decoration:none;font-size:15px}
+.serv{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;padding:12px 16px}
+.serv .ic{width:44px;height:44px;border-radius:12px;background:var(--lav);display:grid;place-items:center;font-size:22px}
+.serv small{display:block;color:var(--texto2);font-size:13px}
+.tog{width:52px;height:30px;border-radius:999px;background:#CFC8E0;position:relative;border:0;cursor:pointer;flex:0 0 auto}
+.tog::after{content:"";position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:#fff;transition:left .15s}
+.tog.on{background:var(--teal)}.tog.on::after{left:25px}
+.resumo{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 16px;background:#fff;border-radius:16px;margin:0 0 10px}
+.gerando{font-size:13px;color:var(--texto2)}
+</style>
+</head>
+<body>
+<div class="w" id="app"></div>
+<script src="../manual.js?v=b161d0e842"></script>
+<script src="imagem.js?v=b161d0e842"></script>
+<script src="rep.js?v=b161d0e842"></script>
+<script>
+(async()=>{
+  const {$,$$,esc,qs,nomeLoja,dados,estado,salvar,nav,topo,voz,ligarVoz,PROD,setorNome,telFmt,ZONA}=Rep;
+  const D=await dados();const slug=qs.get("l")||(JSON.parse(localStorage.getItem("genio-cliente-dados")||"null")||{}).slug;const l=D.lojas.find(x=>x.slug===slug);
+  if(!l){$("#app").innerHTML=`${topo()}<p>Loja não encontrada.</p>${nav("rota")}`;return;}
+  const nome=nomeLoja(l.nome),k=nome.toLowerCase();
+  let cad=null;try{const r=await fetch(`/dados/captacao/${ZONA}/clientes/${slug}.json`,{cache:"no-store"});if(r.ok)cad=await r.json();}catch(e){}
+  const L=(cad&&cad.lacunas)||{};const base=`/dados/captacao/${ZONA}/`;const logo=L.logoOriginal||{};const M0=Imagem.ler();
+  // ficha do cliente no módulo de identidade (fonte única da arte e do manual)
+  const abrirDB=()=>new Promise(res=>{try{const r=indexedDB.open("genio-vendas",3);r.onupgradeneeded=()=>{const d=r.result;["orcamentos","sessao"].forEach(n=>{if(!d.objectStoreNames.contains(n))d.createObjectStore(n,{keyPath:"id"});});if(!d.objectStoreNames.contains("clientes"))d.createObjectStore("clientes",{keyPath:"k"});};r.onsuccess=()=>res(r.result);r.onerror=()=>res(null);}catch(e){res(null);}});
+  const getC=async()=>{const db=await abrirDB();if(!db)return null;return new Promise(res=>{const t=db.transaction("clientes").objectStore("clientes").get(k);t.onsuccess=()=>{res(t.result||null);db.close();};t.onerror=()=>res(null);});};
+  const putC=async o=>{const db=await abrirDB();if(!db)return;return new Promise(res=>{const t=db.transaction("clientes","readwrite");t.objectStore("clientes").put(o);t.oncomplete=()=>{db.close();res();};t.onerror=res;});};
+  let fic=await getC();const abs=s=>s.startsWith("/")?location.origin+s:s;
+  const logoSrc=(fic&&fic.manual&&fic.manual.tratado)||(fic&&fic.logos&&fic.logos[0]&&fic.logos[0].src)||(M0[slug+"/logo"]&&M0[slug+"/logo"].dados)||(logo.estado==="encontrado"?base+logo.valor:null);
+  // catálogo GênIO (o mesmo do site) → aplicação do manual que ilustra cada um
+  const CAT=[
+    {id:"capacho",nome:"Capacho personalizado",apl:"capacho",img:"../img/cena-capacho.jpg",motor:true},
+    {id:"placas",nome:"Placas e sinalização",apl:"placa",img:"../img/cena-placas.jpg"},
+    {id:"adesivos",nome:"Adesivos e vitrines",apl:"vitrine",img:"../img/cena-adesivos.jpg"},
+    {id:"uniformes",nome:"Uniformes e camisetas",apl:"camiseta",img:"../img/cena-uniformes.jpg"},
+    {id:"impressos",nome:"Cartões e impressos",apl:"cartao",img:"../img/cena-cartoes.jpg"},
+    {id:"banners",nome:"Banners e faixas",apl:"banner",img:"../img/cena-banners.jpg"},
+    {id:"parede",nome:"Adesivos de parede",apl:"panfleto",img:"../img/cat-parede.jpg"},
+    {id:"brindes",nome:"Brindes e carimbos",apl:null,img:"../img/cat-brindes.jpg"}];
+  const SERV=[
+    {id:"identidade",nome:"Identidade visual",desc:"Manual, versões da marca e arquivos",ic:"✦",link:"identidade.html"},
+    {id:"mostraai",nome:"Mostra Aí · cardápio digital",desc:"Serviço mensal (AI Negócios)",ic:"📱",tog:true},
+    {id:"postaai",nome:"Posta Aí · postagens",desc:"Conteúdo para as redes (AI Negócios)",ic:"📣",tog:true},
+    {id:"inpi",nome:"Registro de marca (INPI)",desc:"Proteção do nome e do logo",ic:"®",tog:true},
+    {id:"vizinhos",nome:"Campanha Vizinhos",desc:"3 lojas da rua fecham, todas ganham 15%",ic:"🏘",link:`cliente.html?l=${encodeURIComponent(slug)}`}];
+  // sugestão de entrada pelo setor (regra do app)
+  const sug=(PROD[l.setor]||PROD["comércio"]||[]).map(s=>s.toLowerCase());
+  const eSug=p=>sug.some(s=>(p.id==="capacho"&&s.includes("capacho"))||(p.id==="placas"&&s.includes("placa"))||(p.id==="adesivos"&&s.includes("vitrine"))||(p.id==="banners"&&s.includes("banner"))||(p.id==="impressos"&&(s.includes("cart")||s.includes("card")))||(p.id==="uniformes"&&s.includes("uniform"))||(p.id==="parede"&&s.includes("parede")));
+  const e=estado();e.sel=e.sel||{};const S=e.sel[slug]=e.sel[slug]||{};
+  const salvarSel=()=>{salvar(e);};
+  async function definirCliente(){try{localStorage.setItem("genio-cliente",nome);localStorage.setItem("genio-cliente-dados",JSON.stringify({tel:telFmt(l.tel),endereco:l.endereco,slug,setor:l.setor}));}catch(err){}
+    if(logoSrc&&!(fic&&fic.logos&&fic.logos.length)){fic={...(fic||{k,nome,logos:[]}),logos:[{id:"captacao",src:abs(logoSrc),nome:"Logo (captação)",origem:"captacao"}],atualizado:new Date().toISOString()};await putC(fic);}}
+  function render(){
+    const A=(fic&&fic.manual&&fic.manual.aplicacoes)||{};const n=Object.values(S).filter(v=>v&&v.q>0).length;
+    $("#app").innerHTML=`${topo()}
+    <div class="faixa"><a href="visita.html?l=${encodeURIComponent(slug)}">Visita</a></div>
+    <h1>Produtos e serviços</h1><p class="sub">${esc(nome)} · ${esc(setorNome(l.setor))}</p>
+    <div class="resumo"><div><b>${n?`${n} item(ns) no orçamento`:"Nada escolhido ainda"}</b><br><small class="gerando" id="st">${logoSrc?(A.capacho?"Arte da loja aplicada":"Aplicando a arte da loja…"):"Sem arte ainda — toque no logo na visita para arrumar"}</small></div>${logoSrc?`<img src="${esc(logoSrc)}" alt="" style="width:56px;height:40px;object-fit:contain;background:#fff;border-radius:8px">`:""}</div>
+    <div class="grade">${CAT.map(p=>{const s=S[p.id]||{q:0};const mock=p.apl&&A[p.apl];return `<div class="prod ${s.q>0?"sel":""}" data-p="${p.id}">${eSug(p)?'<span class="sug">Entrada sugerida</span>':""}
+      <div class="cena ${!mock&&logoSrc&&!p.apl?"logo":""}" ${mock?"":`style="background-image:url('${p.img}')"`} data-img="prod-${p.id}" data-loja="${esc(slug)}" data-nome="${esc(p.nome)}">${mock?`<img src="${mock}" alt="">`:(!p.apl&&logoSrc?`<img src="${esc(logoSrc)}" alt="">`:"")}</div>
+      <b>${esc(p.nome)}</b>
+      <div class="st ${s.q>0?"ok":""}">${p.motor?(s.q>0?"✓ no orçamento · medidas no motor":"Preço na hora, pelo motor"):(s.q>0?"✓ no orçamento · preço a confirmar":"Produção Printi · preço a confirmar")}</div>
+      ${p.motor?`<a class="ir" href="capacho.html" data-motor>${s.q>0?"Abrir no motor →":"Montar capacho →"}</a>`:`<div class="qtd"><button data-m="-">−</button><span class="${s.q>0?"":"zero"}">${s.q>0?s.q+" un.":"não quero"}</span><button data-m="+">+</button></div>`}
+    </div>`;}).join("")}</div>
+    <h2 style="margin:22px 0 10px">Serviços</h2>
+    ${SERV.map(s=>{const on=!!(S[s.id]&&S[s.id].q>0);return s.link?`<a class="card serv" href="${s.link}" data-serv="${s.id}" style="color:inherit;text-decoration:none"><span class="ic">${s.ic}</span><div><b>${esc(s.nome)}</b><small>${esc(s.desc)}</small></div><span style="color:var(--texto2);font-size:22px">›</span></a>`:`<div class="card serv"><span class="ic">${s.ic}</span><div><b>${esc(s.nome)}</b><small>${esc(s.desc)}${on?" · <b style='color:#0E8A84'>no orçamento</b>":""}</small></div><button class="tog ${on?"on":""}" data-t="${s.id}" aria-label="${esc(s.nome)}"></button></div>`;}).join("")}
+    <p class="ilus">Preços dos produtos Printi e dos serviços ainda não cadastrados — entram pela tela de configurações. Nada aqui é inventado.</p>
+    <div class="acoes"><div class="w"><a class="btn sec" href="visita.html?l=${encodeURIComponent(slug)}">← Visita</a><button class="btn" id="seguir">${n?"Ver orçamento →":"Orçar capacho →"}</button></div></div>
+    ${voz()}${nav("rota")}`;document.body.classList.add("com-acoes");
+    Imagem.ligar(document);ligarVoz(slug);
+    $$(".prod .qtd button").forEach(b=>b.onclick=()=>{const id=b.closest(".prod").dataset.p;const s=S[id]=S[id]||{q:0,nome:CAT.find(c=>c.id===id).nome};s.q=Math.max(0,s.q+(b.dataset.m==="+"?1:-1));s.em=new Date().toISOString();salvarSel();render();});
+    $$(".tog").forEach(b=>b.onclick=()=>{const id=b.dataset.t;const s=S[id]=S[id]||{q:0,nome:SERV.find(c=>c.id===id).nome,servico:true};s.q=s.q>0?0:1;s.em=new Date().toISOString();salvarSel();render();});
+    $$("[data-motor],[data-serv=identidade]").forEach(a=>a.onclick=async ev=>{ev.preventDefault();if(a.dataset.motor){S.capacho={q:1,nome:"Capacho personalizado",em:new Date().toISOString()};salvarSel();}await definirCliente();location.href=a.getAttribute("href");});
+    $("#seguir").onclick=async()=>{await definirCliente();location.href=n?`pedidos.html?l=${encodeURIComponent(slug)}`:"capacho.html";};
+  }
+  render();
+  // aplicações da marca: usa o manual já gerado na identidade; senão gera agora (mesmo código do módulo) e guarda na ficha
+  if(logoSrc&&!(fic&&fic.manual&&fic.manual.aplicacoes)&&typeof Manual!=="undefined"){try{const src=abs(logoSrc);const man=await Promise.race([Manual.gerar(src,nome,telFmt(l.tel)),new Promise((_,rej)=>setTimeout(()=>rej(new Error("demorou demais")),20000))]);fic={...(fic||{k,nome,logos:[{id:"captacao",src,nome:"Logo (captação)",origem:"captacao"}]}),manual:man,atualizado:new Date().toISOString()};await putC(fic);render();}catch(err){const st=$("#st");if(st)st.textContent="Não consegui aplicar a arte automaticamente ("+err.message+") — arrume na identidade";}}
+})();
+</script>
+</body>
+</html>

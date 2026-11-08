@@ -6,7 +6,7 @@
 <title>GênIO · Pedidos</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="rep.css?v=9a673f2f02">
+<link rel="stylesheet" href="rep.css?v=b161d0e842">
 <style>
 .ped{background:#fff;border-radius:var(--r);padding:16px 18px;box-shadow:var(--sombra);margin:0 0 14px}
 .ped .cab{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;flex-wrap:wrap}
@@ -22,11 +22,11 @@
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="rep.js?v=9a673f2f02"></script>
+<script src="rep.js?v=b161d0e842"></script>
 <script>
 (async()=>{
   const {$,$$,esc,qs,dados,estado,salvar,nav,topo,voz,ligarVoz,money,orcamentos,etapaDe,setEtapa}=Rep;
-  await dados();const Qs=await orcamentos();
+  const DD=await dados();const Qs=await orcamentos();
   // pedidos = orçamentos do módulo de capacho (os mesmos que o vendedor monta na visita)
   const e={pedidos:Qs.map(q=>({id:q.id,n:q.numero||q.id,loja:q.cliente&&q.cliente.nome,nome:(q.cliente&&q.cliente.nome)||"Sem nome",itens:[{id:"capacho",nome:(q.tapetes&&q.tapetes.length>1)?`${q.tapetes.length} tapetes`:"Capacho personalizado",desc:q.spec?`${q.spec.w} × ${q.spec.h} cm`:""}],total:(q.preco&&q.preco.total)||0,em:q.atualizado||q.criado||new Date().toISOString(),etapa:etapaDe(q),previa:q.preview||null,status:q.status}))};
   const ETAPAS=[["orcamento","Orçamento"],["arte","Arte"],["pagamento","Pagamento"],["producao","Produção"],["entrega","Entrega"],["entregue","Entregue"]];
@@ -34,16 +34,23 @@
   const IMG={capacho:"../img/cat-capacho.jpg",placas:"../img/cat-placas.jpg",adesivos:"../img/cat-adesivos.jpg",cartoes:"../img/cat-cartoes.jpg",banners:"../img/cat-banners.jpg",uniformes:"../img/cat-uniformes.jpg",parede:"../img/cat-parede.jpg",brindes:"../img/cat-brindes.jpg"};
   let aba=qs.get("aba")||"andamento";
   const quando=iso=>{const d=new Date(iso),h=new Date();return d.toDateString()===h.toDateString()?"Hoje":d.toLocaleDateString("pt-BR",{day:"2-digit",month:"short"}).replace(".","");};
+  // seleções feitas na tela Produtos e serviços (quantidade > 0) que ainda não viraram orçamento no motor
+  function aOrcar(){const est=Rep.estado();const sel=est.sel||{};const D=DD;const blocos=Object.entries(sel).map(([slug,S])=>{const its=Object.values(S).filter(v=>v&&v.q>0);if(!its.length)return "";const lj=(D.lojas||[]).find(x=>x.slug===slug);const nome=lj?Rep.nomeLoja(lj.nome):slug;
+      return `<article class="ped"><div class="cab"><div><h2>${esc(nome)}</h2><div class="meta">${its.length} item(ns) a orçar</div></div><span class="chip dec">◷ A orçar</span></div>
+      <p style="margin:6px 0 10px">${its.map(i=>esc(i.nome)+(i.servico?"":" × "+i.q)).join(" · ")}</p>
+      <div class="rod"><span>Preços de Printi e serviços: a confirmar</span><a href="produtos.html?l=${encodeURIComponent(slug)}">Ajustar →</a></div></article>`;}).filter(Boolean).join("");
+    return blocos?`<h2 style="margin:14px 0 8px;font-size:18px">A orçar</h2>${blocos}`:"";}
   function render(){
     const lista=e.pedidos.filter(p=>aba==="andamento"?p.etapa!=="entregue":p.etapa==="entregue").slice().reverse();
     $("#app").innerHTML=`${topo()}
     <h1>Pedidos</h1><p class="sub">Da aprovação à entrega</p>
     <div class="seg"><button class="${aba==="andamento"?"on":""}" data-aba="andamento">✓ Em andamento</button><button class="${aba==="entregues"?"on":""}" data-aba="entregues">▣ Entregues</button></div>
+    ${aba==="andamento"?aOrcar():""}
     ${lista.length?lista.map(p=>{const r=ROT[p.etapa]||ROT.arte;const idx=ETAPAS.findIndex(x=>x[0]===p.etapa);const nomes=p.itens.map(i=>i.nome.replace(" personalizado","").replace(" de identificação","")).join(" + ");
       return `<article class="ped" id="p${p.n}"><div class="cab"><div><h2>${esc(p.nome)}</h2><div class="meta">#${p.n} · ${money(p.total)} · ${quando(p.em)}</div></div><span class="chip ${r[1]}">${r[1]==="ok"?"✓ ":"◷ "}${r[0]}</span></div>
       <div class="passos">${ETAPAS.slice(1,5).map(([k,n],i)=>`<div class="p ${i+1<=idx?"ok":""}">${n}</div>`).join("")}</div>
       <div class="itens">${p.previa?`<img src="${p.previa}" alt="">`:`<img src="${IMG.capacho}" alt="">`}<b>${esc(nomes)}${p.itens[0].desc?` <small class="muted">· ${esc(p.itens[0].desc)}</small>`:""}</b></div>
-      <div class="rod"><span>📅 ${r[2]}</span><span style="display:flex;gap:14px"><a href="capacho.html" data-abrir="${esc(p.loja||"")}">Abrir no módulo →</a>${p.etapa!=="entregue"?`<button data-av="${esc(p.id)}">Avançar etapa →</button>`:""}</span></div></article>`;}).join(""):`<div class="card vazio">${aba==="andamento"?"Nenhum orçamento ainda. Eles nascem na visita, em “Mostrar produtos”.":"Nenhum pedido entregue ainda."}</div>`}
+      <div class="rod"><span>📅 ${r[2]}</span><span style="display:flex;gap:14px"><a href="capacho.html" data-abrir="${esc(p.loja||"")}">Abrir no módulo →</a>${p.etapa!=="entregue"?`<button data-av="${esc(p.id)}">Avançar etapa →</button>`:""}</span></div></article>`;}).join(""):`<div class="card vazio">${aba==="andamento"?"Nenhum orçamento ainda. Eles nascem na visita, em “Produtos e serviços”.":"Nenhum pedido entregue ainda."}</div>`}
     <p class="ilus">Os pedidos são os orçamentos do módulo de capacho deste aparelho. Etapas avançam sozinhas quando o cliente aprova a arte e o Pix cai (Asaas); até lá o botão avança manualmente.</p>
     ${voz()}${nav("pedidos")}`;
     ligarVoz(null);
