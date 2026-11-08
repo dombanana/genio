@@ -6,7 +6,7 @@
 <title>GênIO · Edição do produto</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="app.css?v=8d46834d98">
+<link rel="stylesheet" href="app.css?v=2428f8d129">
 <style>
 body.com-acoes{padding-bottom:calc(150px + env(safe-area-inset-bottom,0))}
 .ed-frame{height:min(62vh,560px)}
@@ -26,7 +26,7 @@ body.com-acoes{padding-bottom:calc(150px + env(safe-area-inset-bottom,0))}
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=8d46834d98"></script>
+<script src="app.js?v=2428f8d129"></script>
 <script>
 (async()=>{
   const {$,$$,esc,qs,sessao,dados,ficha,nav,topo,voltar,nomeLoja,telFmt,cliente,gravarCliente,definirCliente,ZONA}=App;
@@ -34,7 +34,7 @@ body.com-acoes{padding-bottom:calc(150px + env(safe-area-inset-bottom,0))}
   const D=await dados();const slug=qs.get("l");const pid=qs.get("p")||"capacho";const l=D.lojas.find(x=>x.slug===slug);
   if(!l){$("#app").innerHTML=`${topo()}<p>Loja não encontrada.</p>${nav("rota")}`;return;}
   const nome=nomeLoja(l.nome);definirCliente(l);let c=await cliente(l);
-  const G=await (await fetch("gabaritos.json?v=8d46834d98")).json();const P=G.produtos[pid]||G.produtos.capacho;
+  const G=await (await fetch("gabaritos.json?v=2428f8d129")).json();const P=G.produtos[pid]||G.produtos.capacho;
   const sang=P.sangria_mm!=null?P.sangria_mm:G.sangria_mm,seg=P.seguranca_mm!=null?P.seguranca_mm:G.seguranca_mm;
   const PXCM=Math.min(100,Math.floor(3000/Math.max(P.w_cm+sang/5,P.h_cm+sang/5)));  // px por cm no editor (teto 3000 px)
   const W=Math.round((P.w_cm+2*sang/10)*PXCM),H=Math.round((P.h_cm+2*sang/10)*PXCM),B=Math.round(sang/10*PXCM),S=Math.round(seg/10*PXCM);
