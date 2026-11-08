@@ -479,7 +479,8 @@ def gerar_manual(slug_, cad_path, logo_path, pasta):
         except Exception:
             pass
         fid = res.get("fidelidade")
-        return {"estado": "encontrado" if (fid or 0) >= 0.85 else "pendente", "valor": f"manual/{slug_}/manual.html", "origem": "derivado", "fidelidade": fid, "cores": res.get("cores"), "nota": f"fidelidade {fid} · {res.get('camadas')} camadas · mínimo {res.get('minimo_cm')} cm" + ("" if (fid or 0) >= 0.85 else " — conferir antes de usar")}
+        mn = res.get("minimo_cm"); mn = (mn.get("capacho (8 mm)") if isinstance(mn, dict) else mn)
+        return {"estado": "encontrado" if (fid or 0) >= 0.85 else "pendente", "valor": f"manual/{slug_}/manual.html", "origem": "derivado", "fidelidade": fid, "cores": res.get("cores"), "nota": f"fidelidade {round(fid, 2) if fid else '?'} · {res.get('camadas')} cores/camadas" + (f" · menor largura no capacho {round(mn)} cm" if isinstance(mn, (int, float)) and mn > 0 else "") + ("" if (fid or 0) >= 0.85 else " — conferir antes de usar")}
     except Exception as e:
         return {"estado": "pendente", "valor": "", "origem": "derivado", "nota": "manual não gerado: " + str(e)[:160]}
 # ---------- rota ----------
