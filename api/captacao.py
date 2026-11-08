@@ -82,8 +82,8 @@ def status(pasta, **kw):
 # ---------- filtro de redes / setor (mesmas listas do montar.py) ----------
 FRANQ = re.compile(r"\b(drogasil|droga ?raia|drogaria s[aã]o paulo|pague menos|ultrafarma|drogal|nissei|panvel|mcdonald|burger king|subway|habib|starbucks|cacau show|kopenhagen|brasil cacau|botic[aá]rio|natura|petz|cobasi|petlove|smart ?fit|bluefit|bio ?ritmo|magazine luiza|casas bahia|renner|riachuelo|c&a|americanas|[oó]ticas? (carol|diniz)|chilli beans|havaianas|spoleto|china in box|domino|pizza hut|giraffas|bob's|outback|oakberry|bradesco|ita[uú]|santander|caixa econ|banco do brasil|correios|lot[eé]rica|kumon|wizard|fisk|ccaa|\bcna\b|carrefour|p[aã]o de a[çc][uú]car|assa[ií]|hirota|sonda|swift|vivara|hering|lupo|centauro|leroy|telhanorte|kfc|popeyes|rei do mate|casa do p[aã]o de queijo|chiquinho|kalunga|pernambucanas|marisa|zara|arezzo|melissa|ri happy|pbkids|cvc|localiza|movida|vivo|claro|tim|unidas|shell|am ?pm|oxxo|dia %|extra|minuto p[aã]o|sodi[eê]|hortifruti|oba\b|st ?marche|natural da terra|cultura inglesa|wise up|mercad[aã]o|mercado municipal)\b", re.I)
 TIPOS_FORA = {"lodging", "atm", "bank", "parking", "transit_station", "bus_station", "subway_station", "church", "school", "hospital", "government_office", "post_office", "police", "gas_station", "car_rental", "insurance_agency", "real_estate_agency", "lawyer", "university", "local_government_office", "courthouse", "embassy", "cemetery", "park", "tourist_attraction", "museum"}
-SETORES = [("padaria", ["bakery", "confectionery", "pastry", "cake", "candy", "dessert", "padaria", "panific", "confeit", "doceria"]), ("restaurante", ["restaurant", "snack", "diner", "hamburger", "fast_food", "pizza", "lanch", "restaur"]), ("bar", ["bar", "pub", "boteco"]), ("cafeteria", ["cafe", "coffee", "café"]),
-           ("salão/barbearia", ["barber", "hair", "beauty", "nail", "spa", "barbear", "salão", "salao", "cabele"]), ("pet", ["pet", "veterinary"]), ("clínica/consultório", ["dentist", "dental", "doctor", "medical", "physio", "odonto", "clínica", "clinica"]), ("academia/estúdio", ["gym", "fitness", "pilates", "yoga", "academia", "crossfit"]),
+SETORES = [("padaria", ["bakery", "confectionery", "pastry", "cake", "candy", "dessert", "padaria", "panific", "confeit", "doceria"]), ("restaurante", ["restaurant", "snack", "diner", "hamburger", "fast_food", "pizza", "lanch", "restaur"]), ("bar", [r"\bbar\b", r"\bpub\b", "boteco"]), ("cafeteria", ["cafe", "coffee", "café"]),
+           ("salão/barbearia", ["barber", "hair", "beauty", "nail", "spa", "barbear", "salão", "salao", "cabele"]), ("pet", [r"\bpet\b", r"pet ?shop", "veterinary", "veterin"]), ("clínica/consultório", ["dentist", "dental", "doctor", "medical", "physio", "odonto", "clínica", "clinica"]), ("academia/estúdio", ["gym", "fitness", "pilates", "yoga", "academia", "crossfit"]),
            ("ótica", ["optician", "eyewear", "ótica", "otica"]), ("loja de roupas/calçados", ["clothing", "shoe", "fashion", "apparel", "modas", "calçad"]), ("floricultura/presentes", ["florist", "gift", "home_goods", "toy", "stationery", "floric", "papelaria"]),
            ("cereais/empório", ["health_food", "grocery", "cereal", "emp[óo]rio", "gr[ãa]os", "armaz[ée]m", "temper", "especiar", "castanh", "natura"]), ("mercado/hortifruti", ["supermarket", "butcher", "market", "convenience", "liquor", "casa de carnes", "açougue", "acougue"]),
            ("embalagens/utilidades", ["embalag", "descart", "utilidad", "panela", "utens", "sacaria"]), ("celular/assistência", ["electronics", "cell_phone", "phone", "repair", "celular", "assist"]), ("escritório/imobiliária", ["accounting", "contab", "imobili"]), ("escola/curso", ["language", "education", "tutor", "idiomas", "curso"])]
@@ -146,7 +146,9 @@ GATILHOS = [
     ("atendimento sem identificação", r"\b(n[aã]o sabia quem (era|atendia)|uniforme|funcion[aá]rio[s]? (sem|n[aã]o) identific)\b", "uniformes", "Uniforme com a marca identifica a equipe e passa confiança."),
     ("cheiro / higiene", r"\b(cheiro (ruim|forte|de mofo)|mofo|higiene|insalubr|barat[ao]s?|rato)\b", "capacho", "Higiene aparece nas avaliações: capacho e organização visual da entrada ajudam na percepção de limpeza."),
 ]
+CONTEXTO_LUGAR = r"\b(loja|lugar|local|ambiente|entrada|porta|ch[aã]o|piso|fachada|vitrine|placa|letreiro|banheiro|balc[aã]o|estabelecimento|espa[cç]o|corredor|box|mesa|sal[aã]o|atendimento|funcion[aá]ri)"
 def gatilhos(avals):
+    """só vira gancho quando a reclamação é sobre o LUGAR (não sobre o produto): a palavra precisa vir perto de loja/entrada/chão/placa…"""
     out = []
     for a in avals:
         t = (a.get("texto") or "").lower()
@@ -154,6 +156,8 @@ def gatilhos(avals):
             m = re.search(rx, t, re.I)
             if m:
                 i = max(0, m.start() - 60); trecho = t[i:m.end() + 60].strip()
+                if not re.search(CONTEXTO_LUGAR, t[max(0, m.start() - 80):m.end() + 80], re.I):
+                    continue
                 out.append({"tema": tema, "produto": prod, "argumento": arg, "trecho": ("…" if i else "") + trecho + "…", "nota": a.get("nota"), "autor": a.get("autor")})
     # um por tema, priorizando notas baixas
     vistos, fim = set(), []
