@@ -1,11 +1,11 @@
 <!doctype html>
 <html lang="pt-BR">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>GênIO · Perfil</title><meta name="theme-color" content="#F1EEF8"><link rel="icon" href="../genio-favicon.png"><link rel="stylesheet" href="rep.css?v=9ecac757b4">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>GênIO · Perfil</title><meta name="theme-color" content="#F1EEF8"><link rel="icon" href="../genio-favicon.png"><link rel="stylesheet" href="rep.css?v=71ff04c17c">
 <style>.lin{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--linha)}.lin:last-child{border:0}.av{width:64px;height:64px;border-radius:50%;background:var(--marca);color:#fff;display:grid;place-items:center;font-weight:800;font-size:22px}select{min-height:48px;border-radius:12px;border:1.5px solid var(--linha);padding:0 12px;font:inherit;background:#fff}</style>
 </head>
 <body><div class="w" id="app"></div>
-<script src="rep.js?v=9ecac757b4"></script>
+<script src="rep.js?v=71ff04c17c"></script>
 <script>
 (async()=>{const {$,$$,esc,dados,estado,salvar,nav,topo,voz,ligarVoz,vendedor,ZONA}=Rep;const D=await dados();const e=estado();const v=vendedor();const ini=v.nome.split(/\s+/).filter((p,i,a)=>i===0||i===a.length-1).map(p=>p[0]).join("").toUpperCase();
   const notas=(e.notas||[]).slice().reverse();const dias=[...new Set(D.lojas.map(l=>l.dia))].sort((a,b)=>a-b);
@@ -18,5 +18,5 @@
   $("#dia").onchange=()=>{e.dia=+$("#dia").value;salvar(e);};
   $("#zerar").onclick=()=>{if(confirm("Zerar as visitas concluídas de hoje neste aparelho?")){e.feitas=[];salvar(e);location.reload();}};})();
 </script>
-<script src="imagem.js?v=9ecac757b4"></script>
+<script src="imagem.js?v=71ff04c17c"></script>
 </body></html>

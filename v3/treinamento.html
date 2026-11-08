@@ -11,7 +11,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&display=swap">
-<link rel="stylesheet" href="portal.css?v=9ecac757b4">
+<link rel="stylesheet" href="portal.css?v=71ff04c17c">
 <style>
 .vids{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-top:16px}
 .vid{display:block;background:#EBE3F5;border-radius:16px;overflow:hidden;color:var(--texto);text-decoration:none}
@@ -30,7 +30,7 @@
   <p class="muted" id="sem" hidden>Os primeiros vídeos estão sendo gravados. Enquanto isso, a central de atendimento tira as dúvidas.</p>
   <div class="vids" id="vids"></div>
 </main>
-<script src="portal.js?v=9ecac757b4"></script>
+<script src="portal.js?v=71ff04c17c"></script>
 <script>
 (async()=>{const {$}=G;const c=await G.eu().catch(()=>null);if(!c){location.replace("/?entrar=1&volta=treinamento.html");return;}
   const V=G.VIDEOS||[];$("#sem").hidden=!!V.length;

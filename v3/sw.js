@@ -1,6 +1,6 @@
 // Gênio: funciona sem internet. Cada página abre do que está guardado no aparelho e se atualiza quando há rede.
-const V="genio-9ecac757b4",PAGS=["index.html","app.html","capacho.html","convite.html","admin.html","franquia.html","identidade.html","treinamento.html","ver.html"],
-  CORE=PAGS.concat(["portal.css?v=9ecac757b4","portal.js?v=9ecac757b4","fotocrop.js?v=9ecac757b4","manual.js?v=9ecac757b4","lacunas.js?v=9ecac757b4","manifest.webmanifest","genio-192.png","genio-512.png","genio-touch.png","genio-favicon.png"]);
+const V="genio-71ff04c17c",PAGS=["index.html","app.html","capacho.html","convite.html","admin.html","franquia.html","identidade.html","treinamento.html","ver.html"],
+  CORE=PAGS.concat(["portal.css?v=71ff04c17c","portal.js?v=71ff04c17c","fotocrop.js?v=71ff04c17c","manual.js?v=71ff04c17c","lacunas.js?v=71ff04c17c","manifest.webmanifest","genio-192.png","genio-512.png","genio-touch.png","genio-favicon.png"]);
 self.addEventListener("install",e=>{e.waitUntil(caches.open(V).then(c=>c.addAll(CORE)).then(()=>self.skipWaiting()));});
 self.addEventListener("activate",e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==V&&k!=="genio-fontes").map(k=>caches.delete(k)))).then(()=>self.clients.claim()));});
 // endereço → página guardada ("/" e "/?app=1" são a página de vendas e entrar)

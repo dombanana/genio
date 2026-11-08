@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>GênIO · Fontes da marca</title>
+<meta name="theme-color" content="#F1EEF8">
+<link rel="icon" href="../genio-favicon.png">
+<link rel="stylesheet" href="rep.css?v=71ff04c17c">
+<style>
+.busca{display:flex;gap:8px;margin:0 0 12px}
+.busca input{flex:1;min-height:50px;border:1.5px solid var(--linha);border-radius:14px;padding:0 14px;font:inherit;font-size:16px;background:#fff}
+.busca button{flex:0 0 auto;min-height:50px;padding:0 16px;border:0;border-radius:14px;background:var(--navy);color:#fff;font-weight:700;font-size:16px}
+.grade{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.grade figure{margin:0;background:#fff;border-radius:12px;overflow:hidden;position:relative;aspect-ratio:1/1;display:grid;place-items:center}
+.grade img{width:100%;height:100%;object-fit:contain;display:block;background:#fff}
+.grade figcaption{position:absolute;left:0;right:0;bottom:0;background:rgba(20,28,58,.7);color:#fff;font-size:11px;padding:3px 6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.grade .tag{position:absolute;top:6px;left:6px;background:var(--teal);color:#fff;font-size:11px;font-weight:700;padding:2px 7px;border-radius:999px}
+.dica{background:#fff;border-radius:14px;padding:12px 14px;margin:0 0 12px;font-size:15px;display:flex;gap:10px;align-items:center}
+.dica b{color:var(--marca)}
+.estado{color:var(--texto2);padding:30px 0;text-align:center}
+</style>
+</head>
+<body>
+<div class="w" id="app"></div>
+<script src="rep.js?v=71ff04c17c"></script>
+<script>
+(async()=>{
+  const {$,$$,esc,qs,nomeLoja,dados,nav,topo,ZONA}=Rep;
+  const D=await dados();const slug=qs.get("l");const tipo=qs.get("tipo")||"busca";const l=D.lojas.find(x=>x.slug===slug);
+  if(!l){$("#app").innerHTML=`${topo()}<p>Loja não encontrada.</p>${nav("rota")}`;return;}
+  const nome=nomeLoja(l.nome);
+  let cad=null;try{const r=await fetch(`/dados/captacao/${ZONA}/clientes/${slug}.json?t=${Date.now()}`,{cache:"no-store"});if(r.ok)cad=await r.json();}catch(e){}
+  const L=(cad&&cad.lacunas)||{};const site=L.site&&L.site.estado==="encontrado"?L.site.valor:(l.site||"");
+  const cidade=(D.zona&&D.zona.cidade)||"São Paulo";
+  let q=tipo==="site"?site:`${nome} logo ${cidade}`;
+  function render(){
+    $("#app").innerHTML=`${topo()}
+    <div class="faixa"><a href="visita.html?l=${encodeURIComponent(slug)}">Visita</a></div>
+    <h1>${tipo==="site"?"Imagens do site":"Pesquisa de imagem"}</h1><p class="sub">${esc(nome)}</p>
+    <div class="dica"><span style="font-size:22px">☝️</span><div>Toque numa imagem; depois <b>segure e arraste</b> sobre o logotipo para marcar a área.</div></div>
+    <form class="busca" id="f"><input id="q" value="${esc(q)}" ${tipo==="site"?'placeholder="endereço do site"':'placeholder="o que procurar"'}><button type="submit">${tipo==="site"?"Abrir":"Buscar"}</button></form>
+    ${tipo==="site"&&site?`<p class="ilus" style="margin:-4px 0 10px"><a href="${esc(/^https?:/.test(site)?site:"https://"+site)}" target="_blank" rel="noopener">Abrir o site no navegador ↗</a></p>`:""}
+    <div id="res" class="estado">Carregando…</div>
+    ${nav("rota")}`;
+    $("#f").onsubmit=ev=>{ev.preventDefault();q=$("#q").value.trim();carregar();};
+    carregar();
+  }
+  async function carregar(){
+    const res=$("#res");res.className="estado";res.textContent=tipo==="site"?"Abrindo o site…":"Buscando…";
+    if(!q){res.textContent=tipo==="site"?"Esta loja não tem site encontrado. Use a pesquisa de imagem.":"Digite o que procurar.";return;}
+    try{
+      const u=tipo==="site"?`/api/site/imagens?url=${encodeURIComponent(q)}`:`/api/imagens/busca?q=${encodeURIComponent(q)}`;
+      const r=await fetch(u,{credentials:"same-origin",cache:"no-store"});const d=await r.json();
+      if(!r.ok||d.erro){res.textContent=d.erro||d.mensagem||("Não consegui ("+r.status+"). "+(r.status===401?"Entre com a sua conta.":""));return;}
+      const imgs=d.imagens||[];
+      if(!imgs.length){res.textContent="Nenhuma imagem encontrada.";return;}
+      res.className="grade";
+      res.innerHTML=imgs.map((i,k)=>`<figure data-u="${esc(i.u)}" data-fonte="${esc(tipo==="site"?(d.titulo||q):(i.fonte||"pesquisa"))}">${i.logo?'<span class="tag">logo?</span>':""}<img loading="lazy" src="/api/img?u=${encodeURIComponent(i.thumb||i.u)}" alt=""><figcaption>${esc(i.alt||i.titulo||i.fonte||"")}</figcaption></figure>`).join("");
+      $$("#res figure").forEach(f=>f.onclick=()=>{location.href=`recorte.html?l=${encodeURIComponent(slug)}&u=${encodeURIComponent(f.dataset.u)}&fonte=${encodeURIComponent(f.dataset.fonte)}&tipo=${tipo}`;});
+    }catch(e){res.textContent="Falha de rede: "+e.message;}
+  }
+  render();
+})();
+</script>
+</body>
+</html>

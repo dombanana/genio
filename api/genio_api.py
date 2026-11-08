@@ -401,6 +401,58 @@ def codigo_ok(c):
 
 # ---------- chaves de serviços externos (Places, Serper, Apify, ZapSign…) ----------
 CHAVES_ARQ = os.environ.get("GENIO_CHAVES", "/var/lib/genio/chaves.json")
+# ---------- captura de logotipo: imagens do site do cliente, busca de imagens e proxy ----------
+from urllib import request as _rq
+from urllib.parse import urljoin as _urljoin, parse_qs as _parse_qs, quote as _quote
+_UA = {"User-Agent": "Mozilla/5.0 (Linux; Android 13) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124 Mobile Safari/537.36", "Accept-Language": "pt-BR,pt;q=0.9"}
+def site_imagens(url):
+    """Imagens que o site do cliente mostra (cabeçalho primeiro), para o representante marcar o logotipo com o dedo."""
+    if not re.match(r"^https?://", url or ""):
+        url = "https://" + (url or "")
+    html_ = _rq.urlopen(_rq.Request(url, headers=_UA), timeout=20).read(600_000).decode("utf-8", "replace")
+    titulo = (re.search(r"<title[^>]*>(.*?)</title>", html_, re.I | re.S) or [None, ""])[1].strip()[:120]
+    def srcs(trecho):
+        out = []
+        for m in re.finditer(r"<img[^>]+>", trecho, re.I):
+            t = m.group(0); src = re.search(r'(?:data-src|data-lazy-src|src)=["\']([^"\']+)', t)
+            ss = re.search(r'srcset=["\']([^"\']+)', t)
+            u = (ss.group(1).split(",")[-1].strip().split(" ")[0] if ss else None) or (src.group(1) if src else None)
+            if u and not u.startswith("data:"):
+                alt = re.search(r'alt=["\']([^"\']*)', t)
+                out.append({"u": _urljoin(url, u), "alt": (alt.group(1) if alt else "")[:60], "logo": bool(re.search(r"logo|marca|brand", t, re.I))})
+        return out
+    cab = " ".join(re.findall(r"<(?:header|nav)[^>]*>.*?</(?:header|nav)>", html_, re.I | re.S))
+    lista = srcs(cab); lista += srcs(html_)
+    for m in re.finditer(r'<(?:meta|link)[^>]+(?:property=["\']og:image["\']|rel=["\'][^"\']*icon[^"\']*["\'])[^>]*>', html_, re.I):
+        h = re.search(r'(?:content|href)=["\']([^"\']+)', m.group(0))
+        if h:
+            lista.append({"u": _urljoin(url, h.group(1)), "alt": "ícone / imagem de compartilhamento", "logo": True})
+    vistos, out = set(), []
+    for it in lista:
+        if it["u"] in vistos or re.search(r"\.svg(\?|$)|pixel|tracking|1x1", it["u"], re.I):
+            continue
+        vistos.add(it["u"]); out.append(it)
+        if len(out) >= 60:
+            break
+    out.sort(key=lambda x: (not x["logo"]))
+    return {"url": url, "titulo": titulo, "imagens": out}
+def busca_imagens(qtxt):
+    k = chaves_ler().get("SERPER_KEY")
+    if not k:
+        return {"erro": "SERPER_KEY não definida na tela Chaves"}
+    body = json.dumps({"q": qtxt, "gl": "br", "hl": "pt-br", "num": 30}).encode()
+    r = _rq.urlopen(_rq.Request("https://google.serper.dev/images", data=body, headers={"X-API-KEY": k, "Content-Type": "application/json"}), timeout=25)
+    d = json.loads(r.read().decode("utf-8", "replace"))
+    return {"q": qtxt, "imagens": [{"u": i.get("imageUrl"), "thumb": i.get("thumbnailUrl") or i.get("imageUrl"), "titulo": (i.get("title") or "")[:80], "fonte": i.get("source") or i.get("domain") or "", "pagina": i.get("link")} for i in d.get("images", []) if i.get("imageUrl")]}
+def proxy_img(u):
+    if not re.match(r"^https?://", u or ""):
+        raise ValueError("endereço inválido")
+    r = _rq.urlopen(_rq.Request(u, headers=dict(_UA, Referer="https://www.google.com/")), timeout=25)
+    ct = r.headers.get("Content-Type", "application/octet-stream").split(";")[0]
+    if not ct.startswith("image/"):
+        raise ValueError("não é imagem")
+    return ct, r.read(8_000_000)
+
 CHAVES_NOMES = ["GOOGLE_PLACES_KEY", "SERPER_KEY", "APIFY_TOKEN", "ZAPSIGN_TOKEN", "ASAAS_TOKEN", "OPENAI_KEY", "GEMINI_KEY", "GOOGLE_MAPS_KEY",
                 "MELHORENVIO_TOKEN", "TELEGRAM_BOT_TOKEN", "TELEGRAM_CHAT_ID", "ML_APP_ID", "ML_SECRET"]
 def chaves_ler():
@@ -498,6 +550,19 @@ class H(BaseHTTPRequestHandler):
                 if not eu:
                     return self._erro(401, "entre com a sua conta")
                 return self._send(200, dict(eu, planos=PLANOS))
+            if p in ("/api/site/imagens", "/api/imagens/busca", "/api/img"):
+                if not self._eu():
+                    return self._erro(401, "entre com a sua conta")
+                qs = {k: v[0] for k, v in _parse_qs(urlparse(self.path).query or "").items()}
+                try:
+                    if p == "/api/site/imagens":
+                        return self._send(200, site_imagens(qs.get("url", "")))
+                    if p == "/api/imagens/busca":
+                        return self._send(200, busca_imagens(qs.get("q", "")))
+                    ct, dados = proxy_img(qs.get("u", ""))
+                    return self._send(200, body=dados, ctype=ct, cache="public, max-age=86400")
+                except Exception as e:
+                    return self._erro(502, "não consegui abrir: " + str(e)[:120])
             if p == "/api/convite":
                 qs = dict(x.split("=", 1) for x in (urlparse(self.path).query or "").split("&") if "=" in x)
                 if qs.get("p"):

@@ -6,14 +6,14 @@
 <title>GênIO · Visita</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="rep.css?v=9ecac757b4">
+<link rel="stylesheet" href="rep.css?v=71ff04c17c">
 </head>
 <body>
 <div class="w" id="app"></div>
 <input type="file" accept="image/*" capture="environment" id="cam" hidden>
-<script src="../fotocrop.js?v=9ecac757b4"></script>
-<script src="imagem.js?v=9ecac757b4"></script>
-<script src="rep.js?v=9ecac757b4"></script>
+<script src="../fotocrop.js?v=71ff04c17c"></script>
+<script src="imagem.js?v=71ff04c17c"></script>
+<script src="rep.js?v=71ff04c17c"></script>
 <script>
 (async()=>{
   const {$,$$,esc,qs,nomeLoja,dados,estado,salvar,stLogo,nav,topo,voz,ligarVoz,ouvir,roteiro,CHECK,PROD,setorNome,telFmt,abertaAgora,ZONA}=Rep;
@@ -26,6 +26,7 @@
   const st=stLogo({logo:logo.estado==="encontrado"?"encontrado":(logo.opcoes&&logo.opcoes.length?"pendente":null)});
   const aberta=abertaAgora(l.horario);
   const refs=(L.fachada&&L.fachada.referencias)||[];
+  const cn=L.nome_curiosidade||null;
   const arteVinc=await Rep.arteDoCliente(nomeLoja(l.nome));const M0=Imagem.ler();
   const logoSrc=arteVinc||(M0[slug+"/logo"]&&M0[slug+"/logo"].dados)||(logo.estado==="encontrado"?base+logo.valor:null);
   const fotoLocal=fotos.entrada||(refs[0]?base+refs[0]:null);
@@ -56,15 +57,23 @@
   <div class="faixa"><a href="index.html">Rota</a></div>
   <h1>${esc(nomeLoja(l.nome))}</h1>
   <p class="sub">Parada ${l.ordem} · ${esc(l.endereco)}${l.tel?` · ${esc(telFmt(l.tel))}`:""}</p>
-  <div class="foto" id="foto" data-img="local" data-loja="${esc(slug)}" data-nome="Foto do local" ${fotos.entrada?"":refs[0]?`data-fonte="referência pública"`:""}>${fotoLocal?`<img src="${esc(fotoLocal)}" alt="">${fotos.entrada?"":'<span class="sel">Referência pública</span>'}`:`<div style="text-align:center"><div style="font-size:40px">📷</div>Sem foto do local ainda<br><small>toque em “Fotografar entrada”</small></div>`}</div>
+  <div class="panorama">
+    <div class="foto fachada" id="foto" data-img="local" data-loja="${esc(slug)}" data-nome="Fachada" ${fotos.entrada?"":refs[0]?`data-fonte="referência pública"`:""}>${fotoLocal?`<img src="${esc(fotoLocal)}" alt="">`:`<div class="vazio">📷</div>`}<span class="sel">Fachada${fotos.entrada?"":fotoLocal?" · referência":""}</span></div>
+    <div class="internas"><div class="rotulo">Fotos internas e produtos</div><div class="tira">${refs.slice(fotoLocal&&!fotos.entrada?1:0).map((r,i)=>`<img src="${esc(base+r)}" alt="" data-img="interna-${i}" data-loja="${esc(slug)}" data-nome="Foto interna">`).join("")||'<div class="vazio-tira">nenhuma ainda</div>'}</div></div>
+  </div>
+  <div class="fontes">
+    <a class="btn sec" href="${L.site&&L.site.estado==="encontrado"?`fontes.html?l=${encodeURIComponent(slug)}&tipo=site`:"#"}" ${L.site&&L.site.estado==="encontrado"?"":'aria-disabled="true" style="opacity:.5"'}>🌐 Site${L.site&&L.site.estado==="encontrado"?"":" · não achado"}</a>
+    <a class="btn sec" href="fontes.html?l=${encodeURIComponent(slug)}&tipo=busca">🔍 Pesquisa de imagem</a>
+  </div>
   <div class="chips"><span class="chip">🏪 ${esc(setorNome(l.setor))}</span>${aberta===true?'<span class="chip ok">✓ Aberto agora</span>':aberta===false?'<span class="chip">Fechado agora</span>':""}${l.nota?`<button type="button" class="chip" id="avals" style="cursor:pointer">★ ${String(l.nota).replace(".",",")} · ${l.aval||0} avaliações${AV.gatilhos&&AV.gatilhos.length?` · <b style="color:#C8552B">${AV.gatilhos.length} gancho${AV.gatilhos.length>1?"s":""}</b>`:""}</button>`:""}</div>
   ${AV.gatilhos&&AV.gatilhos.length?`<section class="card" style="border-left:5px solid #C8552B"><h2>O que os clientes reclamam</h2>${AV.gatilhos.map(g=>`<div style="margin:0 0 10px"><b>${esc(g.tema)}</b> <span class="chip dec" style="padding:3px 10px;font-size:13px">★ ${g.nota||"?"}</span><br><i class="muted">“${esc(g.trecho)}”</i><br>→ ${esc(g.argumento)}</div>`).join("")}</section>`:""}
   <section class="card"><h2>Identidade da loja</h2>
     <div class="ident"><div class="logo-box" id="logoBox" data-img="logo" data-loja="${esc(slug)}" data-nome="Logo" ${logo.nome?`data-fonte="${esc(logo.nome)}"`:""} title="Toque para arrumar a arte">${logoSrc?`<img src="${esc(logoSrc)}" alt="">`:`<span style="font-size:30px">◌</span>`}</div>
-      <div><span class="chip ${arteVinc?"ok":st.c}">${arteVinc?"✓ Arte tratada":(st.c==="ok"?"✓ ":"")+(arteVinc?"":st.t)}</span>${cores.length?`<div class="cores">Cores da loja ${cores.map(c=>`<span class="cor" style="background:${esc(c)}"></span>`).join("")}</div>`:""}</div>
+      <div><span class="chip ${arteVinc?"ok":st.c}">${arteVinc?(M0[slug+"/logo"]&&M0[slug+"/logo"].acao==="captura"&&arteVinc===M0[slug+"/logo"].dados?"✓ Logotipo marcado · tratar no manual":"✓ Arte tratada"):(st.c==="ok"?"✓ ":"")+(arteVinc?"":st.t)}</span>${cores.length?`<div class="cores">Cores da loja ${cores.map(c=>`<span class="cor" style="background:${esc(c)}"></span>`).join("")}</div>`:""}</div>
       <a class="acao-link" style="margin:0" id="verIdent" href="${L.manual&&L.manual.valor?esc(base+L.manual.valor):`identidade.html`}">${L.manual&&L.manual.valor?"Ver manual de identidade →":"Arrumar a arte →"}</a></div>
     ${L.manual&&L.manual.nota&&!/pipeline falhou/.test(L.manual.nota)?`<p class="ilus" style="margin-top:8px">Manual: ${esc(L.manual.nota.replace(/menor largura no capacho (\d+) cm/,"traço fino: no capacho a arte precisaria ter $1 cm de largura"))}</p>`:L.manual&&L.manual.nota?`<p class="ilus" style="margin-top:8px">Manual automático ainda não gerado — entra na próxima rodada.</p>`:""}
     ${logo.estado!=="encontrado"&&logo.opcoes&&logo.opcoes.length?`<p class="ilus" style="margin-top:10px">${logo.opcoes.length} opções encontradas na rede — decidir com o cliente na tela de identidade.</p>`:""}</section>
+  ${(cn&&cn.valor)||(L.sobre&&L.sobre.valor)?`<section class="card" style="border-left:5px solid var(--teal)"><h2>Curiosidade</h2>${cn&&cn.valor?`<p style="margin:0 0 6px">${esc(cn.valor)}</p><small class="muted">${esc(cn.nota||"")}</small>`:""}${L.sobre&&L.sobre.valor?`<p style="margin:${cn&&cn.valor?"10px":"0"} 0 0">${esc(L.sobre.valor)}</p>`:""}</section>`:""}
   <section class="card"><h2>Antes de entrar <small class="muted" style="font-weight:400;font-size:14px">· o que a pesquisa achou</small></h2>
     <div class="roteiro"><span class="ic">🔎</span><p>${esc(txtRoteiro)}</p><button class="btn sec sm" id="ouvir" type="button">▶ Ouvir</button></div></section>
   <section class="card"><h2>Condições da entrada</h2>

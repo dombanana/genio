@@ -135,3 +135,17 @@ h2{font-size:20px;margin:0 0 10px;font-weight:700}
 .acoes .btn.sec{flex:0 0 auto;width:auto;padding:0 16px;background:#E6DDF6;color:var(--navy)}
 body.com-acoes{padding-bottom:calc(160px + env(safe-area-inset-bottom,0))}
 body.com-acoes .voz{bottom:calc(166px + env(safe-area-inset-bottom,0))}
+
+/* visita: fachada num canto, fotos internas/produtos ao lado, botões Site e Pesquisa de imagem */
+.panorama{display:grid;grid-template-columns:42% 1fr;gap:10px;margin:0 0 10px}
+.panorama .foto.fachada{margin:0;aspect-ratio:1/1;height:auto;min-height:0;position:relative;border-radius:16px;overflow:hidden;background:var(--lav2);display:block}
+.panorama .fachada img{width:100%;height:100%;object-fit:cover;display:block}
+.panorama .foto.fachada .sel{position:absolute;left:8px;top:auto;bottom:8px;background:rgba(20,28,58,.75);color:#fff;font-size:12px;font-weight:600;padding:3px 8px;border-radius:999px}
+.panorama .vazio{display:grid;place-items:center;height:100%;color:var(--texto2);font-size:30px;text-align:center}
+.internas{background:#fff;border-radius:16px;padding:10px;min-width:0}
+.internas .rotulo{font-size:13px;color:var(--texto2);margin-bottom:8px}
+.internas .tira{display:flex;gap:8px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:4px}
+.internas .tira img{width:96px;height:96px;object-fit:cover;border-radius:10px;flex:0 0 auto;scroll-snap-align:start;background:var(--lav)}
+.vazio-tira{color:var(--texto2);font-size:13px;padding:30px 0}
+.fontes{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 0 12px}
+.fontes .btn.sec{min-height:50px;font-size:16px;text-decoration:none}

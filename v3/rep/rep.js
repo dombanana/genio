@@ -61,5 +61,17 @@ const Rep=(()=>{
   function abrirVendas(){return new Promise(res=>{try{const cria=d=>{["orcamentos","sessao"].forEach(n=>{if(!d.objectStoreNames.contains(n))d.createObjectStore(n,{keyPath:"id"});});if(!d.objectStoreNames.contains("clientes"))d.createObjectStore("clientes",{keyPath:"k"});};
     const r=indexedDB.open("genio-vendas");r.onupgradeneeded=()=>cria(r.result);r.onerror=()=>res(null);
     r.onsuccess=()=>{const d=r.result;if(d.objectStoreNames.contains("clientes"))return res(d);const v=Math.max(4,d.version+1);d.close();const r2=indexedDB.open("genio-vendas",v);r2.onupgradeneeded=()=>cria(r2.result);r2.onsuccess=()=>res(r2.result);r2.onerror=()=>res(null);r2.onblocked=()=>res(null);};}catch(e){res(null);}});}
-  return {$,$$,esc,qs,ZONA,nomeLoja,orcamentos,arteDoCliente,abrirVendas,etapaDe,setEtapa,estado,salvar,vendedor,dados,hojeDia,lojasDoDia,vizinhos,abertaAgora,stLogo,nav,topo,voz,ligarVoz,ouvir,roteiro,CHECK,PROD,setorNome,telFmt,dist,precoCapacho,money};
+  // logotipo marcado pelo representante (recorte do site ou da pesquisa): vira a fonte única da marca do cliente
+  async function salvarLogoCapturado(slug,nome,dataURL,fonte,deUrl){
+    try{const M=JSON.parse(localStorage.getItem("genio-imagens")||"{}");M[slug+"/logo"]={dados:dataURL,acao:"captura",fonte:fonte||"",em:new Date().toISOString()};localStorage.setItem("genio-imagens",JSON.stringify(M));
+      const F=JSON.parse(localStorage.getItem("genio-correcoes")||"[]");F.push({loja:slug,campo:"logo",acao:"captura",fonte:fonte||"",de:deUrl||"",em:new Date().toISOString()});localStorage.setItem("genio-correcoes",JSON.stringify(F));}catch(e){}
+    const db=await abrirVendas();if(!db)return false;
+    return new Promise(res=>{try{const t=db.transaction("clientes","readwrite"),st=t.objectStore("clientes"),k=nome.toLowerCase(),g=st.get(k);
+      g.onsuccess=()=>{const r=g.result||{k,nome,logos:[],criado:new Date().toISOString()};
+        const outros=(r.logos||[]).filter(x=>x.origem!=="captacao"&&x.origem!=="captura");
+        r.logos=[{id:"captura"+Date.now().toString(36),src:dataURL,nome:"Logotipo marcado"+(fonte?" · "+fonte:""),origem:"captura",de:deUrl||"",em:new Date().toISOString()},...outros];
+        if(r.manual&&!r.manual.editado)delete r.manual;  // o manual derivado do logo antigo não vale mais
+        r.atualizado=new Date().toISOString();st.put(r);t.oncomplete=()=>{db.close();res(true);};t.onerror=()=>res(false);};
+      g.onerror=()=>res(false);}catch(e){res(false);}});}
+  return {$,$$,esc,qs,ZONA,nomeLoja,orcamentos,arteDoCliente,abrirVendas,salvarLogoCapturado,etapaDe,setEtapa,estado,salvar,vendedor,dados,hojeDia,lojasDoDia,vizinhos,abertaAgora,stLogo,nav,topo,voz,ligarVoz,ouvir,roteiro,CHECK,PROD,setorNome,telFmt,dist,precoCapacho,money};
 })();
