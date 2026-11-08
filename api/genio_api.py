@@ -17,7 +17,7 @@ Configuração por variáveis de ambiente (arquivo /etc/genio/env, só o root l�
   GENIO_CHAVE   (chave de publicação dos vendedores)
   GENIO_PORT    (porta local, padrão 8110)
 """
-import base64, hashlib, hmac, json, os, re, secrets, sys, threading, time
+import base64, hashlib, hmac, json, os, re, secrets, subprocess, sys, threading, time
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import urlparse
 
@@ -514,6 +514,19 @@ class H(BaseHTTPRequestHandler):
                     return self._send(200, {"interesse": admin_interesse()})
                 if p == "/api/admin/chaves":
                     return self._send(200, {"chaves": chaves_estado()})
+                if p == "/api/admin/esteira":
+                    out = {}
+                    for n in ("esteira.log", "apt.log"):
+                        try:
+                            with open("/var/lib/genio/" + n) as f:
+                                out[n] = f.read()[-4000:]
+                        except Exception as e:
+                            out[n] = ""
+                    try:
+                        out["python"] = subprocess.run([sys.executable, "-c", "import cv2,skimage,PIL;print(cv2.__version__)"], capture_output=True, text=True, timeout=20).stdout.strip() or "sem cv2/skimage"
+                    except Exception as e:
+                        out["python"] = str(e)[:100]
+                    return self._send(200, out)
                 if p == "/api/admin/captacao":
                     est = {}
                     for n in ("quota", "padrao", "pedido"):
