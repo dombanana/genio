@@ -83,6 +83,7 @@ def status(pasta, **kw):
 
 # ---------- filtro de redes / setor (mesmas listas do montar.py) ----------
 FRANQ = re.compile(r"\b(drogasil|droga ?raia|drogaria s[aã]o paulo|pague menos|ultrafarma|drogal|nissei|panvel|mcdonald|burger king|subway|habib|starbucks|cacau show|kopenhagen|brasil cacau|botic[aá]rio|natura|petz|cobasi|petlove|smart ?fit|bluefit|bio ?ritmo|magazine luiza|casas bahia|renner|riachuelo|c&a|americanas|[oó]ticas? (carol|diniz)|chilli beans|havaianas|spoleto|china in box|domino|pizza hut|giraffas|bob's|outback|oakberry|bradesco|ita[uú]|santander|caixa econ|banco do brasil|correios|lot[eé]rica|kumon|wizard|fisk|ccaa|\bcna\b|carrefour|p[aã]o de a[çc][uú]car|assa[ií]|hirota|sonda|swift|vivara|hering|lupo|centauro|leroy|telhanorte|kfc|popeyes|rei do mate|casa do p[aã]o de queijo|chiquinho|kalunga|pernambucanas|marisa|zara|arezzo|melissa|ri happy|pbkids|cvc|localiza|movida|vivo|claro|tim|unidas|shell|am ?pm|oxxo|dia %|extra|minuto p[aã]o|sodi[eê]|hortifruti|oba\b|st ?marche|natural da terra|cultura inglesa|wise up|mercad[aã]o|mercado municipal)\b", re.I)
+ENDERECO_COMO_NOME = re.compile(r"^(r\.|rua|av\.?|avenida|al\.|alameda|tv\.|travessa|pç\.|praça|lj\.?|loja)\s.*\d", re.I)
 TIPOS_FORA = {"lodging", "atm", "bank", "parking", "transit_station", "bus_station", "subway_station", "church", "school", "hospital", "government_office", "post_office", "police", "gas_station", "car_rental", "insurance_agency", "real_estate_agency", "lawyer", "university", "local_government_office", "courthouse", "embassy", "cemetery", "park", "tourist_attraction", "museum"}
 SETORES = [("padaria", ["bakery", "confectionery", "pastry", "cake", "candy", "dessert", "padaria", "panific", "confeit", "doceria"]), ("restaurante", ["restaurant", "snack", "diner", "hamburger", "fast_food", "pizza", "lanch", "restaur"]), ("bar", [r"\bbar\b", r"\bpub\b", "boteco"]), ("cafeteria", ["cafe", "coffee", "café"]),
            ("salão/barbearia", ["barber", "hair", "beauty", "nail", "spa", "barbear", "salão", "salao", "cabele"]), ("pet", [r"\bpet\b", r"pet ?shop", "veterinary", "veterin"]), ("clínica/consultório", ["dentist", "dental", "doctor", "medical", "physio", "odonto", "clínica", "clinica"]), ("academia/estúdio", ["gym", "fitness", "pilates", "yoga", "academia", "crossfit"]),
@@ -264,8 +265,13 @@ def curiosidade_nome(nome):
     if K.get("GEMINI_KEY"):
         try:
             body = {"contents": [{"parts": [{"text": f"Em uma frase curta (máx. 30 palavras), em português, qual a origem ou o significado provável da palavra '{palavra}' no nome do comércio '{nome}' (sobrenome, cidade, palavra estrangeira, apelido)? Seja factual. Se não houver base, responda só: sem registro."}]}], "generationConfig": {"temperature": 0.2, "maxOutputTokens": 80}}
-            r = tenta(http, "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent", body, {"x-goog-api-key": K["GEMINI_KEY"]})
-            txt = ((((r.get("candidates") or [{}])[0].get("content") or {}).get("parts") or [{}])[0].get("text") or "").strip()
+            # modelos em ordem de preferência: o Google aposenta versões e a resposta de erro indica a nova
+            r, txt = {}, ""
+            for modelo in ("gemini-3.8-flash", "gemini-2.5-flash", "gemini-flash-latest"):
+                r = tenta(http, f"https://generativelanguage.googleapis.com/v1beta/models/{modelo}:generateContent", body, {"x-goog-api-key": K["GEMINI_KEY"]})
+                txt = ((((r.get("candidates") or [{}])[0].get("content") or {}).get("parts") or [{}])[0].get("text") or "").strip()
+                if txt or "404" not in str(r.get("_erro", "")):
+                    break
             if txt and "sem registro" not in txt.lower():
                 return {"estado": "derivado", "valor": txt[:220], "origem": "derivado", "nota": "Gemini (uma frase; confirmar com o dono)", "palavra": palavra}
             erro_g = r.get("_erro") or ("resposta vazia" if not txt else "sem registro")
@@ -431,7 +437,9 @@ def identidade(loja, zona, pasta, quota_ok):
                 cands.append(dict(arq=p, fonte="instagram-perfil", legenda=f"Foto de perfil · Instagram @{ig[0]}", url=f"https://www.instagram.com/{ig[0]}/"))
         bio = (pr.get("biography") or "").strip() if isinstance(pr, dict) else ""
         if bio:
-            L["slogan"] = {"estado": "pendente", "origem": "cliente", "valor": "", "opcoes": [{"valor": bio.split("\n")[0][:80], "legenda": "bio do Instagram", "fonte": "Instagram"}], "nota": "frase que a casa usa; confirmar"}
+            if re.search(r"\b(ceo|diretor|diretora|fundador|fundadora|s[oó]cio|propriet[aá]ri[oa]|empres[aá]ri[oa])\b", bio.split("\n")[0], re.I):
+                bio = ""  # bio pessoal do dono, não frase da casa
+            if bio: L["slogan"] = {"estado": "pendente", "origem": "cliente", "valor": "", "opcoes": [{"valor": bio.split("\n")[0][:80], "legenda": "bio do Instagram", "fonte": "Instagram"}], "nota": "frase que a casa usa; confirmar"}
         if isinstance(pr, dict) and pr.get("externalUrl") and L.get("site", {}).get("estado") != "encontrado":
             L["site"] = E(pr["externalUrl"])
         passos.append(f"Instagram @{ig[0]} (Apify) → " + ("perfil lido" if isinstance(pr, dict) and not pr.get("_erro") else f"falhou: {pr.get('_erro') if isinstance(pr, dict) else pr}"))
@@ -669,6 +677,9 @@ def main():
         padrao = {}
     if run:
         padrao["zona"] = run.get("zona") or padrao.get("zona"); json.dump(padrao, open(os.path.join(ESTADO, "captacao", "padrao.json"), "w"))
+    if not run and not (2 <= dt.datetime.now().hour <= 5) and "--forcar" not in sys.argv:
+        # serviço iniciado fora da madrugada sem pedido novo (nonce já consumido): não gastar 50 lojas por engano
+        print("sem pedido novo; nada a fazer"); return
     zslug = run.get("zona") or padrao.get("zona") or (sys.argv[1] if len(sys.argv) > 1 else "zona-cerealista")
     limite = int(run["limite"]) if run.get("limite") is not None else 50
     zona = zona_config(zslug)
@@ -706,6 +717,8 @@ def main():
     for p in brutos:
         nome = p.get("displayName", {}).get("text", ""); loc = p.get("location", {}); lat, lng = loc.get("latitude"), loc.get("longitude")
         if not nome or lat is None or FRANQ.search(nome) or p.get("businessStatus") not in (None, "OPERATIONAL"):
+            continue
+        if ENDERECO_COMO_NOME.search(nome):  # "R. Comendador Abdo Schahin, 206 - Lj 62" não é loja, é um ponto sem nome
             continue
         if set(p.get("types", [])) & TIPOS_FORA and not (set(p.get("types", [])) & {"store", "food", "restaurant", "cafe", "bakery"}):
             continue
