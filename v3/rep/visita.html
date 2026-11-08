@@ -20,8 +20,8 @@
   const D=await dados();const slug=qs.get("l");const l=D.lojas.find(x=>x.slug===slug);
   if(!l){$("#app").innerHTML=`${topo()}<div class="faixa"><a href="index.html">Rota</a></div><p>Loja não encontrada.</p>${nav("rota")}`;return;}
   // cadastro da captação (fotos, logo, cores) quando existir
-  let cad=null;try{const r=await fetch(`../dados/captacao/${ZONA}/clientes/${slug}.json`);if(r.ok)cad=await r.json();}catch(e){}
-  const L=cad?cad.lacunas:{};const logo=L.logoOriginal||{};const base=`../dados/captacao/${ZONA}/`;
+  let cad=null;try{const r=await fetch(`/dados/captacao/${ZONA}/clientes/${slug}.json`);if(r.ok)cad=await r.json();}catch(e){}
+  const L=cad?cad.lacunas:{};const logo=L.logoOriginal||{};const base=`/dados/captacao/${ZONA}/`;
   const e=estado();const fotos=(e.fotos||{})[slug]||{};const ck=(e.check||{})[slug]||{};
   const st=stLogo({logo:logo.estado==="encontrado"?"encontrado":(logo.opcoes&&logo.opcoes.length?"pendente":null)});
   const aberta=abertaAgora(l.horario);

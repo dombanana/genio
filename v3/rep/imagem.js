@@ -26,7 +26,7 @@ const Imagem=(()=>{
   function fila(item){const f=ler(FILA);f.push({...item,em:new Date().toISOString()});gravar(FILA,f);enviar();}
   let enviando=false;
   async function enviar(){if(enviando||!navigator.onLine)return;const f=ler(FILA);if(!f.length)return;enviando=true;
-    try{const r=await fetch("../api/correcoes",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({correcoes:f.map(x=>({...x,dados:undefined}))})});if(r.ok)gravar(FILA,[]);}catch(e){}enviando=false;}
+    try{const r=await fetch("/api/correcoes",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({correcoes:f.map(x=>({...x,dados:undefined}))})});if(r.ok)gravar(FILA,[]);}catch(e){}enviando=false;}
   function salvarImg(el,dados,acao,extra){const M=ler(KEY);M[id(el)]={dados,acao,em:new Date().toISOString(),...(extra||{})};gravar(KEY,M);aplicar(el.parentElement||document);fila({loja:el.dataset.loja||null,campo:el.dataset.img,fonte:el.dataset.fonte||null,acao,...(extra||{})});if(typeof el.onImagem==="function")el.onImagem(dados,acao);el.dispatchEvent(new CustomEvent("imagem",{bubbles:true,detail:{acao,dados}}));}
   function arquivoDe(src){return fetch(src).then(r=>r.blob()).then(b=>new File([b],"imagem.jpg",{type:b.type||"image/jpeg"}));}
   function comoDados(file,max=1400){return new Promise(res=>{const u=URL.createObjectURL(file),i=new Image();i.onload=()=>{const c=document.createElement("canvas"),k=Math.min(1,max/Math.max(i.width,i.height));c.width=i.width*k;c.height=i.height*k;c.getContext("2d").drawImage(i,0,0,c.width,c.height);URL.revokeObjectURL(u);res(c.toDataURL("image/jpeg",.85));};i.src=u;});}

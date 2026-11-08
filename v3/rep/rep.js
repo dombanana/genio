@@ -16,9 +16,13 @@ const Rep=(()=>{
   const telFmt=t=>{const d=(t||"").replace(/\D/g,"").replace(/^55(?=\d{10,11}$)/,"");return d.length>=10?`(${d.slice(0,2)}) ${d.slice(2,-4)}-${d.slice(-4)}`:(t||"");};
   const dist=(a,b)=>{const R=6371e3,toR=x=>x*Math.PI/180,dl=toR(b.lat-a.lat),dg=toR(b.lng-a.lng),s=Math.sin(dl/2)**2+Math.cos(toR(a.lat))*Math.cos(toR(b.lat))*Math.sin(dg/2)**2;return Math.round(2*R*Math.asin(Math.sqrt(s)));};
   let D=null;
-  async function dados(){if(D)return D;const r=await fetch(`dados/${ZONA}.json`);D=await r.json();localStorage.setItem("rep-zona",ZONA);
+  async function dados(){if(D)return D;
+    // lojas reais da captação do servidor; se ainda não houver, a lista local da zona
+    try{const r=await fetch(`/dados/captacao/${ZONA}/lojas.json`,{cache:"no-cache"});if(r.ok){const j=await r.json();D={zona:{slug:ZONA,nome:j.zona.nome.split(" (")[0],base:j.zona.base},gerado:j.gerado,lojas:j.lojas};}}catch(e){}
+    if(!D){const r=await fetch(`dados/${ZONA}.json`);D=await r.json();}
+    localStorage.setItem("rep-zona",ZONA);
     // cadastro da captação (quando existir): estado do logo por loja
-    try{const c=await fetch(`../dados/captacao/${ZONA}/clientes/index.json`);if(c.ok){const idx=await c.json();const m={};idx.forEach(x=>m[x.slug]=x.logo);D.lojas.forEach(l=>l.logo=m[l.slug]||null);}}catch(e){}
+    try{const c=await fetch(`/dados/captacao/${ZONA}/clientes/index.json`);if(c.ok){const idx=await c.json();const m={};idx.forEach(x=>m[x.slug]=x.logo);D.lojas.forEach(l=>l.logo=m[l.slug]||null);}}catch(e){}
     return D;}
   const hojeDia=D=>{const e=estado();return e.dia||1;};
   const lojasDoDia=(D,dia)=>D.lojas.filter(l=>l.dia===dia).sort((a,b)=>a.ordem-b.ordem);

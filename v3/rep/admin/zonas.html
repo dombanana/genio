@@ -15,8 +15,8 @@
 (async()=>{
   const esc=Adm.esc;document.getElementById("side").outerHTML=Adm.menu("zonas");
   const R=await fetch("../dados/ranking.json").then(r=>r.json());const Z=R.zonas;const mes=new Date().getMonth()+1;
-  let cap=null;try{const r=await fetch("../../dados/captacao/zona-cerealista/status.json");if(r.ok)cap=await r.json();}catch(e){}
-  let idx=null;try{const r=await fetch("../../dados/captacao/zona-cerealista/clientes/index.json");if(r.ok)idx=await r.json();}catch(e){}
+  let cap=null;try{const r=await fetch("/dados/captacao/zona-cerealista/status.json");if(r.ok)cap=await r.json();}catch(e){}
+  let idx=null;try{const r=await fetch("/dados/captacao/zona-cerealista/clientes/index.json");if(r.ok)idx=await r.json();}catch(e){}
   const momento=z=>{const m=z.momentos.find(m=>m.meses.includes(mes));if(m)return {t:/chuva/i.test(m.motivo)?"Chuva em alta":"Momento certo",c:"ok",ic:/chuva/i.test(m.motivo)?"🌧":"✓",motivo:m.motivo};const prox=z.momentos.map(m=>({m,d:Math.min(...m.meses.map(x=>(x-mes+12)%12||12))})).sort((a,b)=>a.d-b.d)[0];return {t:prox?`Em ${prox.d} ${prox.d===1?"mês":"meses"}`:"Avaliar visita",c:"dec",ic:"?",motivo:prox?prox.m.motivo:""};};
   const FX={B:"Baixa",M:"Média",A:"Alta",P:"Premium"};
   const CR={nf:"Lojas independentes",amb:"Ambição da loja",chuva:"Exposição à chuva",dono:"Dono presente",porta:"Porta na calçada",fluxo:"Fluxo de pedestres",alag:"Alagamentos",trad:"Tradição (CNPJ)",tiq:"Tíquete do setor",recompra:"Recompra",grafica:"Concorrência de gráficas"};
@@ -36,7 +36,7 @@
       <div style="color:var(--texto2);font-size:14px;margin:0 0 12px">Faixa de investimento ${FX[z.faixa]} · ${esc(z.faixa_txt)}</div>
       <button class="btn" id="escolher">${esc_===z.nome?"Zona escolhida ✓":"Escolher zona"}</button>
       <p style="color:var(--texto2);font-size:13px;margin:10px 0 0">Escolher marca a zona da vez: a captação da madrugada passa a rodar nela e a rota dos representantes aponta para lá.</p></aside></div>
-    <div class="rod"><b style="font-size:18px">◈ Última captação</b><span class="sep"></span><span>${cap?`${cap.processadas||0} lojas processadas · cota ${Math.max(0,50-(cap.processadas||0))} de reserva · ${esc(cap.fase)}`:"ainda não rodou (chaves pendentes no servidor)"}</span><span class="sep"></span><span><b>Custo:</b> ${cap&&cap.custo_reais!=null?"R$ "+cap.custo_reais.toFixed(2).replace(".",","):"—"}</span><span style="flex:1"></span><a href="../../dados/captacao/zona-cerealista/index.html"><b>Ver resultados →</b></a></div>`;
+    <div class="rod"><b style="font-size:18px">◈ Última captação</b><span class="sep"></span><span>${cap?`${cap.processadas||0} lojas processadas · cota ${Math.max(0,50-(cap.processadas||0))} de reserva · ${esc(cap.fase)}`:"ainda não rodou (chaves pendentes no servidor)"}</span><span class="sep"></span><span><b>Custo:</b> ${cap&&cap.custo_reais!=null?"R$ "+cap.custo_reais.toFixed(2).replace(".",","):"—"}</span><span style="flex:1"></span><a href="/dados/captacao/zona-cerealista/index.html"><b>Ver resultados →</b></a></div>`;
     document.querySelectorAll("tr.z").forEach(tr=>tr.onclick=()=>{sel=+tr.dataset.i;render();});
     document.getElementById("escolher").onclick=()=>{localStorage.setItem("adm-zona-escolhida",z.nome);render();};}
   render();

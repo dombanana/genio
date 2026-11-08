@@ -28,8 +28,8 @@
   const {$,$$,esc,qs,nomeLoja,dados,estado,salvar,vizinhos,money,ZONA}=Rep;
   const D=await dados();const slug=qs.get("l")||(JSON.parse(localStorage.getItem("genio-cliente")||"null")||{}).slug;const l=D.lojas.find(x=>x.slug===slug);
   if(!l){$("#app").innerHTML=`<header class="topo"><div class="logo">Gên<i>IO</i></div><div class="papel">Área do cliente</div></header><p>Abra pelo QR do seu cartão GênIO ou pelo link que o representante enviou.</p>`;return;}
-  let cad=null;try{const r=await fetch(`../dados/captacao/${ZONA}/clientes/${slug}.json`);if(r.ok)cad=await r.json();}catch(e){}
-  const base=`../dados/captacao/${ZONA}/`;const logo=cad&&cad.lacunas.logoOriginal||{};const M=Imagem.ler();const logoSrc=(M[slug+"/logo"]&&M[slug+"/logo"].dados)||(logo.estado==="encontrado"?base+logo.valor:null);
+  let cad=null;try{const r=await fetch(`/dados/captacao/${ZONA}/clientes/${slug}.json`);if(r.ok)cad=await r.json();}catch(e){}
+  const base=`/dados/captacao/${ZONA}/`;const logo=cad&&cad.lacunas.logoOriginal||{};const M=Imagem.ler();const logoSrc=(M[slug+"/logo"]&&M[slug+"/logo"].dados)||(logo.estado==="encontrado"?base+logo.valor:null);
   const e=estado();const ped=(e.pedidos||[]).filter(p=>p.loja===slug).slice(-1)[0];const viz=vizinhos(D,l);const fech=viz.filter(v=>(e.fechadas||[]).includes(v.slug)).length+((e.fechadas||[]).includes(slug)?1:0);
   const nome=nomeLoja(l.nome);const ini=nome.split(/\s+/).filter((p,i,a)=>i===0||i===a.length-1).map(p=>p[0]||"").join("").toUpperCase();
   const ROT={arte:["Aguardando sua aprovação","dec"],pagamento:["Aguardando o sinal","dec"],producao:["Em produção","ok"],entrega:["Entrega agendada","ok"],entregue:["Entregue","ok"]};

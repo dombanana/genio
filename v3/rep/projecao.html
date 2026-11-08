@@ -39,8 +39,8 @@
 (async()=>{
   const {$,$$,esc,qs,nomeLoja,dados,estado,salvar,nav,topo,voz,ligarVoz,precoCapacho,money,ZONA,PROD}=Rep;
   const D=await dados();const slug=qs.get("l");const l=D.lojas.find(x=>x.slug===slug);if(!l){location.href="index.html";return;}
-  let cad=null;try{const r=await fetch(`../dados/captacao/${ZONA}/clientes/${slug}.json`);if(r.ok)cad=await r.json();}catch(e){}
-  const base=`../dados/captacao/${ZONA}/`;const logo=cad&&cad.lacunas.logoOriginal||{};
+  let cad=null;try{const r=await fetch(`/dados/captacao/${ZONA}/clientes/${slug}.json`);if(r.ok)cad=await r.json();}catch(e){}
+  const base=`/dados/captacao/${ZONA}/`;const logo=cad&&cad.lacunas.logoOriginal||{};
   const M=Imagem.ler();const fotoLocal=(M[slug+"/local"]&&M[slug+"/local"].dados)||null;
   const logoSrc=(M[slug+"/logo"]&&M[slug+"/logo"].dados)||(logo.estado==="encontrado"?base+logo.valor:null);
   const e=estado();e.orc=e.orc||{};const O=e.orc[slug]=e.orc[slug]||{tam:"120x60",borda:true,estilo:"classico",itens:[]};

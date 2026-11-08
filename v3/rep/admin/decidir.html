@@ -14,7 +14,7 @@
 <script>
 (async()=>{
   const esc=Adm.esc;document.getElementById("side").outerHTML=Adm.menu("identidades");
-  const ZONA=new URLSearchParams(location.search).get("zona")||"zona-cerealista";const base=`../../dados/captacao/${ZONA}/`;
+  const ZONA=new URLSearchParams(location.search).get("zona")||"zona-cerealista";const base=`/dados/captacao/${ZONA}/`;
   let idx=[];try{const r=await fetch(base+"clientes/index.json");if(r.ok)idx=await r.json();}catch(e){}
   const decididas=JSON.parse(localStorage.getItem("adm-decisoes")||"{}");
   const fila=idx.filter(x=>x.logo==="pendente"&&!decididas[x.slug]);
@@ -34,7 +34,7 @@
       <p style="color:var(--texto2);font-size:13px;margin:12px 0 0">ⓘ Sem referência confiável? A marca será fotografada na porta.</p></aside></div>
     <div class="aviso">✓ A identidade será preparada após a confirmação</div>`;
     document.querySelectorAll(".op").forEach(el=>el.onclick=()=>{document.querySelectorAll(".op").forEach(x=>x.classList.remove("sel"));el.classList.add("sel");sel=+el.dataset.k;document.getElementById("prev").src=base+ops[sel].img;});
-    const fim=(d)=>{decididas[it.slug]=d;localStorage.setItem("adm-decisoes",JSON.stringify(decididas));fetch("../../api/correcoes",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({correcoes:[{loja:it.slug,campo:"logo",acao:d.acao,escolhida:d.escolhida,fonte:d.fonte||null}]})}).catch(()=>{});i++;if(i<fila.length)render();else main.innerHTML=`<p class="mig">Identidades / <b>Para decidir</b></p><h1>Pronto</h1><p class="sub">Todas as decisões desta zona foram tomadas.</p>`;};
+    const fim=(d)=>{decididas[it.slug]=d;localStorage.setItem("adm-decisoes",JSON.stringify(decididas));fetch("/api/correcoes",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({correcoes:[{loja:it.slug,campo:"logo",acao:d.acao,escolhida:d.escolhida,fonte:d.fonte||null}]})}).catch(()=>{});i++;if(i<fila.length)render();else main.innerHTML=`<p class="mig">Identidades / <b>Para decidir</b></p><h1>Pronto</h1><p class="sub">Todas as decisões desta zona foram tomadas.</p>`;};
     document.getElementById("confirmar").onclick=()=>fim({acao:"confirmada",escolhida:sel,fonte:ops[sel]&&ops[sel].fonte});
     document.getElementById("porta").onclick=()=>fim({acao:"na-porta"});}
   render();
