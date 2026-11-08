@@ -21,20 +21,21 @@
   if(!l){$("#app").innerHTML=`${topo()}<div class="faixa"><a href="index.html">Rota</a></div><p>Loja não encontrada.</p>${nav("rota")}`;return;}
   // cadastro da captação (fotos, logo, cores) quando existir
   let cad=null;try{const r=await fetch(`/dados/captacao/${ZONA}/clientes/${slug}.json`);if(r.ok)cad=await r.json();}catch(e){}
-  const L=cad?cad.lacunas:{};const logo=L.logoOriginal||{};const base=`/dados/captacao/${ZONA}/`;
+  const L=cad?cad.lacunas:{};const logo=L.logoOriginal||{};const AV=L.avaliacoes||{};const base=`/dados/captacao/${ZONA}/`;
   const e=estado();const fotos=(e.fotos||{})[slug]||{};const ck=(e.check||{})[slug]||{};
   const st=stLogo({logo:logo.estado==="encontrado"?"encontrado":(logo.opcoes&&logo.opcoes.length?"pendente":null)});
   const aberta=abertaAgora(l.horario);
   const refs=(L.fachada&&L.fachada.referencias)||[];
   const fotoLocal=fotos.entrada||(refs[0]?base+refs[0]:null);
   const cores=(L.cores&&L.cores.valor)?L.cores.valor.split(" ").slice(0,3):[];
-  const txtRoteiro=roteiro({...l,logo:logo.estado});
+  let txtRoteiro=roteiro({...l,logo:logo.estado});if(AV.gatilhos&&AV.gatilhos[0])txtRoteiro=AV.gatilhos[0].argumento+" "+txtRoteiro;
   $("#app").innerHTML=`${topo()}
   <div class="faixa"><a href="index.html">Rota</a></div>
   <h1>${esc(nomeLoja(l.nome))}</h1>
   <p class="sub">Parada ${l.ordem} · ${esc(l.endereco)}${l.tel?` · ${esc(telFmt(l.tel))}`:""}</p>
   <div class="foto" id="foto" data-img="local" data-loja="${esc(slug)}" data-nome="Foto do local" ${fotos.entrada?"":refs[0]?`data-fonte="referência pública"`:""}>${fotoLocal?`<img src="${esc(fotoLocal)}" alt="">${fotos.entrada?"":'<span class="sel">Referência pública</span>'}`:`<div style="text-align:center"><div style="font-size:40px">📷</div>Sem foto do local ainda<br><small>toque em “Fotografar entrada”</small></div>`}</div>
-  <div class="chips"><span class="chip">🏪 ${esc(setorNome(l.setor))}</span>${aberta===true?'<span class="chip ok">✓ Aberto agora</span>':aberta===false?'<span class="chip">Fechado agora</span>':""}${l.nota?`<span class="chip">★ ${String(l.nota).replace(".",",")} · ${l.aval||0} avaliações</span>`:""}</div>
+  <div class="chips"><span class="chip">🏪 ${esc(setorNome(l.setor))}</span>${aberta===true?'<span class="chip ok">✓ Aberto agora</span>':aberta===false?'<span class="chip">Fechado agora</span>':""}${l.nota?`<button type="button" class="chip" id="avals" style="cursor:pointer">★ ${String(l.nota).replace(".",",")} · ${l.aval||0} avaliações${AV.gatilhos&&AV.gatilhos.length?` · <b style="color:#C8552B">${AV.gatilhos.length} gancho${AV.gatilhos.length>1?"s":""}</b>`:""}</button>`:""}</div>
+  ${AV.gatilhos&&AV.gatilhos.length?`<section class="card" style="border-left:5px solid #C8552B"><h2>O que os clientes reclamam</h2>${AV.gatilhos.map(g=>`<div style="margin:0 0 10px"><b>${esc(g.tema)}</b> <span class="chip dec" style="padding:3px 10px;font-size:13px">★ ${g.nota||"?"}</span><br><i class="muted">“${esc(g.trecho)}”</i><br>→ ${esc(g.argumento)}</div>`).join("")}</section>`:""}
   <section class="card"><h2>Identidade da loja</h2>
     <div class="ident"><div class="logo-box" data-img="logo" data-loja="${esc(slug)}" data-nome="Logo" ${logo.nome?`data-fonte="${esc(logo.nome)}"`:""}>${logo.estado==="encontrado"?`<img src="${esc(base+logo.valor)}" alt="">`:`<span style="font-size:30px">◌</span>`}</div>
       <div><span class="chip ${st.c}">${st.c==="ok"?"✓ ":""}${st.t}</span>${cores.length?`<div class="cores">Cores da loja ${cores.map(c=>`<span class="cor" style="background:${esc(c)}"></span>`).join("")}</div>`:""}</div>
@@ -50,6 +51,9 @@
   ${voz()}${nav("rota")}`;
   ligarVoz(slug);
   Imagem.ligar(document);
+  const bA=$("#avals");if(bA)bA.onclick=()=>{const lista=(AV.lista||[]).slice().sort((a,b)=>(a.nota||5)-(b.nota||5));const f=document.createElement("div");f.className="im-fundo";const sh=document.createElement("div");sh.className="im-sheet on";sh.style.maxHeight="80vh";sh.style.overflow="auto";
+    sh.innerHTML=`<h3>Avaliações · ★ ${String(l.nota).replace(".",",")} · ${l.aval||0} no Google</h3>${lista.length?lista.map(a=>{const g=(AV.gatilhos||[]).find(x=>x.autor===a.autor&&x.nota===a.nota);return `<div style="padding:10px 0;border-bottom:1px solid #E0DAEE"><b style="color:${(a.nota||5)<=3?"#C8552B":"#1C1635"}">★ ${a.nota||"?"}</b> <small class="muted">${esc(a.autor||"")} · ${esc(a.quando||"")}</small><div>${esc(a.texto||"")}</div>${g?`<div style="margin-top:6px;color:#6933C5;font-weight:600">→ ${esc(g.argumento)}</div>`:""}</div>`;}).join(""):`<p class="muted">As avaliações entram na próxima captação desta loja${AV.nota?` (${esc(AV.nota)})`:""}.</p>`}<p class="muted" style="font-size:13px">Negativas primeiro. Só as que tocam no nosso serviço viram argumento.</p><button data-a="x" class="fechar" style="display:block;width:100%;border:0;background:none;color:#6B6578;font:600 16px Rubik,sans-serif;padding:12px;cursor:pointer">Fechar</button>`;
+    document.body.append(f,sh);const fechar=()=>{sh.remove();f.remove();};f.onclick=fechar;sh.querySelector("[data-a=x]").onclick=fechar;};
   $("#ouvir").onclick=()=>ouvir(txtRoteiro,$("#ouvir"));
   $$("[data-k]").forEach(i=>i.onchange=()=>{const ee=estado();ee.check=ee.check||{};ee.check[slug]=ee.check[slug]||{};ee.check[slug][i.dataset.k]=i.checked;salvar(ee);});
   $("#fotografar").onclick=()=>{if(window.FotoCrop){FotoCrop.abrir({titulo:"Foto da entrada",varias:false,onFim:fs=>{if(fs&&fs[0]){const r=new FileReader();r.onload=()=>{const M=Imagem.ler();M[slug+"/local"]={dados:r.result,acao:"trocada",em:new Date().toISOString()};localStorage.setItem("genio-imagens",JSON.stringify(M));Imagem.aplicar(document);};r.readAsDataURL(fs[0]);}}});}else $("#cam").click();};

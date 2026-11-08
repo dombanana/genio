@@ -121,6 +121,46 @@ def places_fotos(pid):
 def places_foto_bytes(nome, w=900):
     return tenta(http, PL + f"{nome}/media?maxWidthPx={w}&skipHttpRedirect=false&key={K['GOOGLE_PLACES_KEY']}", binario=True)
 
+def places_avaliacoes(pid):
+    r = tenta(http, PL + f"places/{pid}", None, {"X-Goog-Api-Key": K["GOOGLE_PLACES_KEY"], "X-Goog-FieldMask": "reviews,rating,userRatingCount"})
+    if "_erro" in r:
+        return [], r["_erro"]
+    out = []
+    for v in r.get("reviews", [])[:10]:
+        out.append({"nota": v.get("rating"), "texto": (v.get("originalText") or v.get("text") or {}).get("text", ""), "autor": (v.get("authorAttribution") or {}).get("displayName", ""), "quando": v.get("relativePublishTimeDescription", ""), "fonte": "Google"})
+    return out, None
+def serper_avaliacoes(pid):
+    r = serper("reviews", "", placeId=pid, sortBy="lowestRating")
+    if "_erro" in r:
+        return [], r["_erro"]
+    out = []
+    for v in (r.get("reviews") or [])[:10]:
+        out.append({"nota": v.get("rating"), "texto": v.get("snippet") or v.get("text") or "", "autor": (v.get("user") or {}).get("name", ""), "quando": v.get("date", ""), "fonte": "Google"})
+    return out, None
+# temas das avaliações que o nosso serviço resolve → argumento pronto para o vendedor
+GATILHOS = [
+    ("chão sujo / molhado", r"\b(suj[oa]s?|sujeira|imund|poeira|ch[aã]o (molhado|escorregadio|sujo)|piso (molhado|sujo|escorreg)|escorreg|lama|barro|molhad[oa])\b", "capacho", "Clientes já reclamam do chão: o capacho na entrada segura a sujeira e a água da rua antes de entrar."),
+    ("difícil de achar / sem identificação", r"\b(dif[ií]cil (de )?(achar|encontrar|localizar)|n[aã]o (achei|encontrei|vi a placa)|sem placa|placa (pequena|apagada|escondida)|escondid[oa]|mal sinalizad)\b", "placa", "Gente passa reto: placa e adesivo de vitrine com a marca resolvem na hora."),
+    ("fachada / aparência", r"\b(fachada|aparência|apar[eê]ncia|feio|feia|velh[oa]|descuidad|mal cuidad|bagun[cç]|desorganizad|cai(ndo|ndo aos peda[cç]os))\b", "adesivos", "A primeira impressão está pesando contra: identidade visual na entrada e na vitrine muda isso."),
+    ("preço sem placa", r"\b(sem pre[cç]o|pre[cç]o (n[aã]o|sem) (est[aá]|tem) (marcado|exposto)|n[aã]o tem pre[cç]o)\b", "placas", "Reclamação de preço escondido: placa de preços padronizada com a marca."),
+    ("atendimento sem identificação", r"\b(n[aã]o sabia quem (era|atendia)|uniforme|funcion[aá]rio[s]? (sem|n[aã]o) identific)\b", "uniformes", "Uniforme com a marca identifica a equipe e passa confiança."),
+    ("cheiro / higiene", r"\b(cheiro (ruim|forte|de mofo)|mofo|higiene|insalubr|barat[ao]s?|rato)\b", "capacho", "Higiene aparece nas avaliações: capacho e organização visual da entrada ajudam na percepção de limpeza."),
+]
+def gatilhos(avals):
+    out = []
+    for a in avals:
+        t = (a.get("texto") or "").lower()
+        for tema, rx, prod, arg in GATILHOS:
+            m = re.search(rx, t, re.I)
+            if m:
+                i = max(0, m.start() - 60); trecho = t[i:m.end() + 60].strip()
+                out.append({"tema": tema, "produto": prod, "argumento": arg, "trecho": ("…" if i else "") + trecho + "…", "nota": a.get("nota"), "autor": a.get("autor")})
+    # um por tema, priorizando notas baixas
+    vistos, fim = set(), []
+    for g in sorted(out, key=lambda g: (g["nota"] or 5)):
+        if g["tema"] not in vistos:
+            vistos.add(g["tema"]); fim.append(g)
+    return fim
 # ---------- 2. Serper ----------
 def serper(caminho, q, **kw):
     if not K.get("SERPER_KEY"):
@@ -284,6 +324,15 @@ def identidade(loja, zona, pasta, quota_ok):
             autor = (f.get("authorAttributions") or [{}])[0].get("displayName", "")
             cands.append(dict(arq=p, fonte="places-foto", legenda=f"Google Places · foto {i+1}" + (f" · por {autor}" if autor else ""), url=loja.get("maps", ""), dono=(slug(autor)[:12] in s or s[:12] in slug(autor))))
     passos.append(f"Places Photos → {len(fotos)} fotos do perfil do Google" + (f" · erro: {erro_fotos}" if erro_fotos else ""))
+    # --- avaliações (negativas primeiro) e gatilhos do nosso serviço
+    avals, erro_av = places_avaliacoes(loja["place_id"]); custo["places_detalhe"] += 1
+    if not avals:
+        avals, erro_av2 = serper_avaliacoes(loja["place_id"]); custo["serper"] += 1
+        erro_av = (erro_av or "") + (" · serper: " + erro_av2 if erro_av2 else "")
+    avals.sort(key=lambda a: (a.get("nota") or 5))
+    gat = gatilhos(avals)
+    L["avaliacoes"] = {"estado": "encontrado" if avals else "nao", "origem": "publico", "valor": f"{loja.get('nota') or '—'} · {loja.get('aval') or 0} avaliações · {sum(1 for a in avals if (a.get('nota') or 5) <= 3)} negativas lidas", "nota_media": loja.get("nota"), "total": loja.get("aval"), "lista": avals, "gatilhos": gat, "nota": ("nenhuma avaliação lida" + (f" ({erro_av})" if erro_av else "")) if not avals else f"{len(avals)} lidas · {len(gat)} tocam no nosso serviço"}
+    passos.append(f"Avaliações → {len(avals)} lidas, {sum(1 for a in avals if (a.get('nota') or 5) <= 3)} negativas, {len(gat)} gatilho(s) do nosso serviço" + (f" · {erro_av}" if erro_av and not avals else ""))
     # --- Serper imagens + web
     q = f'"{loja["nome"]}" {zona["bairro"]} {zona["cidade"]}'
     ri = serper("images", q, num=10); custo["serper"] += 1
@@ -464,6 +513,9 @@ def revisao(zona, lojas, cads, detalhes, pasta, resumo):
         for k, v in c.items():
             stv = v["estado"]; lab = "decidir" if stv == "pendente" and v.get("opcoes") else stv
             val = v.get("valor", "") if k != "logoOriginal" else v.get("nome", "")
+            if k == "avaliacoes" and v.get("gatilhos"):
+                val = str(val) + "<br>" + "<br>".join(f"<b>{esc(g['tema'])}</b> → {esc(g['argumento'])} <i>“{esc(g['trecho'][:140])}”</i>" for g in v["gatilhos"])
+                nota = ""; h.append(f"<tr><td>{k}</td><td><span class='st {stv}'>{stv}</span></td><td>{val}</td><td>{esc(v['origem'])}</td></tr>"); continue
             if stv == "pendente" and v.get("opcoes") and k != "logoOriginal":
                 val = " · ".join(f"<b>{esc(o.get('valor', ''))}</b> <i>({esc(o['legenda'])})</i>" for o in v["opcoes"])
             else:
