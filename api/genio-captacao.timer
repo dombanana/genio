@@ -1,0 +1,10 @@
+[Unit]
+Description=Captação GenIO toda madrugada
+
+[Timer]
+OnCalendar=*-*-* 03:10:00
+RandomizedDelaySec=10m
+Persistent=true
+
+[Install]
+WantedBy=timers.target

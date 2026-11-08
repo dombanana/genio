@@ -1,0 +1,15 @@
+[Unit]
+Description=Captação GenIO (zona → lojas → identidade pública)
+After=network-online.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=/opt/genio
+ExecStart=/usr/bin/python3 /opt/genio/api/captacao.py
+User=genio
+Group=genio
+ReadWritePaths=/opt/genio/dados /var/lib/genio
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+TimeoutStartSec=3h
