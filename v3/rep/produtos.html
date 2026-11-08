@@ -6,7 +6,7 @@
 <title>GênIO · Produtos e serviços</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="rep.css?v=83fedd26ab">
+<link rel="stylesheet" href="rep.css?v=9578193ff7">
 <style>
 .grade{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .prod{background:#fff;border-radius:18px;box-shadow:0 2px 10px rgba(28,22,53,.06);overflow:hidden;display:flex;flex-direction:column;position:relative}
@@ -38,9 +38,9 @@
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="../manual.js?v=83fedd26ab"></script>
-<script src="imagem.js?v=83fedd26ab"></script>
-<script src="rep.js?v=83fedd26ab"></script>
+<script src="../manual.js?v=9578193ff7"></script>
+<script src="imagem.js?v=9578193ff7"></script>
+<script src="rep.js?v=9578193ff7"></script>
 <script>
 (async()=>{
   const {$,$$,esc,qs,nomeLoja,dados,estado,salvar,nav,topo,voz,ligarVoz,PROD,setorNome,telFmt,ZONA}=Rep;
@@ -54,8 +54,8 @@
   const KMAP={capacho:["01"],placas:["02"],adesivos:["03"],uniformes:["04"],impressos:["05","06"],banners:["07"],parede:["08"],brindes:["09","10"]};
   const capas=id=>KIT?(KMAP[id]||[]).map(k=>(KIT.itens||[]).find(i=>i.id===k&&i.arquivo)).filter(Boolean).map(i=>({src:base+i.arquivo,nome:i.produto})):[];const logo=L.logoOriginal||{};const M0=Imagem.ler();
   // ficha do cliente no módulo de identidade (fonte única da arte e do manual)
-  const abrirDB=()=>new Promise(res=>{try{const r=indexedDB.open("genio-vendas",3);r.onupgradeneeded=()=>{const d=r.result;["orcamentos","sessao"].forEach(n=>{if(!d.objectStoreNames.contains(n))d.createObjectStore(n,{keyPath:"id"});});if(!d.objectStoreNames.contains("clientes"))d.createObjectStore("clientes",{keyPath:"k"});};r.onsuccess=()=>res(r.result);r.onerror=()=>res(null);}catch(e){res(null);}});
-  const getC=async()=>{const db=await abrirDB();if(!db)return null;return new Promise(res=>{const t=db.transaction("clientes").objectStore("clientes").get(k);t.onsuccess=()=>{res(t.result||null);db.close();};t.onerror=()=>res(null);});};
+  const abrirDB=Rep.abrirVendas;
+  const getC=async()=>{const db=await abrirDB();if(!db||!db.objectStoreNames.contains("clientes"))return null;return new Promise(res=>{const t=db.transaction("clientes").objectStore("clientes").get(k);t.onsuccess=()=>{res(t.result||null);db.close();};t.onerror=()=>res(null);});};
   const putC=async o=>{const db=await abrirDB();if(!db)return;return new Promise(res=>{const t=db.transaction("clientes","readwrite");t.objectStore("clientes").put(o);t.oncomplete=()=>{db.close();res();};t.onerror=res;});};
   let fic=await getC();const abs=s=>s.startsWith("/")?location.origin+s:s;
   const logoSrc=(fic&&fic.manual&&fic.manual.tratado)||(fic&&fic.logos&&fic.logos[0]&&fic.logos[0].src)||(M0[slug+"/logo"]&&M0[slug+"/logo"].dados)||(logo.estado==="encontrado"?base+logo.valor:null);

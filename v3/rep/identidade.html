@@ -15,7 +15,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&display=swap">
-<link rel="stylesheet" href="portal.css?v=83fedd26ab">
+<link rel="stylesheet" href="portal.css?v=9578193ff7">
 <style>
 .idv-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;margin-top:16px}
 .idv-it{position:relative;margin:0;aspect-ratio:1;border:1px solid var(--linha);border-radius:14px;background:#fff;display:grid;place-items:center;overflow:hidden}
@@ -101,17 +101,17 @@ main.wrap{padding-bottom:170px}
   <p class="sem" id="sem" hidden>Escolha o cliente na tela de módulos.</p>
   <input type="file" id="fIdv" accept="image/*" multiple hidden>
 </main>
-<script src="portal.js?v=83fedd26ab"></script>
-<script src="fotocrop.js?v=83fedd26ab"></script>
-<script src="manual.js?v=83fedd26ab"></script>
-<script src="lacunas.js?v=83fedd26ab"></script>
+<script src="portal.js?v=9578193ff7"></script>
+<script src="fotocrop.js?v=9578193ff7"></script>
+<script src="manual.js?v=9578193ff7"></script>
+<script src="lacunas.js?v=9578193ff7"></script>
 <script>
 (async()=>{const {$, $$}=G;
   const c=await G.eu().catch(()=>null);if(!c){location.replace("/?entrar=1&volta=rep/identidade.html");return;}
   const nome=(G.ls.get("genio-cliente")||"").trim(),k=nome.toLowerCase();
   $("#cli").textContent=nome||"Identidade visual";
   if(!nome){$("#sem").hidden=false;return;}
-  const abrirDB=()=>new Promise(res=>{try{const r=indexedDB.open("genio-vendas",3);r.onupgradeneeded=()=>{const d=r.result;["orcamentos","sessao"].forEach(n=>{if(!d.objectStoreNames.contains(n))d.createObjectStore(n,{keyPath:"id"});});if(!d.objectStoreNames.contains("clientes"))d.createObjectStore("clientes",{keyPath:"k"});};r.onsuccess=()=>res(r.result);r.onerror=()=>res(null);}catch(e){res(null);}});
+  const abrirDB=()=>new Promise(res=>{try{const r=indexedDB.open("genio-vendas",4);r.onupgradeneeded=()=>{const d=r.result;["orcamentos","sessao"].forEach(n=>{if(!d.objectStoreNames.contains(n))d.createObjectStore(n,{keyPath:"id"});});if(!d.objectStoreNames.contains("clientes"))d.createObjectStore("clientes",{keyPath:"k"});};r.onsuccess=()=>res(r.result);r.onerror=()=>res(null);}catch(e){res(null);}});
   const get=async()=>{const db=await abrirDB();if(!db)return null;return new Promise(res=>{const t=db.transaction("clientes").objectStore("clientes").get(k);t.onsuccess=()=>res(t.result||null);t.onerror=()=>res(null);});};
   const put=async o=>{const db=await abrirDB();if(!db)return;return new Promise(res=>{const t=db.transaction("clientes","readwrite");t.objectStore("clientes").put(o);t.oncomplete=res;t.onerror=res;});};
   const lerImg=f=>new Promise(res=>{const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const q=Math.min(1,1600/Math.max(im.width,im.height)),cv=document.createElement("canvas");cv.width=Math.round(im.width*q);cv.height=Math.round(im.height*q);cv.getContext("2d").drawImage(im,0,0,cv.width,cv.height);res(cv.toDataURL("image/png"));};im.onerror=()=>res(null);im.src=r.result;};r.onerror=()=>res(null);r.readAsDataURL(f);});

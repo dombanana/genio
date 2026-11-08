@@ -1,11 +1,11 @@
 <!doctype html>
 <html lang="pt-BR">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>GênIO · Vendas</title><meta name="theme-color" content="#F1EEF8"><link rel="icon" href="../genio-favicon.png"><link rel="stylesheet" href="rep.css?v=83fedd26ab">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>GênIO · Vendas</title><meta name="theme-color" content="#F1EEF8"><link rel="icon" href="../genio-favicon.png"><link rel="stylesheet" href="rep.css?v=9578193ff7">
 <style>.big{font-size:34px;font-weight:800;letter-spacing:-.02em}.lin{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--linha)}.lin:last-child{border:0}.barra{height:10px;border-radius:999px;background:var(--lav2);overflow:hidden;margin:6px 0 2px}.barra i{display:block;height:100%;background:var(--marca)}</style>
 </head>
 <body><div class="w" id="app"></div>
-<script src="rep.js?v=83fedd26ab"></script>
+<script src="rep.js?v=9578193ff7"></script>
 <script>
 (async()=>{const {$,esc,dados,estado,nav,topo,voz,ligarVoz,money,orcamentos,etapaDe}=Rep;const D=await dados();const e=estado();const Qs=await orcamentos();const ped=Qs.filter(q=>["aprovado"].includes(q.status)||["pagamento","producao","entrega","entregue"].includes(etapaDe(q))).map(q=>({n:q.numero||q.id,nome:(q.cliente&&q.cliente.nome)||"Sem nome",total:(q.preco&&q.preco.total)||0,em:q.aprovado||q.atualizado||q.criado}));
   const mes=new Date().getMonth();const doMes=ped.filter(p=>new Date(p.em).getMonth()===mes);const total=doMes.reduce((s,p)=>s+p.total,0);

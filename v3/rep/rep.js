@@ -57,5 +57,9 @@ const Rep=(()=>{
   const setEtapa=(id,et)=>{const e=estado();e.oper=e.oper||{};e.oper[id]={...(e.oper[id]||{}),etapa:et,em:new Date().toISOString()};salvar(e);};
   // arte vinculada: a fonte única é a ficha do cliente na identidade (manual.tratado > logos[0]); senão a imagem da captação
   function arteDoCliente(nome){return new Promise(res=>{try{const rq=indexedDB.open("genio-vendas");rq.onsuccess=()=>{const db=rq.result;if(!db.objectStoreNames.contains("clientes")){db.close();return res(null);}const g=db.transaction("clientes").objectStore("clientes").get(nome.toLowerCase());g.onsuccess=()=>{const r=g.result;db.close();res(r?((r.manual&&r.manual.tratado)||(r.logos&&r.logos[0]&&r.logos[0].src)||null):null);};g.onerror=()=>res(null);};rq.onerror=()=>res(null);rq.onupgradeneeded=()=>{};}catch(e){res(null);}});}
-  return {$,$$,esc,qs,ZONA,nomeLoja,orcamentos,arteDoCliente,etapaDe,setEtapa,estado,salvar,vendedor,dados,hojeDia,lojasDoDia,vizinhos,abertaAgora,stLogo,nav,topo,voz,ligarVoz,ouvir,roteiro,CHECK,PROD,setorNome,telFmt,dist,precoCapacho,money};
+  // banco do motor (genio-vendas): se a loja "clientes" ainda não existe nesta instalação, sobe a versão e cria
+  function abrirVendas(){return new Promise(res=>{try{const cria=d=>{["orcamentos","sessao"].forEach(n=>{if(!d.objectStoreNames.contains(n))d.createObjectStore(n,{keyPath:"id"});});if(!d.objectStoreNames.contains("clientes"))d.createObjectStore("clientes",{keyPath:"k"});};
+    const r=indexedDB.open("genio-vendas");r.onupgradeneeded=()=>cria(r.result);r.onerror=()=>res(null);
+    r.onsuccess=()=>{const d=r.result;if(d.objectStoreNames.contains("clientes"))return res(d);const v=Math.max(4,d.version+1);d.close();const r2=indexedDB.open("genio-vendas",v);r2.onupgradeneeded=()=>cria(r2.result);r2.onsuccess=()=>res(r2.result);r2.onerror=()=>res(null);r2.onblocked=()=>res(null);};}catch(e){res(null);}});}
+  return {$,$$,esc,qs,ZONA,nomeLoja,orcamentos,arteDoCliente,abrirVendas,etapaDe,setEtapa,estado,salvar,vendedor,dados,hojeDia,lojasDoDia,vizinhos,abertaAgora,stLogo,nav,topo,voz,ligarVoz,ouvir,roteiro,CHECK,PROD,setorNome,telFmt,dist,precoCapacho,money};
 })();
