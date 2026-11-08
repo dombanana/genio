@@ -401,8 +401,8 @@ def codigo_ok(c):
 
 # ---------- chaves de serviços externos (Places, Serper, Apify, ZapSign…) ----------
 CHAVES_ARQ = os.environ.get("GENIO_CHAVES", "/var/lib/genio/chaves.json")
-CHAVES_NOMES = ["GOOGLE_PLACES_KEY", "SERPER_KEY", "APIFY_TOKEN", "ZAPSIGN_TOKEN", "MERCADOPAGO_TOKEN", "OPENAI_KEY", "GEMINI_KEY",
-                "NFE_TOKEN", "MELHORENVIO_TOKEN", "TELEGRAM_BOT_TOKEN", "TELEGRAM_CHAT_ID", "ML_APP_ID", "ML_SECRET"]
+CHAVES_NOMES = ["GOOGLE_PLACES_KEY", "SERPER_KEY", "APIFY_TOKEN", "ZAPSIGN_TOKEN", "ASAAS_TOKEN", "OPENAI_KEY", "GEMINI_KEY",
+                "MELHORENVIO_TOKEN", "TELEGRAM_BOT_TOKEN", "TELEGRAM_CHAT_ID", "ML_APP_ID", "ML_SECRET"]
 def chaves_ler():
     try:
         with open(CHAVES_ARQ) as f:
