@@ -1,0 +1,313 @@
+{
+ "setor": "padaria",
+ "versao_kit": 1,
+ "calibrado_em": "2026-11-08",
+ "unidade": "px na imagem original 1536x1024",
+ "ordem_cantos": "topo-esq, topo-dir, inf-dir, inf-esq",
+ "produtos": {
+  "01": {
+   "produto": "Capacho",
+   "arquivo": "01_capacho.jpg",
+   "plano": [
+    [
+     36,
+     506
+    ],
+    [
+     991,
+     350
+    ],
+    [
+     1502,
+     555
+    ],
+    [
+     305,
+     989
+    ]
+   ],
+   "superficie": "fibra",
+   "material_recolor": true,
+   "borda_px": 14,
+   "aplicacao": "impressao_total",
+   "fundo_arte": "cor_material",
+   "nota": "plano = tapete inteiro; arte centralizada com margem 6%"
+  },
+  "02": {
+   "produto": "Placa",
+   "arquivo": "02_placa.jpg",
+   "plano": [
+    [
+     396,
+     193
+    ],
+    [
+     1325,
+     72
+    ],
+    [
+     1321,
+     845
+    ],
+    [
+     395,
+     789
+    ]
+   ],
+   "superficie": "rigida",
+   "material_recolor": true,
+   "aplicacao": "impressao_total",
+   "oclusoes": "parafusos",
+   "nota": "4 parafusos de aço ficam por cima"
+  },
+  "03": {
+   "produto": "Adesivo de vitrine",
+   "arquivo": "03_adesivo_vitrine.jpg",
+   "plano": [
+    [
+     292,
+     48
+    ],
+    [
+     1316,
+     62
+    ],
+    [
+     1316,
+     940
+    ],
+    [
+     292,
+     945
+    ]
+   ],
+   "superficie": "vidro",
+   "material_recolor": false,
+   "aplicacao": "vinil_recortado",
+   "nota": "arte monocromática com transparência; sem retângulo branco; cor do vinil ≠ vidro"
+  },
+  "04": {
+   "produto": "Uniforme polo",
+   "arquivo": "04_uniforme_polo.jpg",
+   "plano": [
+    [
+     850,
+     300
+    ],
+    [
+     1040,
+     300
+    ],
+    [
+     1036,
+     470
+    ],
+    [
+     846,
+     466
+    ]
+   ],
+   "superficie": "tecido",
+   "material_recolor": true,
+   "aplicacao": "bordado_peito",
+   "nota": "peito esquerdo de quem veste (direita de quem olha); mapa fixo de dobras",
+   "material_bbox": [
+    300,
+    0,
+    1230,
+    1024
+   ]
+  },
+  "05": {
+   "produto": "Cartão de visita",
+   "arquivo": "05_cartao.jpg",
+   "plano": [
+    [
+     454,
+     252
+    ],
+    [
+     1308,
+     390
+    ],
+    [
+     1154,
+     823
+    ],
+    [
+     247,
+     647
+    ]
+   ],
+   "superficie": "papel",
+   "material_recolor": true,
+   "aplicacao": "impressao_total",
+   "proporcao_fisica": [
+    9,
+    5
+   ]
+  },
+  "06": {
+   "produto": "Panfleto",
+   "arquivo": "06_panfleto.jpg",
+   "plano": [
+    [
+     718,
+     56
+    ],
+    [
+     1301,
+     161
+    ],
+    [
+     1050,
+     968
+    ],
+    [
+     323,
+     788
+    ]
+   ],
+   "superficie": "papel",
+   "material_recolor": true,
+   "aplicacao": "impressao_total",
+   "proporcao_fisica": [
+    148,
+    210
+   ]
+  },
+  "07": {
+   "produto": "Banner retrátil",
+   "arquivo": "07_banner.jpg",
+   "plano": [
+    [
+     787,
+     93
+    ],
+    [
+     1100,
+     64
+    ],
+    [
+     1097,
+     890
+    ],
+    [
+     786,
+     856
+    ]
+   ],
+   "superficie": "lona",
+   "material_recolor": true,
+   "aplicacao": "impressao_total",
+   "proporcao_fisica": [
+    85,
+    200
+   ],
+   "nota": "plano exclui trilho superior e cassete",
+   "ancora": "topo"
+  },
+  "08": {
+   "produto": "Adesivo de parede",
+   "arquivo": "08_adesivo_parede.jpg",
+   "plano": [
+    [
+     440,
+     140
+    ],
+    [
+     1290,
+     120
+    ],
+    [
+     1290,
+     690
+    ],
+    [
+     440,
+     700
+    ]
+   ],
+   "superficie": "parede",
+   "material_recolor": false,
+   "aplicacao": "vinil_recortado",
+   "nota": "letras/símbolo recortados; sem fundo"
+  },
+  "09": {
+   "produto": "Sacola",
+   "arquivo": "09_sacola.jpg",
+   "plano": [
+    [
+     690,
+     430
+    ],
+    [
+     1118,
+     430
+    ],
+    [
+     1118,
+     815
+    ],
+    [
+     690,
+     815
+    ]
+   ],
+   "superficie": "tecido",
+   "material_recolor": true,
+   "aplicacao": "serigrafia",
+   "nota": "face frontal; mapa fixo de dobras · alças ficam na cor natural",
+   "material_bbox": [
+    600,
+    90,
+    1190,
+    885
+   ],
+   "material_poly": [
+    [
+     622,
+     352
+    ],
+    [
+     1168,
+     352
+    ],
+    [
+     1174,
+     868
+    ],
+    [
+     612,
+     868
+    ]
+   ]
+  },
+  "10": {
+   "produto": "Carimbo",
+   "arquivo": "10_carimbo.jpg",
+   "plano": [
+    [
+     698,
+     409
+    ],
+    [
+     1439,
+     506
+    ],
+    [
+     1279,
+     985
+    ],
+    [
+     287,
+     825
+    ]
+   ],
+   "superficie": "papel",
+   "material_recolor": false,
+   "aplicacao": "impressao_carimbo",
+   "nota": "impressão monocromática de 4×6 cm no terço esquerdo da folha; corpo preto e etiqueta são superfícies distintas"
+  }
+ }
+}

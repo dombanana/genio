@@ -1,0 +1,105 @@
+{
+  "setor": "padaria",
+  "versao": 1,
+  "produtos": [
+    {
+      "id": "00",
+      "produto": "Contexto do setor",
+      "arquivo": "00_contexto_padaria.jpg",
+      "width": 1536,
+      "height": 1024,
+      "sha256": "c90c48c9336e733682e0cf775282aedea972ab870d4d3c5729c30dbc8b1f23e4",
+      "calibracao": "a_marcar_pela_integracao"
+    },
+    {
+      "id": "01",
+      "produto": "Capacho",
+      "arquivo": "01_capacho.jpg",
+      "width": 1536,
+      "height": 1024,
+      "sha256": "207a437380e580c470c1d4cbb873d86a838ad59150c74a12f74b610bd03e87ac",
+      "calibracao": "a_marcar_pela_integracao"
+    },
+    {
+      "id": "02",
+      "produto": "Placa",
+      "arquivo": "02_placa.jpg",
+      "width": 1536,
+      "height": 1024,
+      "sha256": "49abad59e21ac6598e5eb84d0eac2fc4fb7d4ef0353d29d2dcd5fd643d7be2dd",
+      "calibracao": "a_marcar_pela_integracao"
+    },
+    {
+      "id": "03",
+      "produto": "Adesivo de vitrine",
+      "arquivo": "03_adesivo_vitrine.jpg",
+      "width": 1536,
+      "height": 1024,
+      "sha256": "ad2144dfc3400b2e2b6595de4e948909dec82ab17d3bb0e8fb97ad4468250a52",
+      "calibracao": "a_marcar_pela_integracao"
+    },
+    {
+      "id": "04",
+      "produto": "Uniforme polo",
+      "arquivo": "04_uniforme_polo.jpg",
+      "width": 1536,
+      "height": 1024,
+      "sha256": "6b4dc0bda460f4ab75cd2d802a6c41a4e45442bafa223d1f8be6b8a9b2fa167b",
+      "calibracao": "a_marcar_pela_integracao"
+    },
+    {
+      "id": "05",
+      "produto": "Cartão de visita",
+      "arquivo": "05_cartao.jpg",
+      "width": 1536,
+      "height": 1024,
+      "sha256": "9e9529a25702d8527583a2b7e53d7fdb605f940c418e63af6f17d7cc9fc33e22",
+      "calibracao": "a_marcar_pela_integracao"
+    },
+    {
+      "id": "06",
+      "produto": "Panfleto",
+      "arquivo": "06_panfleto.jpg",
+      "width": 1536,
+      "height": 1024,
+      "sha256": "d7af118fdd0f1d27b67f079b71da3d64b50b79998545b359f300c07d75af1ec2",
+      "calibracao": "a_marcar_pela_integracao"
+    },
+    {
+      "id": "07",
+      "produto": "Banner retrátil",
+      "arquivo": "07_banner.jpg",
+      "width": 1536,
+      "height": 1024,
+      "sha256": "a4207453121a2fd1cdbd09da5728a71912d677df5fed28a65a581e9b955c4c5b",
+      "calibracao": "a_marcar_pela_integracao"
+    },
+    {
+      "id": "08",
+      "produto": "Adesivo de parede",
+      "arquivo": "08_adesivo_parede.jpg",
+      "width": 1536,
+      "height": 1024,
+      "sha256": "2b427c4cd74cceae50759278f6b8117d49da0db61f0f34260f1c46c71fa0994d",
+      "calibracao": "a_marcar_pela_integracao"
+    },
+    {
+      "id": "09",
+      "produto": "Sacola",
+      "arquivo": "09_sacola.jpg",
+      "width": 1536,
+      "height": 1024,
+      "sha256": "f6bd14f93cfbd096c110d2d27894c83e81ace5e0ad97d914537f237a7d6cddb8",
+      "calibracao": "a_marcar_pela_integracao"
+    },
+    {
+      "id": "10",
+      "produto": "Carimbo",
+      "arquivo": "10_carimbo.jpg",
+      "width": 1536,
+      "height": 1024,
+      "sha256": "8b1138b1e10b1467ef0c1a6ee4818ed79c4d536cd11d677ecab253a0cd3a1757",
+      "calibracao": "a_marcar_pela_integracao"
+    }
+  ]
+}

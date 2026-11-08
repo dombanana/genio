@@ -1,0 +1,7 @@
+KIT DE TESTE - PADARIA
+
+00: contexto do setor.
+01 a 10: capas individuais por produto, em JPG no tamanho original.
+Painel_Kit_Padaria.jpg: conferir o conjunto.
+Guia_Kit_Padaria.md: marcação e rotina para aplicar cores e arte.
+As máscaras e os encaixes serão marcados uma vez pela integração, conforme combinado.

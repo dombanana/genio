@@ -787,11 +787,36 @@ def main():
         if x["slug"] in detalhes and L.get("logoOriginal", {}).get("estado") == "encontrado":
             lp = os.path.join(pasta, L["logoOriginal"]["valor"])
             L["manual"] = gerar_manual(x["slug"], cp, lp, pasta); detalhes[x["slug"]]["passos"].append("Manual de identidade → " + L["manual"]["nota"])
+            # kit de ambiente do setor com a marca aplicada (10 capas) — determinístico, a partir do manual
+            try:
+                sys.path.insert(0, os.path.join(RAIZ, "api", "kits")); import gerar_kit
+                kit = gerar_kit.gerar(pasta, x["slug"], x.get("setor"))
+                if kit.get("itens"):
+                    L["kit"] = {"estado": "encontrado", "valor": f"kit/{x['slug']}/index.json", "origem": "derivado", "ambiente": kit["kit"], "referencia": kit.get("ambiente_de_referencia", False),
+                                "nota": f"{sum(1 for i in kit['itens'] if 'arquivo' in i)} capas no ambiente {kit['kit']}" + (" (ambiente de referência; o do setor ainda não existe)" if kit.get("ambiente_de_referencia") else "")}
+                else:
+                    L["kit"] = {"estado": "pendente", "origem": "derivado", "valor": "", "nota": kit.get("erro", "")}
+            except Exception as e:
+                L["kit"] = {"estado": "pendente", "origem": "derivado", "valor": "", "nota": "kit falhou: " + str(e)[:160]}
             json.dump(cads[x["slug"]], open(cp, "w"), ensure_ascii=False, indent=1)
     quota[hoje] = usadas + feitas; json.dump(quota, open(qp, "w"))
     json.dump([{"slug": s, "nome": c["nome"], "dia": c["rota"]["dia"], "ordem": c["rota"]["ordem"], "logo": c["lacunas"].get("logoOriginal", {}).get("estado")} for s, c in cads.items()], open(os.path.join(pasta, "clientes", "index.json"), "w"), ensure_ascii=False)
     enc = sum(1 for s in detalhes if cads[s]["lacunas"]["logoOriginal"]["estado"] == "encontrado"); dec = sum(1 for s in detalhes if cads[s]["lacunas"]["logoOriginal"].get("opcoes") and cads[s]["lacunas"]["logoOriginal"]["estado"] != "encontrado")
     resumo_passos.append(f"3. Identidade pública de {feitas} lojas (cota do dia {quota[hoje]}/50{" · pedido manual" if run else ""}): logo encontrado {enc} · decidir {dec} · na porta {feitas-enc-dec} · custo ≈ R$ {reais:.2f}")
+    # 3b. kits de ambiente que faltam (fichas antigas com manual pronto e sem kit) — sem custo de API
+    try:
+        sys.path.insert(0, os.path.join(RAIZ, "api", "kits")); import gerar_kit
+        for s_, c_ in cads.items():
+            L_ = c_.get("lacunas", {})
+            if L_.get("manual", {}).get("estado") == "encontrado" and L_.get("kit", {}).get("estado") != "encontrado":
+                x_ = next((x for x in lojas if x["slug"] == s_), {})
+                kit = gerar_kit.gerar(pasta, s_, x_.get("setor"))
+                if kit.get("itens"):
+                    L_["kit"] = {"estado": "encontrado", "valor": f"kit/{s_}/index.json", "origem": "derivado", "ambiente": kit["kit"], "referencia": kit.get("ambiente_de_referencia", False),
+                                 "nota": f"{sum(1 for i in kit['itens'] if 'arquivo' in i)} capas no ambiente {kit['kit']}" + (" (ambiente de referência; o do setor ainda não existe)" if kit.get("ambiente_de_referencia") else "")}
+                    json.dump(c_, open(os.path.join(pasta, "clientes", s_ + ".json"), "w"), ensure_ascii=False, indent=1)
+    except Exception as e:
+        log(pasta, "kits: " + str(e)[:200])
     # 4. exportação e revisão
     exportar(zona, lojas, cads, pasta)
     resumo_passos.append("4. Exportado: visitas.csv, visitas.kml, roteiro.html, lojas.json, clientes/*.json")

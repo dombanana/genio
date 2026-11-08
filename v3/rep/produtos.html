@@ -6,7 +6,7 @@
 <title>GênIO · Produtos e serviços</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="rep.css?v=b161d0e842">
+<link rel="stylesheet" href="rep.css?v=83fedd26ab">
 <style>
 .grade{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .prod{background:#fff;border-radius:18px;box-shadow:0 2px 10px rgba(28,22,53,.06);overflow:hidden;display:flex;flex-direction:column;position:relative}
@@ -31,13 +31,16 @@
 .tog.on{background:var(--teal)}.tog.on::after{left:25px}
 .resumo{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 16px;background:#fff;border-radius:16px;margin:0 0 10px}
 .gerando{font-size:13px;color:var(--texto2)}
+.galeria{position:fixed;inset:0;background:var(--lav);z-index:40;display:flex;flex-direction:column}
+.gal-topo{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;font-size:18px}
+.gal-rolo{flex:1;overflow:auto;padding:0 16px 24px}.gal-rolo figure{margin:0 0 14px}.gal-rolo img{width:100%;border-radius:16px;display:block}.gal-rolo figcaption{color:var(--texto2);font-size:14px;margin-top:6px}
 </style>
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="../manual.js?v=b161d0e842"></script>
-<script src="imagem.js?v=b161d0e842"></script>
-<script src="rep.js?v=b161d0e842"></script>
+<script src="../manual.js?v=83fedd26ab"></script>
+<script src="imagem.js?v=83fedd26ab"></script>
+<script src="rep.js?v=83fedd26ab"></script>
 <script>
 (async()=>{
   const {$,$$,esc,qs,nomeLoja,dados,estado,salvar,nav,topo,voz,ligarVoz,PROD,setorNome,telFmt,ZONA}=Rep;
@@ -45,7 +48,11 @@
   if(!l){$("#app").innerHTML=`${topo()}<p>Loja não encontrada.</p>${nav("rota")}`;return;}
   const nome=nomeLoja(l.nome),k=nome.toLowerCase();
   let cad=null;try{const r=await fetch(`/dados/captacao/${ZONA}/clientes/${slug}.json`,{cache:"no-store"});if(r.ok)cad=await r.json();}catch(e){}
-  const L=(cad&&cad.lacunas)||{};const base=`/dados/captacao/${ZONA}/`;const logo=L.logoOriginal||{};const M0=Imagem.ler();
+  const L=(cad&&cad.lacunas)||{};const base=`/dados/captacao/${ZONA}/`;
+  // kit de ambiente do setor com a marca aplicada (gerado no servidor a partir do manual)
+  let KIT=null;if(L.kit&&L.kit.estado==="encontrado"){try{const r=await fetch(base+L.kit.valor,{cache:"no-store"});if(r.ok)KIT=await r.json();}catch(e){}}
+  const KMAP={capacho:["01"],placas:["02"],adesivos:["03"],uniformes:["04"],impressos:["05","06"],banners:["07"],parede:["08"],brindes:["09","10"]};
+  const capas=id=>KIT?(KMAP[id]||[]).map(k=>(KIT.itens||[]).find(i=>i.id===k&&i.arquivo)).filter(Boolean).map(i=>({src:base+i.arquivo,nome:i.produto})):[];const logo=L.logoOriginal||{};const M0=Imagem.ler();
   // ficha do cliente no módulo de identidade (fonte única da arte e do manual)
   const abrirDB=()=>new Promise(res=>{try{const r=indexedDB.open("genio-vendas",3);r.onupgradeneeded=()=>{const d=r.result;["orcamentos","sessao"].forEach(n=>{if(!d.objectStoreNames.contains(n))d.createObjectStore(n,{keyPath:"id"});});if(!d.objectStoreNames.contains("clientes"))d.createObjectStore("clientes",{keyPath:"k"});};r.onsuccess=()=>res(r.result);r.onerror=()=>res(null);}catch(e){res(null);}});
   const getC=async()=>{const db=await abrirDB();if(!db)return null;return new Promise(res=>{const t=db.transaction("clientes").objectStore("clientes").get(k);t.onsuccess=()=>{res(t.result||null);db.close();};t.onerror=()=>res(null);});};
@@ -80,9 +87,9 @@
     $("#app").innerHTML=`${topo()}
     <div class="faixa"><a href="visita.html?l=${encodeURIComponent(slug)}">Visita</a></div>
     <h1>Produtos e serviços</h1><p class="sub">${esc(nome)} · ${esc(setorNome(l.setor))}</p>
-    <div class="resumo"><div><b>${n?`${n} item(ns) no orçamento`:"Nada escolhido ainda"}</b><br><small class="gerando" id="st">${logoSrc?(A.capacho?"Arte da loja aplicada":"Aplicando a arte da loja…"):"Sem arte ainda — toque no logo na visita para arrumar"}</small></div>${logoSrc?`<img src="${esc(logoSrc)}" alt="" style="width:56px;height:40px;object-fit:contain;background:#fff;border-radius:8px">`:""}</div>
-    <div class="grade">${CAT.map(p=>{const s=S[p.id]||{q:0};const mock=p.apl&&A[p.apl];return `<div class="prod ${s.q>0?"sel":""}" data-p="${p.id}">${eSug(p)?'<span class="sug">Entrada sugerida</span>':""}
-      <div class="cena ${!mock&&logoSrc&&!p.apl?"logo":""}" ${mock?"":`style="background-image:url('${p.img}')"`} data-img="prod-${p.id}" data-loja="${esc(slug)}" data-nome="${esc(p.nome)}">${mock?`<img src="${mock}" alt="">`:(!p.apl&&logoSrc?`<img src="${esc(logoSrc)}" alt="">`:"")}</div>
+    <div class="resumo"><div><b>${n?`${n} item(ns) no orçamento`:"Nada escolhido ainda"}</b><br><small class="gerando" id="st">${KIT?`Marca aplicada no ambiente ${KIT.kit}${KIT.ambiente_de_referencia?" (referência — o do setor ainda não existe)":""}`:logoSrc?(A.capacho?"Arte da loja aplicada":"Aplicando a arte da loja…"):"Sem arte ainda — toque no logo na visita para arrumar"}</small></div>${logoSrc?`<img src="${esc(logoSrc)}" alt="" style="width:56px;height:40px;object-fit:contain;background:#fff;border-radius:8px">`:""}</div>
+    <div class="grade">${CAT.map(p=>{const s=S[p.id]||{q:0};const cp=capas(p.id);const mock=cp.length?cp[0].src:(p.apl&&A[p.apl]);return `<div class="prod ${s.q>0?"sel":""}" data-p="${p.id}">${eSug(p)?'<span class="sug">Entrada sugerida</span>':""}${cp.length>1?`<span class="sug" style="left:auto;right:8px;background:var(--navy)">${cp.length} capas</span>`:""}
+      <div class="cena ${!mock&&logoSrc&&!p.apl?"logo":""}" ${mock?"":`style="background-image:url('${p.img}')"`} data-capas="${p.id}" data-img="prod-${p.id}" data-loja="${esc(slug)}" data-nome="${esc(p.nome)}">${mock?`<img src="${mock}" alt="">`:(!p.apl&&logoSrc?`<img src="${esc(logoSrc)}" alt="">`:"")}</div>
       <b>${esc(p.nome)}</b>
       <div class="st ${s.q>0?"ok":""}">${p.motor?(s.q>0?"✓ no orçamento · medidas no motor":"Preço na hora, pelo motor"):(s.q>0?"✓ no orçamento · preço a confirmar":"Produção Printi · preço a confirmar")}</div>
       ${p.motor?`<a class="ir" href="capacho.html" data-motor>${s.q>0?"Abrir no motor →":"Montar capacho →"}</a>`:`<div class="qtd"><button data-m="-">−</button><span class="${s.q>0?"":"zero"}">${s.q>0?s.q+" un.":"não quero"}</span><button data-m="+">+</button></div>`}
@@ -93,6 +100,8 @@
     <div class="acoes"><div class="w"><a class="btn sec" href="visita.html?l=${encodeURIComponent(slug)}">← Visita</a><button class="btn" id="seguir">${n?"Ver orçamento →":"Orçar capacho →"}</button></div></div>
     ${voz()}${nav("rota")}`;document.body.classList.add("com-acoes");
     Imagem.ligar(document);ligarVoz(slug);
+    $$(".cena[data-capas]").forEach(el=>{let t0=0,mv=false;el.addEventListener("pointerdown",()=>{t0=Date.now();mv=false;});el.addEventListener("pointermove",()=>{mv=true;});el.addEventListener("pointerup",()=>{if(mv||Date.now()-t0>450)return;const cp=capas(el.dataset.capas);if(!cp.length)return;
+      const g=document.createElement("div");g.className="galeria";g.innerHTML=`<div class="gal-topo"><b>${esc(CAT.find(c=>c.id===el.dataset.capas).nome)}</b><button class="btn sec sm" id="galFechar">Fechar</button></div><div class="gal-rolo">${cp.map(c=>`<figure><img src="${c.src}" alt=""><figcaption>${esc(c.nome)}</figcaption></figure>`).join("")}</div>`;document.body.appendChild(g);g.querySelector("#galFechar").onclick=()=>g.remove();});});
     $$(".prod .qtd button").forEach(b=>b.onclick=()=>{const id=b.closest(".prod").dataset.p;const s=S[id]=S[id]||{q:0,nome:CAT.find(c=>c.id===id).nome};s.q=Math.max(0,s.q+(b.dataset.m==="+"?1:-1));s.em=new Date().toISOString();salvarSel();render();});
     $$(".tog").forEach(b=>b.onclick=()=>{const id=b.dataset.t;const s=S[id]=S[id]||{q:0,nome:SERV.find(c=>c.id===id).nome,servico:true};s.q=s.q>0?0:1;s.em=new Date().toISOString();salvarSel();render();});
     $$("[data-motor],[data-serv=identidade]").forEach(a=>a.onclick=async ev=>{ev.preventDefault();if(a.dataset.motor){S.capacho={q:1,nome:"Capacho personalizado",em:new Date().toISOString()};salvarSel();}await definirCliente();location.href=a.getAttribute("href");});
