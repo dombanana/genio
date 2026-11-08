@@ -6,7 +6,7 @@
 <title>GênIO · Fontes da marca</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="app.css?v=9c812f7c25">
+<link rel="stylesheet" href="app.css?v=4066e87fe6">
 <style>
 .busca{display:flex;gap:8px;margin:0 0 12px}
 .busca input{flex:1;min-height:50px;border:1.5px solid var(--linha);border-radius:14px;padding:0 14px;font:inherit;font-size:16px;background:#fff}
@@ -23,7 +23,7 @@
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=9c812f7c25"></script>
+<script src="app.js?v=4066e87fe6"></script>
 <script>
 (async()=>{
   const {$,$$,esc,qs,nomeLoja,dados,nav,topo,ZONA,sessao,ficha}=App;
@@ -33,18 +33,20 @@
   const nome=nomeLoja(l.nome);
   const cad=await ficha(slug);
   const L=(cad&&cad.lacunas)||{};const site=L.site&&L.site.estado==="encontrado"?L.site.valor:(l.site||"");
-  const cidade=(D.zona&&D.zona.cidade)||"São Paulo";
-  let q=tipo==="site"?site:`${nome} logo ${cidade}`;
+  const bairro=((((L.endereco||{}).valor||l.endereco||"").split(" · ")[1])||"").trim()||(D.zona&&D.zona.nome)||"";
+  let q=tipo==="site"?site:`${nome} logo ${bairro}`.trim();
   function render(){
     $("#app").innerHTML=`${topo()}
     <div class="faixa"><a href="visita.html?l=${encodeURIComponent(slug)}">Visita</a></div>
     <h1>${tipo==="site"?"Imagens do site":"Pesquisa de fotos"}</h1><p class="sub">${esc(nome)}</p>
-    <div class="dica"><span style="font-size:22px">☝️</span><div><b>Toque</b> para recortar como logotipo · <b>segure</b> para classificar (fachada, arquivo, produto).</div></div>
+    <div class="dica"><span style="font-size:22px">☝️</span><div><b>Toque</b> para usar como logotipo · <b>segure</b> para classificar (fachada, arquivo, produto).</div></div>
+    ${tipo==="site"?"":`<div class="entradas" id="ent"><span class="btn sec" style="opacity:.55;pointer-events:none">🔍 Pesquisa</span><button type="button" class="btn sec" data-e="camera">📷 Fotografar</button><button type="button" class="btn sec" data-e="arquivo">📁 Enviar arquivo</button></div>`}
     <form class="busca" id="f"><input id="q" value="${esc(q)}" ${tipo==="site"?'placeholder="endereço do site"':'placeholder="o que procurar"'}><button type="submit">${tipo==="site"?"Abrir":"Buscar"}</button></form>
     ${tipo==="site"&&site?`<p class="ilus" style="margin:-4px 0 10px"><a href="${esc(/^https?:/.test(site)?site:"https://"+site)}" target="_blank" rel="noopener">Abrir o site no navegador ↗</a></p>`:""}
     <div id="res" class="estado">Carregando…</div>
     ${nav("rota")}`;
     $("#f").onsubmit=ev=>{ev.preventDefault();q=$("#q").value.trim();carregar();};
+    App.ligarEntradas(document,l,null,k=>{$("#res").insertAdjacentHTML("afterbegin",`<p class="ilus" style="grid-column:1/-1">Imagem guardada como ${({fachada:"fachada",arquivo:"arquivo",produto:"produto"})[k]||k}.</p>`);});
     carregar();
   }
   async function carregar(){
@@ -57,10 +59,11 @@
       const imgs=d.imagens||[];
       if(!imgs.length){res.textContent="Nenhuma imagem encontrada.";return;}
       res.className="grade";
-      res.innerHTML=imgs.map((i,k)=>`<figure data-u="${esc(i.u)}" data-fonte="${esc(tipo==="site"?(d.titulo||q):(i.fonte||"pesquisa"))}">${i.logo?'<span class="tag">logo?</span>':""}<img loading="lazy" src="/api/img?u=${encodeURIComponent(i.thumb||i.u)}" alt=""><figcaption>${esc(i.alt||i.titulo||i.fonte||"")}</figcaption></figure>`).join("");
-      $$("#res figure").forEach(fg=>{fg.setAttribute("data-longo","");fg.dataset.src=fg.dataset.u;let longo=false;fg.addEventListener("pointerdown",()=>{longo=false;});fg.onclick=()=>{if(longo)return;location.href=`recorte.html?l=${encodeURIComponent(slug)}&u=${encodeURIComponent(fg.dataset.u)}&fonte=${encodeURIComponent(fg.dataset.fonte)}&tipo=${tipo}`;};fg.addEventListener("longo",()=>{longo=true;});});
+      res.innerHTML=imgs.map((i,k)=>`<figure data-u="${esc(i.u)}" data-thumb="${esc(i.thumb||"")}" data-fonte="${esc(tipo==="site"?(d.titulo||q):(i.fonte||"pesquisa"))}">${i.logo?'<span class="tag">logo?</span>':""}<img loading="lazy" src="/api/img?u=${encodeURIComponent(i.thumb||i.u)}" alt=""><figcaption>${esc(i.alt||i.titulo||i.fonte||"")}</figcaption></figure>`).join("");
+      const abrir=fg=>App.abrirLogotipo(slug,fg.dataset.u,fg.dataset.fonte,"fontes",`&tipo=${tipo}&thumb=${encodeURIComponent(fg.dataset.thumb||"")}`);
+      $$("#res figure").forEach(fg=>{fg.setAttribute("data-longo","");fg.dataset.src=fg.dataset.u;let longo=false;fg.addEventListener("pointerdown",()=>{longo=false;});fg.onclick=()=>{if(longo)return;abrir(fg);};fg.addEventListener("longo",()=>{longo=true;});});
       App.ligarLongo(res,async el=>{el.dispatchEvent(new Event("longo"));const k=await App.menuLongo("Esta imagem é…",[{k:"logotipo",ic:"✦",t:"Logotipo (recortar)"},{k:"fachada",ic:"🏬",t:"Fachada"},{k:"arquivo",ic:"🗂",t:"Imagem de arquivo"},{k:"produto",ic:"🛍",t:"Foto de produto"}]);if(!k)return;
-        if(k==="logotipo"){location.href=`recorte.html?l=${encodeURIComponent(slug)}&u=${encodeURIComponent(el.dataset.u)}&fonte=${encodeURIComponent(el.dataset.fonte)}&tipo=${tipo}`;return;}
+        if(k==="logotipo"){abrir(el);return;}
         await App.classificar(l,el.dataset.u,k,el.dataset.fonte);el.insertAdjacentHTML("afterbegin",`<span class="tag" style="background:var(--teal)">${{fachada:"Fachada",arquivo:"Arquivo",produto:"Produto"}[k]}</span>`);});
     }catch(e){res.textContent="Falha de rede: "+e.message;}
   }

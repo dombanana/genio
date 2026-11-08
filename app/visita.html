@@ -6,7 +6,7 @@
 <title>GênIO · Visita</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="app.css?v=9c812f7c25">
+<link rel="stylesheet" href="app.css?v=4066e87fe6">
 <style>
 .cab{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
 .fach{width:100%;aspect-ratio:16/9;border-radius:16px;overflow:hidden;background:var(--lav2);display:grid;place-items:center;position:relative}
@@ -21,10 +21,10 @@
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=9c812f7c25"></script>
+<script src="app.js?v=4066e87fe6"></script>
 <script>
 (async()=>{
-  const {$,$$,esc,qs,sessao,dados,ficha,estrelasHTML,estado,salvar,nav,topo,voltar,setorNome,nomeLoja,telFmt,cliente,gravarCliente,classificar,definirCliente,menuLongo,ligarLongo,ZONA}=App;
+  const {$,$$,esc,qs,sessao,dados,ficha,estrelasHTML,estado,salvar,nav,topo,voltar,setorNome,nomeLoja,telFmt,cliente,gravarCliente,classificar,definirCliente,menuLongo,ligarLongo,ZONA,entradas,ligarEntradas,abrirLogotipo,logoPrincipal,removerLogo}=App;
   if(!await sessao())return;
   const D=await dados();const slug=qs.get("l");const l=D.lojas.find(x=>x.slug===slug);
   if(!l){$("#app").innerHTML=`${topo()}<p>Loja não encontrada.</p>${nav("rota")}`;return;}
@@ -42,30 +42,39 @@
   const leitura=(L.leitura||{}).valor||"";const desde=(leitura.match(/desde (\d{4})/)||[])[1];const razao=(leitura.match(/Razão social: ([^·]+)/)||[])[1];
   const AV=L.avaliacoes||{};const ganchos=(AV.gatilhos||[]).map(g=>g.tema);
   function render(){
-    const cands=candidatos();const logo=(c.manual&&c.manual.tratado)||(c.logos&&c.logos[0]&&c.logos[0].src)||null;const fach=(c.fachada&&c.fachada.src)||null;
+    const cands=candidatos();const logos=c.logos||[];const principal=logos[0]||null;const logo=(c.manual&&c.manual.tratado)||(principal&&principal.src)||null;const fach=(c.fachada&&c.fachada.src)||null;
     const pronto=!!(c.manual&&c.manual.editado);const e=estado();
     $("#app").innerHTML=`${topo()}${voltar("index.html","Rota")}
     <div class="cab"><div><h1 style="margin-bottom:2px">${esc(nome)}</h1><p class="sub">${esc(setorNome(l.setor))} · ${esc(l.endereco||"")}</p></div><div style="padding-top:8px">${estrelasHTML(l.estrelas)}</div></div>
     <div class="fach" data-longo data-src="${esc(fach||"")}">${fach?`<img src="${esc(fach)}" alt=""><span class="sel">Fachada</span>`:`<div class="vazio">📷<br>Fachada ainda não escolhida<br><small>segure uma imagem da galeria e marque “Fachada”</small></div>`}</div>
-    <div class="fontes"><a class="btn sec" href="${L.site&&L.site.estado==="encontrado"?`fontes.html?l=${encodeURIComponent(slug)}&tipo=site`:"#"}" ${L.site&&L.site.estado==="encontrado"?"":'style="opacity:.5" aria-disabled="true"'}>🌐 Site${L.site&&L.site.estado==="encontrado"?"":" · não achado"}</a><a class="btn sec" href="fontes.html?l=${encodeURIComponent(slug)}&tipo=busca">🔍 Pesquisa de fotos</a></div>
+    ${entradas(slug,"entG")}${L.site&&L.site.estado==="encontrado"?`<a class="btn sec" style="margin:-4px 0 10px;min-height:44px" href="fontes.html?l=${encodeURIComponent(slug)}&tipo=site">🌐 Imagens do site</a>`:""}
     <section class="card"><h2>Imagens encontradas <small class="muted" style="font-weight:400;font-size:14px">· segure para classificar</small></h2>
       ${cands.length?`<div class="galeria">${cands.map((x,i)=>`<figure data-longo data-src="${esc(x.src)}" data-fonte="${esc(x.fonte||"")}">${x.papel?`<span class="pap ${x.papel==="logotipo"?"logo":x.papel==="fachada"?"fach":""}">${{logotipo:"Logotipo",fachada:"Fachada",produto:"Produto",arquivo:"Arquivo"}[x.papel]}</span>`:""}<img src="${esc(x.src)}" alt="" loading="lazy"></figure>`).join("")}</div>`:`<p class="muted">Nenhuma imagem ainda. Use o Site ou a Pesquisa de fotos.</p>`}</section>
-    <section class="card"><h2>Logotipo</h2><div class="logo-area" id="logoArea">${logo?`<img src="${esc(logo)}" alt="">`:`<div class="vazio">Nenhum logotipo escolhido<br><small>toque para pesquisar</small></div>`}</div>
-      <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap"><span class="chip ${pronto?"ok":logo?"dec":""}">${pronto?"✓ Logotipo tratado":logo?"◷ Falta tratar no manual":"Sem logotipo"}</span>${logo?`<a class="btn sec sm" href="manual.html?l=${encodeURIComponent(slug)}" style="width:auto;min-height:36px;padding:0 12px;font-size:14px;text-decoration:none">Abrir o manual →</a>`:""}</div></section>
+    <section class="card"><h2>Logotipo${logos.length>1?` <small class="muted" style="font-weight:400;font-size:14px">· ${logos.length} salvos · toque para usar · segure para remover</small>`:""}</h2>
+      <div class="logo-area" id="logoArea">${logo?`<img src="${esc(logo)}" alt="">`:`<div class="vazio">Nenhum logotipo escolhido<br><small>pesquise, fotografe ou envie um arquivo</small></div>`}</div>
+      ${logos.length>1?`<div class="logos">${logos.map((x,i)=>`<figure class="${i===0?"on":""}" data-id="${esc(x.id)}" data-longo><img src="${esc(x.src)}" alt=""><figcaption>${x.tratado?"✓":""}${esc((x.nome||"").replace(/^Logotipo ?·? ?/,"")||"logotipo")}</figcaption></figure>`).join("")}</div>`:""}
+      <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;align-items:center"><span class="chip ${pronto?"ok":logo?"dec":""}">${pronto?"✓ Logotipo tratado":logo?"◷ Falta tirar o fundo":"Sem logotipo"}</span>${logo?`<button type="button" class="btn sec sm" id="editarLogo" style="width:auto;min-height:36px;padding:0 12px;font-size:14px">✂ Editar</button><a class="btn sec sm" href="manual.html?l=${encodeURIComponent(slug)}" style="width:auto;min-height:36px;padding:0 12px;font-size:14px;text-decoration:none">Editor avançado</a>`:""}</div>
+      ${entradas(slug,"entL")}</section>
     ${curios.length?`<section class="card" style="border-left:5px solid var(--teal)"><h2>Curiosidade</h2>${curios.map(t=>`<p style="margin:0 0 6px">${esc(t)}</p>`).join("")}${cn.nota&&cn.valor?`<small class="muted">${esc(cn.nota)}</small>`:""}</section>`:""}
     <section class="card"><h2>Antes de entrar</h2>
       ${razao?`<div class="fato"><span>Razão social</span><b>${esc(razao.trim())}</b></div>`:""}${desde?`<div class="fato"><span>Desde</span><b>${esc(desde)}</b></div>`:""}
       ${l.tel?`<div class="fato"><span>Telefone</span><b>${esc(telFmt(l.tel))}</b></div>`:""}${horarioHoje((L.horario||{}).valor)?`<div class="fato"><span>Hoje</span><b>${esc(horarioHoje(L.horario.valor))}</b></div>`:""}
       ${l.nota?`<div class="fato"><span>Google</span><b>${l.nota} · ${l.aval||0} avaliações${ganchos.length?` · reclamam de: ${esc(ganchos.join(", "))}`:""}</b></div>`:""}
     </section>
-    <div class="acoes"><div class="w"><a class="btn sec" href="index.html">← Rota</a>${pronto?`<a class="btn" href="produtos.html?l=${encodeURIComponent(slug)}">Produtos e serviços →</a>`:logo?`<a class="btn" href="manual.html?l=${encodeURIComponent(slug)}">Tratar o logotipo →</a>`:`<a class="btn" href="fontes.html?l=${encodeURIComponent(slug)}&tipo=busca">Escolher logotipo →</a>`}</div></div>
+    <div class="acoes"><div class="w"><a class="btn sec" href="index.html">← Rota</a>${pronto?`<a class="btn" href="produtos.html?l=${encodeURIComponent(slug)}">Produtos e serviços →</a>`:logo?`<button class="btn" type="button" id="tratarLogo">Tratar o logotipo →</button>`:`<a class="btn" href="fontes.html?l=${encodeURIComponent(slug)}&tipo=busca">Escolher logotipo →</a>`}</div></div>
     ${nav("rota")}`;document.body.classList.add("com-acoes");
     if(!(e.feitas||[]).includes(slug)){e.feitas=[...(e.feitas||[]),slug];salvar(e);}
-    $("#logoArea").onclick=()=>{location.href=logo?`manual.html?l=${encodeURIComponent(slug)}`:`fontes.html?l=${encodeURIComponent(slug)}&tipo=busca`;};
-    ligarLongo(document,async el=>{const src=el.dataset.src;if(!src)return;
+    const editar=()=>{if(!principal)return location.href=`fontes.html?l=${encodeURIComponent(slug)}&tipo=busca`;abrirLogotipo(slug,principal.src,(principal.nome||"").replace(/^Logotipo ?·? ?/,""),"visita");};
+    $("#logoArea").onclick=editar;const eb=$("#editarLogo");if(eb)eb.onclick=editar;const tb=$("#tratarLogo");if(tb)tb.onclick=editar;
+    ligarEntradas(document,l,null,async()=>{c=await cliente(l);render();});
+    $$(".logos figure").forEach(fg=>{let longo=false;fg.addEventListener("pointerdown",()=>{longo=false;});fg.addEventListener("longo",()=>{longo=true;});fg.onclick=async()=>{if(longo)return;await logoPrincipal(l,fg.dataset.id);c=await cliente(l);render();};});
+    ligarLongo(document,async el=>{
+      if(el.dataset.id&&el.closest(".logos")){el.dispatchEvent(new Event("longo"));const k=await menuLongo("Este logotipo…",[{k:"usar",ic:"✦",t:"Usar como principal"},{k:"editar",ic:"✂",t:"Editar"},{k:"remover",ic:"🗑",t:"Remover"}]);if(!k)return;
+        const x=(c.logos||[]).find(y=>y.id===el.dataset.id);if(k==="editar"&&x)return abrirLogotipo(slug,x.src,(x.nome||"").replace(/^Logotipo ?·? ?/,""),"visita");if(k==="usar")await logoPrincipal(l,el.dataset.id);if(k==="remover")await removerLogo(l,el.dataset.id);c=await cliente(l);render();return;}
+      const src=el.dataset.src;if(!src)return;
       const k=await menuLongo("Esta imagem é…",[{k:"logotipo",ic:"✦",t:"Logotipo"},{k:"fachada",ic:"🏬",t:"Fachada"},{k:"arquivo",ic:"🗂",t:"Imagem de arquivo"},{k:"produto",ic:"🛍",t:"Foto de produto"},{k:"descartar",ic:"🗑",t:"Descartar"}]);
       if(!k)return;await classificar(l,src,k,el.dataset.fonte||"");c=await cliente(l);
-      if(k==="logotipo"){location.href=`recorte.html?l=${encodeURIComponent(slug)}&u=${encodeURIComponent(src)}&fonte=${encodeURIComponent(el.dataset.fonte||"")}&tipo=galeria`;return;}
+      if(k==="logotipo"){abrirLogotipo(slug,src,el.dataset.fonte||"","visita");return;}
       render();});
   }
   render();
