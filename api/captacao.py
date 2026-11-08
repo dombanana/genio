@@ -808,7 +808,7 @@ def main():
         sys.path.insert(0, os.path.join(RAIZ, "api", "kits")); import gerar_kit
         for s_, c_ in cads.items():
             L_ = c_.get("lacunas", {})
-            if L_.get("manual", {}).get("estado") == "encontrado" and L_.get("kit", {}).get("estado") != "encontrado":
+            if L_.get("manual", {}).get("valor") and L_.get("kit", {}).get("estado") != "encontrado":  # basta a marca vetorizada existir; fidelidade é informação, não bloqueio
                 x_ = next((x for x in lojas if x["slug"] == s_), {})
                 kit = gerar_kit.gerar(pasta, s_, x_.get("setor"))
                 if kit.get("itens"):
