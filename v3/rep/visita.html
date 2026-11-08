@@ -28,7 +28,27 @@
   const refs=(L.fachada&&L.fachada.referencias)||[];
   const fotoLocal=fotos.entrada||(refs[0]?base+refs[0]:null);
   const cores=(L.cores&&L.cores.valor)?L.cores.valor.split(" ").slice(0,3):[];
-  let txtRoteiro=roteiro({...l,logo:logo.estado});if(AV.gatilhos&&AV.gatilhos[0])txtRoteiro=AV.gatilhos[0].argumento+" "+txtRoteiro;
+  // "Antes de entrar" = o que a pesquisa pública achou sobre este comércio (sem frase de venda; o produto entra só no fim)
+  function briefing(){const P=[];const val=k=>(L[k]&&L[k].estado==="encontrado"&&L[k].valor)||"";
+    const nome=nomeLoja(l.nome);const set=setorNome(l.setor).toLowerCase();
+    let abre=`${nome} é ${/^[aeiou]/i.test(set)?"um":"um"} ${set} na ${l.endereco}`;
+    const lei=val("leitura");const m=lei.match(/Razão social: ([^·]+)·\s*CNPJ\s*([\d./-]+)(?:\s*·\s*desde\s*(\d{4}))?/);
+    if(m){abre+=` — razão social ${m[1].trim()}${m[3]?`, aberta em ${m[3]}`:""}`;}
+    P.push(abre+".");
+    if(val("sobre"))P.push(val("sobre"));
+    const sl=L.slogan;const frase=(sl&&sl.estado==="encontrado"&&sl.valor)||(sl&&sl.opcoes&&sl.opcoes[0]&&sl.opcoes[0].valor)||"";
+    const redes=val("redes");if(redes||frase)P.push(`${redes?"Presença: "+redes+". ":""}${frase?`A casa se apresenta como “${frase}”.`:""}`.trim());
+    if(val("site"))P.push(`Site: ${val("site").replace(/^https?:\/\//,"")}.`);
+    if(l.nota){const lista=AV.lista||[];const boas=lista.filter(a=>(a.nota||0)>=4&&(a.texto||"").length>30).sort((a,b)=>(b.nota||0)-(a.nota||0));const ruins=lista.filter(a=>(a.nota||5)<=3);
+      let av=`No Google tem nota ${String(l.nota).replace(".",",")} em ${l.aval||0} avaliações`;
+      if(boas[0])av+=`; elogiam, por exemplo: “${boas[0].texto.slice(0,110).trim()}${boas[0].texto.length>110?"…":""}”`;
+      if(ruins.length)av+=`; ${ruins.length} das ${lista.length} lidas são negativas`;
+      if(AV.gatilhos&&AV.gatilhos.length)av+=` — e tocam no nosso serviço: ${AV.gatilhos.map(g=>g.tema).join(", ")}`;
+      P.push(av+".");}
+    if(val("horario")){const h=val("horario").split(" · ");const hoje=["dom","seg","ter","qua","qui","sex","sáb"][new Date().getDay()];const hh=h.find(x=>x.startsWith(hoje));if(hh)P.push(`Hoje: ${hh.replace(/^\S+\s*/,"")}.`);}
+    const prods=(PROD[l.setor]||PROD["comércio"]);P.push(`${logo.estado==="encontrado"?"A marca já está pronta no sistema — mostre o "+prods[0].toLowerCase()+" com ela na entrada.":"Sem marca pública confiável: fotografe a placa na porta antes de mostrar o "+prods[0].toLowerCase()+"."}`);
+    return P.filter(Boolean).join(" ");}
+  let txtRoteiro=briefing();
   $("#app").innerHTML=`${topo()}
   <div class="faixa"><a href="index.html">Rota</a></div>
   <h1>${esc(nomeLoja(l.nome))}</h1>
@@ -42,8 +62,8 @@
       <a class="acao-link" style="margin:0" id="verIdent" href="${L.manual&&L.manual.valor?esc(base+L.manual.valor):`../identidade.html`}">${L.manual&&L.manual.valor?"Ver manual de identidade →":"Ver identidade →"}</a></div>
     ${L.manual&&L.manual.nota?`<p class="ilus" style="margin-top:8px">Manual: ${esc(L.manual.nota)}</p>`:""}
     ${logo.estado!=="encontrado"&&logo.opcoes&&logo.opcoes.length?`<p class="ilus" style="margin-top:10px">${logo.opcoes.length} opções encontradas na rede — decidir com o cliente na tela de identidade.</p>`:""}</section>
-  <section class="card"><h2>Antes de entrar</h2>
-    <div class="roteiro"><span class="ic">💬</span><p>${esc(txtRoteiro)}</p><button class="btn sec sm" id="ouvir" type="button">▶ Ouvir roteiro</button></div></section>
+  <section class="card"><h2>Antes de entrar <small class="muted" style="font-weight:400;font-size:14px">· o que a pesquisa achou</small></h2>
+    <div class="roteiro"><span class="ic">🔎</span><p>${esc(txtRoteiro)}</p><button class="btn sec sm" id="ouvir" type="button">▶ Ouvir</button></div></section>
   <section class="card"><h2>Condições da entrada</h2>
     <div class="check">${CHECK.map(([k,n])=>`<label><input type="checkbox" data-k="${k}" ${ck[k]?"checked":""}>${n}</label>`).join("")}</div>
     <button class="acao-link" id="fotografar" type="button" style="background:none;border:0;cursor:pointer;padding:0">📷 Fotografar entrada</button></section>
