@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>GênIO · Fontes da marca</title>
+<meta name="theme-color" content="#F1EEF8">
+<link rel="icon" href="../genio-favicon.png">
+<link rel="stylesheet" href="app.css?v=9c812f7c25">
+<style>
+.busca{display:flex;gap:8px;margin:0 0 12px}
+.busca input{flex:1;min-height:50px;border:1.5px solid var(--linha);border-radius:14px;padding:0 14px;font:inherit;font-size:16px;background:#fff}
+.busca button{flex:0 0 auto;min-height:50px;padding:0 16px;border:0;border-radius:14px;background:var(--navy);color:#fff;font-weight:700;font-size:16px}
+.grade{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.grade figure{margin:0;background:#fff;border-radius:12px;overflow:hidden;position:relative;aspect-ratio:1/1;display:grid;place-items:center}
+.grade img{width:100%;height:100%;object-fit:contain;display:block;background:#fff}
+.grade figcaption{position:absolute;left:0;right:0;bottom:0;background:rgba(20,28,58,.7);color:#fff;font-size:11px;padding:3px 6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.grade .tag{position:absolute;top:6px;left:6px;background:var(--teal);color:#fff;font-size:11px;font-weight:700;padding:2px 7px;border-radius:999px}
+.dica{background:#fff;border-radius:14px;padding:12px 14px;margin:0 0 12px;font-size:15px;display:flex;gap:10px;align-items:center}
+.dica b{color:var(--marca)}
+.estado{color:var(--texto2);padding:30px 0;text-align:center}
+</style>
+</head>
+<body>
+<div class="w" id="app"></div>
+<script src="app.js?v=9c812f7c25"></script>
+<script>
+(async()=>{
+  const {$,$$,esc,qs,nomeLoja,dados,nav,topo,ZONA,sessao,ficha}=App;
+  if(!await sessao())return;
+  const D=await dados();const slug=qs.get("l");const tipo=qs.get("tipo")||"busca";const l=D.lojas.find(x=>x.slug===slug);
+  if(!l){$("#app").innerHTML=`${topo()}<p>Loja não encontrada.</p>${nav("rota")}`;return;}
+  const nome=nomeLoja(l.nome);
+  const cad=await ficha(slug);
+  const L=(cad&&cad.lacunas)||{};const site=L.site&&L.site.estado==="encontrado"?L.site.valor:(l.site||"");
+  const cidade=(D.zona&&D.zona.cidade)||"São Paulo";
+  let q=tipo==="site"?site:`${nome} logo ${cidade}`;
+  function render(){
+    $("#app").innerHTML=`${topo()}
+    <div class="faixa"><a href="visita.html?l=${encodeURIComponent(slug)}">Visita</a></div>
+    <h1>${tipo==="site"?"Imagens do site":"Pesquisa de fotos"}</h1><p class="sub">${esc(nome)}</p>
+    <div class="dica"><span style="font-size:22px">☝️</span><div><b>Toque</b> para recortar como logotipo · <b>segure</b> para classificar (fachada, arquivo, produto).</div></div>
+    <form class="busca" id="f"><input id="q" value="${esc(q)}" ${tipo==="site"?'placeholder="endereço do site"':'placeholder="o que procurar"'}><button type="submit">${tipo==="site"?"Abrir":"Buscar"}</button></form>
+    ${tipo==="site"&&site?`<p class="ilus" style="margin:-4px 0 10px"><a href="${esc(/^https?:/.test(site)?site:"https://"+site)}" target="_blank" rel="noopener">Abrir o site no navegador ↗</a></p>`:""}
+    <div id="res" class="estado">Carregando…</div>
+    ${nav("rota")}`;
+    $("#f").onsubmit=ev=>{ev.preventDefault();q=$("#q").value.trim();carregar();};
+    carregar();
+  }
+  async function carregar(){
+    const res=$("#res");res.className="estado";res.textContent=tipo==="site"?"Abrindo o site…":"Buscando…";
+    if(!q){res.textContent=tipo==="site"?"Esta loja não tem site encontrado. Use a pesquisa de imagem.":"Digite o que procurar.";return;}
+    try{
+      const u=tipo==="site"?`/api/site/imagens?url=${encodeURIComponent(q)}`:`/api/imagens/busca?q=${encodeURIComponent(q)}`;
+      const r=await fetch(u,{credentials:"same-origin",cache:"no-store"});const d=await r.json();
+      if(!r.ok||d.erro){res.textContent=d.erro||d.mensagem||("Não consegui ("+r.status+"). "+(r.status===401?"Entre com a sua conta.":""));return;}
+      const imgs=d.imagens||[];
+      if(!imgs.length){res.textContent="Nenhuma imagem encontrada.";return;}
+      res.className="grade";
+      res.innerHTML=imgs.map((i,k)=>`<figure data-u="${esc(i.u)}" data-fonte="${esc(tipo==="site"?(d.titulo||q):(i.fonte||"pesquisa"))}">${i.logo?'<span class="tag">logo?</span>':""}<img loading="lazy" src="/api/img?u=${encodeURIComponent(i.thumb||i.u)}" alt=""><figcaption>${esc(i.alt||i.titulo||i.fonte||"")}</figcaption></figure>`).join("");
+      $$("#res figure").forEach(fg=>{fg.setAttribute("data-longo","");fg.dataset.src=fg.dataset.u;let longo=false;fg.addEventListener("pointerdown",()=>{longo=false;});fg.onclick=()=>{if(longo)return;location.href=`recorte.html?l=${encodeURIComponent(slug)}&u=${encodeURIComponent(fg.dataset.u)}&fonte=${encodeURIComponent(fg.dataset.fonte)}&tipo=${tipo}`;};fg.addEventListener("longo",()=>{longo=true;});});
+      App.ligarLongo(res,async el=>{el.dispatchEvent(new Event("longo"));const k=await App.menuLongo("Esta imagem é…",[{k:"logotipo",ic:"✦",t:"Logotipo (recortar)"},{k:"fachada",ic:"🏬",t:"Fachada"},{k:"arquivo",ic:"🗂",t:"Imagem de arquivo"},{k:"produto",ic:"🛍",t:"Foto de produto"}]);if(!k)return;
+        if(k==="logotipo"){location.href=`recorte.html?l=${encodeURIComponent(slug)}&u=${encodeURIComponent(el.dataset.u)}&fonte=${encodeURIComponent(el.dataset.fonte)}&tipo=${tipo}`;return;}
+        await App.classificar(l,el.dataset.u,k,el.dataset.fonte);el.insertAdjacentHTML("afterbegin",`<span class="tag" style="background:var(--teal)">${{fachada:"Fachada",arquivo:"Arquivo",produto:"Produto"}[k]}</span>`);});
+    }catch(e){res.textContent="Falha de rede: "+e.message;}
+  }
+  render();
+})();
+</script>
+</body>
+</html>

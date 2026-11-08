@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>GênIO · Rota</title>
+<meta name="theme-color" content="#F1EEF8">
+<link rel="icon" href="../genio-favicon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="stylesheet" href="app.css?v=9c812f7c25">
+</head>
+<body>
+<div class="w" id="app"></div>
+<script src="app.js?v=9c812f7c25"></script>
+<script>
+(async()=>{
+  const {$,$$,esc,qs,sessao,eu,dados,estrelasHTML,estado,salvar,nav,topo,setorNome,nomeLoja}=App;
+  if(!await sessao())return;
+  let D;try{D=await dados();}catch(e){$("#app").innerHTML=`${topo()}<section class="card"><h2>Rota ainda não preparada</h2><p>A zona <b>${esc(App.ZONA)}</b> não tem captação pronta. Peça ao administrador para rodar a varredura.</p></section>${nav("rota")}`;return;}
+  const e=estado();e.feitas=e.feitas||[];
+  // perfil do vendedor = rota: ~50 lojas ordenadas por estrelas; 1–2 estrelas só se faltar loja
+  const META=50;let lista=D.lojas.slice().sort((a,b)=>b.estrelas-a.estrelas||a.dia-b.dia||a.ordem-b.ordem);
+  const boas=lista.filter(l=>l.estrelas>=3);const rota=(boas.length>=META?boas:lista).slice(0,META);
+  const filtro=qs.get("min")?+qs.get("min"):0;const vis=rota.filter(l=>l.estrelas>=filtro);
+  const cont=[5,4,3,2,1].map(n=>[n,rota.filter(l=>l.estrelas===n).length]);
+  $("#app").innerHTML=`${topo()}
+  <h1>Olá, ${esc(eu().nome.split(" ")[0])}</h1><p class="sub">${esc(D.zona.nome)} · ${rota.length} lojas na sua rota · ${e.feitas.length} visitadas</p>
+  <section class="card" style="padding:12px 16px"><div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">${cont.map(([n,q])=>`<a href="?min=${n}" class="chip ${filtro===n?"ok":""}" style="text-decoration:none">${"★".repeat(n)} <b>${q}</b></a>`).join("")}${filtro?`<a href="index.html" class="chip">todas</a>`:""}</div><small class="muted">Estrelas: proposta automática (nota e volume no Google, presença própria, setor, movimento) — critério a validar.</small></section>
+  <div class="lista">${vis.map((l,i)=>`<a class="card loja-l ${e.feitas.includes(l.slug)?"feita":""}" href="visita.html?l=${encodeURIComponent(l.slug)}" style="display:grid;color:inherit;text-decoration:none"><span class="n">${e.feitas.includes(l.slug)?"✓":i+1}</span><div><b>${esc(nomeLoja(l.nome))}</b><small>${esc(setorNome(l.setor))} · ${esc((l.endereco||"").split(" · ")[0])}</small></div><div style="text-align:right">${estrelasHTML(l.estrelas)}<br><small class="muted">${l.cad&&l.cad.logo==="encontrado"?"marca sugerida":"sem marca"}</small></div></a>`).join("")}</div>
+  ${nav("rota")}`;
+})();
+</script>
+</body>
+</html>

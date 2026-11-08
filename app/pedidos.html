@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>GênIO · Pedidos</title>
+<meta name="theme-color" content="#F1EEF8">
+<link rel="icon" href="../genio-favicon.png">
+<link rel="stylesheet" href="app.css?v=9c812f7c25">
+</head>
+<body>
+<div class="w" id="app"></div>
+<script src="app.js?v=9c812f7c25"></script>
+<script>
+(async()=>{
+  const {$,esc,sessao,dados,nav,topo,nomeLoja,estado}=App;
+  if(!await sessao())return;
+  const D=await dados();const e=estado();const sel=e.sel||{};
+  const blocos=Object.entries(sel).map(([slug,S])=>{const its=Object.values(S).filter(v=>v&&v.q>0);if(!its.length)return "";const l=D.lojas.find(x=>x.slug===slug);const nome=l?nomeLoja(l.nome):slug;
+    return `<section class="card"><div style="display:flex;justify-content:space-between;gap:10px;align-items:center"><h2 style="margin:0">${esc(nome)}</h2><span class="chip dec">◷ A orçar</span></div><p style="margin:8px 0 10px">${its.map(i=>esc(i.nome)+(i.servico?"":" × "+i.q)).join(" · ")}</p><div style="display:flex;justify-content:space-between;align-items:center"><small class="muted">Preços: fase do orçamento</small><a href="produtos.html?l=${encodeURIComponent(slug)}">Ajustar →</a></div></section>`;}).filter(Boolean).join("");
+  $("#app").innerHTML=`${topo()}<h1>Pedidos</h1><p class="sub">${blocos?"Seleções feitas nas visitas":"Nenhuma seleção ainda"}</p>${blocos||'<section class="card"><p>As seleções nascem na visita, em “Produtos e serviços”.</p></section>'}${nav("pedidos")}`;
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<title>GênIO · Edição do produto</title>
+<meta name="theme-color" content="#F1EEF8">
+<link rel="icon" href="../genio-favicon.png">
+<link rel="stylesheet" href="app.css?v=9c812f7c25">
+<style>
+body.com-acoes{padding-bottom:calc(150px + env(safe-area-inset-bottom,0))}
+.ed-frame{height:min(62vh,560px)}
+.painel{background:#fff;border-radius:16px;padding:12px 14px;margin:10px 0}
+.painel h3{margin:0 0 8px;font-size:15px}
+.paleta{display:flex;gap:6px;flex-wrap:wrap}
+.paleta button{width:34px;height:34px;border-radius:10px;border:2px solid #fff;box-shadow:0 0 0 1px rgba(0,0,0,.12);padding:0}
+.paleta button.on{outline:3px solid var(--marca)}
+.paleta button.mais{background:#fff;font-size:16px;font-weight:700;color:var(--marca);border:1.5px dashed var(--marca)}
+.acs{display:flex;gap:8px;flex-wrap:wrap}
+.acs button{border:0;background:var(--lav);border-radius:12px;min-height:42px;padding:0 12px;font:inherit;font-size:14px;font-weight:600;color:var(--texto)}
+.ia textarea{width:100%;min-height:70px;border:1.5px solid var(--linha);border-radius:12px;padding:10px;font:inherit;font-size:15px;background:var(--lav)}
+.medida{font-size:13px;color:var(--texto2);margin:4px 0 8px;display:flex;justify-content:space-between}
+.campos{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.campos input{width:100%;font:inherit;font-size:14px;border:1.5px solid var(--linha);border-radius:10px;padding:8px 10px;background:#fff}
+</style>
+</head>
+<body>
+<div class="w" id="app"></div>
+<script src="app.js?v=9c812f7c25"></script>
+<script>
+(async()=>{
+  const {$,$$,esc,qs,sessao,dados,ficha,nav,topo,voltar,nomeLoja,telFmt,cliente,gravarCliente,definirCliente,ZONA}=App;
+  if(!await sessao())return;
+  const D=await dados();const slug=qs.get("l");const pid=qs.get("p")||"capacho";const l=D.lojas.find(x=>x.slug===slug);
+  if(!l){$("#app").innerHTML=`${topo()}<p>Loja não encontrada.</p>${nav("rota")}`;return;}
+  const nome=nomeLoja(l.nome);definirCliente(l);let c=await cliente(l);
+  const G=await (await fetch("gabaritos.json?v=9c812f7c25")).json();const P=G.produtos[pid]||G.produtos.capacho;
+  const sang=P.sangria_mm!=null?P.sangria_mm:G.sangria_mm,seg=P.seguranca_mm!=null?P.seguranca_mm:G.seguranca_mm;
+  const PXCM=Math.min(100,Math.floor(3000/Math.max(P.w_cm+sang/5,P.h_cm+sang/5)));  // px por cm no editor (teto 3000 px)
+  const W=Math.round((P.w_cm+2*sang/10)*PXCM),H=Math.round((P.h_cm+2*sang/10)*PXCM),B=Math.round(sang/10*PXCM),S=Math.round(seg/10*PXCM);
+  const PALETAS={capacho:[["#2B2B2D","Preto"],["#9A9B9D","Cinza"],["#1F3A5F","Azul marinho"],["#7A1E1E","Vinho"],["#2E5E3A","Verde"],["#EE6A1D","Laranja"],["#C8A95B","Bege"],["#5B3A29","Marrom"]],rigido:[["#F4F1EA","Branco"],["#141C3A","Navy"],["#2B2B2D","Preto"],["#B8B8B8","Alumínio"],["#D4AF37","Dourado"]],vinil:[],tecido:[["#F4F1EA","Branco"],["#2B2B2D","Preto"],["#1F3A5F","Marinho"],["#9A9B9D","Cinza"],["#C62828","Vermelho"],["#2E7D32","Verde"],["#14B8B0","Verde-água"],["#EDE6D6","Cru"]],papel:[["#FFFFFF","Branco"],["#EDE6D6","Kraft claro"],["#141C3A","Navy"],["#2B2B2D","Preto"]],lona:[["#FFFFFF","Branco"],["#141C3A","Navy"],["#2B2B2D","Preto"],["#F4F1EA","Creme"]],carimbo:[]};
+  const cad=await ficha(slug);const L=(cad&&cad.lacunas)||{};
+  const cores=(c.manual&&c.manual.cores)||[];
+  let arte=(c.artes||{})[pid]||null;let fundo=arte?arte.material:(P.sem_fundo?null:(PALETAS[P.superficie]||[["#FFFFFF"]])[0][0]);
+  const temIA=!!P.ia;
+  $("#app").innerHTML=`${topo()}${voltar(`produtos.html?l=${encodeURIComponent(slug)}`,"Produtos")}
+  <h1 style="font-size:24px;margin-bottom:2px">${esc(P.nome)}</h1><p class="sub">${esc(nome)}</p>
+  <div class="medida"><span>${P.w_cm} × ${P.h_cm} cm · sangria ${sang} mm · segurança ${seg} mm</span><span>${esc(P.fonte||"")}</span></div>
+  <iframe class="ed-frame" id="ed" src="vendor/minipaint/index.html"></iframe>
+  <div class="painel"><h3>Cor do produto</h3><div class="paleta" id="pal">${P.sem_fundo?'<button type="button" data-c="" class="'+(!fundo?"on":"")+'" style="background:repeating-conic-gradient(#ccc 0 25%,#fff 0 50%) 0 0/10px 10px" title="sem fundo"></button>':""}${(PALETAS[P.superficie]||[]).map(([h,n])=>`<button type="button" data-c="${h}" class="${fundo===h?"on":""}" style="background:${h}" title="${n}"></button>`).join("")}${cores.map(x=>`<button type="button" data-c="${x.hex}" class="${fundo===x.hex?"on":""}" style="background:${x.hex}" title="${esc(x.nome||"")} (marca)"></button>`).join("")}<button type="button" class="mais" id="mais">+</button></div></div>
+  <div class="painel"><h3>Inserir</h3><div class="acs"><button type="button" id="insMarca">✦ Marca (camadas)</button><button type="button" id="insTexto">T Nome da loja</button>${P.cartao?'<button type="button" id="insCampos">≡ Dados do cartão</button><button type="button" id="insQR">▦ QR genérico</button>':""}<button type="button" id="insGuia">⌗ Guia do gabarito</button></div>
+    ${P.cartao?`<div class="campos" style="margin-top:10px">${[["nome",nome],["cargo",""],["tel",l.tel?telFmt(l.tel):""],["email",""],["endereco",l.endereco||""],["site",(L.site&&L.site.estado==="encontrado"?L.site.valor:"")]].map(([k,v])=>`<input data-campo="${k}" placeholder="${k}" value="${esc(v)}">`).join("")}</div>`:""}</div>
+  ${temIA?`<div class="painel ia"><h3>Fundo com IA <small class="muted" style="font-weight:400">· só a composição; marca e textos ficam por cima</small></h3><textarea id="prompt">${esc(`Fundo para ${P.nome.toLowerCase()} de ${nome} (${App.setorNome(l.setor).toLowerCase()}), elegante, cores ${cores.slice(0,3).map(x=>x.hex).join(", ")||"neutras"}, sem texto, sem logotipo, espaço limpo para a marca.`)}</textarea><div class="acs" style="margin-top:8px"><button type="button" id="gerar">✨ Gerar fundo</button><span class="muted" id="iaSt" style="font-size:13px;align-self:center"></span></div></div>`:""}
+  <div class="acoes"><div class="w"><a class="btn sec" href="produtos.html?l=${encodeURIComponent(slug)}">← Produtos</a><button class="btn" id="salvar" type="button" disabled>Salvar arte →</button></div></div>
+  ${nav("rota")}`;document.body.classList.add("com-acoes");
+  const fr=$("#ed");const win=()=>fr.contentWindow;
+  const pronto=()=>new Promise(res=>{const t=setInterval(()=>{try{if(win().Layers&&win().AppConfig){clearInterval(t);res();}}catch(e){}},100);});
+  const img=src=>new Promise(res=>{const i=new Image();i.crossOrigin="anonymous";i.onload=()=>res(i);i.onerror=()=>res(null);i.src=src;});
+  const ajustar=()=>{try{const Wn=win();Wn.Layers.Base_gui.GUI_preview.zoom_auto();Wn.Layers.render(true);}catch(e){}};
+  function camadaCanvas(nomeC,cv,x=0,y=0){const Wn=win();Wn.Layers.insert({name:nomeC,type:"image",data:cv,x,y,width:cv.width,height:cv.height,width_original:cv.width,height_original:cv.height});}
+  function corCanvas(hex){const cv=document.createElement("canvas");cv.width=W;cv.height=H;const g=cv.getContext("2d");g.fillStyle=hex;g.fillRect(0,0,W,H);return cv;}
+  function guiaCanvas(){const cv=document.createElement("canvas");cv.width=W;cv.height=H;const g=cv.getContext("2d");
+    if(B){g.fillStyle="rgba(220,40,40,.18)";g.fillRect(0,0,W,B);g.fillRect(0,H-B,W,B);g.fillRect(0,0,B,H);g.fillRect(W-B,0,B,H);g.strokeStyle="#DC2828";g.lineWidth=Math.max(2,W/600);g.strokeRect(B,B,W-2*B,H-2*B);}
+    g.setLineDash([W/80,W/120]);g.strokeStyle="#14B8B0";g.lineWidth=Math.max(2,W/700);g.strokeRect(B+S,B+S,W-2*(B+S),H-2*(B+S));
+    if(P.rodape_oculto_cm){const r=P.rodape_oculto_cm*PXCM;g.setLineDash([]);g.fillStyle="rgba(20,28,58,.25)";g.fillRect(0,H-B-r,W,r);}
+    g.setLineDash([]);g.fillStyle="#DC2828";g.font=`${Math.max(12,W/60)}px sans-serif`;g.fillText("corte",B+6,B-4>14?B-4:B+14);g.fillStyle="#14B8B0";g.fillText("segurança",B+S+6,B+S+Math.max(12,W/60)+2);return cv;}
+  async function inserirMarca(){const cams=(c.manual&&c.manual.camadas)||[];const src=cams.length?cams:(c.manual&&c.manual.tratado?[{nome:"Marca",png:c.manual.tratado}]:[]);if(!src.length){alert("Trate o logotipo no manual antes.");return;}
+    const first=await img(src[0].png);if(!first)return;const esc_=Math.min((W-2*(B+S))*0.6/first.naturalWidth,(H-2*(B+S))*(P.ancora==="topo"?0.3:0.6)/first.naturalHeight);const nw=Math.round(first.naturalWidth*esc_),nh=Math.round(first.naturalHeight*esc_);
+    const x=Math.round((W-nw)/2),y=P.ancora==="topo"?Math.round(B+S+H*0.06):Math.round((H-nh)/2);
+    for(const cam of src){const im=await img(cam.png);if(!im)continue;const cv=document.createElement("canvas");cv.width=nw;cv.height=nh;cv.getContext("2d").drawImage(im,0,0,nw,nh);camadaCanvas(cam.nome||"Marca",cv,x,y);}}
+  function textoCanvas(linhas,tam,cor,peso=700){const cv=document.createElement("canvas");const g=cv.getContext("2d");g.font=`${peso} ${tam}px Rubik, system-ui, sans-serif`;const w=Math.max(...linhas.map(t=>g.measureText(t).width))+10;cv.width=Math.ceil(w);cv.height=Math.ceil(linhas.length*tam*1.3);const g2=cv.getContext("2d");g2.font=`${peso} ${tam}px Rubik, system-ui, sans-serif`;g2.fillStyle=cor;g2.textBaseline="top";linhas.forEach((t,i)=>g2.fillText(t,4,i*tam*1.3));return cv;}
+  const luz=h=>{if(!h)return 255;const r=parseInt(h.slice(1,3),16),g=parseInt(h.slice(3,5),16),b=parseInt(h.slice(5,7),16);return 0.299*r+0.587*g+0.114*b;};
+  const corTexto=()=>luz(fundo)<128?"#FFFFFF":"#1C1635";
+  function qrCanvas(s){const cv=document.createElement("canvas");cv.width=cv.height=s;const g=cv.getContext("2d");g.fillStyle="#fff";g.fillRect(0,0,s,s);const n=21,m=(s*0.86)/n,o=s*0.07;g.fillStyle="#1C1635";let seed=7;const rnd=()=>{seed=(seed*9301+49297)%233280;return seed/233280;};
+    for(let i=0;i<n;i++)for(let j=0;j<n;j++){const inF=(i<8&&j<8)||(i<8&&j>=n-8)||(i>=n-8&&j<8);if(!inF&&rnd()>0.55)g.fillRect(o+j*m,o+i*m,m,m);}
+    const f=(fx,fy)=>{g.fillStyle="#1C1635";g.fillRect(o+fx*m,o+fy*m,7*m,7*m);g.fillStyle="#fff";g.fillRect(o+(fx+1)*m,o+(fy+1)*m,5*m,5*m);g.fillStyle="#1C1635";g.fillRect(o+(fx+2)*m,o+(fy+2)*m,3*m,3*m);};f(0,0);f(n-7,0);f(0,n-7);return cv;}
+  async function abrir(){const Wn=win();[...Wn.AppConfig.layers].forEach(ly=>Wn.Layers.delete(ly.id,true));Wn.AppConfig.WIDTH=W;Wn.AppConfig.HEIGHT=H;
+    if(arte&&arte.json){try{Wn.FileOpen.load_json(arte.json,false);setTimeout(ajustar,400);$("#salvar").disabled=false;return;}catch(e){}}
+    if(fundo)camadaCanvas("Fundo · cor do produto",corCanvas(fundo));
+    await inserirMarca();
+    if(P.cartao){inserirCampos();camadaCanvas("QR genérico",qrCanvas(Math.round(H*0.3)),Math.round(W-B-S-H*0.3),Math.round(H-B-S-H*0.3));}
+    camadaCanvas("Gabarito (guia — não imprime)",guiaCanvas());ajustar();$("#salvar").disabled=false;}
+  function inserirCampos(){const v={};$$("[data-campo]").forEach(i=>v[i.dataset.campo]=i.value.trim());const linhas=[v.nome,v.cargo,v.tel,v.email,v.endereco,v.site].filter(Boolean);if(!linhas.length)return;
+    const tam=Math.round(H*0.07);const cv=textoCanvas(linhas,tam,corTexto(),500);camadaCanvas("Dados do cartão",cv,Math.round(W*0.46),Math.round(B+S+H*0.1));}
+  function trocarFundo(h){fundo=h||null;const Wn=win();const ly=Wn.AppConfig.layers.find(x=>/^Fundo/.test(x.name));if(ly)Wn.Layers.delete(ly.id,true);if(fundo){camadaCanvas("Fundo · cor do produto",corCanvas(fundo));const f=Wn.AppConfig.layers.find(x=>/^Fundo/.test(x.name));/* fundo vai para baixo */if(f&&Wn.Layers.move){try{for(let i=0;i<Wn.AppConfig.layers.length;i++)Wn.Layers.move(f.id,-1);}catch(e){}}}
+    $$("#pal button").forEach(b=>b.classList.toggle("on",(b.dataset.c||"")===(fundo||"")));}
+  $("#pal").onclick=ev=>{const b=ev.target.closest("button");if(!b)return;if(b.id==="mais"){const v=prompt("Cor em hexadecimal (ex.: #1C1635)");if(v&&/^#[0-9a-fA-F]{6}$/.test(v.trim()))trocarFundo(v.trim());return;}trocarFundo(b.dataset.c);};
+  $("#insMarca").onclick=inserirMarca;$("#insTexto").onclick=()=>camadaCanvas("Texto",textoCanvas([nome],Math.round(Math.min(W,H)*0.12),corTexto()),Math.round(W*0.1),Math.round(H*0.1));$("#insGuia").onclick=()=>camadaCanvas("Gabarito (guia — não imprime)",guiaCanvas());
+  if(P.cartao){$("#insCampos").onclick=inserirCampos;$("#insQR").onclick=()=>camadaCanvas("QR genérico",qrCanvas(Math.round(H*0.3)),Math.round(W-B-S-H*0.3),Math.round(H-B-S-H*0.3));}
+  if(temIA)$("#gerar").onclick=async()=>{const st=$("#iaSt");st.textContent="Gerando…";$("#gerar").disabled=true;
+    try{const r=await fetch("/api/ia/fundo",{method:"POST",credentials:"same-origin",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt:$("#prompt").value,w:W,h:H,produto:pid})});const d=await r.json();
+      if(!r.ok||!d.png){st.textContent=d.mensagem||d.erro||("falhou ("+r.status+")");}else{const im=await img(d.png);const cv=document.createElement("canvas");cv.width=W;cv.height=H;const g=cv.getContext("2d");const s=Math.max(W/im.naturalWidth,H/im.naturalHeight);g.drawImage(im,(W-im.naturalWidth*s)/2,(H-im.naturalHeight*s)/2,im.naturalWidth*s,im.naturalHeight*s);
+        const Wn=win();const ant=Wn.AppConfig.layers.find(x=>/^Fundo IA/.test(x.name));if(ant)Wn.Layers.delete(ant.id,true);camadaCanvas("Fundo IA",cv);const f=Wn.AppConfig.layers.find(x=>/^Fundo IA/.test(x.name));try{for(let i=0;i<Wn.AppConfig.layers.length;i++)Wn.Layers.move(f.id,-1);const base=Wn.AppConfig.layers.find(x=>/^Fundo ·/.test(x.name));if(base)Wn.Layers.move(f.id,1);}catch(e){}st.textContent=`pronto (${d.provedor||"IA"})`;}}
+    catch(e){st.textContent="falha: "+e.message;}$("#gerar").disabled=false;};
+  await pronto();await abrir();
+  $("#salvar").onclick=async()=>{const Wn=win();const dim=Wn.Layers.get_dimensions();const guia=Wn.AppConfig.layers.filter(x=>/^Gabarito/.test(x.name));guia.forEach(g=>{g.visible=false;});
+    const comp=document.createElement("canvas");comp.width=dim.width;comp.height=dim.height;Wn.Layers.convert_layers_to_canvas(comp.getContext("2d"));
+    const fundos=Wn.AppConfig.layers.filter(x=>/^Fundo/.test(x.name));fundos.forEach(f=>{f.visible=false;});const semF=document.createElement("canvas");semF.width=dim.width;semF.height=dim.height;Wn.Layers.convert_layers_to_canvas(semF.getContext("2d"));fundos.forEach(f=>{f.visible=true;});guia.forEach(g=>{g.visible=true;});
+    let json=null;try{json=Wn.FileSave.export_as_json();}catch(e){}
+    c=await cliente(l);c.artes=c.artes||{};const ant=c.artes[pid]||{};const png=comp.toDataURL("image/png");c.artes[pid]={png,pngArte:semF.toDataURL("image/png"),material:fundo,json,w_cm:P.w_cm,h_cm:P.h_cm,sangria_mm:sang,em:new Date().toISOString(),contexto:ant.png===png?ant.contexto:null};
+    $("#salvar").disabled=true;$("#salvar").textContent="Salvando…";await gravarCliente(c);location.href=`produtos.html?l=${encodeURIComponent(slug)}`;};
+})();
+</script>
+</body>
+</html>

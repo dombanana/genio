@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<title>GênIO · Marcar logotipo</title>
+<meta name="theme-color" content="#F1EEF8">
+<link rel="icon" href="../genio-favicon.png">
+<link rel="stylesheet" href="app.css?v=9c812f7c25">
+<style>
+.palco{position:relative;background:#fff;border-radius:16px;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;margin:0 0 12px}
+.palco img{width:100%;display:block;pointer-events:none}
+.palco .veu{position:absolute;inset:0;background:rgba(20,28,58,.45);pointer-events:none;display:none}
+.palco.marcando .veu{display:block}
+.palco .caixa{position:absolute;border:2px solid var(--teal);box-shadow:0 0 0 9999px rgba(20,28,58,.45);pointer-events:none;display:none}
+.palco.marcando .caixa{display:block}
+.palco .alca{position:absolute;width:28px;height:28px;border-radius:50%;background:#fff;border:3px solid var(--teal);transform:translate(-50%,-50%);display:none;touch-action:none}
+.palco.pronto .alca{display:block}
+.previa{display:grid;grid-template-columns:120px 1fr;gap:12px;align-items:center;background:#fff;border-radius:16px;padding:12px}
+.previa canvas{width:120px;height:120px;background:repeating-conic-gradient(#eee 0 25%,#fff 0 50%) 0 0/16px 16px;border-radius:10px}
+.dica{background:#fff;border-radius:14px;padding:12px 14px;margin:0 0 12px;font-size:15px;display:flex;gap:10px;align-items:center}
+.dica b{color:var(--marca)}
+</style>
+</head>
+<body>
+<div class="w" id="app"></div>
+<script src="app.js?v=9c812f7c25"></script>
+<script>
+(async()=>{
+  const {$,$$,esc,qs,nomeLoja,dados,nav,topo,sessao}=App;
+  if(!await sessao())return;
+  const D=await dados();const slug=qs.get("l");const l=D.lojas.find(x=>x.slug===slug);const u=qs.get("u")||"";const fonte=qs.get("fonte")||"";const tipo=qs.get("tipo")||"";
+  if(!l||!u){$("#app").innerHTML=`${topo()}<p>Faltou a imagem.</p>${nav("rota")}`;return;}
+  const nome=nomeLoja(l.nome);
+  const src=/^https?:/.test(u)&&!u.startsWith(location.origin)?`/api/img?u=${encodeURIComponent(u)}`:u;
+  $("#app").innerHTML=`${topo()}
+  <div class="faixa"><a href="${tipo==="galeria"?`visita.html?l=${encodeURIComponent(slug)}`:`fontes.html?l=${encodeURIComponent(slug)}&tipo=${esc(tipo)}`}">${tipo==="site"?"Imagens do site":tipo==="galeria"?"Visita":"Pesquisa de fotos"}</a></div>
+  <h1>Marcar o logotipo</h1><p class="sub">${esc(nome)}${fonte?` · ${esc(fonte)}`:""}</p>
+  <div class="dica" id="dica"><span style="font-size:22px">☝️</span><div><b>Segure</b> sobre um canto do logotipo e <b>arraste</b> até o canto oposto. Depois ajuste pelas bolinhas.</div></div>
+  <div class="palco" id="palco"><img id="img" crossorigin="anonymous" src="${esc(src)}" alt=""><div class="veu"></div><div class="caixa" id="caixa"></div>${[0,1,2,3].map(i=>`<div class="alca" data-i="${i}"></div>`).join("")}</div>
+  <div class="previa" id="previa" style="display:none"><canvas id="cv" width="300" height="300"></canvas><div><b>Recorte</b><br><small class="muted" id="dim"></small><br><button class="btn sec sm" id="refazer" type="button" style="margin-top:8px">Marcar de novo</button></div></div>
+  <div class="acoes"><div class="w"><a class="btn sec" href="${tipo==="galeria"?`visita.html?l=${encodeURIComponent(slug)}`:`fontes.html?l=${encodeURIComponent(slug)}&tipo=${esc(tipo)}`}">← Voltar</a><button class="btn" id="salvar" type="button" disabled>Salvar como logotipo →</button></div></div>
+  ${nav("rota")}`;document.body.classList.add("com-acoes");
+  const palco=$("#palco"),img=$("#img"),caixa=$("#caixa"),alcas=$$(".alca");
+  let R=null;  // retângulo em coordenadas do palco (px CSS)
+  let press=null,timer=null,arr=false,alca=null;
+  const pos=ev=>{const b=palco.getBoundingClientRect();return {x:Math.min(Math.max(ev.clientX-b.left,0),b.width),y:Math.min(Math.max(ev.clientY-b.top,0),b.height)};};
+  function desenhar(){if(!R)return;const x=Math.min(R.x0,R.x1),y=Math.min(R.y0,R.y1),w=Math.abs(R.x1-R.x0),h=Math.abs(R.y1-R.y0);
+    caixa.style.left=x+"px";caixa.style.top=y+"px";caixa.style.width=w+"px";caixa.style.height=h+"px";
+    [[x,y],[x+w,y],[x+w,y+h],[x,y+h]].forEach(([px,py],i)=>{alcas[i].style.left=px+"px";alcas[i].style.top=py+"px";});}
+  function previa(){if(!R)return;const x=Math.min(R.x0,R.x1),y=Math.min(R.y0,R.y1),w=Math.abs(R.x1-R.x0),h=Math.abs(R.y1-R.y0);if(w<8||h<8)return;
+    const k=img.naturalWidth/img.clientWidth;const cv=$("#cv"),cx=cv.getContext("2d");const W=Math.round(w*k),H=Math.round(h*k);cv.width=W;cv.height=H;
+    try{cx.drawImage(img,x*k,y*k,W,H,0,0,W,H);$("#previa").style.display="grid";$("#dim").textContent=`${W} × ${H} px`;$("#salvar").disabled=false;palco.classList.add("pronto");}
+    catch(e){$("#dica").innerHTML="<b>Esta imagem não permite recorte direto</b> (origem bloqueia). Tente outra imagem ou a pesquisa de imagem.";}}
+  palco.addEventListener("pointerdown",ev=>{const a=ev.target.closest(".alca");if(a){alca=+a.dataset.i;palco.setPointerCapture(ev.pointerId);ev.preventDefault();return;}
+    press=pos(ev);arr=false;palco.setPointerCapture(ev.pointerId);
+    timer=setTimeout(()=>{R={x0:press.x,y0:press.y,x1:press.x,y1:press.y};palco.classList.add("marcando");palco.classList.remove("pronto");$("#previa").style.display="none";$("#salvar").disabled=true;desenhar();if(navigator.vibrate)navigator.vibrate(15);},350);});
+  palco.addEventListener("pointermove",ev=>{const p=pos(ev);
+    if(alca!==null&&R){const x=Math.min(R.x0,R.x1),y=Math.min(R.y0,R.y1),X=Math.max(R.x0,R.x1),Y=Math.max(R.y0,R.y1);
+      if(alca===0)R={x0:p.x,y0:p.y,x1:X,y1:Y};if(alca===1)R={x0:x,y0:p.y,x1:p.x,y1:Y};if(alca===2)R={x0:x,y0:y,x1:p.x,y1:p.y};if(alca===3)R={x0:p.x,y0:y,x1:X,y1:p.y};desenhar();return;}
+    if(!press)return;
+    if(!R){if(Math.hypot(p.x-press.x,p.y-press.y)>10){clearTimeout(timer);press=null;}return;}  // rolagem comum: cancela o toque longo
+    R.x1=p.x;R.y1=p.y;arr=true;desenhar();});
+  const fim=()=>{clearTimeout(timer);if(alca!==null){alca=null;previa();return;}if(R&&arr){previa();}press=null;arr=false;};
+  palco.addEventListener("pointerup",fim);palco.addEventListener("pointercancel",fim);
+  $("#refazer").onclick=()=>{R=null;palco.classList.remove("marcando","pronto");$("#previa").style.display="none";$("#salvar").disabled=true;};
+  $("#salvar").onclick=async()=>{const cv=$("#cv");const dataURL=cv.toDataURL("image/png");$("#salvar").disabled=true;$("#salvar").textContent="Salvando…";
+    await App.classificar(l,dataURL,"logotipo",fonte||tipo);App.definirCliente(l);
+    location.href=`manual.html?l=${encodeURIComponent(slug)}`;};
+})();
+</script>
+</body>
+</html>

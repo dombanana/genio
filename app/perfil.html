@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>GênIO · Perfil</title>
+<meta name="theme-color" content="#F1EEF8">
+<link rel="icon" href="../genio-favicon.png">
+<link rel="stylesheet" href="app.css?v=9c812f7c25">
+</head>
+<body>
+<div class="w" id="app"></div>
+<script src="app.js?v=9c812f7c25"></script>
+<script>
+(async()=>{
+  const {$,esc,sessao,eu,nav,topo,estado,ZONA}=App;
+  if(!await sessao())return;
+  const e=estado();const u=eu();
+  $("#app").innerHTML=`${topo()}<h1>${esc(u.nome)}</h1><p class="sub">${esc(u.email||"")}</p>
+  <section class="card"><h2>Minha rota</h2><p>Zona atual: <b>${esc(ZONA)}</b><br>Visitas feitas hoje: <b>${(e.feitas||[]).length}</b></p><button class="btn sec" id="zerar" type="button">Recomeçar o dia (zera visitas feitas)</button></section>
+  <section class="card"><h2>Conta</h2><p class="muted">Você entrou uma vez; o app lembra. Para trocar de conta, saia.</p><a class="btn sec" href="/api/sair">Sair</a></section>
+  ${nav("perfil")}`;
+  $("#zerar").onclick=()=>{if(!confirm("Zerar as visitas feitas de hoje?"))return;e.feitas=[];App.salvar(e);location.reload();};
+})();
+</script>
+</body>
+</html>

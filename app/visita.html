@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>GênIO · Visita</title>
+<meta name="theme-color" content="#F1EEF8">
+<link rel="icon" href="../genio-favicon.png">
+<link rel="stylesheet" href="app.css?v=9c812f7c25">
+<style>
+.cab{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.fach{width:100%;aspect-ratio:16/9;border-radius:16px;overflow:hidden;background:var(--lav2);display:grid;place-items:center;position:relative}
+.fach img{width:100%;height:100%;object-fit:cover;display:block}
+.fach .sel{position:absolute;left:10px;bottom:10px;background:rgba(20,28,58,.75);color:#fff;font-size:12px;font-weight:600;padding:3px 9px;border-radius:999px}
+.fach .vazio{color:var(--texto2);text-align:center;font-size:15px}
+.fontes{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0 12px}
+.fontes .btn.sec{min-height:50px;font-size:16px;text-decoration:none}
+.fato{display:grid;grid-template-columns:auto 1fr;gap:10px;padding:6px 0;border-top:1px solid var(--linha);font-size:15px}
+.fato:first-of-type{border-top:0}.fato span{color:var(--texto2)}
+</style>
+</head>
+<body>
+<div class="w" id="app"></div>
+<script src="app.js?v=9c812f7c25"></script>
+<script>
+(async()=>{
+  const {$,$$,esc,qs,sessao,dados,ficha,estrelasHTML,estado,salvar,nav,topo,voltar,setorNome,nomeLoja,telFmt,cliente,gravarCliente,classificar,definirCliente,menuLongo,ligarLongo,ZONA}=App;
+  if(!await sessao())return;
+  const D=await dados();const slug=qs.get("l");const l=D.lojas.find(x=>x.slug===slug);
+  if(!l){$("#app").innerHTML=`${topo()}<p>Loja não encontrada.</p>${nav("rota")}`;return;}
+  const nome=nomeLoja(l.nome);definirCliente(l);
+  const cad=await ficha(slug);const L=(cad&&cad.lacunas)||{};const base=`/dados/captacao/${ZONA}/`;
+  let c=await cliente(l);
+  const abs=s=>/^(data:|https?:)/.test(s)?s:(s.startsWith("/")?location.origin+s:location.origin+base+s);
+  // candidatos: imagens que a varredura trouxe (logotipo sugerido, referências do local, fotos da web) + o que o representante já guardou
+  function candidatos(){const vistos=new Set(),out=[];const add=(src,fonte,papel)=>{if(!src)return;const a=abs(src);if(vistos.has(a)||(c.descartadas||[]).includes(a))return;vistos.add(a);out.push({src:a,fonte,papel});};
+    (c.logos||[]).forEach(x=>add(x.src,x.nome,"logotipo"));if(c.fachada)add(c.fachada.src,"fachada","fachada");(c.produtos||[]).forEach(x=>add(x.src,x.fonte,"produto"));(c.arquivo||[]).forEach(x=>add(x.src,x.fonte,"arquivo"));
+    ((L.logoOriginal||{}).opcoes||[]).forEach(o=>add(o.img,o.legenda,null));((L.fachada||{}).referencias||[]).forEach(r=>add(r,"referência pública",null));
+    return out;}
+  const horarioHoje=h=>{if(!h)return null;const d=["dom","seg","ter","qua","qui","sex","sáb"][new Date().getDay()];const m=h.split(" · ").find(p=>p.startsWith(d));return m?m.replace(d,"").trim():null;};
+  const cn=L.nome_curiosidade||{};const curios=[cn.valor,(L.sobre||{}).valor].filter(Boolean);
+  const leitura=(L.leitura||{}).valor||"";const desde=(leitura.match(/desde (\d{4})/)||[])[1];const razao=(leitura.match(/Razão social: ([^·]+)/)||[])[1];
+  const AV=L.avaliacoes||{};const ganchos=(AV.gatilhos||[]).map(g=>g.tema);
+  function render(){
+    const cands=candidatos();const logo=(c.manual&&c.manual.tratado)||(c.logos&&c.logos[0]&&c.logos[0].src)||null;const fach=(c.fachada&&c.fachada.src)||null;
+    const pronto=!!(c.manual&&c.manual.editado);const e=estado();
+    $("#app").innerHTML=`${topo()}${voltar("index.html","Rota")}
+    <div class="cab"><div><h1 style="margin-bottom:2px">${esc(nome)}</h1><p class="sub">${esc(setorNome(l.setor))} · ${esc(l.endereco||"")}</p></div><div style="padding-top:8px">${estrelasHTML(l.estrelas)}</div></div>
+    <div class="fach" data-longo data-src="${esc(fach||"")}">${fach?`<img src="${esc(fach)}" alt=""><span class="sel">Fachada</span>`:`<div class="vazio">📷<br>Fachada ainda não escolhida<br><small>segure uma imagem da galeria e marque “Fachada”</small></div>`}</div>
+    <div class="fontes"><a class="btn sec" href="${L.site&&L.site.estado==="encontrado"?`fontes.html?l=${encodeURIComponent(slug)}&tipo=site`:"#"}" ${L.site&&L.site.estado==="encontrado"?"":'style="opacity:.5" aria-disabled="true"'}>🌐 Site${L.site&&L.site.estado==="encontrado"?"":" · não achado"}</a><a class="btn sec" href="fontes.html?l=${encodeURIComponent(slug)}&tipo=busca">🔍 Pesquisa de fotos</a></div>
+    <section class="card"><h2>Imagens encontradas <small class="muted" style="font-weight:400;font-size:14px">· segure para classificar</small></h2>
+      ${cands.length?`<div class="galeria">${cands.map((x,i)=>`<figure data-longo data-src="${esc(x.src)}" data-fonte="${esc(x.fonte||"")}">${x.papel?`<span class="pap ${x.papel==="logotipo"?"logo":x.papel==="fachada"?"fach":""}">${{logotipo:"Logotipo",fachada:"Fachada",produto:"Produto",arquivo:"Arquivo"}[x.papel]}</span>`:""}<img src="${esc(x.src)}" alt="" loading="lazy"></figure>`).join("")}</div>`:`<p class="muted">Nenhuma imagem ainda. Use o Site ou a Pesquisa de fotos.</p>`}</section>
+    <section class="card"><h2>Logotipo</h2><div class="logo-area" id="logoArea">${logo?`<img src="${esc(logo)}" alt="">`:`<div class="vazio">Nenhum logotipo escolhido<br><small>toque para pesquisar</small></div>`}</div>
+      <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap"><span class="chip ${pronto?"ok":logo?"dec":""}">${pronto?"✓ Logotipo tratado":logo?"◷ Falta tratar no manual":"Sem logotipo"}</span>${logo?`<a class="btn sec sm" href="manual.html?l=${encodeURIComponent(slug)}" style="width:auto;min-height:36px;padding:0 12px;font-size:14px;text-decoration:none">Abrir o manual →</a>`:""}</div></section>
+    ${curios.length?`<section class="card" style="border-left:5px solid var(--teal)"><h2>Curiosidade</h2>${curios.map(t=>`<p style="margin:0 0 6px">${esc(t)}</p>`).join("")}${cn.nota&&cn.valor?`<small class="muted">${esc(cn.nota)}</small>`:""}</section>`:""}
+    <section class="card"><h2>Antes de entrar</h2>
+      ${razao?`<div class="fato"><span>Razão social</span><b>${esc(razao.trim())}</b></div>`:""}${desde?`<div class="fato"><span>Desde</span><b>${esc(desde)}</b></div>`:""}
+      ${l.tel?`<div class="fato"><span>Telefone</span><b>${esc(telFmt(l.tel))}</b></div>`:""}${horarioHoje((L.horario||{}).valor)?`<div class="fato"><span>Hoje</span><b>${esc(horarioHoje(L.horario.valor))}</b></div>`:""}
+      ${l.nota?`<div class="fato"><span>Google</span><b>${l.nota} · ${l.aval||0} avaliações${ganchos.length?` · reclamam de: ${esc(ganchos.join(", "))}`:""}</b></div>`:""}
+    </section>
+    <div class="acoes"><div class="w"><a class="btn sec" href="index.html">← Rota</a>${pronto?`<a class="btn" href="produtos.html?l=${encodeURIComponent(slug)}">Produtos e serviços →</a>`:logo?`<a class="btn" href="manual.html?l=${encodeURIComponent(slug)}">Tratar o logotipo →</a>`:`<a class="btn" href="fontes.html?l=${encodeURIComponent(slug)}&tipo=busca">Escolher logotipo →</a>`}</div></div>
+    ${nav("rota")}`;document.body.classList.add("com-acoes");
+    if(!(e.feitas||[]).includes(slug)){e.feitas=[...(e.feitas||[]),slug];salvar(e);}
+    $("#logoArea").onclick=()=>{location.href=logo?`manual.html?l=${encodeURIComponent(slug)}`:`fontes.html?l=${encodeURIComponent(slug)}&tipo=busca`;};
+    ligarLongo(document,async el=>{const src=el.dataset.src;if(!src)return;
+      const k=await menuLongo("Esta imagem é…",[{k:"logotipo",ic:"✦",t:"Logotipo"},{k:"fachada",ic:"🏬",t:"Fachada"},{k:"arquivo",ic:"🗂",t:"Imagem de arquivo"},{k:"produto",ic:"🛍",t:"Foto de produto"},{k:"descartar",ic:"🗑",t:"Descartar"}]);
+      if(!k)return;await classificar(l,src,k,el.dataset.fonte||"");c=await cliente(l);
+      if(k==="logotipo"){location.href=`recorte.html?l=${encodeURIComponent(slug)}&u=${encodeURIComponent(src)}&fonte=${encodeURIComponent(el.dataset.fonte||"")}&tipo=galeria`;return;}
+      render();});
+  }
+  render();
+})();
+</script>
+</body>
+</html>

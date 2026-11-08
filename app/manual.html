@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<title>GênIO · Manual de identidade</title>
+<meta name="theme-color" content="#F1EEF8">
+<link rel="icon" href="../genio-favicon.png">
+<link rel="stylesheet" href="app.css?v=9c812f7c25">
+<style>
+body.com-acoes{padding-bottom:calc(150px + env(safe-area-inset-bottom,0))}
+.barra{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;margin:0 0 8px}
+.barra button{flex:0 0 auto;border:0;background:#fff;border-radius:12px;min-height:44px;padding:0 12px;font:inherit;font-size:14px;font-weight:600;color:var(--texto)}
+.barra button.on{background:var(--navy);color:#fff}
+.estado{font-size:13px;color:var(--texto2);margin:0 0 8px}
+.cores{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0 0}
+.cores .c{display:flex;align-items:center;gap:6px;background:#fff;border-radius:999px;padding:4px 10px 4px 4px;font-size:13px}
+.cores .sw{width:22px;height:22px;border-radius:50%;border:1px solid rgba(0,0,0,.1)}
+</style>
+</head>
+<body>
+<div class="w" id="app"></div>
+<script src="app.js?v=9c812f7c25"></script>
+<script>
+(async()=>{
+  const {$,$$,esc,qs,sessao,dados,nav,topo,voltar,nomeLoja,cliente,gravarCliente,definirCliente}=App;
+  if(!await sessao())return;
+  const D=await dados();const slug=qs.get("l");const l=D.lojas.find(x=>x.slug===slug);
+  if(!l){$("#app").innerHTML=`${topo()}<p>Loja não encontrada.</p>${nav("rota")}`;return;}
+  const nome=nomeLoja(l.nome);definirCliente(l);let c=await cliente(l);
+  const logo=(c.logos&&c.logos[0]&&c.logos[0].src)||null;
+  if(!logo&&!(c.manual&&c.manual.editado)){location.href=`fontes.html?l=${encodeURIComponent(slug)}&tipo=busca`;return;}
+  $("#app").innerHTML=`${topo()}${voltar(`visita.html?l=${encodeURIComponent(slug)}`,"Visita")}
+  <h1 style="font-size:24px;margin-bottom:2px">Manual de identidade</h1><p class="sub">${esc(nome)}</p>
+  <div class="barra" id="barra"><button type="button" data-a="preparar">✦ Preparar automático</button><button type="button" data-a="original">↺ Original</button><button type="button" data-a="camadas">Camadas</button><button type="button" data-a="ferramentas">Ferramentas</button></div>
+  <div class="estado" id="st">Abrindo o editor…</div>
+  <iframe class="ed-frame" id="ed" src="vendor/minipaint/index.html" allow="camera"></iframe>
+  <div class="cores" id="cores"></div>
+  <div class="acoes"><div class="w"><a class="btn sec" href="visita.html?l=${encodeURIComponent(slug)}">← Visita</a><button class="btn" id="salvar" type="button" disabled>Salvar e escolher produtos →</button></div></div>
+  ${nav("rota")}`;document.body.classList.add("com-acoes");
+  const fr=$("#ed");const win=()=>fr.contentWindow;
+  const carregarImg=src=>new Promise(res=>{const i=new Image();i.crossOrigin="anonymous";i.onload=()=>res(i);i.onerror=()=>res(null);i.src=src;});
+  const pronto=()=>new Promise(res=>{const t=setInterval(()=>{try{if(win().Layers&&win().FileOpen){clearInterval(t);res();}}catch(e){}},100);});
+  async function inserir(src,nomeCamada){const im=await carregarImg(src);if(!im)return false;const W=win();
+    W.Layers.insert({name:nomeCamada,type:"image",data:im,width:im.naturalWidth,height:im.naturalHeight,width_original:im.naturalWidth,height_original:im.naturalHeight});return true;}
+  function limpar(){const W=win();[...W.AppConfig.layers].forEach(ly=>W.Layers.delete(ly.id,true));}
+  const ajustar=()=>{try{const W=win();W.Layers.Base_gui.GUI_preview.zoom_auto();W.Layers.render(true);}catch(e){}};
+  async function abrirOriginal(){limpar();const W=win();const im=await carregarImg(logo);if(!im){$("#st").textContent="Não consegui abrir o logotipo.";return;}
+    W.AppConfig.WIDTH=im.naturalWidth;W.AppConfig.HEIGHT=im.naturalHeight;await inserir(logo,"Logotipo original");ajustar();$("#st").textContent=`Logotipo aberto (${im.naturalWidth}×${im.naturalHeight}). Use as ferramentas (≡) para limpar; camadas no menu da direita.`;$("#salvar").disabled=false;}
+  async function abrirManual(){limpar();const W=win();const m=c.manual;let ok=false;
+    for(const cam of (m.camadas||[])){if(await inserir(cam.png,cam.nome||"Camada"))ok=true;}
+    if(!ok&&m.tratado){await inserir(m.tratado,"Logotipo tratado");}
+    ajustar();$("#st").textContent="Manual aberto com as camadas salvas.";$("#salvar").disabled=false;}
+  // preparo automático no servidor: fundo removido (rembg) + camadas por cor (vtracer)
+  async function preparar(){$("#st").textContent="Preparando no servidor (fundo e camadas)…";
+    try{const r=await fetch("/api/marca/preparar",{method:"POST",credentials:"same-origin",headers:{"Content-Type":"application/json"},body:JSON.stringify({png:logo})});const d=await r.json();
+      if(!r.ok||d.erro){$("#st").textContent="Preparo automático indisponível: "+(d.mensagem||d.erro||r.status)+". Siga pelo editor.";return;}
+      limpar();let n=0;for(const cam of (d.camadas||[])){if(await inserir(cam.png,`${cam.nome||"Cor"} ${cam.hex||""}`.trim()))n++;}
+      if(!n&&d.sem_fundo)await inserir(d.sem_fundo,"Sem fundo");
+      $("#cores").innerHTML=(d.cores||[]).map(x=>`<span class="c"><span class="sw" style="background:${x.hex}"></span>${esc(x.hex)} · ${x.area}%</span>`).join("");
+      ajustar();$("#st").textContent=`Pronto: ${n} camada(s) por cor${d.sem_fundo?" + fundo removido":""}. Ajuste o que precisar e salve.`;$("#salvar").disabled=false;}
+    catch(e){$("#st").textContent="Falha no preparo: "+e.message;}}
+  $$("#barra button").forEach(b=>b.onclick=()=>{const a=b.dataset.a;if(a==="preparar")preparar();if(a==="original")abrirOriginal();if(a==="camadas"){try{win().document.querySelector("#mobile_menu_layers, .mobile_menu_layers, #toggle_layers")?.click();}catch(e){}}if(a==="ferramentas"){try{win().document.querySelector("#mobile_menu_tools, .mobile_menu_tools, #toggle_tools")?.click();}catch(e){}}});
+  await pronto();if(c.manual&&c.manual.editado)await abrirManual();else await abrirOriginal();
+  $("#salvar").onclick=async()=>{const W=win();const dim=W.Layers.get_dimensions();const comp=document.createElement("canvas");comp.width=dim.width;comp.height=dim.height;W.Layers.convert_layers_to_canvas(comp.getContext("2d"));
+    const camadas=[];for(const ly of W.AppConfig.layers){if(ly.visible===false)continue;const cv=document.createElement("canvas");cv.width=dim.width;cv.height=dim.height;W.Layers.convert_layers_to_canvas(cv.getContext("2d"),ly.id,false);camadas.push({nome:ly.name,png:cv.toDataURL("image/png")});}
+    c=await cliente(l);c.manual={editado:true,tratado:comp.toDataURL("image/png"),largura:dim.width,altura:dim.height,camadas,em:new Date().toISOString()};
+    $("#salvar").disabled=true;$("#salvar").textContent="Salvando…";await gravarCliente(c);location.href=`produtos.html?l=${encodeURIComponent(slug)}`;};
+})();
+</script>
+</body>
+</html>

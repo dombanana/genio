@@ -1,0 +1,17 @@
+{
+  "_nota": "Medidas dos produtos conforme as páginas da Printi (08/11/2026). Sangria 3 mm e margem de segurança 3 mm (Guia de impressão Printi). Substituir pelos gabaritos oficiais (PDF/AI) quando baixados — o editor desenha a guia a partir destes números.",
+  "sangria_mm": 3,
+  "seguranca_mm": 3,
+  "produtos": {
+    "capacho":   {"nome": "Capacho",            "w_cm": 120,  "h_cm": 60,   "superficie": "capacho", "fonte": "Kapazi/produção própria", "sangria_mm": 0, "seguranca_mm": 20},
+    "placas":    {"nome": "Placa",              "w_cm": 60,   "h_cm": 40,   "superficie": "rigido",  "fonte": "Printi · placa"},
+    "adesivos":  {"nome": "Adesivo de vitrine", "w_cm": 100,  "h_cm": 60,   "superficie": "vinil",   "fonte": "Printi · adesivo (vinil transparente/perfurado)", "sem_fundo": true},
+    "uniformes": {"nome": "Camisa polo · peito","w_cm": 12,   "h_cm": 12,   "superficie": "tecido",  "fonte": "bordado/serigrafia", "sangria_mm": 0},
+    "impressos": {"nome": "Cartão de visita",   "w_cm": 9,    "h_cm": 4.8,  "superficie": "papel",   "fonte": "Printi · cartão 9×4,8 couché 300g", "cartao": true, "ia": true},
+    "panfleto":  {"nome": "Flyer A5",           "w_cm": 14.8, "h_cm": 21,   "superficie": "papel",   "fonte": "Printi · flyer A5 couché", "ia": true},
+    "banners":   {"nome": "Banner roll-up",     "w_cm": 80,   "h_cm": 200,  "superficie": "lona",    "fonte": "Printi · roll-up 80×200 lona 440g", "ia": true, "ancora": "topo", "rodape_oculto_cm": 10},
+    "parede":    {"nome": "Adesivo de parede",  "w_cm": 42,   "h_cm": 59.4, "superficie": "vinil",   "fonte": "Printi · adesivo de parede A2", "sem_fundo": true},
+    "brindes":   {"nome": "Sacola · adesivo",   "w_cm": 10,   "h_cm": 14,   "superficie": "papel",   "fonte": "Printi · sacola kraft com adesivo 10×14"},
+    "carimbo":   {"nome": "Carimbo",            "w_cm": 6,    "h_cm": 4,    "superficie": "carimbo", "fonte": "produção própria", "sangria_mm": 0, "mono": true}
+  }
+}

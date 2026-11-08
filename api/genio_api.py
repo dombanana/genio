@@ -480,6 +480,110 @@ def kit_aplicar(d):
             except Exception: pass
     return {"kit": kit, "produto": pid, "referencia": ref, "jpg": "data:image/jpeg;base64," + base64.b64encode(open(saida, "rb").read()).decode()}
 
+def marca_preparar(d):
+    """Passada 1 (grátis): fundo removido (rembg, se instalado) + camadas por cor (k-means OpenCV) para o representante corrigir no editor."""
+    import numpy as np, cv2
+    png = (d.get("png") or ""); png = png.split(",", 1)[1] if "," in png[:40] else png
+    raw = np.frombuffer(base64.b64decode(png), np.uint8); img = cv2.imdecode(raw, cv2.IMREAD_UNCHANGED)
+    if img is None:
+        raise ValueError("imagem inválida")
+    if img.ndim == 2:
+        img = cv2.cvtColor(img, cv2.COLOR_GRAY2BGRA)
+    if img.shape[2] == 3:
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2BGRA)
+    h, w = img.shape[:2]; esc = min(1.0, 1400 / max(h, w))
+    if esc < 1:
+        img = cv2.resize(img, (int(w * esc), int(h * esc)), interpolation=cv2.INTER_AREA); h, w = img.shape[:2]
+    sem_fundo = None
+    try:
+        from rembg import remove
+        out = remove(cv2.cvtColor(img, cv2.COLOR_BGRA2RGBA)); out = np.array(out)
+        if out.ndim == 3 and out.shape[2] == 4 and (out[..., 3] > 10).mean() > 0.02:
+            img = cv2.cvtColor(out, cv2.COLOR_RGBA2BGRA); sem_fundo = True
+    except Exception:
+        pass
+    if not sem_fundo:  # sem rembg: fundo = cor dominante das bordas, removido por tolerância
+        borda = np.concatenate([img[0, :, :3], img[-1, :, :3], img[:, 0, :3], img[:, -1, :3]]).astype(np.float32)
+        cor = np.median(borda, axis=0); dist = np.linalg.norm(img[..., :3].astype(np.float32) - cor, axis=2)
+        if (dist < 40).mean() > 0.25:
+            img[..., 3] = np.where(dist < 40, 0, img[..., 3]); sem_fundo = "borda"
+    alfa = img[..., 3] > 20; px = img[..., :3][alfa].astype(np.float32)
+    camadas, cores = [], []
+    if len(px) > 50:
+        k = 5; amostra = px[np.random.RandomState(1).choice(len(px), min(len(px), 20000), replace=False)]
+        crit = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 30, 1.0)
+        _, _, centros = cv2.kmeans(amostra, k, None, crit, 3, cv2.KMEANS_PP_CENTERS)
+        # junta centros parecidos (ΔRGB < 40)
+        cs = []
+        for c in centros:
+            if all(np.linalg.norm(c - x) >= 40 for x in cs):
+                cs.append(c)
+        cs = np.array(cs, np.float32)
+        rot = np.argmin(np.linalg.norm(px[:, None, :] - cs[None, :, :], axis=2), axis=1)
+        idx = np.zeros((h, w), np.int32) - 1; idx[alfa] = rot
+        for i, c in enumerate(cs):
+            m = idx == i; area = int(m.sum())
+            if area < 0.03 * alfa.sum():
+                continue
+            cam = np.zeros_like(img); cam[m] = img[m]
+            ok, buf = cv2.imencode(".png", cam); hexc = "#%02x%02x%02x" % (int(c[2]), int(c[1]), int(c[0]))
+            cores.append({"hex": hexc, "area": round(area / alfa.sum() * 100)})
+            camadas.append({"nome": "Cor", "hex": hexc, "area": cores[-1]["area"], "png": "data:image/png;base64," + base64.b64encode(buf.tobytes()).decode()})
+        camadas.sort(key=lambda x: -x["area"]); cores.sort(key=lambda x: -x["area"])
+    ok, buf = cv2.imencode(".png", img)
+    return {"sem_fundo": "data:image/png;base64," + base64.b64encode(buf.tobytes()).decode(), "fundo_removido_por": sem_fundo or None, "cores": cores, "camadas": camadas, "largura": w, "altura": h}
+
+def ia_fundo(d):
+    """Fundo/composição por IA para cartão, flyer e banner — só a composição (a marca e os textos ficam como camadas por cima).
+    Gemini primeiro (chave já gravada), OpenAI como opção. Registra cada geração em /var/lib/genio/ia.log."""
+    prompt = (d.get("prompt") or "").strip()[:1500]
+    if not prompt:
+        raise ValueError("prompt vazio")
+    w, h = max(1, int(d.get("w") or 1), ), max(1, int(d.get("h") or 1))
+    razoes = {"1:1": 1, "3:4": 3/4, "4:3": 4/3, "9:16": 9/16, "16:9": 16/9, "2:3": 2/3, "3:2": 3/2, "4:5": 4/5, "5:4": 5/4, "21:9": 21/9}
+    ar = min(razoes, key=lambda k: abs(razoes[k] - w / h))
+    K = chaves_ler(); erros = []
+    prompt_full = prompt + " Sem texto, sem letras, sem logotipos, sem marcas d'água; imagem de fundo limpa, com área de respiro para aplicar uma marca por cima. Alta qualidade, impressão gráfica."
+    if K.get("GEMINI_KEY"):
+        for modelo in ("gemini-3.8-flash-image", "gemini-2.5-flash-image", "gemini-2.0-flash-preview-image-generation"):
+            try:
+                body = json.dumps({"contents": [{"parts": [{"text": prompt_full}]}], "generationConfig": {"responseModalities": ["IMAGE"], "imageConfig": {"aspectRatio": ar}}}).encode()
+                r = _rq.urlopen(_rq.Request(f"https://generativelanguage.googleapis.com/v1beta/models/{modelo}:generateContent", data=body, headers={"x-goog-api-key": K["GEMINI_KEY"], "Content-Type": "application/json"}), timeout=90)
+                j = json.loads(r.read().decode("utf-8", "replace"))
+                for part in (((j.get("candidates") or [{}])[0].get("content") or {}).get("parts") or []):
+                    if part.get("inlineData", {}).get("data"):
+                        mt = part["inlineData"].get("mimeType", "image/png")
+                        with open(os.path.join(ESTADO_DIR, "ia.log"), "a") as f:
+                            f.write(f"{dt_now()} gemini {modelo} {ar} {prompt[:80]!r}\n")
+                        return {"png": f"data:{mt};base64," + part["inlineData"]["data"], "provedor": modelo, "aspecto": ar}
+                erros.append(f"{modelo}: sem imagem na resposta")
+            except Exception as e:
+                msg = str(e)
+                try: msg = e.read().decode("utf-8", "replace")[:160]
+                except Exception: pass
+                erros.append(f"{modelo}: {msg[:160]}")
+                if "429" in msg:
+                    break
+    if K.get("OPENAI_KEY"):
+        size = "1536x1024" if w > h else ("1024x1536" if h > w else "1024x1024")
+        try:
+            body = json.dumps({"model": "gpt-image-1", "prompt": prompt_full, "size": size, "n": 1, "quality": d.get("qualidade") or "medium"}).encode()
+            r = _rq.urlopen(_rq.Request("https://api.openai.com/v1/images/generations", data=body, headers={"Authorization": "Bearer " + K["OPENAI_KEY"], "Content-Type": "application/json"}), timeout=120)
+            j = json.loads(r.read().decode("utf-8", "replace")); b64 = (j.get("data") or [{}])[0].get("b64_json")
+            if b64:
+                with open(os.path.join(ESTADO_DIR, "ia.log"), "a") as f:
+                    f.write(f"{dt_now()} openai gpt-image-1 {size} {prompt[:80]!r}\n")
+                return {"png": "data:image/png;base64," + b64, "provedor": "gpt-image-1", "aspecto": size}
+            erros.append("openai: sem imagem")
+        except Exception as e:
+            msg = str(e)
+            try: msg = e.read().decode("utf-8", "replace")[:160]
+            except Exception: pass
+            erros.append("openai: " + msg[:160])
+    raise ValueError(" · ".join(erros) or "nenhuma chave de IA (Gemini/OpenAI) gravada")
+def dt_now():
+    import datetime; return datetime.datetime.now().isoformat(timespec="seconds")
+
 CHAVES_NOMES = ["GOOGLE_PLACES_KEY", "SERPER_KEY", "APIFY_TOKEN", "ZAPSIGN_TOKEN", "ASAAS_TOKEN", "OPENAI_KEY", "GEMINI_KEY", "GOOGLE_MAPS_KEY",
                 "MELHORENVIO_TOKEN", "TELEGRAM_BOT_TOKEN", "TELEGRAM_CHAT_ID", "ML_APP_ID", "ML_SECRET"]
 def chaves_ler():
@@ -650,6 +754,20 @@ class H(BaseHTTPRequestHandler):
     def do_POST(self):
         p = urlparse(self.path).path.rstrip("/")
         try:
+            if p == "/api/ia/fundo":
+                if not self._eu():
+                    return self._erro(401, "entre com a sua conta")
+                try:
+                    return self._send(200, ia_fundo(self._json()))
+                except Exception as e:
+                    return self._erro(502, "IA: " + str(e)[:400])
+            if p == "/api/marca/preparar":
+                if not self._eu():
+                    return self._erro(401, "entre com a sua conta")
+                try:
+                    return self._send(200, marca_preparar(self._json()))
+                except Exception as e:
+                    return self._erro(500, "preparo falhou: " + str(e)[:160])
             if p == "/api/kit/aplicar":
                 if not self._eu():
                     return self._erro(401, "entre com a sua conta")
