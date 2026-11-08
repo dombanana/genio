@@ -535,23 +535,70 @@ def revisao(zona, lojas, cads, detalhes, pasta, resumo):
     open(os.path.join(pasta, "index.html"), "w").write("".join(h))
 
 PEN = _penalidades()
+def zona_config(zslug):
+    """configuração da zona: arquivo em captacao/zonas/<slug>.json ou, se não houver, montada a partir do ranking
+    (centro pelo Places, raio 700 m, consultas por eixo e por perfil) e guardada para as próximas rodadas"""
+    for cfgp in (os.path.join(RAIZ, "captacao", "zonas", zslug + ".json"), os.path.join(ESTADO, "captacao", "zonas", zslug + ".json")):
+        if os.path.exists(cfgp):
+            return json.load(open(cfgp))
+    try:
+        rk = json.load(open(os.path.join(RAIZ, "captacao", "ranking.json")))
+    except Exception:
+        return None
+    z = next((x for x in rk["zonas"] if x.get("slug") == zslug), None)
+    if not z or not K.get("GOOGLE_PLACES_KEY"):
+        return None
+    nome = z["nome"].split(" (")[0]; eixos = [e.strip() for e in re.split(r"[·,]", z["nome"].split("(")[1].rstrip(")"))] if "(" in z["nome"] else [nome]
+    r = tenta(http, PL + "places:searchText", {"textQuery": f"{nome}, São Paulo, SP", "languageCode": "pt-BR", "regionCode": "BR", "pageSize": 1}, {"X-Goog-Api-Key": K["GOOGLE_PLACES_KEY"], "X-Goog-FieldMask": "places.location,places.formattedAddress"})
+    loc = ((r.get("places") or [{}])[0].get("location") or {}) if "_erro" not in r else {}
+    if not loc:
+        return None
+    centro = [loc["latitude"], loc["longitude"]]
+    setores = [t.strip() for t in re.split(r"[;,]", z.get("perfil", "")) if len(t.strip()) > 3][:4]
+    consultas = [f"lojas {e} São Paulo" for e in eixos] + [f"comércio {nome} São Paulo", f"restaurante lanchonete {nome} São Paulo", f"padaria café {nome} São Paulo", f"loja de roupas {nome} São Paulo", f"salão de beleza barbearia {nome} São Paulo", f"pet shop {nome} São Paulo", f"ótica farmácia {nome} São Paulo", f"mercado hortifruti {nome} São Paulo"] + [f"{st} {nome} São Paulo" for st in setores]
+    cfg = {"slug": zslug, "nome": z["nome"], "bairro": nome, "cidade": "São Paulo", "centro": centro, "raio_m": 700, "base": centro, "por_dia": 25, "consultas": consultas[:22], "gerada": dt.date.today().isoformat()}
+    try:
+        os.makedirs(os.path.join(ESTADO, "captacao", "zonas"), exist_ok=True)
+        json.dump(cfg, open(os.path.join(ESTADO, "captacao", "zonas", zslug + ".json"), "w"), ensure_ascii=False, indent=1)
+    except Exception:
+        pass
+    return cfg
 # ---------- principal ----------
 resumo_passos = []
 def main():
-    run = {}
+    # pedido de execução: (a) api/captacao.run pela esteira, (b) /var/lib/genio/captacao/pedido.json pelo admin; cada nonce vale uma vez.
+    # Sem pedido novo (rodada da madrugada): zona escolhida no admin ou a do último pedido, 50 lojas, sem refazer.
+    os.makedirs(os.path.join(ESTADO, "captacao"), exist_ok=True)
+    run, consumidos = {}, {}
     try:
-        run = json.load(open(os.path.join(RAIZ, "api", "captacao.run")))
+        consumidos = json.load(open(os.path.join(ESTADO, "captacao", "nonces.json")))
     except Exception:
         pass
-    zslug = run.get("zona") or (sys.argv[1] if len(sys.argv) > 1 else "zona-cerealista")
+    for fonte in (os.path.join(ESTADO, "captacao", "pedido.json"), os.path.join(RAIZ, "api", "captacao.run")):
+        try:
+            r = json.load(open(fonte))
+            if r.get("nonce") and r["nonce"] not in consumidos:
+                run = r; consumidos[r["nonce"]] = dt.datetime.now().isoformat(timespec="seconds"); break
+        except Exception:
+            pass
+    json.dump(consumidos, open(os.path.join(ESTADO, "captacao", "nonces.json"), "w"))
+    try:
+        padrao = json.load(open(os.path.join(ESTADO, "captacao", "padrao.json")))
+    except Exception:
+        padrao = {}
+    if run:
+        padrao["zona"] = run.get("zona") or padrao.get("zona"); json.dump(padrao, open(os.path.join(ESTADO, "captacao", "padrao.json"), "w"))
+    zslug = run.get("zona") or padrao.get("zona") or (sys.argv[1] if len(sys.argv) > 1 else "zona-cerealista")
     limite = int(run["limite"]) if run.get("limite") is not None else 50
-    zona = json.load(open(os.path.join(RAIZ, "captacao", "zonas", zslug + ".json")))
+    zona = zona_config(zslug)
+    if not zona:
+        pasta = os.path.join(DADOS, zslug); os.makedirs(pasta, exist_ok=True)
+        log(pasta, f"zona {zslug} sem configuração e sem entrada no ranking"); status(pasta, fase="erro", erro="zona desconhecida"); return
     pasta = os.path.join(DADOS, zslug); os.makedirs(os.path.join(pasta, "clientes"), exist_ok=True); os.makedirs(os.path.join(pasta, "img"), exist_ok=True)
     status(pasta, fase="inicio", zona=zslug, limite=limite)
     if not K.get("GOOGLE_PLACES_KEY"):
         log(pasta, "sem GOOGLE_PLACES_KEY — grave na tela Chaves do admin"); status(pasta, fase="erro", erro="sem chave Places"); return
     # cota diária
-    os.makedirs(os.path.join(ESTADO, "captacao"), exist_ok=True)
     qp = os.path.join(ESTADO, "captacao", "quota.json")
     try:
         quota = json.load(open(qp))

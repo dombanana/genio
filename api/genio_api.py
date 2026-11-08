@@ -512,6 +512,15 @@ class H(BaseHTTPRequestHandler):
                     return self._send(200, {"interesse": admin_interesse()})
                 if p == "/api/admin/chaves":
                     return self._send(200, {"chaves": chaves_estado()})
+                if p == "/api/admin/captacao":
+                    est = {}
+                    for n in ("quota", "padrao", "pedido"):
+                        try:
+                            est[n] = json.load(open(f"/var/lib/genio/captacao/{n}.json"))
+                        except Exception:
+                            est[n] = None
+                    zonas = sorted(f[:-5] for f in os.listdir(os.path.join(os.path.dirname(__file__), "..", "captacao", "zonas")) if f.endswith(".json"))
+                    return self._send(200, {"zonas": zonas, "quota": est["quota"] or {}, "padrao": est["padrao"] or {}, "pedido": est["pedido"]})
                 return self._erro(404, "não encontrado")
             parts = p.split("/")
             if len(parts) == 4 and parts[1:3] == ["api", "t"] and codigo_ok(parts[3]):
@@ -592,6 +601,20 @@ class H(BaseHTTPRequestHandler):
                     return self._send(200, {"ok": True})
                 if p == "/api/admin/chaves":
                     return self._send(200, {"chaves": chaves_gravar(d)})
+                if p == "/api/admin/captacao":
+                    zona = re.sub(r"[^a-z0-9-]", "", str(d.get("zona") or ""))
+                    if not zona:
+                        return self._erro(400, "zona?")
+                    ped = {"zona": zona, "limite": max(1, min(100, int(d.get("limite") or 50))), "refazer": bool(d.get("refazer")), "nonce": "admin-" + str(int(time.time()))}
+                    os.makedirs("/var/lib/genio/captacao", exist_ok=True)
+                    json.dump(ped, open("/var/lib/genio/captacao/pedido.json", "w"))
+                    pad = {}
+                    try:
+                        pad = json.load(open("/var/lib/genio/captacao/padrao.json"))
+                    except Exception:
+                        pass
+                    pad["zona"] = zona; json.dump(pad, open("/var/lib/genio/captacao/padrao.json", "w"))
+                    return self._send(200, {"ok": True, "pedido": ped})
                 return self._erro(404, "não encontrado")
             if p in ("/api/tapetes", "/api/status"):
                 if not self._autorizado():

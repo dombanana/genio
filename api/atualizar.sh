@@ -40,6 +40,14 @@ if [ "$antes" != "$depois" ] && ! git diff --quiet "$antes" "$depois" -- api/gen
   systemctl restart genio-api
 fi
 
+# (c2) pedido do admin (API grava /var/lib/genio/captacao/pedido.json) → roda agora
+if [ -f /var/lib/genio/captacao/pedido.json ]; then
+  hp=$(sha256sum /var/lib/genio/captacao/pedido.json | cut -c1-16)
+  if [ "$(cat /var/lib/genio/captacao.pedido.sha 2>/dev/null)" != "$hp" ]; then
+    echo "$hp" > /var/lib/genio/captacao.pedido.sha
+    systemctl start --no-block genio-captacao.service
+  fi
+fi
 # (c) gatilho: conteúdo de api/captacao.run mudou → roda agora (em segundo plano)
 if [ -f api/captacao.run ]; then
   h=$(sha256sum api/captacao.run | cut -c1-16)
