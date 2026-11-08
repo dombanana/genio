@@ -332,7 +332,7 @@ def identidade(loja, zona, pasta, quota_ok):
         erro_av = (erro_av or "") + (" · serper: " + erro_av2 if erro_av2 else "")
     avals.sort(key=lambda a: (a.get("nota") or 5))
     gat = gatilhos(avals)
-    L["avaliacoes"] = {"estado": "encontrado" if avals else "nao", "origem": "publico", "valor": f"{loja.get('nota') or '—'} · {loja.get('aval') or 0} avaliações · {sum(1 for a in avals if (a.get('nota') or 5) <= 3)} negativas lidas", "nota_media": loja.get("nota"), "total": loja.get("aval"), "lista": avals, "gatilhos": gat, "nota": ("nenhuma avaliação lida" + (f" ({erro_av})" if erro_av else "")) if not avals else f"{len(avals)} lidas · {len(gat)} tocam no nosso serviço"}
+    L["avaliacoes"] = {"estado": "encontrado" if avals else "nao", "origem": "publico", "valor": f"{loja.get('nota') or '—'} · {loja.get('aval') or 0} avaliações · {sum(1 for a in avals if (a.get('nota') or 5) <= 3)} negativas entre as {len(avals)} lidas (piores primeiro)", "nota_media": loja.get("nota"), "total": loja.get("aval"), "lista": avals, "gatilhos": gat, "nota": ("nenhuma avaliação lida" + (f" ({erro_av})" if erro_av else "")) if not avals else f"{len(avals)} lidas · {len(gat)} tocam no nosso serviço"}
     passos.append(f"Avaliações → {len(avals)} lidas, {sum(1 for a in avals if (a.get('nota') or 5) <= 3)} negativas, {len(gat)} gatilho(s) do nosso serviço" + (f" · {erro_av}" if erro_av and not avals else ""))
     # --- Serper imagens + web
     q = f'"{loja["nome"]}" {zona["bairro"]} {zona["cidade"]}'
@@ -434,7 +434,9 @@ def identidade(loja, zona, pasta, quota_ok):
         nota += 12 * min(c["repete"], 3)    # principal = o que mais se repete
         c["nota"] = min(100 if c["repete"] else 85, nota)
         # foto de ambiente: paisagem/retrato grande sem fundo liso e sem ser perfil → Local
-        if c["fonte"] in ("instagram-perfil", "facebook-perfil", "site-proprio") or (quadrada and liso) or c["repete"] >= 2:
+        # site próprio: só vira candidato de logo se parecer logo (quadrada com fundo liso, ou "logo" no endereço/legenda); foto de produto vai para Local
+        pareceLogo = re.search(r"logo|marca|brand|icon|avatar|perfil", (c.get("url") or "") + " " + (c.get("legenda") or ""), re.I)
+        if c["fonte"] in ("instagram-perfil", "facebook-perfil") or (c["fonte"] == "site-proprio" and (quadrada and liso or pareceLogo)) or (quadrada and liso) or c["repete"] >= 2:
             logos.append(c)
         else:
             loc.append(c)

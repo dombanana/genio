@@ -29,7 +29,8 @@ if [ ! -f /var/lib/genio/pacotes.ok ]; then
   DEBIAN_FRONTEND=noninteractive apt-get install -y -q python3-pil python3-numpy >/dev/null 2>&1 && touch /var/lib/genio/pacotes.ok || true
 fi
 if [ ! -f /var/lib/genio/pacotes2.ok ]; then
-  DEBIAN_FRONTEND=noninteractive apt-get install -y -q python3-opencv python3-skimage librsvg2-bin tesseract-ocr tesseract-ocr-por python3-pytesseract >/dev/null 2>&1 && touch /var/lib/genio/pacotes2.ok || true
+  DEBIAN_FRONTEND=noninteractive apt-get update -q >/dev/null 2>&1
+  DEBIAN_FRONTEND=noninteractive apt-get install -y -q python3-opencv python3-skimage librsvg2-bin tesseract-ocr tesseract-ocr-por python3-pytesseract >>/var/lib/genio/apt.log 2>&1 && touch /var/lib/genio/pacotes2.ok || echo "apt falhou $(date -Is)" >> /var/lib/genio/esteira.log
 fi
 for u in api/*.service api/*.timer; do
   [ -f "$u" ] || continue
