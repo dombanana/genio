@@ -743,6 +743,8 @@ def main():
         padrao = {}
     if run:
         padrao["zona"] = run.get("zona") or padrao.get("zona"); json.dump(padrao, open(os.path.join(ESTADO, "captacao", "padrao.json"), "w"))
+    if os.path.exists(os.path.join(RAIZ, "api", "captacao.pausa")):
+        print("captação pausada (api/captacao.pausa) — nenhuma chamada paga"); return
     if not run and not (2 <= dt.datetime.now().hour <= 5) and "--forcar" not in sys.argv:
         # serviço iniciado fora da madrugada sem pedido novo (nonce já consumido): não gastar 50 lojas por engano
         print("sem pedido novo; nada a fazer"); return
