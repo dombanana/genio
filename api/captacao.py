@@ -189,6 +189,20 @@ def ham(a, b):
     return bin(int(a, 16) ^ int(b, 16)).count("1")
 
 # ---------- notas ----------
+def _penalidades():
+    """fontes que o vendedor marcou como erradas no aparelho: -8 por marcação (até -30)"""
+    pen = {}
+    try:
+        for linha in open(os.path.join(ESTADO, "captacao", "correcoes.jsonl")):
+            x = json.loads(linha)
+            if x.get("acao") == "errada" and x.get("fonte"):
+                k = str(x["fonte"]).lower()
+                for f in ("instagram", "facebook", "linktr", "places", "imprensa", "diretorio"):
+                    if f in k:
+                        pen[f] = min(30, pen.get(f, 0) + 8)
+    except Exception:
+        pass
+    return pen
 PESO_FONTE = {"instagram-perfil": 70, "facebook-perfil": 65, "places-foto": 45, "serper-instagram": 55, "serper-facebook": 55, "serper-linktree": 60, "serper-diretorio": 40, "serper-imprensa": 25, "serper-outro": 30}
 def classificar_fonte(dominio):
     d = (dominio or "").lower()
@@ -314,7 +328,7 @@ def identidade(loja, zona, pasta, quota_ok):
         prop = c.get("prop") or 0
         quadrada = 0.75 <= prop <= 1.35
         liso = (c.get("fundo_liso") or 0) >= 0.6
-        nota = PESO_FONTE.get(c["fonte"], 30)
+        nota = PESO_FONTE.get(c["fonte"], 30) - next((v for k, v in PEN.items() if k in c["fonte"]), 0)
         if c["fonte"] in ("instagram-perfil", "facebook-perfil"):
             nota += 15                       # a marca como o dono a usa
         if c.get("dono"):
@@ -423,6 +437,7 @@ def revisao(zona, lojas, cads, detalhes, pasta, resumo):
     h.append("</div></body></html>")
     open(os.path.join(pasta, "index.html"), "w").write("".join(h))
 
+PEN = _penalidades()
 # ---------- principal ----------
 resumo_passos = []
 def main():

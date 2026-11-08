@@ -529,6 +529,17 @@ class H(BaseHTTPRequestHandler):
     def do_POST(self):
         p = urlparse(self.path).path.rstrip("/")
         try:
+            if p == "/api/correcoes":
+                # correções de imagem feitas no aparelho (trocada, ajustada, apagada, errada) — alimentam a captação
+                if not self._origem_ok():
+                    return self._erro(403, "origem não permitida")
+                d = self._json()
+                itens = [x for x in (d.get("correcoes") or []) if isinstance(x, dict)][:200]
+                os.makedirs("/var/lib/genio/captacao", exist_ok=True)
+                with open("/var/lib/genio/captacao/correcoes.jsonl", "a") as f:
+                    for x in itens:
+                        f.write(json.dumps({k: (str(v)[:300] if isinstance(v, str) else v) for k, v in x.items() if k != "dados"}, ensure_ascii=False) + "\n")
+                return self._send(200, {"ok": True, "recebidas": len(itens)})
             if p in ("/api/entrar", "/api/sair", "/api/convite", "/api/primeiro", "/api/interesse") or p.startswith("/api/admin/"):
                 if not self._origem_ok():
                     return self._erro(403, "origem não permitida")

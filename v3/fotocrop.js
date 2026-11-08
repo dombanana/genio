@@ -97,7 +97,9 @@ const FotoCrop=(()=>{
     $(".fc-use").onclick=()=>{const k=full.width/cv.width,o=document.createElement("canvas");o.width=Math.round(crop.w*k);o.height=Math.round(crop.h*k);o.getContext("2d").drawImage(full,crop.x*k,crop.y*k,crop.w*k,crop.h*k,0,0,o.width,o.height);
       o.toBlob(b=>{st.prontas.push(new File([b],f.name.replace(/\.\w+$/,"")+"-ajustada.jpg",{type:"image/jpeg"}));st.i++;ajustar();},"image/jpeg",.92);};
     render();window.addEventListener("resize",render,{once:true});}
+  // ajustar uma imagem que já existe (sem abrir a câmera): recortar, endireitar, girar
+  function ajustarArquivo(file,o){montar();st={titulo:(o&&o.titulo)||"Ajustar",varias:false,onFim:(o&&o.onFim)||(()=>{}),shots:[file],prontas:[],i:0};el.hidden=false;document.body.style.overflow="hidden";iniciarAjuste();}
   function terminar(){const fim=st.onFim,fs=st.prontas;el.hidden=true;document.body.style.overflow="";st={};fim(fs);}
   const carregar=f=>new Promise((res,rej)=>{const u=URL.createObjectURL(f),im=new Image();im.onload=()=>{URL.revokeObjectURL(u);res(im);};im.onerror=rej;im.src=u;});
-  return {abrir};
+  return {abrir,ajustarArquivo};
 })();

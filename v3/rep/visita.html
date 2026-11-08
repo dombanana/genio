@@ -6,12 +6,14 @@
 <title>GênIO · Visita</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="rep.css?v=4fcf9d8a7e">
+<link rel="stylesheet" href="rep.css?v=bbfd9db4f5">
 </head>
 <body>
 <div class="w" id="app"></div>
 <input type="file" accept="image/*" capture="environment" id="cam" hidden>
-<script src="rep.js?v=4fcf9d8a7e"></script>
+<script src="../fotocrop.js?v=bbfd9db4f5"></script>
+<script src="imagem.js?v=bbfd9db4f5"></script>
+<script src="rep.js?v=bbfd9db4f5"></script>
 <script>
 (async()=>{
   const {$,$$,esc,qs,nomeLoja,dados,estado,salvar,stLogo,nav,topo,voz,ligarVoz,ouvir,roteiro,CHECK,PROD,setorNome,telFmt,abertaAgora,ZONA}=Rep;
@@ -31,10 +33,10 @@
   <div class="faixa"><a href="index.html">Rota</a></div>
   <h1>${esc(nomeLoja(l.nome))}</h1>
   <p class="sub">Parada ${l.ordem} · ${esc(l.endereco)}${l.tel?` · ${esc(telFmt(l.tel))}`:""}</p>
-  <div class="foto" id="foto">${fotoLocal?`<img src="${esc(fotoLocal)}" alt="">${fotos.entrada?"":'<span class="sel">Referência pública</span>'}`:`<div style="text-align:center"><div style="font-size:40px">📷</div>Sem foto do local ainda<br><small>toque em “Fotografar entrada”</small></div>`}</div>
+  <div class="foto" id="foto" data-img="local" data-loja="${esc(slug)}" data-nome="Foto do local" ${fotos.entrada?"":refs[0]?`data-fonte="referência pública"`:""}>${fotoLocal?`<img src="${esc(fotoLocal)}" alt="">${fotos.entrada?"":'<span class="sel">Referência pública</span>'}`:`<div style="text-align:center"><div style="font-size:40px">📷</div>Sem foto do local ainda<br><small>toque em “Fotografar entrada”</small></div>`}</div>
   <div class="chips"><span class="chip">🏪 ${esc(setorNome(l.setor))}</span>${aberta===true?'<span class="chip ok">✓ Aberto agora</span>':aberta===false?'<span class="chip">Fechado agora</span>':""}${l.nota?`<span class="chip">★ ${String(l.nota).replace(".",",")} · ${l.aval||0} avaliações</span>`:""}</div>
   <section class="card"><h2>Identidade da loja</h2>
-    <div class="ident"><div class="logo-box">${logo.estado==="encontrado"?`<img src="${esc(base+logo.valor)}" alt="">`:`<span style="font-size:30px">◌</span>`}</div>
+    <div class="ident"><div class="logo-box" data-img="logo" data-loja="${esc(slug)}" data-nome="Logo" ${logo.nome?`data-fonte="${esc(logo.nome)}"`:""}>${logo.estado==="encontrado"?`<img src="${esc(base+logo.valor)}" alt="">`:`<span style="font-size:30px">◌</span>`}</div>
       <div><span class="chip ${st.c}">${st.c==="ok"?"✓ ":""}${st.t}</span>${cores.length?`<div class="cores">Cores da loja ${cores.map(c=>`<span class="cor" style="background:${esc(c)}"></span>`).join("")}</div>`:""}</div>
       <a class="acao-link" style="margin:0" href="../identidade.html?cliente=${encodeURIComponent(slug)}">Ver identidade →</a></div>
     ${logo.estado!=="encontrado"&&logo.opcoes&&logo.opcoes.length?`<p class="ilus" style="margin-top:10px">${logo.opcoes.length} opções encontradas na rede — decidir com o cliente na tela de identidade.</p>`:""}</section>
@@ -47,9 +49,10 @@
   <p class="ilus">${cad?`Dados públicos coletados em ${esc(cad.coletadoEm)}`:"Dados do Google Places; identidade entra na próxima captação"}</p>
   ${voz()}${nav("rota")}`;
   ligarVoz(slug);
+  Imagem.ligar(document);
   $("#ouvir").onclick=()=>ouvir(txtRoteiro,$("#ouvir"));
   $$("[data-k]").forEach(i=>i.onchange=()=>{const ee=estado();ee.check=ee.check||{};ee.check[slug]=ee.check[slug]||{};ee.check[slug][i.dataset.k]=i.checked;salvar(ee);});
-  $("#fotografar").onclick=()=>$("#cam").click();
+  $("#fotografar").onclick=()=>{if(window.FotoCrop){FotoCrop.abrir({titulo:"Foto da entrada",varias:false,onFim:fs=>{if(fs&&fs[0]){const r=new FileReader();r.onload=()=>{const M=Imagem.ler();M[slug+"/local"]={dados:r.result,acao:"trocada",em:new Date().toISOString()};localStorage.setItem("genio-imagens",JSON.stringify(M));Imagem.aplicar(document);};r.readAsDataURL(fs[0]);}}});}else $("#cam").click();};
   $("#cam").onchange=()=>{const f=$("#cam").files[0];if(!f)return;const img=new Image();const u=URL.createObjectURL(f);img.onload=()=>{const c=document.createElement("canvas");const k=Math.min(1,1400/img.width);c.width=img.width*k;c.height=img.height*k;c.getContext("2d").drawImage(img,0,0,c.width,c.height);const d=c.toDataURL("image/jpeg",.82);const ee=estado();ee.fotos=ee.fotos||{};ee.fotos[slug]={...(ee.fotos[slug]||{}),entrada:d,em:new Date().toISOString()};salvar(ee);$("#foto").innerHTML=`<img src="${d}" alt="">`;URL.revokeObjectURL(u);};img.src=u;};
 })();
 </script>
