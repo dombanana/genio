@@ -401,7 +401,7 @@ def codigo_ok(c):
 
 # ---------- chaves de serviços externos (Places, Serper, Apify, ZapSign…) ----------
 CHAVES_ARQ = os.environ.get("GENIO_CHAVES", "/var/lib/genio/chaves.json")
-CHAVES_NOMES = ["GOOGLE_PLACES_KEY", "SERPER_KEY", "APIFY_TOKEN", "ZAPSIGN_TOKEN", "ASAAS_TOKEN", "OPENAI_KEY", "GEMINI_KEY",
+CHAVES_NOMES = ["GOOGLE_PLACES_KEY", "SERPER_KEY", "APIFY_TOKEN", "ZAPSIGN_TOKEN", "ASAAS_TOKEN", "OPENAI_KEY", "GEMINI_KEY", "GOOGLE_MAPS_KEY",
                 "MELHORENVIO_TOKEN", "TELEGRAM_BOT_TOKEN", "TELEGRAM_CHAT_ID", "ML_APP_ID", "ML_SECRET"]
 def chaves_ler():
     try:
@@ -488,6 +488,8 @@ class H(BaseHTTPRequestHandler):
     def do_GET(self):
         p = urlparse(self.path).path.rstrip("/")
         try:
+            if p == "/api/mapa":
+                return self._send(200, {"google": chaves_ler().get("GOOGLE_MAPS_KEY") or ""})
             if p == "/api/saude":
                 q("SELECT 1", one=True)
                 return self._send(200, {"ok": True, "banco": True, "hora": agora()})
