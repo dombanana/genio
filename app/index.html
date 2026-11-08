@@ -8,13 +8,13 @@
 <link rel="icon" href="../genio-favicon.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
-<link rel="stylesheet" href="app.css?v=4066e87fe6">
+<link rel="stylesheet" href="app.css?v=871e516b58">
 <style>.leaflet-div-icon{background:transparent;border:0}.mapa svg.esq{width:100%;height:100%}</style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=4066e87fe6"></script>
+<script src="app.js?v=871e516b58"></script>
 <script>
 (async()=>{
   const {$,$$,esc,qs,sessao,eu,dados,estrelasHTML,estado,salvar,nav,topo,setorNome,nomeLoja}=App;
@@ -51,8 +51,8 @@
     return;}
   if(typeof L==="undefined"){const xs=lojas.map(l=>l.lng),ys=lojas.map(l=>l.lat);const x0=Math.min(...xs),x1=Math.max(...xs),y0=Math.min(...ys),y1=Math.max(...ys);const X=v=>30+(v-x0)/((x1-x0)||1)*340,Y=v=>270-(v-y0)/((y1-y0)||1)*240;
     $("#mapa").innerHTML=`<svg class="esq" viewBox="0 0 400 300"><polyline fill="none" stroke="#6933C5" stroke-width="5" stroke-linejoin="round" points="${lojas.map(l=>X(l.lng)+","+Y(l.lat)).join(" ")}"/>${lojas.map(l=>`<g><circle cx="${X(l.lng)}" cy="${Y(l.lat)}" r="${l===prox?17:14}" fill="${cor(l)}" stroke="#fff" stroke-width="3"/><text x="${X(l.lng)}" y="${Y(l.lat)+5}" text-anchor="middle" fill="#fff" font-size="13" font-weight="700">${feitas.has(l.slug)?"✓":l.parada}</text></g>`).join("")}</svg>`;return;}
-  const map=L.map("mapa",{zoomControl:false,attributionControl:false});
-  L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",{maxZoom:19,subdomains:"abcd"}).addTo(map);
+  const map=L.map("mapa",{zoomControl:false,attributionControl:true});
+  L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:"© OpenStreetMap"}).addTo(map);
   const pts=lojas.map(l=>[l.lat,l.lng]);
   L.polyline(pts,{color:"#6933C5",weight:5,opacity:.9,lineJoin:"round"}).addTo(map);
   lojas.forEach(l=>{const f=feitas.has(l.slug);const ic=L.divIcon({className:"",html:`<div class="mk ${l===prox?"prox":""} ${f?"feita":""}">${f?"✓":l.parada}</div>`,iconSize:[34,34],iconAnchor:[17,17]});L.marker([l.lat,l.lng],{icon:ic}).addTo(map).on("click",()=>location.href=`visita.html?l=${encodeURIComponent(l.slug)}`);});
