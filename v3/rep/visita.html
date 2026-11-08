@@ -35,6 +35,7 @@
     const lei=val("leitura");const m=lei.match(/Razão social: ([^·]+)·\s*CNPJ\s*([\d./-]+)(?:\s*·\s*desde\s*(\d{4}))?/);
     if(m){abre+=` — razão social ${m[1].trim()}${m[3]?`, aberta em ${m[3]}`:""}`;}
     P.push(abre+".");
+    const cn=L.nome_curiosidade;if(cn&&cn.valor)P.push(`Sobre o nome: ${cn.valor}${/[.!?]$/.test(cn.valor)?"":"."}${cn.origem==="derivado"?" (confirmar com o dono)":""}`);else if(cn&&cn.palavra)P.push(`Pergunta que abre conversa: “${cn.palavra[0].toUpperCase()+cn.palavra.slice(1)}” é de família ou de lugar?`);
     if(val("sobre"))P.push(val("sobre"));
     const sl=L.slogan;const frase=(sl&&sl.estado==="encontrado"&&sl.valor)||(sl&&sl.opcoes&&sl.opcoes[0]&&sl.opcoes[0].valor)||"";
     const redes=val("redes");if(redes||frase)P.push(`${redes?"Presença: "+redes+". ":""}${frase?`A casa se apresenta como “${frase}”.`:""}`.trim());

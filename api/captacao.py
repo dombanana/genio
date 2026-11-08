@@ -56,6 +56,8 @@ def http(url, data=None, headers=None, timeout=40, binario=False):
         b = r.read()
         return b if binario else json.loads(b.decode("utf-8", "replace") or "{}")
 def tenta(f, *a, **kw):
+    if f is http and "headers" in kw and len(a) == 1:
+        a = (a[0], None)
     try:
         return f(*a, **kw)
     except error.HTTPError as e:
@@ -234,6 +236,34 @@ def analisar(caminho):
 def ham(a, b):
     return bin(int(a, 16) ^ int(b, 16)).count("1")
 
+# ---------- curiosidade do nome (Wikipédia pt; Gemini só se a Wikipédia não tiver) ----------
+def curiosidade_nome(nome):
+    ts = [t for t in tokens(nome) if len(t) >= 4]
+    if not ts:
+        return None
+    palavra = max(ts, key=len)
+    try:
+        r = tenta(http, "https://pt.wikipedia.org/w/api.php?action=query&list=search&format=json&srlimit=1&srsearch=" + parse.quote(palavra), headers={"User-Agent": "GenIO/1.0 (captacao)"})
+        hit = (r.get("query") or {}).get("search") or []
+        if hit:
+            titulo = hit[0]["title"]
+            r2 = tenta(http, "https://pt.wikipedia.org/api/rest_v1/page/summary/" + parse.quote(titulo.replace(" ", "_")), headers={"User-Agent": "GenIO/1.0 (captacao)"})
+            ext = (r2.get("extract") or "").strip()
+            if ext and palavra.lower() in unicodedata.normalize("NFKD", (titulo + " " + ext)).encode("ascii", "ignore").decode().lower():
+                frase = re.split(r"(?<=[.!?])\s", ext)[0][:220]
+                return {"estado": "encontrado", "valor": frase, "origem": "publico", "nota": f"Wikipédia · {titulo}", "palavra": palavra}
+    except Exception:
+        pass
+    if K.get("GEMINI_KEY"):
+        try:
+            body = {"contents": [{"parts": [{"text": f"Em uma frase curta (máx. 30 palavras), em português, qual a origem ou o significado provável da palavra '{palavra}' no nome do comércio '{nome}' (sobrenome, cidade, palavra estrangeira, apelido)? Se não houver base, responda só: sem registro."}]}], "generationConfig": {"temperature": 0.2, "maxOutputTokens": 80}}
+            r = tenta(http, "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent", body, {"x-goog-api-key": K["GEMINI_KEY"]})
+            txt = ((((r.get("candidates") or [{}])[0].get("content") or {}).get("parts") or [{}])[0].get("text") or "").strip()
+            if txt and "sem registro" not in txt.lower():
+                return {"estado": "derivado", "valor": txt[:220], "origem": "derivado", "nota": "Gemini (uma frase; confirmar com o dono)", "palavra": palavra}
+        except Exception:
+            pass
+    return {"estado": "pendente", "valor": "", "origem": "cliente", "nota": f"origem do nome não encontrada — perguntar ao dono (“{palavra}” é de família ou de lugar?)", "palavra": palavra}
 # ---------- o @ / domínio bate com o nome da loja? ----------
 STOP={"natural","temperos","tempero","padaria","cafe","bar","restaurante","barbearia","salao","salão","otica","ótica","pet","farmacia","farmácia","doces","doce","loja","lojas","casa","comercio","comércio","ltda","me","mei","eireli","sa","s/a","e","de","da","do","das","dos","the","zona","cerealista","brás","bras","sao","são","paulo","sp","centro","oficial","store","shop","br","com","www","emporio","empório","distribuidora","produtos","naturais","mercado","mercadao","mercadão"}
 def tokens(s_):
@@ -459,6 +489,9 @@ def identidade(loja, zona, pasta, quota_ok):
     if logos and logos[0].get("cores"):
         L["cores"] = dict(estado="derivado", valor=" ".join(logos[0]["cores"]), origem="derivado", nota="cores dominantes da imagem principal; o manual confirma")
     L.setdefault("slogan", {"estado": "pendente", "origem": "cliente", "valor": "", "nota": "nenhum slogan público; perguntar na porta"})
+    cn = curiosidade_nome(loja["nome"])
+    if cn:
+        L["nome_curiosidade"] = cn; passos.append("Curiosidade do nome → " + (cn["valor"][:90] if cn["valor"] else cn["nota"]))
     L.setdefault("sobre", {"estado": "pendente", "origem": "cliente", "valor": "", "nota": "sem texto público sobre a casa"})
     return L, custo, passos, fontes, logos, loc
 
