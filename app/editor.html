@@ -6,7 +6,7 @@
 <title>GênIO · Edição do produto</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="app.css?v=060c860c8a">
+<link rel="stylesheet" href="app.css?v=85921f73ef">
 <style>
 body.com-acoes{padding-bottom:calc(250px + env(safe-area-inset-bottom,0))}
 .prancheta{position:relative;background:repeating-conic-gradient(#e9e5f3 0 25%,#fff 0 50%) 0 0/18px 18px;border-radius:16px;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;height:min(72vw,460px);margin:0 0 8px}
@@ -39,7 +39,7 @@ body.com-acoes{padding-bottom:calc(250px + env(safe-area-inset-bottom,0))}
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=060c860c8a"></script>
+<script src="app.js?v=85921f73ef"></script>
 <script>
 (async()=>{
   const {$,$$,esc,qs,sessao,dados,ficha,nav,topo,voltar,nomeLoja,telFmt,cliente,gravarCliente,definirCliente,setorNome}=App;
@@ -48,7 +48,7 @@ body.com-acoes{padding-bottom:calc(250px + env(safe-area-inset-bottom,0))}
   if(!l){$("#app").innerHTML=`${topo()}<p>Loja não encontrada.</p>${nav("rota")}`;return;}
   const nome=nomeLoja(l.nome);definirCliente(l);let c=await cliente(l);const man=c.manual||null;
   // gabarito da gráfica: área total = produto + sangria; a guia mostra corte (vermelho) e segurança (verde-água)
-  const G=await (await fetch("gabaritos.json?v=060c860c8a")).json();const P=G.produtos[pid]||G.produtos.capacho;
+  const G=await (await fetch("gabaritos.json?v=85921f73ef")).json();const P=G.produtos[pid]||G.produtos.capacho;
   const sang=P.sangria_mm!=null?P.sangria_mm:G.sangria_mm,seg=P.seguranca_mm!=null?P.seguranca_mm:G.seguranca_mm;
   const PX=Math.min(100,Math.floor(3000/Math.max(P.w_cm+sang/5,P.h_cm+sang/5)));  // px por cm (teto 3000 px)
   const W=Math.round((P.w_cm+2*sang/10)*PX),H=Math.round((P.h_cm+2*sang/10)*PX),B=Math.round(sang/10*PX),S=Math.round(seg/10*PX);
@@ -182,7 +182,7 @@ body.com-acoes{padding-bottom:calc(250px + env(safe-area-inset-bottom,0))}
         else if(sel.tipo==="texto"){sel.tam=Math.max(8,Math.round(sel.tam*nw/sel.w));}else if(sel.tipo==="campos"){sel.w=nw;}else{sel.w=nw;sel.h=nw/r;}}
       desenhar();});
     const fim=ev=>{ptrs.delete(ev.pointerId);if(ptrs.size<2)pinch=null;drag=null;pan=null;};pr.addEventListener("pointerup",fim);pr.addEventListener("pointercancel",fim);
-    $("#salvar").onclick=async()=>{sel=null;$("#salvar").disabled=true;$("#salvar").textContent="Salvando…";
+    $("#salvar").onclick=async()=>{sel=null;delete doc.auto;$("#salvar").disabled=true;$("#salvar").textContent="Salvando…";
       await desenhar(false,true,false);const png=cv.toDataURL("image/png");
       await desenhar(false,false,false);const pngArte=cv.toDataURL("image/png");  // arte sem o fundo: o material do kit recebe a cor separadamente
       c=await cliente(l);c.artes=c.artes||{};const ant=c.artes[pid]||{};c.artes[pid]={doc,png,pngArte,material:doc.fundo,w_cm:P.w_cm,h_cm:P.h_cm,sangria_mm:sang,em:new Date().toISOString(),contexto:ant.png===png?ant.contexto:null};

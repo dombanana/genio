@@ -6,7 +6,7 @@
 <title>GênIO · Produtos e serviços</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="app.css?v=060c860c8a">
+<link rel="stylesheet" href="app.css?v=85921f73ef">
 <style>
 .grade{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .prod{background:#fff;border-radius:18px;box-shadow:0 2px 10px rgba(28,22,53,.06);overflow:hidden;display:flex;flex-direction:column;position:relative}
@@ -32,7 +32,7 @@
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=060c860c8a"></script>
+<script src="app.js?v=85921f73ef"></script>
 <script>
 (async()=>{
   const {$,$$,esc,qs,sessao,dados,nav,topo,voltar,setorNome,nomeLoja,estado,salvar,cliente,gravarCliente,definirCliente}=App;
@@ -41,7 +41,7 @@
   if(!l){$("#app").innerHTML=`${topo()}<p>Loja não encontrada.</p>${nav("rota")}`;return;}
   const nome=nomeLoja(l.nome);definirCliente(l);let c=await cliente(l);
   if(!(c.manual&&c.manual.editado)){location.href=`visita.html?l=${encodeURIComponent(slug)}`;return;}  // catálogo só depois do logotipo limpo
-  const G=await (await fetch("gabaritos.json?v=060c860c8a")).json();
+  const G=await (await fetch("gabaritos.json?v=85921f73ef")).json();
   const CAT=[["capacho","Capacho personalizado","../img/cena-capacho.jpg"],["placas","Placas e sinalização","../img/cena-placas.jpg"],["adesivos","Adesivos e vitrines","../img/cena-adesivos.jpg"],["uniformes","Uniformes e camisetas","../img/cena-uniformes.jpg"],["impressos","Cartões de visita","../img/cena-cartoes.jpg"],["panfleto","Flyers e panfletos","../img/cat-impressos.jpg"],["banners","Banners e faixas","../img/cena-banners.jpg"],["parede","Adesivos de parede","../img/cat-parede.jpg"],["brindes","Sacolas e brindes","../img/cat-brindes.jpg"],["carimbo","Carimbos","../img/cat-brindes.jpg"]].map(([id,n,img])=>({id,nome:n,img}));
   const SERV=[{id:"mostraai",nome:"Mostra Aí · cardápio digital",desc:"Serviço mensal (AI Negócios)",ic:"📱"},{id:"postaai",nome:"Posta Aí · postagens",desc:"Conteúdo para as redes (AI Negócios)",ic:"📣"},{id:"inpi",nome:"Registro de marca (INPI)",desc:"Proteção do nome e do logo",ic:"®"}];
   const e=estado();e.sel=e.sel||{};const S=e.sel[slug]=e.sel[slug]||{};
@@ -49,10 +49,10 @@
     $("#app").innerHTML=`${topo()}${voltar(`visita.html?l=${encodeURIComponent(slug)}`,"Visita")}
     <h1>Produtos e serviços</h1><p class="sub">${esc(nome)} · ${esc(setorNome(l.setor))}</p>
     <div class="resumo"><div><b>${n?`${n} item(ns) no orçamento`:"Nada escolhido ainda"}</b><br><small class="muted">${Object.keys(artes).length} arte(s) feita(s) · logotipo tratado</small></div><img src="${esc(c.manual.tratado)}" alt="" style="width:56px;height:40px;object-fit:contain;background:#fff;border-radius:8px"></div>
-    ${Object.keys(artes).length?`<button class="btn sec" id="ctx" type="button" style="margin:0 0 12px;min-height:50px">✦ Gerar contextualização das artes (${Object.keys(artes).length})</button>`:""}
+    <div style="display:grid;grid-template-columns:1fr ${Object.keys(artes).length?"1fr":""};gap:8px;margin:0 0 12px"><button class="btn sec" id="todos" type="button" style="min-height:50px">✦ Gerar todos os produtos</button>${Object.keys(artes).length?`<button class="btn sec" id="ctx" type="button" style="min-height:50px">Contextualizar (${Object.keys(artes).length})</button>`:""}</div>
     <div class="grade">${CAT.map(p=>{const s=S[p.id]||{q:0},A=artes[p.id];const mock=(A&&A.contexto)||(A&&A.png)||null;return `<div class="prod ${s.q>0?"sel":""}" data-p="${p.id}">
       <div class="cena" ${mock?"":`style="background-image:url('${p.img}')"`} data-ctx="${p.id}">${mock?`<img src="${mock}" alt="">`:""}</div>
-      <b>${esc(p.nome)}</b><div class="st ${s.q>0?"ok":""}">${s.q>0?"✓ no orçamento":A?"arte feita":"sem arte"}${A&&A.contexto?" · no ambiente":""}</div>
+      <b>${esc(p.nome)}</b><div class="st ${s.q>0?"ok":""}">${s.q>0?"✓ no orçamento":A?(A.doc&&A.doc.auto?"arte automática":"arte feita"):"sem arte"}${A&&A.contexto?" · no ambiente":""}</div>
       <a class="ir" href="editor.html?l=${encodeURIComponent(slug)}&p=${p.id}">${A?"Editar arte":"Criar arte"}</a>
       <div class="qtd"><button data-m="-">−</button><span class="${s.q>0?"":"zero"}">${s.q>0?s.q+" un.":"não quero"}</span><button data-m="+">+</button></div></div>`;}).join("")}</div>
     <h2 style="margin:22px 0 10px">Serviços</h2>
@@ -64,6 +64,7 @@
     $$(".tog").forEach(b=>b.onclick=()=>{const id=b.dataset.t;const s=S[id]=S[id]||{q:0,nome:SERV.find(x=>x.id===id).nome,servico:true};s.q=s.q>0?0:1;salvar(e);render();});
     // item do kit com arte: tocar volta para a edição daquela arte
     $$(".cena[data-ctx]").forEach(el=>{let t0=0,mv=false;el.addEventListener("pointerdown",()=>{t0=Date.now();mv=false;});el.addEventListener("pointermove",()=>{mv=true;});el.addEventListener("pointerup",()=>{if(mv||Date.now()-t0>450)return;const A=artes[el.dataset.ctx];if(A&&A.contexto){const g=document.createElement("div");g.className="galeria-ctx";g.innerHTML=`<div class="top"><b>${esc(CAT.find(x=>x.id===el.dataset.ctx).nome)}</b><span><a class="btn sec sm" style="width:auto;display:inline-grid;min-height:40px;padding:0 12px;text-decoration:none;margin-right:6px" href="editor.html?l=${encodeURIComponent(slug)}&p=${el.dataset.ctx}">Editar</a><button class="btn sec sm" id="fechar" style="width:auto;min-height:40px;padding:0 12px">Fechar</button></span></div><div class="rolo"><img src="${A.contexto}" alt=""></div>`;document.body.appendChild(g);g.querySelector("#fechar").onclick=()=>g.remove();}else location.href=`editor.html?l=${encodeURIComponent(slug)}&p=${el.dataset.ctx}`;});});
+    $("#todos").onclick=async()=>{const b=$("#todos");b.disabled=true;const r=await App.gerarProdutos(l,pid=>{b.textContent=`Gerando ${CAT.find(x=>x.id===pid).nome}…`;});c=await cliente(l);render();if(r.falhas.length)alert("Não consegui em: "+r.falhas.join(" · "));};
     const cb=$("#ctx");if(cb)cb.onclick=async()=>{cb.disabled=true;const ids=Object.keys(artes);let k=0,falhas=[];
       for(const id of ids){const A=artes[id];cb.textContent=`Aplicando ${CAT.find(x=>x.id===id).nome}… (${++k}/${ids.length})`;
         try{const r=await fetch("/api/kit/aplicar",{method:"POST",credentials:"same-origin",headers:{"Content-Type":"application/json"},body:JSON.stringify({setor:l.setor,produto:id,png:A.pngArte||A.png,material:A.material||null})});const d=await r.json();if(r.ok&&d.jpg){A.contexto=d.jpg;A.kit=d.kit;}else falhas.push(CAT.find(x=>x.id===id).nome+": "+(d.mensagem||d.erro||r.status));}catch(err){falhas.push(id+": "+err.message);}}

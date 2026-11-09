@@ -8,13 +8,13 @@
 <link rel="icon" href="../genio-favicon.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
-<link rel="stylesheet" href="app.css?v=060c860c8a">
+<link rel="stylesheet" href="app.css?v=85921f73ef">
 <style>.leaflet-div-icon{background:transparent;border:0}.mapa svg.esq{width:100%;height:100%}</style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=060c860c8a"></script>
+<script src="app.js?v=85921f73ef"></script>
 <script>
 (async()=>{
   const {$,$$,esc,qs,sessao,eu,dados,estrelasHTML,estado,salvar,nav,topo,setorNome,nomeLoja}=App;
@@ -35,8 +35,13 @@
   <h1>Olá, ${esc(eu().nome.split(" ")[0])}</h1><p class="sub">${esc(D.zona.nome)} · ${rota.length} lojas na sua rota · ${e.feitas.length} visitadas</p>
   <section class="card" style="padding:12px 16px"><div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">${cont.map(([n,q])=>`<a href="?min=${n}" class="chip ${filtro===n?"ok":""}" style="text-decoration:none">${"★".repeat(n)} <b>${q}</b></a>`).join("")}${filtro?`<a href="index.html" class="chip">todas</a>`:""}</div><small class="muted">Estrelas: proposta automática (nota e volume no Google, presença própria, setor, movimento) — critério a validar.</small></section>
   <div class="mapa" id="mapa"></div>
+  <button class="btn sec" id="gerarTodas" type="button" style="margin:0 0 12px;min-height:48px">✦ Gerar produtos de todas as lojas com logotipo</button><div class="muted" id="gerarSt" style="font-size:13px;margin:-6px 0 10px"></div>
   <div class="lista">${vis.map((l,i)=>`<a class="card loja-l ${e.feitas.includes(l.slug)?"feita":""}" href="visita.html?l=${encodeURIComponent(l.slug)}" style="display:grid;color:inherit;text-decoration:none"><span class="n">${e.feitas.includes(l.slug)?"✓":l.parada}</span><div><b>${esc(nomeLoja(l.nome))}</b><small>${esc(setorNome(l.setor))} · ${esc((l.endereco||"").split(" · ")[0])}</small></div><div style="text-align:right">${estrelasHTML(l.estrelas)}<br><small class="muted">${l.cad&&l.cad.logo==="encontrado"?"marca sugerida":"sem marca"}</small></div></a>`).join("")}</div>
   ${nav("rota")}`;
+  $("#gerarTodas").onclick=async()=>{const b=$("#gerarTodas"),st=$("#gerarSt");b.disabled=true;let prontas=0,feitas=0,falhas=[];
+    for(const l of rota){const c=await App.cliente(l);if(!(c.manual&&c.manual.editado))continue;prontas++;b.textContent=`${nomeLoja(l.nome)}…`;
+      const r=await App.gerarProdutos(l,pid=>{st.textContent=`${nomeLoja(l.nome)} · ${pid} (loja ${prontas})`;});feitas+=r.ok;if(r.falhas.length)falhas.push(nomeLoja(l.nome)+": "+r.falhas.join(", "));}
+    b.textContent="✦ Gerar produtos de todas as lojas com logotipo";b.disabled=false;st.textContent=`${prontas} loja(s) com logotipo · ${feitas} arte(s) geradas${falhas.length?" · falhas: "+falhas.length:""}`;if(falhas.length)alert(falhas.slice(0,8).join("\n"));};
   // mapa com o traço ligando as paradas na ordem do percurso: Google Maps se houver chave no servidor; senão mapa aberto (Leaflet/CARTO); sem rede, esquema
   const lojas=rota.filter(l=>l.lat&&l.lng);if(!lojas.length){$("#mapa").remove();return;}
   const cor=l=>l===prox?"#141C3A":feitas.has(l.slug)?"#B9B1CC":"#6933C5";
