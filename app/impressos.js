@@ -27,7 +27,7 @@
       fundo:campoEscuro?escuro:"#FFFFFF",texto:campoEscuro?"#FFFFFF":escuro,texto2:campoEscuro?mix(escuro,"#FFFFFF",0.78):mix(escuro,"#FFFFFF",0.35),
       realce:campoEscuro?(lum(vivo2)>120?vivo2:mix(vivo,"#FFFFFF",0.5)):vivo,
       chipClaro:logoLum>190,chipEscuro:logoLum<70};}
-  function luzDoLogo(im){try{const cv=document.createElement("canvas");cv.width=48;cv.height=48;const g=cv.getContext("2d");g.drawImage(im,0,0,48,48);const d=g.getImageData(0,0,48,48).data;let s=0,n=0;for(let i=0;i<d.length;i+=4){if(d[i+3]>100){s+=0.2126*d[i]+0.7152*d[i+1]+0.0722*d[i+2];n++;}}return n?s/n:128;}catch(e){return 128;}}
+  function luzDoLogo(im,rec){try{const cv=document.createElement("canvas");cv.width=48;cv.height=48;const g=cv.getContext("2d");if(rec)g.drawImage(im,rec.sx,rec.sy,rec.sw,rec.sh,0,0,48,48);else g.drawImage(im,0,0,48,48);const d=g.getImageData(0,0,48,48).data;let s=0,n=0;for(let i=0;i<d.length;i+=4){if(d[i+3]>100){s+=0.2126*d[i]+0.7152*d[i+1]+0.0722*d[i+2];n++;}}return n?s/n:128;}catch(e){return 128;}}
   // ---------- texto que cabe: quebra em palavras e reduz o corpo até caber em w × maxLinhas
   const MED=document.createElement("canvas").getContext("2d");
   function caber(texto,o){let tam=o.tam;const min=o.min||Math.max(8,o.tam*0.45);const alt=o.alt||1.2;
@@ -69,9 +69,9 @@
     const T=(id,nome,texto,x,y,w,h,opt)=>{opt=opt||{};const c=caber(texto,{tam:opt.tam||mm(4),min:opt.min,w:mm(w),h:mm(h),maxLinhas:opt.maxLinhas,peso:opt.peso,esp:opt.esp,alt:opt.alt});
       el.push({tipo:"texto",id,nome,texto:c.texto,x:X(x),y:Y(y),w:mm(w),h:c.h,cor:opt.cor||pal.texto,tam:Math.round(c.tam),fonte:F,peso:opt.peso||700,esp:opt.esp||0,alt:opt.alt||1.2,alinh:opt.alinh||"left"});return c;};
     const R=(id,nome,x,y,w,h,cor,raio)=>el.push({tipo:"forma",forma:"ret",id,nome,x:X(x),y:Y(y),w:mm(w),h:mm(h),cor,borda:0,bordaCor:"#FFFFFF",raio:raio?mm(raio):0});
-    const LOGO=(id,x,y,w,h,chip)=>{const lw=man.largura||im.naturalWidth,lh=man.altura||im.naturalHeight;const f=Math.min(mm(w)/lw,mm(h)/lh);const gw=lw*f,gh=lh*f;
+    const rec=o.rec;const LOGO=(id,x,y,w,h,chip)=>{const lw=rec?rec.sw:im.naturalWidth,lh=rec?rec.sh:im.naturalHeight;const f=Math.min(mm(w)/lw,mm(h)/lh);const gw=lw*f,gh=lh*f;
       if(chip){const p=Math.min(gw,gh)*0.12;el.push({tipo:"forma",forma:"ret",id:id+"-chip",nome:"Fundo da marca",x:X(x)-p,y:Y(y)+(mm(h)-gh)/2-p,w:gw+2*p,h:gh+2*p,cor:chip,borda:0,bordaCor:"#FFFFFF",raio:p});}
-      el.push({tipo:"camada",id,nome:"Logotipo",src:man.tratado,cor:null,usarCor:false,x:X(x),y:Y(y)+(mm(h)-gh)/2,w:gw,h:gh,borda:0,bordaCor:"#FFFFFF",grupo:"logo"});};
+      el.push({tipo:"camada",id,nome:"Logotipo",src:man.tratado,recorte:rec||undefined,cor:null,usarCor:false,x:X(x),y:Y(y)+(mm(h)-gh)/2,w:gw,h:gh,borda:0,bordaCor:"#FFFFFF",grupo:"logo"});};
     const QRel=(id,x,y,s)=>{if(!ct.url)return false;el.push({tipo:"qr",id,nome:"QR · "+ct.urlTipo,texto:ct.url,x:X(x),y:Y(y),w:mm(s),h:mm(s),cor:lum(pal.escuro)<90?pal.escuro:"#111111"});return true;};
     const linhaContato=[ct.tel,ct.site||ct.insta,ct.email].filter(Boolean).join("  ·  ");
     const chipMarcaClaro=pal.chipClaro?pal.escuro:null;   // logotipo claro sobre face branca: vai num chip escuro
@@ -119,14 +119,14 @@
       T("cxl","Informações",hor||ct.endereco||"Consulte horários e endereço no balcão.",21,156,112,14,{tam:mm(3.1),min:mm(2.6),maxLinhas:3,peso:400,cor:cinza,alt:1.35});
       const temQR=QRel("qr",16,179,22);LOGO("logo",temQR?45:16,179,31,8,chipMarcaClaro);
       T("contato","Contato",[K.cta+".",[ct.tel,ct.site||ct.insta,ct.email].filter(Boolean).join("  ·  ")].filter(Boolean).join("\n"),temQR?45:16,189,93,13,{tam:mm(3.2),min:mm(2.7),maxLinhas:2,peso:700,cor:pal.escuro,alt:1.35});}
-    return {doc:{fundo,fundoImg:null,el,campos:ct.carimbo,auto:true,kit:"genio-ra-1.0",face,setor:o.setor},fundo};}
+    return {doc:{fundo,fundoImg:null,el,campos:ct.carimbo,auto:true,kit:"genio-ra-1.1",face,setor:o.setor},fundo};}
   // ---------- desenho de uma face (usa App.desenharElementos) → png com fundo + pngArte sem fundo
   function renderizar(App,doc,W,H,imgs){const k=Math.min(1,1400/Math.max(W,H));const cv=document.createElement("canvas");cv.width=Math.round(W*k);cv.height=Math.round(H*k);const g=cv.getContext("2d");g.scale(k,k);
     App.desenharElementos(g,doc.el,imgs,doc);const pngArte=cv.toDataURL("image/png");g.globalCompositeOperation="destination-over";g.fillStyle=doc.fundo||"#FFFFFF";g.fillRect(0,0,W,H);const png=cv.toDataURL("image/jpeg",0.9);return {png,pngArte};}
   async function arteImpressa(App,pid,c,l,geo){const {P,W,H,B,PX,im}=geo;const man=c.manual;const K=setorKit(l&&l.setor);const ct=await contato(App,l||{nome:"",slug:""});
-    const pal=paleta(man.cores,luzDoLogo(im));const imgs={[man.tratado]:im};
-    const fr=montar(App,{pid,face:"frente",P,W,H,B,PX,im,pal,man,K,ct,setor:l&&l.setor});const vs=montar(App,{pid,face:"verso",P,W,H,B,PX,im,pal,man,K,ct,setor:l&&l.setor});
+    const pal=paleta(man.cores,luzDoLogo(im,geo.rec||null));const imgs={[man.tratado]:im};
+    const rec=geo.rec||null;const fr=montar(App,{pid,face:"frente",P,W,H,B,PX,im,pal,man,K,ct,rec,setor:l&&l.setor});const vs=montar(App,{pid,face:"verso",P,W,H,B,PX,im,pal,man,K,ct,rec,setor:l&&l.setor});
     const a=renderizar(App,fr.doc,W,H,imgs),b=renderizar(App,vs.doc,W,H,imgs);
-    return {doc:fr.doc,png:a.png,pngArte:a.pngArte,material:fr.fundo,verso:{doc:vs.doc,png:b.png,pngArte:b.pngArte,material:vs.fundo},w_cm:P.w_cm,h_cm:P.h_cm,sangria_mm:geo.sang,em:new Date().toISOString(),contexto:null,kitBase:"genio-ra-1.0",paleta:pal};}
+    return {doc:fr.doc,png:a.png,pngArte:a.pngArte,material:fr.fundo,verso:{doc:vs.doc,png:b.png,pngArte:b.pngArte,material:vs.fundo},w_cm:P.w_cm,h_cm:P.h_cm,sangria_mm:geo.sang,em:new Date().toISOString(),contexto:null,kitBase:"genio-ra-1.1",paleta:pal};}
   window.Impressos={arteImpressa,setorKit,paleta,caber,contato,SETORES:S};
 })();

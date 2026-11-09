@@ -76,7 +76,7 @@ def layout_frontal(arte_bgra, P, largura_rel=0.7, cor_fundo=None, cheio=False):
     if cor_fundo is not None:
         tela[..., :3] = cor_fundo.astype(np.uint8); tela[..., 3] = 255
     ah, aw = arte_bgra.shape[:2]; mw, mh = (W, H) if cheio else (W * 0.88 * largura_rel, H * 0.88)
-    s = min(mw / aw, mh / ah); nw, nh = max(1, int(aw * s)), max(1, int(ah * s))
+    s = min(mw / aw, mh / ah, W / aw, H / ah); nw, nh = max(1, int(aw * s)), max(1, int(ah * s))  # nunca maior que o plano
     arte = cv2.resize(arte_bgra, (nw, nh), interpolation=cv2.INTER_AREA)
     x0, y0 = (W - nw) // 2, (H - nh) // 2
     if P.get("ancora") == "topo":

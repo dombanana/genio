@@ -100,7 +100,7 @@ const App=(()=>{
     else{g.translate((w-p)/2,h/2);g.rotate(dir==="baixo"?-Math.PI/2:Math.PI/2);g.font=`800 ${tam}px ${e.fonte||"Rubik, system-ui, sans-serif"}`;while(g.measureText(t).width>h*0.6*0.9&&tam>6){tam*=0.94;g.font=`800 ${tam}px ${e.fonte||"Rubik, system-ui, sans-serif"}`;}g.fillText(t,0,0);}
     g.restore();}
   function desenharElementos(g,el,imgs,doc){for(const e of el){g.save();if(e.rot){const cxm=e.x+e.w/2,cym=e.y+e.h/2;g.translate(cxm,cym);g.rotate(e.rot*Math.PI/180);g.translate(-cxm,-cym);}
-    if(e.tipo==="camada"&&imgs[e.src]&&!e.oculta)g.drawImage(imgs[e.src],e.x,e.y,e.w,e.h);
+    if(e.tipo==="camada"&&imgs[e.src]&&!e.oculta){const r=e.recorte;if(r)g.drawImage(imgs[e.src],r.sx,r.sy,r.sw,r.sh,e.x,e.y,e.w,e.h);else g.drawImage(imgs[e.src],e.x,e.y,e.w,e.h);}
     else if(e.tipo==="forma"){g.fillStyle=e.cor;g.beginPath();if(e.forma==="cir")g.ellipse(e.x+e.w/2,e.y+e.h/2,e.w/2,e.h/2,0,0,Math.PI*2);else if(e.forma==="tri"){g.moveTo(e.x+e.w/2,e.y);g.lineTo(e.x+e.w,e.y+e.h);g.lineTo(e.x,e.y+e.h);g.closePath();}else if(e.raio>0&&g.roundRect)g.roundRect(e.x,e.y,e.w,e.h,e.raio);else g.rect(e.x,e.y,e.w,e.h);
       if(e.cor!=="transparent")g.fill();if(e.borda>0){g.strokeStyle=e.bordaCor;g.lineWidth=e.borda;g.stroke();}}
     else if(e.tipo==="texto")desenharTexto(g,e);
@@ -117,6 +117,12 @@ const App=(()=>{
     const n=21,m=s/n;g.fillStyle=e.cor||"#000";let seed=7;const rnd=()=>{seed=(seed*9301+49297)%233280;return seed/233280;};
     const olho=(ox,oy)=>{g.fillRect(e.x+ox*m,e.y+oy*m,7*m,7*m);g.fillStyle="#fff";g.fillRect(e.x+(ox+1)*m,e.y+(oy+1)*m,5*m,5*m);g.fillStyle=e.cor||"#000";g.fillRect(e.x+(ox+2)*m,e.y+(oy+2)*m,3*m,3*m);};olho(0,0);olho(14,0);olho(0,14);
     for(let r=0;r<n;r++)for(let c=0;c<n;c++){const emOlho=(r<8&&c<8)||(r<8&&c>12)||(r>12&&c<8);if(!emOlho&&rnd()<0.45)g.fillRect(e.x+c*m,e.y+r*m,m,m);}}
+  function aparar(im){try{const W=im.naturalWidth,H=im.naturalHeight;const k=Math.min(1,256/Math.max(W,H));const cv=document.createElement("canvas");cv.width=Math.max(1,Math.round(W*k));cv.height=Math.max(1,Math.round(H*k));const g=cv.getContext("2d");g.drawImage(im,0,0,cv.width,cv.height);const d=g.getImageData(0,0,cv.width,cv.height).data;
+      let x0=cv.width,y0=cv.height,x1=-1,y1=-1;for(let y=0;y<cv.height;y++)for(let x=0;x<cv.width;x++){if(d[(y*cv.width+x)*4+3]>12){if(x<x0)x0=x;if(x>x1)x1=x;if(y<y0)y0=y;if(y>y1)y1=y;}}
+      if(x1<0)return null;const m=Math.max(2,Math.round(Math.max(x1-x0,y1-y0)*0.03));x0=Math.max(0,x0-m);y0=Math.max(0,y0-m);x1=Math.min(cv.width-1,x1+m);y1=Math.min(cv.height-1,y1+m);
+      const r={sx:Math.round(x0/k),sy:Math.round(y0/k),sw:Math.round((x1-x0+1)/k),sh:Math.round((y1-y0+1)/k)};if(r.sw>=W*0.92&&r.sh>=H*0.92)return null;return r;}catch(e){return null;}}
+  // o editor trabalha com a imagem inteira: converte camadas com recorte em imagens já aparadas
+  async function assarRecortes(doc){for(const e of (doc&&doc.el)||[]){if(e.tipo!=="camada"||!e.recorte)continue;const im=await carregarImg(e.src);if(!im){delete e.recorte;continue;}const r=e.recorte;const cv=document.createElement("canvas");cv.width=r.sw;cv.height=r.sh;cv.getContext("2d").drawImage(im,r.sx,r.sy,r.sw,r.sh,0,0,r.sw,r.sh);e.src=cv.toDataURL("image/png");delete e.recorte;}return doc;}
   const carregarScript=src=>new Promise((res,rej)=>{if(document.querySelector(`script[data-src="${src}"]`))return res();const s=document.createElement("script");s.dataset.src=src;s.src=src;s.onload=res;s.onerror=()=>rej(new Error("não carregou "+src));document.head.appendChild(s);});
   // flyer: cardápio fictício por kit (hoje só padaria; outros setores entram com os próximos kits)
   const CARDAPIOS={padaria:{titulo:"Nossos produtos",itens:[["Pão francês (kg)","R$ 18,90"],["Pão de queijo (un.)","R$ 4,50"],["Croissant de manteiga","R$ 9,00"],["Bolo de cenoura (fatia)","R$ 8,50"],["Sonho de creme","R$ 7,00"],["Café coado (copo)","R$ 4,00"],["Pão na chapa + café","R$ 9,90"],["Baguete artesanal","R$ 12,00"]],promo:["PROMOÇÃO DA SEMANA","Café + pão na chapa","por R$ 8,90","seg. a sex., das 6h às 10h","apresente este flyer"]}};
@@ -132,7 +138,7 @@ const App=(()=>{
   // ---- arte automática: logotipo tratado centralizado preenchendo a área segura do gabarito, cor padrão do material
   const COR_PADRAO={capacho:"#2B2B2D",rigido:"#F4F1EA",vinil:null,tecido:"#F4F1EA",papel:"#FFFFFF",lona:"#FFFFFF",carimbo:null};
   const PRODUTOS_IDS=["capacho","placas","adesivos","uniformes","impressos","panfleto","banners","parede","brindes","carimbo"];
-  let _G=null;const gabaritos=async()=>_G||(_G=await (await fetch("gabaritos.json?v=4563719462")).json());
+  let _G=null;const gabaritos=async()=>_G||(_G=await (await fetch("gabaritos.json?v=b7cd179941")).json());
   const carregarImg=src=>new Promise(res=>{const i=new Image();i.crossOrigin="anonymous";i.onload=()=>res(i);i.onerror=()=>res(null);i.src=src;});
   // ---- carimbo: só texto — nome, razão social, CNPJ (negrito), endereço, telefone; nunca logotipo
   async function dadosCarimbo(l){const cad=await ficha(l.slug).catch(()=>null);const L=(cad&&cad.lacunas)||{};const leit=(L.leitura||{}).valor||"";const razao=((leit.match(/Razão social: ([^·]+)/)||[])[1]||"").trim();const cnpj=((leit.match(/CNPJ:? ?([\d./-]{14,18})/)||[])[1]||"");
@@ -169,12 +175,12 @@ const App=(()=>{
       const cv=document.createElement("canvas");cv.width=W;cv.height=H;const g=cv.getContext("2d");g.strokeStyle="#1C1635";g.lineWidth=Math.max(2,W/120);g.strokeRect(g.lineWidth,g.lineWidth,W-2*g.lineWidth,H-2*g.lineWidth);
       desenharCarimbo(g,e,cp);const pngArte=cv.toDataURL("image/png");const doc={fundo:null,fundoImg:null,el:[{tipo:"forma",forma:"ret",id:"moldura",nome:"Moldura",x:0,y:0,w:W,h:H,cor:"transparent",borda:Math.max(2,W/120),bordaCor:"#1C1635"},e],campos:cp,carimbo:true,auto:true};
       return {doc,png:pngArte,pngArte,material:null,w_cm:P.w_cm,h_cm:P.h_cm,sangria_mm:0,em:new Date().toISOString(),contexto:null,soTexto:true};}
-    if(!(c.manual&&c.manual.tratado))return null;const im=await carregarImg(c.manual.tratado);if(!im)return null;
+    if(!(c.manual&&c.manual.tratado))return null;const im=await carregarImg(c.manual.tratado);if(!im)return null;const rec=aparar(im);const LW=rec?rec.sw:im.naturalWidth,LH=rec?rec.sh:im.naturalHeight;
     const sang=P.sangria_mm!=null?P.sangria_mm:G.sangria_mm,seg=P.seguranca_mm!=null?P.seguranca_mm:G.seguranca_mm;
     const PX=Math.min(100,Math.floor(3000/Math.max(P.w_cm+sang/5,P.h_cm+sang/5)));const W=Math.round((P.w_cm+2*sang/10)*PX),H=Math.round((P.h_cm+2*sang/10)*PX),B=Math.round(sang/10*PX),S=Math.round(seg/10*PX);
-    const aw=W-2*(B+S),ah=H-2*(B+S);const f=Math.min(aw/im.naturalWidth,(P.ancora==="topo"?ah*0.45:ah)/im.naturalHeight);const w=im.naturalWidth*f,h=im.naturalHeight*f;const x=(W-w)/2,y=P.ancora==="topo"?B+S+ah*0.05:(H-h)/2;
+    const aw=W-2*(B+S),ah=H-2*(B+S);const f=Math.min(aw/LW,(P.ancora==="topo"?ah*0.45:ah)/LH);const w=LW*f,h=LH*f;const x=(W-w)/2,y=P.ancora==="topo"?B+S+ah*0.05:(H-h)/2;
     const fundo=P.sem_fundo?null:(COR_PADRAO[P.superficie]===undefined?"#FFFFFF":COR_PADRAO[P.superficie]);
-    if(pid==="impressos"||pid==="panfleto"){await carregarScript("qr.js?v=4563719462");await carregarScript("impressos.js?v=4563719462");return window.Impressos.arteImpressa(App,pid,c,l,{P,G,W,H,B,S,PX,im,sang});}
+    if(pid==="impressos"||pid==="panfleto"){await carregarScript("qr.js?v=b7cd179941");await carregarScript("impressos.js?v=b7cd179941");return window.Impressos.arteImpressa(App,pid,c,l,{P,G,W,H,B,S,PX,im,sang,rec});}
     if(pid==="panfleto"){const M=cardapioDe();const f1=B+S,ah3=(H-2*(B+S))/3;const lf=Math.min(aw/im.naturalWidth,(ah3*0.8)/im.naturalHeight);const lw=im.naturalWidth*lf,lh=im.naturalHeight*lf;
       const cor=(c.manual.cores&&c.manual.cores[0]&&c.manual.cores[0].hex)||"#6933C5";const esc_=luz(cor)<140?"#FFFFFF":"#1C1635";
       const el=[{tipo:"camada",id:"logo",nome:"Logotipo",src:c.manual.tratado,cor:null,usarCor:false,x:(W-lw)/2,y:f1+(ah3-lh)/2,w:lw,h:lh,borda:0,bordaCor:"#FFFFFF",grupo:"logo"},
@@ -186,23 +192,23 @@ const App=(()=>{
       desenharElementos(g,el,{[c.manual.tratado]:im});const pngArte=cv.toDataURL("image/png");g.globalCompositeOperation="destination-over";g.fillStyle="#FFFFFF";g.fillRect(0,0,W,H);const png=cv.toDataURL("image/jpeg",0.88);
       return {doc,png,pngArte,material:"#FFFFFF",w_cm:P.w_cm,h_cm:P.h_cm,sangria_mm:sang,em:new Date().toISOString(),contexto:null};}
     if(pid==="parede"){const cor=(c.manual.cores&&c.manual.cores[0]&&c.manual.cores[0].hex)||"#1C1635";const ct=luz(cor)<140?"#FFFFFF":"#1C1635";
-      const colL=aw*0.46,colR=aw*0.48,x0=B+S,y0=B+S;const lf=Math.min(colL/im.naturalWidth,(ah*0.6)/im.naturalHeight);const lw=im.naturalWidth*lf,lh=im.naturalHeight*lf;
+      const colL=aw*0.46,colR=aw*0.48,x0=B+S,y0=B+S;const lf=Math.min(colL/LW,(ah*0.6)/LH);const lw=LW*lf,lh=LH*lf;
       const sh=ah*0.14,gap=ah*0.05,yS=(H-(3*sh+2*gap))/2,xS=x0+colL+aw*0.06;
-      const el=[{tipo:"camada",id:"logo",nome:"Logotipo",src:c.manual.tratado,cor:null,usarCor:false,x:x0+(colL-lw)/2,y:(H-lh)/2,w:lw,h:lh,borda:0,bordaCor:"#FFFFFF",grupo:"logo"}];
+      const el=[{tipo:"camada",id:"logo",nome:"Logotipo",src:c.manual.tratado,recorte:rec||undefined,cor:null,usarCor:false,x:x0+(colL-lw)/2,y:(H-lh)/2,w:lw,h:lh,borda:0,bordaCor:"#FFFFFF",grupo:"logo"}];
       ["Balcão","Caixa","Banheiros"].forEach((t,i)=>el.push({tipo:"seta",id:"seta"+(i+1),nome:"Seta · "+t,texto:t,x:xS,y:yS+i*(sh+gap),w:colR,h:sh,cor,corTexto:ct,tam:Math.round(sh*0.38),fonte:"Rubik, system-ui, sans-serif"}));
       const doc={fundo:null,fundoImg:null,el,campos:null,auto:true};const k=Math.min(1,1400/Math.max(W,H));const cv=document.createElement("canvas");cv.width=Math.round(W*k);cv.height=Math.round(H*k);const g=cv.getContext("2d");g.scale(k,k);
       desenharElementos(g,el,{[c.manual.tratado]:im});const pngArte=cv.toDataURL("image/png");
       return {doc,png:pngArte,pngArte,material:null,w_cm:P.w_cm,h_cm:P.h_cm,sangria_mm:sang,em:new Date().toISOString(),contexto:null};}
-    const cams=(c.manual.camadas||[]).filter(q=>q.png);const el=cams.length>1?cams.map((q,i)=>({tipo:"camada",id:"c"+i,nome:q.nome||("Cor "+(i+1)),src:q.png,cor:q.cor||null,usarCor:false,x,y,w,h,borda:0,bordaCor:"#FFFFFF",grupo:"logo"})):[{tipo:"camada",id:"logo",nome:"Logotipo",src:c.manual.tratado,cor:null,usarCor:false,x,y,w,h,borda:0,bordaCor:"#FFFFFF",grupo:"logo"}];
+    const cams=(c.manual.camadas||[]).filter(q=>q.png);const el=cams.length>1?cams.map((q,i)=>({tipo:"camada",id:"c"+i,nome:q.nome||("Cor "+(i+1)),src:q.png,recorte:rec||undefined,cor:q.cor||null,usarCor:false,x,y,w,h,borda:0,bordaCor:"#FFFFFF",grupo:"logo"})):[{tipo:"camada",id:"logo",nome:"Logotipo",src:c.manual.tratado,recorte:rec||undefined,cor:null,usarCor:false,x,y,w,h,borda:0,bordaCor:"#FFFFFF",grupo:"logo"}];
     const doc={fundo,fundoImg:null,el,campos:null,auto:true};
     const k=Math.min(1,1400/Math.max(W,H));const cv=document.createElement("canvas");cv.width=Math.round(W*k);cv.height=Math.round(H*k);const g=cv.getContext("2d");
-    g.drawImage(im,x*k,y*k,w*k,h*k);const pngArte=cv.toDataURL("image/png");
+    if(rec)g.drawImage(im,rec.sx,rec.sy,rec.sw,rec.sh,x*k,y*k,w*k,h*k);else g.drawImage(im,x*k,y*k,w*k,h*k);const pngArte=cv.toDataURL("image/png");
     g.globalCompositeOperation="destination-over";if(fundo){g.fillStyle=fundo;g.fillRect(0,0,cv.width,cv.height);}const png=cv.toDataURL(fundo?"image/jpeg":"image/png",0.88);
     return {doc,png,pngArte,material:fundo,w_cm:P.w_cm,h_cm:P.h_cm,sangria_mm:sang,em:new Date().toISOString(),contexto:null};}
   // gera (e contextualiza) todos os produtos de uma loja; pula os que já têm arte feita à mão
   async function gerarProdutos(l,aoPasso){let c=await garantirCamadas(l);if(!(c.manual&&c.manual.editado))return {ok:0,falhas:["sem logotipo tratado"]};c.artes=c.artes||{};let ok=0;const falhas=[];
     for(const pid of PRODUTOS_IDS){const ant=c.artes[pid];if(pid==="carimbo"&&ant&&!ant.soTexto){/* carimbo antigo com logotipo: refaz só texto */}else if(ant&&ant.contexto&&!(ant.doc&&ant.doc.auto))continue;if(aoPasso)aoPasso(pid);
-      try{const logoAnt=ant&&ant.doc&&ant.doc.auto&&(ant.doc.el||[]).find(e=>e.grupo==="logo");const mesmoKit=!ant||!["impressos","panfleto"].includes(pid)||ant.kitBase==="genio-ra-1.0";
+      try{const logoAnt=ant&&ant.doc&&ant.doc.auto&&(ant.doc.el||[]).find(e=>e.grupo==="logo");const mesmoKit=!ant||!["impressos","panfleto"].includes(pid)||ant.kitBase==="genio-ra-1.1";
         const a=ant&&ant.contexto&&logoAnt&&logoAnt.src===c.manual.tratado&&mesmoKit&&pid!=="carimbo"?ant:await artePadrao(pid,c,l);if(!a){falhas.push(pid+": sem gabarito");continue;}
         if(pid==="carimbo"&&!a.contexto){a.contexto=cenaCarimbo((a.doc&&a.doc.campos)||{});a.kit="carimbo-folha";}
         if(!a.contexto){const r=await fetch("/api/kit/aplicar",{method:"POST",credentials:"same-origin",headers:{"Content-Type":"application/json"},body:JSON.stringify({setor:l.setor,produto:pid,png:a.pngArte,material:a.material})});const d=await r.json();if(r.ok&&d.jpg){a.contexto=d.jpg;a.kit=d.kit;}else falhas.push(pid+": "+(d.mensagem||d.erro||r.status));}
@@ -287,5 +293,5 @@ const App=(()=>{
   // toque longo em elementos [data-longo]: chama fn(el) após 450 ms sem mover
   function ligarLongo(root,fn){$$("[data-longo]",root).forEach(el=>{let t=null,p=null;el.addEventListener("pointerdown",ev=>{p={x:ev.clientX,y:ev.clientY};t=setTimeout(()=>{t=null;if(navigator.vibrate)navigator.vibrate(12);fn(el);},450);});
     const c=ev=>{if(t&&p&&ev.type==="pointermove"&&Math.hypot(ev.clientX-p.x,ev.clientY-p.y)<8)return;clearTimeout(t);t=null;};el.addEventListener("pointermove",c);el.addEventListener("pointerup",c);el.addEventListener("pointercancel",c);el.addEventListener("contextmenu",ev=>ev.preventDefault());});}
-  return {$,$$,esc,qs,ZONA,setorNome,nomeLoja,telFmt,ini,sessao,eu,dados,ficha,estrelas,estrelasHTML,estado,salvar,abrirVendas,lerCliente,gravarCliente,cliente,definirCliente,classificar,logoPrincipal,removerLogo,escolherImagem,abrirLogotipo,entradas,ligarEntradas,artePadrao,gerarProdutos,desenharElementos,desenharTexto,desenharQR,carregarScript,recortarLogo,PRODUTOS_IDS,separarCores,garantirCamadas,dadosCarimbo,desenharCarimbo,cenaCarimbo,desenharLista,desenharSeta,listarNotas,gravarNota,apagarNota,diasDeRota,reagendar,hojeISO,dataCurta,META,ICONES,NA_CASCA,avulsos,novoAvulso,atualizarAvulso,ocorrenciasManuais,gravarOcorrencias,ocorrenciasAuto,ETAPAS,etapaDe,moverEtapa,nav,topo,voltar,acoes,menuLongo,ligarLongo};
+  return {$,$$,esc,qs,ZONA,setorNome,nomeLoja,telFmt,ini,sessao,eu,dados,ficha,estrelas,estrelasHTML,estado,salvar,abrirVendas,lerCliente,gravarCliente,cliente,definirCliente,classificar,logoPrincipal,removerLogo,escolherImagem,abrirLogotipo,entradas,ligarEntradas,artePadrao,gerarProdutos,aparar,assarRecortes,desenharElementos,desenharTexto,desenharQR,carregarScript,recortarLogo,PRODUTOS_IDS,separarCores,garantirCamadas,dadosCarimbo,desenharCarimbo,cenaCarimbo,desenharLista,desenharSeta,listarNotas,gravarNota,apagarNota,diasDeRota,reagendar,hojeISO,dataCurta,META,ICONES,NA_CASCA,avulsos,novoAvulso,atualizarAvulso,ocorrenciasManuais,gravarOcorrencias,ocorrenciasAuto,ETAPAS,etapaDe,moverEtapa,nav,topo,voltar,acoes,menuLongo,ligarLongo};
 })();
