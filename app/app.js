@@ -78,20 +78,21 @@ const App=(()=>{
   // ---- arte automática: logotipo tratado centralizado preenchendo a área segura do gabarito, cor padrão do material
   const COR_PADRAO={capacho:"#2B2B2D",rigido:"#F4F1EA",vinil:null,tecido:"#F4F1EA",papel:"#FFFFFF",lona:"#FFFFFF",carimbo:null};
   const PRODUTOS_IDS=["capacho","placas","adesivos","uniformes","impressos","panfleto","banners","parede","brindes","carimbo"];
-  let _G=null;const gabaritos=async()=>_G||(_G=await (await fetch("gabaritos.json?v=a66a4dd874")).json());
+  let _G=null;const gabaritos=async()=>_G||(_G=await (await fetch("gabaritos.json?v=266500af68")).json());
   const carregarImg=src=>new Promise(res=>{const i=new Image();i.crossOrigin="anonymous";i.onload=()=>res(i);i.onerror=()=>res(null);i.src=src;});
   async function artePadrao(pid,c){const G=await gabaritos();const P=G.produtos[pid];if(!P||!(c.manual&&c.manual.tratado))return null;const im=await carregarImg(c.manual.tratado);if(!im)return null;
     const sang=P.sangria_mm!=null?P.sangria_mm:G.sangria_mm,seg=P.seguranca_mm!=null?P.seguranca_mm:G.seguranca_mm;
     const PX=Math.min(100,Math.floor(3000/Math.max(P.w_cm+sang/5,P.h_cm+sang/5)));const W=Math.round((P.w_cm+2*sang/10)*PX),H=Math.round((P.h_cm+2*sang/10)*PX),B=Math.round(sang/10*PX),S=Math.round(seg/10*PX);
     const aw=W-2*(B+S),ah=H-2*(B+S);const f=Math.min(aw/im.naturalWidth,(P.ancora==="topo"?ah*0.45:ah)/im.naturalHeight);const w=im.naturalWidth*f,h=im.naturalHeight*f;const x=(W-w)/2,y=P.ancora==="topo"?B+S+ah*0.05:(H-h)/2;
     const fundo=P.sem_fundo?null:(COR_PADRAO[P.superficie]===undefined?"#FFFFFF":COR_PADRAO[P.superficie]);
-    const doc={fundo,fundoImg:null,el:[{tipo:"camada",id:"logo",nome:"Logotipo",src:c.manual.tratado,cor:null,usarCor:false,x,y,w,h,borda:0,bordaCor:"#FFFFFF",grupo:"logo"}],campos:null,auto:true};
+    const cams=(c.manual.camadas||[]).filter(q=>q.png);const el=cams.length>1?cams.map((q,i)=>({tipo:"camada",id:"c"+i,nome:q.nome||("Cor "+(i+1)),src:q.png,cor:q.cor||null,usarCor:false,x,y,w,h,borda:0,bordaCor:"#FFFFFF",grupo:"logo"})):[{tipo:"camada",id:"logo",nome:"Logotipo",src:c.manual.tratado,cor:null,usarCor:false,x,y,w,h,borda:0,bordaCor:"#FFFFFF",grupo:"logo"}];
+    const doc={fundo,fundoImg:null,el,campos:null,auto:true};
     const k=Math.min(1,1400/Math.max(W,H));const cv=document.createElement("canvas");cv.width=Math.round(W*k);cv.height=Math.round(H*k);const g=cv.getContext("2d");
     g.drawImage(im,x*k,y*k,w*k,h*k);const pngArte=cv.toDataURL("image/png");
     g.globalCompositeOperation="destination-over";if(fundo){g.fillStyle=fundo;g.fillRect(0,0,cv.width,cv.height);}const png=cv.toDataURL(fundo?"image/jpeg":"image/png",0.88);
     return {doc,png,pngArte,material:fundo,w_cm:P.w_cm,h_cm:P.h_cm,sangria_mm:sang,em:new Date().toISOString(),contexto:null};}
   // gera (e contextualiza) todos os produtos de uma loja; pula os que já têm arte feita à mão
-  async function gerarProdutos(l,aoPasso){let c=await cliente(l);if(!(c.manual&&c.manual.editado))return {ok:0,falhas:["sem logotipo tratado"]};c.artes=c.artes||{};let ok=0;const falhas=[];
+  async function gerarProdutos(l,aoPasso){let c=await garantirCamadas(l);if(!(c.manual&&c.manual.editado))return {ok:0,falhas:["sem logotipo tratado"]};c.artes=c.artes||{};let ok=0;const falhas=[];
     for(const pid of PRODUTOS_IDS){const ant=c.artes[pid];if(ant&&ant.contexto&&!(ant.doc&&ant.doc.auto))continue;if(aoPasso)aoPasso(pid);
       try{const a=ant&&ant.contexto&&ant.doc&&ant.doc.auto&&ant.doc.el[0]&&ant.doc.el[0].src===c.manual.tratado?ant:await artePadrao(pid,c);if(!a){falhas.push(pid+": sem gabarito");continue;}
         if(!a.contexto){const r=await fetch("/api/kit/aplicar",{method:"POST",credentials:"same-origin",headers:{"Content-Type":"application/json"},body:JSON.stringify({setor:l.setor,produto:pid,png:a.pngArte,material:a.material})});const d=await r.json();if(r.ok&&d.jpg){a.contexto=d.jpg;a.kit=d.kit;}else falhas.push(pid+": "+(d.mensagem||d.erro||r.status));}
@@ -115,6 +116,29 @@ const App=(()=>{
     pedidos:`<svg viewBox="0 0 48 48"><defs><linearGradient id="gclip" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8F6BE0"/><stop offset="1" stop-color="#5A2EB5"/></linearGradient></defs><rect x="9" y="7" width="30" height="37" rx="4" fill="url(#gclip)"/><rect x="12.5" y="12" width="23" height="29" rx="2" fill="#FFFDF7"/><rect x="17" y="4" width="14" height="7" rx="2.5" fill="#2B2B2D"/><rect x="21" y="6" width="6" height="3" rx="1.5" fill="#9A9B9D"/><path d="M16 20h16M16 25h16M16 30h10" stroke="#B9B1CC" stroke-width="2" stroke-linecap="round"/><path d="M15.5 35.5l3 3 6-6" stroke="#14B8B0" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>`,
     perfil:`<svg viewBox="0 0 48 48"><defs><linearGradient id="gface" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFD9B8"/><stop offset="1" stop-color="#E8A878"/></linearGradient><linearGradient id="gshirt" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2B6CB0"/><stop offset="1" stop-color="#1F3A5F"/></linearGradient></defs><circle cx="24" cy="24" r="21" fill="#EEE9F7"/><path d="M8 40c2-8 8-11 16-11s14 3 16 11a21 21 0 0 1-32 0z" fill="url(#gshirt)"/><path d="M19 29l5 8 5-8" fill="#fff"/><circle cx="24" cy="18" r="8" fill="url(#gface)"/><path d="M16 17c0-6 4-9 8-9s8 3 8 9c-2-3-5-4-8-4s-6 1-8 4z" fill="#3B2A1E"/></svg>`,
     notas:`<svg viewBox="0 0 48 48"><defs><linearGradient id="gmic" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#C9CCD6"/><stop offset="1" stop-color="#6E7383"/></linearGradient></defs><rect x="17" y="5" width="14" height="24" rx="7" fill="url(#gmic)"/><path d="M19 10h10M19 14h10M19 18h10M19 22h10" stroke="rgba(0,0,0,.25)" stroke-width="1.4"/><path d="M12 22a12 12 0 0 0 24 0" stroke="#2B2B2D" stroke-width="3" fill="none" stroke-linecap="round"/><rect x="22.5" y="33" width="3" height="7" fill="#2B2B2D"/><rect x="15" y="40" width="18" height="3.5" rx="1.75" fill="#2B2B2D"/><circle cx="36" cy="10" r="5" fill="#C62828"/><circle cx="36" cy="10" r="2" fill="#fff"/></svg>`};
+  // ---- separação de cores do logotipo (no aparelho): k-means em RGB, junta cores parecidas, descarta <3% → uma camada por cor
+  async function separarCores(png,maxK){const im=await carregarImg(png);if(!im)return null;const k0=Math.min(1,900/Math.max(im.naturalWidth,im.naturalHeight));
+    const W=Math.max(1,Math.round(im.naturalWidth*k0)),H=Math.max(1,Math.round(im.naturalHeight*k0));const cv=document.createElement("canvas");cv.width=W;cv.height=H;const g=cv.getContext("2d",{willReadFrequently:true});g.drawImage(im,0,0,W,H);const d=g.getImageData(0,0,W,H).data;
+    const pts=[];for(let i=0;i<W*H;i++)if(d[i*4+3]>60)pts.push(i);if(pts.length<50)return null;
+    const amostra=[];for(let j=0;j<pts.length;j+=Math.max(1,Math.floor(pts.length/6000)))amostra.push(pts[j]);
+    let K=Math.min(maxK||5,6);let cent=[];for(let k=0;k<K;k++){const i=amostra[Math.floor(amostra.length*(k+0.5)/K)];cent.push([d[i*4],d[i*4+1],d[i*4+2]]);}
+    const perto=i=>{let b=0,bd=1e9;for(let k=0;k<cent.length;k++){const dr=d[i*4]-cent[k][0],dg=d[i*4+1]-cent[k][1],db=d[i*4+2]-cent[k][2];const dd=dr*dr+dg*dg+db*db;if(dd<bd){bd=dd;b=k;}}return b;};
+    for(let it=0;it<10;it++){const soma=cent.map(()=>[0,0,0,0]);for(const i of amostra){const k=perto(i);soma[k][0]+=d[i*4];soma[k][1]+=d[i*4+1];soma[k][2]+=d[i*4+2];soma[k][3]++;}cent=soma.filter(x=>x[3]).map(x=>[x[0]/x[3],x[1]/x[3],x[2]/x[3]]);}
+    // junta centros parecidos (ΔRGB<40)
+    let m=true;while(m&&cent.length>1){m=false;for(let a=0;a<cent.length&&!m;a++)for(let b=a+1;b<cent.length&&!m;b++){if(Math.hypot(cent[a][0]-cent[b][0],cent[a][1]-cent[b][1],cent[a][2]-cent[b][2])<40){cent[a]=cent[a].map((v,i)=>(v+cent[b][i])/2);cent.splice(b,1);m=true;}}}
+    const rot=new Uint8Array(W*H);const cont=cent.map(()=>0);for(const i of pts){const k=perto(i);rot[i]=k+1;cont[k]++;}
+    const ordem=cent.map((c,k)=>k).filter(k=>cont[k]/pts.length>=0.03).sort((a,b)=>cont[b]-cont[a]);if(ordem.length<2)return null;
+    // pixels das cores descartadas vão para a cor mais próxima que ficou
+    const hex=c=>"#"+c.map(v=>Math.round(v).toString(16).padStart(2,"0")).join("");
+    const nomes=ordem.map((k,i)=>{const c=cent[k];const l=(0.299*c[0]+0.587*c[1]+0.114*c[2]);return i===0?"Cor principal":l<70?"Escuro":l>200?"Claro":"Cor "+(i+1);});
+    const camadas=ordem.map((k,i)=>{const o=document.createElement("canvas");o.width=W;o.height=H;const og=o.getContext("2d");const id=og.createImageData(W,H);const e=id.data;
+      for(const p of pts){let r=rot[p]-1;if(!ordem.includes(r)){let b=ordem[0],bd=1e9;for(const q of ordem){const dd=Math.hypot(d[p*4]-cent[q][0],d[p*4+1]-cent[q][1],d[p*4+2]-cent[q][2]);if(dd<bd){bd=dd;b=q;}}r=b;}
+        if(r===k){e[p*4]=d[p*4];e[p*4+1]=d[p*4+1];e[p*4+2]=d[p*4+2];e[p*4+3]=d[p*4+3];}}
+      og.putImageData(id,0,0);return {nome:nomes[i],cor:hex(cent[k]),png:o.toDataURL("image/png"),area:Math.round(cont[k]*100/pts.length)};});
+    return {camadas,cores:camadas.map(c=>({nome:c.nome,hex:c.cor,area:c.area})),largura:W,altura:H};}
+  // garante que o manual da loja tem camadas por cor (separa uma vez e guarda)
+  async function garantirCamadas(l){const c=await cliente(l);const m=c.manual;if(!m||!m.editado||!m.tratado)return c;if((m.camadas||[]).length>1&&m.separado)return c;
+    const r=await separarCores(m.tratado,5);if(r){m.camadas=r.camadas;m.cores=r.cores;m.separado=true;}else{m.camadas=[{nome:"Logotipo",png:m.tratado}];m.separado=true;}await gravarCliente(c);return c;}
   const nav=on=>`<nav class="nav"><a href="index.html" class="${on==="rota"?"on":""}"><span class="ic">${ICONES.rota}</span>Rota</a><a href="pedidos.html" class="${on==="pedidos"?"on":""}"><span class="ic">${ICONES.pedidos}</span>Pedidos</a><a href="perfil.html" class="${on==="perfil"?"on":""}"><span class="ic">${ICONES.perfil}</span>Perfil</a><span class="sep"></span><a href="notas.html" class="${on==="notas"?"on":""}"><span class="ic">${ICONES.notas}</span>Notas</a></nav>`;
   const topo=()=>`<header class="topo"><div class="logo">Gên<i>IO</i></div><div class="papel">Representante</div><div class="fill"></div><a class="avatar" href="perfil.html" title="${esc(eu().nome)}">${esc(ini(eu().nome))}</a></header>`;
   const voltar=(href,txt)=>`<div class="faixa"><a href="${href}">${esc(txt)}</a></div>`;
@@ -125,5 +149,5 @@ const App=(()=>{
   // toque longo em elementos [data-longo]: chama fn(el) após 450 ms sem mover
   function ligarLongo(root,fn){$$("[data-longo]",root).forEach(el=>{let t=null,p=null;el.addEventListener("pointerdown",ev=>{p={x:ev.clientX,y:ev.clientY};t=setTimeout(()=>{t=null;if(navigator.vibrate)navigator.vibrate(12);fn(el);},450);});
     const c=ev=>{if(t&&p&&ev.type==="pointermove"&&Math.hypot(ev.clientX-p.x,ev.clientY-p.y)<8)return;clearTimeout(t);t=null;};el.addEventListener("pointermove",c);el.addEventListener("pointerup",c);el.addEventListener("pointercancel",c);el.addEventListener("contextmenu",ev=>ev.preventDefault());});}
-  return {$,$$,esc,qs,ZONA,setorNome,nomeLoja,telFmt,ini,sessao,eu,dados,ficha,estrelas,estrelasHTML,estado,salvar,abrirVendas,lerCliente,gravarCliente,cliente,definirCliente,classificar,logoPrincipal,removerLogo,escolherImagem,abrirLogotipo,entradas,ligarEntradas,artePadrao,gerarProdutos,PRODUTOS_IDS,listarNotas,gravarNota,apagarNota,diasDeRota,reagendar,hojeISO,dataCurta,META,nav,topo,voltar,acoes,menuLongo,ligarLongo};
+  return {$,$$,esc,qs,ZONA,setorNome,nomeLoja,telFmt,ini,sessao,eu,dados,ficha,estrelas,estrelasHTML,estado,salvar,abrirVendas,lerCliente,gravarCliente,cliente,definirCliente,classificar,logoPrincipal,removerLogo,escolherImagem,abrirLogotipo,entradas,ligarEntradas,artePadrao,gerarProdutos,PRODUTOS_IDS,separarCores,garantirCamadas,listarNotas,gravarNota,apagarNota,diasDeRota,reagendar,hojeISO,dataCurta,META,nav,topo,voltar,acoes,menuLongo,ligarLongo};
 })();

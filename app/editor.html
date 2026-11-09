@@ -6,7 +6,7 @@
 <title>GênIO · Edição do produto</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="app.css?v=a66a4dd874">
+<link rel="stylesheet" href="app.css?v=266500af68">
 <style>
 body.com-acoes{padding-bottom:calc(250px + env(safe-area-inset-bottom,0))}
 .prancheta{position:relative;background:repeating-conic-gradient(#e9e5f3 0 25%,#fff 0 50%) 0 0/18px 18px;border-radius:16px;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;height:min(72vw,460px);margin:0 0 8px}
@@ -39,16 +39,16 @@ body.com-acoes{padding-bottom:calc(250px + env(safe-area-inset-bottom,0))}
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=a66a4dd874"></script>
+<script src="app.js?v=266500af68"></script>
 <script>
 (async()=>{
   const {$,$$,esc,qs,sessao,dados,ficha,nav,topo,voltar,nomeLoja,telFmt,cliente,gravarCliente,definirCliente,setorNome}=App;
   if(!await sessao())return;
   const D=await dados();const slug=qs.get("l");const pid=qs.get("p")||"capacho";const l=D.lojas.find(x=>x.slug===slug);
   if(!l){$("#app").innerHTML=`${topo()}<p>Loja não encontrada.</p>${nav("rota")}`;return;}
-  const nome=nomeLoja(l.nome);definirCliente(l);let c=await cliente(l);const man=c.manual||null;
+  const nome=nomeLoja(l.nome);definirCliente(l);let c=await App.garantirCamadas(l);const man=c.manual||null;
   // gabarito da gráfica: área total = produto + sangria; a guia mostra corte (vermelho) e segurança (verde-água)
-  const G=await (await fetch("gabaritos.json?v=a66a4dd874")).json();const P=G.produtos[pid]||G.produtos.capacho;
+  const G=await (await fetch("gabaritos.json?v=266500af68")).json();const P=G.produtos[pid]||G.produtos.capacho;
   const sang=P.sangria_mm!=null?P.sangria_mm:G.sangria_mm,seg=P.seguranca_mm!=null?P.seguranca_mm:G.seguranca_mm;
   const PX=Math.min(100,Math.floor(3000/Math.max(P.w_cm+sang/5,P.h_cm+sang/5)));  // px por cm (teto 3000 px)
   const W=Math.round((P.w_cm+2*sang/10)*PX),H=Math.round((P.h_cm+2*sang/10)*PX),B=Math.round(sang/10*PX),S=Math.round(seg/10*PX);
@@ -66,7 +66,7 @@ body.com-acoes{padding-bottom:calc(250px + env(safe-area-inset-bottom,0))}
   // ---- documento da arte
   function elementosMarca(){const el=[];if(!man)return el;const cams=(man.camadas||[]).filter(x=>x.png);const lw=man.largura||1,lh=man.altura||1;
     const aw=W-2*(B+S),ah=H-2*(B+S);const esc_=Math.min(aw*0.6/lw,ah*(P.ancora==="topo"?0.3:0.6)/lh);const gw=lw*esc_,gh=lh*esc_;const gx=(W-gw)/2,gy=P.ancora==="topo"?B+S+ah*0.06:(H-gh)/2;
-    if(cams.length>1){cams.forEach((cm,i)=>el.push({tipo:"camada",id:"c"+i,nome:cm.nome||("Camada "+(i+1)),src:cm.png,cor:null,usarCor:false,x:gx,y:gy,w:gw,h:gh,borda:0,bordaCor:"#FFFFFF",grupo:"logo"}));}
+    if(cams.length>1){cams.forEach((cm,i)=>el.push({tipo:"camada",id:"c"+i,nome:cm.nome||("Camada "+(i+1)),src:cm.png,cor:cm.cor||null,corOriginal:cm.cor||null,usarCor:false,x:gx,y:gy,w:gw,h:gh,borda:0,bordaCor:"#FFFFFF",grupo:"logo"}));}
     else{const src=(cams[0]&&cams[0].png)||man.tratado;if(src)el.push({tipo:"camada",id:"logo",nome:"Logotipo",src,cor:null,usarCor:false,x:gx,y:gy,w:gw,h:gh,borda:0,bordaCor:"#FFFFFF",grupo:"logo"});}
     return el;}
   function novoDoc(){const d={fundo:semFundo?null:PAL[0][0],fundoImg:null,el:elementosMarca(),campos:null};
@@ -77,7 +77,7 @@ body.com-acoes{padding-bottom:calc(250px + env(safe-area-inset-bottom,0))}
     return d;}
   const arteAnt=(c.artes||{})[pid]||null;
   let doc=(arteAnt&&arteAnt.doc)?JSON.parse(JSON.stringify(arteAnt.doc)):novoDoc();
-  let sel=null,cv,cx,guia=true,z=1,px=0,py=0;
+  let sel=null,cv,cx,guia=true,z=1,px=0,py=0,borracha=false,pincel=0,desfazer=[];
   const luz=h=>{if(!h)return 255;const r=parseInt(h.slice(1,3),16),g=parseInt(h.slice(3,5),16),b=parseInt(h.slice(5,7),16);return 0.299*r+0.587*g+0.114*b;};
   const corTexto=()=>luz(doc.fundo)<128?"#FFFFFF":"#1C1635";
   function render(){
@@ -85,7 +85,8 @@ body.com-acoes{padding-bottom:calc(250px + env(safe-area-inset-bottom,0))}
     <h1 style="font-size:24px;margin-bottom:2px">${esc(P.nome)}</h1><p class="sub">${esc(nome)}</p>
     <div class="prancheta" id="pr"><canvas id="cv"></canvas></div>
     <div class="medida"><span>${P.w_cm} × ${P.h_cm} cm${sang?` · sangria ${sang} mm`:""} · segurança ${seg} mm</span><span id="selnome">${sel?esc(sel.nome||sel.tipo):"toque num elemento · pinça amplia"}</span></div>
-    <div class="ferr">${[["ret","▭","Retângulo"],["qua","◻","Quadrado"],["tri","△","Triângulo"],["cir","○","Círculo"],["txt","T","Texto"],["logo","✦","Marca"]].map(([id,ic,n])=>`<button type="button" data-add="${id}"><span class="ic">${ic}</span>${n}</button>`).join("")}</div>
+    <div class="ferr" style="grid-template-columns:repeat(7,1fr)">${[["ret","▭","Retângulo"],["qua","◻","Quadrado"],["tri","△","Triângulo"],["cir","○","Círculo"],["txt","T","Texto"],["logo","✦","Marca"]].map(([id,ic,n])=>`<button type="button" data-add="${id}"><span class="ic">${ic}</span>${n}</button>`).join("")}<button type="button" id="ferrBorracha" class="${borracha?"on":""}"><span class="ic">🧽</span>Borracha</button></div>
+    ${borracha?`<div class="painel"><div class="linha"><label>Borracha${sel&&(sel.tipo==="camada"||sel.tipo==="imagem")?` em <b>${esc(sel.nome)}</b>`:" · toque numa camada do logotipo"}</label><input type="range" id="pincel" min="1" max="12" value="${pincel||4}"><button type="button" class="btn sec mini" id="desfazerB" ${desfazer.length?"":"disabled"}>↶ Desfazer</button></div><small class="muted">Arraste sobre a prancheta para apagar partes da camada selecionada.</small></div>`:""}
     <div class="painel"><h3>Cor do ${semFundo?"material":"produto"} <small class="muted" style="font-weight:400">${semFundo?"· recorte: só a arte tem cor":""}</small><button type="button" class="btn sec mini" id="guia">${guia?"Ocultar guia":"Mostrar guia"}</button></h3>
       <div class="paleta" id="palFundo">${semFundo?'<button type="button" data-c="" class="'+(!doc.fundo?"on":"")+'" style="background:repeating-conic-gradient(#ccc 0 25%,#fff 0 50%) 0 0/10px 10px" title="sem fundo"></button>':""}${PAL.map(([h,n])=>`<button type="button" data-c="${h}" class="${doc.fundo===h?"on":""}" style="background:${h}" title="${n}"></button>`).join("")}${coresMarca.map(x=>`<button type="button" data-c="${x.hex}" class="${doc.fundo===x.hex?"on":""}" style="background:${x.hex}" title="${esc(x.nome||"")} (marca)"></button>`).join("")}<button type="button" class="mais" id="fundoMais">+</button></div></div>
     ${P.ia?`<div class="painel ia"><h3>Fundo com IA <small class="muted" style="font-weight:400">· só a composição; marca e textos ficam por cima</small></h3><textarea id="prompt">${esc(doc.prompt||`Fundo para ${P.nome.toLowerCase()} de ${nome} (${setorNome(l.setor).toLowerCase()}), elegante, cores ${coresMarca.slice(0,3).map(x=>x.hex).join(", ")||"neutras"}, sem texto, sem logotipo, espaço limpo para a marca.`)}</textarea><div class="acs" style="margin-top:8px"><button type="button" id="gerar">✨ Gerar fundo</button>${doc.fundoImg?'<button type="button" id="tirarIA">Tirar fundo IA</button>':""}<span class="muted" id="iaSt" style="font-size:13px;align-self:center"></span></div></div>`:""}
@@ -109,7 +110,7 @@ body.com-acoes{padding-bottom:calc(250px + env(safe-area-inset-bottom,0))}
     cx.clearRect(0,0,W,H);if(comFundo&&doc.fundo){cx.fillStyle=doc.fundo;cx.fillRect(0,0,W,H);}
     if(comFundo&&doc.fundoImg){const im=await img(doc.fundoImg);if(im){const s=Math.max(W/im.naturalWidth,H/im.naturalHeight);cx.drawImage(im,(W-im.naturalWidth*s)/2,(H-im.naturalHeight*s)/2,im.naturalWidth*s,im.naturalHeight*s);}}
     for(const e of doc.el){cx.save();
-      if(e.tipo==="camada"||e.tipo==="imagem"){const im=await img(e.src);if(im){
+      if(e.tipo==="camada"||e.tipo==="imagem"){const im=e.oculta?null:await img(e.src);if(im){
           if(e.borda>0){const t=tintar(im,e.bordaCor||"#fff",e.w,e.h);const b=e.borda;for(let a=0;a<360;a+=30){cx.drawImage(t,e.x+Math.cos(a*Math.PI/180)*b,e.y+Math.sin(a*Math.PI/180)*b,e.w,e.h);}}
           if(e.usarCor&&e.cor)cx.drawImage(tintar(im,e.cor,e.w,e.h),e.x,e.y,e.w,e.h);else cx.drawImage(im,e.x,e.y,e.w,e.h);}}
       else if(e.tipo==="forma"){cx.fillStyle=e.cor;cx.strokeStyle=e.bordaCor||"#000";cx.lineWidth=e.borda||0;cx.beginPath();
@@ -124,13 +125,15 @@ body.com-acoes{padding-bottom:calc(250px + env(safe-area-inset-bottom,0))}
     if(comGuia){cx.save();desenharGuia(cx);cx.restore();}
     if(comSel&&sel){cx.save();cx.strokeStyle="#14B8B0";cx.lineWidth=Math.max(2,W/300);cx.setLineDash([W/80,W/120]);cx.strokeRect(sel.x,sel.y,sel.w,sel.h);cx.setLineDash([]);cx.fillStyle="#14B8B0";const r=Math.max(12,W/40);cx.beginPath();cx.arc(sel.x+sel.w,sel.y+sel.h,r,0,Math.PI*2);cx.fill();cx.fillStyle="#fff";cx.font=`bold ${r*1.1}px sans-serif`;cx.textAlign="center";cx.textBaseline="middle";cx.fillText("⤡",sel.x+sel.w,sel.y+sel.h);cx.restore();}
   }
-  function renderLista(){const li=$("#lista");li.innerHTML=doc.el.length?doc.el.slice().reverse().map(e=>`<div class="it ${e===sel?"on":""}" data-id="${e.id}"><span class="ic">${{camada:"▣",imagem:"✦",forma:"◆",texto:"T",campos:"≡",qr:"▦"}[e.tipo]||"•"}</span><span>${esc(e.nome||e.tipo)}</span><span><button type="button" data-up="${e.id}" title="trazer para frente">⬆</button><button type="button" data-del="${e.id}" title="remover">✕</button></span></div>`).join(""):'<small class="muted">nada ainda — adicione formas, texto ou a marca</small>';
+  function renderLista(){const li=$("#lista");li.innerHTML=doc.el.length?doc.el.slice().reverse().map(e=>`<div class="it ${e===sel?"on":""}" data-id="${e.id}"><span class="ic">${{camada:"▣",imagem:"✦",forma:"◆",texto:"T",campos:"≡",qr:"▦"}[e.tipo]||"•"}</span><span>${esc(e.nome||e.tipo)}${e.oculta?' <small class="muted">· transparente</small>':e.usarCor?` <span style="display:inline-block;width:12px;height:12px;border-radius:3px;vertical-align:middle;background:${e.cor}"></span>`:""}</span><span><button type="button" data-up="${e.id}" title="trazer para frente">⬆</button><button type="button" data-del="${e.id}" title="remover">✕</button></span></div>`).join(""):'<small class="muted">nada ainda — adicione formas, texto ou a marca</small>';
     $$("#lista .it").forEach(d=>d.onclick=ev=>{if(ev.target.dataset.up){const e=doc.el.find(x=>x.id===ev.target.dataset.up);doc.el.splice(doc.el.indexOf(e),1);doc.el.push(e);renderLista();desenhar();return;}if(ev.target.dataset.del){doc.el=doc.el.filter(x=>x.id!==ev.target.dataset.del);if(sel&&sel.id===ev.target.dataset.del)sel=null;renderLista();renderProps();desenhar();return;}sel=doc.el.find(x=>x.id===d.dataset.id);$("#selnome").textContent=sel.nome||sel.tipo;renderLista();renderProps();desenhar();});}
   function paleta(id,atual,extra){return `<div class="paleta" data-pal="${id}">${PALETAS.vinil.map(([h,n])=>`<button type="button" data-c="${h}" class="${atual===h?"on":""}" style="background:${h}" title="${n}"></button>`).join("")}${coresMarca.map(x=>`<button type="button" data-c="${x.hex}" class="${atual===x.hex?"on":""}" style="background:${x.hex}" title="${esc(x.nome||"")} (marca)"></button>`).join("")}${extra||""}<button type="button" class="mais" data-mais="${id}">+</button></div>`;}
   function renderProps(){const p=$("#props");if(!sel){p.innerHTML=`<h3>Elemento</h3><small class="muted">Toque num elemento da prancheta (ou na lista) para mudar cor, tamanho, borda e texto. Arraste para mover; a bolinha do canto redimensiona.</small>`;return;}
     const e=sel;let h=`<h3>${esc(e.nome||e.tipo)} <span><button type="button" class="btn sec mini" id="centrar">Centralizar</button> <button type="button" class="btn sec mini" id="encher">Encher</button></span></h3>`;
     h+=`<div class="linha"><label>Tamanho</label><input type="range" id="tam" min="2" max="100" value="${Math.round(e.w/W*100)}"><label id="tamv">${Math.round(e.w/PX*10)/10} cm</label></div>`;
-    if(e.tipo==="camada"||e.tipo==="imagem"){h+=`<div class="linha" style="margin-top:8px"><label>Cor desta camada</label></div>${paleta("cor",e.usarCor?e.cor:null,'<button type="button" data-c="__orig" class="'+(!e.usarCor?"on":"")+'" style="background:linear-gradient(135deg,#f33,#3f3,#33f)" title="cores originais"></button>')}`;}
+    if(e.tipo==="camada"||e.tipo==="imagem"){const co=e.corOriginal||(coresMarca.find(x=>x.nome===e.nome)||{}).hex;const fundoEsc=luz(doc.fundo)<128;
+      h+=`<div class="linha" style="margin-top:8px"><label>Cor desta camada${co?` · original <span style="display:inline-block;width:12px;height:12px;border-radius:3px;vertical-align:middle;background:${co}"></span>`:""}</label></div>${paleta("cor",e.usarCor?e.cor:null,'<button type="button" data-c="__orig" class="'+(!e.usarCor?"on":"")+'" style="background:'+(co||"linear-gradient(135deg,#f33,#3f3,#33f)")+'" title="cor original"></button><button type="button" data-c="'+(fundoEsc?"#FFFFFF":"#1C1635")+'" style="background:'+(fundoEsc?"#FFFFFF":"#1C1635")+'" title="contraste com o fundo"></button><button type="button" data-c="__transp" class="'+(e.oculta?"on":"")+'" style="background:repeating-conic-gradient(#ccc 0 25%,#fff 0 50%) 0 0/10px 10px" title="transparente (não imprime esta cor)"></button>')}
+      ${doc.el.filter(x=>x.grupo==="logo").length>1?`<small class="muted">Cada cor do logotipo é uma camada: toque na camada na prancheta ou na lista e escolha a cor que contrasta com o ${semFundo?"material":"produto"}.</small>`:""}`;}
     if(e.tipo==="forma"||e.tipo==="texto"||e.tipo==="campos"||e.tipo==="qr"){h+=`<div class="linha" style="margin-top:8px"><label>Cor</label></div>${paleta("cor",e.cor,e.tipo==="forma"?'<button type="button" data-c="transparent" style="background:repeating-conic-gradient(#ccc 0 25%,#fff 0 50%) 0 0/10px 10px" title="sem preenchimento"></button>':"")}`;}
     if(e.tipo==="camada"||e.tipo==="imagem"||e.tipo==="forma"){h+=`<div class="linha" style="margin-top:10px"><label>Borda</label><input type="range" id="borda" min="0" max="${Math.round(W/25)}" value="${e.borda||0}"><label>${e.borda?Math.round(e.borda/PX*10)/10+" cm":"sem"}</label></div>${paleta("bordaCor",e.bordaCor)}`;}
     if(e.tipo==="texto"){h+=`<div class="linha" style="margin-top:10px"><textarea id="txt" rows="2" style="flex:1">${esc(e.texto||"")}</textarea></div><div class="linha" style="margin-top:8px"><select id="fonte"><option ${/Rubik/.test(e.fonte)?"selected":""} value="Rubik, system-ui, sans-serif">Rubik</option><option ${/Georgia/.test(e.fonte)?"selected":""} value="Georgia, serif">Serifa</option><option ${/Courier/.test(e.fonte)?"selected":""} value="'Courier New', monospace">Mono</option><option ${/Impact/.test(e.fonte)?"selected":""} value="Impact, sans-serif">Impacto</option></select><select id="peso"><option value="400" ${e.peso==400?"selected":""}>Normal</option><option value="700" ${!e.peso||e.peso==700?"selected":""}>Negrito</option></select><label>Tam.</label><input type="range" id="ttam" min="${Math.round(H/40)}" max="${Math.round(H/2)}" value="${e.tam}"></div>`;}
@@ -147,7 +150,7 @@ body.com-acoes{padding-bottom:calc(250px + env(safe-area-inset-bottom,0))}
     const tt=$("#ttam");if(tt)tt.oninput=()=>{e.tam=+tt.value;desenhar();};
     $$("[data-campo]").forEach(i=>i.oninput=()=>{doc.campos[i.dataset.campo]=i.value;desenhar();});
     $$("[data-pal] button").forEach(bt=>bt.onclick=()=>{const pal=bt.closest("[data-pal]").dataset.pal;if(bt.dataset.mais!==undefined){const v=prompt("Cor em hexadecimal (ex.: #1C1635)");if(v&&/^#[0-9a-fA-F]{6}$/.test(v.trim()))aplicarCor(pal,v.trim());return;}aplicarCor(pal,bt.dataset.c);});
-    function aplicarCor(pal,cor){if(pal==="cor"&&(e.tipo==="camada"||e.tipo==="imagem")){if(cor==="__orig")e.usarCor=false;else{e.usarCor=true;e.cor=cor;}}else e[pal]=cor;renderProps();desenhar();}
+    function aplicarCor(pal,cor){if(pal==="cor"&&(e.tipo==="camada"||e.tipo==="imagem")){e.oculta=false;if(cor==="__transp")e.oculta=true;else if(cor==="__orig")e.usarCor=false;else{e.usarCor=true;e.cor=cor;}}else e[pal]=cor;renderProps();renderLista();desenhar();}
   }
   function ligar(){
     $$("[data-add]").forEach(b=>b.onclick=()=>{const t=b.dataset.add;const s=Math.min(W,H)*0.3;let e=null;
@@ -155,6 +158,8 @@ body.com-acoes{padding-bottom:calc(250px + env(safe-area-inset-bottom,0))}
       else if(t==="logo"){const base=elementosMarca();if(!base.length){alert("Esta loja ainda não tem logotipo tratado.");return;}base.forEach(x=>{x.id=x.id+"_"+Date.now().toString(36);doc.el.push(x);});sel=doc.el[doc.el.length-1];renderLista();renderProps();desenhar();return;}
       else e={tipo:"forma",forma:t==="qua"?"ret":t,id:"f"+Date.now().toString(36),nome:{ret:"Retângulo",qua:"Quadrado",tri:"Triângulo",cir:"Círculo"}[t],x:(W-s)/2,y:(H-s)/2,w:t==="ret"?s*1.6:s,h:s,cor:coresMarca[0]?coresMarca[0].hex:"#6933C5",borda:0,bordaCor:"#1C1635"};
       doc.el.push(e);sel=e;renderLista();renderProps();desenhar();});
+    $("#ferrBorracha").onclick=()=>{borracha=!borracha;if(!pincel)pincel=4;render();};
+    const pz=$("#pincel");if(pz)pz.oninput=()=>pincel=+pz.value;const db=$("#desfazerB");if(db)db.onclick=()=>{const u=desfazer.pop();if(!u)return;u.e.src=u.src;render();};
     $("#palFundo").onclick=ev=>{const b=ev.target.closest("button");if(!b)return;if(b.id==="fundoMais"){const v=prompt("Cor em hexadecimal (ex.: #1C1635)");if(v&&/^#[0-9a-fA-F]{6}$/.test(v.trim()))doc.fundo=v.trim();}else doc.fundo=b.dataset.c||null;$$("#palFundo button").forEach(x=>x.classList.toggle("on",x.dataset.c===(doc.fundo||"")));desenhar();};
     $("#guia").onclick=()=>{guia=!guia;$("#guia").textContent=guia?"Ocultar guia":"Mostrar guia";desenhar();};
     if(P.ia){$("#gerar").onclick=async()=>{const st=$("#iaSt");st.textContent="Gerando…";$("#gerar").disabled=true;doc.prompt=$("#prompt").value;
@@ -168,6 +173,7 @@ body.com-acoes{padding-bottom:calc(250px + env(safe-area-inset-bottom,0))}
     pr.addEventListener("pointerdown",ev=>{try{pr.setPointerCapture(ev.pointerId);}catch(e){}ptrs.set(ev.pointerId,ev);
       if(ptrs.size===2){drag=null;pan=null;const [a,b]=[...ptrs.values()];pinch={d:Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY),z,px,py,cx:(a.clientX+b.clientX)/2,cy:(a.clientY+b.clientY)/2};return;}
       const p=pos(ev);
+      if(borracha&&sel&&(sel.tipo==="camada"||sel.tipo==="imagem")&&p.x>=sel.x&&p.x<=sel.x+sel.w&&p.y>=sel.y&&p.y<=sel.y+sel.h){const im=IMGS[sel.src];if(!im)return;const oc=document.createElement("canvas");oc.width=im.naturalWidth;oc.height=im.naturalHeight;const og=oc.getContext("2d");og.drawImage(im,0,0);desfazer.push({e:sel,src:sel.src});if(desfazer.length>10)desfazer.shift();drag={modo:"apaga",oc,og,k:im.naturalWidth/sel.w};apagar(p);return;}
       if(sel){const r=Math.max(14,W/35);if(Math.hypot(p.x-(sel.x+sel.w),p.y-(sel.y+sel.h))<r*1.8){drag={modo:"red",p,w:sel.w,h:sel.h,x0:sel.x,y0:sel.y,grupo:sel.grupo==="logo"?doc.el.filter(e=>e.grupo==="logo").map(e=>({e,x:e.x,y:e.y,w:e.w,h:e.h})):null};return;}}
       const hit=doc.el.slice().reverse().find(e=>p.x>=e.x&&p.x<=e.x+e.w&&p.y>=e.y&&p.y<=e.y+e.h);
       if(hit!==sel){sel=hit||null;renderLista();renderProps();$("#selnome").textContent=sel?(sel.nome||sel.tipo):"toque num elemento · pinça amplia";}
@@ -175,13 +181,16 @@ body.com-acoes{padding-bottom:calc(250px + env(safe-area-inset-bottom,0))}
     pr.addEventListener("pointermove",ev=>{if(!ptrs.has(ev.pointerId))return;ptrs.set(ev.pointerId,ev);
       if(pinch&&ptrs.size===2){const [a,b]=[...ptrs.values()];const d=Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY);z=Math.min(6,Math.max(1,pinch.z*d/pinch.d));const mx=(a.clientX+b.clientX)/2,my=(a.clientY+b.clientY)/2;px=pinch.px+(mx-pinch.cx);py=pinch.py+(my-pinch.cy);encaixe();return;}
       if(pan){px=pan.px+(ev.clientX-pan.x);py=pan.py+(ev.clientY-pan.y);encaixe();return;}
-      if(!drag||!sel)return;const p=pos(ev);const dx=p.x-drag.p.x,dy=p.y-drag.p.y;
+      if(!drag||!sel)return;const p=pos(ev);if(drag.modo==="apaga"){apagar(p);return;}const dx=p.x-drag.p.x,dy=p.y-drag.p.y;
       if(drag.modo==="mov"){if(drag.grupo){drag.grupo.forEach(g=>{g.e.x=g.x+dx;g.e.y=g.y+dy;});}else{sel.x=drag.x+dx;sel.y=drag.y+dy;}}
       else{const r=drag.w/drag.h;let nw=Math.max(W*0.03,drag.w+dx);
         if(drag.grupo){const f=nw/drag.w;drag.grupo.forEach(g=>{g.e.w=g.w*f;g.e.h=g.h*f;g.e.x=drag.x0+(g.x-drag.x0)*f;g.e.y=drag.y0+(g.y-drag.y0)*f;});}
         else if(sel.tipo==="texto"){sel.tam=Math.max(8,Math.round(sel.tam*nw/sel.w));}else if(sel.tipo==="campos"){sel.w=nw;}else{sel.w=nw;sel.h=nw/r;}}
       desenhar();});
-    const fim=ev=>{ptrs.delete(ev.pointerId);if(ptrs.size<2)pinch=null;drag=null;pan=null;};pr.addEventListener("pointerup",fim);pr.addEventListener("pointercancel",fim);
+    function apagar(p){const r=Math.max(2,pincel)*W/100*0.5;const g=drag.og;g.save();g.globalCompositeOperation="destination-out";g.beginPath();g.arc((p.x-sel.x)*drag.k,(p.y-sel.y)*drag.k,r*drag.k,0,Math.PI*2);g.fill();g.restore();
+      const tmp=drag.oc;cx.save();cx.clearRect(sel.x,sel.y,sel.w,sel.h);cx.restore();desenharApaga(tmp);}
+    let tApaga=0;function desenharApaga(oc){const im=new Image();im.onload=()=>{IMGS[sel.src]=im;desenhar();};if(Date.now()-tApaga>80){tApaga=Date.now();im.src=oc.toDataURL("image/png");}}
+    const fim=ev=>{ptrs.delete(ev.pointerId);if(ptrs.size<2)pinch=null;if(drag&&drag.modo==="apaga"){const u=drag.oc.toDataURL("image/png");const im=new Image();im.onload=()=>{IMGS[u]=im;sel.src=u;const b=$("#desfazerB");if(b)b.disabled=false;desenhar();};im.src=u;}drag=null;pan=null;};pr.addEventListener("pointerup",fim);pr.addEventListener("pointercancel",fim);
     $("#salvar").onclick=async()=>{sel=null;delete doc.auto;$("#salvar").disabled=true;$("#salvar").textContent="Salvando…";
       await desenhar(false,true,false);const png=cv.toDataURL("image/png");
       await desenhar(false,false,false);const pngArte=cv.toDataURL("image/png");  // arte sem o fundo: o material do kit recebe a cor separadamente
