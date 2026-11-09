@@ -30,13 +30,23 @@ const App=(()=>{
     localStorage.setItem("app-zona",ZONA);
     try{const c=await fetch(`/dados/captacao/${ZONA}/clientes/index.json?t=${Date.now()}`,{cache:"no-store"});if(c.ok){const m={};(await c.json()).forEach(x=>m[x.slug]=x);D.lojas.forEach(l=>{l.cad=m[l.slug]||null;});}}catch(e){}
     D.lojas.forEach(l=>{l.estrelas=estrelas(l);});
-    // clientes avulsos criados no aparelho (pedido novo fora da rota): entram como lojas, sem dia/estrelas de rota
-    avulsos().forEach(a=>{if(!D.lojas.some(l=>l.slug===a.slug))D.lojas.push({...a,estrelas:0,avulso:true,dia:99,ordem:0});});
+    await migrarAparelho();            // o que algum aparelho ainda tiver guardado localmente sobe para o servidor (uma vez) e é apagado
+    await carregarEstado();            // dia da rota, pedidos, avulsos, ocorrências — do servidor
+    await carregarFichas(D.lojas.map(l=>l.slug).concat(AVU.map(a=>a.slug)));
+    // clientes avulsos (pedido novo fora da rota): entram como lojas, sem dia/estrelas de rota
+    AVU.forEach(a=>{if(!D.lojas.some(l=>l.slug===a.slug))D.lojas.push({...a,estrelas:0,avulso:true,dia:99,ordem:0});});
     return D;}
-  const avulsos=()=>{try{return JSON.parse(localStorage.getItem("app-avulsos")||"[]");}catch(e){return [];}};
+  // ---- estado compartilhado no servidor (/api/estado/<chave>): lido uma vez por página, gravado a cada mudança
+  const API=async(metodo,url,corpo)=>{const r=await fetch(url,{method:metodo,credentials:"same-origin",cache:"no-store",headers:corpo!==undefined?{"Content-Type":"application/json"}:{},body:corpo!==undefined?JSON.stringify(corpo):undefined});if(r.status===401){location.href="/?entrar=1&volta="+encodeURIComponent("app/"+location.pathname.split("/").pop()+location.search);throw new Error("sem sessão");}return r;};
+  const lerChave=async k=>{try{const r=await API("GET",`/api/estado/${k}`);if(!r.ok)return null;return (await r.json()).valor;}catch(e){return null;}};
+  const _fila={};async function gravarChave(k,v){_fila[k]=v;if(_fila["_"+k])return;_fila["_"+k]=true;try{while(_fila[k]!==undefined){const val=_fila[k];delete _fila[k];const r=await API("PUT",`/api/estado/${k}`,{valor:val});if(!r.ok){console.warn("não gravou",k,r.status);avisarFalha("Não consegui gravar no servidor ("+r.status+"). Confira a conexão.");}}}catch(e){avisarFalha("Sem conexão com o servidor. A última alteração não foi gravada.");}finally{delete _fila["_"+k];}}
+  let _aviso=0;function avisarFalha(t){if(Date.now()-_aviso<8000)return;_aviso=Date.now();try{const d=document.createElement("div");d.className="aviso-rede";d.textContent=t;document.body.appendChild(d);setTimeout(()=>d.remove(),6000);}catch(e){}}
+  let EST={},AVU=[],OCO=[];
+  async function carregarEstado(){const [e,a,o]=await Promise.all([lerChave("dia-"+ZONA),lerChave("avulsos"),lerChave("ocorrencias")]);EST=e||{};AVU=Array.isArray(a)?a:[];OCO=Array.isArray(o)?o:[];}
+  const avulsos=()=>AVU;
   function novoAvulso(dadosA){const a={slug:"avulso-"+Date.now().toString(36),nome:(dadosA&&dadosA.nome)||("Pedido avulso "+new Date().toLocaleDateString("pt-BR")),tel:(dadosA&&dadosA.tel)||"",endereco:(dadosA&&dadosA.endereco)||"",setor:(dadosA&&dadosA.setor)||"comércio",criado:new Date().toISOString()};
-    const lista=avulsos();lista.unshift(a);localStorage.setItem("app-avulsos",JSON.stringify(lista));if(D)D.lojas.push({...a,estrelas:0,avulso:true,dia:99,ordem:0});return a;}
-  function atualizarAvulso(slug,campos){const lista=avulsos().map(a=>a.slug===slug?{...a,...campos}:a);localStorage.setItem("app-avulsos",JSON.stringify(lista));if(D){const l=D.lojas.find(x=>x.slug===slug);if(l)Object.assign(l,campos);}}
+    AVU.unshift(a);gravarChave("avulsos",AVU);if(D)D.lojas.push({...a,estrelas:0,avulso:true,dia:99,ordem:0});return a;}
+  function atualizarAvulso(slug,campos){AVU=AVU.map(a=>a.slug===slug?{...a,...campos}:a);gravarChave("avulsos",AVU);if(D){const l=D.lojas.find(x=>x.slug===slug);if(l)Object.assign(l,campos);}}
   async function ficha(slug){try{const r=await fetch(`/dados/captacao/${ZONA}/clientes/${slug}.json?t=${Date.now()}`,{cache:"no-store"});return r.ok?await r.json():null;}catch(e){return null;}}
   // ---- estrelas (1–5): proposta de 08/11, a validar com o Yoshio. Cada sinal soma 1; nunca menos de 1.
   function estrelas(l){let n=1;const L=(l.cad&&l.cad.lacunas)||{};
@@ -46,16 +56,35 @@ const App=(()=>{
     if((l.aval||0)>=80)n++;
     return Math.min(5,n);}
   const estrelasHTML=n=>`<span class="estrelas" title="${n} de 5">${"★".repeat(n)}<span class="off">${"★".repeat(5-n)}</span></span>`;
-  // ---- estado do dia no aparelho (feitas, seleções)
-  const KEY="app-dia-"+ZONA;const estado=()=>{try{return JSON.parse(localStorage.getItem(KEY)||"{}");}catch(e){return {};}};const salvar=e=>localStorage.setItem(KEY,JSON.stringify(e));
-  // ---- ficha local do cliente (IndexedDB genio-vendas › clientes): fonte única de logotipo, manual e artes
+  // ---- estado do dia (feitas, seleções, pedidos): no servidor, compartilhado por todos os aparelhos da conta
+  const estado=()=>EST;const salvar=e=>{EST=e;gravarChave("dia-"+ZONA,e);};
+  // ---- fichas dos clientes (logotipo, manual, artes): no servidor (/api/clientes/<slug>); aqui só um espelho em memória da página
+  const FICHAS={};
+  async function carregarFichas(slugs){try{const r=await API("GET",`/api/clientes?slugs=${encodeURIComponent(slugs.join(","))}`);if(!r.ok)return;(await r.json()).clientes.forEach(f=>{FICHAS[f.slug]=f;});}catch(e){}}
+  const slugDeNome=nome=>{const n=chave(nome);const l=D&&D.lojas.find(x=>chave(nomeLoja(x.nome))===n);return l?l.slug:null;};
+  async function lerCliente(nome){const slug=slugDeNome(nome);return slug?(await cliente({slug,nome})):null;}
+  async function gravarCliente(o){if(!o.slug)throw new Error("ficha sem slug");try{const r=await API("PUT",`/api/clientes/${o.slug}`,o);if(!r.ok){const d=await r.json().catch(()=>({}));avisarFalha("Não gravou no servidor: "+(d.erro||r.status));return false;}
+      const f=await r.json();for(const k of Object.keys(o))delete o[k];Object.assign(o,f);FICHAS[o.slug]=o;return true;}catch(e){avisarFalha("Sem conexão: a ficha não foi gravada.");return false;}}
+  async function cliente(l){if(FICHAS[l.slug])return FICHAS[l.slug];const nome=nomeLoja(l.nome||"");
+    try{const r=await API("GET",`/api/clientes/${l.slug}`);if(r.ok){const f=await r.json();FICHAS[l.slug]=f;return f;}}catch(e){}
+    return FICHAS[l.slug]={k:chave(nome),nome,slug:l.slug,logos:[],arquivo:[],criado:new Date().toISOString()};}
+  // ---- migração única: fichas/notas/estado que ficaram no aparelho (versão anterior) sobem para o servidor e o local é apagado
+  async function migrarAparelho(){if(localStorage.getItem("app-migrado")==="2")return;let ok=true;
+    try{const db=await abrirVendas();if(db){const tudo=st=>new Promise(res=>{try{const t=db.transaction(st).objectStore(st).getAll();t.onsuccess=()=>res(t.result||[]);t.onerror=()=>res([]);}catch(e){res([]);}});
+        const cl=await tudo("clientes");for(const c of cl){const slug=c.slug||slugDeNome(c.nome||"");if(!slug)continue;const temAlgo=(c.logos&&c.logos.length)||(c.manual&&c.manual.editado)||(c.artes&&Object.keys(c.artes).length)||c.fachada||(c.arquivo&&c.arquivo.length);if(!temAlgo)continue;
+          const r0=await API("GET",`/api/clientes/${slug}`);if(r0.ok){const f=await r0.json();if((f.manual&&f.manual.editado)||(f.artes&&Object.keys(f.artes).length)||(f.logos&&f.logos.length))continue;}  // servidor já tem: não sobrescreve
+          c.slug=slug;const r=await API("PUT",`/api/clientes/${slug}`,c);if(!r.ok)ok=false;}
+        const ns=await tudo("notas");for(const n of ns){for(const k of ["audio","video","foto"]){if(n[k]&&typeof n[k]!=="string")n[k]=await blobParaDataURL(n[k]);}const r=await API("PUT",`/api/notas/${n.id}`,n);if(!r.ok)ok=false;}
+        db.close();}
+      for(const [lk,sk] of [["app-dia-"+ZONA,"dia-"+ZONA],["app-avulsos","avulsos"],["app-ocorrencias","ocorrencias"],["app-fornecedores","fornecedores"]]){const v=localStorage.getItem(lk);if(!v)continue;let val;try{val=JSON.parse(v);}catch(e){continue;}const atual=await lerChave(sk);if(atual&&(Array.isArray(atual)?atual.length:Object.keys(atual).length))continue;const r=await API("PUT",`/api/estado/${sk}`,{valor:val});if(!r.ok)ok=false;}
+    }catch(e){ok=false;}
+    if(ok){localStorage.setItem("app-migrado","2");["app-dia-"+ZONA,"app-avulsos","app-ocorrencias","app-fornecedores"].forEach(k=>localStorage.removeItem(k));try{indexedDB.deleteDatabase("genio-vendas");}catch(e){}}}
+  const blobParaDataURL=b=>new Promise(res=>{const fr=new FileReader();fr.onload=()=>res(fr.result);fr.onerror=()=>res(null);fr.readAsDataURL(b);});
+  // ---- (legado) banco local só é aberto pela migração acima; nada mais grava nele
   function abrirVendas(){return new Promise(res=>{try{const cria=d=>{["orcamentos","sessao"].forEach(n=>{if(!d.objectStoreNames.contains(n))d.createObjectStore(n,{keyPath:"id"});});if(!d.objectStoreNames.contains("clientes"))d.createObjectStore("clientes",{keyPath:"k"});if(!d.objectStoreNames.contains("notas"))d.createObjectStore("notas",{keyPath:"id"});};
     const r=indexedDB.open("genio-vendas");r.onupgradeneeded=()=>cria(r.result);r.onerror=()=>res(null);
     r.onsuccess=()=>{const d=r.result;if(d.objectStoreNames.contains("clientes")&&d.objectStoreNames.contains("notas"))return res(d);const v=Math.max(5,d.version+1);d.close();const r2=indexedDB.open("genio-vendas",v);r2.onupgradeneeded=()=>cria(r2.result);r2.onsuccess=()=>res(r2.result);r2.onerror=()=>res(null);r2.onblocked=()=>res(null);};}catch(e){res(null);}});}
   const chave=nome=>nome.toLowerCase();
-  async function lerCliente(nome){const db=await abrirVendas();if(!db)return null;return new Promise(res=>{const t=db.transaction("clientes").objectStore("clientes").get(chave(nome));t.onsuccess=()=>{res(t.result||null);db.close();};t.onerror=()=>{res(null);db.close();};});}
-  async function gravarCliente(o){const db=await abrirVendas();if(!db)return false;return new Promise(res=>{const t=db.transaction("clientes","readwrite");o.atualizado=new Date().toISOString();t.objectStore("clientes").put(o);t.oncomplete=()=>{db.close();res(true);};t.onerror=()=>{db.close();res(false);};});}
-  async function cliente(l){const nome=nomeLoja(l.nome);return (await lerCliente(nome))||{k:chave(nome),nome,slug:l.slug,logos:[],arquivo:[],criado:new Date().toISOString()};}
   function definirCliente(l){try{localStorage.setItem("genio-cliente",nomeLoja(l.nome));localStorage.setItem("genio-cliente-dados",JSON.stringify({slug:l.slug,tel:telFmt(l.tel),endereco:l.endereco,setor:l.setor}));}catch(e){}}
   // imagem classificada pelo dedo (menu da galeria): logotipo · fachada · arquivo · produto
   async function classificar(l,src,papel,fonte){const c=await cliente(l);const item={src,fonte:fonte||"",em:new Date().toISOString()};
@@ -138,7 +167,7 @@ const App=(()=>{
   // ---- arte automática: logotipo tratado centralizado preenchendo a área segura do gabarito, cor padrão do material
   const COR_PADRAO={capacho:"#2B2B2D",rigido:"#F4F1EA",vinil:null,tecido:"#F4F1EA",papel:"#FFFFFF",lona:"#FFFFFF",carimbo:null};
   const PRODUTOS_IDS=["capacho","placas","adesivos","uniformes","impressos","panfleto","banners","parede","brindes","carimbo"];
-  let _G=null;const gabaritos=async()=>_G||(_G=await (await fetch("gabaritos.json?v=2550cc91b4")).json());
+  let _G=null;const gabaritos=async()=>_G||(_G=await (await fetch("gabaritos.json?v=bc2c2d653a")).json());
   const carregarImg=src=>new Promise(res=>{const i=new Image();i.crossOrigin="anonymous";i.onload=()=>res(i);i.onerror=()=>res(null);i.src=src;});
   // ---- carimbo: só texto — nome, razão social, CNPJ (negrito), endereço, telefone; nunca logotipo
   async function dadosCarimbo(l){const cad=await ficha(l.slug).catch(()=>null);const L=(cad&&cad.lacunas)||{};const leit=(L.leitura||{}).valor||"";const razao=((leit.match(/Razão social: ([^·]+)/)||[])[1]||"").trim();const cnpj=((leit.match(/CNPJ:? ?([\d./-]{14,18})/)||[])[1]||"");
@@ -180,7 +209,7 @@ const App=(()=>{
     const PX=Math.min(100,Math.floor(3000/Math.max(P.w_cm+sang/5,P.h_cm+sang/5)));const W=Math.round((P.w_cm+2*sang/10)*PX),H=Math.round((P.h_cm+2*sang/10)*PX),B=Math.round(sang/10*PX),S=Math.round(seg/10*PX);
     const aw=W-2*(B+S),ah=H-2*(B+S);const f=Math.min(aw/LW,(P.ancora==="topo"?ah*0.45:ah)/LH);const w=LW*f,h=LH*f;const x=(W-w)/2,y=P.ancora==="topo"?B+S+ah*0.05:(H-h)/2;
     const fundo=P.sem_fundo?null:(COR_PADRAO[P.superficie]===undefined?"#FFFFFF":COR_PADRAO[P.superficie]);
-    if(pid==="impressos"||pid==="panfleto"){await carregarScript("qr.js?v=2550cc91b4");await carregarScript("impressos.js?v=2550cc91b4");return window.Impressos.arteImpressa(App,pid,c,l,{P,G,W,H,B,S,PX,im,sang,rec});}
+    if(pid==="impressos"||pid==="panfleto"){await carregarScript("qr.js?v=bc2c2d653a");await carregarScript("impressos.js?v=bc2c2d653a");return window.Impressos.arteImpressa(App,pid,c,l,{P,G,W,H,B,S,PX,im,sang,rec});}
     if(pid==="panfleto"){const M=cardapioDe();const f1=B+S,ah3=(H-2*(B+S))/3;const lf=Math.min(aw/im.naturalWidth,(ah3*0.8)/im.naturalHeight);const lw=im.naturalWidth*lf,lh=im.naturalHeight*lf;
       const cor=(c.manual.cores&&c.manual.cores[0]&&c.manual.cores[0].hex)||"#6933C5";const esc_=luz(cor)<140?"#FFFFFF":"#1C1635";
       const el=[{tipo:"camada",id:"logo",nome:"Logotipo",src:c.manual.tratado,cor:null,usarCor:false,x:(W-lw)/2,y:f1+(ah3-lh)/2,w:lw,h:lh,borda:0,bordaCor:"#FFFFFF",grupo:"logo"},
@@ -215,9 +244,9 @@ const App=(()=>{
         c.artes[pid]=a;ok++;}catch(e){falhas.push(pid+": "+e.message);}}
     await gravarCliente(c);return {ok,falhas};}
   // ---- notas (gravador): áudio + texto, ligadas à última loja aberta
-  async function listarNotas(){const db=await abrirVendas();if(!db)return [];return new Promise(res=>{const t=db.transaction("notas").objectStore("notas").getAll();t.onsuccess=()=>{res((t.result||[]).sort((a,b)=>b.em.localeCompare(a.em)));db.close();};t.onerror=()=>{res([]);db.close();};});}
-  async function gravarNota(n){const db=await abrirVendas();if(!db)return false;return new Promise(res=>{const t=db.transaction("notas","readwrite");t.objectStore("notas").put(n);t.oncomplete=()=>{res(true);db.close();};t.onerror=()=>{res(false);db.close();};});}
-  async function apagarNota(id){const db=await abrirVendas();if(!db)return false;return new Promise(res=>{const t=db.transaction("notas","readwrite");t.objectStore("notas").delete(id);t.oncomplete=()=>{res(true);db.close();};t.onerror=()=>{res(false);db.close();};});}
+  async function listarNotas(){try{const r=await API("GET","/api/notas");if(!r.ok)return [];return (await r.json()).notas;}catch(e){return [];}}
+  async function gravarNota(n){const o={...n};for(const k of ["audio","video","foto"]){if(o[k]&&typeof o[k]!=="string")o[k]=await blobParaDataURL(o[k]);}try{const r=await API("PUT",`/api/notas/${o.id}`,o);if(!r.ok){avisarFalha("A nota não foi gravada no servidor ("+r.status+").");return false;}return true;}catch(e){avisarFalha("Sem conexão: a nota não foi gravada.");return false;}}
+  async function apagarNota(id){try{const r=await API("DELETE",`/api/notas/${id}`);return r.ok;}catch(e){return false;}}
   // ---- agenda de rotas: lojas 3–5★ em dias de 50; dia 1 = data do início (primeira abertura); seg–sex; sábado = recuperação das pendentes
   const META=50;
   function diasDeRota(D){const lista=D.lojas.filter(l=>l.estrelas>=3).sort((a,b)=>b.estrelas-a.estrelas||a.dia-b.dia||a.ordem-b.ordem);/* 1–2 estrelas ficam fora da rota */const dias=[];for(let i=0;i<lista.length;i+=META)dias.push(lista.slice(i,i+META));
@@ -269,8 +298,8 @@ const App=(()=>{
   const etapaDe=slug=>{const e=estado();return ((e.pedidos||{})[slug]||{}).etapa||"entrada";};
   function moverEtapa(slug,etapa,dados){const e=estado();e.pedidos=e.pedidos||{};const p=e.pedidos[slug]||{};p.etapa=etapa;p.hist=(p.hist||[]).concat([{etapa,em:new Date().toISOString()}]);Object.assign(p,dados||{});e.pedidos[slug]=p;salvar(e);return p;}
   // ---- ocorrências: o que está atravancando algum processo (automáticas) + as que o vendedor registra
-  const ocorrenciasManuais=()=>{try{return JSON.parse(localStorage.getItem("app-ocorrencias")||"[]");}catch(e){return [];}};
-  const gravarOcorrencias=l=>localStorage.setItem("app-ocorrencias",JSON.stringify(l));
+  const ocorrenciasManuais=()=>OCO;
+  const gravarOcorrencias=l=>{OCO=l;gravarChave("ocorrencias",l);};
   async function ocorrenciasAuto(D){const out=[];const e=estado();const sel=e.sel||{};const hoje=hojeISO();
     for(const l of D.lojas){const c=await cliente(l);const S=sel[l.slug]||{};const pedidos=Object.entries(S).filter(([k,v])=>v&&v.q>0&&!v.servico).map(([k])=>k);
       if(pedidos.length&&!(c.manual&&c.manual.editado))out.push({nivel:"urgente",loja:l,texto:"Pedido com itens, mas o logotipo não está tratado",acao:`visita.html?l=${encodeURIComponent(l.slug)}`});
@@ -293,5 +322,5 @@ const App=(()=>{
   // toque longo em elementos [data-longo]: chama fn(el) após 450 ms sem mover
   function ligarLongo(root,fn){$$("[data-longo]",root).forEach(el=>{let t=null,p=null;el.addEventListener("pointerdown",ev=>{p={x:ev.clientX,y:ev.clientY};t=setTimeout(()=>{t=null;if(navigator.vibrate)navigator.vibrate(12);fn(el);},450);});
     const c=ev=>{if(t&&p&&ev.type==="pointermove"&&Math.hypot(ev.clientX-p.x,ev.clientY-p.y)<8)return;clearTimeout(t);t=null;};el.addEventListener("pointermove",c);el.addEventListener("pointerup",c);el.addEventListener("pointercancel",c);el.addEventListener("contextmenu",ev=>ev.preventDefault());});}
-  return {$,$$,esc,qs,ZONA,setorNome,nomeLoja,telFmt,ini,sessao,eu,dados,ficha,estrelas,estrelasHTML,estado,salvar,abrirVendas,lerCliente,gravarCliente,cliente,definirCliente,classificar,logoPrincipal,removerLogo,escolherImagem,abrirLogotipo,entradas,ligarEntradas,artePadrao,gerarProdutos,aparar,assarRecortes,desenharElementos,desenharTexto,desenharQR,carregarScript,recortarLogo,PRODUTOS_IDS,separarCores,garantirCamadas,dadosCarimbo,desenharCarimbo,cenaCarimbo,desenharLista,desenharSeta,listarNotas,gravarNota,apagarNota,diasDeRota,reagendar,hojeISO,dataCurta,META,ICONES,NA_CASCA,avulsos,novoAvulso,atualizarAvulso,ocorrenciasManuais,gravarOcorrencias,ocorrenciasAuto,ETAPAS,etapaDe,moverEtapa,nav,topo,voltar,acoes,menuLongo,ligarLongo};
+  return {$,$$,esc,qs,ZONA,setorNome,nomeLoja,telFmt,ini,sessao,eu,dados,ficha,estrelas,estrelasHTML,estado,salvar,abrirVendas,lerCliente,gravarCliente,cliente,lerChave,gravarChave,API,definirCliente,classificar,logoPrincipal,removerLogo,escolherImagem,abrirLogotipo,entradas,ligarEntradas,artePadrao,gerarProdutos,aparar,assarRecortes,desenharElementos,desenharTexto,desenharQR,carregarScript,recortarLogo,PRODUTOS_IDS,separarCores,garantirCamadas,dadosCarimbo,desenharCarimbo,cenaCarimbo,desenharLista,desenharSeta,listarNotas,gravarNota,apagarNota,diasDeRota,reagendar,hojeISO,dataCurta,META,ICONES,NA_CASCA,avulsos,novoAvulso,atualizarAvulso,ocorrenciasManuais,gravarOcorrencias,ocorrenciasAuto,ETAPAS,etapaDe,moverEtapa,nav,topo,voltar,acoes,menuLongo,ligarLongo};
 })();

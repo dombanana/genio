@@ -455,6 +455,8 @@ def proxy_img(u):
 
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ESTADO_DIR = os.path.dirname(CHAVES_ARQ) if os.path.dirname(CHAVES_ARQ) else "/var/lib/genio"
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__))); import dados as DADOS  # fichas, notas e estado do app: fonte única no servidor
+MAX_FICHA = 60 * 1024 * 1024  # ficha com artes em base64 (vira arquivos no servidor)
 KIT_IDS = {"capacho": "01", "placas": "02", "adesivos": "03", "uniformes": "04", "impressos": "05", "panfleto": "06", "banners": "07", "parede": "08", "brindes": "09", "carimbo": "10"}
 def kit_aplicar(d):
     """Contextualização: a arte feita no editor (PNG transparente, base64) aplicada na capa calibrada do kit do setor."""
@@ -462,9 +464,13 @@ def kit_aplicar(d):
     sys.path.insert(0, os.path.join(RAIZ, "api", "kits")); import aplicar, gerar_kit
     setor = (d.get("setor") or "").split("/")[0]; kit, ref = gerar_kit.kit_para(setor)
     pid = KIT_IDS.get(d.get("produto"), d.get("produto")); png = d.get("png") or ""
-    if "," in png[:40]:
-        png = png.split(",", 1)[1]
-    raw = base64.b64decode(png)
+    if png.startswith("/api/arq/"):
+        _, col, ident, nome = png.split("/")[2:6]
+        raw = DADOS.arquivo(col, ident, nome)[1]
+    else:
+        if "," in png[:40]:
+            png = png.split(",", 1)[1]
+        raw = base64.b64decode(png)
     if len(raw) > 6_000_000:
         raise ValueError("arte grande demais")
     material = d.get("material") if re.match(r"^#[0-9a-fA-F]{6}$", d.get("material") or "") else None
@@ -703,6 +709,36 @@ class H(BaseHTTPRequestHandler):
                     return self._send(200, body=dados, ctype=ct, cache="public, max-age=86400")
                 except Exception as e:
                     return self._erro(502, "não consegui abrir: " + str(e)[:120])
+            if p.startswith("/api/arq/"):
+                if not self._eu():
+                    return self._erro(401, "entre com a sua conta")
+                partes = p.split("/")
+                if len(partes) != 6:
+                    return self._erro(404, "arquivo não existe")
+                try:
+                    ct, raw = DADOS.arquivo(partes[3], partes[4], partes[5])
+                except (FileNotFoundError, ValueError):
+                    return self._erro(404, "arquivo não existe")
+                return self._send(200, body=raw, ctype=ct, cache="private, max-age=31536000, immutable")
+            if p == "/api/clientes" or p.startswith("/api/clientes/") or p == "/api/notas" or p.startswith("/api/estado/") or p == "/api/dados/resumo":
+                if not self._eu():
+                    return self._erro(401, "entre com a sua conta")
+                try:
+                    if p == "/api/clientes":
+                        qs = {k: v[0] for k, v in _parse_qs(urlparse(self.path).query or "").items()}
+                        slugs = set(qs["slugs"].split(",")) if qs.get("slugs") else None
+                        return self._send(200, {"clientes": DADOS.clientes_listar(slugs)})
+                    if p.startswith("/api/clientes/"):
+                        f = DADOS.cliente_ler(p.split("/")[3])
+                        return self._send(200, f) if f else self._erro(404, "sem ficha")
+                    if p == "/api/notas":
+                        return self._send(200, {"notas": DADOS.notas_listar()})
+                    if p == "/api/dados/resumo":
+                        return self._send(200, DADOS.resumo())
+                    e = DADOS.estado_ler(p.split("/")[3])
+                    return self._send(200, e if e else {"valor": None})
+                except ValueError as e:
+                    return self._erro(400, str(e))
             if p == "/api/convite":
                 qs = dict(x.split("=", 1) for x in (urlparse(self.path).query or "").split("&") if "=" in x)
                 if qs.get("p"):
@@ -774,6 +810,50 @@ class H(BaseHTTPRequestHandler):
             sys.stderr.write("erro GET %r\n" % e)
             return self._erro(500, "erro no servidor")
     do_HEAD = do_GET
+
+    def _json_grande(self):
+        n = int(self.headers.get("Content-Length") or 0)
+        if n <= 0 or n > MAX_FICHA:
+            raise ValueError("tamanho inválido")
+        return json.loads(self.rfile.read(n).decode("utf-8"))
+
+    def do_PUT(self):
+        p = urlparse(self.path).path.rstrip("/")
+        try:
+            eu = self._eu()
+            if not eu:
+                return self._erro(401, "entre com a sua conta")
+            if not self._origem_ok():
+                return self._erro(403, "origem")
+            partes = p.split("/")
+            if p.startswith("/api/clientes/") and len(partes) == 4:
+                return self._send(200, DADOS.cliente_gravar(partes[3], self._json_grande(), eu["nome"]))
+            if p.startswith("/api/notas/") and len(partes) == 4:
+                return self._send(200, DADOS.nota_gravar(partes[3], self._json_grande(), eu["nome"]))
+            if p.startswith("/api/estado/") and len(partes) == 4:
+                return self._send(200, {"valor": DADOS.estado_gravar(partes[3], self._json_grande().get("valor"), eu["nome"])})
+            return self._erro(404, "não existe")
+        except ValueError as e:
+            return self._erro(400, str(e))
+        except Exception as e:
+            return self._erro(500, "erro: " + str(e)[:200])
+
+    def do_DELETE(self):
+        p = urlparse(self.path).path.rstrip("/")
+        try:
+            eu = self._eu()
+            if not eu:
+                return self._erro(401, "entre com a sua conta")
+            if not self._origem_ok():
+                return self._erro(403, "origem")
+            partes = p.split("/")
+            if p.startswith("/api/notas/") and len(partes) == 4:
+                DADOS.nota_apagar(partes[3]); return self._send(200, {"ok": True})
+            if p.startswith("/api/clientes/") and len(partes) == 4 and eu["papel"] == "admin":
+                DADOS.cliente_apagar(partes[3]); return self._send(200, {"ok": True})
+            return self._erro(404, "não existe")
+        except ValueError as e:
+            return self._erro(400, str(e))
 
     def do_POST(self):
         p = urlparse(self.path).path.rstrip("/")

@@ -6,7 +6,7 @@
 <title>GênIO · Configuração</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="app.css?v=2550cc91b4">
+<link rel="stylesheet" href="app.css?v=bc2c2d653a">
 <style>
 .forn{display:grid;grid-template-columns:1fr;gap:6px;margin:8px 0 0}
 .forn .it{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;background:var(--lav);border-radius:12px;padding:10px 12px}
@@ -19,7 +19,7 @@
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=2550cc91b4"></script>
+<script src="app.js?v=bc2c2d653a"></script>
 <script>
 (async()=>{
   const {$,$$,esc,sessao,nav,topo}=App;
@@ -29,8 +29,9 @@
   const TIPOS=[["audio","🎙","Áudio"],["transcrever","📝","Transcrever"],["video-tras","🎥","Vídeo"],["video-frente","🎦","Vídeo selfie"],["foto","📷","Foto"],["selfie","🤳","Selfie"],["tela","📱","Tela"]];
   // fornecedores por item (gravado no aparelho até existir conta no servidor)
   const PADRAO={capacho:{item:"Capacho",fornecedor:"Kapazi",obs:"23 cores de vinil · produção própria"},placas:{item:"Placas e sinalização",fornecedor:"Printi"},adesivos:{item:"Adesivos e vitrines",fornecedor:"Printi"},uniformes:{item:"Uniformes e camisetas",fornecedor:"Printi",obs:"polo bordada · camiseta clássica/premium"},impressos:{item:"Cartões de visita",fornecedor:"Printi"},panfleto:{item:"Flyers e panfletos",fornecedor:"Printi"},banners:{item:"Banners e faixas",fornecedor:"Printi"},parede:{item:"Adesivos de parede",fornecedor:"Printi"},brindes:{item:"Sacolas e brindes",fornecedor:"Printi"},carimbo:{item:"Carimbos",fornecedor:"produção própria"},mostraai:{item:"Mostra Aí · cardápio digital",fornecedor:"AI Negócios"},postaai:{item:"Posta Aí · postagens",fornecedor:"AI Negócios"},telefonia:{item:"Atendente virtual (telefone)",fornecedor:"a definir"},inpi:{item:"Registro de marca",fornecedor:"a definir"}};
-  const ler=()=>{try{return Object.assign({},PADRAO,JSON.parse(localStorage.getItem("app-fornecedores")||"{}"));}catch(e){return PADRAO;}};
-  const gravar=f=>localStorage.setItem("app-fornecedores",JSON.stringify(f));
+  let FORN=(await App.lerChave("fornecedores"))||{};  // fornecedores por item: no servidor, iguais para todos
+  const ler=()=>Object.assign({},PADRAO,FORN);
+  const gravar=f=>{FORN=f;App.gravarChave("fornecedores",f);};
   function render(){const E=API?API.estado():{suporte:{}};const F=ler();
     $("#app").innerHTML=`${topo()}<h1>Configuração</h1>
     <section class="card"><h2>Modo do REC</h2><small class="muted" style="display:block;margin:0 0 8px">O botão REC da barra grava neste modo com um toque; outro toque para.</small>

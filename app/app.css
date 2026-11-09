@@ -284,3 +284,5 @@ html.na-casca body.com-acoes{padding-bottom:110px}
 .ped .acs{display:flex;gap:6px;flex-wrap:wrap}.ped .acs a,.ped .acs button{border:0;background:var(--lav);color:var(--marca);border-radius:10px;min-height:36px;padding:0 12px;font:inherit;font-size:13px;font-weight:700;text-decoration:none;display:inline-grid;place-items:center}
 .ped .acs .ok{background:var(--navy);color:#fff}
 .etapas{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:0 0 12px}.etapas a{text-decoration:none;color:var(--texto);background:#fff;border-radius:12px;padding:8px;text-align:center;font-size:13px;font-weight:600}.etapas a.on{background:var(--navy);color:#fff}
+
+.aviso-rede{position:fixed;left:12px;right:12px;bottom:84px;z-index:9999;background:#B42318;color:#fff;padding:12px 14px;border-radius:12px;font-weight:700;box-shadow:0 6px 20px rgba(0,0,0,.25)}
