@@ -78,7 +78,7 @@ const App=(()=>{
   // ---- arte automática: logotipo tratado centralizado preenchendo a área segura do gabarito, cor padrão do material
   const COR_PADRAO={capacho:"#2B2B2D",rigido:"#F4F1EA",vinil:null,tecido:"#F4F1EA",papel:"#FFFFFF",lona:"#FFFFFF",carimbo:null};
   const PRODUTOS_IDS=["capacho","placas","adesivos","uniformes","impressos","panfleto","banners","parede","brindes","carimbo"];
-  let _G=null;const gabaritos=async()=>_G||(_G=await (await fetch("gabaritos.json?v=0e64fe8284")).json());
+  let _G=null;const gabaritos=async()=>_G||(_G=await (await fetch("gabaritos.json?v=39b5207458")).json());
   const carregarImg=src=>new Promise(res=>{const i=new Image();i.crossOrigin="anonymous";i.onload=()=>res(i);i.onerror=()=>res(null);i.src=src;});
   async function artePadrao(pid,c){const G=await gabaritos();const P=G.produtos[pid];if(!P||!(c.manual&&c.manual.tratado))return null;const im=await carregarImg(c.manual.tratado);if(!im)return null;
     const sang=P.sangria_mm!=null?P.sangria_mm:G.sangria_mm,seg=P.seguranca_mm!=null?P.seguranca_mm:G.seguranca_mm;
@@ -103,7 +103,7 @@ const App=(()=>{
   async function apagarNota(id){const db=await abrirVendas();if(!db)return false;return new Promise(res=>{const t=db.transaction("notas","readwrite");t.objectStore("notas").delete(id);t.oncomplete=()=>{res(true);db.close();};t.onerror=()=>{res(false);db.close();};});}
   // ---- agenda de rotas: todas as lojas da zona por estrelas, em dias de 50; dia 1 = data do início (hoje, na primeira abertura); pula domingo
   const META=50;
-  function diasDeRota(D){const lista=D.lojas.slice().sort((a,b)=>b.estrelas-a.estrelas||a.dia-b.dia||a.ordem-b.ordem);const dias=[];for(let i=0;i<lista.length;i+=META)dias.push(lista.slice(i,i+META));
+  function diasDeRota(D){const lista=D.lojas.filter(l=>l.estrelas>=3).sort((a,b)=>b.estrelas-a.estrelas||a.dia-b.dia||a.ordem-b.ordem);  // 1–2 estrelas ficam fora da rotaconst dias=[];for(let i=0;i<lista.length;i+=META)dias.push(lista.slice(i,i+META));
     const e=estado();if(!e.inicio){e.inicio=hojeISO();salvar(e);}const datas=[];let d=new Date(e.inicio+"T12:00:00");for(let k=0;k<dias.length;k++){while(d.getDay()===0)d.setDate(d.getDate()+1);datas.push(d.toISOString().slice(0,10));d.setDate(d.getDate()+1);}
     return dias.map((lojas,i)=>({n:i+1,data:datas[i],lojas}));}
   const hojeISO=()=>{const d=new Date();d.setMinutes(d.getMinutes()-d.getTimezoneOffset());return d.toISOString().slice(0,10);};
