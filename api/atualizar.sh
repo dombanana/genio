@@ -65,11 +65,17 @@ for u in api/*.service api/*.timer; do
   fi
 done
 
-# (b2) nginx: fichas com artes sobem em um corpo só (até 64 MB) — ajusta o site já instalado
-NG=/etc/nginx/sites-available/genio.dombanana.tech.conf
-if [ -f "$NG" ] && grep -q "client_max_body_size 8m;" "$NG"; then
-  sed -i 's/client_max_body_size 8m;/client_max_body_size 64m;/; s/proxy_read_timeout 30s;/proxy_read_timeout 120s;/' "$NG"
-  nginx -t >/dev/null 2>&1 && systemctl reload nginx && echo "nginx: corpo 64m $(date -Is)" >> /var/lib/genio/esteira.log
+# (b2) nginx: fichas com artes sobem em um corpo só (até 64 MB) — ajusta o(s) site(s) já instalado(s)
+if ! grep -rqs "client_max_body_size 64m" /etc/nginx/sites-enabled /etc/nginx/conf.d 2>/dev/null; then
+  for NG in $(grep -rls "genio.dombanana.tech" /etc/nginx/sites-available /etc/nginx/conf.d 2>/dev/null); do
+    if grep -q "client_max_body_size" "$NG"; then
+      sed -i -E 's/client_max_body_size [0-9]+[mMkK]?;/client_max_body_size 64m;/; s/proxy_read_timeout 30s;/proxy_read_timeout 120s;/' "$NG"
+    else
+      sed -i -E 's#(location \^~ /api/ \{)#\1\n        client_max_body_size 64m;\n        proxy_read_timeout 120s;#' "$NG"
+    fi
+    echo "nginx: $NG corpo 64m $(date -Is)" >> /var/lib/genio/esteira.log
+  done
+  nginx -t >/dev/null 2>&1 && systemctl reload nginx || echo "nginx: teste falhou $(date -Is)" >> /var/lib/genio/esteira.log
 fi
 
 if [ "$antes" != "$depois" ] && ! git diff --quiet "$antes" "$depois" -- api/genio_api.py api/dados.py api/genio-api.service api/kits api/captacao.py; then
