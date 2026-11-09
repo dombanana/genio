@@ -218,3 +218,20 @@ html.na-casca body.com-acoes{padding-bottom:110px}
 .rec-menu{left:auto;right:12px;width:min(68vw,330px);bottom:calc(74px + env(safe-area-inset-bottom,0));background:#ECEAF1;border-radius:18px 18px 18px 6px;box-shadow:0 10px 36px rgba(28,22,53,.28);padding:10px 8px 8px}
 .rec-menu button:active{background:rgba(255,255,255,.7)}
 .rec-fundo{background:rgba(20,28,58,.18)}
+
+/* painel da orelha REC: abre para cima a partir da aba, mesma cor; menu ou parâmetros da gravação */
+.rec-painel{position:fixed;right:10px;width:min(68vw,330px);bottom:calc(74px + env(safe-area-inset-bottom,0));background:#ECEAF1;border-radius:18px 18px 18px 6px;box-shadow:0 10px 36px rgba(28,22,53,.28);padding:8px;z-index:60;display:grid;gap:4px;transform-origin:bottom right;transform:scaleY(.6);opacity:0;transition:transform .18s ease,opacity .18s ease;overflow:hidden}
+.rec-painel.aberto{transform:scaleY(1);opacity:1}
+.rec-painel button{border:0;background:transparent;text-align:left;font:inherit;font-size:16px;padding:12px 12px;border-radius:12px;display:flex;gap:12px;align-items:center;color:var(--texto)}
+.rec-painel button:active{background:rgba(255,255,255,.7)}.rec-painel button .ic{font-size:22px;width:30px;text-align:center}
+.rec-painel small{display:block;color:var(--texto2);font-size:12px}
+.rec-painel.status{width:min(68vw,300px);padding:10px 12px}
+.rec-painel.aviso{width:auto;max-width:68vw;padding:10px 14px}
+.rec-linha{display:flex;align-items:center;gap:10px;font-size:15px}
+.rec-linha .dot{width:10px;height:10px;border-radius:50%;background:#C62828;animation:pisca 1s infinite;flex:0 0 auto}
+.rec-linha #recTempo{margin-left:auto;font-variant-numeric:tabular-nums}
+.rec-linha #recStop{border:0;background:#1C1635;color:#fff;border-radius:999px;font:inherit;font-weight:700;padding:6px 12px;margin:0}
+.rec-painel video{width:100%;aspect-ratio:4/3;max-height:22vh;object-fit:cover;border-radius:12px;background:#000;margin-top:8px}
+.rec-menu,.rec-status,.rec-prev{display:none}
+.agenda a .tag.a\ captar{background:#EEE9F7;color:var(--texto2)}
+.agenda a.vazio{opacity:.6}
