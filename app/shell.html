@@ -4,74 +4,73 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>GênIO · Representante</title>
-<meta name="theme-color" content="#F1EEF8">
+<meta name="theme-color" content="#6933C5">
 <link rel="icon" href="../genio-favicon.png">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="stylesheet" href="app.css?v=5691596b2b">
+<link rel="stylesheet" href="app.css?v=fb39cb902f">
 <style>html,body{height:100%;overflow:hidden;padding:0}</style>
 </head>
 <body>
 <div class="casca">
-  <iframe id="tela" allow="camera; microphone; geolocation; display-capture" title="GênIO"></iframe>
+  <iframe id="tela" allow="camera; microphone; geolocation; display-capture; screen-wake-lock" title="GênIO"></iframe>
   <nav class="nav" id="barra"></nav>
 </div>
-<script src="app.js?v=5691596b2b"></script>
+<script src="app.js?v=fb39cb902f"></script>
 <script>
 (()=>{
   const {$,esc,ICONES,gravarNota}=App;
   const fr=$("#tela");const alvo=()=>decodeURIComponent((location.hash||"#index.html").slice(1))||"index.html";
   let atual=alvo();fr.src=atual;
-  // a tela dentro do quadro avisa onde está → hash e destaque da barra
   window.addEventListener("message",ev=>{if(ev.origin!==location.origin||!ev.data||ev.data.genio!=="tela")return;atual=ev.data.href;history.replaceState(null,"","#"+atual);marcar();});
   window.addEventListener("hashchange",()=>{const a=alvo();if(a!==atual){atual=a;fr.src=a;}});
   const on=p=>atual.startsWith(p)?"on":"";
-  function marcar(){const rotOn=on("index")||on("visita")||on("fontes")||on("logotipo")||on("manual")||on("produtos")||on("editor")||on("capacho");
-    $("#barra").innerHTML=`<a href="#index.html" class="${rotOn}" data-ir="index.html"><span class="ic">${ICONES.rota}</span>Rota</a><a href="#pedidos.html" class="${on("pedidos")}" data-ir="pedidos.html"><span class="ic">${ICONES.pedidos}</span>Pedidos</a><a href="#perfil.html" class="${on("perfil")}" data-ir="perfil.html"><span class="ic">${ICONES.perfil}</span>Perfil</a>
-      <div class="aba"><a href="#notas.html" class="${on("notas")}" data-ir="notas.html"><span class="ic">${ICONES.notasLista}</span>Notas</a><button type="button" class="rec ${REC.ativo?"on":""}" id="rec">${REC.ativo?`<span class="dot pisca"></span><span id="recTempo">0:00</span><small id="recTipo">${esc(({audio:"áudio","video-tras":"vídeo","video-frente":"selfie",tela:"tela"})[REC.tipo]||"")}</small>`:`<span class="dot">${ICONES.notas}</span>REC`}</button></div>`;
-    $("#barra").querySelectorAll("[data-ir]").forEach(a=>a.onclick=ev=>{ev.preventDefault();atual=a.dataset.ir;fr.src=atual;history.replaceState(null,"","#"+atual);marcar();});
-    ligarRec();}
-  // ---- REC: toque = áudio (continua gravando enquanto você usa o app); segurar = menu
-  let ultima=null;const lojaAtual=()=>{try{return JSON.parse(localStorage.getItem("app-ultima-loja")||"null");}catch(e){return null;}};
-  const REC={ativo:false,tipo:null,rec:null,stream:null,chunks:[],t0:0,timer:null};
-  const mime=cands=>cands.find(t=>window.MediaRecorder&&MediaRecorder.isTypeSupported(t))||"";
+  const ir=h=>{atual=h;fr.src=h;history.replaceState(null,"","#"+h);marcar();};
   const dur=s=>`${Math.floor(s/60)}:${String(Math.floor(s%60)).padStart(2,"0")}`;
-  // painel da orelha REC (abre para cima): mostra o menu, ou os parâmetros da gravação em andamento
-  function painel(html,cls){let p=$("#recPainel");if(!p){p=document.createElement("div");p.id="recPainel";p.className="rec-painel";document.body.appendChild(p);requestAnimationFrame(()=>p.classList.add("aberto"));}p.className="rec-painel aberto "+(cls||"");p.innerHTML=html;return p;}
-  function fecharPainel(){const p=$("#recPainel");if(p){p.classList.remove("aberto");setTimeout(()=>p.remove(),180);}const f=$("#recFundo");if(f)f.remove();}
-  function status(){marcar();fecharPainel();if(REC.tipo!=="audio"&&REC.tipo!=="tela"){const p=painel('<video id="recPrev" muted playsinline autoplay></video>',"status");const v=$("#recPrev");if(v&&REC.stream)v.srcObject=REC.stream;}}
-  async function iniciar(tipo){if(REC.ativo)return;ultima=lojaAtual();
-    try{let stream;
+  function marcar(){const rotOn=on("index")||on("visita")||on("fontes")||on("logotipo")||on("manual")||on("produtos")||on("editor")||on("capacho");
+    $("#barra").innerHTML=`<a href="#index.html" class="${rotOn}" data-ir="index.html"><span class="ic">${ICONES.rota}</span>Rota</a><a href="#pedidos.html" class="${on("pedidos")}" data-ir="pedidos.html"><span class="ic">${ICONES.pedidos}</span>Pedidos</a><a href="#perfil.html" class="${on("perfil")}" data-ir="perfil.html"><span class="ic">${ICONES.perfil}</span>Perfil</a><span class="sep"></span><a href="#notas.html" class="${on("notas")}" data-ir="notas.html"><span class="ic">${ICONES.notasLista}</span>Notas</a><a href="#notas.html?rec=1" class="rec ${REC.ativo?(REC.pausado?"pausado":"on"):""} ${on("notas")}" data-ir="notas.html?rec=1" id="rec">${REC.ativo?`<span class="ic"><span class="dot"></span></span><span id="recTempo">${dur(REC.segundos())}</span>`:`<span class="ic">${ICONES.notas}</span>REC`}</a>`;
+    $("#barra").querySelectorAll("[data-ir]").forEach(a=>a.onclick=ev=>{ev.preventDefault();ir(a.dataset.ir);});}
+  // ---- motor de gravação (vive na casca: continua entre telas). A tela de Notas é o painel de controle.
+  const lojaAtual=()=>{try{return JSON.parse(localStorage.getItem("app-ultima-loja")||"null");}catch(e){return null;}};
+  const REC={ativo:false,pausado:false,tipo:null,rec:null,stream:null,chunks:[],t0:0,acum:0,timer:null,texto:"",reconhec:null,wake:null,loja:null,ouvintes:new Set(),
+    segundos(){return (this.acum+(this.ativo&&!this.pausado?Date.now()-this.t0:0))/1000;}};
+  const mime=c=>c.find(t=>window.MediaRecorder&&MediaRecorder.isTypeSupported(t))||"";
+  const avisar=()=>{marcar();const s=$("#recTempo");if(s)s.textContent=dur(REC.segundos());REC.ouvintes.forEach(f=>{try{f(estado());}catch(e){}});};
+  const estado=()=>({ativo:REC.ativo,pausado:REC.pausado,tipo:REC.tipo,segundos:REC.segundos(),texto:REC.texto,loja:REC.loja,stream:REC.stream,telaAcesa:!!REC.wake,suporte:{tela:!!(navigator.mediaDevices&&navigator.mediaDevices.getDisplayMedia),transcrever:!!(window.SpeechRecognition||window.webkitSpeechRecognition),wake:"wakeLock" in navigator}});
+  async function telaAcesa(liga){try{if(liga&&!REC.wake&&"wakeLock" in navigator){REC.wake=await navigator.wakeLock.request("screen");REC.wake.addEventListener("release",()=>{REC.wake=null;avisar();});}else if(!liga&&REC.wake){await REC.wake.release();REC.wake=null;}}catch(e){}avisar();}
+  document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible"&&REC.ativo&&REC.quisWake&&!REC.wake)telaAcesa(true);});
+  async function iniciar(tipo,opc){if(REC.ativo)return estado();opc=opc||{};REC.loja=lojaAtual();REC.texto="";REC.chunks=[];REC.acum=0;REC.pausado=false;
+    if(tipo==="transcrever"){const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR)throw new Error("Este navegador não transcreve. Use a gravação de áudio.");
+      const r=new SR();r.lang="pt-BR";r.continuous=true;r.interimResults=true;let fim="";r.onresult=ev=>{let parcial="";for(let i=ev.resultIndex;i<ev.results.length;i++){const t=ev.results[i][0].transcript;if(ev.results[i].isFinal)fim+=t.trim()+" ";else parcial+=t;}REC.texto=(fim+parcial).trim();REC.fimTexto=fim;avisar();};
+      r.onend=()=>{if(REC.ativo&&REC.tipo==="transcrever"&&!REC.pausado){try{r.start();}catch(e){}}};r.onerror=ev=>{if(ev.error==="not-allowed"){parar();}};
+      REC.reconhec=r;REC.fimTexto="";r.start();REC.ativo=true;REC.tipo=tipo;REC.t0=Date.now();}
+    else{let stream;
       if(tipo==="audio")stream=await navigator.mediaDevices.getUserMedia({audio:true});
       else if(tipo==="video-tras"||tipo==="video-frente")stream=await navigator.mediaDevices.getUserMedia({audio:true,video:{facingMode:tipo==="video-frente"?"user":{ideal:"environment"},width:{ideal:1280}}});
-      else if(tipo==="tela"){if(!navigator.mediaDevices.getDisplayMedia){fecharPainel();alert("Este navegador não grava a tela do celular (o Chrome no Android não oferece). Use o gravador de tela do próprio aparelho; a nota de áudio continua disponível.");return;}
+      else if(tipo==="tela"){if(!navigator.mediaDevices.getDisplayMedia)throw new Error("Este navegador não grava a tela do celular (o Chrome no Android não oferece). Use o gravador de tela do aparelho.");
         stream=await navigator.mediaDevices.getDisplayMedia({video:true,audio:true});try{const mic=await navigator.mediaDevices.getUserMedia({audio:true});mic.getAudioTracks().forEach(t=>stream.addTrack(t));}catch(e){}}
+      else throw new Error("tipo desconhecido");
       const tm=tipo==="audio"?mime(["audio/webm;codecs=opus","audio/webm","audio/mp4","audio/ogg"]):mime(["video/webm;codecs=vp9,opus","video/webm;codecs=vp8,opus","video/webm","video/mp4"]);
-      const rec=new MediaRecorder(stream,tm?{mimeType:tm}:undefined);REC.ativo=true;REC.tipo=tipo;REC.rec=rec;REC.stream=stream;REC.chunks=[];REC.t0=Date.now();
+      const rec=new MediaRecorder(stream,tm?{mimeType:tm}:undefined);REC.rec=rec;REC.stream=stream;REC.mime=rec.mimeType||tm||(tipo==="audio"?"audio/webm":"video/webm");
       rec.ondataavailable=e=>{if(e.data.size)REC.chunks.push(e.data);};
-      rec.onstop=async()=>{clearInterval(REC.timer);stream.getTracks().forEach(t=>t.stop());const blob=new Blob(REC.chunks,{type:rec.mimeType||tm||(tipo==="audio"?"audio/webm":"video/webm")});const d=(Date.now()-REC.t0)/1000;
-        if(d>0.7)await gravarNota({id:"n"+Date.now().toString(36),em:new Date().toISOString(),tipo,[tipo==="audio"?"audio":"video"]:blob,dur:d,loja:ultima});
-        REC.ativo=false;REC.rec=null;fecharPainel();marcar();if(atual.startsWith("notas"))fr.contentWindow.location.reload();};
-      rec.start(500);status();REC.timer=setInterval(()=>{const s=$("#recTempo");if(s)s.textContent=dur((Date.now()-REC.t0)/1000);},500);
-      stream.getVideoTracks().forEach(t=>t.onended=()=>{if(REC.ativo)parar();});}
-    catch(e){fecharPainel();alert("Não consegui iniciar: "+e.message);}}
-  function parar(){if(REC.rec&&REC.rec.state!=="inactive")REC.rec.stop();}
-  // foto: câmera do aparelho (traseira ou selfie) → nota com imagem
-  function foto(frente){const i=document.createElement("input");i.type="file";i.accept="image/*";i.capture=frente?"user":"environment";i.style.display="none";document.body.appendChild(i);
-    i.onchange=async()=>{const f=i.files&&i.files[0];i.remove();if(!f){fecharPainel();return;}await gravarNota({id:"n"+Date.now().toString(36),em:new Date().toISOString(),tipo:frente?"selfie":"foto",foto:f,loja:lojaAtual()});if(atual.startsWith("notas"))fr.contentWindow.location.reload();status2("Foto guardada nas notas");};i.click();}
-  function status2(txt){const d=document.createElement("div");d.className="rec-status";d.innerHTML=`<span>${esc(txt)}</span>`;document.body.appendChild(d);setTimeout(()=>d.remove(),2200);}
-  function status2(txt){painel(`<div class="rec-linha"><b>${esc(txt)}</b></div>`,"aviso");setTimeout(fecharPainel,2000);}
-  function menu(){const l=lojaAtual();let f=$("#recFundo");if(!f){f=document.createElement("div");f.id="recFundo";f.className="rec-fundo";f.onclick=fecharPainel;document.body.appendChild(f);}
-    const m=painel(`<small style="padding:4px 12px 0;display:block">${l?"Ligado a <b>"+esc(l.nome)+"</b>":"Sem loja aberta"}</small>
-      <button data-k="foto"><span class="ic">📷</span><span>Foto · câmera traseira</span></button>
-      <button data-k="selfie"><span class="ic">🤳</span><span>Foto · selfie</span></button>
-      <button data-k="video-tras"><span class="ic">🎥</span><span>Vídeo · traseira<small>grava enquanto você usa o app</small></span></button>
-      <button data-k="video-frente"><span class="ic">🎦</span><span>Vídeo · frontal</span></button>
-      <button data-k="tela"><span class="ic">📱</span><span>Gravar a tela com áudio<small>depende do navegador</small></span></button>
-      <button data-k="audio"><span class="ic">🎙</span><span>Só áudio</span></button>`,"menu");
-    m.querySelectorAll("button").forEach(b=>b.onclick=()=>{const fd=$("#recFundo");if(fd)fd.remove();const k=b.dataset.k;if(k==="foto")foto(false);else if(k==="selfie")foto(true);else iniciar(k);});}
-  function ligarRec(){const b=$("#rec");if(!b)return;
-    b.onclick=()=>{if(REC.ativo){parar();return;}if($("#recPainel")&&$("#recPainel").classList.contains("menu"))fecharPainel();else menu();};
-    b.addEventListener("contextmenu",ev=>ev.preventDefault());}
+      rec.onstop=async()=>{stream.getTracks().forEach(t=>t.stop());const blob=new Blob(REC.chunks,{type:REC.mime});const d=REC.segundos();
+        if(d>0.7)await gravarNota({id:"n"+Date.now().toString(36),em:new Date().toISOString(),tipo,[tipo==="audio"?"audio":"video"]:blob,dur:d,loja:REC.loja});
+        limpar();};
+      stream.getVideoTracks().forEach(t=>t.onended=()=>{if(REC.ativo)parar();});
+      rec.start(500);REC.ativo=true;REC.tipo=tipo;REC.t0=Date.now();}
+    REC.quisWake=!!opc.telaAcesa;if(opc.telaAcesa)telaAcesa(true);
+    REC.timer=setInterval(avisar,500);avisar();return estado();}
+  function pausar(){if(!REC.ativo||REC.pausado)return;REC.acum+=Date.now()-REC.t0;REC.pausado=true;if(REC.rec&&REC.rec.state==="recording")REC.rec.pause();if(REC.reconhec){try{REC.reconhec.stop();}catch(e){}}avisar();}
+  function retomar(){if(!REC.ativo||!REC.pausado)return;REC.pausado=false;REC.t0=Date.now();if(REC.rec&&REC.rec.state==="paused")REC.rec.resume();if(REC.reconhec){try{REC.reconhec.start();}catch(e){}}avisar();}
+  async function parar(){if(!REC.ativo)return;if(REC.pausado){REC.pausado=false;}else{REC.acum+=Date.now()-REC.t0;}REC.t0=Date.now();
+    if(REC.tipo==="transcrever"){const r=REC.reconhec;REC.reconhec=null;try{r.onend=null;r.stop();}catch(e){}const t=(REC.texto||"").trim();if(t)await gravarNota({id:"n"+Date.now().toString(36),em:new Date().toISOString(),tipo:"transcricao",texto:t,dur:REC.acum/1000,loja:REC.loja});limpar();}
+    else if(REC.rec&&REC.rec.state!=="inactive")REC.rec.stop();else limpar();}
+  function limpar(){clearInterval(REC.timer);REC.ativo=false;REC.pausado=false;REC.rec=null;REC.stream=null;REC.tipo=null;telaAcesa(false);avisar();REC.ouvintes.forEach(f=>{try{f({...estado(),terminou:true});}catch(e){}});}
+  // foto: câmera do aparelho → nota com imagem
+  function foto(frente){return new Promise(res=>{const i=document.createElement("input");i.type="file";i.accept="image/*";i.capture=frente?"user":"environment";i.style.display="none";document.body.appendChild(i);let ok=false;
+    i.onchange=async()=>{const f=i.files&&i.files[0];i.remove();if(!f)return res(false);ok=true;await gravarNota({id:"n"+Date.now().toString(36),em:new Date().toISOString(),tipo:frente?"selfie":"foto",foto:f,loja:lojaAtual()});res(true);};
+    i.addEventListener("cancel",()=>{i.remove();res(false);});i.click();});}
+  // API para a tela de Notas (mesma origem)
+  window.REC_API={estado,iniciar,pausar,retomar,parar,foto,telaAcesa,ouvir(f){REC.ouvintes.add(f);return()=>REC.ouvintes.delete(f);}};
   marcar();
 })();
 </script>

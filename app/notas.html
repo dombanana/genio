@@ -6,12 +6,12 @@
 <title>GênIO · Notas</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="app.css?v=5691596b2b">
+<link rel="stylesheet" href="app.css?v=fb39cb902f">
 <style>.sel-cli{position:fixed;left:12px;right:12px;top:10vh;max-height:78vh;overflow:auto;background:#fff;border-radius:18px;padding:14px;z-index:75;box-shadow:0 10px 40px rgba(28,22,53,.3)}.sel-cli h3{margin:0 0 8px}.sel-cli input{width:100%;box-sizing:border-box;font:inherit;font-size:16px;border:1.5px solid var(--linha);border-radius:12px;padding:10px 12px}.lista-cli{display:grid;gap:4px;margin-top:8px}.lista-cli button{border:0;background:var(--lav);border-radius:12px;text-align:left;padding:10px 12px;font:inherit;display:grid}.lista-cli button small{color:var(--texto2);font-size:12px}</style>
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=5691596b2b"></script>
+<script src="app.js?v=fb39cb902f"></script>
 <script>
 (async()=>{
   const {$,$$,esc,sessao,nav,topo,listarNotas,gravarNota,apagarNota,nomeLoja}=App;
@@ -31,13 +31,41 @@
   async function render(){const notas=await listarNotas();const grupos={};notas.forEach(n=>{const k=n.loja?"c:"+n.loja.slug:"d:"+n.em.slice(0,10);(grupos[k]=grupos[k]||{k,nome:n.loja?n.loja.nome:"Sem cliente · "+diaDe(n.em),itens:[],loja:n.loja}).itens.push(n);});
     const ordem=Object.values(grupos).sort((a,b)=>b.itens[0].em.localeCompare(a.itens[0].em));
     $("#app").innerHTML=`${topo()}<h1>Notas</h1><p class="sub">Tudo que saiu do REC. Toque numa nota para atrelar a um cliente; sem cliente, fica guardada no dia.</p>
-    <section class="card"><div style="display:flex;gap:8px"><input id="texto" placeholder="nota rápida por escrito…" style="flex:1;font:inherit;font-size:15px;border:1.5px solid var(--linha);border-radius:12px;padding:10px 12px"><button type="button" class="btn sm" id="addTexto" style="width:auto;min-height:44px;padding:0 14px">Salvar</button></div>${ultima?`<small class="muted" style="display:block;margin-top:6px">Loja aberta por último: <b>${esc(ultima.nome)}</b> — notas novas do REC vão para ela.</small>`:""}</section>
+    <section class="card rec-painel-notas" id="recCard"></section>
+    <section class="card"><div style="display:flex;gap:8px"><input id="texto" placeholder="nota rápida por escrito…" style="flex:1;font:inherit;font-size:15px;border:1.5px solid var(--linha);border-radius:12px;padding:10px 12px"><button type="button" class="btn sm" id="addTexto" style="width:auto;min-height:44px;padding:0 14px">Salvar</button></div></section>
     ${ordem.length?ordem.map(g=>`<h2 style="margin:16px 0 8px;font-size:17px">${g.loja?"🏬 ":"📅 "}${esc(g.nome)}${g.loja?` <a href="visita.html?l=${encodeURIComponent(g.loja.slug)}" style="font-size:13px;font-weight:500;margin-left:6px">abrir</a>`:""}</h2>${g.itens.map(n=>`<div class="nota" data-id="${n.id}"><div class="corpo" data-at="${n.id}"><small>${({audio:"🎙",foto:"📷",selfie:"🤳","video-tras":"🎥","video-frente":"🎦",tela:"📱"})[n.tipo]||(n.audio?"🎙":"✎")} ${fmt(n.em)}${n.dur?` · ${dur(n.dur)}`:""} · <u>${n.loja?"trocar cliente":"atrelar a um cliente"}</u></small>${n.texto?`<div style="margin-top:4px">${esc(n.texto)}</div>`:""}${n.audio?`<audio controls preload="none" data-a="${n.id}"></audio>`:""}${n.video?`<video controls playsinline preload="metadata" data-v="${n.id}" style="width:100%;border-radius:12px;margin-top:6px;max-height:260px;background:#000"></video>`:""}${n.foto?`<img data-f="${n.id}" alt="" style="width:100%;border-radius:12px;margin-top:6px;max-height:320px;object-fit:contain;background:#fff">`:""}</div><button type="button" class="x" data-x="${n.id}" aria-label="apagar">✕</button></div>`).join("")}`).join(""):`<p class="ilus">Nenhuma nota ainda. Use o REC na barra.</p>`}
     ${nav("notas")}`;
     notas.forEach(n=>{if(n.audio){const a=document.querySelector(`audio[data-a="${n.id}"]`);if(a)a.src=URL.createObjectURL(n.audio);}if(n.video){const v=document.querySelector(`video[data-v="${n.id}"]`);if(v)v.src=URL.createObjectURL(n.video);}if(n.foto){const f=document.querySelector(`img[data-f="${n.id}"]`);if(f)f.src=URL.createObjectURL(n.foto);}});
     $$("[data-x]").forEach(b=>b.onclick=async()=>{await apagarNota(b.dataset.x);render();});
     $$("[data-at] small").forEach(sm=>sm.onclick=()=>{const n=notas.find(x=>x.id===sm.closest("[data-at]").dataset.at);escolherCliente(n);});
-    $("#addTexto").onclick=async()=>{const t=$("#texto").value.trim();if(!t)return;await gravarNota({id:"n"+Date.now().toString(36),em:new Date().toISOString(),texto:t,loja:ultima||null});render();};}
+    $("#addTexto").onclick=async()=>{const t=$("#texto").value.trim();if(!t)return;await gravarNota({id:"n"+Date.now().toString(36),em:new Date().toISOString(),texto:t,loja:ultima||null});render();};
+    painelRec();}
+  // ---- painel do REC (o motor fica na casca; aqui só o controle)
+  const API=(()=>{try{return window.top.REC_API||null;}catch(e){return null;}})();
+  let tipoSel=localStorage.getItem("rec-tipo")||"audio",telaAcesa=localStorage.getItem("rec-tela")!=="0",desligar=null;
+  const TIPOS=[["audio","🎙","Áudio"],["transcrever","📝","Transcrever"],["video-tras","🎥","Vídeo"],["video-frente","🎦","Vídeo selfie"],["foto","📷","Foto"],["selfie","🤳","Selfie"],["tela","📱","Tela"]];
+  const durF=s=>`${Math.floor(s/60)}:${String(Math.floor(s%60)).padStart(2,"0")}`;
+  function painelRec(){const c=$("#recCard");if(!c)return;if(!API){c.innerHTML='<p class="muted" style="margin:0">O gravador funciona dentro do app (abra pela barra).</p>';return;}
+    const E=API.estado();
+    if(!E.ativo){c.innerHTML=`<h2 style="margin:0 0 8px">Gravar</h2><div class="rec-tipos">${TIPOS.map(([k,ic,n])=>`<button type="button" data-t="${k}" class="${tipoSel===k?"on":""}" ${(k==="tela"&&!E.suporte.tela)||(k==="transcrever"&&!E.suporte.transcrever)?'disabled title="não disponível neste navegador"':""}><span>${ic}</span>${n}</button>`).join("")}</div>
+      <div class="rec-opc"><label><input type="checkbox" id="rTela" ${telaAcesa?"checked":""} ${E.suporte.wake?"":"disabled"}> manter a tela acesa enquanto grava${E.suporte.wake?"":" (sem suporte)"}</label>${ultima?`<small class="muted">Nota vai para <b>${esc(ultima.nome)}</b></small>`:'<small class="muted">Sem loja aberta: a nota fica no dia</small>'}</div>
+      <button type="button" class="btn rec-go" id="rGo">● ${({audio:"Gravar áudio",transcrever:"Começar a transcrever","video-tras":"Gravar vídeo","video-frente":"Gravar vídeo (selfie)",foto:"Tirar foto",selfie:"Tirar selfie",tela:"Gravar a tela"})[tipoSel]}</button>
+      ${tipoSel==="tela"?'<small class="muted">No celular o Chrome não grava a tela; use o gravador do aparelho.</small>':tipoSel==="transcrever"?'<small class="muted">Transcrição pelo reconhecimento de voz do navegador (precisa de internet); salva só o texto.</small>':""}`;
+      $$("#recCard [data-t]").forEach(b=>b.onclick=()=>{tipoSel=b.dataset.t;localStorage.setItem("rec-tipo",tipoSel);painelRec();});
+      $("#rTela").onchange=ev=>{telaAcesa=ev.target.checked;localStorage.setItem("rec-tela",telaAcesa?"1":"0");};
+      $("#rGo").onclick=async()=>{try{if(tipoSel==="foto"||tipoSel==="selfie"){const ok=await API.foto(tipoSel==="selfie");if(ok)render();return;}await API.iniciar(tipoSel,{telaAcesa});painelRec();}catch(e){alert(e.message);}};
+      return;}
+    const rot=({audio:"🎙 Áudio",transcrever:"📝 Transcrevendo","video-tras":"🎥 Vídeo","video-frente":"🎦 Vídeo selfie",tela:"📱 Tela"})[E.tipo]||E.tipo;
+    c.innerHTML=`<div class="rec-topo"><span class="dot ${E.pausado?"pausa":""}"></span><b>${rot}</b><span class="muted">${E.pausado?"pausado":"gravando"}</span><span id="rTempo" class="tempo">${durF(E.segundos)}</span></div>
+      ${E.stream&&E.tipo!=="audio"?'<video id="rPrev" muted playsinline autoplay></video>':""}
+      ${E.tipo==="transcrever"?`<div class="rec-texto" id="rTexto">${esc(E.texto||"…")}</div>`:""}
+      <div class="rec-botoes"><button type="button" class="btn sec" id="rPausa">${E.pausado?"▶ Retomar":"⏸ Pausar"}</button><button type="button" class="btn" id="rStop">■ Parar e salvar</button></div>
+      <small class="muted">${E.loja?"Vai para <b>"+esc(E.loja.nome)+"</b>":"Fica no dia"}${E.telaAcesa?" · tela acesa":""} · continua gravando se você trocar de tela</small>`;
+    const v=$("#rPrev");if(v)v.srcObject=E.stream;
+    $("#rPausa").onclick=()=>{E.pausado?API.retomar():API.pausar();painelRec();};$("#rStop").onclick=async()=>{await API.parar();};}
+  if(API){desligar=API.ouvir(E=>{if(E.terminou){render();return;}const t=$("#rTempo");if(t)t.textContent=durF(E.segundos);const tx=$("#rTexto");if(tx)tx.textContent=E.texto||"…";});}
+  if(API&&qsRec())setTimeout(()=>{const g=$("#rGo");if(g)g.scrollIntoView({block:"center"});},300);
+  function qsRec(){return /[?&]rec=1/.test(location.search);}
   render();
 })();
 </script>

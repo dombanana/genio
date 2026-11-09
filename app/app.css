@@ -191,7 +191,6 @@ html.na-casca body.com-acoes{padding-bottom:110px}
 .casca iframe{flex:1;border:0;width:100%;background:var(--lav)}
 .casca .nav{position:static;grid-template-columns:1fr 1fr 1fr 1px 1fr}
 .casca .rec{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 0;border-radius:14px;color:var(--texto);font-weight:600;font-size:15px;border:0;background:transparent;font-family:inherit;touch-action:none;-webkit-user-select:none;user-select:none}
-.casca .rec .dot{width:34px;height:34px;display:block;line-height:0}.casca .rec .dot img{width:100%;height:100%;object-fit:contain}
 .casca .rec.on{color:#B42318}.casca .rec.on .dot{animation:pisca 1s infinite}
 @keyframes pisca{0%,100%{opacity:1}50%{opacity:.35}}
 .rec-menu{position:fixed;left:12px;right:12px;bottom:calc(86px + env(safe-area-inset-bottom,0));background:#fff;border-radius:18px;box-shadow:0 10px 40px rgba(28,22,53,.25);padding:8px;z-index:60;display:grid;gap:4px}
@@ -204,21 +203,11 @@ html.na-casca body.com-acoes{padding-bottom:110px}
 .rec-status button{border:0;background:#fff;color:#1C1635;border-radius:999px;font:inherit;font-weight:700;padding:4px 10px}
 .rec-prev{position:fixed;right:12px;bottom:calc(136px + env(safe-area-inset-bottom,0));width:120px;height:160px;object-fit:cover;border-radius:14px;z-index:50;box-shadow:0 6px 20px rgba(0,0,0,.3);background:#000}
 /* barra da casca: três itens em roxo; à direita a aba cinza-clara com Notas e REC */
-.casca .nav{background:var(--marca);border-top:0;grid-template-columns:1fr 1fr 1fr 1.9fr;gap:0;padding:0 0 env(safe-area-inset-bottom,0);align-items:end;overflow:visible}
-.casca .nav .sep{display:none}
+.casca .nav{background:var(--marca);border-top:0;grid-template-columns:1fr 1fr 1fr 1px 1fr 1fr;gap:0;padding:0 0 env(safe-area-inset-bottom,0);align-items:stretch;overflow:visible}
+.casca .nav .sep{display:block;background:rgba(255,255,255,.35);margin:12px 0}
 .casca .nav a{color:#fff;border-radius:0;padding:10px 0 10px;gap:3px;font-size:14px}
 .casca .nav a.on{background:rgba(255,255,255,.14);color:#fff}
 .casca .nav a .ic img{filter:drop-shadow(0 1px 2px rgba(0,0,0,.25))}
-.casca .aba{display:grid;grid-template-columns:1fr 1fr;background:#ECEAF1;border-radius:16px 16px 0 0;margin:0 8px 0 6px;position:relative;top:-6px;box-shadow:0 -2px 10px rgba(0,0,0,.12);overflow:hidden;align-self:end}
-.casca .aba a{color:var(--texto);padding:10px 0 12px}
-.casca .aba a.on{background:rgba(105,51,197,.12);color:var(--marca)}
-.casca .rec{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:10px 0 12px;border:0;background:transparent;color:var(--texto);font-weight:700;font-size:14px;font-family:inherit;border-radius:0;margin:0;top:0;box-shadow:none;min-height:70px}
-.casca .rec::before,.casca .rec::after{display:none}
-.casca .rec .dot{width:34px;height:34px;display:block;line-height:0}.casca .rec .dot img{width:100%;height:100%;object-fit:contain}
-/* gravando: a informação fica dentro do próprio botão */
-.casca .rec.on{background:#1C1635;color:#fff;font-variant-numeric:tabular-nums}
-.casca .rec.on .dot.pisca{width:12px;height:12px;border-radius:50%;background:#F0786B;animation:pisca 1s infinite;margin:2px 0}
-.casca .rec.on small{font-size:11px;font-weight:500;opacity:.8}
 /* pop-up do REC: continuação da aba, ~2/3 da largura, com margens */
 .rec-painel{position:fixed;right:8px;width:min(68vw,330px);bottom:calc(74px + env(safe-area-inset-bottom,0));background:#ECEAF1;border-radius:16px 16px 0 0;box-shadow:0 -6px 24px rgba(28,22,53,.18);padding:8px;z-index:60;display:grid;gap:4px;transform-origin:bottom right;transform:scaleY(.6);opacity:0;transition:transform .18s ease,opacity .18s ease;overflow:hidden}
 .rec-painel.aberto{transform:scaleY(1);opacity:1}
@@ -230,3 +219,21 @@ html.na-casca body.com-acoes{padding-bottom:110px}
 .rec-painel video{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:10px;background:#000;display:block}
 .rec-fundo{position:fixed;inset:0;z-index:55;background:rgba(20,28,58,.18)}
 .rec-menu,.rec-status,.rec-prev,.rec-linha{display:none}
+
+/* REC na barra: item roxo como os outros; gravando → ponto vermelho piscando + tempo */
+.casca .nav a.rec .ic{display:grid;place-items:center}
+.casca .nav a.rec .dot{width:16px;height:16px;border-radius:50%;background:#FF5A4E;box-shadow:0 0 0 4px rgba(255,90,78,.35);animation:pisca 1s infinite}
+.casca .nav a.rec.pausado .dot{animation:none;background:#F2A33A;box-shadow:0 0 0 4px rgba(242,163,58,.35)}
+.casca .nav a.rec.on,.casca .nav a.rec.pausado{font-variant-numeric:tabular-nums}
+.rec-painel{display:none}
+/* painel do REC na tela de Notas */
+.rec-tipos{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:0 0 10px}
+.rec-tipos button{border:0;background:var(--lav);border-radius:12px;min-height:58px;font:inherit;font-size:12px;color:var(--texto);display:grid;place-items:center;gap:2px;padding:6px 2px}
+.rec-tipos button span{font-size:22px}.rec-tipos button.on{background:var(--navy);color:#fff}.rec-tipos button:disabled{opacity:.4}
+.rec-opc{display:grid;gap:4px;margin:0 0 10px;font-size:14px}.rec-opc label{display:flex;gap:8px;align-items:center}
+.rec-go{min-height:52px;background:#C62828}
+.rec-topo{display:flex;align-items:center;gap:10px;font-size:16px}.rec-topo .tempo{margin-left:auto;font-variant-numeric:tabular-nums;font-weight:700;font-size:20px}
+.rec-topo .dot{width:12px;height:12px;border-radius:50%;background:#C62828;animation:pisca 1s infinite;flex:0 0 auto}.rec-topo .dot.pausa{animation:none;background:#F2A33A}
+.rec-painel-notas video{width:100%;aspect-ratio:4/3;max-height:40vh;object-fit:cover;border-radius:12px;background:#000;margin:10px 0 0;display:block}
+.rec-texto{margin:10px 0 0;background:var(--lav);border-radius:12px;padding:10px 12px;min-height:60px;max-height:30vh;overflow:auto;font-size:15px;line-height:1.4}
+.rec-botoes{display:grid;grid-template-columns:1fr 1.4fr;gap:8px;margin:10px 0 6px}
