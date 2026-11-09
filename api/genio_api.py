@@ -719,6 +719,21 @@ class H(BaseHTTPRequestHandler):
                     return self._send(200, {"interesse": admin_interesse()})
                 if p == "/api/admin/chaves":
                     return self._send(200, {"chaves": chaves_estado()})
+                if p == "/api/admin/atividade":
+                    # rastro das contextualizações (cache em /var/lib/genio/kits, um arquivo por arte aplicada); as fichas ficam no aparelho
+                    import datetime as _dt
+                    pasta = os.path.join(ESTADO_DIR, "kits"); arqs = []
+                    try:
+                        for n in os.listdir(pasta):
+                            st = os.stat(os.path.join(pasta, n)); arqs.append(st.st_mtime)
+                    except Exception:
+                        pass
+                    arqs.sort(); agora = time.time(); fmt = lambda t: _dt.datetime.fromtimestamp(t).strftime("%d/%m %H:%M")
+                    horas = {}
+                    for t in arqs:
+                        if agora - t < 48 * 3600:
+                            k = _dt.datetime.fromtimestamp(t).strftime("%d/%m %Hh"); horas[k] = horas.get(k, 0) + 1
+                    return self._send(200, {"total": len(arqs), "ultima": fmt(arqs[-1]) if arqs else None, "ultimas_2h": sum(1 for t in arqs if agora - t < 7200), "ultimas_24h": sum(1 for t in arqs if agora - t < 86400), "por_hora_48h": horas})
                 if p == "/api/admin/esteira":
                     out = {}
                     for n in ("esteira.log", "apt.log"):
