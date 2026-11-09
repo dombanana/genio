@@ -79,7 +79,8 @@ const App=(()=>{
   async function migrarAparelho(){if(localStorage.getItem("app-migrado")==="2")return;let ok=true;
     try{const db=await abrirVendas();if(db){const tudo=st=>new Promise(res=>{try{const t=db.transaction(st).objectStore(st).getAll();t.onsuccess=()=>res(t.result||[]);t.onerror=()=>res([]);}catch(e){res([]);}});
         const cl=await tudo("clientes");for(const c of cl){const slug=c.slug||slugDeNome(c.nome||"");if(!slug)continue;const temAlgo=(c.logos&&c.logos.length)||(c.manual&&c.manual.editado)||(c.artes&&Object.keys(c.artes).length)||c.fachada||(c.arquivo&&c.arquivo.length);if(!temAlgo)continue;
-          const r0=await API("GET",`/api/clientes/${slug}`);if(r0.ok){const f=await r0.json();if((f.manual&&f.manual.editado)||(f.artes&&Object.keys(f.artes).length)||(f.logos&&f.logos.length))continue;}  // servidor já tem: não sobrescreve
+          const peso=f=>Object.keys((f&&f.artes)||{}).length*10+((f&&f.manual&&f.manual.editado)?5:0)+(((f&&f.logos)||[]).length);
+          const r0=await API("GET",`/api/clientes/${slug}`);if(r0.ok){const f=await r0.json();if(peso(f)>=peso(c))continue;}  // servidor já tem igual ou mais: não sobrescreve
           c.slug=slug;const r=await API("PUT",`/api/clientes/${slug}`,c);if(!r.ok)ok=false;}
         const ns=await tudo("notas");for(const n of ns){for(const k of ["audio","video","foto"]){if(n[k]&&typeof n[k]!=="string")n[k]=await blobParaDataURL(n[k]);}const r=await API("PUT",`/api/notas/${n.id}`,n);if(!r.ok)ok=false;}
         db.close();}
@@ -174,7 +175,7 @@ const App=(()=>{
   // ---- arte automática: logotipo tratado centralizado preenchendo a área segura do gabarito, cor padrão do material
   const COR_PADRAO={capacho:"#2B2B2D",rigido:"#F4F1EA",vinil:null,tecido:"#F4F1EA",papel:"#FFFFFF",lona:"#FFFFFF",carimbo:null};
   const PRODUTOS_IDS=["capacho","placas","adesivos","uniformes","impressos","panfleto","banners","parede","brindes","carimbo"];
-  let _G=null;const gabaritos=async()=>_G||(_G=await (await fetch("gabaritos.json?v=9c71f7c18a")).json());
+  let _G=null;const gabaritos=async()=>_G||(_G=await (await fetch("gabaritos.json?v=31a31082c2")).json());
   const carregarImg=src=>new Promise(res=>{const i=new Image();i.crossOrigin="anonymous";i.onload=()=>res(i);i.onerror=()=>res(null);i.src=src;});
   // ---- carimbo: só texto — nome, razão social, CNPJ (negrito), endereço, telefone; nunca logotipo
   async function dadosCarimbo(l){const cad=await ficha(l.slug).catch(()=>null);const L=(cad&&cad.lacunas)||{};const leit=(L.leitura||{}).valor||"";const razao=((leit.match(/Razão social: ([^·]+)/)||[])[1]||"").trim();const cnpj=((leit.match(/CNPJ:? ?([\d./-]{14,18})/)||[])[1]||"");
@@ -216,7 +217,7 @@ const App=(()=>{
     const PX=Math.min(100,Math.floor(3000/Math.max(P.w_cm+sang/5,P.h_cm+sang/5)));const W=Math.round((P.w_cm+2*sang/10)*PX),H=Math.round((P.h_cm+2*sang/10)*PX),B=Math.round(sang/10*PX),S=Math.round(seg/10*PX);
     const aw=W-2*(B+S),ah=H-2*(B+S);const f=Math.min(aw/LW,(P.ancora==="topo"?ah*0.45:ah)/LH);const w=LW*f,h=LH*f;const x=(W-w)/2,y=P.ancora==="topo"?B+S+ah*0.05:(H-h)/2;
     const fundo=P.sem_fundo?null:(COR_PADRAO[P.superficie]===undefined?"#FFFFFF":COR_PADRAO[P.superficie]);
-    if(pid==="impressos"||pid==="panfleto"){await carregarScript("qr.js?v=9c71f7c18a");await carregarScript("impressos.js?v=9c71f7c18a");return window.Impressos.arteImpressa(App,pid,c,l,{P,G,W,H,B,S,PX,im,sang,rec});}
+    if(pid==="impressos"||pid==="panfleto"){await carregarScript("qr.js?v=31a31082c2");await carregarScript("impressos.js?v=31a31082c2");return window.Impressos.arteImpressa(App,pid,c,l,{P,G,W,H,B,S,PX,im,sang,rec});}
     if(pid==="panfleto"){const M=cardapioDe();const f1=B+S,ah3=(H-2*(B+S))/3;const lf=Math.min(aw/im.naturalWidth,(ah3*0.8)/im.naturalHeight);const lw=im.naturalWidth*lf,lh=im.naturalHeight*lf;
       const cor=(c.manual.cores&&c.manual.cores[0]&&c.manual.cores[0].hex)||"#6933C5";const esc_=luz(cor)<140?"#FFFFFF":"#1C1635";
       const el=[{tipo:"camada",id:"logo",nome:"Logotipo",src:c.manual.tratado,cor:null,usarCor:false,x:(W-lw)/2,y:f1+(ah3-lh)/2,w:lw,h:lh,borda:0,bordaCor:"#FFFFFF",grupo:"logo"},
