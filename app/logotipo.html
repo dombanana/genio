@@ -6,7 +6,7 @@
 <title>GênIO · Logotipo</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="app.css?v=7bc05044ef">
+<link rel="stylesheet" href="app.css?v=688fd98b02">
 <style>
 body.com-acoes{padding-bottom:calc(150px + env(safe-area-inset-bottom,0))}
 .palco{position:relative;height:min(50vh,480px);background:repeating-conic-gradient(#e9e5f3 0 25%,#fff 0 50%) 0 0/18px 18px;border-radius:16px;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
@@ -27,7 +27,7 @@ body.com-acoes{padding-bottom:calc(150px + env(safe-area-inset-bottom,0))}
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=7bc05044ef"></script>
+<script src="app.js?v=688fd98b02"></script>
 <script>
 (async()=>{
   const {$,$$,esc,qs,sessao,dados,nav,topo,voltar,nomeLoja,cliente,gravarCliente,definirCliente}=App;
@@ -112,8 +112,8 @@ body.com-acoes{padding-bottom:calc(150px + env(safe-area-inset-bottom,0))}
     const png=cv.toDataURL("image/png");const c=await cliente(l);
     // vários logotipos por loja: o novo entra como principal; os anteriores ficam guardados
     c.logos=[{id:"logo"+Date.now().toString(36),src:png,nome:"Logotipo"+(fonte?" · "+fonte:""),origem:"escolha",de:u.startsWith("data:")?"":u,largura:W,altura:H,tratado:hist.length>0,em:new Date().toISOString()},...(c.logos||[])].slice(0,12);
-    // logotipo salvo aqui já vale como tratado para abrir o catálogo (o fundo foi tirado nesta tela quando precisou)
-    c.manual={editado:true,tratado:png,largura:W,altura:H,cores:(c.manual&&c.manual.cores)||[],camadas:[{nome:"Logotipo",png}],em:new Date().toISOString()};
+    // só conta como tratado se houve edição aqui (fundo tirado, recorte, giro); salvo inteiro sem mexer fica "falta tratar" → recorte em lote ou manual depois
+    if(hist.length>0)c.manual={editado:true,tratado:png,largura:W,altura:H,cores:(c.manual&&c.manual.cores)||[],camadas:[{nome:"Logotipo",png}],em:new Date().toISOString()};else if(c.manual&&c.manual.tratado!==png)delete c.manual;
     await gravarCliente(c);location.href=`visita.html?l=${encodeURIComponent(slug)}`;};
 })();
 </script>

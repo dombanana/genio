@@ -8,13 +8,13 @@
 <link rel="icon" href="../genio-favicon.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
-<link rel="stylesheet" href="app.css?v=7bc05044ef">
+<link rel="stylesheet" href="app.css?v=688fd98b02">
 <style>.leaflet-div-icon{background:transparent;border:0}.mapa svg.esq{width:100%;height:100%}</style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=7bc05044ef"></script>
+<script src="app.js?v=688fd98b02"></script>
 <script>
 (async()=>{
   const {$,$$,esc,qs,sessao,eu,dados,estrelasHTML,estado,salvar,nav,topo,setorNome,nomeLoja}=App;
@@ -44,14 +44,19 @@
   ${atual.data!==hoje&&feitasDia<rota.length?`<div class="linha-rota"><span class="muted">Rota ${atual.n} agendada para ${dc.sem} ${dc.dia}/${dc.mes}${atual.data<hoje?" · ainda não feita":""}</span><button type="button" class="btn sec sm" id="reHoje" style="width:auto;min-height:36px;padding:0 12px;font-size:13px">Fazer hoje</button><label class="btn sec sm" style="width:auto;min-height:36px;padding:0 12px;font-size:13px;display:inline-grid;place-items:center;position:relative">Outra data<input type="date" id="reData" value="${atual.data}" style="position:absolute;inset:0;opacity:0;width:100%"></label></div>`:""}
   <section class="card" style="padding:12px 16px"><div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">${cont.map(([n,q])=>`<a href="?dia=${atual.n}&min=${n}" class="chip ${filtro===n?"ok":""}" style="text-decoration:none">${"★".repeat(n)} <b>${q}</b></a>`).join("")}${filtro?`<a href="?dia=${atual.n}" class="chip">todas</a>`:""}</div><small class="muted">Só lojas de 3 a 5 estrelas; 5 e 4 primeiro. <span class="leg-falta">Fundo âmbar</span> = logotipo ainda não organizado.</small></section>
   <div class="mapa" id="mapa"></div>
-  <button class="btn sec" id="gerarTodas" type="button" style="margin:0 0 12px;min-height:48px">✦ Gerar produtos de todas as lojas com logotipo</button><div class="muted" id="gerarSt" style="font-size:13px;margin:-6px 0 10px"></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 6px"><button class="btn sec" id="recortarTodas" type="button" style="min-height:48px;font-size:14px">✂ Recortar logotipos em lote</button><button class="btn sec" id="gerarTodas" type="button" style="min-height:48px;font-size:14px">✦ Gerar produtos de todas</button></div><div class="muted" id="gerarSt" style="font-size:13px;margin:0 0 10px"></div>
   <div class="lista">${vis.map((l,i)=>`<a class="card loja-l ${e.feitas.includes(l.slug)?"feita":""} logo-${LOGO[l.slug]}" href="visita.html?l=${encodeURIComponent(l.slug)}" style="display:grid;color:inherit;text-decoration:none"><span class="n">${e.feitas.includes(l.slug)?"✓":l.parada}</span><div><b>${esc(nomeLoja(l.nome))}</b><small>${esc(setorNome(l.setor))} · ${esc((l.endereco||"").split(" · ")[0])}</small></div><div style="text-align:right">${estrelasHTML(l.estrelas)}<br><small class="${LOGO[l.slug]==="pronto"?"ok-logo":"falta-logo"}">${LOGO[l.slug]==="pronto"?"✓ logotipo pronto":LOGO[l.slug]==="falta"?"◷ falta tratar":"✦ falta logotipo"}</small></div></a>`).join("")}</div>
   ${nav("rota")}`;
   const rh=$("#reHoje");if(rh)rh.onclick=()=>{App.reagendar(atual.n,hoje);location.href=`?dia=${atual.n}`;};const rd=$("#reData");if(rd)rd.onchange=()=>{if(rd.value){App.reagendar(atual.n,rd.value);location.href=`?dia=${atual.n}`;}};
+  // recorte em lote: só as lojas desta rota com logotipo escolhido e ainda não tratado (o manual não é mexido)
+  $("#recortarTodas").onclick=async()=>{const b=$("#recortarTodas"),st=$("#gerarSt");b.disabled=true;let fila=[];for(const l of D.lojas){const c=await App.cliente(l);if((c.logos||[]).length&&!(c.manual&&c.manual.editado))fila.push(l);}  // todas as lojas da zona, qualquer dia
+    if(!fila.length){st.textContent="Nenhuma loja com logotipo esperando recorte.";b.disabled=false;return;}
+    let ok=0,falhas=[];for(let i=0;i<fila.length;i++){const l=fila[i];b.textContent=`✂ ${i+1}/${fila.length}`;st.textContent=`Recortando ${nomeLoja(l.nome)}…`;const r=await App.recortarLogo(l);if(r.ok)ok++;else falhas.push(nomeLoja(l.nome)+": "+r.motivo);}
+    b.textContent="✂ Recortar logotipos em lote";b.disabled=false;st.textContent=`${ok} logotipo(s) recortado(s)${falhas.length?" · "+falhas.length+" falha(s)":""}`;if(falhas.length)alert(falhas.slice(0,8).join("\n"));setTimeout(()=>location.reload(),1200);};
   $("#gerarTodas").onclick=async()=>{const b=$("#gerarTodas"),st=$("#gerarSt");b.disabled=true;let prontas=0,feitas=0,falhas=[];
     for(const l of rota){const c=await App.cliente(l);if(!(c.manual&&c.manual.editado))continue;prontas++;b.textContent=`${nomeLoja(l.nome)}…`;
       const r=await App.gerarProdutos(l,pid=>{st.textContent=`${nomeLoja(l.nome)} · ${pid} (loja ${prontas})`;});feitas+=r.ok;if(r.falhas.length)falhas.push(nomeLoja(l.nome)+": "+r.falhas.join(", "));}
-    b.textContent="✦ Gerar produtos de todas as lojas com logotipo";b.disabled=false;st.textContent=`${prontas} loja(s) com logotipo · ${feitas} arte(s) geradas${falhas.length?" · falhas: "+falhas.length:""}`;if(falhas.length)alert(falhas.slice(0,8).join("\n"));};
+    b.textContent="✦ Gerar produtos de todas";b.disabled=false;st.textContent=`${prontas} loja(s) com logotipo · ${feitas} arte(s) geradas${falhas.length?" · falhas: "+falhas.length:""}`;if(falhas.length)alert(falhas.slice(0,8).join("\n"));};
   {const a=document.querySelector(".agenda a.on")||document.querySelector(".agenda a.hoje");if(a)a.scrollIntoView({inline:"center",block:"nearest"});}
   // mapa com o traço ligando as paradas na ordem do percurso: Google Maps se houver chave no servidor; senão mapa aberto (Leaflet/CARTO); sem rede, esquema
   const lojas=rota.filter(l=>l.lat&&l.lng);if(!lojas.length){$("#mapa").remove();return;}
