@@ -6,7 +6,7 @@
 <title>GênIO · Produtos e serviços</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="app.css?v=0571fc5497">
+<link rel="stylesheet" href="app.css?v=6e77cf19c1">
 <style>
 .grade{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .prod{background:#fff;border-radius:18px;box-shadow:0 2px 10px rgba(28,22,53,.06);overflow:hidden;display:flex;flex-direction:column;position:relative}
@@ -23,6 +23,7 @@
 .serv{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;padding:12px 16px}
 .serv .ic{width:44px;height:44px;border-radius:12px;background:var(--lav);display:grid;place-items:center;font-size:22px}
 .serv small{display:block;color:var(--texto2);font-size:13px}
+.serv .mostra-acao{grid-column:1/-1}.serv .mostra-acao .btn{min-height:42px}
 .tog{width:52px;height:30px;border-radius:999px;background:#CFC8E0;position:relative;border:0}.tog::after{content:"";position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:#fff;transition:left .15s}.tog.on{background:var(--teal)}.tog.on::after{left:25px}
 .resumo{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 16px;background:#fff;border-radius:16px;margin:0 0 10px}
 .galeria-ctx{position:fixed;inset:0;background:var(--lav);z-index:40;display:flex;flex-direction:column}
@@ -33,8 +34,8 @@
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=0571fc5497"></script>
-<script src="qr.js?v=0571fc5497"></script>
+<script src="app.js?v=6e77cf19c1"></script>
+<script src="qr.js?v=6e77cf19c1"></script>
 <script>
 (async()=>{
   const {$,$$,esc,qs,sessao,dados,nav,topo,voltar,setorNome,nomeLoja,estado,salvar,cliente,gravarCliente,definirCliente}=App;
@@ -43,7 +44,7 @@
   if(!l){$("#app").innerHTML=`${topo()}<p>Loja não encontrada.</p>${nav("rota")}`;return;}
   const nome=nomeLoja(l.nome);definirCliente(l);let c=await cliente(l);
   if(!(c.manual&&c.manual.editado)){location.href=`visita.html?l=${encodeURIComponent(slug)}`;return;}  // catálogo só depois do logotipo limpo
-  const G=await (await fetch("gabaritos.json?v=0571fc5497")).json();
+  const G=await (await fetch("gabaritos.json?v=6e77cf19c1")).json();
   const CAT=[["capacho","Capacho personalizado","../img/cena-capacho.jpg"],["placas","Placas e sinalização","../img/cena-placas.jpg"],["adesivos","Adesivos e vitrines","../img/cena-adesivos.jpg"],["uniformes","Uniformes e camisetas","../img/cena-uniformes.jpg"],["impressos","Cartões de visita","../img/cena-cartoes.jpg"],["panfleto","Flyers e panfletos","../img/cat-impressos.jpg"],["banners","Banners e faixas","../img/cena-banners.jpg"],["parede","Adesivos de parede","../img/cat-parede.jpg"],["brindes","Sacolas e brindes","../img/cat-brindes.jpg"],["carimbo","Carimbos","../img/cat-brindes.jpg"]].map(([id,n,img])=>({id,nome:n,img}));
   const SERV=[{id:"mostraai",nome:"Mostra Aí · cardápio digital",desc:"Serviço mensal (AI Negócios)",ic:"📱"},{id:"postaai",nome:"Posta Aí · postagens",desc:"Conteúdo para as redes (AI Negócios)",ic:"📣"},{id:"inpi",nome:"Registro de marca (INPI)",desc:"Proteção do nome e do logo",ic:"®"}];
   const e=estado();e.sel=e.sel||{};const S=e.sel[slug]=e.sel[slug]||{};
@@ -58,11 +59,22 @@
       ${p.id==="capacho"?`<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:0 12px 8px"><a class="ir" style="margin:0" href="capacho.html?l=${encodeURIComponent(slug)}">${A?"Editar →":"Montar →"}</a><a class="ir" style="margin:0;background:var(--navy);color:#fff" href="capacho.html?l=${encodeURIComponent(slug)}&ver=1" title="foto do local · ao vivo">👁 Visualizar</a></div>`:`<a class="ir" href="editor.html?l=${encodeURIComponent(slug)}&p=${p.id}">${A?"Editar arte":"Criar arte"}</a>`}
       <div class="qtd"><button data-m="-">−</button><span class="${s.q>0?"":"zero"}">${s.q>0?s.q+" un.":"não quero"}</span><button data-m="+">+</button></div></div>`;}).join("")}</div>
     <h2 style="margin:22px 0 10px">Serviços</h2>
-    ${SERV.map(s=>{const on=!!(S[s.id]&&S[s.id].q>0);return `<div class="card serv"><span class="ic">${s.ic}</span><div><b>${esc(s.nome)}</b><small>${esc(s.desc)}${on?" · <b style='color:#0E8A84'>no orçamento</b>":""}</small></div><button class="tog ${on?"on":""}" data-t="${s.id}" aria-label="${esc(s.nome)}"></button></div>`;}).join("")}
+    ${SERV.map(s=>{const on=!!(S[s.id]&&S[s.id].q>0);return `<div class="card serv"><span class="ic">${s.ic}</span><div><b>${esc(s.nome)}</b><small>${esc(s.desc)}${on?" · <b style='color:#0E8A84'>no orçamento</b>":""}</small></div><button class="tog ${on?"on":""}" data-t="${s.id}" aria-label="${esc(s.nome)}"></button>${s.id==="mostraai"?`<div class="mostra-acao"><button type="button" class="btn sec sm" id="acionarMostra">${c.mostra&&c.mostra.token?"📺 Abrir links do Mostra Aí":"📺 Acionar Mostra Aí"}</button></div>`:""}</div>`;}).join("")}
     <p class="ilus">Preços entram na fase do orçamento.</p>
     <div class="acoes"><div class="w"><a class="btn sec" href="visita.html?l=${encodeURIComponent(slug)}">← Visita</a><a class="btn" href="pedidos.html?l=${encodeURIComponent(slug)}">Ver seleção →</a></div></div>
     ${nav("rota")}`;document.body.classList.add("com-acoes");
     $$(".prod .qtd button").forEach(b=>b.onclick=()=>{const id=b.closest(".prod").dataset.p;const s=S[id]=S[id]||{q:0,nome:CAT.find(x=>x.id===id).nome};s.q=Math.max(0,s.q+(b.dataset.m==="+"?1:-1));salvar(e);render();});
+    const am=$("#acionarMostra");if(am)am.onclick=async()=>{am.disabled=true;am.textContent="Preparando…";
+      try{const r=await fetch("/api/mostra",{method:"POST",credentials:"same-origin",headers:{"Content-Type":"application/json"},body:JSON.stringify({slug,loja:{nome:l.nome,setor:l.setor}})});const d=await r.json();if(!r.ok)throw new Error(d.erro||r.status);
+        c=await cliente(l);c.mostra={token:d.token,criado:(c.mostra&&c.mostra.criado)||new Date().toISOString()};await gravarCliente(c);
+        const tela=location.origin+d.tela,prog=location.origin+d.programacao;
+        const g=document.createElement("div");g.className="galeria-ctx";g.innerHTML=`<div class="top"><b>Mostra Aí · ${esc(nome)}</b><button class="btn sec sm" id="fecharM" style="width:auto;min-height:40px;padding:0 12px">Fechar</button></div><div class="rolo" style="padding:0 16px 24px">
+          <section class="card" style="text-align:center"><h2 style="margin:0 0 6px">Tela</h2><p class="sub" style="margin:0 0 10px">Abra no seu celular ou na TV Box. Aponte a câmera:</p><canvas id="qrTela" width="220" height="220" style="width:220px;height:220px;border-radius:12px"></canvas><p style="word-break:break-all;font-size:13px;color:var(--texto2);margin:8px 0">${esc(tela)}</p><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><a class="btn" href="${esc(tela)}" target="_blank" rel="noopener" style="text-decoration:none">Abrir tela</a><button type="button" class="btn sec" data-copia="${esc(tela)}">Copiar · enviar</button></div></section>
+          <section class="card" style="text-align:center"><h2 style="margin:0 0 6px">Programação (painel do cliente)</h2><p class="sub" style="margin:0 0 10px">O cliente edita itens, preços e destaques; a tela muda em segundos.</p><canvas id="qrProg" width="220" height="220" style="width:220px;height:220px;border-radius:12px"></canvas><p style="word-break:break-all;font-size:13px;color:var(--texto2);margin:8px 0">${esc(prog)}</p><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><a class="btn" href="${esc(prog)}" target="_blank" rel="noopener" style="text-decoration:none">Abrir programação</a><button type="button" class="btn sec" data-copia="${esc(prog)}">Copiar · enviar</button></div></section></div>`;
+        document.body.appendChild(g);g.querySelector("#fecharM").onclick=()=>{g.remove();render();};
+        if(window.QR){const q1=g.querySelector("#qrTela").getContext("2d");window.QR.desenhar(q1,tela,0,0,220,"#1C1635","#fff");const q2=g.querySelector("#qrProg").getContext("2d");window.QR.desenhar(q2,prog,0,0,220,"#1C1635","#fff");}
+        g.querySelectorAll("[data-copia]").forEach(b=>b.onclick=async()=>{const u=b.dataset.copia;if(navigator.share){try{await navigator.share({title:"Mostra Aí · "+nome,url:u});return;}catch(e){}}try{await navigator.clipboard.writeText(u);b.textContent="Copiado ✓";}catch(e){prompt("Copie o link:",u);}});
+      }catch(e){alert("Não consegui acionar o Mostra Aí: "+e.message);am.disabled=false;am.textContent="📺 Acionar Mostra Aí";}};
     $$(".tog").forEach(b=>b.onclick=()=>{const id=b.dataset.t;const s=S[id]=S[id]||{q:0,nome:SERV.find(x=>x.id===id).nome,servico:true};s.q=s.q>0?0:1;salvar(e);render();});
     // item do kit com arte: tocar volta para a edição daquela arte
     $$(".cena[data-ctx]").forEach(el=>{let t0=0,mv=false;el.addEventListener("pointerdown",()=>{t0=Date.now();mv=false;});el.addEventListener("pointermove",()=>{mv=true;});el.addEventListener("pointerup",()=>{if(mv||Date.now()-t0>450)return;const A=artes[el.dataset.ctx];if(A&&A.contexto){const g=document.createElement("div");g.className="galeria-ctx";g.innerHTML=`<div class="top"><b>${esc(CAT.find(x=>x.id===el.dataset.ctx).nome)}</b><span><a class="btn sec sm" style="width:auto;display:inline-grid;min-height:40px;padding:0 12px;text-decoration:none;margin-right:6px" href="editor.html?l=${encodeURIComponent(slug)}&p=${el.dataset.ctx}">${A.verso?"Editar frente":"Editar"}</a>${A.verso?`<a class="btn sec sm" style="width:auto;display:inline-grid;min-height:40px;padding:0 12px;text-decoration:none;margin-right:6px" href="editor.html?l=${encodeURIComponent(slug)}&p=${el.dataset.ctx}&face=verso">Editar verso</a>`:""}<button class="btn sec sm" id="fechar" style="width:auto;min-height:40px;padding:0 12px">Fechar</button></span></div><div class="rolo"><img src="${A.contexto}" alt="">${A.verso?`<div class="faces2"><figure><img src="${A.png}" alt=""><figcaption>Frente</figcaption></figure><figure><img src="${A.verso.png}" alt=""><figcaption>Verso</figcaption></figure></div>`:""}</div>`;document.body.appendChild(g);g.querySelector("#fechar").onclick=()=>g.remove();}else location.href=el.dataset.ctx==="capacho"?`capacho.html?l=${encodeURIComponent(slug)}`:`editor.html?l=${encodeURIComponent(slug)}&p=${el.dataset.ctx}`;});});

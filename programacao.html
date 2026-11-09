@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Mostra Aí · Programação</title>
+<meta name="robots" content="noindex">
+<style>
+:root{--roxo:#6933C5;--esc:#1C1635;--lav:#EFEAFB;--texto2:#5B5675;--ok:#0E8A84}
+*{box-sizing:border-box}
+body{margin:0;background:#F6F3FC;color:var(--esc);font-family:Rubik,"Segoe UI",system-ui,sans-serif;padding:16px 16px 120px}
+h1{font-size:22px;margin:0 0 2px}.sub{color:var(--texto2);margin:0 0 14px;font-size:14px}
+.card{background:#fff;border-radius:16px;padding:14px;margin-bottom:12px;box-shadow:0 1px 4px rgba(28,22,53,.06)}
+label{display:block;font-size:13px;color:var(--texto2);margin:0 0 4px}
+input[type=text]{width:100%;font:inherit;font-size:16px;padding:10px 12px;border:1px solid #D9D2F0;border-radius:10px;background:#fff}
+.it{display:grid;grid-template-columns:1fr 92px;gap:8px;align-items:start;padding:12px 0;border-top:1px solid #EEE9F8}
+.it:first-child{border-top:0}
+.it .linha2{grid-column:1/-1;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.tog{display:inline-flex;align-items:center;gap:6px;font-size:13px;padding:6px 10px;border-radius:999px;border:1px solid #D9D2F0;background:#fff;color:var(--texto2);cursor:pointer}
+.tog.on{background:var(--lav);color:var(--roxo);border-color:#C9B8F2;font-weight:700}
+.tog.dest.on{background:#FFF4E0;color:#8A5A00;border-color:#F3D9A4}
+.mini{font-size:13px;padding:6px 9px;border-radius:8px;border:1px solid #D9D2F0;background:#fff;cursor:pointer}
+.mini.rm{color:#B42318}
+.it.off input{opacity:.55}
+.add{width:100%;min-height:46px;border-radius:12px;border:2px dashed #C9B8F2;background:transparent;color:var(--roxo);font:700 15px Rubik,system-ui;cursor:pointer}
+.estado{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid #E6E0F5;padding:10px 16px calc(10px + env(safe-area-inset-bottom));display:flex;align-items:center;gap:10px;font-size:14px}
+.estado .pt{width:10px;height:10px;border-radius:50%;background:#ccc}.estado .pt.ok{background:var(--ok)}.estado .pt.env{background:#E6A700}.estado .pt.erro{background:#B42318}
+.estado a{margin-left:auto;color:var(--roxo);font-weight:700;text-decoration:none}
+.erro{padding:40px 20px;text-align:center}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div class="estado" id="estado"><span class="pt" id="pt"></span><span id="txt">Carregando…</span><a id="verTela" href="#" target="_blank" rel="noopener">Ver a tela ↗</a></div>
+<script>
+(()=>{
+  const c=new URLSearchParams(location.search).get("c")||"";const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+  const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]));
+  if(!c){$("#app").innerHTML='<div class="erro">Falta o código no endereço.</div>';return;}
+  $("#verTela").href=`/mostra.html?c=${encodeURIComponent(c)}`;
+  let E=null,timer=null,enviando=false,pendente=false;
+  const estado=(k,t)=>{$("#pt").className="pt "+k;$("#txt").textContent=t;};
+  function render(){const it=E.itens||[];$("#app").innerHTML=`<h1>${esc(E.nome)}</h1><p class="sub">Programação do Mostra Aí · o que você muda aqui aparece na tela em poucos segundos</p>
+    <div class="card"><label>Título da tela</label><input type="text" id="titulo" value="${esc(E.titulo||"")}" maxlength="40"><label style="margin-top:10px">Aviso que passa no rodapé (opcional)</label><input type="text" id="aviso" value="${esc(E.aviso||"")}" maxlength="140" placeholder="Ex.: hoje até as 20h · aceitamos Pix"></div>
+    <div class="card" id="lista">${it.map((x,i)=>`<div class="it ${x.ativo===false?"off":""}" data-i="${i}"><input type="text" data-k="nome" value="${esc(x.nome)}" placeholder="Nome do item" maxlength="60"><input type="text" data-k="preco" value="${esc(x.preco)}" placeholder="R$" inputmode="decimal" maxlength="20">
+      <div class="linha2"><button type="button" class="tog ${x.ativo!==false?"on":""}" data-a="ativo">${x.ativo!==false?"● Na tela":"○ Fora da tela"}</button><button type="button" class="tog dest ${x.destaque?"on":""}" data-a="destaque">★ Destaque</button><span style="flex:1"></span><button type="button" class="mini" data-a="sobe" title="subir">↑</button><button type="button" class="mini" data-a="desce" title="descer">↓</button><button type="button" class="mini rm" data-a="rm">✕</button></div></div>`).join("")}</div>
+    <button type="button" class="add" id="add">+ Adicionar item</button>`;
+    $("#titulo").oninput=()=>{E.titulo=$("#titulo").value;agendar();};$("#aviso").oninput=()=>{E.aviso=$("#aviso").value;agendar();};
+    $$("#lista input").forEach(inp=>inp.oninput=()=>{const i=+inp.closest(".it").dataset.i;E.itens[i][inp.dataset.k]=inp.value;agendar();});
+    $$("#lista [data-a]").forEach(b=>b.onclick=()=>{const i=+b.closest(".it").dataset.i;const a=b.dataset.a;const L=E.itens;
+      if(a==="ativo")L[i].ativo=L[i].ativo===false;else if(a==="destaque")L[i].destaque=!L[i].destaque;else if(a==="rm"){if(!confirm("Remover “"+(L[i].nome||"item")+"”?"))return;L.splice(i,1);}else if(a==="sobe"&&i>0)[L[i-1],L[i]]=[L[i],L[i-1]];else if(a==="desce"&&i<L.length-1)[L[i+1],L[i]]=[L[i],L[i+1]];
+      render();agendar();});
+    $("#add").onclick=()=>{E.itens.push({id:"i"+Date.now().toString(36),nome:"",preco:"",destaque:false,ativo:true});render();agendar();setTimeout(()=>{const ins=$$("#lista .it input[data-k=nome]");ins[ins.length-1]&&ins[ins.length-1].focus();},50);};}
+  function agendar(){pendente=true;estado("env","Enviando…");clearTimeout(timer);timer=setTimeout(enviar,600);}
+  async function enviar(){if(enviando){pendente=true;return;}enviando=true;pendente=false;
+    try{const r=await fetch(`/api/mostra/${encodeURIComponent(c)}`,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify({itens:E.itens,titulo:E.titulo,aviso:E.aviso})});if(!r.ok)throw new Error(r.status);const d=await r.json();E.v=d.v;const h=new Date();estado("ok","Na tela · "+String(h.getHours()).padStart(2,"0")+":"+String(h.getMinutes()).padStart(2,"0"));}
+    catch(e){estado("erro","Não foi: confira a internet e mexa de novo.");}
+    enviando=false;if(pendente)enviar();}
+  (async()=>{try{const r=await fetch(`/api/mostra/${encodeURIComponent(c)}`,{cache:"no-store"});if(!r.ok)throw 0;E=await r.json();render();estado("ok","Na tela");}catch(e){$("#app").innerHTML='<div class="erro">Este Mostra Aí não existe ou foi desligado.</div>';estado("erro","Sem programação");}})();
+})();
+</script>
+</body>
+</html>

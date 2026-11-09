@@ -455,7 +455,7 @@ def proxy_img(u):
 
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ESTADO_DIR = os.path.dirname(CHAVES_ARQ) if os.path.dirname(CHAVES_ARQ) else "/var/lib/genio"
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__))); import dados as DADOS  # fichas, notas e estado do app: fonte única no servidor
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__))); import dados as DADOS; import mostra as MOSTRA  # fichas, notas e estado do app: fonte única no servidor
 MAX_FICHA = 60 * 1024 * 1024  # ficha com artes em base64 (vira arquivos no servidor)
 KIT_IDS = {"capacho": "01", "placas": "02", "adesivos": "03", "uniformes": "04", "impressos": "05", "panfleto": "06", "banners": "07", "parede": "08", "brindes": "09", "carimbo": "10"}
 def kit_aplicar(d):
@@ -709,6 +709,21 @@ class H(BaseHTTPRequestHandler):
                     return self._send(200, body=dados, ctype=ct, cache="public, max-age=86400")
                 except Exception as e:
                     return self._erro(502, "não consegui abrir: " + str(e)[:120])
+            if p.startswith("/api/mostra/"):
+                partes = p.split("/")   # /api/mostra/<token>[/logo.ext]
+                try:
+                    if len(partes) == 5 and partes[4].startswith("logo."):
+                        ct, raw = MOSTRA.logo(partes[3], partes[4])
+                        return self._send(200, body=raw, ctype=ct, cache="public, max-age=600")
+                    est = MOSTRA.ler(partes[3]) if len(partes) == 4 else None
+                    if not est:
+                        return self._erro(404, "este Mostra Aí não existe")
+                    qs = {k: v[0] for k, v in _parse_qs(urlparse(self.path).query or "").items()}
+                    if qs.get("v") and str(est.get("v")) == qs["v"]:
+                        return self._send(200, {"v": est["v"], "igual": True})
+                    return self._send(200, est)
+                except (ValueError, FileNotFoundError):
+                    return self._erro(404, "este Mostra Aí não existe")
             if p.startswith("/api/arq/"):
                 if not self._eu():
                     return self._erro(401, "entre com a sua conta")
@@ -840,6 +855,11 @@ class H(BaseHTTPRequestHandler):
     def do_PUT(self):
         p = urlparse(self.path).path.rstrip("/")
         try:
+            if p.startswith("/api/mostra/") and len(p.split("/")) == 4:   # programação do cliente: o código é a chave
+                try:
+                    return self._send(200, MOSTRA.gravar(p.split("/")[3], self._json()))
+                except (ValueError, FileNotFoundError):
+                    return self._erro(404, "este Mostra Aí não existe")
             eu = self._eu()
             if not eu:
                 return self._erro(401, "entre com a sua conta")
@@ -892,6 +912,19 @@ class H(BaseHTTPRequestHandler):
                     return self._send(200, marca_preparar(self._json()))
                 except Exception as e:
                     return self._erro(500, "preparo falhou: " + str(e)[:160])
+            if p == "/api/mostra":   # acionar o Mostra Aí de uma loja (vendedor logado) → links
+                eu = self._eu()
+                if not eu:
+                    return self._erro(401, "entre com a sua conta")
+                d = self._json(); slug = d.get("slug") or ""
+                try:
+                    ficha = DADOS.cliente_ler(slug) or {"k": slug, "nome": (d.get("loja") or {}).get("nome") or slug, "slug": slug, "logos": [], "arquivo": []}
+                    est = MOSTRA.criar(slug, ficha, d.get("loja") or {}, eu["nome"])
+                    ficha["mostra"] = {"token": est["token"], "criado": est["criado"]}
+                    DADOS.cliente_gravar(slug, ficha, eu["nome"])
+                    return self._send(200, {"token": est["token"], "tela": f"/mostra.html?c={est['token']}", "programacao": f"/programacao.html?c={est['token']}", "estado": est})
+                except Exception as e:
+                    return self._erro(500, "Mostra Aí: " + str(e)[:200])
             if p == "/api/kit/aplicar":
                 if not self._eu():
                     return self._erro(401, "entre com a sua conta")
