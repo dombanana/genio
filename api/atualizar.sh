@@ -9,6 +9,13 @@ antes=$(git rev-parse HEAD)
 git fetch -q origin main
 git reset -q --hard origin/main
 depois=$(git rev-parse HEAD)
+
+# ícones 3D da barra (Fluent Emoji, MIT): baixa uma vez para app/vendor/icones (fora do git; o reset não apaga)
+if [ -f app/vendor/icones/icones.txt ]; then
+  while read -r nome url; do
+    [ -n "$nome" ] && [ ! -s "app/vendor/icones/$nome" ] && curl -fsSL -m 20 -o "app/vendor/icones/$nome" "$url" || true
+  done < app/vendor/icones/icones.txt
+fi
 mkdir -p /var/lib/genio /opt/genio/dados
 id genio >/dev/null 2>&1 && chown -R genio:genio /var/lib/genio /opt/genio/dados
 

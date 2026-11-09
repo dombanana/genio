@@ -1,6 +1,10 @@
 // GênIO · app do representante (versão limpa) — núcleo: sessão, dados da zona, ficha do cliente, navegação.
 const App=(()=>{
   const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
+  // casca (shell.html): barra fixa + REC que continua gravando enquanto as telas trocam dentro do quadro
+  const NA_CASCA=(()=>{try{return window.top!==window;}catch(e){return true;}})();
+  if(!NA_CASCA&&!/shell\.html$/.test(location.pathname)&&!/[?&]solto=1/.test(location.search)){const alvo=location.pathname.split("/").pop()+location.search;location.replace("shell.html#"+alvo);}
+  if(NA_CASCA){document.documentElement.classList.add("na-casca");try{window.top.postMessage({genio:"tela",href:location.pathname.split("/").pop()+location.search},location.origin);}catch(e){}}
   const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
   const qs=new URLSearchParams(location.search);
   const ZONA=qs.get("zona")||localStorage.getItem("app-zona")||"zona-cerealista";
@@ -78,7 +82,7 @@ const App=(()=>{
   // ---- arte automática: logotipo tratado centralizado preenchendo a área segura do gabarito, cor padrão do material
   const COR_PADRAO={capacho:"#2B2B2D",rigido:"#F4F1EA",vinil:null,tecido:"#F4F1EA",papel:"#FFFFFF",lona:"#FFFFFF",carimbo:null};
   const PRODUTOS_IDS=["capacho","placas","adesivos","uniformes","impressos","panfleto","banners","parede","brindes","carimbo"];
-  let _G=null;const gabaritos=async()=>_G||(_G=await (await fetch("gabaritos.json?v=266500af68")).json());
+  let _G=null;const gabaritos=async()=>_G||(_G=await (await fetch("gabaritos.json?v=905824686a")).json());
   const carregarImg=src=>new Promise(res=>{const i=new Image();i.crossOrigin="anonymous";i.onload=()=>res(i);i.onerror=()=>res(null);i.src=src;});
   async function artePadrao(pid,c){const G=await gabaritos();const P=G.produtos[pid];if(!P||!(c.manual&&c.manual.tratado))return null;const im=await carregarImg(c.manual.tratado);if(!im)return null;
     const sang=P.sangria_mm!=null?P.sangria_mm:G.sangria_mm,seg=P.seguranca_mm!=null?P.seguranca_mm:G.seguranca_mm;
@@ -111,11 +115,6 @@ const App=(()=>{
   function reagendar(n,iso){const e=estado();e.datas=e.datas||{};if(iso)e.datas[n]=iso;else delete e.datas[n];salvar(e);}
   const hojeISO=()=>{const d=new Date();d.setMinutes(d.getMinutes()-d.getTimezoneOffset());return d.toISOString().slice(0,10);};
   const dataCurta=iso=>{const d=new Date(iso+"T12:00:00");return {dia:d.getDate(),sem:["dom","seg","ter","qua","qui","sex","sáb"][d.getDay()],mes:["jan","fev","mar","abr","mai","jun","jul","ago","set","out","nov","dez"][d.getMonth()]};};
-  // ---- ícones da barra (SVG)
-  const ICONES={rota:`<svg viewBox="0 0 48 48"><defs><linearGradient id="gpin" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F0786B"/><stop offset="1" stop-color="#C62828"/></linearGradient></defs><ellipse cx="24" cy="43" rx="9" ry="2.5" fill="rgba(0,0,0,.18)"/><path d="M24 4c-8.3 0-15 6.6-15 14.8C9 30 24 42 24 42s15-12 15-23.2C39 10.6 32.3 4 24 4z" fill="url(#gpin)"/><circle cx="24" cy="18.5" r="6" fill="#fff"/><circle cx="24" cy="18.5" r="3" fill="#F8D7D3"/><path d="M15 12c2-4 5.5-6 9-6" stroke="rgba(255,255,255,.55)" stroke-width="2" stroke-linecap="round" fill="none"/></svg>`,
-    pedidos:`<svg viewBox="0 0 48 48"><defs><linearGradient id="gclip" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8F6BE0"/><stop offset="1" stop-color="#5A2EB5"/></linearGradient></defs><rect x="9" y="7" width="30" height="37" rx="4" fill="url(#gclip)"/><rect x="12.5" y="12" width="23" height="29" rx="2" fill="#FFFDF7"/><rect x="17" y="4" width="14" height="7" rx="2.5" fill="#2B2B2D"/><rect x="21" y="6" width="6" height="3" rx="1.5" fill="#9A9B9D"/><path d="M16 20h16M16 25h16M16 30h10" stroke="#B9B1CC" stroke-width="2" stroke-linecap="round"/><path d="M15.5 35.5l3 3 6-6" stroke="#14B8B0" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>`,
-    perfil:`<svg viewBox="0 0 48 48"><defs><linearGradient id="gface" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFD9B8"/><stop offset="1" stop-color="#E8A878"/></linearGradient><linearGradient id="gshirt" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2B6CB0"/><stop offset="1" stop-color="#1F3A5F"/></linearGradient></defs><circle cx="24" cy="24" r="21" fill="#EEE9F7"/><path d="M8 40c2-8 8-11 16-11s14 3 16 11a21 21 0 0 1-32 0z" fill="url(#gshirt)"/><path d="M19 29l5 8 5-8" fill="#fff"/><circle cx="24" cy="18" r="8" fill="url(#gface)"/><path d="M16 17c0-6 4-9 8-9s8 3 8 9c-2-3-5-4-8-4s-6 1-8 4z" fill="#3B2A1E"/></svg>`,
-    notas:`<svg viewBox="0 0 48 48"><defs><linearGradient id="gmic" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#C9CCD6"/><stop offset="1" stop-color="#6E7383"/></linearGradient></defs><rect x="17" y="5" width="14" height="24" rx="7" fill="url(#gmic)"/><path d="M19 10h10M19 14h10M19 18h10M19 22h10" stroke="rgba(0,0,0,.25)" stroke-width="1.4"/><path d="M12 22a12 12 0 0 0 24 0" stroke="#2B2B2D" stroke-width="3" fill="none" stroke-linecap="round"/><rect x="22.5" y="33" width="3" height="7" fill="#2B2B2D"/><rect x="15" y="40" width="18" height="3.5" rx="1.75" fill="#2B2B2D"/><circle cx="36" cy="10" r="5" fill="#C62828"/><circle cx="36" cy="10" r="2" fill="#fff"/></svg>`};
   // ---- separação de cores do logotipo (no aparelho): k-means em RGB, junta cores parecidas, descarta <3% → uma camada por cor
   async function separarCores(png,maxK){const im=await carregarImg(png);if(!im)return null;const k0=Math.min(1,900/Math.max(im.naturalWidth,im.naturalHeight));
     const W=Math.max(1,Math.round(im.naturalWidth*k0)),H=Math.max(1,Math.round(im.naturalHeight*k0));const cv=document.createElement("canvas");cv.width=W;cv.height=H;const g=cv.getContext("2d",{willReadFrequently:true});g.drawImage(im,0,0,W,H);const d=g.getImageData(0,0,W,H).data;
@@ -124,11 +123,9 @@ const App=(()=>{
     let K=Math.min(maxK||5,6);let cent=[];for(let k=0;k<K;k++){const i=amostra[Math.floor(amostra.length*(k+0.5)/K)];cent.push([d[i*4],d[i*4+1],d[i*4+2]]);}
     const perto=i=>{let b=0,bd=1e9;for(let k=0;k<cent.length;k++){const dr=d[i*4]-cent[k][0],dg=d[i*4+1]-cent[k][1],db=d[i*4+2]-cent[k][2];const dd=dr*dr+dg*dg+db*db;if(dd<bd){bd=dd;b=k;}}return b;};
     for(let it=0;it<10;it++){const soma=cent.map(()=>[0,0,0,0]);for(const i of amostra){const k=perto(i);soma[k][0]+=d[i*4];soma[k][1]+=d[i*4+1];soma[k][2]+=d[i*4+2];soma[k][3]++;}cent=soma.filter(x=>x[3]).map(x=>[x[0]/x[3],x[1]/x[3],x[2]/x[3]]);}
-    // junta centros parecidos (ΔRGB<40)
     let m=true;while(m&&cent.length>1){m=false;for(let a=0;a<cent.length&&!m;a++)for(let b=a+1;b<cent.length&&!m;b++){if(Math.hypot(cent[a][0]-cent[b][0],cent[a][1]-cent[b][1],cent[a][2]-cent[b][2])<40){cent[a]=cent[a].map((v,i)=>(v+cent[b][i])/2);cent.splice(b,1);m=true;}}}
     const rot=new Uint8Array(W*H);const cont=cent.map(()=>0);for(const i of pts){const k=perto(i);rot[i]=k+1;cont[k]++;}
     const ordem=cent.map((c,k)=>k).filter(k=>cont[k]/pts.length>=0.03).sort((a,b)=>cont[b]-cont[a]);if(ordem.length<2)return null;
-    // pixels das cores descartadas vão para a cor mais próxima que ficou
     const hex=c=>"#"+c.map(v=>Math.round(v).toString(16).padStart(2,"0")).join("");
     const nomes=ordem.map((k,i)=>{const c=cent[k];const l=(0.299*c[0]+0.587*c[1]+0.114*c[2]);return i===0?"Cor principal":l<70?"Escuro":l>200?"Claro":"Cor "+(i+1);});
     const camadas=ordem.map((k,i)=>{const o=document.createElement("canvas");o.width=W;o.height=H;const og=o.getContext("2d");const id=og.createImageData(W,H);const e=id.data;
@@ -139,7 +136,12 @@ const App=(()=>{
   // garante que o manual da loja tem camadas por cor (separa uma vez e guarda)
   async function garantirCamadas(l){const c=await cliente(l);const m=c.manual;if(!m||!m.editado||!m.tratado)return c;if((m.camadas||[]).length>1&&m.separado)return c;
     const r=await separarCores(m.tratado,5);if(r){m.camadas=r.camadas;m.cores=r.cores;m.separado=true;}else{m.camadas=[{nome:"Logotipo",png:m.tratado}];m.separado=true;}await gravarCliente(c);return c;}
-  const nav=on=>`<nav class="nav"><a href="index.html" class="${on==="rota"?"on":""}"><span class="ic">${ICONES.rota}</span>Rota</a><a href="pedidos.html" class="${on==="pedidos"?"on":""}"><span class="ic">${ICONES.pedidos}</span>Pedidos</a><a href="perfil.html" class="${on==="perfil"?"on":""}"><span class="ic">${ICONES.perfil}</span>Perfil</a><span class="sep"></span><a href="notas.html" class="${on==="notas"?"on":""}"><span class="ic">${ICONES.notas}</span>Notas</a></nav>`;
+  // ---- ícones da barra: ilustrações 3D (Fluent Emoji 3D, MIT) + rosto do vendedor; o servidor baixa para vendor/icones, senão vem do CDN
+  const ICO_CDN={mapa:"https://cdn.jsdelivr.net/gh/microsoft/fluentui-emoji@main/assets/World%20map/3D/world_map_3d.png",pedidos:"https://cdn.jsdelivr.net/gh/microsoft/fluentui-emoji@main/assets/Clipboard/3D/clipboard_3d.png",rec:"https://cdn.jsdelivr.net/gh/microsoft/fluentui-emoji@main/assets/Record%20button/3D/record_button_3d.png"};
+  const ico=(n,alt)=>`<img src="vendor/icones/${n}.png" alt="${alt||""}" onerror="this.onerror=null;this.src='${ICO_CDN[n]||""}'">`;
+  const ICONES={rota:`<span class="ic-mapa">${ico("mapa","")}<svg viewBox="0 0 48 48"><path d="M8 36 C14 30, 16 22, 22 20 S30 26, 34 18 S40 12, 42 10" fill="none" stroke="#6933C5" stroke-width="4.5" stroke-linecap="round" stroke-dasharray="7 4"/><circle cx="8" cy="36" r="4.5" fill="#14B8B0" stroke="#fff" stroke-width="2"/><path d="M42 3c-3.3 0-6 2.6-6 5.9C36 13 42 19 42 19s6-6 6-10.1C48 5.6 45.3 3 42 3z" fill="#C62828" stroke="#fff" stroke-width="1.5"/><circle cx="42" cy="8.8" r="2.2" fill="#fff"/></svg></span>`,
+    pedidos:ico("pedidos"),perfil:`<img src="vendor/icones/vendedor.png" alt="">`,notas:ico("rec")};
+  const nav=on=>NA_CASCA?"":`<nav class="nav"><a href="index.html" class="${on==="rota"?"on":""}"><span class="ic">${ICONES.rota}</span>Rota</a><a href="pedidos.html" class="${on==="pedidos"?"on":""}"><span class="ic">${ICONES.pedidos}</span>Pedidos</a><a href="perfil.html" class="${on==="perfil"?"on":""}"><span class="ic">${ICONES.perfil}</span>Perfil</a><span class="sep"></span><a href="notas.html" class="${on==="notas"?"on":""}"><span class="ic">${ICONES.notas}</span>Notas</a></nav>`;
   const topo=()=>`<header class="topo"><div class="logo">Gên<i>IO</i></div><div class="papel">Representante</div><div class="fill"></div><a class="avatar" href="perfil.html" title="${esc(eu().nome)}">${esc(ini(eu().nome))}</a></header>`;
   const voltar=(href,txt)=>`<div class="faixa"><a href="${href}">${esc(txt)}</a></div>`;
   const acoes=(voltaHref,voltaTxt,avancaId,avancaTxt)=>`<div class="acoes"><div class="w">${voltaHref?`<a class="btn sec" href="${voltaHref}">← ${esc(voltaTxt)}</a>`:""}<button class="btn" id="${avancaId}" type="button">${esc(avancaTxt)}</button></div></div>`;
@@ -149,5 +151,5 @@ const App=(()=>{
   // toque longo em elementos [data-longo]: chama fn(el) após 450 ms sem mover
   function ligarLongo(root,fn){$$("[data-longo]",root).forEach(el=>{let t=null,p=null;el.addEventListener("pointerdown",ev=>{p={x:ev.clientX,y:ev.clientY};t=setTimeout(()=>{t=null;if(navigator.vibrate)navigator.vibrate(12);fn(el);},450);});
     const c=ev=>{if(t&&p&&ev.type==="pointermove"&&Math.hypot(ev.clientX-p.x,ev.clientY-p.y)<8)return;clearTimeout(t);t=null;};el.addEventListener("pointermove",c);el.addEventListener("pointerup",c);el.addEventListener("pointercancel",c);el.addEventListener("contextmenu",ev=>ev.preventDefault());});}
-  return {$,$$,esc,qs,ZONA,setorNome,nomeLoja,telFmt,ini,sessao,eu,dados,ficha,estrelas,estrelasHTML,estado,salvar,abrirVendas,lerCliente,gravarCliente,cliente,definirCliente,classificar,logoPrincipal,removerLogo,escolherImagem,abrirLogotipo,entradas,ligarEntradas,artePadrao,gerarProdutos,PRODUTOS_IDS,separarCores,garantirCamadas,listarNotas,gravarNota,apagarNota,diasDeRota,reagendar,hojeISO,dataCurta,META,nav,topo,voltar,acoes,menuLongo,ligarLongo};
+  return {$,$$,esc,qs,ZONA,setorNome,nomeLoja,telFmt,ini,sessao,eu,dados,ficha,estrelas,estrelasHTML,estado,salvar,abrirVendas,lerCliente,gravarCliente,cliente,definirCliente,classificar,logoPrincipal,removerLogo,escolherImagem,abrirLogotipo,entradas,ligarEntradas,artePadrao,gerarProdutos,PRODUTOS_IDS,separarCores,garantirCamadas,listarNotas,gravarNota,apagarNota,diasDeRota,reagendar,hojeISO,dataCurta,META,ICONES,NA_CASCA,nav,topo,voltar,acoes,menuLongo,ligarLongo};
 })();

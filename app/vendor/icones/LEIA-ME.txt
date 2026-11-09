@@ -1,0 +1,3 @@
+vendedor.png: recorte do personagem parceiro.png (GênIO).
+mapa.png, pedidos.png, rec.png, microfone.png: Fluent Emoji 3D (Microsoft, licença MIT, github.com/microsoft/fluentui-emoji),
+baixados pelo servidor em api/atualizar.sh (lista em icones.txt); enquanto não existirem, o app usa o CDN jsDelivr.

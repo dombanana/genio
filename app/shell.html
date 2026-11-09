@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>GênIO · Representante</title>
+<meta name="theme-color" content="#F1EEF8">
+<link rel="icon" href="../genio-favicon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="stylesheet" href="app.css?v=905824686a">
+<style>html,body{height:100%;overflow:hidden;padding:0}</style>
+</head>
+<body>
+<div class="casca">
+  <iframe id="tela" allow="camera; microphone; geolocation; display-capture" title="GênIO"></iframe>
+  <nav class="nav" id="barra"></nav>
+</div>
+<script src="app.js?v=905824686a"></script>
+<script>
+(()=>{
+  const {$,esc,ICONES,gravarNota}=App;
+  const fr=$("#tela");const alvo=()=>decodeURIComponent((location.hash||"#index.html").slice(1))||"index.html";
+  let atual=alvo();fr.src=atual;
+  // a tela dentro do quadro avisa onde está → hash e destaque da barra
+  window.addEventListener("message",ev=>{if(ev.origin!==location.origin||!ev.data||ev.data.genio!=="tela")return;atual=ev.data.href;history.replaceState(null,"","#"+atual);marcar();});
+  window.addEventListener("hashchange",()=>{const a=alvo();if(a!==atual){atual=a;fr.src=a;}});
+  const on=p=>atual.startsWith(p)?"on":"";
+  function marcar(){$("#barra").innerHTML=`<a href="#index.html" class="${on("index")||on("visita")||on("fontes")||on("logotipo")||on("manual")||on("produtos")||on("editor")||on("capacho")}" data-ir="index.html"><span class="ic">${ICONES.rota}</span>Rota</a><a href="#pedidos.html" class="${on("pedidos")}" data-ir="pedidos.html"><span class="ic">${ICONES.pedidos}</span>Pedidos</a><a href="#perfil.html" class="${on("perfil")}" data-ir="perfil.html"><span class="ic">${ICONES.perfil}</span>Perfil</a><span class="sep"></span><button type="button" class="rec ${REC.ativo?"on":""}" id="rec"><span class="dot">${ICONES.notas}</span>${REC.ativo?"parar":"REC"}</button>`;
+    $("#barra").querySelectorAll("[data-ir]").forEach(a=>a.onclick=ev=>{ev.preventDefault();atual=a.dataset.ir;fr.src=atual;history.replaceState(null,"","#"+atual);marcar();});
+    ligarRec();}
+  // ---- REC: toque = áudio (continua gravando enquanto você usa o app); segurar = menu
+  let ultima=null;const lojaAtual=()=>{try{return JSON.parse(localStorage.getItem("app-ultima-loja")||"null");}catch(e){return null;}};
+  const REC={ativo:false,tipo:null,rec:null,stream:null,chunks:[],t0:0,timer:null};
+  const mime=cands=>cands.find(t=>window.MediaRecorder&&MediaRecorder.isTypeSupported(t))||"";
+  const dur=s=>`${Math.floor(s/60)}:${String(Math.floor(s%60)).padStart(2,"0")}`;
+  function status(txt){let st=$("#recSt");if(!st){st=document.createElement("div");st.id="recSt";st.className="rec-status";document.body.appendChild(st);}st.innerHTML=`<span class="dot"></span><span>${esc(txt)}</span><button type="button" id="recStop">parar</button>`;$("#recStop").onclick=parar;}
+  async function iniciar(tipo){if(REC.ativo)return;ultima=lojaAtual();
+    try{let stream;
+      if(tipo==="audio")stream=await navigator.mediaDevices.getUserMedia({audio:true});
+      else if(tipo==="video-tras"||tipo==="video-frente")stream=await navigator.mediaDevices.getUserMedia({audio:true,video:{facingMode:tipo==="video-frente"?"user":{ideal:"environment"},width:{ideal:1280}}});
+      else if(tipo==="tela"){if(!navigator.mediaDevices.getDisplayMedia){alert("Este navegador não grava a tela do celular (o Chrome no Android não oferece). Use o gravador de tela do próprio aparelho; a nota de áudio continua disponível.");return;}
+        stream=await navigator.mediaDevices.getDisplayMedia({video:true,audio:true});try{const mic=await navigator.mediaDevices.getUserMedia({audio:true});mic.getAudioTracks().forEach(t=>stream.addTrack(t));}catch(e){}}
+      const tm=tipo==="audio"?mime(["audio/webm;codecs=opus","audio/webm","audio/mp4","audio/ogg"]):mime(["video/webm;codecs=vp9,opus","video/webm;codecs=vp8,opus","video/webm","video/mp4"]);
+      const rec=new MediaRecorder(stream,tm?{mimeType:tm}:undefined);REC.ativo=true;REC.tipo=tipo;REC.rec=rec;REC.stream=stream;REC.chunks=[];REC.t0=Date.now();
+      rec.ondataavailable=e=>{if(e.data.size)REC.chunks.push(e.data);};
+      rec.onstop=async()=>{clearInterval(REC.timer);stream.getTracks().forEach(t=>t.stop());const blob=new Blob(REC.chunks,{type:rec.mimeType||tm||(tipo==="audio"?"audio/webm":"video/webm")});const d=(Date.now()-REC.t0)/1000;
+        if(d>0.7)await gravarNota({id:"n"+Date.now().toString(36),em:new Date().toISOString(),tipo,[tipo==="audio"?"audio":"video"]:blob,dur:d,loja:ultima});
+        REC.ativo=false;REC.rec=null;const st=$("#recSt");if(st)st.remove();const pv=$("#recPrev");if(pv)pv.remove();marcar();if(atual.startsWith("notas"))fr.contentWindow.location.reload();};
+      if(tipo!=="audio"&&tipo!=="tela"){const v=document.createElement("video");v.id="recPrev";v.className="rec-prev";v.muted=true;v.playsInline=true;v.autoplay=true;v.srcObject=stream;document.body.appendChild(v);}
+      rec.start(500);const rot={audio:"Áudio","video-tras":"Vídeo","video-frente":"Vídeo (selfie)",tela:"Tela"}[tipo];status(`${rot} · 0:00`);REC.timer=setInterval(()=>{const s=$("#recSt span:nth-child(2)");if(s)s.textContent=`${rot} · ${dur((Date.now()-REC.t0)/1000)}`;},500);marcar();
+      stream.getVideoTracks().forEach(t=>t.onended=()=>{if(REC.ativo)parar();});}
+    catch(e){alert("Não consegui iniciar: "+e.message);}}
+  function parar(){if(REC.rec&&REC.rec.state!=="inactive")REC.rec.stop();}
+  // foto: câmera do aparelho (traseira ou selfie) → nota com imagem
+  function foto(frente){const i=document.createElement("input");i.type="file";i.accept="image/*";i.capture=frente?"user":"environment";i.style.display="none";document.body.appendChild(i);
+    i.onchange=async()=>{const f=i.files&&i.files[0];i.remove();if(!f)return;await gravarNota({id:"n"+Date.now().toString(36),em:new Date().toISOString(),tipo:frente?"selfie":"foto",foto:f,loja:lojaAtual()});if(atual.startsWith("notas"))fr.contentWindow.location.reload();else status2("Foto guardada nas notas");};i.click();}
+  function status2(txt){const d=document.createElement("div");d.className="rec-status";d.innerHTML=`<span>${esc(txt)}</span>`;document.body.appendChild(d);setTimeout(()=>d.remove(),2200);}
+  function menu(){const f=document.createElement("div");f.className="rec-fundo";const m=document.createElement("div");m.className="rec-menu";const l=lojaAtual();
+    m.innerHTML=`<small style="padding:4px 12px 0">${l?"Ligado a <b>"+esc(l.nome)+"</b>":"Sem loja aberta"}</small>
+      <button data-k="foto"><span class="ic">📷</span><span>Foto · câmera traseira</span></button>
+      <button data-k="selfie"><span class="ic">🤳</span><span>Foto · selfie</span></button>
+      <button data-k="video-tras"><span class="ic">🎥</span><span>Vídeo · traseira<small>grava enquanto você usa o app</small></span></button>
+      <button data-k="video-frente"><span class="ic">🎦</span><span>Vídeo · frontal</span></button>
+      <button data-k="tela"><span class="ic">📱</span><span>Gravar a tela com áudio<small>depende do navegador</small></span></button>
+      <button data-k="audio"><span class="ic">🎙</span><span>Só áudio</span></button>`;
+    const fecha=()=>{f.remove();m.remove();};f.onclick=fecha;m.querySelectorAll("button").forEach(b=>b.onclick=()=>{fecha();const k=b.dataset.k;if(k==="foto")foto(false);else if(k==="selfie")foto(true);else iniciar(k);});
+    document.body.appendChild(f);document.body.appendChild(m);}
+  function ligarRec(){const b=$("#rec");if(!b)return;let t=null,longo=false;
+    b.addEventListener("pointerdown",ev=>{longo=false;if(REC.ativo)return;t=setTimeout(()=>{longo=true;if(navigator.vibrate)navigator.vibrate(15);menu();},450);});
+    const fim=()=>{clearTimeout(t);};b.addEventListener("pointerup",()=>{fim();if(longo)return;if(REC.ativo)parar();else iniciar("audio");});b.addEventListener("pointercancel",fim);b.addEventListener("pointerleave",fim);
+    b.addEventListener("contextmenu",ev=>ev.preventDefault());}
+  marcar();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,4 @@
+mapa.png https://cdn.jsdelivr.net/gh/microsoft/fluentui-emoji@main/assets/World%20map/3D/world_map_3d.png
+pedidos.png https://cdn.jsdelivr.net/gh/microsoft/fluentui-emoji@main/assets/Clipboard/3D/clipboard_3d.png
+rec.png https://cdn.jsdelivr.net/gh/microsoft/fluentui-emoji@main/assets/Record%20button/3D/record_button_3d.png
+microfone.png https://cdn.jsdelivr.net/gh/microsoft/fluentui-emoji@main/assets/Studio%20microphone/3D/studio_microphone_3d.png

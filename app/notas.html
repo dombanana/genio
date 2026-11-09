@@ -6,39 +6,30 @@
 <title>GênIO · Notas</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="app.css?v=266500af68">
+<link rel="stylesheet" href="app.css?v=905824686a">
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=266500af68"></script>
+<script src="app.js?v=905824686a"></script>
 <script>
 (async()=>{
   const {$,$$,esc,sessao,nav,topo,listarNotas,gravarNota,apagarNota}=App;
   if(!await sessao())return;
   let ultima=null;try{ultima=JSON.parse(localStorage.getItem("app-ultima-loja")||"null");}catch(e){}
-  let rec=null,chunks=[],t0=0,timer=null,ligada=!!ultima;
+  let ligada=!!ultima;
   const fmt=iso=>{const d=new Date(iso);return d.toLocaleDateString("pt-BR",{day:"2-digit",month:"2-digit"})+" "+d.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});};
   const dur=s=>`${Math.floor(s/60)}:${String(Math.round(s%60)).padStart(2,"0")}`;
   async function render(){const notas=await listarNotas();
     $("#app").innerHTML=`${topo()}<h1>Notas</h1><p class="sub">Grave uma nota de voz ou escreva; fica ligada à loja aberta por último.</p>
-    <section class="card"><div class="rec"><button type="button" id="gravar" aria-label="gravar">🎙</button><b id="tempo" class="muted" style="font-size:15px">toque para gravar</b></div>
+    <section class="card"><p style="margin:0 0 10px"><b>Gravar:</b> toque no <b>REC</b> da barra (áudio). Segure o REC para foto, selfie, vídeo ou tela. A gravação continua enquanto você usa o app.</p>
       ${ultima?`<label style="display:flex;gap:8px;align-items:center;font-size:14px"><input type="checkbox" id="ligar" ${ligada?"checked":""}> Ligar a <b>${esc(ultima.nome)}</b></label>`:""}
-      <div style="display:flex;gap:8px;margin-top:10px"><input id="texto" placeholder="ou escreva uma nota rápida…" style="flex:1;font:inherit;font-size:15px;border:1.5px solid var(--linha);border-radius:12px;padding:10px 12px"><button type="button" class="btn sm" id="addTexto" style="width:auto;min-height:44px;padding:0 14px">Salvar</button></div></section>
-    ${notas.length?notas.map(n=>`<div class="nota" data-id="${n.id}"><div><small>${fmt(n.em)}${n.loja?` · ${esc(n.loja.nome)}`:""}${n.dur?` · ${dur(n.dur)}`:""}</small>${n.texto?`<div style="margin-top:4px">${esc(n.texto)}</div>`:""}${n.audio?`<audio controls preload="none" data-a="${n.id}"></audio>`:""}</div><button type="button" class="x" data-x="${n.id}" aria-label="apagar">✕</button></div>`).join(""):`<p class="ilus">Nenhuma nota ainda.</p>`}
+      <div style="display:flex;gap:8px;margin-top:10px"><input id="texto" placeholder="escreva uma nota rápida…" style="flex:1;font:inherit;font-size:15px;border:1.5px solid var(--linha);border-radius:12px;padding:10px 12px"><button type="button" class="btn sm" id="addTexto" style="width:auto;min-height:44px;padding:0 14px">Salvar</button></div></section>
+    ${notas.length?notas.map(n=>`<div class="nota" data-id="${n.id}"><div><small>${({audio:"🎙",foto:"📷",selfie:"🤳","video-tras":"🎥","video-frente":"🎦",tela:"📱"})[n.tipo]||(n.audio?"🎙":"✎")} ${fmt(n.em)}${n.loja?` · ${esc(n.loja.nome)}`:""}${n.dur?` · ${dur(n.dur)}`:""}</small>${n.texto?`<div style="margin-top:4px">${esc(n.texto)}</div>`:""}${n.audio?`<audio controls preload="none" data-a="${n.id}"></audio>`:""}${n.video?`<video controls playsinline preload="metadata" data-v="${n.id}" style="width:100%;border-radius:12px;margin-top:6px;max-height:260px;background:#000"></video>`:""}${n.foto?`<img data-f="${n.id}" alt="" style="width:100%;border-radius:12px;margin-top:6px;max-height:320px;object-fit:contain;background:#fff">`:""}</div><button type="button" class="x" data-x="${n.id}" aria-label="apagar">✕</button></div>`).join(""):`<p class="ilus">Nenhuma nota ainda.</p>`}
     ${nav("notas")}`;
-    notas.forEach(n=>{if(n.audio){const a=document.querySelector(`audio[data-a="${n.id}"]`);if(a)a.src=URL.createObjectURL(n.audio);}});
+    notas.forEach(n=>{if(n.audio){const a=document.querySelector(`audio[data-a="${n.id}"]`);if(a)a.src=URL.createObjectURL(n.audio);}if(n.video){const v=document.querySelector(`video[data-v="${n.id}"]`);if(v)v.src=URL.createObjectURL(n.video);}if(n.foto){const f=document.querySelector(`img[data-f="${n.id}"]`);if(f)f.src=URL.createObjectURL(n.foto);}});
     $$("[data-x]").forEach(b=>b.onclick=async()=>{await apagarNota(b.dataset.x);render();});
     const lg=$("#ligar");if(lg)lg.onchange=()=>ligada=lg.checked;
-    $("#addTexto").onclick=async()=>{const t=$("#texto").value.trim();if(!t)return;await gravarNota({id:"n"+Date.now().toString(36),em:new Date().toISOString(),texto:t,loja:ligada?ultima:null});render();};
-    $("#gravar").onclick=async()=>{const b=$("#gravar");
-      if(rec&&rec.state==="recording"){rec.stop();return;}
-      if(!navigator.mediaDevices||!window.MediaRecorder){alert("Este navegador não grava áudio. Use a nota escrita.");return;}
-      try{const st=await navigator.mediaDevices.getUserMedia({audio:true});const tipo=["audio/webm;codecs=opus","audio/webm","audio/mp4","audio/ogg"].find(t=>MediaRecorder.isTypeSupported(t))||"";rec=new MediaRecorder(st,tipo?{mimeType:tipo}:undefined);chunks=[];
-        rec.ondataavailable=e=>{if(e.data.size)chunks.push(e.data);};
-        rec.onstop=async()=>{clearInterval(timer);st.getTracks().forEach(t=>t.stop());const blob=new Blob(chunks,{type:rec.mimeType||tipo||"audio/webm"});const d=(Date.now()-t0)/1000;
-          if(d>0.7)await gravarNota({id:"n"+Date.now().toString(36),em:new Date().toISOString(),audio:blob,dur:d,loja:ligada?ultima:null});rec=null;render();};
-        rec.start(250);t0=Date.now();b.classList.add("on");b.textContent="■";timer=setInterval(()=>{$("#tempo").textContent="gravando · "+dur((Date.now()-t0)/1000);},500);}
-      catch(e){alert("Sem acesso ao microfone: "+e.message);}};}
+    $("#addTexto").onclick=async()=>{const t=$("#texto").value.trim();if(!t)return;await gravarNota({id:"n"+Date.now().toString(36),em:new Date().toISOString(),texto:t,loja:ligada?ultima:null});render();};}
   render();
 })();
 </script>
