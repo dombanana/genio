@@ -111,7 +111,7 @@ const App=(()=>{
   // ---- arte automática: logotipo tratado centralizado preenchendo a área segura do gabarito, cor padrão do material
   const COR_PADRAO={capacho:"#2B2B2D",rigido:"#F4F1EA",vinil:null,tecido:"#F4F1EA",papel:"#FFFFFF",lona:"#FFFFFF",carimbo:null};
   const PRODUTOS_IDS=["capacho","placas","adesivos","uniformes","impressos","panfleto","banners","parede","brindes","carimbo"];
-  let _G=null;const gabaritos=async()=>_G||(_G=await (await fetch("gabaritos.json?v=cf1931f0e7")).json());
+  let _G=null;const gabaritos=async()=>_G||(_G=await (await fetch("gabaritos.json?v=5691596b2b")).json());
   const carregarImg=src=>new Promise(res=>{const i=new Image();i.crossOrigin="anonymous";i.onload=()=>res(i);i.onerror=()=>res(null);i.src=src;});
   // ---- carimbo: só texto — nome, razão social, CNPJ (negrito), endereço, telefone; nunca logotipo
   async function dadosCarimbo(l){const cad=await ficha(l.slug).catch(()=>null);const L=(cad&&cad.lacunas)||{};const leit=(L.leitura||{}).valor||"";const razao=((leit.match(/Razão social: ([^·]+)/)||[])[1]||"").trim();const cnpj=((leit.match(/CNPJ:? ?([\d./-]{14,18})/)||[])[1]||"");
@@ -195,9 +195,15 @@ const App=(()=>{
     // primeira saída de vendas: segunda 16/11/2026 (decisão do dono); datas anteriores guardadas no aparelho são corrigidas
     const INICIO="2026-11-16";const e=estado();if(!e.inicio||e.inicio<INICIO){e.inicio=INICIO;delete e.datas;salvar(e);}const datas=[];let d=new Date(e.inicio+"T12:00:00");for(let k=0;k<dias.length;k++){while(d.getDay()===0||d.getDay()===6)d.setDate(d.getDate()+1);/* rotas só de segunda a sexta */datas.push(d.toISOString().slice(0,10));d.setDate(d.getDate()+1);}
     const mov=e.datas||{};const out=dias.map((lojas,i)=>({n:i+1,data:mov[i+1]||datas[i],dataOriginal:datas[i],lojas}));
-    // agenda sempre com pelo menos 15 dias úteis à frente: os sem lojas ficam como "a captar"
-    const hoje=hojeISO();let dd=new Date((e.inicio>hoje?e.inicio:hoje)+"T12:00:00");let uteis=0;const vistos=new Set(out.map(x=>x.data));
-    while(uteis<15){if(dd.getDay()!==0&&dd.getDay()!==6){const iso=dd.toISOString().slice(0,10);if(!vistos.has(iso)){out.push({n:out.length+1,data:iso,dataOriginal:iso,lojas:[],vazio:true});vistos.add(iso);}uteis++;}dd.setDate(dd.getDate()+1);}
+    // janela da agenda: hoje, 15 dias úteis para trás e 15 para a frente (31 datas); dias sem lojas ficam "a captar"
+    const hoje=hojeISO();const vistos=new Set(out.map(x=>x.data));const util=d=>d.getDay()!==0&&d.getDay()!==6;const iso=d=>d.toISOString().slice(0,10);
+    const add=d=>{const k=iso(d);if(!vistos.has(k)){out.push({n:0,data:k,dataOriginal:k,lojas:[],vazio:true});vistos.add(k);}};
+    let dj=new Date(hoje+"T12:00:00");if(util(dj))add(dj);let k=0;while(k<15){dj.setDate(dj.getDate()+1);if(util(dj)){add(dj);k++;}}
+    dj=new Date(hoje+"T12:00:00");k=0;while(k<15){dj.setDate(dj.getDate()-1);if(util(dj)){add(dj);k++;}}
+    const lim0=(()=>{const x=new Date(hoje+"T12:00:00");let c=0;while(c<15){x.setDate(x.getDate()-1);if(util(x))c++;}return iso(x);})();const lim1=(()=>{const x=new Date(hoje+"T12:00:00");let c=0;while(c<15){x.setDate(x.getDate()+1);if(util(x))c++;}return iso(x);})();
+    // rotas com lojas fora da janela continuam existindo (ex.: início em 16/11 fora dos 15 dias), mas a faixa mostra só a janela + rotas com lojas
+    for(let i=out.length-1;i>=0;i--){const o=out[i];if(o.vazio&&(o.data<lim0||o.data>lim1))out.splice(i,1);}
+    out.filter(o=>o.vazio).forEach(o=>{o.n=0;});let nn=Math.max(0,...out.map(o=>o.n))+1;out.sort((a,b)=>a.data.localeCompare(b.data));out.forEach(o=>{if(!o.n)o.n=nn++;});
     out.sort((a,b)=>a.data.localeCompare(b.data));return out;}
   // rota não feita continua presa à sua data; reagendar move só aquela rota
   function reagendar(n,iso){const e=estado();e.datas=e.datas||{};if(iso)e.datas[n]=iso;else delete e.datas[n];salvar(e);}
