@@ -738,6 +738,21 @@ def main():
         except Exception:
             pass
     json.dump(consumidos, open(os.path.join(ESTADO, "captacao", "nonces.json"), "w"))
+    # uma rodada por zona; "depois" encadeia a próxima zona no mesmo serviço (ex.: ipiranga → cambuci)
+    while True:
+        executar(run, padrao_ler())
+        prox = run.get("depois") if run else None
+        if not prox:
+            break
+        run = prox
+
+def padrao_ler():
+    try:
+        return json.load(open(os.path.join(ESTADO, "captacao", "padrao.json")))
+    except Exception:
+        return {}
+
+def executar(run, padrao):
     try:
         padrao = json.load(open(os.path.join(ESTADO, "captacao", "padrao.json")))
     except Exception:
@@ -888,6 +903,7 @@ def main():
     resumo_passos.append("4. Exportado: visitas.csv, visitas.kml, roteiro.html, lojas.json, clientes/*.json")
     revisao(zona, lojas, cads, detalhes, pasta, f"{len(lojas)} lojas · {feitas} processadas nesta rodada · {hoje} · custo da rodada ≈ R$ {reais:.2f}")
     status(pasta, fase="pronto", lojas=len(lojas), processadas=feitas, custo_reais=round(reais, 2)); log(pasta, f"pronto: {len(lojas)} lojas, {feitas} processadas, R$ {reais:.2f}")
+
 
 if __name__ == "__main__":
     main()
