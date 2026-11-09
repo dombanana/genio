@@ -237,3 +237,8 @@ html.na-casca body.com-acoes{padding-bottom:110px}
 .rec-painel-notas video{width:100%;aspect-ratio:4/3;max-height:40vh;object-fit:cover;border-radius:12px;background:#000;margin:10px 0 0;display:block}
 .rec-texto{margin:10px 0 0;background:var(--lav);border-radius:12px;padding:10px 12px;min-height:60px;max-height:30vh;overflow:auto;font-size:15px;line-height:1.4}
 .rec-botoes{display:grid;grid-template-columns:1fr 1.4fr;gap:8px;margin:10px 0 6px}
+/* rota: loja sem logotipo organizado fica com cor diferente */
+.loja-l.logo-falta,.loja-l.logo-vazio{background:#FFF4E0;border-left:5px solid var(--amarelo)}
+.loja-l.logo-falta .n,.loja-l.logo-vazio .n{background:#FDE7C2;color:#8A5A00}
+.loja-l.logo-pronto{border-left:5px solid var(--teal)}
+.falta-logo{color:#8A5A00}.ok-logo{color:#0E8A84}.leg-falta{background:#FFF4E0;border:1px solid var(--amarelo);border-radius:6px;padding:0 6px}
