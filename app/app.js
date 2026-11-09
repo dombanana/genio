@@ -93,18 +93,19 @@ const App=(()=>{
     if(dir==="direita"||dir==="esquerda"){if(dir==="esquerda"){g.translate(w/2,h/2);g.rotate(Math.PI);g.translate(-w/2,-h/2);}const cxm=dir==="direita"?(w-p)/2:(w+p)/2;g.font=`800 ${tam}px ${e.fonte||"Rubik, system-ui, sans-serif"}`;while(g.measureText(t).width>(w-p)*0.9&&tam>6){tam*=0.94;g.font=`800 ${tam}px ${e.fonte||"Rubik, system-ui, sans-serif"}`;}g.fillText(t,cxm,h/2);}
     else{g.translate((w-p)/2,h/2);g.rotate(dir==="baixo"?-Math.PI/2:Math.PI/2);g.font=`800 ${tam}px ${e.fonte||"Rubik, system-ui, sans-serif"}`;while(g.measureText(t).width>h*0.6*0.9&&tam>6){tam*=0.94;g.font=`800 ${tam}px ${e.fonte||"Rubik, system-ui, sans-serif"}`;}g.fillText(t,0,0);}
     g.restore();}
-  function desenharElementos(g,el,imgs){for(const e of el){if(e.tipo==="camada"&&imgs[e.src]&&!e.oculta)g.drawImage(imgs[e.src],e.x,e.y,e.w,e.h);
+  function desenharElementos(g,el,imgs){for(const e of el){g.save();if(e.rot){const cxm=e.x+e.w/2,cym=e.y+e.h/2;g.translate(cxm,cym);g.rotate(e.rot*Math.PI/180);g.translate(-cxm,-cym);}
+    if(e.tipo==="camada"&&imgs[e.src]&&!e.oculta)g.drawImage(imgs[e.src],e.x,e.y,e.w,e.h);
     else if(e.tipo==="forma"){g.fillStyle=e.cor;if(e.cor!=="transparent")g.fillRect(e.x,e.y,e.w,e.h);if(e.borda>0){g.strokeStyle=e.bordaCor;g.lineWidth=e.borda;g.strokeRect(e.x,e.y,e.w,e.h);}}
     else if(e.tipo==="texto"){g.fillStyle=e.cor;g.font=`${e.peso||700} ${e.tam}px ${e.fonte}`;g.textBaseline="top";g.textAlign="left";String(e.texto||"").split("\n").forEach((t,i)=>g.fillText(t,e.x,e.y+i*e.tam*1.2));}
     else if(e.tipo==="lista")desenharLista(g,e);
-    else if(e.tipo==="seta")desenharSeta(g,e);}}
+    else if(e.tipo==="seta")desenharSeta(g,e);g.restore();}}
   // flyer: cardápio fictício por kit (hoje só padaria; outros setores entram com os próximos kits)
   const CARDAPIOS={padaria:{titulo:"Nossos produtos",itens:[["Pão francês (kg)","R$ 18,90"],["Pão de queijo (un.)","R$ 4,50"],["Croissant de manteiga","R$ 9,00"],["Bolo de cenoura (fatia)","R$ 8,50"],["Sonho de creme","R$ 7,00"],["Café coado (copo)","R$ 4,00"],["Pão na chapa + café","R$ 9,90"],["Baguete artesanal","R$ 12,00"]],promo:["PROMOÇÃO DA SEMANA","Café + pão na chapa","por R$ 8,90","seg. a sex., das 6h às 10h","apresente este flyer"]}};
   const cardapioDe=()=>CARDAPIOS.padaria;
   // ---- arte automática: logotipo tratado centralizado preenchendo a área segura do gabarito, cor padrão do material
   const COR_PADRAO={capacho:"#2B2B2D",rigido:"#F4F1EA",vinil:null,tecido:"#F4F1EA",papel:"#FFFFFF",lona:"#FFFFFF",carimbo:null};
   const PRODUTOS_IDS=["capacho","placas","adesivos","uniformes","impressos","panfleto","banners","parede","brindes","carimbo"];
-  let _G=null;const gabaritos=async()=>_G||(_G=await (await fetch("gabaritos.json?v=1abec6e838")).json());
+  let _G=null;const gabaritos=async()=>_G||(_G=await (await fetch("gabaritos.json?v=f88865fe9b")).json());
   const carregarImg=src=>new Promise(res=>{const i=new Image();i.crossOrigin="anonymous";i.onload=()=>res(i);i.onerror=()=>res(null);i.src=src;});
   // ---- carimbo: só texto — nome, razão social, CNPJ (negrito), endereço, telefone; nunca logotipo
   async function dadosCarimbo(l){const cad=await ficha(l.slug).catch(()=>null);const L=(cad&&cad.lacunas)||{};const leit=(L.leitura||{}).valor||"";const razao=((leit.match(/Razão social: ([^·]+)/)||[])[1]||"").trim();const cnpj=((leit.match(/CNPJ:? ?([\d./-]{14,18})/)||[])[1]||"");

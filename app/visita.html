@@ -6,7 +6,7 @@
 <title>GênIO · Visita</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="app.css?v=1abec6e838">
+<link rel="stylesheet" href="app.css?v=f88865fe9b">
 <style>
 .cab{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
 .fach{width:100%;aspect-ratio:16/9;border-radius:16px;overflow:hidden;background:var(--lav2);display:grid;place-items:center;position:relative}
@@ -16,12 +16,12 @@
 .fontes{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0 12px}
 .fontes .btn.sec{min-height:50px;font-size:16px;text-decoration:none}
 .fato{display:grid;grid-template-columns:auto 1fr;gap:10px;padding:6px 0;border-top:1px solid var(--linha);font-size:15px}
-.fato:first-of-type{border-top:0}.fato span{color:var(--texto2)}
+.fato:first-of-type{border-top:0}.fato span{color:var(--texto2)}.fato .lk{color:var(--marca);text-decoration:underline;text-underline-offset:3px;word-break:break-all}
 </style>
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=1abec6e838"></script>
+<script src="app.js?v=f88865fe9b"></script>
 <script>
 (async()=>{
   const {$,$$,esc,qs,sessao,dados,ficha,estrelasHTML,estado,salvar,nav,topo,voltar,setorNome,nomeLoja,telFmt,cliente,gravarCliente,classificar,definirCliente,menuLongo,ligarLongo,ZONA,entradas,ligarEntradas,abrirLogotipo,logoPrincipal,removerLogo}=App;
@@ -45,7 +45,7 @@
     const cands=candidatos();const logos=c.logos||[];const principal=logos[0]||null;const logo=(c.manual&&c.manual.tratado)||(principal&&principal.src)||null;const fach=(c.fachada&&c.fachada.src)||null;
     const pronto=!!(c.manual&&c.manual.editado);const e=estado();
     $("#app").innerHTML=`${topo()}${voltar("index.html","Rota")}
-    <div class="cab"><div><h1 style="margin-bottom:2px">${esc(nome)}</h1><p class="sub">${esc(setorNome(l.setor))} · ${esc(l.endereco||"")}</p></div><div style="padding-top:8px">${estrelasHTML(l.estrelas)}</div></div>
+    <div class="cab"><div><h1 style="margin-bottom:2px">${esc(nome)}</h1><p class="sub">${esc(setorNome(l.setor))} · <a href="${l.maps||(l.place_id?`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((l.endereco||l.nome)+", São Paulo")}&query_place_id=${encodeURIComponent(l.place_id)}`:(l.lat&&l.lng?`https://www.google.com/maps/search/?api=1&query=${l.lat},${l.lng}`:`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((l.endereco||l.nome)+", São Paulo")}`))}" target="_blank" rel="noopener" style="color:var(--marca);text-decoration:underline;text-underline-offset:3px">📍 ${esc(l.endereco||"ver no mapa")}</a></p></div><div style="padding-top:8px">${estrelasHTML(l.estrelas)}</div></div>
     ${(()=>{const prod=(c.produtos||[])[0];const capa=fach?[fach,"Fachada"]:prod?[abs(prod.src),"Produto · sem fachada"]:logo?[logo,"Logotipo · sem fachada"]:null;
       return `<div class="fach" data-longo data-src="${esc(capa?capa[0]:"")}">${capa?`<img src="${esc(capa[0])}" alt="" ${capa[1]!=="Fachada"?'style="object-fit:contain;background:#fff"':""}><span class="sel">${capa[1]}</span>`:`<div class="nome-logo"><b>${esc(nome)}</b><small>${esc(setorNome(l.setor))}</small></div><span class="sel">Nome · sem imagem</span>`}</div>`;})()}
     ${entradas(slug,"entG")}${L.site&&L.site.estado==="encontrado"?`<a class="btn sec" style="margin:-4px 0 10px;min-height:44px" href="fontes.html?l=${encodeURIComponent(slug)}&tipo=site">🌐 Imagens do site</a>`:""}
@@ -59,7 +59,10 @@
     ${curios.length?`<section class="card" style="border-left:5px solid var(--teal)"><h2>Curiosidade</h2>${curios.map(t=>`<p style="margin:0 0 6px">${esc(t)}</p>`).join("")}${cn.nota&&cn.valor?`<small class="muted">${esc(cn.nota)}</small>`:""}</section>`:""}
     <section class="card"><h2>Antes de entrar</h2>
       ${razao?`<div class="fato"><span>Razão social</span><b>${esc(razao.trim())}</b></div>`:""}${desde?`<div class="fato"><span>Desde</span><b>${esc(desde)}</b></div>`:""}
-      ${l.tel?`<div class="fato"><span>Telefone</span><b>${esc(telFmt(l.tel))}</b></div>`:""}${horarioHoje((L.horario||{}).valor)?`<div class="fato"><span>Hoje</span><b>${esc(horarioHoje(L.horario.valor))}</b></div>`:""}
+      ${l.tel?`<div class="fato"><span>Telefone</span><b><a href="tel:+55${esc(String(l.tel).replace(/\D/g,"").replace(/^55/,""))}" class="lk">📞 ${esc(telFmt(l.tel))}</a> · <a href="https://wa.me/55${esc(String(l.tel).replace(/\D/g,"").replace(/^55/,""))}" target="_blank" rel="noopener" class="lk">WhatsApp</a></b></div>`:""}
+      ${(L.site&&L.site.estado==="encontrado"&&L.site.valor)||l.site?`<div class="fato"><span>Site</span><b><a href="${esc(((L.site&&L.site.valor)||l.site).match(/^https?:/)?((L.site&&L.site.valor)||l.site):"https://"+((L.site&&L.site.valor)||l.site))}" target="_blank" rel="noopener" class="lk">🌐 ${esc(((L.site&&L.site.valor)||l.site).replace(/^https?:\/\//,"").replace(/\/$/,""))}</a></b></div>`:""}
+      ${(L.email&&L.email.valor)?`<div class="fato"><span>E-mail</span><b><a href="mailto:${esc(L.email.valor)}" class="lk">✉️ ${esc(L.email.valor)}</a></b></div>`:""}
+      ${(L.redes&&L.redes.estado==="encontrado"&&/@/.test(L.redes.valor||""))?`<div class="fato"><span>Redes</span><b>${(L.redes.valor.match(/@[\w.]+/g)||[]).map(h=>`<a href="https://instagram.com/${esc(h.slice(1))}" target="_blank" rel="noopener" class="lk">${esc(h)}</a>`).join(" · ")}</b></div>`:""}${horarioHoje((L.horario||{}).valor)?`<div class="fato"><span>Hoje</span><b>${esc(horarioHoje(L.horario.valor))}</b></div>`:""}
       ${l.nota?`<div class="fato"><span>Google</span><b>${l.nota} · ${l.aval||0} avaliações${ganchos.length?` · reclamam de: ${esc(ganchos.join(", "))}`:""}</b></div>`:""}
     </section>
     <div class="acoes"><div class="w"><a class="btn sec" href="index.html">← Rota</a>${pronto?`<a class="btn" href="produtos.html?l=${encodeURIComponent(slug)}">Produtos e serviços →</a>`:logo?`<button class="btn" type="button" id="tratarLogo">Tratar o logotipo →</button>`:`<a class="btn" href="fontes.html?l=${encodeURIComponent(slug)}&tipo=busca">Escolher logotipo →</a>`}</div></div>

@@ -6,7 +6,7 @@
 <title>GênIO · Produtos e serviços</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="app.css?v=1abec6e838">
+<link rel="stylesheet" href="app.css?v=f88865fe9b">
 <style>
 .grade{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .prod{background:#fff;border-radius:18px;box-shadow:0 2px 10px rgba(28,22,53,.06);overflow:hidden;display:flex;flex-direction:column;position:relative}
@@ -32,7 +32,7 @@
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=1abec6e838"></script>
+<script src="app.js?v=f88865fe9b"></script>
 <script>
 (async()=>{
   const {$,$$,esc,qs,sessao,dados,nav,topo,voltar,setorNome,nomeLoja,estado,salvar,cliente,gravarCliente,definirCliente}=App;
@@ -41,7 +41,7 @@
   if(!l){$("#app").innerHTML=`${topo()}<p>Loja não encontrada.</p>${nav("rota")}`;return;}
   const nome=nomeLoja(l.nome);definirCliente(l);let c=await cliente(l);
   if(!(c.manual&&c.manual.editado)){location.href=`visita.html?l=${encodeURIComponent(slug)}`;return;}  // catálogo só depois do logotipo limpo
-  const G=await (await fetch("gabaritos.json?v=1abec6e838")).json();
+  const G=await (await fetch("gabaritos.json?v=f88865fe9b")).json();
   const CAT=[["capacho","Capacho personalizado","../img/cena-capacho.jpg"],["placas","Placas e sinalização","../img/cena-placas.jpg"],["adesivos","Adesivos e vitrines","../img/cena-adesivos.jpg"],["uniformes","Uniformes e camisetas","../img/cena-uniformes.jpg"],["impressos","Cartões de visita","../img/cena-cartoes.jpg"],["panfleto","Flyers e panfletos","../img/cat-impressos.jpg"],["banners","Banners e faixas","../img/cena-banners.jpg"],["parede","Adesivos de parede","../img/cat-parede.jpg"],["brindes","Sacolas e brindes","../img/cat-brindes.jpg"],["carimbo","Carimbos","../img/cat-brindes.jpg"]].map(([id,n,img])=>({id,nome:n,img}));
   const SERV=[{id:"mostraai",nome:"Mostra Aí · cardápio digital",desc:"Serviço mensal (AI Negócios)",ic:"📱"},{id:"postaai",nome:"Posta Aí · postagens",desc:"Conteúdo para as redes (AI Negócios)",ic:"📣"},{id:"inpi",nome:"Registro de marca (INPI)",desc:"Proteção do nome e do logo",ic:"®"}];
   const e=estado();e.sel=e.sel||{};const S=e.sel[slug]=e.sel[slug]||{};
