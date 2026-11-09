@@ -69,7 +69,7 @@
     const T=(id,nome,texto,x,y,w,h,opt)=>{opt=opt||{};const c=caber(texto,{tam:opt.tam||mm(4),min:opt.min,w:mm(w),h:mm(h),maxLinhas:opt.maxLinhas,peso:opt.peso,esp:opt.esp,alt:opt.alt});
       el.push({tipo:"texto",id,nome,texto:c.texto,x:X(x),y:Y(y),w:mm(w),h:c.h,cor:opt.cor||pal.texto,tam:Math.round(c.tam),fonte:F,peso:opt.peso||700,esp:opt.esp||0,alt:opt.alt||1.2,alinh:opt.alinh||"left"});return c;};
     const R=(id,nome,x,y,w,h,cor,raio)=>el.push({tipo:"forma",forma:"ret",id,nome,x:X(x),y:Y(y),w:mm(w),h:mm(h),cor,borda:0,bordaCor:"#FFFFFF",raio:raio?mm(raio):0});
-    const rec=o.rec;const LOGO=(id,x,y,w,h,chip)=>{const lw=rec?rec.sw:im.naturalWidth,lh=rec?rec.sh:im.naturalHeight;const f=Math.min(mm(w)/lw,mm(h)/lh);const gw=lw*f,gh=lh*f;
+    const rec=o.rec;const LA=(rec?rec.sw/rec.sh:im.naturalWidth/im.naturalHeight);const LOGO=(id,x,y,w,h,chip)=>{const lw=rec?rec.sw:im.naturalWidth,lh=rec?rec.sh:im.naturalHeight;const f=Math.min(mm(w)/lw,mm(h)/lh);const gw=lw*f,gh=lh*f;
       if(chip){const p=Math.min(gw,gh)*0.12;el.push({tipo:"forma",forma:"ret",id:id+"-chip",nome:"Fundo da marca",x:X(x)-p,y:Y(y)+(mm(h)-gh)/2-p,w:gw+2*p,h:gh+2*p,cor:chip,borda:0,bordaCor:"#FFFFFF",raio:p});}
       el.push({tipo:"camada",id,nome:"Logotipo",src:man.tratado,recorte:rec||undefined,cor:null,usarCor:false,x:X(x),y:Y(y)+(mm(h)-gh)/2,w:gw,h:gh,borda:0,bordaCor:"#FFFFFF",grupo:"logo"});};
     const QRel=(id,x,y,s)=>{if(!ct.url)return false;el.push({tipo:"qr",id,nome:"QR · "+ct.urlTipo,texto:ct.url,x:X(x),y:Y(y),w:mm(s),h:mm(s),cor:lum(pal.escuro)<90?pal.escuro:"#111111"});return true;};
@@ -79,7 +79,7 @@
     let fundo;
     if(pid==="impressos"&&face==="frente"){fundo=pal.fundo;
       R("bl1","Bloco de cor",76,-3,17,16,pal.vivo);R("bl2","Bloco de cor",83,13,10,7,pal.vivo2);R("bl3","Detalhe",77.5,15,3.6,3.6,pal.campoEscuro?"#FFFFFF":pal.escuro);
-      LOGO("logo",5,5,43,11,chipMarcaEscuro);
+      LOGO("logo",5,5,43,LA<2?14:11,chipMarcaEscuro);  // logotipo quadrado ganha altura
       T("titulo","Título",K.t,5,20,64,13,{tam:mm(5.2),min:mm(3.6),maxLinhas:2,peso:800,alt:1.12});
       R("regra","Linha",5,35.2,56,0.7,pal.realce);
       T("servicos","Serviços",K.sv.replace(/ \/ /g,"   /   "),5,37,78,5,{tam:mm(2.9),min:mm(2.3),maxLinhas:1,peso:800,esp:mm(0.25)});
@@ -94,7 +94,7 @@
       R("d1","Detalhe",75,42.5,3,3,pal.vivo2);R("d2","Detalhe",81,41,4,4,pal.vivo);}
     else if(pid==="panfleto"&&face==="frente"){fundo=pal.fundo;
       R("bl1","Bloco de cor",117,-3,34,27,pal.vivo);R("bl2","Bloco de cor",135,24,16,10,pal.vivo2);R("bl3","Detalhe",120,28,8,6,pal.campoEscuro?"#FFFFFF":pal.escuro);
-      LOGO("logo",10,9,49,13,chipMarcaEscuro);
+      LOGO("logo",10,9,49,LA<2?20:13,chipMarcaEscuro);
       T("chapeu","Chapéu",K.ch,10,31,100,5,{tam:mm(3.2),min:mm(2.6),maxLinhas:1,peso:800,esp:mm(0.3),cor:pal.realce});
       const ct_=T("titulo","Título",K.ft,10,38,113,38,{tam:mm(11.5),min:mm(7.2),maxLinhas:3,peso:800,alt:1.08});
       T("descricao","Descrição",K.fd,10,Math.min(80,38+ct_.h/mm(1)+6),128,12,{tam:mm(4.4),min:mm(3.4),maxLinhas:2,peso:400,cor:pal.texto2});
@@ -117,7 +117,7 @@
       const hor=ct.horario?ct.horario.split(" · ").slice(0,3).join("  ·  "):"";
       T("cxt","Título da caixa",hor?"Horário de atendimento":"Onde estamos",21,149,112,6,{tam:mm(4.2),min:mm(3),maxLinhas:1,peso:800,cor:pal.escuro});
       T("cxl","Informações",hor||ct.endereco||"Consulte horários e endereço no balcão.",21,156,112,14,{tam:mm(3.1),min:mm(2.6),maxLinhas:3,peso:400,cor:cinza,alt:1.35});
-      const temQR=QRel("qr",16,179,22);LOGO("logo",temQR?45:16,179,31,8,chipMarcaClaro);
+      const temQR=QRel("qr",16,179,22);LOGO("logo",temQR?45:16,177,31,LA<2?11:8,chipMarcaClaro);
       T("contato","Contato",[K.cta+".",[ct.tel,ct.site||ct.insta,ct.email].filter(Boolean).join("  ·  ")].filter(Boolean).join("\n"),temQR?45:16,189,93,13,{tam:mm(3.2),min:mm(2.7),maxLinhas:2,peso:700,cor:pal.escuro,alt:1.35});}
     return {doc:{fundo,fundoImg:null,el,campos:ct.carimbo,auto:true,kit:"genio-ra-1.1",face,setor:o.setor},fundo};}
   // ---------- desenho de uma face (usa App.desenharElementos) → png com fundo + pngArte sem fundo
