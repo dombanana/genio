@@ -24,11 +24,17 @@ const App=(()=>{
   const eu=()=>EU||{nome:"Representante"};
   // ---- dados da zona (captação do servidor)
   let D=null;
+  // plano de zonas (ordem da agenda a partir de 16/11): decisão do dono em 09/11 — Ipiranga e Cambuci primeiro, Cerealista depois. Guardado em /api/estado/plano.
+  const PLANO_PADRAO=["ipiranga","cambuci-aclimacao","zona-cerealista"];let PLANO=PLANO_PADRAO;
   async function dados(){if(D)return D;
-    const r=await fetch(`/dados/captacao/${ZONA}/lojas.json?t=${Date.now()}`,{cache:"no-store"});if(!r.ok)throw new Error("zona sem dados");
-    const j=await r.json();D={zona:{slug:ZONA,nome:(j.zona.nome||ZONA).split(" (")[0],base:j.zona.base,cidade:j.zona.cidade||"São Paulo"},gerado:j.gerado,lojas:j.lojas};
-    localStorage.setItem("app-zona",ZONA);
-    try{const c=await fetch(`/dados/captacao/${ZONA}/clientes/index.json?t=${Date.now()}`,{cache:"no-store"});if(c.ok){const m={};(await c.json()).forEach(x=>m[x.slug]=x);D.lojas.forEach(l=>{l.cad=m[l.slug]||null;});}}catch(e){}
+    PLANO=(await lerChave("plano"))||PLANO_PADRAO;if(!PLANO.includes(ZONA))PLANO=PLANO.concat([ZONA]);
+    D={zonas:{},lojas:[],gerado:null};
+    for(const z of PLANO){try{const r=await fetch(`/dados/captacao/${z}/lojas.json?t=${Date.now()}`,{cache:"no-store"});if(!r.ok)continue;const j=await r.json();
+        D.zonas[z]={slug:z,nome:(j.zona.nome||z).split(" (")[0],base:j.zona.base,cidade:j.zona.cidade||"São Paulo",gerado:j.gerado};
+        let m={};try{const c=await fetch(`/dados/captacao/${z}/clientes/index.json?t=${Date.now()}`,{cache:"no-store"});if(c.ok)(await c.json()).forEach(x=>m[x.slug]=x);}catch(e){}
+        j.lojas.forEach(l=>{l.zona=z;l.cad=m[l.slug]||null;D.lojas.push(l);});}catch(e){}}
+    if(!Object.keys(D.zonas).length)throw new Error("zona sem dados");
+    D.zona=D.zonas[ZONA]||D.zonas[PLANO.find(z=>D.zonas[z])];localStorage.setItem("app-zona",D.zona.slug);
     D.lojas.forEach(l=>{l.estrelas=estrelas(l);});
     await migrarAparelho();            // o que algum aparelho ainda tiver guardado localmente sobe para o servidor (uma vez) e é apagado
     await carregarEstado();            // dia da rota, pedidos, avulsos, ocorrências — do servidor
@@ -42,12 +48,13 @@ const App=(()=>{
   const _fila={};async function gravarChave(k,v){_fila[k]=v;if(_fila["_"+k])return;_fila["_"+k]=true;try{while(_fila[k]!==undefined){const val=_fila[k];delete _fila[k];const r=await API("PUT",`/api/estado/${k}`,{valor:val});if(!r.ok){console.warn("não gravou",k,r.status);avisarFalha("Não consegui gravar no servidor ("+r.status+"). Confira a conexão.");}}}catch(e){avisarFalha("Sem conexão com o servidor. A última alteração não foi gravada.");}finally{delete _fila["_"+k];}}
   let _aviso=0;function avisarFalha(t){if(Date.now()-_aviso<8000)return;_aviso=Date.now();try{const d=document.createElement("div");d.className="aviso-rede";d.textContent=t;document.body.appendChild(d);setTimeout(()=>d.remove(),6000);}catch(e){}}
   let EST={},AVU=[],OCO=[];
-  async function carregarEstado(){const [e,a,o]=await Promise.all([lerChave("dia-"+ZONA),lerChave("avulsos"),lerChave("ocorrencias")]);EST=e||{};AVU=Array.isArray(a)?a:[];OCO=Array.isArray(o)?o:[];}
+  async function carregarEstado(){let [e,a,o]=await Promise.all([lerChave("dia"),lerChave("avulsos"),lerChave("ocorrencias")]);if(!e||!Object.keys(e).length){const ant=await lerChave("dia-zona-cerealista");if(ant&&Object.keys(ant).length){e={feitas:ant.feitas||[],pedidos:ant.pedidos||{}};gravarChave("dia",e);}}EST=e||{};AVU=Array.isArray(a)?a:[];OCO=Array.isArray(o)?o:[];}
   const avulsos=()=>AVU;
   function novoAvulso(dadosA){const a={slug:"avulso-"+Date.now().toString(36),nome:(dadosA&&dadosA.nome)||("Pedido avulso "+new Date().toLocaleDateString("pt-BR")),tel:(dadosA&&dadosA.tel)||"",endereco:(dadosA&&dadosA.endereco)||"",setor:(dadosA&&dadosA.setor)||"comércio",criado:new Date().toISOString()};
     AVU.unshift(a);gravarChave("avulsos",AVU);if(D)D.lojas.push({...a,estrelas:0,avulso:true,dia:99,ordem:0});return a;}
   function atualizarAvulso(slug,campos){AVU=AVU.map(a=>a.slug===slug?{...a,...campos}:a);gravarChave("avulsos",AVU);if(D){const l=D.lojas.find(x=>x.slug===slug);if(l)Object.assign(l,campos);}}
-  async function ficha(slug){try{const r=await fetch(`/dados/captacao/${ZONA}/clientes/${slug}.json?t=${Date.now()}`,{cache:"no-store"});return r.ok?await r.json():null;}catch(e){return null;}}
+  const zonaDe=slug=>{const l=D&&D.lojas.find(x=>x.slug===slug);return (l&&l.zona)||ZONA;};
+  async function ficha(slug){try{const r=await fetch(`/dados/captacao/${zonaDe(slug)}/clientes/${slug}.json?t=${Date.now()}`,{cache:"no-store"});return r.ok?await r.json():null;}catch(e){return null;}}
   // ---- estrelas (1–5): proposta de 08/11, a validar com o Yoshio. Cada sinal soma 1; nunca menos de 1.
   function estrelas(l){let n=1;const L=(l.cad&&l.cad.lacunas)||{};
     if((l.nota||0)>=4.3&&(l.aval||0)>=20)n++;
@@ -57,7 +64,7 @@ const App=(()=>{
     return Math.min(5,n);}
   const estrelasHTML=n=>`<span class="estrelas" title="${n} de 5">${"★".repeat(n)}<span class="off">${"★".repeat(5-n)}</span></span>`;
   // ---- estado do dia (feitas, seleções, pedidos): no servidor, compartilhado por todos os aparelhos da conta
-  const estado=()=>EST;const salvar=e=>{EST=e;gravarChave("dia-"+ZONA,e);};
+  const estado=()=>EST;const salvar=e=>{EST=e;gravarChave("dia",e);};
   // ---- fichas dos clientes (logotipo, manual, artes): no servidor (/api/clientes/<slug>); aqui só um espelho em memória da página
   const FICHAS={};
   async function carregarFichas(slugs){try{const r=await API("GET",`/api/clientes?slugs=${encodeURIComponent(slugs.join(","))}`);if(!r.ok)return;(await r.json()).clientes.forEach(f=>{FICHAS[f.slug]=f;});}catch(e){}}
@@ -167,7 +174,7 @@ const App=(()=>{
   // ---- arte automática: logotipo tratado centralizado preenchendo a área segura do gabarito, cor padrão do material
   const COR_PADRAO={capacho:"#2B2B2D",rigido:"#F4F1EA",vinil:null,tecido:"#F4F1EA",papel:"#FFFFFF",lona:"#FFFFFF",carimbo:null};
   const PRODUTOS_IDS=["capacho","placas","adesivos","uniformes","impressos","panfleto","banners","parede","brindes","carimbo"];
-  let _G=null;const gabaritos=async()=>_G||(_G=await (await fetch("gabaritos.json?v=bc2c2d653a")).json());
+  let _G=null;const gabaritos=async()=>_G||(_G=await (await fetch("gabaritos.json?v=9c71f7c18a")).json());
   const carregarImg=src=>new Promise(res=>{const i=new Image();i.crossOrigin="anonymous";i.onload=()=>res(i);i.onerror=()=>res(null);i.src=src;});
   // ---- carimbo: só texto — nome, razão social, CNPJ (negrito), endereço, telefone; nunca logotipo
   async function dadosCarimbo(l){const cad=await ficha(l.slug).catch(()=>null);const L=(cad&&cad.lacunas)||{};const leit=(L.leitura||{}).valor||"";const razao=((leit.match(/Razão social: ([^·]+)/)||[])[1]||"").trim();const cnpj=((leit.match(/CNPJ:? ?([\d./-]{14,18})/)||[])[1]||"");
@@ -209,7 +216,7 @@ const App=(()=>{
     const PX=Math.min(100,Math.floor(3000/Math.max(P.w_cm+sang/5,P.h_cm+sang/5)));const W=Math.round((P.w_cm+2*sang/10)*PX),H=Math.round((P.h_cm+2*sang/10)*PX),B=Math.round(sang/10*PX),S=Math.round(seg/10*PX);
     const aw=W-2*(B+S),ah=H-2*(B+S);const f=Math.min(aw/LW,(P.ancora==="topo"?ah*0.45:ah)/LH);const w=LW*f,h=LH*f;const x=(W-w)/2,y=P.ancora==="topo"?B+S+ah*0.05:(H-h)/2;
     const fundo=P.sem_fundo?null:(COR_PADRAO[P.superficie]===undefined?"#FFFFFF":COR_PADRAO[P.superficie]);
-    if(pid==="impressos"||pid==="panfleto"){await carregarScript("qr.js?v=bc2c2d653a");await carregarScript("impressos.js?v=bc2c2d653a");return window.Impressos.arteImpressa(App,pid,c,l,{P,G,W,H,B,S,PX,im,sang,rec});}
+    if(pid==="impressos"||pid==="panfleto"){await carregarScript("qr.js?v=9c71f7c18a");await carregarScript("impressos.js?v=9c71f7c18a");return window.Impressos.arteImpressa(App,pid,c,l,{P,G,W,H,B,S,PX,im,sang,rec});}
     if(pid==="panfleto"){const M=cardapioDe();const f1=B+S,ah3=(H-2*(B+S))/3;const lf=Math.min(aw/im.naturalWidth,(ah3*0.8)/im.naturalHeight);const lw=im.naturalWidth*lf,lh=im.naturalHeight*lf;
       const cor=(c.manual.cores&&c.manual.cores[0]&&c.manual.cores[0].hex)||"#6933C5";const esc_=luz(cor)<140?"#FFFFFF":"#1C1635";
       const el=[{tipo:"camada",id:"logo",nome:"Logotipo",src:c.manual.tratado,cor:null,usarCor:false,x:(W-lw)/2,y:f1+(ah3-lh)/2,w:lw,h:lh,borda:0,bordaCor:"#FFFFFF",grupo:"logo"},
@@ -249,10 +256,11 @@ const App=(()=>{
   async function apagarNota(id){try{const r=await API("DELETE",`/api/notas/${id}`);return r.ok;}catch(e){return false;}}
   // ---- agenda de rotas: lojas 3–5★ em dias de 50; dia 1 = data do início (primeira abertura); seg–sex; sábado = recuperação das pendentes
   const META=50;
-  function diasDeRota(D){const lista=D.lojas.filter(l=>l.estrelas>=3).sort((a,b)=>b.estrelas-a.estrelas||a.dia-b.dia||a.ordem-b.ordem);/* 1–2 estrelas ficam fora da rota */const dias=[];for(let i=0;i<lista.length;i+=META)dias.push(lista.slice(i,i+META));
+  function diasDeRota(D){const dias=[];/* 1–2 estrelas ficam fora da rota; zonas na ordem do plano, cada uma em dias de 50 */
+    for(const z of PLANO){const lista=D.lojas.filter(l=>l.zona===z&&l.estrelas>=3).sort((a,b)=>b.estrelas-a.estrelas||a.dia-b.dia||a.ordem-b.ordem);for(let i=0;i<lista.length;i+=META){const g=lista.slice(i,i+META);g.zona=z;dias.push(g);}}
     // primeira saída de vendas: segunda 16/11/2026 (decisão do dono); datas anteriores guardadas no aparelho são corrigidas
     const INICIO="2026-11-16";const e=estado();if(!e.inicio||e.inicio<INICIO){e.inicio=INICIO;delete e.datas;salvar(e);}const datas=[];let d=new Date(e.inicio+"T12:00:00");for(let k=0;k<dias.length;k++){while(d.getDay()===0||d.getDay()===6)d.setDate(d.getDate()+1);/* rotas só de segunda a sexta */datas.push(d.toISOString().slice(0,10));d.setDate(d.getDate()+1);}
-    const mov=e.datas||{};const out=dias.map((lojas,i)=>({n:i+1,data:mov[i+1]||datas[i],dataOriginal:datas[i],lojas}));
+    const mov=e.datas||{};const out=dias.map((lojas,i)=>({n:i+1,data:mov[i+1]||datas[i],dataOriginal:datas[i],lojas,zona:lojas.zona}));
     // janela da agenda: hoje, 15 dias úteis para trás e 15 para a frente (31 datas); dias sem lojas ficam "a captar"
     const hoje=hojeISO();const vistos=new Set(out.map(x=>x.data));const util=d=>d.getDay()!==0&&d.getDay()!==6;const iso=d=>d.toISOString().slice(0,10);
     const add=d=>{const k=iso(d);if(!vistos.has(k)){out.push({n:0,data:k,dataOriginal:k,lojas:[],vazio:true});vistos.add(k);}};
@@ -322,5 +330,5 @@ const App=(()=>{
   // toque longo em elementos [data-longo]: chama fn(el) após 450 ms sem mover
   function ligarLongo(root,fn){$$("[data-longo]",root).forEach(el=>{let t=null,p=null;el.addEventListener("pointerdown",ev=>{p={x:ev.clientX,y:ev.clientY};t=setTimeout(()=>{t=null;if(navigator.vibrate)navigator.vibrate(12);fn(el);},450);});
     const c=ev=>{if(t&&p&&ev.type==="pointermove"&&Math.hypot(ev.clientX-p.x,ev.clientY-p.y)<8)return;clearTimeout(t);t=null;};el.addEventListener("pointermove",c);el.addEventListener("pointerup",c);el.addEventListener("pointercancel",c);el.addEventListener("contextmenu",ev=>ev.preventDefault());});}
-  return {$,$$,esc,qs,ZONA,setorNome,nomeLoja,telFmt,ini,sessao,eu,dados,ficha,estrelas,estrelasHTML,estado,salvar,abrirVendas,lerCliente,gravarCliente,cliente,lerChave,gravarChave,API,definirCliente,classificar,logoPrincipal,removerLogo,escolherImagem,abrirLogotipo,entradas,ligarEntradas,artePadrao,gerarProdutos,aparar,assarRecortes,desenharElementos,desenharTexto,desenharQR,carregarScript,recortarLogo,PRODUTOS_IDS,separarCores,garantirCamadas,dadosCarimbo,desenharCarimbo,cenaCarimbo,desenharLista,desenharSeta,listarNotas,gravarNota,apagarNota,diasDeRota,reagendar,hojeISO,dataCurta,META,ICONES,NA_CASCA,avulsos,novoAvulso,atualizarAvulso,ocorrenciasManuais,gravarOcorrencias,ocorrenciasAuto,ETAPAS,etapaDe,moverEtapa,nav,topo,voltar,acoes,menuLongo,ligarLongo};
+  return {$,$$,esc,qs,ZONA,zonaDe,get PLANO(){return PLANO;},setorNome,nomeLoja,telFmt,ini,sessao,eu,dados,ficha,estrelas,estrelasHTML,estado,salvar,abrirVendas,lerCliente,gravarCliente,cliente,lerChave,gravarChave,API,definirCliente,classificar,logoPrincipal,removerLogo,escolherImagem,abrirLogotipo,entradas,ligarEntradas,artePadrao,gerarProdutos,aparar,assarRecortes,desenharElementos,desenharTexto,desenharQR,carregarScript,recortarLogo,PRODUTOS_IDS,separarCores,garantirCamadas,dadosCarimbo,desenharCarimbo,cenaCarimbo,desenharLista,desenharSeta,listarNotas,gravarNota,apagarNota,diasDeRota,reagendar,hojeISO,dataCurta,META,ICONES,NA_CASCA,avulsos,novoAvulso,atualizarAvulso,ocorrenciasManuais,gravarOcorrencias,ocorrenciasAuto,ETAPAS,etapaDe,moverEtapa,nav,topo,voltar,acoes,menuLongo,ligarLongo};
 })();
