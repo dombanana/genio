@@ -6,7 +6,7 @@
 <title>GênIO · Logotipo</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="app.css?v=ed18653760">
+<link rel="stylesheet" href="app.css?v=bb8907b150">
 <style>
 body.com-acoes{padding-bottom:calc(150px + env(safe-area-inset-bottom,0))}
 .palco{position:relative;height:min(50vh,480px);background:repeating-conic-gradient(#e9e5f3 0 25%,#fff 0 50%) 0 0/18px 18px;border-radius:16px;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
@@ -27,7 +27,7 @@ body.com-acoes{padding-bottom:calc(150px + env(safe-area-inset-bottom,0))}
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=ed18653760"></script>
+<script src="app.js?v=bb8907b150"></script>
 <script>
 (async()=>{
   const {$,$$,esc,qs,sessao,dados,nav,topo,voltar,nomeLoja,cliente,gravarCliente,definirCliente}=App;
@@ -69,7 +69,7 @@ body.com-acoes{padding-bottom:calc(150px + env(safe-area-inset-bottom,0))}
     if(modo==="ver"){drag={x:ev.clientX,y:ev.clientY,px,py};return;}
     if(modo==="area"){press=posPalco(ev);timer=setTimeout(()=>{const p=pos(ev);R={x0:p.x,y0:p.y,x1:p.x,y1:p.y};caixa.style.display="block";alcas.forEach(x=>x.style.display="none");desenharCaixa();if(navigator.vibrate)navigator.vibrate(15);},300);return;}
     if(modo==="fundo"){const p=pos(ev);if(p.x<0||p.y<0||p.x>=W||p.y>=H)return;
-      if(ferr==="varinha"){const m=similares(p.x,p.y,contiguo);if(!selMask)selMask=m;else for(let i=0;i<W*H;i++)if(m[i])selMask[i]=1;nSel++;mostrarSel(selMask);renderOpc();$("#st").textContent=`${nSel} área(s) marcada(s) · continue tocando ou apague`;}
+      if(ferr==="varinha"){const m=similares(p.x,p.y,contiguo);const ja=selMask&&selMask[p.y*W+p.x];if(ja){for(let i=0;i<W*H;i++)if(m[i])selMask[i]=0;nSel=Math.max(0,nSel-1);if(!selMask.some(v=>v)){selMask=null;nSel=0;}}else{if(!selMask)selMask=m;else for(let i=0;i<W*H;i++)if(m[i])selMask[i]=1;nSel++;}mostrarSel(selMask);renderOpc();$("#st").textContent=ja?`Área desmarcada · ${nSel} marcada(s)`:`${nSel} área(s) marcada(s) · toque de novo para desmarcar`;}
       if(ferr==="borracha"||ferr==="recuperar"){guardar();pint=true;pincelar(p);}
       if(ferr==="gotas"){const i=(p.y*W+p.x)*4;$("#st").textContent=`Cor tocada: #${[base.data[i],base.data[i+1],base.data[i+2]].map(v=>v.toString(16).padStart(2,"0")).join("")}`;}}});
   palco.addEventListener("pointermove",ev=>{if(!ptrs.has(ev.pointerId))return;ptrs.set(ev.pointerId,ev);
