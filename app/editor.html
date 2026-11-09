@@ -6,7 +6,7 @@
 <title>GênIO · Edição do produto</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="app.css?v=f88865fe9b">
+<link rel="stylesheet" href="app.css?v=35a0b0fb4f">
 <style>
 body.com-acoes{padding-bottom:calc(250px + env(safe-area-inset-bottom,0))}
 .prancheta{position:relative;background:repeating-conic-gradient(#e9e5f3 0 25%,#fff 0 50%) 0 0/18px 18px;border-radius:16px;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;height:min(72vw,460px);margin:0 0 8px}
@@ -39,7 +39,7 @@ body.com-acoes{padding-bottom:calc(250px + env(safe-area-inset-bottom,0))}
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=f88865fe9b"></script>
+<script src="app.js?v=35a0b0fb4f"></script>
 <script>
 (async()=>{
   const {$,$$,esc,qs,sessao,dados,ficha,nav,topo,voltar,nomeLoja,telFmt,cliente,gravarCliente,definirCliente,setorNome}=App;
@@ -48,7 +48,7 @@ body.com-acoes{padding-bottom:calc(250px + env(safe-area-inset-bottom,0))}
   if(!l){$("#app").innerHTML=`${topo()}<p>Loja não encontrada.</p>${nav("rota")}`;return;}
   const nome=nomeLoja(l.nome);definirCliente(l);let c=await App.garantirCamadas(l);const man=c.manual||null;
   // gabarito da gráfica: área total = produto + sangria; a guia mostra corte (vermelho) e segurança (verde-água)
-  const G=await (await fetch("gabaritos.json?v=f88865fe9b")).json();const P=G.produtos[pid]||G.produtos.capacho;
+  const G=await (await fetch("gabaritos.json?v=35a0b0fb4f")).json();const P=G.produtos[pid]||G.produtos.capacho;
   const sang=P.sangria_mm!=null?P.sangria_mm:G.sangria_mm,seg=P.seguranca_mm!=null?P.seguranca_mm:G.seguranca_mm;
   const PX=Math.min(100,Math.floor(3000/Math.max(P.w_cm+sang/5,P.h_cm+sang/5)));  // px por cm (teto 3000 px)
   const W=Math.round((P.w_cm+2*sang/10)*PX),H=Math.round((P.h_cm+2*sang/10)*PX),B=Math.round(sang/10*PX),S=Math.round(seg/10*PX);
@@ -181,7 +181,7 @@ body.com-acoes{padding-bottom:calc(250px + env(safe-area-inset-bottom,0))}
         catch(e){st.textContent="falha: "+e.message;}$("#gerar").disabled=false;};
       const ti=$("#tirarIA");if(ti)ti.onclick=()=>{doc.fundoImg=null;render();};}
     // gestos: 1 dedo move/redimensiona o elemento (ou arrasta a prancheta se não tocar em nada); 2 dedos = pinça
-    const pr=$("#pr");let drag=null,pan=null,pinch=null;const ptrs=new Map();
+    const pr=$("#pr");let drag=null,pan=null,pinch=null,tocouVazio=null;const ptrs=new Map();
     const pos=ev=>{const b=cv.getBoundingClientRect();return {x:(ev.clientX-b.left)/b.width*W,y:(ev.clientY-b.top)/b.height*H};};
     pr.addEventListener("pointerdown",ev=>{try{pr.setPointerCapture(ev.pointerId);}catch(e){}ptrs.set(ev.pointerId,ev);
       if(ptrs.size===2){drag=null;pan=null;guiaCentro=null;const [a,b]=[...ptrs.values()];pinch={d:Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY),ang:Math.atan2(b.clientY-a.clientY,b.clientX-a.clientX),z,px,py,cx:(a.clientX+b.clientX)/2,cy:(a.clientY+b.clientY)/2,
@@ -190,6 +190,8 @@ body.com-acoes{padding-bottom:calc(250px + env(safe-area-inset-bottom,0))}
       if(borracha&&sel&&(sel.tipo==="camada"||sel.tipo==="imagem")&&p.x>=sel.x&&p.x<=sel.x+sel.w&&p.y>=sel.y&&p.y<=sel.y+sel.h){const im=IMGS[sel.src];if(!im)return;const oc=document.createElement("canvas");oc.width=im.naturalWidth;oc.height=im.naturalHeight;const og=oc.getContext("2d");og.drawImage(im,0,0);desfazer.push({e:sel,src:sel.src});if(desfazer.length>10)desfazer.shift();drag={modo:"apaga",oc,og,k:im.naturalWidth/sel.w};apagar(p);return;}
       if(sel){const r=Math.max(14,W/35);const q=local(sel,p);if(Math.hypot(q.x-(sel.x+sel.w),q.y-(sel.y+sel.h))<r*1.8){drag={modo:"red",p,w:sel.w,h:sel.h,x0:sel.x,y0:sel.y,grupo:sel.grupo==="logo"?doc.el.filter(e=>e.grupo==="logo").map(e=>({e,x:e.x,y:e.y,w:e.w,h:e.h})):null};return;}}
       const hit=doc.el.slice().reverse().find(e=>{const q=local(e,p);return q.x>=e.x&&q.x<=e.x+e.w&&q.y>=e.y&&q.y<=e.y+e.h;});
+      // tocar fora não desmarca na hora (o segundo dedo da pinça costuma cair fora do item); desmarca só se for um toque simples
+      if(!hit&&sel){tocouVazio={x:ev.clientX,y:ev.clientY};pan={x:ev.clientX,y:ev.clientY,px,py};return;}
       if(hit!==sel){sel=hit||null;renderLista();renderProps();$("#selnome").textContent=sel?(sel.nome||sel.tipo):"toque num elemento · pinça amplia";}
       if(sel)drag={modo:"mov",p,x:sel.x,y:sel.y,grupo:sel.grupo==="logo"?doc.el.filter(e=>e.grupo==="logo").map(e=>({e,x:e.x,y:e.y})):null};else pan={x:ev.clientX,y:ev.clientY,px,py};desenhar();});
     pr.addEventListener("pointermove",ev=>{if(!ptrs.has(ev.pointerId))return;ptrs.set(ev.pointerId,ev);
@@ -213,7 +215,7 @@ body.com-acoes{padding-bottom:calc(250px + env(safe-area-inset-bottom,0))}
       const tmp=drag.oc;cx.save();cx.clearRect(sel.x,sel.y,sel.w,sel.h);cx.restore();desenharApaga(tmp);}
     let tApaga=0;function desenharApaga(oc){const im=new Image();im.onload=()=>{IMGS[sel.src]=im;desenhar();};if(Date.now()-tApaga>80){tApaga=Date.now();im.src=oc.toDataURL("image/png");}}
     function local(e,p){if(!e.rot)return p;const cxm=e.x+e.w/2,cym=e.y+e.h/2,a=-e.rot*Math.PI/180;const dx=p.x-cxm,dy=p.y-cym;return {x:cxm+dx*Math.cos(a)-dy*Math.sin(a),y:cym+dx*Math.sin(a)+dy*Math.cos(a)};}
-    const fim=ev=>{ptrs.delete(ev.pointerId);if(ptrs.size<2)pinch=null;if(guiaCentro){guiaCentro=null;desenhar();}if(drag&&drag.modo==="apaga"){const u=drag.oc.toDataURL("image/png");const im=new Image();im.onload=()=>{IMGS[u]=im;sel.src=u;const b=$("#desfazerB");if(b)b.disabled=false;desenhar();};im.src=u;}drag=null;pan=null;};pr.addEventListener("pointerup",fim);pr.addEventListener("pointercancel",fim);
+    const fim=ev=>{ptrs.delete(ev.pointerId);if(tocouVazio&&!pinch&&ptrs.size===0&&Math.hypot(ev.clientX-tocouVazio.x,ev.clientY-tocouVazio.y)<8){sel=null;renderLista();renderProps();$("#selnome").textContent="toque num elemento · pinça amplia";desenhar();}if(ptrs.size===0)tocouVazio=null;if(ptrs.size<2)pinch=null;if(guiaCentro){guiaCentro=null;desenhar();}if(drag&&drag.modo==="apaga"){const u=drag.oc.toDataURL("image/png");const im=new Image();im.onload=()=>{IMGS[u]=im;sel.src=u;const b=$("#desfazerB");if(b)b.disabled=false;desenhar();};im.src=u;}drag=null;pan=null;};pr.addEventListener("pointerup",fim);pr.addEventListener("pointercancel",fim);
     $("#salvar").onclick=async()=>{sel=null;delete doc.auto;$("#salvar").disabled=true;$("#salvar").textContent="Salvando…";
       await desenhar(false,true,false);const png=cv.toDataURL("image/png");
       await desenhar(false,false,false);const pngArte=cv.toDataURL("image/png");  // arte sem o fundo: o material do kit recebe a cor separadamente
