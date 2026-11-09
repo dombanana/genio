@@ -65,7 +65,7 @@ for u in api/*.service api/*.timer; do
   fi
 done
 
-if [ "$antes" != "$depois" ] && ! git diff --quiet "$antes" "$depois" -- api/genio_api.py api/genio-api.service; then
+if [ "$antes" != "$depois" ] && ! git diff --quiet "$antes" "$depois" -- api/genio_api.py api/genio-api.service api/kits api/captacao.py; then
   systemctl restart genio-api
 fi
 

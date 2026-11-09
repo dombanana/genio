@@ -884,3 +884,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+# reinício 2026-11-09 (aplicador)
