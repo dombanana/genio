@@ -6,11 +6,12 @@
 <title>GênIO · Pedidos</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="app.css?v=718dac6994">
+<link rel="stylesheet" href="app.css?v=cf1931f0e7">
+<style>.novo-ped{position:fixed;left:12px;right:12px;top:8vh;max-height:80vh;overflow:auto;background:#fff;border-radius:18px;padding:14px;z-index:75;box-shadow:0 10px 40px rgba(28,22,53,.3)}.novo-ped h3{margin:0 0 8px}.novo-ped input{width:100%;box-sizing:border-box;font:inherit;font-size:16px;border:1.5px solid var(--linha);border-radius:12px;padding:10px 12px;margin:0 0 8px}.lista-cli{display:grid;gap:4px}.lista-cli button{border:0;background:var(--lav);border-radius:12px;text-align:left;padding:10px 12px;font:inherit;display:grid}.lista-cli button small{color:var(--texto2);font-size:12px}.fato{display:grid;grid-template-columns:auto 1fr;gap:10px;padding:6px 0;border-top:1px solid var(--linha)}.fato:first-of-type{border-top:0}.fato span{color:var(--texto2)}</style>
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=718dac6994"></script>
+<script src="app.js?v=cf1931f0e7"></script>
 <script>
 (async()=>{
   const {$,esc,sessao,dados,nav,topo,nomeLoja,estado}=App;
@@ -18,7 +19,19 @@
   const D=await dados();const e=estado();const sel=e.sel||{};
   const blocos=Object.entries(sel).map(([slug,S])=>{const its=Object.values(S).filter(v=>v&&v.q>0);if(!its.length)return "";const l=D.lojas.find(x=>x.slug===slug);const nome=l?nomeLoja(l.nome):slug;
     return `<section class="card"><div style="display:flex;justify-content:space-between;gap:10px;align-items:center"><h2 style="margin:0">${esc(nome)}</h2><span class="chip dec">◷ A orçar</span></div><p style="margin:8px 0 10px">${its.map(i=>esc(i.nome)+(i.servico?"":" × "+i.q)).join(" · ")}</p><div style="display:flex;justify-content:space-between;align-items:center"><small class="muted">Preços: fase do orçamento</small><a href="produtos.html?l=${encodeURIComponent(slug)}">Ajustar →</a></div></section>`;}).filter(Boolean).join("");
-  $("#app").innerHTML=`${topo()}<h1>Pedidos</h1><p class="sub">${blocos?"Seleções feitas nas visitas":"Nenhuma seleção ainda"}</p>${blocos||'<section class="card"><p>As seleções nascem na visita, em “Produtos e serviços”.</p></section>'}${nav("pedidos")}`;
+  const avul=App.avulsos();
+  $("#app").innerHTML=`${topo()}<h1>Pedidos</h1><p class="sub">${blocos?"Seleções feitas nas visitas":"Nenhuma seleção ainda"}</p>
+  <button type="button" class="btn" id="novo" style="margin:0 0 12px;min-height:52px">＋ Novo pedido</button>
+  ${avul.length?`<section class="card"><h2>Pedidos avulsos</h2>${avul.map(a=>`<div class="fato"><span>${new Date(a.criado).toLocaleDateString("pt-BR")}</span><b><a href="visita.html?l=${encodeURIComponent(a.slug)}">${esc(a.nome)}</a></b></div>`).join("")}</section>`:""}
+  ${blocos||'<section class="card"><p>As seleções nascem na visita, em “Produtos e serviços”, ou num pedido novo.</p></section>'}${nav("pedidos")}`;
+  // novo pedido: para qualquer pessoa — cliente da rota ou alguém novo (nome opcional, pode completar depois)
+  $("#novo").onclick=()=>{const f=document.createElement("div");f.className="rec-fundo";f.style.zIndex=70;const m=document.createElement("div");m.className="novo-ped";
+    m.innerHTML=`<h3>Novo pedido</h3><input id="np-nome" placeholder="Nome do cliente ou da empresa (opcional)" autocomplete="off"><input id="np-tel" placeholder="Telefone (opcional)" inputmode="tel"><div class="muted" style="font-size:13px;margin:8px 0 4px">ou escolha uma loja da rota:</div><input id="np-busca" placeholder="buscar na rota" autocomplete="off"><div class="lista-cli" id="np-lc"></div><div style="display:flex;gap:8px;margin-top:10px"><button type="button" class="btn" id="np-criar" style="min-height:46px">Criar pedido →</button><button type="button" class="btn sec" id="np-fechar" style="width:auto;min-height:46px;padding:0 14px">Fechar</button></div>`;
+    document.body.appendChild(f);document.body.appendChild(m);const fecha=()=>{f.remove();m.remove();};f.onclick=fecha;m.querySelector("#np-fechar").onclick=fecha;
+    const lojas=D.lojas.filter(l=>!l.avulso);const lc=m.querySelector("#np-lc");const desenha=q=>{const t=(q||"").toLowerCase();lc.innerHTML=t?lojas.filter(l=>l.nome.toLowerCase().includes(t)).slice(0,20).map(l=>`<button type="button" data-s="${esc(l.slug)}"><b>${esc(nomeLoja(l.nome))}</b><small>${esc(l.endereco||"")}</small></button>`).join("")||'<small class="muted">nada encontrado</small>':"";
+      lc.querySelectorAll("button").forEach(b=>b.onclick=()=>{location.href=`visita.html?l=${encodeURIComponent(b.dataset.s)}`;});};
+    m.querySelector("#np-busca").oninput=ev=>desenha(ev.target.value);
+    m.querySelector("#np-criar").onclick=()=>{const a=App.novoAvulso({nome:m.querySelector("#np-nome").value.trim()||undefined,tel:m.querySelector("#np-tel").value.trim()});location.href=`visita.html?l=${encodeURIComponent(a.slug)}`;};};
 })();
 </script>
 </body>

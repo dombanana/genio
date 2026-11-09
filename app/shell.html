@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="stylesheet" href="app.css?v=718dac6994">
+<link rel="stylesheet" href="app.css?v=cf1931f0e7">
 <style>html,body{height:100%;overflow:hidden;padding:0}</style>
 </head>
 <body>
@@ -15,7 +15,7 @@
   <iframe id="tela" allow="camera; microphone; geolocation; display-capture" title="GênIO"></iframe>
   <nav class="nav" id="barra"></nav>
 </div>
-<script src="app.js?v=718dac6994"></script>
+<script src="app.js?v=cf1931f0e7"></script>
 <script>
 (()=>{
   const {$,esc,ICONES,gravarNota}=App;
@@ -25,7 +25,9 @@
   window.addEventListener("message",ev=>{if(ev.origin!==location.origin||!ev.data||ev.data.genio!=="tela")return;atual=ev.data.href;history.replaceState(null,"","#"+atual);marcar();});
   window.addEventListener("hashchange",()=>{const a=alvo();if(a!==atual){atual=a;fr.src=a;}});
   const on=p=>atual.startsWith(p)?"on":"";
-  function marcar(){$("#barra").innerHTML=`<a href="#index.html" class="${on("index")||on("visita")||on("fontes")||on("logotipo")||on("manual")||on("produtos")||on("editor")||on("capacho")}" data-ir="index.html"><span class="ic">${ICONES.rota}</span>Rota</a><a href="#pedidos.html" class="${on("pedidos")}" data-ir="pedidos.html"><span class="ic">${ICONES.pedidos}</span>Pedidos</a><a href="#perfil.html" class="${on("perfil")}" data-ir="perfil.html"><span class="ic">${ICONES.perfil}</span>Perfil</a><span class="sep"></span><button type="button" class="rec ${REC.ativo?"on":""}" id="rec"><span class="dot">${ICONES.notas}</span>${REC.ativo?"parar":"REC"}</button>`;
+  function marcar(){const rotOn=on("index")||on("visita")||on("fontes")||on("logotipo")||on("manual")||on("produtos")||on("editor")||on("capacho");
+    $("#barra").innerHTML=`<a href="#index.html" class="${rotOn}" data-ir="index.html"><span class="ic">${ICONES.rota}</span>Rota</a><a href="#pedidos.html" class="${on("pedidos")}" data-ir="pedidos.html"><span class="ic">${ICONES.pedidos}</span>Pedidos</a><a href="#perfil.html" class="${on("perfil")}" data-ir="perfil.html"><span class="ic">${ICONES.perfil}</span>Perfil</a>
+      <div class="aba"><a href="#notas.html" class="${on("notas")}" data-ir="notas.html"><span class="ic">${ICONES.notasLista}</span>Notas</a><button type="button" class="rec ${REC.ativo?"on":""}" id="rec">${REC.ativo?`<span class="dot pisca"></span><span id="recTempo">0:00</span><small id="recTipo">${esc(({audio:"áudio","video-tras":"vídeo","video-frente":"selfie",tela:"tela"})[REC.tipo]||"")}</small>`:`<span class="dot">${ICONES.notas}</span>REC`}</button></div>`;
     $("#barra").querySelectorAll("[data-ir]").forEach(a=>a.onclick=ev=>{ev.preventDefault();atual=a.dataset.ir;fr.src=atual;history.replaceState(null,"","#"+atual);marcar();});
     ligarRec();}
   // ---- REC: toque = áudio (continua gravando enquanto você usa o app); segurar = menu
@@ -36,9 +38,7 @@
   // painel da orelha REC (abre para cima): mostra o menu, ou os parâmetros da gravação em andamento
   function painel(html,cls){let p=$("#recPainel");if(!p){p=document.createElement("div");p.id="recPainel";p.className="rec-painel";document.body.appendChild(p);requestAnimationFrame(()=>p.classList.add("aberto"));}p.className="rec-painel aberto "+(cls||"");p.innerHTML=html;return p;}
   function fecharPainel(){const p=$("#recPainel");if(p){p.classList.remove("aberto");setTimeout(()=>p.remove(),180);}const f=$("#recFundo");if(f)f.remove();}
-  function status(txt){const rot={audio:"🎙 Áudio","video-tras":"🎥 Vídeo","video-frente":"🎦 Vídeo · selfie",tela:"📱 Tela"}[REC.tipo]||"REC";
-    painel(`<div class="rec-linha"><span class="dot"></span><b id="recTipo">${esc(rot)}</b><span id="recTempo" class="muted">0:00</span><button type="button" id="recStop">parar</button></div>${REC.tipo!=="audio"&&REC.tipo!=="tela"?'<video id="recPrev" muted playsinline autoplay></video>':""}${ultima?`<small class="muted">ligado a ${esc(ultima.nome)}</small>`:""}`,"status");
-    $("#recStop").onclick=parar;const v=$("#recPrev");if(v&&REC.stream)v.srcObject=REC.stream;}
+  function status(){marcar();fecharPainel();if(REC.tipo!=="audio"&&REC.tipo!=="tela"){const p=painel('<video id="recPrev" muted playsinline autoplay></video>',"status");const v=$("#recPrev");if(v&&REC.stream)v.srcObject=REC.stream;}}
   async function iniciar(tipo){if(REC.ativo)return;ultima=lojaAtual();
     try{let stream;
       if(tipo==="audio")stream=await navigator.mediaDevices.getUserMedia({audio:true});
@@ -51,7 +51,7 @@
       rec.onstop=async()=>{clearInterval(REC.timer);stream.getTracks().forEach(t=>t.stop());const blob=new Blob(REC.chunks,{type:rec.mimeType||tm||(tipo==="audio"?"audio/webm":"video/webm")});const d=(Date.now()-REC.t0)/1000;
         if(d>0.7)await gravarNota({id:"n"+Date.now().toString(36),em:new Date().toISOString(),tipo,[tipo==="audio"?"audio":"video"]:blob,dur:d,loja:ultima});
         REC.ativo=false;REC.rec=null;fecharPainel();marcar();if(atual.startsWith("notas"))fr.contentWindow.location.reload();};
-      rec.start(500);status();REC.timer=setInterval(()=>{const s=$("#recTempo");if(s)s.textContent=dur((Date.now()-REC.t0)/1000);},500);marcar();
+      rec.start(500);status();REC.timer=setInterval(()=>{const s=$("#recTempo");if(s)s.textContent=dur((Date.now()-REC.t0)/1000);},500);
       stream.getVideoTracks().forEach(t=>t.onended=()=>{if(REC.ativo)parar();});}
     catch(e){fecharPainel();alert("Não consegui iniciar: "+e.message);}}
   function parar(){if(REC.rec&&REC.rec.state!=="inactive")REC.rec.stop();}
@@ -69,9 +69,8 @@
       <button data-k="tela"><span class="ic">📱</span><span>Gravar a tela com áudio<small>depende do navegador</small></span></button>
       <button data-k="audio"><span class="ic">🎙</span><span>Só áudio</span></button>`,"menu");
     m.querySelectorAll("button").forEach(b=>b.onclick=()=>{const fd=$("#recFundo");if(fd)fd.remove();const k=b.dataset.k;if(k==="foto")foto(false);else if(k==="selfie")foto(true);else iniciar(k);});}
-  function ligarRec(){const b=$("#rec");if(!b)return;let t=null,longo=false;
-    b.addEventListener("pointerdown",ev=>{longo=false;if(REC.ativo)return;t=setTimeout(()=>{longo=true;if(navigator.vibrate)navigator.vibrate(15);menu();},450);});
-    const fim=()=>{clearTimeout(t);};b.addEventListener("pointerup",()=>{fim();if(longo)return;if(REC.ativo)parar();else iniciar("audio");});b.addEventListener("pointercancel",fim);b.addEventListener("pointerleave",fim);
+  function ligarRec(){const b=$("#rec");if(!b)return;
+    b.onclick=()=>{if(REC.ativo){parar();return;}if($("#recPainel")&&$("#recPainel").classList.contains("menu"))fecharPainel();else menu();};
     b.addEventListener("contextmenu",ev=>ev.preventDefault());}
   marcar();
 })();

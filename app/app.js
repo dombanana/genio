@@ -30,7 +30,13 @@ const App=(()=>{
     localStorage.setItem("app-zona",ZONA);
     try{const c=await fetch(`/dados/captacao/${ZONA}/clientes/index.json?t=${Date.now()}`,{cache:"no-store"});if(c.ok){const m={};(await c.json()).forEach(x=>m[x.slug]=x);D.lojas.forEach(l=>{l.cad=m[l.slug]||null;});}}catch(e){}
     D.lojas.forEach(l=>{l.estrelas=estrelas(l);});
+    // clientes avulsos criados no aparelho (pedido novo fora da rota): entram como lojas, sem dia/estrelas de rota
+    avulsos().forEach(a=>{if(!D.lojas.some(l=>l.slug===a.slug))D.lojas.push({...a,estrelas:0,avulso:true,dia:99,ordem:0});});
     return D;}
+  const avulsos=()=>{try{return JSON.parse(localStorage.getItem("app-avulsos")||"[]");}catch(e){return [];}};
+  function novoAvulso(dadosA){const a={slug:"avulso-"+Date.now().toString(36),nome:(dadosA&&dadosA.nome)||("Pedido avulso "+new Date().toLocaleDateString("pt-BR")),tel:(dadosA&&dadosA.tel)||"",endereco:(dadosA&&dadosA.endereco)||"",setor:(dadosA&&dadosA.setor)||"comércio",criado:new Date().toISOString()};
+    const lista=avulsos();lista.unshift(a);localStorage.setItem("app-avulsos",JSON.stringify(lista));if(D)D.lojas.push({...a,estrelas:0,avulso:true,dia:99,ordem:0});return a;}
+  function atualizarAvulso(slug,campos){const lista=avulsos().map(a=>a.slug===slug?{...a,...campos}:a);localStorage.setItem("app-avulsos",JSON.stringify(lista));if(D){const l=D.lojas.find(x=>x.slug===slug);if(l)Object.assign(l,campos);}}
   async function ficha(slug){try{const r=await fetch(`/dados/captacao/${ZONA}/clientes/${slug}.json?t=${Date.now()}`,{cache:"no-store"});return r.ok?await r.json():null;}catch(e){return null;}}
   // ---- estrelas (1–5): proposta de 08/11, a validar com o Yoshio. Cada sinal soma 1; nunca menos de 1.
   function estrelas(l){let n=1;const L=(l.cad&&l.cad.lacunas)||{};
@@ -105,7 +111,7 @@ const App=(()=>{
   // ---- arte automática: logotipo tratado centralizado preenchendo a área segura do gabarito, cor padrão do material
   const COR_PADRAO={capacho:"#2B2B2D",rigido:"#F4F1EA",vinil:null,tecido:"#F4F1EA",papel:"#FFFFFF",lona:"#FFFFFF",carimbo:null};
   const PRODUTOS_IDS=["capacho","placas","adesivos","uniformes","impressos","panfleto","banners","parede","brindes","carimbo"];
-  let _G=null;const gabaritos=async()=>_G||(_G=await (await fetch("gabaritos.json?v=718dac6994")).json());
+  let _G=null;const gabaritos=async()=>_G||(_G=await (await fetch("gabaritos.json?v=cf1931f0e7")).json());
   const carregarImg=src=>new Promise(res=>{const i=new Image();i.crossOrigin="anonymous";i.onload=()=>res(i);i.onerror=()=>res(null);i.src=src;});
   // ---- carimbo: só texto — nome, razão social, CNPJ (negrito), endereço, telefone; nunca logotipo
   async function dadosCarimbo(l){const cad=await ficha(l.slug).catch(()=>null);const L=(cad&&cad.lacunas)||{};const leit=(L.leitura||{}).valor||"";const razao=((leit.match(/Razão social: ([^·]+)/)||[])[1]||"").trim();const cnpj=((leit.match(/CNPJ:? ?([\d./-]{14,18})/)||[])[1]||"");
@@ -219,11 +225,11 @@ const App=(()=>{
   async function garantirCamadas(l){const c=await cliente(l);const m=c.manual;if(!m||!m.editado||!m.tratado)return c;if((m.camadas||[]).length>1&&m.separado)return c;
     const r=await separarCores(m.tratado,5);if(r){m.camadas=r.camadas;m.cores=r.cores;m.separado=true;}else{m.camadas=[{nome:"Logotipo",png:m.tratado}];m.separado=true;}await gravarCliente(c);return c;}
   // ---- ícones da barra: ilustrações 3D (Fluent Emoji 3D, MIT) + rosto do vendedor; o servidor baixa para vendor/icones, senão vem do CDN
-  const ICO_CDN={mapa:"https://cdn.jsdelivr.net/gh/microsoft/fluentui-emoji@main/assets/World%20map/3D/world_map_3d.png",pedidos:"https://cdn.jsdelivr.net/gh/microsoft/fluentui-emoji@main/assets/Clipboard/3D/clipboard_3d.png",rec:"https://cdn.jsdelivr.net/gh/microsoft/fluentui-emoji@main/assets/Red%20circle/3D/red_circle_3d.png"};
+  const ICO_CDN={notas:"https://cdn.jsdelivr.net/gh/microsoft/fluentui-emoji@main/assets/Spiral%20notepad/3D/spiral_notepad_3d.png",mapa:"https://cdn.jsdelivr.net/gh/microsoft/fluentui-emoji@main/assets/World%20map/3D/world_map_3d.png",pedidos:"https://cdn.jsdelivr.net/gh/microsoft/fluentui-emoji@main/assets/Clipboard/3D/clipboard_3d.png",rec:"https://cdn.jsdelivr.net/gh/microsoft/fluentui-emoji@main/assets/Red%20circle/3D/red_circle_3d.png"};
   const ico=(n,alt)=>`<img src="vendor/icones/${n}.png" alt="${alt||""}" onerror="this.onerror=null;this.src='${ICO_CDN[n]||""}'">`;
   const ICONES={rota:`<span class="ic-mapa">${ico("mapa","")}<svg viewBox="0 0 48 48"><path d="M8 36 C14 30, 16 22, 22 20 S30 26, 34 18 S40 12, 42 10" fill="none" stroke="#6933C5" stroke-width="4.5" stroke-linecap="round" stroke-dasharray="7 4"/><circle cx="8" cy="36" r="4.5" fill="#14B8B0" stroke="#fff" stroke-width="2"/><path d="M42 3c-3.3 0-6 2.6-6 5.9C36 13 42 19 42 19s6-6 6-10.1C48 5.6 45.3 3 42 3z" fill="#C62828" stroke="#fff" stroke-width="1.5"/><circle cx="42" cy="8.8" r="2.2" fill="#fff"/></svg></span>`,
-    pedidos:ico("pedidos"),perfil:`<img src="vendor/icones/vendedor.png" alt="">`,notas:ico("rec")};
-  const nav=on=>NA_CASCA?"":`<nav class="nav"><a href="index.html" class="${on==="rota"?"on":""}"><span class="ic">${ICONES.rota}</span>Rota</a><a href="pedidos.html" class="${on==="pedidos"?"on":""}"><span class="ic">${ICONES.pedidos}</span>Pedidos</a><a href="perfil.html" class="${on==="perfil"?"on":""}"><span class="ic">${ICONES.perfil}</span>Perfil</a><span class="sep"></span><a href="notas.html" class="${on==="notas"?"on":""}"><span class="ic">${ICONES.notas}</span>Notas</a></nav>`;
+    pedidos:ico("pedidos"),perfil:`<img src="vendor/icones/vendedor.png" alt="">`,notas:ico("rec"),notasLista:ico("notas")};
+  const nav=on=>NA_CASCA?"":`<nav class="nav"><a href="index.html" class="${on==="rota"?"on":""}"><span class="ic">${ICONES.rota}</span>Rota</a><a href="pedidos.html" class="${on==="pedidos"?"on":""}"><span class="ic">${ICONES.pedidos}</span>Pedidos</a><a href="perfil.html" class="${on==="perfil"?"on":""}"><span class="ic">${ICONES.perfil}</span>Perfil</a><a href="notas.html" class="${on==="notas"?"on":""}"><span class="ic">${ICONES.notasLista}</span>Notas</a></nav>`;
   const topo=()=>`<header class="topo"><div class="logo">Gên<i>IO</i></div><div class="papel">Representante</div><div class="fill"></div><a class="avatar" href="perfil.html" title="${esc(eu().nome)}">${esc(ini(eu().nome))}</a></header>`;
   const voltar=(href,txt)=>`<div class="faixa"><a href="${href}">${esc(txt)}</a></div>`;
   const acoes=(voltaHref,voltaTxt,avancaId,avancaTxt)=>`<div class="acoes"><div class="w">${voltaHref?`<a class="btn sec" href="${voltaHref}">← ${esc(voltaTxt)}</a>`:""}<button class="btn" id="${avancaId}" type="button">${esc(avancaTxt)}</button></div></div>`;
@@ -233,5 +239,5 @@ const App=(()=>{
   // toque longo em elementos [data-longo]: chama fn(el) após 450 ms sem mover
   function ligarLongo(root,fn){$$("[data-longo]",root).forEach(el=>{let t=null,p=null;el.addEventListener("pointerdown",ev=>{p={x:ev.clientX,y:ev.clientY};t=setTimeout(()=>{t=null;if(navigator.vibrate)navigator.vibrate(12);fn(el);},450);});
     const c=ev=>{if(t&&p&&ev.type==="pointermove"&&Math.hypot(ev.clientX-p.x,ev.clientY-p.y)<8)return;clearTimeout(t);t=null;};el.addEventListener("pointermove",c);el.addEventListener("pointerup",c);el.addEventListener("pointercancel",c);el.addEventListener("contextmenu",ev=>ev.preventDefault());});}
-  return {$,$$,esc,qs,ZONA,setorNome,nomeLoja,telFmt,ini,sessao,eu,dados,ficha,estrelas,estrelasHTML,estado,salvar,abrirVendas,lerCliente,gravarCliente,cliente,definirCliente,classificar,logoPrincipal,removerLogo,escolherImagem,abrirLogotipo,entradas,ligarEntradas,artePadrao,gerarProdutos,PRODUTOS_IDS,separarCores,garantirCamadas,dadosCarimbo,desenharCarimbo,cenaCarimbo,desenharLista,desenharSeta,listarNotas,gravarNota,apagarNota,diasDeRota,reagendar,hojeISO,dataCurta,META,ICONES,NA_CASCA,nav,topo,voltar,acoes,menuLongo,ligarLongo};
+  return {$,$$,esc,qs,ZONA,setorNome,nomeLoja,telFmt,ini,sessao,eu,dados,ficha,estrelas,estrelasHTML,estado,salvar,abrirVendas,lerCliente,gravarCliente,cliente,definirCliente,classificar,logoPrincipal,removerLogo,escolherImagem,abrirLogotipo,entradas,ligarEntradas,artePadrao,gerarProdutos,PRODUTOS_IDS,separarCores,garantirCamadas,dadosCarimbo,desenharCarimbo,cenaCarimbo,desenharLista,desenharSeta,listarNotas,gravarNota,apagarNota,diasDeRota,reagendar,hojeISO,dataCurta,META,ICONES,NA_CASCA,avulsos,novoAvulso,atualizarAvulso,nav,topo,voltar,acoes,menuLongo,ligarLongo};
 })();
