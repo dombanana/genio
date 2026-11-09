@@ -8,13 +8,13 @@
 <link rel="icon" href="../genio-favicon.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
-<link rel="stylesheet" href="app.css?v=39b5207458">
+<link rel="stylesheet" href="app.css?v=a66a4dd874">
 <style>.leaflet-div-icon{background:transparent;border:0}.mapa svg.esq{width:100%;height:100%}</style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=39b5207458"></script>
+<script src="app.js?v=a66a4dd874"></script>
 <script>
 (async()=>{
   const {$,$$,esc,qs,sessao,eu,dados,estrelasHTML,estado,salvar,nav,topo,setorNome,nomeLoja}=App;
@@ -24,7 +24,9 @@
   // agenda: todas as lojas da zona por estrelas, em dias de 50; cada dia tem uma data (pula domingo)
   const DIAS=App.diasDeRota(D);const hoje=App.hojeISO();
   const pedida=qs.get("dia")?+qs.get("dia"):0;const feitasSet=new Set(e.feitas);
-  const atual=DIAS.find(d=>d.n===pedida)||DIAS.find(d=>d.data>=hoje&&d.lojas.some(l=>!feitasSet.has(l.slug)))||DIAS.find(d=>d.lojas.some(l=>!feitasSet.has(l.slug)))||DIAS[0];
+  const pend=d=>d.lojas.some(l=>!feitasSet.has(l.slug));
+  // abre a rota de hoje; sem rota hoje (sábado) ou com atraso, a pendente mais antiga; senão a próxima
+  const atual=DIAS.find(d=>d.n===pedida)||DIAS.find(d=>d.data===hoje&&pend(d))||DIAS.find(d=>d.data<hoje&&pend(d))||DIAS.find(d=>d.data>hoje&&pend(d))||DIAS[0];
   const sel=atual.lojas;
   // percurso do dia: encadeado ponto a ponto a partir da base (vizinho mais próximo)
   const dist=(a,b)=>Math.hypot((a.lat-b.lat)*111,(a.lng-b.lng)*111*Math.cos(a.lat*Math.PI/180));
@@ -35,12 +37,14 @@
   const cont=[5,4,3].map(n=>[n,rota.filter(l=>l.estrelas===n).length]).filter(x=>x[1]);
   $("#app").innerHTML=`${topo()}
   <h1>Olá, ${esc(eu().nome.split(" ")[0])}</h1><p class="sub">${esc(D.zona.nome)} · rota ${atual.n} · ${dc.sem} ${dc.dia}/${dc.mes} · ${rota.length} lojas · ${feitasDia} visitadas</p>
-  <div class="agenda">${DIAS.map(d=>{const q=d.lojas.filter(l=>feitasSet.has(l.slug)).length;const x=App.dataCurta(d.data);return `<a href="?dia=${d.n}" class="${d===atual?"on":""} ${d.data===hoje?"hoje":""} ${d.data<hoje?"passado":""}"><span class="s">${x.sem}</span><span class="d">${x.dia}</span><span class="s">${x.mes}</span><span class="q">${q?`<b>${q}</b>/`:""}${d.lojas.length} lojas</span></a>`;}).join("")}</div>
-  <section class="card" style="padding:12px 16px"><div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">${cont.map(([n,q])=>`<a href="?dia=${atual.n}&min=${n}" class="chip ${filtro===n?"ok":""}" style="text-decoration:none">${"★".repeat(n)} <b>${q}</b></a>`).join("")}${filtro?`<a href="?dia=${atual.n}" class="chip">todas</a>`:""}</div><small class="muted">Só lojas de 3 a 5 estrelas entram nas rotas; 5 e 4 primeiro.</small></section>
+  <div class="agenda">${DIAS.map(d=>{const q=d.lojas.filter(l=>feitasSet.has(l.slug)).length;const x=App.dataCurta(d.data);const st=q>=d.lojas.length?"feita":d.data<hoje?"pendente":d.data===hoje?"hoje":"";return `<a href="?dia=${d.n}" class="${d===atual?"on":""} ${d.data===hoje?"hoje":""} ${d.data<hoje?"passado":""}"><span class="s">${x.sem}</span><span class="d">${x.dia}</span><span class="s">${x.mes}</span><span class="q">${q?`<b>${q}</b>/`:""}${d.lojas.length} lojas</span>${st?`<span class="tag ${st}">${st}</span>`:""}</a>`;}).join("")}</div>
+  ${atual.data!==hoje&&feitasDia<rota.length?`<div class="linha-rota"><span class="muted">Rota ${atual.n} agendada para ${dc.sem} ${dc.dia}/${dc.mes}${atual.data<hoje?" · ainda não feita":""}</span><button type="button" class="btn sec sm" id="reHoje" style="width:auto;min-height:36px;padding:0 12px;font-size:13px">Fazer hoje</button><label class="btn sec sm" style="width:auto;min-height:36px;padding:0 12px;font-size:13px;display:inline-grid;place-items:center;position:relative">Outra data<input type="date" id="reData" value="${atual.data}" style="position:absolute;inset:0;opacity:0;width:100%"></label></div>`:""}
+  <section class="card" style="padding:12px 16px"><div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">${cont.map(([n,q])=>`<a href="?dia=${atual.n}&min=${n}" class="chip ${filtro===n?"ok":""}" style="text-decoration:none">${"★".repeat(n)} <b>${q}</b></a>`).join("")}${filtro?`<a href="?dia=${atual.n}" class="chip">todas</a>`:""}</div><small class="muted">Só lojas de 3 a 5 estrelas; 5 e 4 primeiro. Rotas de segunda a sexta; a pendente fica na data dela até você decidir quando fazer.</small></section>
   <div class="mapa" id="mapa"></div>
   <button class="btn sec" id="gerarTodas" type="button" style="margin:0 0 12px;min-height:48px">✦ Gerar produtos de todas as lojas com logotipo</button><div class="muted" id="gerarSt" style="font-size:13px;margin:-6px 0 10px"></div>
   <div class="lista">${vis.map((l,i)=>`<a class="card loja-l ${e.feitas.includes(l.slug)?"feita":""}" href="visita.html?l=${encodeURIComponent(l.slug)}" style="display:grid;color:inherit;text-decoration:none"><span class="n">${e.feitas.includes(l.slug)?"✓":l.parada}</span><div><b>${esc(nomeLoja(l.nome))}</b><small>${esc(setorNome(l.setor))} · ${esc((l.endereco||"").split(" · ")[0])}</small></div><div style="text-align:right">${estrelasHTML(l.estrelas)}<br><small class="muted">${l.cad&&l.cad.logo==="encontrado"?"marca sugerida":"sem marca"}</small></div></a>`).join("")}</div>
   ${nav("rota")}`;
+  const rh=$("#reHoje");if(rh)rh.onclick=()=>{App.reagendar(atual.n,hoje);location.href=`?dia=${atual.n}`;};const rd=$("#reData");if(rd)rd.onchange=()=>{if(rd.value){App.reagendar(atual.n,rd.value);location.href=`?dia=${atual.n}`;}};
   $("#gerarTodas").onclick=async()=>{const b=$("#gerarTodas"),st=$("#gerarSt");b.disabled=true;let prontas=0,feitas=0,falhas=[];
     for(const l of rota){const c=await App.cliente(l);if(!(c.manual&&c.manual.editado))continue;prontas++;b.textContent=`${nomeLoja(l.nome)}…`;
       const r=await App.gerarProdutos(l,pid=>{st.textContent=`${nomeLoja(l.nome)} · ${pid} (loja ${prontas})`;});feitas+=r.ok;if(r.falhas.length)falhas.push(nomeLoja(l.nome)+": "+r.falhas.join(", "));}

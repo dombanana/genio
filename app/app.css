@@ -178,3 +178,6 @@ body.com-acoes .voz{bottom:calc(166px + env(safe-area-inset-bottom,0))}
 .nota{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:start;background:#fff;border-radius:14px;padding:10px 12px;margin:0 0 8px}
 .nota audio{width:100%;height:36px;margin-top:6px}.nota .x{border:0;background:var(--lav);border-radius:10px;width:36px;height:36px;font-size:16px;color:var(--texto2)}
 .nota small{color:var(--texto2);font-size:12px}
+.agenda a .tag{font-size:10px;font-weight:700;border-radius:999px;padding:1px 6px;margin:3px auto 0;text-transform:uppercase;letter-spacing:.02em}
+.agenda a .tag.pendente{background:#FDE7E7;color:#B42318}.agenda a .tag.feita{background:#E0F5F3;color:#0E8A84}.agenda a .tag.hoje{background:var(--lav2);color:var(--marca)}
+.linha-rota{display:flex;gap:8px;align-items:center;flex-wrap:wrap;background:#fff;border-radius:14px;padding:10px 12px;margin:0 0 10px;font-size:13px}

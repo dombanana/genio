@@ -78,7 +78,7 @@ const App=(()=>{
   // ---- arte automática: logotipo tratado centralizado preenchendo a área segura do gabarito, cor padrão do material
   const COR_PADRAO={capacho:"#2B2B2D",rigido:"#F4F1EA",vinil:null,tecido:"#F4F1EA",papel:"#FFFFFF",lona:"#FFFFFF",carimbo:null};
   const PRODUTOS_IDS=["capacho","placas","adesivos","uniformes","impressos","panfleto","banners","parede","brindes","carimbo"];
-  let _G=null;const gabaritos=async()=>_G||(_G=await (await fetch("gabaritos.json?v=39b5207458")).json());
+  let _G=null;const gabaritos=async()=>_G||(_G=await (await fetch("gabaritos.json?v=a66a4dd874")).json());
   const carregarImg=src=>new Promise(res=>{const i=new Image();i.crossOrigin="anonymous";i.onload=()=>res(i);i.onerror=()=>res(null);i.src=src;});
   async function artePadrao(pid,c){const G=await gabaritos();const P=G.produtos[pid];if(!P||!(c.manual&&c.manual.tratado))return null;const im=await carregarImg(c.manual.tratado);if(!im)return null;
     const sang=P.sangria_mm!=null?P.sangria_mm:G.sangria_mm,seg=P.seguranca_mm!=null?P.seguranca_mm:G.seguranca_mm;
@@ -101,11 +101,13 @@ const App=(()=>{
   async function listarNotas(){const db=await abrirVendas();if(!db)return [];return new Promise(res=>{const t=db.transaction("notas").objectStore("notas").getAll();t.onsuccess=()=>{res((t.result||[]).sort((a,b)=>b.em.localeCompare(a.em)));db.close();};t.onerror=()=>{res([]);db.close();};});}
   async function gravarNota(n){const db=await abrirVendas();if(!db)return false;return new Promise(res=>{const t=db.transaction("notas","readwrite");t.objectStore("notas").put(n);t.oncomplete=()=>{res(true);db.close();};t.onerror=()=>{res(false);db.close();};});}
   async function apagarNota(id){const db=await abrirVendas();if(!db)return false;return new Promise(res=>{const t=db.transaction("notas","readwrite");t.objectStore("notas").delete(id);t.oncomplete=()=>{res(true);db.close();};t.onerror=()=>{res(false);db.close();};});}
-  // ---- agenda de rotas: todas as lojas da zona por estrelas, em dias de 50; dia 1 = data do início (hoje, na primeira abertura); pula domingo
+  // ---- agenda de rotas: lojas 3–5★ em dias de 50; dia 1 = data do início (primeira abertura); seg–sex; sábado = recuperação das pendentes
   const META=50;
-  function diasDeRota(D){const lista=D.lojas.filter(l=>l.estrelas>=3).sort((a,b)=>b.estrelas-a.estrelas||a.dia-b.dia||a.ordem-b.ordem);  // 1–2 estrelas ficam fora da rotaconst dias=[];for(let i=0;i<lista.length;i+=META)dias.push(lista.slice(i,i+META));
-    const e=estado();if(!e.inicio){e.inicio=hojeISO();salvar(e);}const datas=[];let d=new Date(e.inicio+"T12:00:00");for(let k=0;k<dias.length;k++){while(d.getDay()===0)d.setDate(d.getDate()+1);datas.push(d.toISOString().slice(0,10));d.setDate(d.getDate()+1);}
-    return dias.map((lojas,i)=>({n:i+1,data:datas[i],lojas}));}
+  function diasDeRota(D){const lista=D.lojas.filter(l=>l.estrelas>=3).sort((a,b)=>b.estrelas-a.estrelas||a.dia-b.dia||a.ordem-b.ordem);/* 1–2 estrelas ficam fora da rota */const dias=[];for(let i=0;i<lista.length;i+=META)dias.push(lista.slice(i,i+META));
+    const e=estado();if(!e.inicio){e.inicio=hojeISO();salvar(e);}const datas=[];let d=new Date(e.inicio+"T12:00:00");for(let k=0;k<dias.length;k++){while(d.getDay()===0||d.getDay()===6)d.setDate(d.getDate()+1);/* rotas só de segunda a sexta */datas.push(d.toISOString().slice(0,10));d.setDate(d.getDate()+1);}
+    const mov=e.datas||{};return dias.map((lojas,i)=>({n:i+1,data:mov[i+1]||datas[i],dataOriginal:datas[i],lojas}));}
+  // rota não feita continua presa à sua data; reagendar move só aquela rota
+  function reagendar(n,iso){const e=estado();e.datas=e.datas||{};if(iso)e.datas[n]=iso;else delete e.datas[n];salvar(e);}
   const hojeISO=()=>{const d=new Date();d.setMinutes(d.getMinutes()-d.getTimezoneOffset());return d.toISOString().slice(0,10);};
   const dataCurta=iso=>{const d=new Date(iso+"T12:00:00");return {dia:d.getDate(),sem:["dom","seg","ter","qua","qui","sex","sáb"][d.getDay()],mes:["jan","fev","mar","abr","mai","jun","jul","ago","set","out","nov","dez"][d.getMonth()]};};
   // ---- ícones da barra (SVG)
@@ -123,5 +125,5 @@ const App=(()=>{
   // toque longo em elementos [data-longo]: chama fn(el) após 450 ms sem mover
   function ligarLongo(root,fn){$$("[data-longo]",root).forEach(el=>{let t=null,p=null;el.addEventListener("pointerdown",ev=>{p={x:ev.clientX,y:ev.clientY};t=setTimeout(()=>{t=null;if(navigator.vibrate)navigator.vibrate(12);fn(el);},450);});
     const c=ev=>{if(t&&p&&ev.type==="pointermove"&&Math.hypot(ev.clientX-p.x,ev.clientY-p.y)<8)return;clearTimeout(t);t=null;};el.addEventListener("pointermove",c);el.addEventListener("pointerup",c);el.addEventListener("pointercancel",c);el.addEventListener("contextmenu",ev=>ev.preventDefault());});}
-  return {$,$$,esc,qs,ZONA,setorNome,nomeLoja,telFmt,ini,sessao,eu,dados,ficha,estrelas,estrelasHTML,estado,salvar,abrirVendas,lerCliente,gravarCliente,cliente,definirCliente,classificar,logoPrincipal,removerLogo,escolherImagem,abrirLogotipo,entradas,ligarEntradas,artePadrao,gerarProdutos,PRODUTOS_IDS,listarNotas,gravarNota,apagarNota,diasDeRota,hojeISO,dataCurta,META,nav,topo,voltar,acoes,menuLongo,ligarLongo};
+  return {$,$$,esc,qs,ZONA,setorNome,nomeLoja,telFmt,ini,sessao,eu,dados,ficha,estrelas,estrelasHTML,estado,salvar,abrirVendas,lerCliente,gravarCliente,cliente,definirCliente,classificar,logoPrincipal,removerLogo,escolherImagem,abrirLogotipo,entradas,ligarEntradas,artePadrao,gerarProdutos,PRODUTOS_IDS,listarNotas,gravarNota,apagarNota,diasDeRota,reagendar,hojeISO,dataCurta,META,nav,topo,voltar,acoes,menuLongo,ligarLongo};
 })();
