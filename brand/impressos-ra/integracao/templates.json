@@ -1,0 +1,743 @@
+{
+  "schema": "genio.flat-material-ra/1.0",
+  "version": "1.0.0",
+  "status": "artwork_prepared_tracking_not_integrated",
+  "created": "2026-11-09",
+  "units": "mm",
+  "origin": "top_left",
+  "corner_order": [
+    "top_left",
+    "top_right",
+    "bottom_right",
+    "bottom_left"
+  ],
+  "color_preview": "sRGB",
+  "production_note": "Sangria proposta 3 mm; validar papel, espessura, perfil e acabamento com a gráfica. PDFs vetoriais com TrimBox e BleedBox; não certificados PDF/X.",
+  "targets": [
+    {
+      "id": "cartao_frente",
+      "physical_size_mm": [
+        90,
+        50
+      ],
+      "reference_image": "../referencias/cartao_frente.png",
+      "reference_sha256": "5189c042cb680791fbdef38cd8615ce186a8592c83be5cc07ae731243116cfe6",
+      "reference_px": [
+        1063,
+        591
+      ],
+      "full_surface_replace": true,
+      "base": "../camadas/cartao_frente_base_neutra.png",
+      "mask": "../camadas/cartao_frente_mask_full.png",
+      "foreground": "../camadas/cartao_frente_foreground.png",
+      "corners_normalized": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "safe_margin_mm": 4,
+      "slots": [
+        {
+          "id": "marca",
+          "rect_mm": [
+            5,
+            5,
+            43,
+            11
+          ],
+          "rect_normalized": [
+            0.05555555555555555,
+            0.1,
+            0.4777777777777778,
+            0.22
+          ],
+          "kind": "logo",
+          "fit": "contain",
+          "preserve_original": true,
+          "replacement_required": true
+        },
+        {
+          "id": "titulo",
+          "rect_mm": [
+            5,
+            20,
+            64,
+            13
+          ],
+          "rect_normalized": [
+            0.05555555555555555,
+            0.4,
+            0.7111111111111111,
+            0.26
+          ],
+          "kind": "text",
+          "max_lines": 2,
+          "min_font_mm": 3.6,
+          "replacement_required": true
+        },
+        {
+          "id": "servicos",
+          "rect_mm": [
+            5,
+            37,
+            78,
+            5
+          ],
+          "rect_normalized": [
+            0.05555555555555555,
+            0.74,
+            0.8666666666666667,
+            0.1
+          ],
+          "kind": "text",
+          "max_lines": 1,
+          "min_font_mm": 2.3,
+          "replacement_required": true
+        },
+        {
+          "id": "apoio",
+          "rect_mm": [
+            5,
+            42,
+            78,
+            5
+          ],
+          "rect_normalized": [
+            0.05555555555555555,
+            0.84,
+            0.8666666666666667,
+            0.1
+          ],
+          "kind": "text",
+          "max_lines": 1,
+          "min_font_mm": 2.3,
+          "replacement_required": true
+        }
+      ],
+      "palette_replacement": "all printed colors, patterns, logos, text, QR and product samples may be replaced; no original GenIO pixels in client render",
+      "overlay": "compose full opaque client face in local coordinates, then apply pose; do not place transparent client logo over GenIO sample",
+      "full_art_input": "same aspect ratio required; preserve approved complete artwork"
+    },
+    {
+      "id": "cartao_verso",
+      "physical_size_mm": [
+        90,
+        50
+      ],
+      "reference_image": "../referencias/cartao_verso.png",
+      "reference_sha256": "02d5e51dd3a2ee703a5bf5a5839d7e9f4de5482d72bd2b571b9dd09c5c80807e",
+      "reference_px": [
+        1063,
+        591
+      ],
+      "full_surface_replace": true,
+      "base": "../camadas/cartao_verso_base_neutra.png",
+      "mask": "../camadas/cartao_verso_mask_full.png",
+      "foreground": "../camadas/cartao_verso_foreground.png",
+      "corners_normalized": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "safe_margin_mm": 4,
+      "slots": [
+        {
+          "id": "titulo",
+          "rect_mm": [
+            5,
+            4,
+            80,
+            9
+          ],
+          "rect_normalized": [
+            0.05555555555555555,
+            0.08,
+            0.8888888888888888,
+            0.18
+          ],
+          "kind": "text",
+          "max_lines": 2,
+          "min_font_mm": 2.3,
+          "replacement_required": true
+        },
+        {
+          "id": "superficie_carimbo",
+          "rect_mm": [
+            5,
+            16,
+            56,
+            25
+          ],
+          "rect_normalized": [
+            0.05555555555555555,
+            0.32,
+            0.6222222222222222,
+            0.5
+          ],
+          "kind": "stamp_surface",
+          "clear_before_overlay": true,
+          "background_hex": "#F5F5F0",
+          "all_models": true,
+          "replacement_required": true
+        },
+        {
+          "id": "matriz_carimbo_exemplo",
+          "rect_mm": [
+            11,
+            21,
+            44,
+            15
+          ],
+          "rect_normalized": [
+            0.12222222222222222,
+            0.42,
+            0.4888888888888889,
+            0.3
+          ],
+          "kind": "stamp_matrix",
+          "monochrome": true,
+          "preserve_alpha": true,
+          "fit": "contain",
+          "replace_all_sample_ink": true,
+          "replacement_required": true
+        },
+        {
+          "id": "qr",
+          "rect_mm": [
+            66,
+            16,
+            19,
+            19
+          ],
+          "rect_normalized": [
+            0.7333333333333333,
+            0.32,
+            0.2111111111111111,
+            0.38
+          ],
+          "kind": "qr",
+          "quiet_zone_included": true,
+          "replacement_requires_verified_url": true,
+          "replacement_required": true
+        },
+        {
+          "id": "contato",
+          "rect_mm": [
+            5,
+            42,
+            65,
+            5
+          ],
+          "rect_normalized": [
+            0.05555555555555555,
+            0.84,
+            0.7222222222222222,
+            0.1
+          ],
+          "kind": "text",
+          "max_lines": 1,
+          "min_font_mm": 2.3,
+          "replacement_required": true
+        }
+      ],
+      "palette_replacement": "all printed colors, patterns, logos, text, QR and product samples may be replaced; no original GenIO pixels in client render",
+      "overlay": "compose full opaque client face in local coordinates, then apply pose; do not place transparent client logo over GenIO sample",
+      "full_art_input": "same aspect ratio required; preserve approved complete artwork"
+    },
+    {
+      "id": "flyer_frente",
+      "physical_size_mm": [
+        148,
+        210
+      ],
+      "reference_image": "../referencias/flyer_frente.png",
+      "reference_sha256": "bbc4b712c74405881beccb7609bde645b55b12b6a5aa28084ced29f4593cbf8f",
+      "reference_px": [
+        1748,
+        2480
+      ],
+      "full_surface_replace": true,
+      "base": "../camadas/flyer_frente_base_neutra.png",
+      "mask": "../camadas/flyer_frente_mask_full.png",
+      "foreground": "../camadas/flyer_frente_foreground.png",
+      "corners_normalized": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "safe_margin_mm": 8,
+      "slots": [
+        {
+          "id": "marca",
+          "rect_mm": [
+            10,
+            9,
+            49,
+            13
+          ],
+          "rect_normalized": [
+            0.06756756756756757,
+            0.04285714285714286,
+            0.3310810810810811,
+            0.06190476190476191
+          ],
+          "kind": "logo",
+          "fit": "contain",
+          "preserve_original": true,
+          "replacement_required": true
+        },
+        {
+          "id": "titulo",
+          "rect_mm": [
+            10,
+            38,
+            113,
+            38
+          ],
+          "rect_normalized": [
+            0.06756756756756757,
+            0.18095238095238095,
+            0.7635135135135135,
+            0.18095238095238095
+          ],
+          "kind": "text",
+          "max_lines": 3,
+          "min_font_mm": 7.2,
+          "replacement_required": true
+        },
+        {
+          "id": "descricao",
+          "rect_mm": [
+            10,
+            80,
+            128,
+            12
+          ],
+          "rect_normalized": [
+            0.06756756756756757,
+            0.38095238095238093,
+            0.8648648648648649,
+            0.05714285714285714
+          ],
+          "kind": "text",
+          "max_lines": 2,
+          "min_font_mm": 3.4,
+          "replacement_required": true
+        },
+        {
+          "id": "demonstracao_produtos",
+          "rect_mm": [
+            10,
+            99,
+            128,
+            39
+          ],
+          "rect_normalized": [
+            0.06756756756756757,
+            0.4714285714285714,
+            0.8648648648648649,
+            0.18571428571428572
+          ],
+          "kind": "image",
+          "fit": "contain",
+          "replace_all_sample_branding": true,
+          "replacement_required": true
+        },
+        {
+          "id": "processo",
+          "rect_mm": [
+            10,
+            142,
+            128,
+            49
+          ],
+          "rect_normalized": [
+            0.06756756756756757,
+            0.6761904761904762,
+            0.8648648648648649,
+            0.23333333333333334
+          ],
+          "kind": "structured_text",
+          "max_steps": 4,
+          "replacement_required": true
+        },
+        {
+          "id": "chamada",
+          "rect_mm": [
+            10,
+            198,
+            128,
+            7
+          ],
+          "rect_normalized": [
+            0.06756756756756757,
+            0.9428571428571428,
+            0.8648648648648649,
+            0.03333333333333333
+          ],
+          "kind": "text",
+          "max_lines": 1,
+          "min_font_mm": 2.7,
+          "replacement_required": true
+        }
+      ],
+      "palette_replacement": "all printed colors, patterns, logos, text, QR and product samples may be replaced; no original GenIO pixels in client render",
+      "overlay": "compose full opaque client face in local coordinates, then apply pose; do not place transparent client logo over GenIO sample",
+      "full_art_input": "same aspect ratio required; preserve approved complete artwork"
+    },
+    {
+      "id": "flyer_verso",
+      "physical_size_mm": [
+        148,
+        210
+      ],
+      "reference_image": "../referencias/flyer_verso.png",
+      "reference_sha256": "85c23cbb19433b86b5f8ed6a12a3bcea598fd7ad61f79839190d11a96fe68d7e",
+      "reference_px": [
+        1748,
+        2480
+      ],
+      "full_surface_replace": true,
+      "base": "../camadas/flyer_verso_base_neutra.png",
+      "mask": "../camadas/flyer_verso_mask_full.png",
+      "foreground": "../camadas/flyer_verso_foreground.png",
+      "corners_normalized": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "safe_margin_mm": 8,
+      "slots": [
+        {
+          "id": "titulo",
+          "rect_mm": [
+            16,
+            7,
+            122,
+            40
+          ],
+          "rect_normalized": [
+            0.10810810810810811,
+            0.03333333333333333,
+            0.8243243243243243,
+            0.19047619047619047
+          ],
+          "kind": "text",
+          "max_lines": 4,
+          "min_font_mm": 3,
+          "replacement_required": true
+        },
+        {
+          "id": "orientacoes_tapete",
+          "rect_mm": [
+            16,
+            55,
+            122,
+            40
+          ],
+          "rect_normalized": [
+            0.10810810810810811,
+            0.2619047619047619,
+            0.8243243243243243,
+            0.19047619047619047
+          ],
+          "kind": "structured_text",
+          "max_lines": 5,
+          "min_font_mm": 3,
+          "replacement_required": true
+        },
+        {
+          "id": "orientacoes_vidro_parede",
+          "rect_mm": [
+            16,
+            103,
+            122,
+            35
+          ],
+          "rect_normalized": [
+            0.10810810810810811,
+            0.49047619047619045,
+            0.8243243243243243,
+            0.16666666666666666
+          ],
+          "kind": "structured_text",
+          "max_lines": 5,
+          "min_font_mm": 3,
+          "replacement_required": true
+        },
+        {
+          "id": "conferencia",
+          "rect_mm": [
+            16,
+            145,
+            122,
+            28
+          ],
+          "rect_normalized": [
+            0.10810810810810811,
+            0.6904761904761905,
+            0.8243243243243243,
+            0.13333333333333333
+          ],
+          "kind": "structured_text",
+          "max_lines": 3,
+          "min_font_mm": 2.7,
+          "replacement_required": true
+        },
+        {
+          "id": "qr",
+          "rect_mm": [
+            16,
+            179,
+            22,
+            22
+          ],
+          "rect_normalized": [
+            0.10810810810810811,
+            0.8523809523809524,
+            0.14864864864864866,
+            0.10476190476190476
+          ],
+          "kind": "qr",
+          "quiet_zone_included": true,
+          "replacement_requires_verified_url": true,
+          "replacement_required": true
+        },
+        {
+          "id": "marca",
+          "rect_mm": [
+            45,
+            179,
+            31,
+            8
+          ],
+          "rect_normalized": [
+            0.30405405405405406,
+            0.8523809523809524,
+            0.20945945945945946,
+            0.0380952380952381
+          ],
+          "kind": "logo",
+          "fit": "contain",
+          "preserve_original": true,
+          "replacement_required": true
+        },
+        {
+          "id": "contato",
+          "rect_mm": [
+            45,
+            189,
+            93,
+            13
+          ],
+          "rect_normalized": [
+            0.30405405405405406,
+            0.9,
+            0.6283783783783784,
+            0.06190476190476191
+          ],
+          "kind": "text",
+          "max_lines": 2,
+          "min_font_mm": 2.7,
+          "replacement_required": true
+        }
+      ],
+      "palette_replacement": "all printed colors, patterns, logos, text, QR and product samples may be replaced; no original GenIO pixels in client render",
+      "overlay": "compose full opaque client face in local coordinates, then apply pose; do not place transparent client logo over GenIO sample",
+      "full_art_input": "same aspect ratio required; preserve approved complete artwork"
+    }
+  ],
+  "physical_objects": [
+    {
+      "id": "cartao",
+      "size_mm": [
+        90,
+        50
+      ],
+      "anchor": "center_of_front_surface",
+      "coordinate_system": "right_handed +X right, +Y up, +Z outward from front",
+      "front_target": "cartao_frente",
+      "back_target": "cartao_verso",
+      "back_target_local_to_object_rotation_4x4": [
+        [
+          -1,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          -1,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          1
+        ]
+      ],
+      "back_target_local_to_object_translation_mm": [
+        0,
+        0,
+        "-measured_thickness_mm"
+      ],
+      "mapping_convention": "matrix maps centered back-face target-local coordinates into object-front coordinates; objectPose = targetPose * inverse(targetToObject)",
+      "pivot": "object center; never reset geometry on face switch",
+      "shared_state": [
+        "selected_product",
+        "client_art_version",
+        "stamp_model_selection",
+        "virtual_product_scale",
+        "user_rotation_offset"
+      ],
+      "scale_1to1": "target in mm; virtual product dimensions from confirmed real catalog, not inferred from image",
+      "tracking_test_required": true
+    },
+    {
+      "id": "flyer",
+      "size_mm": [
+        148,
+        210
+      ],
+      "anchor": "center_of_front_surface",
+      "coordinate_system": "right_handed +X right, +Y up, +Z outward from front",
+      "front_target": "flyer_frente",
+      "back_target": "flyer_verso",
+      "back_target_local_to_object_rotation_4x4": [
+        [
+          -1,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          -1,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          1
+        ]
+      ],
+      "back_target_local_to_object_translation_mm": [
+        0,
+        0,
+        "-measured_thickness_mm"
+      ],
+      "mapping_convention": "matrix maps centered back-face target-local coordinates into object-front coordinates; objectPose = targetPose * inverse(targetToObject)",
+      "pivot": "object center; never reset geometry on face switch",
+      "shared_state": [
+        "selected_product",
+        "client_art_version",
+        "stamp_model_selection",
+        "virtual_product_scale",
+        "user_rotation_offset"
+      ],
+      "scale_1to1": "target in mm; virtual product dimensions from confirmed real catalog, not inferred from image",
+      "tracking_test_required": true
+    }
+  ],
+  "stamp_mode": {
+    "target": "cartao_verso",
+    "surface_zone": "superficie_carimbo",
+    "source": "client_approved_stamp_matrices[]",
+    "catalog": "not_predefined_use_all_client_models",
+    "default_view": "one_model_at_a_time",
+    "optional_view": "multiple_instances_inside_surface",
+    "remove_demo_ink_before_apply": true,
+    "background_is_opaque": true,
+    "ink_monochrome": true,
+    "preserve_matrix_proportions": true,
+    "preserve_alpha": true,
+    "never_crop_matrix": true,
+    "do_not_generate_from_logo_without_approval": true,
+    "reject_if_unreadable": true,
+    "minimum_detail_mm": "confirm_with_stamp_manufacturer",
+    "render_order": [
+      "client_card_base_without_genio",
+      "all_selected_stamp_instances",
+      "shared_pose_transform"
+    ]
+  },
+  "tracking": {
+    "implementation": "requires_external_camera_image_tracking_runtime",
+    "image_targets": "separate_per_face",
+    "pose": "6DoF using target physical size",
+    "feature_quality": "not_compiled_or_measured",
+    "reacquisition": "same object state, calibrated face transform; do not reset content",
+    "when_lost": "hide_or_freeze_briefly_per_runtime; never claim continued physical tracking",
+    "thickness": "measure_printed_sample_before_calibration",
+    "full_turn_without_visible_target": "requires runtime world tracking or another visible reference; not guaranteed by artwork",
+    "no_camera_code_in_package": true
+  }
+}

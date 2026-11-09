@@ -1,0 +1,22 @@
+GÊNIO | KIT DE COMUNICAÇÃO E BASE PARA RA | v1.0 | 09/11/2026
+
+Cartão: 90 x 50 mm. Flyer: A5, 148 x 210 mm. PDFs: frente e verso.
+Sangria proposta de 3 mm. Imprimir em escala 100%, sem ajustar à página.
+
+Cada face é uma referência distinta. As duas faces da mesma peça usam uma âncora
+compartilhada. A inclinação/giro do impresso controla a pose do objeto virtual.
+A continuidade na troca de faces depende da integração e do ensaio de rastreio.
+
+Verso do flyer: orientações de tapete, vidro e parede.
+Verso do cartão: área específica para simular todas as matrizes de carimbo do cliente.
+
+A personalização substitui integralmente a face: marca, texto, cores, exemplos,
+contatos e QR. Nunca sobrepor só o logo do cliente sobre os pixels GênIO.
+O QR de amostra aponta para https://genio.dombanana.tech, sem rota AR inventada.
+
+Vetores em contornos em vetores/. SVG com texto em editaveis/ (DejaVu Sans).
+Referências frontais a 300 dpi em referencias/. Camadas e máscaras em camadas/.
+Contrato de encaixe e âncoras em integracao/templates.json.
+
+Não acompanha aplicativo de câmera ou alvos compilados. Ler o guia de integração.
+PDFs em RGB; validar perfil, papel e acabamento na gráfica. Não certificados PDF/X.
