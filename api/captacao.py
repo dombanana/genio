@@ -903,6 +903,12 @@ def executar(run, padrao):
     resumo_passos.append("4. Exportado: visitas.csv, visitas.kml, roteiro.html, lojas.json, clientes/*.json")
     revisao(zona, lojas, cads, detalhes, pasta, f"{len(lojas)} lojas · {feitas} processadas nesta rodada · {hoje} · custo da rodada ≈ R$ {reais:.2f}")
     status(pasta, fase="pronto", lojas=len(lojas), processadas=feitas, custo_reais=round(reais, 2)); log(pasta, f"pronto: {len(lojas)} lojas, {feitas} processadas, R$ {reais:.2f}")
+    # busca automática de logotipo para toda loja sem logotipo (decisão do dono 09/11); o vendedor aprova no app
+    try:
+        sys.path.insert(0, os.path.join(RAIZ, "api")); import logos_auto, genio_api as _api
+        r = logos_auto.rodar(zslug, _api, log=lambda t: log(pasta, t)); status(pasta, fase="pronto", lojas=len(lojas), processadas=feitas, logos_auto=r)
+    except Exception as e:
+        log(pasta, f"logos automáticos falharam: {e}")
 
 
 if __name__ == "__main__":

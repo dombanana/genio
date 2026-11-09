@@ -8,13 +8,13 @@
 <link rel="icon" href="../genio-favicon.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
-<link rel="stylesheet" href="app.css?v=9d8731c0e4">
+<link rel="stylesheet" href="app.css?v=0571fc5497">
 <style>.leaflet-div-icon{background:transparent;border:0}.mapa svg.esq{width:100%;height:100%}</style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=9d8731c0e4"></script>
+<script src="app.js?v=0571fc5497"></script>
 <script>
 (async()=>{
   const {$,$$,esc,qs,sessao,eu,dados,estrelasHTML,estado,salvar,nav,topo,setorNome,nomeLoja}=App;
@@ -35,14 +35,14 @@
   const Z=D.zonas[atual.zona]||D.zona;const rota=[];{let cur={lat:Z.base[0],lng:Z.base[1]};const resto=sel.filter(l=>l.lat&&l.lng);const semGeo=sel.filter(l=>!(l.lat&&l.lng));while(resto.length){let k=0;for(let i=1;i<resto.length;i++)if(dist(cur,resto[i])<dist(cur,resto[k]))k=i;cur=resto.splice(k,1)[0];rota.push(cur);}rota.push(...semGeo);}
   rota.forEach((l,i)=>l.parada=i+1);
   const filtro=qs.get("min")?+qs.get("min"):0;const vis=rota.filter(l=>l.estrelas>=filtro);
-  const LOGO={},MINI={};for(const l of vis){const c=await App.cliente(l);LOGO[l.slug]=(c.manual&&c.manual.editado)?"pronto":(c.logos&&c.logos.length)?"falta":"vazio";MINI[l.slug]=(c.manual&&c.manual.tratado)||(c.logos&&c.logos[0]&&c.logos[0].src)||null;}const feitasDia=rota.filter(l=>feitasSet.has(l.slug)).length;const dc=App.dataCurta(atual.data);
+  const LOGO={},MINI={};for(const l of vis){const c=await App.cliente(l);LOGO[l.slug]=App.estadoLogo(c);MINI[l.slug]=(c.manual&&c.manual.tratado)||(c.logos&&c.logos[0]&&c.logos[0].src)||null;}const feitasDia=rota.filter(l=>feitasSet.has(l.slug)).length;const dc=App.dataCurta(atual.data);
   const feitas=new Set(e.feitas);const prox=rota.find(l=>!feitas.has(l.slug))||null;
   const cont=[5,4,3].map(n=>[n,rota.filter(l=>l.estrelas===n).length]).filter(x=>x[1]);
   $("#app").innerHTML=`${topo()}
   <h1>Olá, ${esc(eu().nome.split(" ")[0])}</h1><p class="sub">${esc(Z.nome)} · rota ${atual.n} · ${dc.sem} ${dc.dia}/${dc.mes} · ${rota.length} lojas · ${feitasDia} visitadas</p>
   <div class="agenda">${DIAS.map(d=>{const q=d.lojas.filter(l=>feitasSet.has(l.slug)).length;const x=App.dataCurta(d.data);const st=d.vazio?"a captar":q>=d.lojas.length?"feita":d.data<hoje?"pendente":d.data===hoje?"hoje":"";return `<a href="?dia=${d.n}" class="${d===atual?"on":""} ${d.data===hoje?"hoje":""} ${d.data<hoje?"passado":""}"><span class="s">${x.sem}</span><span class="d">${x.dia}</span><span class="s">${x.mes}</span><span class="q">${d.vazio?"sem lojas":`${q?`<b>${q}</b>/`:""}${d.lojas.length} lojas`}</span>${st?`<span class="tag ${st}">${st}</span>`:""}</a>`;}).join("")}</div>
   ${atual.data!==hoje&&feitasDia<rota.length?`<div class="linha-rota"><span class="muted">Rota ${atual.n} agendada para ${dc.sem} ${dc.dia}/${dc.mes}${atual.data<hoje?" · ainda não feita":""}</span><button type="button" class="btn sec sm" id="reHoje" style="width:auto;min-height:36px;padding:0 12px;font-size:13px">Fazer hoje</button><label class="btn sec sm" style="width:auto;min-height:36px;padding:0 12px;font-size:13px;display:inline-grid;place-items:center;position:relative">Outra data<input type="date" id="reData" value="${atual.data}" style="position:absolute;inset:0;opacity:0;width:100%"></label></div>`:""}
-  <section class="card" style="padding:12px 16px"><div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">${cont.map(([n,q])=>`<a href="?dia=${atual.n}&min=${n}" class="chip ${filtro===n?"ok":""}" style="text-decoration:none">${"★".repeat(n)} <b>${q}</b></a>`).join("")}${filtro?`<a href="?dia=${atual.n}" class="chip">todas</a>`:""}</div><small class="muted">Só lojas de 3 a 5 estrelas; 5 e 4 primeiro. <span class="leg-falta">Fundo âmbar</span> = logotipo ainda não organizado.</small></section>
+  <section class="card" style="padding:12px 16px"><div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">${cont.map(([n,q])=>`<a href="?dia=${atual.n}&min=${n}" class="chip ${filtro===n?"ok":""}" style="text-decoration:none">${"★".repeat(n)} <b>${q}</b></a>`).join("")}${filtro?`<a href="?dia=${atual.n}" class="chip">todas</a>`:""}</div><small class="muted">Só lojas de 3 a 5 estrelas; 5 e 4 primeiro. <span class="leg-auto">Azul</span> = logotipo automático aguardando aprovação · <span class="leg-falta">âmbar</span> = logotipo ainda não organizado.</small></section>
   <div class="mapa" id="mapa"></div>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 6px"><button class="btn sec" id="recortarTodas" type="button" style="min-height:48px;font-size:14px">✂ Recortar logotipos em lote</button><button class="btn sec" id="gerarTodas" type="button" style="min-height:48px;font-size:14px">✦ Gerar produtos de todas</button></div><div class="muted" id="gerarSt" style="font-size:13px;margin:0 0 10px"></div>
   <div class="lista">${vis.map((l,i)=>`<a class="card loja-l ${e.feitas.includes(l.slug)?"feita":""} logo-${LOGO[l.slug]}" href="visita.html?l=${encodeURIComponent(l.slug)}" style="display:grid;color:inherit;text-decoration:none"><span class="n">${e.feitas.includes(l.slug)?"✓":l.parada}</span><span class="mini ${LOGO[l.slug]}" data-mini="${esc(l.slug)}">${MINI[l.slug]?`<img src="${esc(MINI[l.slug])}" alt="" loading="lazy">`:"<i>sem<br>logo</i>"}</span><div><b>${esc(nomeLoja(l.nome))}</b><small>${esc(setorNome(l.setor))} · ${esc((l.endereco||"").split(" · ")[0])}</small></div><div style="text-align:right">${estrelasHTML(l.estrelas)}<br><small class="${LOGO[l.slug]==="pronto"?"ok-logo":"falta-logo"}">${LOGO[l.slug]==="pronto"?"✓ logotipo pronto":LOGO[l.slug]==="falta"?"◷ falta tratar":"✦ falta logotipo"}</small></div></a>`).join("")}</div>
@@ -59,7 +59,9 @@
     b.textContent="✦ Gerar produtos de todas";b.disabled=false;st.textContent=`${prontas} loja(s) com logotipo · ${feitas} arte(s) geradas${falhas.length?" · falhas: "+falhas.length:""}`;if(falhas.length)alert(falhas.slice(0,8).join("\n"));};
   // miniatura do logotipo: toque = pop-up maior para analisar (toque de novo fecha); segurar = abre a edição
   (()=>{let pop=null;const fechar=()=>{if(pop){pop.remove();pop=null;}};
-    const abrir=(l)=>{fechar();const src=MINI[l.slug];pop=document.createElement("div");pop.className="pop-logo";pop.innerHTML=`<div class="cx"><div class="img">${src?`<img src="${esc(src)}" alt="">`:"<i>sem logotipo</i>"}</div><div class="rod"><b>${esc(nomeLoja(l.nome))}</b><small>${LOGO[l.slug]==="pronto"?"✓ tratado":LOGO[l.slug]==="falta"?"◷ falta tratar":"✦ sem logotipo"} · toque para fechar · segure para editar</small></div></div>`;document.body.appendChild(pop);
+    const abrir=(l)=>{fechar();const src=MINI[l.slug];pop=document.createElement("div");pop.className="pop-logo";pop.innerHTML=`<div class="cx"><div class="img">${src?`<img src="${esc(src)}" alt="">`:"<i>sem logotipo</i>"}</div><div class="rod"><b>${esc(nomeLoja(l.nome))}</b><small>${App.ROTULO_LOGO[LOGO[l.slug]]} · toque para fechar · segure para editar</small>${LOGO[l.slug]==="auto"?`<div class="aprov"><button type="button" class="btn sm" id="aprovar">✓ Aprovar</button><button type="button" class="btn sec sm" id="trocar">Trocar</button></div>`:""}</div></div>`;document.body.appendChild(pop);
+      const ba=pop.querySelector("#aprovar");if(ba){ba.onpointerdown=ev=>ev.stopPropagation();ba.onclick=async ev=>{ev.stopPropagation();ba.disabled=true;ba.textContent="Aprovando…";await App.aprovarLogo(l);location.reload();};}
+      const bt=pop.querySelector("#trocar");if(bt){bt.onpointerdown=ev=>ev.stopPropagation();bt.onclick=ev=>{ev.stopPropagation();location.href=`fontes.html?l=${encodeURIComponent(l.slug)}&tipo=busca`;};}
       let t=null,longo=false;pop.addEventListener("pointerdown",()=>{longo=false;t=setTimeout(()=>{longo=true;if(navigator.vibrate)navigator.vibrate(12);menuLogo(l);},450);});
       const fim=()=>{clearTimeout(t);if(!longo)fechar();};pop.addEventListener("pointerup",fim);pop.addEventListener("pointercancel",()=>clearTimeout(t));};
     async function menuLogo(l){fechar();const src=MINI[l.slug];const k=await App.menuLongo(nomeLoja(l.nome),[{k:"editar",ic:"✂",t:"Editar logotipo"},{k:"auto",ic:"✦",t:"Recorte automático"},{k:"pesquisa",ic:"🔍",t:"Substituir · pesquisa"},{k:"foto",ic:"📷",t:"Substituir · fotografar"},{k:"arquivo",ic:"📁",t:"Substituir · enviar arquivo"},{k:"remover",ic:"🗑",t:"Remover logotipo"}]);if(!k)return;

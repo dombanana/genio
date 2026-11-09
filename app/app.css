@@ -245,6 +245,9 @@ html.na-casca body.com-acoes{padding-bottom:110px}
 .loja-l.logo-falta,.loja-l.logo-vazio{background:#FFF4E0;border-left:5px solid var(--amarelo)}
 .loja-l.logo-falta .n,.loja-l.logo-vazio .n{background:#FDE7C2;color:#8A5A00}
 .loja-l.logo-pronto{border-left:5px solid var(--teal)}
+.loja-l.logo-auto{background:#EAF1FF;border-left:5px solid #2F6FED}.loja-l.logo-auto .n{background:#D6E3FF;color:#1D4ED8}
+.chip.auto{background:#D6E3FF;color:#1D4ED8}.leg-auto{background:#D6E3FF;color:#1D4ED8;padding:1px 6px;border-radius:6px}
+.pop-logo .aprov{display:flex;gap:8px;margin-top:10px}.pop-logo .aprov .btn{min-height:42px;flex:1}
 .falta-logo{color:#8A5A00}.ok-logo{color:#0E8A84}.leg-falta{background:#FFF4E0;border:1px solid var(--amarelo);border-radius:6px;padding:0 6px}
 /* miniatura do logotipo na linha da rota (xadrez atrás para ver se o fundo saiu) */
 .loja-l .mini{width:50px;height:40px;border-radius:10px;overflow:hidden;background:transparent;border:0;display:grid;place-items:center;flex:0 0 auto}

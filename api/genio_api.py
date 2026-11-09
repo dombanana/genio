@@ -755,6 +755,26 @@ class H(BaseHTTPRequestHandler):
                     return self._send(200, {"interesse": admin_interesse()})
                 if p == "/api/admin/chaves":
                     return self._send(200, {"chaves": chaves_estado()})
+                if p == "/api/admin/logos-auto":
+                    # dispara a busca automática de logotipo da zona (em segundo plano); ?zona=
+                    qs = {k: v[0] for k, v in _parse_qs(urlparse(self.path).query or "").items()}
+                    zona = re.sub(r"[^a-z0-9-]", "", qs.get("zona") or ""); 
+                    if not zona:
+                        return self._erro(400, "zona?")
+                    import logos_auto, importlib; importlib.reload(logos_auto)
+                    me = sys.modules[__name__]; res = {}
+                    def _job():
+                        try: res.update(logos_auto.rodar(zona, me, log=lambda t: sys.stderr.write(t + "\n")))
+                        except Exception as e: res["erro"] = str(e)
+                        json.dump(res, open(os.path.join(ESTADO_DIR, f"logos_auto-{zona}.json"), "w"))
+                    threading.Thread(target=_job, daemon=True).start()
+                    return self._send(200, {"ok": True, "zona": zona, "resultado_em": f"/api/admin/logos-auto/estado?zona={zona}"})
+                if p == "/api/admin/logos-auto/estado":
+                    qs = {k: v[0] for k, v in _parse_qs(urlparse(self.path).query or "").items()}
+                    try:
+                        return self._send(200, json.load(open(os.path.join(ESTADO_DIR, "logos_auto-" + re.sub(r"[^a-z0-9-]", "", qs.get("zona") or "") + ".json"))))
+                    except Exception:
+                        return self._send(200, {"andamento": True})
                 if p == "/api/admin/atividade":
                     # rastro das contextualizações (cache em /var/lib/genio/kits, um arquivo por arte aplicada); as fichas ficam no aparelho
                     import datetime as _dt
