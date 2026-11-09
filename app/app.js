@@ -76,16 +76,21 @@ const App=(()=>{
     try{const r=await API("GET",`/api/clientes/${l.slug}`);if(r.ok){const f=await r.json();FICHAS[l.slug]=f;return f;}}catch(e){}
     return FICHAS[l.slug]={k:chave(nome),nome,slug:l.slug,logos:[],arquivo:[],criado:new Date().toISOString()};}
   // ---- migração única: fichas/notas/estado que ficaram no aparelho (versão anterior) sobem para o servidor e o local é apagado
+  // aviso de progresso na tela enquanto o aparelho esvazia para o servidor (pode levar minutos no 4G/5G)
+  function progresso(t){let d=document.getElementById("migrando");if(!t){if(d)d.remove();return;}if(!d){d=document.createElement("div");d.id="migrando";d.style.cssText="position:fixed;inset:0;z-index:9998;display:grid;place-items:center;background:#EFEAFB;padding:24px;text-align:center;font:600 17px/1.5 Rubik,system-ui,sans-serif;color:#1C1635";document.body.appendChild(d);}d.innerHTML=`<div><div style="font-size:40px;margin-bottom:10px">☁️</div>${t}<div style="font-weight:400;font-size:14px;color:#5B5675;margin-top:10px">Mantenha o app aberto. Isso acontece uma vez só.</div></div>`;}
   async function migrarAparelho(){if(localStorage.getItem("app-migrado")==="2")return;let ok=true;
-    try{const db=await abrirVendas();if(db){const tudo=st=>new Promise(res=>{try{const t=db.transaction(st).objectStore(st).getAll();t.onsuccess=()=>res(t.result||[]);t.onerror=()=>res([]);}catch(e){res([]);}});
-        const cl=await tudo("clientes");for(const c of cl){const slug=c.slug||slugDeNome(c.nome||"");if(!slug)continue;const temAlgo=(c.logos&&c.logos.length)||(c.manual&&c.manual.editado)||(c.artes&&Object.keys(c.artes).length)||c.fachada||(c.arquivo&&c.arquivo.length);if(!temAlgo)continue;
+    try{const db=await Promise.race([abrirVendas(),new Promise(r=>setTimeout(()=>r(null),8000))]);if(db){const tudo=st=>new Promise(res=>{try{const t=db.transaction(st).objectStore(st).getAll();t.onsuccess=()=>res(t.result||[]);t.onerror=()=>res([]);}catch(e){res([]);}});
+        const cl=await tudo("clientes");let i=0;const nCl=cl.length;for(const c of cl){i++;const slug=c.slug||slugDeNome(c.nome||"");if(!slug)continue;const temAlgo=(c.logos&&c.logos.length)||(c.manual&&c.manual.editado)||(c.artes&&Object.keys(c.artes).length)||c.fachada||(c.arquivo&&c.arquivo.length);if(!temAlgo)continue;
+          progresso(`Enviando suas fichas para o servidor…<br>${i} de ${nCl} · ${esc(c.nome||slug)}`);
+          const tam=JSON.stringify(c).length;if(tam>55*1024*1024){console.warn("ficha grande demais para subir inteira",slug,tam);const {artes,...semArtes}=c;c.artes={};c.artesPendentes=Object.keys(artes||{});}
           const peso=f=>Object.keys((f&&f.artes)||{}).length*10+((f&&f.manual&&f.manual.editado)?5:0)+(((f&&f.logos)||[]).length);
           const r0=await API("GET",`/api/clientes/${slug}`);if(r0.ok){const f=await r0.json();if(peso(f)>=peso(c))continue;}  // servidor já tem igual ou mais: não sobrescreve
           c.slug=slug;const r=await API("PUT",`/api/clientes/${slug}`,c);if(!r.ok)ok=false;}
-        const ns=await tudo("notas");for(const n of ns){for(const k of ["audio","video","foto"]){if(n[k]&&typeof n[k]!=="string")n[k]=await blobParaDataURL(n[k]);}const r=await API("PUT",`/api/notas/${n.id}`,n);if(!r.ok)ok=false;}
+        const ns=await tudo("notas");let j=0;for(const n of ns){j++;progresso(`Enviando suas notas…<br>${j} de ${ns.length}`);for(const k of ["audio","video","foto"]){if(n[k]&&typeof n[k]!=="string")n[k]=await blobParaDataURL(n[k]);}const r=await API("PUT",`/api/notas/${n.id}`,n);if(!r.ok)ok=false;}
         db.close();}
       for(const [lk,sk] of [["app-dia-"+ZONA,"dia-"+ZONA],["app-avulsos","avulsos"],["app-ocorrencias","ocorrencias"],["app-fornecedores","fornecedores"]]){const v=localStorage.getItem(lk);if(!v)continue;let val;try{val=JSON.parse(v);}catch(e){continue;}const atual=await lerChave(sk);if(atual&&(Array.isArray(atual)?atual.length:Object.keys(atual).length))continue;const r=await API("PUT",`/api/estado/${sk}`,{valor:val});if(!r.ok)ok=false;}
-    }catch(e){ok=false;}
+    }catch(e){ok=false;console.warn("migração",e);}
+    progresso(null);
     if(ok){localStorage.setItem("app-migrado","2");["app-dia-"+ZONA,"app-avulsos","app-ocorrencias","app-fornecedores"].forEach(k=>localStorage.removeItem(k));try{indexedDB.deleteDatabase("genio-vendas");}catch(e){}}}
   const blobParaDataURL=b=>new Promise(res=>{const fr=new FileReader();fr.onload=()=>res(fr.result);fr.onerror=()=>res(null);fr.readAsDataURL(b);});
   // ---- (legado) banco local só é aberto pela migração acima; nada mais grava nele
@@ -175,7 +180,7 @@ const App=(()=>{
   // ---- arte automática: logotipo tratado centralizado preenchendo a área segura do gabarito, cor padrão do material
   const COR_PADRAO={capacho:"#2B2B2D",rigido:"#F4F1EA",vinil:null,tecido:"#F4F1EA",papel:"#FFFFFF",lona:"#FFFFFF",carimbo:null};
   const PRODUTOS_IDS=["capacho","placas","adesivos","uniformes","impressos","panfleto","banners","parede","brindes","carimbo"];
-  let _G=null;const gabaritos=async()=>_G||(_G=await (await fetch("gabaritos.json?v=31a31082c2")).json());
+  let _G=null;const gabaritos=async()=>_G||(_G=await (await fetch("gabaritos.json?v=c86dbde7b5")).json());
   const carregarImg=src=>new Promise(res=>{const i=new Image();i.crossOrigin="anonymous";i.onload=()=>res(i);i.onerror=()=>res(null);i.src=src;});
   // ---- carimbo: só texto — nome, razão social, CNPJ (negrito), endereço, telefone; nunca logotipo
   async function dadosCarimbo(l){const cad=await ficha(l.slug).catch(()=>null);const L=(cad&&cad.lacunas)||{};const leit=(L.leitura||{}).valor||"";const razao=((leit.match(/Razão social: ([^·]+)/)||[])[1]||"").trim();const cnpj=((leit.match(/CNPJ:? ?([\d./-]{14,18})/)||[])[1]||"");
@@ -217,7 +222,7 @@ const App=(()=>{
     const PX=Math.min(100,Math.floor(3000/Math.max(P.w_cm+sang/5,P.h_cm+sang/5)));const W=Math.round((P.w_cm+2*sang/10)*PX),H=Math.round((P.h_cm+2*sang/10)*PX),B=Math.round(sang/10*PX),S=Math.round(seg/10*PX);
     const aw=W-2*(B+S),ah=H-2*(B+S);const f=Math.min(aw/LW,(P.ancora==="topo"?ah*0.45:ah)/LH);const w=LW*f,h=LH*f;const x=(W-w)/2,y=P.ancora==="topo"?B+S+ah*0.05:(H-h)/2;
     const fundo=P.sem_fundo?null:(COR_PADRAO[P.superficie]===undefined?"#FFFFFF":COR_PADRAO[P.superficie]);
-    if(pid==="impressos"||pid==="panfleto"){await carregarScript("qr.js?v=31a31082c2");await carregarScript("impressos.js?v=31a31082c2");return window.Impressos.arteImpressa(App,pid,c,l,{P,G,W,H,B,S,PX,im,sang,rec});}
+    if(pid==="impressos"||pid==="panfleto"){await carregarScript("qr.js?v=c86dbde7b5");await carregarScript("impressos.js?v=c86dbde7b5");return window.Impressos.arteImpressa(App,pid,c,l,{P,G,W,H,B,S,PX,im,sang,rec});}
     if(pid==="panfleto"){const M=cardapioDe();const f1=B+S,ah3=(H-2*(B+S))/3;const lf=Math.min(aw/im.naturalWidth,(ah3*0.8)/im.naturalHeight);const lw=im.naturalWidth*lf,lh=im.naturalHeight*lf;
       const cor=(c.manual.cores&&c.manual.cores[0]&&c.manual.cores[0].hex)||"#6933C5";const esc_=luz(cor)<140?"#FFFFFF":"#1C1635";
       const el=[{tipo:"camada",id:"logo",nome:"Logotipo",src:c.manual.tratado,cor:null,usarCor:false,x:(W-lw)/2,y:f1+(ah3-lh)/2,w:lw,h:lh,borda:0,bordaCor:"#FFFFFF",grupo:"logo"},
