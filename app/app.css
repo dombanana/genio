@@ -243,7 +243,7 @@ html.na-casca body.com-acoes{padding-bottom:110px}
 .loja-l.logo-pronto{border-left:5px solid var(--teal)}
 .falta-logo{color:#8A5A00}.ok-logo{color:#0E8A84}.leg-falta{background:#FFF4E0;border:1px solid var(--amarelo);border-radius:6px;padding:0 6px}
 /* miniatura do logotipo na linha da rota (xadrez atrás para ver se o fundo saiu) */
-.loja-l .mini{width:50px;height:40px;border-radius:10px;overflow:hidden;background:repeating-conic-gradient(#e4dff0 0 25%,#fff 0 50%) 0 0/10px 10px;border:1.5px solid var(--linha);display:grid;place-items:center;flex:0 0 auto}
+.loja-l .mini{width:50px;height:40px;border-radius:10px;overflow:hidden;background:transparent;border:0;display:grid;place-items:center;flex:0 0 auto}
 .loja-l .mini img{width:100%;height:100%;object-fit:contain;display:block}
 .loja-l .mini i{font-style:normal;font-size:10px;line-height:1.1;color:var(--texto2);text-align:center}
 .loja-l .mini.pronto{border-color:var(--teal)}.loja-l .mini.falta{border-color:var(--amarelo)}
@@ -251,7 +251,7 @@ html.na-casca body.com-acoes{padding-bottom:110px}
 /* pop-up do logotipo (rota) */
 .pop-logo{position:fixed;inset:0;z-index:80;background:rgba(20,28,58,.55);display:grid;place-items:center;padding:20px;touch-action:none;-webkit-user-select:none;user-select:none}
 .pop-logo .cx{background:#fff;border-radius:20px;overflow:hidden;width:min(86vw,420px);box-shadow:0 20px 60px rgba(0,0,0,.35)}
-.pop-logo .img{aspect-ratio:4/3;background:repeating-conic-gradient(#e4dff0 0 25%,#fff 0 50%) 0 0/18px 18px;display:grid;place-items:center}
+.pop-logo .img{aspect-ratio:4/3;background:var(--lav);display:grid;place-items:center}
 .pop-logo .img img{width:100%;height:100%;object-fit:contain;padding:14px;box-sizing:border-box}
 .pop-logo .img i{color:var(--texto2);font-style:normal}
 .pop-logo .rod{padding:10px 14px 12px}.pop-logo .rod b{display:block;font-size:16px}.pop-logo .rod small{color:var(--texto2);font-size:12px}
