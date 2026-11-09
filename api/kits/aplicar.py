@@ -80,7 +80,7 @@ def layout_frontal(arte_bgra, P, largura_rel=0.7, cor_fundo=None, cheio=False):
     arte = cv2.resize(arte_bgra, (nw, nh), interpolation=cv2.INTER_AREA)
     x0, y0 = (W - nw) // 2, (H - nh) // 2
     if P.get("ancora") == "topo":
-        y0 = int(H * 0.08)
+        y0 = min(int(H * 0.08), max(0, H - nh))  # arte cheia não pode sair do plano
     if P.get("aplicacao") == "impressao_carimbo":  # 4×6 cm no terço esquerdo da folha
         x0, y0 = int(W * 0.12), int(H * 0.18); nw, nh = min(nw, W - x0), min(nh, H - y0); arte = arte[:nh, :nw]
     a = arte[..., 3:4].astype(np.float32) / 255
