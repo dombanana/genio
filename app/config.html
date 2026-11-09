@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>GênIO · Configuração</title>
+<meta name="theme-color" content="#F1EEF8">
+<link rel="icon" href="../genio-favicon.png">
+<link rel="stylesheet" href="app.css?v=6306b7a188">
+<style>
+.forn{display:grid;grid-template-columns:1fr;gap:6px;margin:8px 0 0}
+.forn .it{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;background:var(--lav);border-radius:12px;padding:10px 12px}
+.forn .it small{display:block;color:var(--texto2);font-size:12px}
+.forn .it button{border:0;background:#fff;border-radius:10px;min-height:36px;padding:0 12px;font:inherit;font-size:13px;color:var(--marca);font-weight:700}
+.ed-forn{position:fixed;left:12px;right:12px;top:10vh;background:#fff;border-radius:18px;padding:14px;z-index:75;box-shadow:0 10px 40px rgba(28,22,53,.3)}
+.ed-forn label{display:block;font-size:12px;color:var(--texto2);margin:8px 0 2px}
+.ed-forn input,.ed-forn textarea{width:100%;box-sizing:border-box;font:inherit;font-size:15px;border:1.5px solid var(--linha);border-radius:10px;padding:9px 10px}
+</style>
+</head>
+<body>
+<div class="w" id="app"></div>
+<script src="app.js?v=6306b7a188"></script>
+<script>
+(async()=>{
+  const {$,$$,esc,sessao,nav,topo}=App;
+  if(!await sessao())return;
+  const API=(()=>{try{return window.top.REC_API||null;}catch(e){return null;}})();
+  let tipoSel=localStorage.getItem("rec-tipo")||"audio",telaAcesa=localStorage.getItem("rec-tela")!=="0";
+  const TIPOS=[["audio","🎙","Áudio"],["transcrever","📝","Transcrever"],["video-tras","🎥","Vídeo"],["video-frente","🎦","Vídeo selfie"],["foto","📷","Foto"],["selfie","🤳","Selfie"],["tela","📱","Tela"]];
+  // fornecedores por item (gravado no aparelho até existir conta no servidor)
+  const PADRAO={capacho:{item:"Capacho",fornecedor:"Kapazi",obs:"23 cores de vinil · produção própria"},placas:{item:"Placas e sinalização",fornecedor:"Printi"},adesivos:{item:"Adesivos e vitrines",fornecedor:"Printi"},uniformes:{item:"Uniformes e camisetas",fornecedor:"Printi",obs:"polo bordada · camiseta clássica/premium"},impressos:{item:"Cartões de visita",fornecedor:"Printi"},panfleto:{item:"Flyers e panfletos",fornecedor:"Printi"},banners:{item:"Banners e faixas",fornecedor:"Printi"},parede:{item:"Adesivos de parede",fornecedor:"Printi"},brindes:{item:"Sacolas e brindes",fornecedor:"Printi"},carimbo:{item:"Carimbos",fornecedor:"produção própria"},mostraai:{item:"Mostra Aí · cardápio digital",fornecedor:"AI Negócios"},postaai:{item:"Posta Aí · postagens",fornecedor:"AI Negócios"},telefonia:{item:"Atendente virtual (telefone)",fornecedor:"a definir"},inpi:{item:"Registro de marca",fornecedor:"a definir"}};
+  const ler=()=>{try{return Object.assign({},PADRAO,JSON.parse(localStorage.getItem("app-fornecedores")||"{}"));}catch(e){return PADRAO;}};
+  const gravar=f=>localStorage.setItem("app-fornecedores",JSON.stringify(f));
+  function render(){const E=API?API.estado():{suporte:{}};const F=ler();
+    $("#app").innerHTML=`${topo()}<h1>Configuração</h1>
+    <section class="card"><h2>Modo do REC</h2><small class="muted" style="display:block;margin:0 0 8px">O botão REC da barra grava neste modo com um toque; outro toque para.</small>
+      <div class="rec-tipos">${TIPOS.map(([k,ic,n])=>`<button type="button" data-t="${k}" class="${tipoSel===k?"on":""}" ${(k==="tela"&&!E.suporte.tela)||(k==="transcrever"&&!E.suporte.transcrever)?'disabled title="não disponível neste navegador"':""}><span>${ic}</span>${n}</button>`).join("")}</div>
+      <div class="rec-opc"><label><input type="checkbox" id="rTela" ${telaAcesa?"checked":""} ${E.suporte.wake?"":"disabled"}> manter a tela acesa enquanto grava${E.suporte.wake?"":" (sem suporte)"}</label></div>
+      ${tipoSel==="tela"?'<small class="muted">No celular o Chrome não grava a tela; use o gravador do aparelho.</small>':tipoSel==="transcrever"?'<small class="muted">Transcrição pelo reconhecimento de voz do navegador (precisa de internet); salva só o texto.</small>':""}</section>
+    <section class="card"><h2>Fornecedores por item</h2><small class="muted">Quem produz cada item e observações. Preços entram na fase do orçamento.</small>
+      <div class="forn">${Object.entries(F).map(([k,v])=>`<div class="it"><div><b>${esc(v.item)}</b><small>${esc(v.fornecedor||"a definir")}${v.obs?" · "+esc(v.obs):""}${v.link?` · <a href="${esc(v.link)}" target="_blank" rel="noopener">site</a>`:""}</small></div><button type="button" data-f="${k}">Editar</button></div>`).join("")}</div></section>
+    ${nav("config")}`;
+    $$("#app [data-t]").forEach(b=>b.onclick=()=>{tipoSel=b.dataset.t;localStorage.setItem("rec-tipo",tipoSel);render();});
+    $("#rTela").onchange=ev=>{telaAcesa=ev.target.checked;localStorage.setItem("rec-tela",telaAcesa?"1":"0");};
+    $$("[data-f]").forEach(b=>b.onclick=()=>{const k=b.dataset.f,v=F[k];const f=document.createElement("div");f.className="rec-fundo";f.style.zIndex=70;const m=document.createElement("div");m.className="ed-forn";
+      m.innerHTML=`<h3 style="margin:0">${esc(v.item)}</h3><label>Fornecedor</label><input id="ef-forn" value="${esc(v.fornecedor||"")}"><label>Site / link</label><input id="ef-link" value="${esc(v.link||"")}" inputmode="url"><label>Contato</label><input id="ef-cont" value="${esc(v.contato||"")}"><label>Observações</label><textarea id="ef-obs" rows="3">${esc(v.obs||"")}</textarea><div style="display:flex;gap:8px;margin-top:12px"><button type="button" class="btn" id="ef-ok" style="min-height:46px">Salvar</button><button type="button" class="btn sec" id="ef-x" style="width:auto;min-height:46px;padding:0 14px">Fechar</button></div>`;
+      document.body.appendChild(f);document.body.appendChild(m);const fecha=()=>{f.remove();m.remove();};f.onclick=fecha;m.querySelector("#ef-x").onclick=fecha;
+      m.querySelector("#ef-ok").onclick=()=>{const all=ler();all[k]={...v,fornecedor:m.querySelector("#ef-forn").value.trim(),link:m.querySelector("#ef-link").value.trim(),contato:m.querySelector("#ef-cont").value.trim(),obs:m.querySelector("#ef-obs").value.trim()};gravar(all);fecha();render();};});}
+  render();
+})();
+</script>
+</body>
+</html>
