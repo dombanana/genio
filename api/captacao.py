@@ -825,6 +825,7 @@ def main():
     # 3. identidade (ordem da rota; pula quem já tem cadastro completo)
     cads, detalhes = {}, {}; feitas = 0; reais = 0.0
     dias_pedidos = set(run.get("dias") or [])
+    slugs_pedidos = set(run.get("slugs") or [])   # pedido dirigido: só estas lojas (as demais entram como esqueleto, nunca sobrescrevendo ficha existente)
     for x in lojas:
         cp = os.path.join(pasta, "clientes", x["slug"] + ".json")
         if os.path.exists(cp):
@@ -836,7 +837,7 @@ def main():
                 ANTERIOR[x["slug"]] = {"ig": re.findall(r"@([A-Za-z0-9_.]{3,30})", rd), "fb": re.findall(r"/([A-Za-z0-9_.\-]{3,60})", rd), "site": (La.get("site") or {}).get("valor") if (La.get("site") or {}).get("estado") == "encontrado" else None}
             except Exception:
                 pass
-        fora = (dias_pedidos and x["dia"] not in dias_pedidos) or feitas >= limite or (not run and usadas + feitas >= 50)  # cota de 50/dia só para a rodada automática
+        fora = (dias_pedidos and x["dia"] not in dias_pedidos) or (slugs_pedidos and x["slug"] not in slugs_pedidos) or feitas >= limite or (not run and usadas + feitas >= 50)  # cota de 50/dia só para a rodada automática
         if fora and x["slug"] in cads:
             continue  # ficha existente (pronta ou não) nunca é sobrescrita por esqueleto
         if fora:
