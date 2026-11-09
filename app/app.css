@@ -203,7 +203,8 @@ html.na-casca body.com-acoes{padding-bottom:110px}
 .rec-status button{border:0;background:#fff;color:#1C1635;border-radius:999px;font:inherit;font-weight:700;padding:4px 10px}
 .rec-prev{position:fixed;right:12px;bottom:calc(136px + env(safe-area-inset-bottom,0));width:120px;height:160px;object-fit:cover;border-radius:14px;z-index:50;box-shadow:0 6px 20px rgba(0,0,0,.3);background:#000}
 /* barra da casca: três itens em roxo; à direita a aba cinza-clara com Notas e REC */
-.casca .nav{background:var(--marca);border-top:0;grid-template-columns:repeat(5,1fr);gap:0;padding:0 0 env(safe-area-inset-bottom,0);align-items:stretch;overflow:visible}
+.casca .nav{background:var(--marca);border-top:0;grid-template-columns:1fr 1fr 1fr 14px 1fr 1fr 14px 1fr;gap:0;padding:0 4px env(safe-area-inset-bottom,0);align-items:stretch;overflow:visible}
+.casca .nav .vao{display:block}
 .casca .nav .sep{display:none}
 .casca .nav a{color:#fff;border-radius:0;padding:10px 0 10px;gap:3px;font-size:14px}
 .casca .nav a.on{background:rgba(255,255,255,.14);color:#fff}
@@ -262,7 +263,7 @@ html.na-casca body.com-acoes{padding-bottom:110px}
 .gelo .arg{font-size:14px;margin-top:4px}.gelo .arg b{color:var(--marca)}
 /* REC: botão à parte na barra, mesma cor; piscando quando grava */
 .casca .nav button.rec{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border:0;background:transparent;color:#fff;font:inherit;font-size:14px;font-weight:600;padding:10px 0;font-family:inherit;border-radius:0}
-.casca .nav button.rec .ic{width:34px;height:34px;display:grid;place-items:center}.casca .nav button.rec .ic img{width:100%;height:100%;object-fit:contain}
+.casca .nav button.rec .ic{width:40px;height:40px;display:grid;place-items:center}.casca .nav button.rec .ic img{width:100%;height:100%;object-fit:contain}
 .casca .nav button.rec .dot{width:16px;height:16px;border-radius:50%;background:#FF5A4E;box-shadow:0 0 0 4px rgba(255,90,78,.35)}
 .casca .nav button.rec.on{animation:piscaRec 1s infinite;font-variant-numeric:tabular-nums}
 .casca .nav button.rec.pausado .dot{background:#F2A33A;box-shadow:0 0 0 4px rgba(242,163,58,.35)}
