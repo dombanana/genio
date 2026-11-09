@@ -82,9 +82,44 @@ const App=(()=>{
   // ---- arte automática: logotipo tratado centralizado preenchendo a área segura do gabarito, cor padrão do material
   const COR_PADRAO={capacho:"#2B2B2D",rigido:"#F4F1EA",vinil:null,tecido:"#F4F1EA",papel:"#FFFFFF",lona:"#FFFFFF",carimbo:null};
   const PRODUTOS_IDS=["capacho","placas","adesivos","uniformes","impressos","panfleto","banners","parede","brindes","carimbo"];
-  let _G=null;const gabaritos=async()=>_G||(_G=await (await fetch("gabaritos.json?v=992dfff564")).json());
+  let _G=null;const gabaritos=async()=>_G||(_G=await (await fetch("gabaritos.json?v=ceff91281d")).json());
   const carregarImg=src=>new Promise(res=>{const i=new Image();i.crossOrigin="anonymous";i.onload=()=>res(i);i.onerror=()=>res(null);i.src=src;});
-  async function artePadrao(pid,c){const G=await gabaritos();const P=G.produtos[pid];if(!P||!(c.manual&&c.manual.tratado))return null;const im=await carregarImg(c.manual.tratado);if(!im)return null;
+  // ---- carimbo: só texto — nome, razão social, CNPJ (negrito), endereço, telefone; nunca logotipo
+  async function dadosCarimbo(l){const cad=await ficha(l.slug).catch(()=>null);const L=(cad&&cad.lacunas)||{};const leit=(L.leitura||{}).valor||"";const razao=((leit.match(/Razão social: ([^·]+)/)||[])[1]||"").trim();const cnpj=((leit.match(/CNPJ:? ?([\d./-]{14,18})/)||[])[1]||"");
+    return {nome:nomeLoja(l.nome),razao,cnpj,endereco:((L.endereco||{}).valor||l.endereco||"").split(" · ")[0],tel:l.tel?telFmt(l.tel):""};}
+  // cena do carimbo: uma folha com várias marcas de exemplo (sempre com o nome da empresa) e, por último, o carimbo completo
+  function cenaCarimbo(cp){const W=1536,H=1024;const cv=document.createElement("canvas");cv.width=W;cv.height=H;const g=cv.getContext("2d");
+    g.fillStyle="#D9D3C7";g.fillRect(0,0,W,H);g.fillStyle="#FBF8F1";g.shadowColor="rgba(0,0,0,.25)";g.shadowBlur=30;g.shadowOffsetY=12;g.fillRect(96,56,W-192,H-112);g.shadowColor="transparent";
+    g.strokeStyle="#E6E1D6";g.lineWidth=1;for(let y=140;y<H-90;y+=46){g.beginPath();g.moveTo(130,y);g.lineTo(W-130,y);g.stroke();}
+    const nome=(cp.nome||"NOME DA EMPRESA").toUpperCase();
+    function marca(x,y,ang,cor,linhas,larg,alturaBase,grosso){const h=linhas.reduce((a,l)=>a+l[1]*1.35,0)+34;const oc=document.createElement("canvas");oc.width=Math.ceil(larg+40);oc.height=Math.ceil(h+40);const o=oc.getContext("2d");o.translate(oc.width/2,oc.height/2);
+      o.strokeStyle=cor;o.fillStyle=cor;o.lineWidth=grosso||6;o.strokeRect(-larg/2,-h/2,larg,h);o.textAlign="center";o.textBaseline="top";let yy=-h/2+17;
+      for(const [t,tam,peso] of linhas){let f=tam;o.font=`${peso||700} ${f}px Arial, Helvetica, sans-serif`;while(o.measureText(t).width>larg-30&&f>8){f*=0.94;o.font=`${peso||700} ${f}px Arial, Helvetica, sans-serif`;}o.fillText(t,0,yy);yy+=tam*1.35;}
+      // falhas de tinta: pequenos furos só na própria marca
+      o.globalCompositeOperation="destination-out";let sd=7;const rnd=()=>{sd=(sd*9301+49297)%233280;return sd/233280;};for(let i=0;i<260;i++){o.globalAlpha=0.5+rnd()*0.5;o.beginPath();o.arc((rnd()-0.5)*larg,(rnd()-0.5)*h,rnd()*2.2+0.6,0,7);o.fill();}
+      g.save();g.translate(x,y);g.rotate(ang*Math.PI/180);g.globalAlpha=0.9;g.drawImage(oc,-oc.width/2,-oc.height/2);g.restore();}
+    const AZ="#1F3A8A",VM="#B42318",VD="#1B6B3A",RX="#4C2A85";
+    marca(380,230,-7,VM,[["ENTREGUE",52],[nome,18,500]],330,0);
+    marca(800,215,5,AZ,[["EM PREPARAÇÃO",40],[nome,18,500]],360,0);
+    marca(1180,250,-4,VD,[["RECEBIDO EM ___/___/______",26],[nome,18,500]],360,0);
+    marca(420,470,6,RX,[["PAGO",56],[nome,18,500]],280,0);
+    marca(850,480,-6,VM,[["CONFERIDO",44],[nome,18,500]],330,0);
+    marca(1210,470,3,AZ,[["URGENTE",48],[nome,18,500]],300,0);
+    // carimbo completo, reto e maior
+    marca(W/2,790,0,"#141C3A",[[nome,44,800],[cp.razao||"Razão social: a preencher",26,400],["CNPJ "+(cp.cnpj||"00.000.000/0000-00"),32,800],[cp.endereco||"Endereço: a preencher",24,400],[cp.tel||"Telefone: a preencher",26,500]],760,0,7);
+    return cv.toDataURL("image/jpeg",0.9);}
+  // desenha o bloco do carimbo (usado na arte automática e no editor); x,y,w em px do gabarito; retorna a altura usada
+  function desenharCarimbo(g,e,cp){const linhas=[[cp.nome||"NOME DA EMPRESA",1.15,800],[cp.razao||"Razão social: a preencher",0.78,400],[("CNPJ "+(cp.cnpj||"00.000.000/0000-00")),0.9,800],[cp.endereco||"Endereço: a preencher",0.72,400],[cp.tel||"Telefone: a preencher",0.78,500]];
+    g.save();g.fillStyle=e.cor||"#1C1635";g.textBaseline="top";g.textAlign="center";let y=e.y;const cxm=e.x+e.w/2;
+    for(const [t,f,p] of linhas){let tam=e.tam*f;g.font=`${p} ${Math.round(tam)}px ${e.fonte||"Arial, Helvetica, sans-serif"}`;while(g.measureText(t).width>e.w&&tam>6){tam*=0.95;g.font=`${p} ${Math.round(tam)}px ${e.fonte||"Arial, Helvetica, sans-serif"}`;}g.fillText(t,cxm,y);y+=tam*1.3;}
+    g.restore();e.h=Math.max(y-e.y,10);return e.h;}
+  async function artePadrao(pid,c,l){const G=await gabaritos();const P=G.produtos[pid];if(!P)return null;
+    if(pid==="carimbo"){const sang=0,seg=P.seguranca_mm!=null?P.seguranca_mm:G.seguranca_mm;const PX=Math.min(100,Math.floor(3000/Math.max(P.w_cm,P.h_cm)));const W=Math.round(P.w_cm*PX),H=Math.round(P.h_cm*PX),S=Math.round(seg/10*PX);
+      const cp=l?await dadosCarimbo(l):{nome:""};const e={tipo:"carimbo",id:"carimbo",nome:"Dados do carimbo",x:S,y:S,w:W-2*S,h:H-2*S,cor:"#1C1635",tam:Math.round(H/8.5),fonte:"Arial, Helvetica, sans-serif"};
+      const cv=document.createElement("canvas");cv.width=W;cv.height=H;const g=cv.getContext("2d");g.strokeStyle="#1C1635";g.lineWidth=Math.max(2,W/120);g.strokeRect(g.lineWidth,g.lineWidth,W-2*g.lineWidth,H-2*g.lineWidth);
+      desenharCarimbo(g,e,cp);const pngArte=cv.toDataURL("image/png");const doc={fundo:null,fundoImg:null,el:[{tipo:"forma",forma:"ret",id:"moldura",nome:"Moldura",x:0,y:0,w:W,h:H,cor:"transparent",borda:Math.max(2,W/120),bordaCor:"#1C1635"},e],campos:cp,carimbo:true,auto:true};
+      return {doc,png:pngArte,pngArte,material:null,w_cm:P.w_cm,h_cm:P.h_cm,sangria_mm:0,em:new Date().toISOString(),contexto:null,soTexto:true};}
+    if(!(c.manual&&c.manual.tratado))return null;const im=await carregarImg(c.manual.tratado);if(!im)return null;
     const sang=P.sangria_mm!=null?P.sangria_mm:G.sangria_mm,seg=P.seguranca_mm!=null?P.seguranca_mm:G.seguranca_mm;
     const PX=Math.min(100,Math.floor(3000/Math.max(P.w_cm+sang/5,P.h_cm+sang/5)));const W=Math.round((P.w_cm+2*sang/10)*PX),H=Math.round((P.h_cm+2*sang/10)*PX),B=Math.round(sang/10*PX),S=Math.round(seg/10*PX);
     const aw=W-2*(B+S),ah=H-2*(B+S);const f=Math.min(aw/im.naturalWidth,(P.ancora==="topo"?ah*0.45:ah)/im.naturalHeight);const w=im.naturalWidth*f,h=im.naturalHeight*f;const x=(W-w)/2,y=P.ancora==="topo"?B+S+ah*0.05:(H-h)/2;
@@ -97,8 +132,9 @@ const App=(()=>{
     return {doc,png,pngArte,material:fundo,w_cm:P.w_cm,h_cm:P.h_cm,sangria_mm:sang,em:new Date().toISOString(),contexto:null};}
   // gera (e contextualiza) todos os produtos de uma loja; pula os que já têm arte feita à mão
   async function gerarProdutos(l,aoPasso){let c=await garantirCamadas(l);if(!(c.manual&&c.manual.editado))return {ok:0,falhas:["sem logotipo tratado"]};c.artes=c.artes||{};let ok=0;const falhas=[];
-    for(const pid of PRODUTOS_IDS){const ant=c.artes[pid];if(ant&&ant.contexto&&!(ant.doc&&ant.doc.auto))continue;if(aoPasso)aoPasso(pid);
-      try{const a=ant&&ant.contexto&&ant.doc&&ant.doc.auto&&ant.doc.el[0]&&ant.doc.el[0].src===c.manual.tratado?ant:await artePadrao(pid,c);if(!a){falhas.push(pid+": sem gabarito");continue;}
+    for(const pid of PRODUTOS_IDS){const ant=c.artes[pid];if(pid==="carimbo"&&ant&&!ant.soTexto){/* carimbo antigo com logotipo: refaz só texto */}else if(ant&&ant.contexto&&!(ant.doc&&ant.doc.auto))continue;if(aoPasso)aoPasso(pid);
+      try{const a=ant&&ant.contexto&&ant.doc&&ant.doc.auto&&ant.doc.el[0]&&ant.doc.el[0].src===c.manual.tratado&&pid!=="carimbo"?ant:await artePadrao(pid,c,l);if(!a){falhas.push(pid+": sem gabarito");continue;}
+        if(pid==="carimbo"&&!a.contexto){a.contexto=cenaCarimbo((a.doc&&a.doc.campos)||{});a.kit="carimbo-folha";}
         if(!a.contexto){const r=await fetch("/api/kit/aplicar",{method:"POST",credentials:"same-origin",headers:{"Content-Type":"application/json"},body:JSON.stringify({setor:l.setor,produto:pid,png:a.pngArte,material:a.material})});const d=await r.json();if(r.ok&&d.jpg){a.contexto=d.jpg;a.kit=d.kit;}else falhas.push(pid+": "+(d.mensagem||d.erro||r.status));}
         c.artes[pid]=a;ok++;}catch(e){falhas.push(pid+": "+e.message);}}
     await gravarCliente(c);return {ok,falhas};}
@@ -151,5 +187,5 @@ const App=(()=>{
   // toque longo em elementos [data-longo]: chama fn(el) após 450 ms sem mover
   function ligarLongo(root,fn){$$("[data-longo]",root).forEach(el=>{let t=null,p=null;el.addEventListener("pointerdown",ev=>{p={x:ev.clientX,y:ev.clientY};t=setTimeout(()=>{t=null;if(navigator.vibrate)navigator.vibrate(12);fn(el);},450);});
     const c=ev=>{if(t&&p&&ev.type==="pointermove"&&Math.hypot(ev.clientX-p.x,ev.clientY-p.y)<8)return;clearTimeout(t);t=null;};el.addEventListener("pointermove",c);el.addEventListener("pointerup",c);el.addEventListener("pointercancel",c);el.addEventListener("contextmenu",ev=>ev.preventDefault());});}
-  return {$,$$,esc,qs,ZONA,setorNome,nomeLoja,telFmt,ini,sessao,eu,dados,ficha,estrelas,estrelasHTML,estado,salvar,abrirVendas,lerCliente,gravarCliente,cliente,definirCliente,classificar,logoPrincipal,removerLogo,escolherImagem,abrirLogotipo,entradas,ligarEntradas,artePadrao,gerarProdutos,PRODUTOS_IDS,separarCores,garantirCamadas,listarNotas,gravarNota,apagarNota,diasDeRota,reagendar,hojeISO,dataCurta,META,ICONES,NA_CASCA,nav,topo,voltar,acoes,menuLongo,ligarLongo};
+  return {$,$$,esc,qs,ZONA,setorNome,nomeLoja,telFmt,ini,sessao,eu,dados,ficha,estrelas,estrelasHTML,estado,salvar,abrirVendas,lerCliente,gravarCliente,cliente,definirCliente,classificar,logoPrincipal,removerLogo,escolherImagem,abrirLogotipo,entradas,ligarEntradas,artePadrao,gerarProdutos,PRODUTOS_IDS,separarCores,garantirCamadas,dadosCarimbo,desenharCarimbo,cenaCarimbo,listarNotas,gravarNota,apagarNota,diasDeRota,reagendar,hojeISO,dataCurta,META,ICONES,NA_CASCA,nav,topo,voltar,acoes,menuLongo,ligarLongo};
 })();
