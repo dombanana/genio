@@ -6,7 +6,7 @@
 <title>GênIO · Edição do produto</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="app.css?v=be09986185">
+<link rel="stylesheet" href="app.css?v=4563719462">
 <style>
 body.com-acoes{padding-bottom:calc(250px + env(safe-area-inset-bottom,0))}
 .prancheta{position:relative;background:repeating-conic-gradient(#e9e5f3 0 25%,#fff 0 50%) 0 0/18px 18px;border-radius:16px;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;height:min(72vw,460px);margin:0 0 8px}
@@ -39,16 +39,17 @@ body.com-acoes{padding-bottom:calc(250px + env(safe-area-inset-bottom,0))}
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=be09986185"></script>
+<script src="app.js?v=4563719462"></script>
+<script src="qr.js?v=4563719462"></script>
 <script>
 (async()=>{
   const {$,$$,esc,qs,sessao,dados,ficha,nav,topo,voltar,nomeLoja,telFmt,cliente,gravarCliente,definirCliente,setorNome}=App;
   if(!await sessao())return;
-  const D=await dados();const slug=qs.get("l");const pid=qs.get("p")||"capacho";const l=D.lojas.find(x=>x.slug===slug);
+  const D=await dados();const slug=qs.get("l");const pid=qs.get("p")||"capacho";const FACE=qs.get("face")==="verso"?"verso":"frente";const l=D.lojas.find(x=>x.slug===slug);
   if(!l){$("#app").innerHTML=`${topo()}<p>Loja não encontrada.</p>${nav("rota")}`;return;}
   const nome=nomeLoja(l.nome);definirCliente(l);let c=await App.garantirCamadas(l);const man=c.manual||null;
   // gabarito da gráfica: área total = produto + sangria; a guia mostra corte (vermelho) e segurança (verde-água)
-  const G=await (await fetch("gabaritos.json?v=be09986185")).json();const P=G.produtos[pid]||G.produtos.capacho;
+  const G=await (await fetch("gabaritos.json?v=4563719462")).json();const P=G.produtos[pid]||G.produtos.capacho;
   const sang=P.sangria_mm!=null?P.sangria_mm:G.sangria_mm,seg=P.seguranca_mm!=null?P.seguranca_mm:G.seguranca_mm;
   const PX=Math.min(100,Math.floor(3000/Math.max(P.w_cm+sang/5,P.h_cm+sang/5)));  // px por cm (teto 3000 px)
   const W=Math.round((P.w_cm+2*sang/10)*PX),H=Math.round((P.h_cm+2*sang/10)*PX),B=Math.round(sang/10*PX),S=Math.round(seg/10*PX);
@@ -75,15 +76,17 @@ body.com-acoes{padding-bottom:calc(250px + env(safe-area-inset-bottom,0))}
       d.el.push({tipo:"campos",id:"campos",nome:"Dados do cartão",x:W*0.46,y:H*0.16,w:W*0.46,h:H*0.6,cor:"#1C1635",tam:Math.round(H*0.075),fonte:"Rubik, system-ui, sans-serif"});
       d.el.push({tipo:"qr",id:"qr",nome:"QR Code (genérico)",x:W-B-S-H*0.3,y:H-B-S-H*0.3,w:H*0.3,h:H*0.3,cor:"#1C1635"});}
     return d;}
-  const arteAnt=(c.artes||{})[pid]||null;
+  const arteTopo=(c.artes||{})[pid]||null;const arteAnt=FACE==="verso"?(arteTopo&&arteTopo.verso)||null:arteTopo;
+  const DUAS=!!P.faces&&P.faces>1;
   const CARIMBO=pid==="carimbo";
-  let doc=(arteAnt&&arteAnt.doc&&!(CARIMBO&&!arteAnt.soTexto))?JSON.parse(JSON.stringify(arteAnt.doc)):(CARIMBO?(await App.artePadrao("carimbo",c,l)).doc:novoDoc());
+  let doc=(arteAnt&&arteAnt.doc&&!(CARIMBO&&!arteAnt.soTexto))?JSON.parse(JSON.stringify(arteAnt.doc)):(CARIMBO?(await App.artePadrao("carimbo",c,l)).doc:(DUAS&&man&&man.tratado?await (async()=>{const a=await App.artePadrao(pid,c,l);return a?(FACE==="verso"?a.verso.doc:a.doc):novoDoc();})():novoDoc()));
   let sel=null,cv,cx,guia=true,z=1,px=0,py=0,borracha=false,pincel=0,desfazer=[],guiaCentro=null;
   const luz=h=>{if(!h)return 255;const r=parseInt(h.slice(1,3),16),g=parseInt(h.slice(3,5),16),b=parseInt(h.slice(5,7),16);return 0.299*r+0.587*g+0.114*b;};
   const corTexto=()=>luz(doc.fundo)<128?"#FFFFFF":"#1C1635";
   function render(){
     $("#app").innerHTML=`${topo()}${voltar(`produtos.html?l=${encodeURIComponent(slug)}`,"Produtos")}
-    <h1 style="font-size:24px;margin-bottom:2px">${esc(P.nome)}</h1><p class="sub">${esc(nome)}${CARIMBO?' · só texto, CNPJ em negrito':''}</p>
+    <h1 style="font-size:24px;margin-bottom:2px">${esc(P.nome)}${DUAS?` <span class="sub" style="font-weight:400">· ${FACE}</span>`:""}</h1><p class="sub">${esc(nome)}${CARIMBO?' · só texto, CNPJ em negrito':''}</p>
+    ${DUAS?`<div class="faces" style="display:flex;gap:8px;margin:0 0 10px"><a class="btn sec sm ${FACE==="frente"?"on":""}" style="flex:1;min-height:38px;text-decoration:none" href="editor.html?l=${encodeURIComponent(slug)}&p=${pid}">Frente</a><a class="btn sec sm ${FACE==="verso"?"on":""}" style="flex:1;min-height:38px;text-decoration:none" href="editor.html?l=${encodeURIComponent(slug)}&p=${pid}&face=verso">Verso</a></div>`:""}
     <div class="prancheta" id="pr"><canvas id="cv"></canvas></div>
     <div class="medida-ed"><span>${P.w_cm} × ${P.h_cm} cm${sang?` · sangria ${sang} mm`:""} · segurança ${seg} mm</span><span id="selnome">${sel?esc(sel.nome||sel.tipo):"toque num elemento · pinça amplia"}</span></div>
     <div class="ferr" style="grid-template-columns:repeat(8,1fr)">${[["ret","▭","Retângulo"],["qua","◻","Quadrado"],["tri","△","Triângulo"],["cir","○","Círculo"],["seta","➜","Seta"],["txt","T","Texto"]].concat(CARIMBO?[]:[["logo","✦","Marca"]]).map(([id,ic,n])=>`<button type="button" data-add="${id}"><span class="ic">${ic}</span>${n}</button>`).join("")}<button type="button" id="ferrBorracha" class="${borracha?"on":""}"><span class="ic">🧽</span>Borracha</button></div>
@@ -115,16 +118,15 @@ body.com-acoes{padding-bottom:calc(250px + env(safe-area-inset-bottom,0))}
           if(e.borda>0){const t=tintar(im,e.bordaCor||"#fff",e.w,e.h);const b=e.borda;for(let a=0;a<360;a+=30){cx.drawImage(t,e.x+Math.cos(a*Math.PI/180)*b,e.y+Math.sin(a*Math.PI/180)*b,e.w,e.h);}}
           if(e.usarCor&&e.cor)cx.drawImage(tintar(im,e.cor,e.w,e.h),e.x,e.y,e.w,e.h);else cx.drawImage(im,e.x,e.y,e.w,e.h);}}
       else if(e.tipo==="forma"){cx.fillStyle=e.cor;cx.strokeStyle=e.bordaCor||"#000";cx.lineWidth=e.borda||0;cx.beginPath();
-        if(e.forma==="cir"){cx.ellipse(e.x+e.w/2,e.y+e.h/2,e.w/2,e.h/2,0,0,Math.PI*2);}else if(e.forma==="tri"){cx.moveTo(e.x+e.w/2,e.y);cx.lineTo(e.x+e.w,e.y+e.h);cx.lineTo(e.x,e.y+e.h);cx.closePath();}else{cx.rect(e.x,e.y,e.w,e.h);}
+        if(e.forma==="cir"){cx.ellipse(e.x+e.w/2,e.y+e.h/2,e.w/2,e.h/2,0,0,Math.PI*2);}else if(e.forma==="tri"){cx.moveTo(e.x+e.w/2,e.y);cx.lineTo(e.x+e.w,e.y+e.h);cx.lineTo(e.x,e.y+e.h);cx.closePath();}else if(e.raio>0&&cx.roundRect){cx.roundRect(e.x,e.y,e.w,e.h,e.raio);}else{cx.rect(e.x,e.y,e.w,e.h);}
         if(e.cor!=="transparent")cx.fill();if(e.borda>0)cx.stroke();}
-      else if(e.tipo==="texto"){cx.fillStyle=e.cor;cx.font=`${e.peso||700} ${e.tam}px ${e.fonte}`;cx.textBaseline="top";const linhas=String(e.texto||"").split("\n");linhas.forEach((t,i)=>cx.fillText(t,e.x,e.y+i*e.tam*1.2));
-        e.w=Math.max(...linhas.map(t=>cx.measureText(t).width),10);e.h=linhas.length*e.tam*1.2;}
+      else if(e.tipo==="texto"){App.desenharTexto(cx,e);const linhas=String(e.texto||"").split("\n");cx.font=`${e.peso||700} ${e.tam}px ${e.fonte}`;const lw=Math.max(...linhas.map(t=>cx.measureText(t).width),10);if(!e.alinh||e.alinh==="left")e.w=lw;else e.w=Math.max(e.w||0,lw);e.h=linhas.length*e.tam*(e.alt||1.2);}
       else if(e.tipo==="campos"&&doc.campos){cx.fillStyle=e.cor;cx.textBaseline="top";const cp=doc.campos;const li=[[cp.nome,1.25,700],[cp.cargo,0.9,400],[cp.tel,1,500],[cp.email,0.9,400],[cp.endereco,0.85,400],[cp.site,0.85,400]].filter(x=>x[0]);let y=e.y;
         for(const [t,f,p] of li){cx.font=`${p} ${Math.round(e.tam*f)}px ${e.fonte}`;cx.fillText(t,e.x,y,e.w);y+=e.tam*f*1.35;}e.h=Math.max(y-e.y,10);}
       else if(e.tipo==="carimbo"){App.desenharCarimbo(cx,e,doc.campos||{});}
       else if(e.tipo==="lista"){App.desenharLista(cx,e);}
       else if(e.tipo==="seta"){App.desenharSeta(cx,e);}
-      else if(e.tipo==="qr"){cx.fillStyle="#fff";cx.fillRect(e.x-e.w*0.06,e.y-e.w*0.06,e.w*1.12,e.w*1.12);qrGenerico(cx,e.x,e.y,e.w,e.cor);e.h=e.w;}
+      else if(e.tipo==="qr"){App.desenharQR(cx,e);e.h=e.w;}
       cx.restore();}
     if(comGuia){cx.save();desenharGuia(cx);cx.restore();}
     if(comSel&&guiaCentro){cx.save();cx.strokeStyle="#F0786B";cx.lineWidth=Math.max(2,W/400);cx.setLineDash([W/60,W/120]);if(guiaCentro.v){cx.beginPath();cx.moveTo(W/2,0);cx.lineTo(W/2,H);cx.stroke();}if(guiaCentro.h){cx.beginPath();cx.moveTo(0,H/2);cx.lineTo(W,H/2);cx.stroke();}cx.restore();}
@@ -147,7 +149,7 @@ body.com-acoes{padding-bottom:calc(250px + env(safe-area-inset-bottom,0))}
     if(e.tipo==="seta"){h+=`<div class="linha" style="margin-top:10px"><label>Texto</label><input id="txtSeta" value="${esc(e.texto||"")}" style="flex:1;font:inherit;font-size:15px;border:1.5px solid var(--linha);border-radius:10px;padding:8px 10px"></div><div class="linha" style="margin-top:8px"><label>Direção</label>${["esquerda","cima","baixo","direita"].map(d=>`<button type="button" class="btn sec mini ${(e.dir||"direita")===d?"on":""}" data-dir="${d}" style="${(e.dir||"direita")===d?"background:var(--navy);color:#fff":""}">${{esquerda:"←",cima:"↑",baixo:"↓",direita:"→"}[d]}</button>`).join("")}<button type="button" class="btn sec mini" id="dupSeta">+ outra seta</button></div><div class="linha" style="margin-top:8px"><label>Seta</label></div>${paleta("cor",e.cor)}<div class="linha" style="margin-top:8px"><label>Letra</label></div>${paleta("corTexto",e.corTexto)}`;}
     if(e.tipo==="lista"){h+=`<div class="linha" style="margin-top:10px"><textarea id="itens" rows="6" style="flex:1;font-size:14px">${esc((e.itens||[]).map(x=>x[0]+" | "+x[1]).join("\n"))}</textarea></div><div class="linha" style="margin-top:8px"><label>Letra</label><input type="range" id="ttam" min="${Math.round(H/60)}" max="${Math.round(H/12)}" value="${e.tam}"></div>${paleta("cor",e.cor)}<small class="muted">Um produto por linha: nome | preço. Lista de exemplo; troque pelos produtos reais.</small>`;}
     if(e.tipo==="carimbo"){const cp=doc.campos;h+=`<div class="campos" style="margin-top:10px">${[["nome","Nome da empresa"],["razao","Razão social"],["cnpj","CNPJ (sai em negrito)"],["endereco","Endereço"],["tel","Telefone"]].map(([k_,n])=>`<div><label>${n}</label><input data-campo="${k_}" value="${esc(cp[k_]||"")}"></div>`).join("")}</div><div class="linha" style="margin-top:8px"><label>Letra</label><input type="range" id="ttam" min="${Math.round(H/20)}" max="${Math.round(H/5)}" value="${e.tam}"></div><small class="muted">Carimbo é só texto, sem logotipo.</small>`;}
-    if(e.tipo==="qr"){h+=`<small class="muted">QR genérico para marcar o lugar; o QR real (site, cardápio ou WhatsApp) entra no arquivo de produção.</small>`;}
+    if(e.tipo==="qr"){h+=e.texto?`<small class="muted">QR real → ${esc(e.texto)}</small>`:`<small class="muted">QR genérico para marcar o lugar; o QR real (site, cardápio ou WhatsApp) entra quando a ficha tiver o endereço verificado.</small>`;}
     p.innerHTML=h;
     $("#centrar").onclick=()=>{const g=e.grupo==="logo"?doc.el.filter(x=>x.grupo==="logo"):[e];const x0=Math.min(...g.map(x=>x.x)),y0=Math.min(...g.map(x=>x.y)),x1=Math.max(...g.map(x=>x.x+x.w)),y1=Math.max(...g.map(x=>x.y+x.h));const dx=(W-(x1-x0))/2-x0,dy=(H-(y1-y0))/2-y0;g.forEach(x=>{x.x+=dx;x.y+=dy;});desenhar();};
     $("#encher").onclick=()=>{const aw=W-2*(B+S),ah=H-2*(B+S);const f=Math.min(aw/e.w,ah/e.h);escalar(e,f);$("#centrar").click();};
@@ -219,7 +221,9 @@ body.com-acoes{padding-bottom:calc(250px + env(safe-area-inset-bottom,0))}
     $("#salvar").onclick=async()=>{sel=null;delete doc.auto;$("#salvar").disabled=true;$("#salvar").textContent="Salvando…";
       await desenhar(false,true,false);const png=cv.toDataURL("image/png");
       await desenhar(false,false,false);const pngArte=cv.toDataURL("image/png");  // arte sem o fundo: o material do kit recebe a cor separadamente
-      c=await cliente(l);c.artes=c.artes||{};const ant=c.artes[pid]||{};c.artes[pid]={doc,png,pngArte,material:doc.fundo,w_cm:P.w_cm,h_cm:P.h_cm,sangria_mm:sang,em:new Date().toISOString(),contexto:ant.png===png?ant.contexto:null,soTexto:CARIMBO};
+      c=await cliente(l);c.artes=c.artes||{};const ant=c.artes[pid]||{};
+      if(FACE==="verso"){c.artes[pid]={...ant,verso:{doc,png,pngArte,material:doc.fundo,em:new Date().toISOString()}};}
+      else{const novo={doc,png,pngArte,material:doc.fundo,w_cm:P.w_cm,h_cm:P.h_cm,sangria_mm:sang,em:new Date().toISOString(),contexto:ant.png===png?ant.contexto:null,soTexto:CARIMBO};if(ant.verso)novo.verso=ant.verso;if(ant.paleta)novo.paleta=ant.paleta;c.artes[pid]=novo;}
       await gravarCliente(c);location.href=`produtos.html?l=${encodeURIComponent(slug)}`;};
   }
   window.__editor=()=>({doc,sel,W,H,B,S});
