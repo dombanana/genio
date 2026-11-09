@@ -79,10 +79,26 @@ const App=(()=>{
   function ligarEntradas(root,l,papel,aoFim){$$("[data-e]",root).forEach(b=>b.onclick=async()=>{const src=await escolherImagem(b.dataset.e==="camera");if(!src)return;
     const k=papel||await menuLongo("Esta imagem é…",[{k:"logotipo",ic:"✦",t:"Logotipo"},{k:"fachada",ic:"🏬",t:"Fachada"},{k:"arquivo",ic:"🗂",t:"Imagem de arquivo"},{k:"produto",ic:"🛍",t:"Foto de produto"}]);if(!k)return;
     const fonte=b.dataset.e==="camera"?"foto":"arquivo";if(k==="logotipo"){abrirLogotipo(l.slug,src,fonte,"visita");return;}await classificar(l,src,k,fonte);if(aoFim)aoFim(k);});}
+  const luz=h=>{if(!h)return 255;const r=parseInt(h.slice(1,3),16),g=parseInt(h.slice(3,5),16),b=parseInt(h.slice(5,7),16);return 0.299*r+0.587*g+0.114*b;};
+  function desenharLista(g,e){g.save();g.fillStyle=e.cor||"#1C1635";g.textBaseline="top";const tam=e.tam;const lh=tam*1.55;let y=e.y;
+    for(const [n,p] of (e.itens||[])){if(y+lh>e.y+e.h+1)break;g.font=`500 ${tam}px ${e.fonte||"Rubik, system-ui, sans-serif"}`;g.textAlign="left";g.fillText(n,e.x,y);g.font=`700 ${tam}px ${e.fonte||"Rubik, system-ui, sans-serif"}`;g.textAlign="right";const pw=g.measureText(p).width;g.fillText(p,e.x+e.w,y);
+      const nw=g.measureText(n).width;g.save();g.globalAlpha=0.35;g.setLineDash([2,tam*0.35]);g.lineWidth=Math.max(1,tam/14);g.strokeStyle=e.cor||"#1C1635";g.beginPath();g.moveTo(e.x+Math.min(nw*1.02+tam*0.5,e.w-pw-tam*0.5),y+tam*0.8);g.lineTo(e.x+e.w-pw-tam*0.4,y+tam*0.8);g.stroke();g.restore();y+=lh;}
+    g.restore();}
+  // seta de sinalização com texto dentro (adesivo de parede)
+  function desenharSeta(g,e){const {x,y,w,h}=e;const p=Math.min(h*0.5,w*0.28);g.save();g.fillStyle=e.cor||"#1C1635";g.beginPath();g.moveTo(x,y+h*0.18);g.lineTo(x+w-p,y+h*0.18);g.lineTo(x+w-p,y);g.lineTo(x+w,y+h/2);g.lineTo(x+w-p,y+h);g.lineTo(x+w-p,y+h*0.82);g.lineTo(x,y+h*0.82);g.closePath();g.fill();
+    g.fillStyle=e.corTexto||"#FFFFFF";g.textBaseline="middle";g.textAlign="left";let tam=e.tam||h*0.36;g.font=`800 ${tam}px ${e.fonte||"Rubik, system-ui, sans-serif"}`;const t=String(e.texto||"");while(g.measureText(t).width>(w-p)*0.9&&tam>6){tam*=0.94;g.font=`800 ${tam}px ${e.fonte||"Rubik, system-ui, sans-serif"}`;}g.fillText(t,x+(w-p)*0.06,y+h/2);g.restore();}
+  function desenharElementos(g,el,imgs){for(const e of el){if(e.tipo==="camada"&&imgs[e.src]&&!e.oculta)g.drawImage(imgs[e.src],e.x,e.y,e.w,e.h);
+    else if(e.tipo==="forma"){g.fillStyle=e.cor;if(e.cor!=="transparent")g.fillRect(e.x,e.y,e.w,e.h);if(e.borda>0){g.strokeStyle=e.bordaCor;g.lineWidth=e.borda;g.strokeRect(e.x,e.y,e.w,e.h);}}
+    else if(e.tipo==="texto"){g.fillStyle=e.cor;g.font=`${e.peso||700} ${e.tam}px ${e.fonte}`;g.textBaseline="top";g.textAlign="left";String(e.texto||"").split("\n").forEach((t,i)=>g.fillText(t,e.x,e.y+i*e.tam*1.2));}
+    else if(e.tipo==="lista")desenharLista(g,e);
+    else if(e.tipo==="seta")desenharSeta(g,e);}}
+  // flyer: cardápio fictício por kit (hoje só padaria; outros setores entram com os próximos kits)
+  const CARDAPIOS={padaria:{titulo:"Nossos produtos",itens:[["Pão francês (kg)","R$ 18,90"],["Pão de queijo (un.)","R$ 4,50"],["Croissant de manteiga","R$ 9,00"],["Bolo de cenoura (fatia)","R$ 8,50"],["Sonho de creme","R$ 7,00"],["Café coado (copo)","R$ 4,00"],["Pão na chapa + café","R$ 9,90"],["Baguete artesanal","R$ 12,00"]],promo:["PROMOÇÃO DA SEMANA","Café + pão na chapa","por R$ 8,90","seg. a sex., das 6h às 10h","apresente este flyer"]}};
+  const cardapioDe=()=>CARDAPIOS.padaria;
   // ---- arte automática: logotipo tratado centralizado preenchendo a área segura do gabarito, cor padrão do material
   const COR_PADRAO={capacho:"#2B2B2D",rigido:"#F4F1EA",vinil:null,tecido:"#F4F1EA",papel:"#FFFFFF",lona:"#FFFFFF",carimbo:null};
   const PRODUTOS_IDS=["capacho","placas","adesivos","uniformes","impressos","panfleto","banners","parede","brindes","carimbo"];
-  let _G=null;const gabaritos=async()=>_G||(_G=await (await fetch("gabaritos.json?v=ceff91281d")).json());
+  let _G=null;const gabaritos=async()=>_G||(_G=await (await fetch("gabaritos.json?v=daf40e1ae1")).json());
   const carregarImg=src=>new Promise(res=>{const i=new Image();i.crossOrigin="anonymous";i.onload=()=>res(i);i.onerror=()=>res(null);i.src=src;});
   // ---- carimbo: só texto — nome, razão social, CNPJ (negrito), endereço, telefone; nunca logotipo
   async function dadosCarimbo(l){const cad=await ficha(l.slug).catch(()=>null);const L=(cad&&cad.lacunas)||{};const leit=(L.leitura||{}).valor||"";const razao=((leit.match(/Razão social: ([^·]+)/)||[])[1]||"").trim();const cnpj=((leit.match(/CNPJ:? ?([\d./-]{14,18})/)||[])[1]||"");
@@ -124,6 +140,24 @@ const App=(()=>{
     const PX=Math.min(100,Math.floor(3000/Math.max(P.w_cm+sang/5,P.h_cm+sang/5)));const W=Math.round((P.w_cm+2*sang/10)*PX),H=Math.round((P.h_cm+2*sang/10)*PX),B=Math.round(sang/10*PX),S=Math.round(seg/10*PX);
     const aw=W-2*(B+S),ah=H-2*(B+S);const f=Math.min(aw/im.naturalWidth,(P.ancora==="topo"?ah*0.45:ah)/im.naturalHeight);const w=im.naturalWidth*f,h=im.naturalHeight*f;const x=(W-w)/2,y=P.ancora==="topo"?B+S+ah*0.05:(H-h)/2;
     const fundo=P.sem_fundo?null:(COR_PADRAO[P.superficie]===undefined?"#FFFFFF":COR_PADRAO[P.superficie]);
+    if(pid==="panfleto"){const M=cardapioDe();const f1=B+S,ah3=(H-2*(B+S))/3;const lf=Math.min(aw/im.naturalWidth,(ah3*0.8)/im.naturalHeight);const lw=im.naturalWidth*lf,lh=im.naturalHeight*lf;
+      const cor=(c.manual.cores&&c.manual.cores[0]&&c.manual.cores[0].hex)||"#6933C5";const esc_=luz(cor)<140?"#FFFFFF":"#1C1635";
+      const el=[{tipo:"camada",id:"logo",nome:"Logotipo",src:c.manual.tratado,cor:null,usarCor:false,x:(W-lw)/2,y:f1+(ah3-lh)/2,w:lw,h:lh,borda:0,bordaCor:"#FFFFFF",grupo:"logo"},
+        {tipo:"texto",id:"tit",nome:"Título da lista",texto:M.titulo,x:f1+W*0.06,y:f1+ah3+ah3*0.04,w:W*0.8,h:ah3*0.12,cor:"#1C1635",tam:Math.round(ah3*0.11),fonte:"Rubik, system-ui, sans-serif",peso:800},
+        {tipo:"lista",id:"lista",nome:"Lista de produtos (exemplo)",itens:M.itens,x:f1+W*0.06,y:f1+ah3+ah3*0.2,w:W-2*f1-W*0.12,h:ah3*0.78,cor:"#1C1635",tam:Math.round(ah3*0.065),fonte:"Rubik, system-ui, sans-serif"},
+        {tipo:"forma",forma:"ret",id:"faixa",nome:"Faixa da promoção",x:0,y:f1+2*ah3+ah3*0.04,w:W,h:H-(f1+2*ah3+ah3*0.04),cor,borda:0,bordaCor:"#1C1635"},
+        {tipo:"texto",id:"promo",nome:"Promoção",texto:M.promo.join("\n"),x:f1+W*0.06,y:f1+2*ah3+ah3*0.14,w:W*0.8,h:ah3*0.7,cor:esc_,tam:Math.round(ah3*0.085),fonte:"Rubik, system-ui, sans-serif",peso:800}];
+      const doc={fundo:"#FFFFFF",fundoImg:null,el,campos:null,auto:true};const k=Math.min(1,1400/Math.max(W,H));const cv=document.createElement("canvas");cv.width=Math.round(W*k);cv.height=Math.round(H*k);const g=cv.getContext("2d");g.scale(k,k);
+      desenharElementos(g,el,{[c.manual.tratado]:im});const pngArte=cv.toDataURL("image/png");g.globalCompositeOperation="destination-over";g.fillStyle="#FFFFFF";g.fillRect(0,0,W,H);const png=cv.toDataURL("image/jpeg",0.88);
+      return {doc,png,pngArte,material:"#FFFFFF",w_cm:P.w_cm,h_cm:P.h_cm,sangria_mm:sang,em:new Date().toISOString(),contexto:null};}
+    if(pid==="parede"){const cor=(c.manual.cores&&c.manual.cores[0]&&c.manual.cores[0].hex)||"#1C1635";const ct=luz(cor)<140?"#FFFFFF":"#1C1635";
+      const colL=aw*0.46,colR=aw*0.48,x0=B+S,y0=B+S;const lf=Math.min(colL/im.naturalWidth,(ah*0.6)/im.naturalHeight);const lw=im.naturalWidth*lf,lh=im.naturalHeight*lf;
+      const sh=ah*0.14,gap=ah*0.05,yS=(H-(3*sh+2*gap))/2,xS=x0+colL+aw*0.06;
+      const el=[{tipo:"camada",id:"logo",nome:"Logotipo",src:c.manual.tratado,cor:null,usarCor:false,x:x0+(colL-lw)/2,y:(H-lh)/2,w:lw,h:lh,borda:0,bordaCor:"#FFFFFF",grupo:"logo"}];
+      ["Balcão","Caixa","Banheiros"].forEach((t,i)=>el.push({tipo:"seta",id:"seta"+(i+1),nome:"Seta · "+t,texto:t,x:xS,y:yS+i*(sh+gap),w:colR,h:sh,cor,corTexto:ct,tam:Math.round(sh*0.38),fonte:"Rubik, system-ui, sans-serif"}));
+      const doc={fundo:null,fundoImg:null,el,campos:null,auto:true};const k=Math.min(1,1400/Math.max(W,H));const cv=document.createElement("canvas");cv.width=Math.round(W*k);cv.height=Math.round(H*k);const g=cv.getContext("2d");g.scale(k,k);
+      desenharElementos(g,el,{[c.manual.tratado]:im});const pngArte=cv.toDataURL("image/png");
+      return {doc,png:pngArte,pngArte,material:null,w_cm:P.w_cm,h_cm:P.h_cm,sangria_mm:sang,em:new Date().toISOString(),contexto:null};}
     const cams=(c.manual.camadas||[]).filter(q=>q.png);const el=cams.length>1?cams.map((q,i)=>({tipo:"camada",id:"c"+i,nome:q.nome||("Cor "+(i+1)),src:q.png,cor:q.cor||null,usarCor:false,x,y,w,h,borda:0,bordaCor:"#FFFFFF",grupo:"logo"})):[{tipo:"camada",id:"logo",nome:"Logotipo",src:c.manual.tratado,cor:null,usarCor:false,x,y,w,h,borda:0,bordaCor:"#FFFFFF",grupo:"logo"}];
     const doc={fundo,fundoImg:null,el,campos:null,auto:true};
     const k=Math.min(1,1400/Math.max(W,H));const cv=document.createElement("canvas");cv.width=Math.round(W*k);cv.height=Math.round(H*k);const g=cv.getContext("2d");
@@ -187,5 +221,5 @@ const App=(()=>{
   // toque longo em elementos [data-longo]: chama fn(el) após 450 ms sem mover
   function ligarLongo(root,fn){$$("[data-longo]",root).forEach(el=>{let t=null,p=null;el.addEventListener("pointerdown",ev=>{p={x:ev.clientX,y:ev.clientY};t=setTimeout(()=>{t=null;if(navigator.vibrate)navigator.vibrate(12);fn(el);},450);});
     const c=ev=>{if(t&&p&&ev.type==="pointermove"&&Math.hypot(ev.clientX-p.x,ev.clientY-p.y)<8)return;clearTimeout(t);t=null;};el.addEventListener("pointermove",c);el.addEventListener("pointerup",c);el.addEventListener("pointercancel",c);el.addEventListener("contextmenu",ev=>ev.preventDefault());});}
-  return {$,$$,esc,qs,ZONA,setorNome,nomeLoja,telFmt,ini,sessao,eu,dados,ficha,estrelas,estrelasHTML,estado,salvar,abrirVendas,lerCliente,gravarCliente,cliente,definirCliente,classificar,logoPrincipal,removerLogo,escolherImagem,abrirLogotipo,entradas,ligarEntradas,artePadrao,gerarProdutos,PRODUTOS_IDS,separarCores,garantirCamadas,dadosCarimbo,desenharCarimbo,cenaCarimbo,listarNotas,gravarNota,apagarNota,diasDeRota,reagendar,hojeISO,dataCurta,META,ICONES,NA_CASCA,nav,topo,voltar,acoes,menuLongo,ligarLongo};
+  return {$,$$,esc,qs,ZONA,setorNome,nomeLoja,telFmt,ini,sessao,eu,dados,ficha,estrelas,estrelasHTML,estado,salvar,abrirVendas,lerCliente,gravarCliente,cliente,definirCliente,classificar,logoPrincipal,removerLogo,escolherImagem,abrirLogotipo,entradas,ligarEntradas,artePadrao,gerarProdutos,PRODUTOS_IDS,separarCores,garantirCamadas,dadosCarimbo,desenharCarimbo,cenaCarimbo,desenharLista,desenharSeta,listarNotas,gravarNota,apagarNota,diasDeRota,reagendar,hojeISO,dataCurta,META,ICONES,NA_CASCA,nav,topo,voltar,acoes,menuLongo,ligarLongo};
 })();
