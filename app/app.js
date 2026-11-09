@@ -85,8 +85,14 @@ const App=(()=>{
       const nw=g.measureText(n).width;g.save();g.globalAlpha=0.35;g.setLineDash([2,tam*0.35]);g.lineWidth=Math.max(1,tam/14);g.strokeStyle=e.cor||"#1C1635";g.beginPath();g.moveTo(e.x+Math.min(nw*1.02+tam*0.5,e.w-pw-tam*0.5),y+tam*0.8);g.lineTo(e.x+e.w-pw-tam*0.4,y+tam*0.8);g.stroke();g.restore();y+=lh;}
     g.restore();}
   // seta de sinalização com texto dentro (adesivo de parede)
-  function desenharSeta(g,e){const {x,y,w,h}=e;const p=Math.min(h*0.5,w*0.28);g.save();g.fillStyle=e.cor||"#1C1635";g.beginPath();g.moveTo(x,y+h*0.18);g.lineTo(x+w-p,y+h*0.18);g.lineTo(x+w-p,y);g.lineTo(x+w,y+h/2);g.lineTo(x+w-p,y+h);g.lineTo(x+w-p,y+h*0.82);g.lineTo(x,y+h*0.82);g.closePath();g.fill();
-    g.fillStyle=e.corTexto||"#FFFFFF";g.textBaseline="middle";g.textAlign="left";let tam=e.tam||h*0.36;g.font=`800 ${tam}px ${e.fonte||"Rubik, system-ui, sans-serif"}`;const t=String(e.texto||"");while(g.measureText(t).width>(w-p)*0.9&&tam>6){tam*=0.94;g.font=`800 ${tam}px ${e.fonte||"Rubik, system-ui, sans-serif"}`;}g.fillText(t,x+(w-p)*0.06,y+h/2);g.restore();}
+  function desenharSeta(g,e){const dir=e.dir||"direita";const vert=dir==="cima"||dir==="baixo";const {x,y}=e;const w=vert?e.h:e.w,h=vert?e.w:e.h;  // desenha sempre "para a direita" e gira
+    g.save();g.translate(x+e.w/2,y+e.h/2);g.rotate({direita:0,baixo:Math.PI/2,esquerda:Math.PI,cima:-Math.PI/2}[dir]||0);g.translate(-w/2,-h/2);
+    const p=Math.min(h*0.5,w*0.28);g.fillStyle=e.cor||"#1C1635";g.beginPath();g.moveTo(0,h*0.18);g.lineTo(w-p,h*0.18);g.lineTo(w-p,0);g.lineTo(w,h/2);g.lineTo(w-p,h);g.lineTo(w-p,h*0.82);g.lineTo(0,h*0.82);g.closePath();g.fill();
+    // texto sempre legível: desfaz a rotação para o texto nas setas verticais/esquerda
+    const t=String(e.texto||"");let tam=e.tam||h*0.36;g.fillStyle=e.corTexto||"#FFFFFF";g.textBaseline="middle";g.textAlign="center";
+    if(dir==="direita"||dir==="esquerda"){if(dir==="esquerda"){g.translate(w/2,h/2);g.rotate(Math.PI);g.translate(-w/2,-h/2);}const cxm=dir==="direita"?(w-p)/2:(w+p)/2;g.font=`800 ${tam}px ${e.fonte||"Rubik, system-ui, sans-serif"}`;while(g.measureText(t).width>(w-p)*0.9&&tam>6){tam*=0.94;g.font=`800 ${tam}px ${e.fonte||"Rubik, system-ui, sans-serif"}`;}g.fillText(t,cxm,h/2);}
+    else{g.translate((w-p)/2,h/2);g.rotate(dir==="baixo"?-Math.PI/2:Math.PI/2);g.font=`800 ${tam}px ${e.fonte||"Rubik, system-ui, sans-serif"}`;while(g.measureText(t).width>h*0.6*0.9&&tam>6){tam*=0.94;g.font=`800 ${tam}px ${e.fonte||"Rubik, system-ui, sans-serif"}`;}g.fillText(t,0,0);}
+    g.restore();}
   function desenharElementos(g,el,imgs){for(const e of el){if(e.tipo==="camada"&&imgs[e.src]&&!e.oculta)g.drawImage(imgs[e.src],e.x,e.y,e.w,e.h);
     else if(e.tipo==="forma"){g.fillStyle=e.cor;if(e.cor!=="transparent")g.fillRect(e.x,e.y,e.w,e.h);if(e.borda>0){g.strokeStyle=e.bordaCor;g.lineWidth=e.borda;g.strokeRect(e.x,e.y,e.w,e.h);}}
     else if(e.tipo==="texto"){g.fillStyle=e.cor;g.font=`${e.peso||700} ${e.tam}px ${e.fonte}`;g.textBaseline="top";g.textAlign="left";String(e.texto||"").split("\n").forEach((t,i)=>g.fillText(t,e.x,e.y+i*e.tam*1.2));}
@@ -98,7 +104,7 @@ const App=(()=>{
   // ---- arte automática: logotipo tratado centralizado preenchendo a área segura do gabarito, cor padrão do material
   const COR_PADRAO={capacho:"#2B2B2D",rigido:"#F4F1EA",vinil:null,tecido:"#F4F1EA",papel:"#FFFFFF",lona:"#FFFFFF",carimbo:null};
   const PRODUTOS_IDS=["capacho","placas","adesivos","uniformes","impressos","panfleto","banners","parede","brindes","carimbo"];
-  let _G=null;const gabaritos=async()=>_G||(_G=await (await fetch("gabaritos.json?v=daf40e1ae1")).json());
+  let _G=null;const gabaritos=async()=>_G||(_G=await (await fetch("gabaritos.json?v=1abec6e838")).json());
   const carregarImg=src=>new Promise(res=>{const i=new Image();i.crossOrigin="anonymous";i.onload=()=>res(i);i.onerror=()=>res(null);i.src=src;});
   // ---- carimbo: só texto — nome, razão social, CNPJ (negrito), endereço, telefone; nunca logotipo
   async function dadosCarimbo(l){const cad=await ficha(l.slug).catch(()=>null);const L=(cad&&cad.lacunas)||{};const leit=(L.leitura||{}).valor||"";const razao=((leit.match(/Razão social: ([^·]+)/)||[])[1]||"").trim();const cnpj=((leit.match(/CNPJ:? ?([\d./-]{14,18})/)||[])[1]||"");

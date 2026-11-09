@@ -6,12 +6,12 @@
 <title>GênIO · Edição do produto</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="app.css?v=daf40e1ae1">
+<link rel="stylesheet" href="app.css?v=1abec6e838">
 <style>
 body.com-acoes{padding-bottom:calc(250px + env(safe-area-inset-bottom,0))}
 .prancheta{position:relative;background:repeating-conic-gradient(#e9e5f3 0 25%,#fff 0 50%) 0 0/18px 18px;border-radius:16px;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;height:min(72vw,460px);margin:0 0 8px}
 .prancheta canvas{position:absolute;left:0;top:0;transform-origin:0 0;box-shadow:0 2px 14px rgba(28,22,53,.18)}
-.medida{display:flex;justify-content:space-between;gap:8px;color:var(--texto2);font-size:13px;margin:0 0 10px;flex-wrap:wrap}
+.medida-ed{display:flex;justify-content:space-between;gap:8px;color:var(--texto2);font-size:13px;margin:0 0 10px;flex-wrap:wrap}
 .ferr{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin:0 0 10px}
 .ferr button{border:0;background:#fff;border-radius:12px;min-height:58px;font:inherit;font-size:12px;color:var(--texto);display:grid;place-items:center;gap:2px;padding:6px 2px}
 .ferr button .ic{font-size:20px}.ferr button.on{background:var(--navy);color:#fff}
@@ -39,7 +39,7 @@ body.com-acoes{padding-bottom:calc(250px + env(safe-area-inset-bottom,0))}
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=daf40e1ae1"></script>
+<script src="app.js?v=1abec6e838"></script>
 <script>
 (async()=>{
   const {$,$$,esc,qs,sessao,dados,ficha,nav,topo,voltar,nomeLoja,telFmt,cliente,gravarCliente,definirCliente,setorNome}=App;
@@ -48,7 +48,7 @@ body.com-acoes{padding-bottom:calc(250px + env(safe-area-inset-bottom,0))}
   if(!l){$("#app").innerHTML=`${topo()}<p>Loja não encontrada.</p>${nav("rota")}`;return;}
   const nome=nomeLoja(l.nome);definirCliente(l);let c=await App.garantirCamadas(l);const man=c.manual||null;
   // gabarito da gráfica: área total = produto + sangria; a guia mostra corte (vermelho) e segurança (verde-água)
-  const G=await (await fetch("gabaritos.json?v=daf40e1ae1")).json();const P=G.produtos[pid]||G.produtos.capacho;
+  const G=await (await fetch("gabaritos.json?v=1abec6e838")).json();const P=G.produtos[pid]||G.produtos.capacho;
   const sang=P.sangria_mm!=null?P.sangria_mm:G.sangria_mm,seg=P.seguranca_mm!=null?P.seguranca_mm:G.seguranca_mm;
   const PX=Math.min(100,Math.floor(3000/Math.max(P.w_cm+sang/5,P.h_cm+sang/5)));  // px por cm (teto 3000 px)
   const W=Math.round((P.w_cm+2*sang/10)*PX),H=Math.round((P.h_cm+2*sang/10)*PX),B=Math.round(sang/10*PX),S=Math.round(seg/10*PX);
@@ -85,7 +85,7 @@ body.com-acoes{padding-bottom:calc(250px + env(safe-area-inset-bottom,0))}
     $("#app").innerHTML=`${topo()}${voltar(`produtos.html?l=${encodeURIComponent(slug)}`,"Produtos")}
     <h1 style="font-size:24px;margin-bottom:2px">${esc(P.nome)}</h1><p class="sub">${esc(nome)}${CARIMBO?' · só texto, CNPJ em negrito':''}</p>
     <div class="prancheta" id="pr"><canvas id="cv"></canvas></div>
-    <div class="medida"><span>${P.w_cm} × ${P.h_cm} cm${sang?` · sangria ${sang} mm`:""} · segurança ${seg} mm</span><span id="selnome">${sel?esc(sel.nome||sel.tipo):"toque num elemento · pinça amplia"}</span></div>
+    <div class="medida-ed"><span>${P.w_cm} × ${P.h_cm} cm${sang?` · sangria ${sang} mm`:""} · segurança ${seg} mm</span><span id="selnome">${sel?esc(sel.nome||sel.tipo):"toque num elemento · pinça amplia"}</span></div>
     <div class="ferr" style="grid-template-columns:repeat(8,1fr)">${[["ret","▭","Retângulo"],["qua","◻","Quadrado"],["tri","△","Triângulo"],["cir","○","Círculo"],["seta","➜","Seta"],["txt","T","Texto"]].concat(CARIMBO?[]:[["logo","✦","Marca"]]).map(([id,ic,n])=>`<button type="button" data-add="${id}"><span class="ic">${ic}</span>${n}</button>`).join("")}<button type="button" id="ferrBorracha" class="${borracha?"on":""}"><span class="ic">🧽</span>Borracha</button></div>
     ${borracha?`<div class="painel"><div class="linha"><label>Borracha${sel&&(sel.tipo==="camada"||sel.tipo==="imagem")?` em <b>${esc(sel.nome)}</b>`:" · toque numa camada do logotipo"}</label><input type="range" id="pincel" min="1" max="12" value="${pincel||4}"><button type="button" class="btn sec mini" id="desfazerB" ${desfazer.length?"":"disabled"}>↶ Desfazer</button></div><small class="muted">Arraste sobre a prancheta para apagar partes da camada selecionada.</small></div>`:""}
     <div class="painel"><h3>Cor do ${semFundo?"material":"produto"} <small class="muted" style="font-weight:400">${semFundo?"· recorte: só a arte tem cor":""}</small><button type="button" class="btn sec mini" id="guia">${guia?"Ocultar guia":"Mostrar guia"}</button></h3>
@@ -142,7 +142,7 @@ body.com-acoes{padding-bottom:calc(250px + env(safe-area-inset-bottom,0))}
     if(e.tipo==="camada"||e.tipo==="imagem"||e.tipo==="forma"){h+=`<div class="linha" style="margin-top:10px"><label>Borda</label><input type="range" id="borda" min="0" max="${Math.round(W/25)}" value="${e.borda||0}"><label>${e.borda?Math.round(e.borda/PX*10)/10+" cm":"sem"}</label></div>${paleta("bordaCor",e.bordaCor)}`;}
     if(e.tipo==="texto"){h+=`<div class="linha" style="margin-top:10px"><textarea id="txt" rows="2" style="flex:1">${esc(e.texto||"")}</textarea></div><div class="linha" style="margin-top:8px"><select id="fonte"><option ${/Rubik/.test(e.fonte)?"selected":""} value="Rubik, system-ui, sans-serif">Rubik</option><option ${/Georgia/.test(e.fonte)?"selected":""} value="Georgia, serif">Serifa</option><option ${/Courier/.test(e.fonte)?"selected":""} value="'Courier New', monospace">Mono</option><option ${/Impact/.test(e.fonte)?"selected":""} value="Impact, sans-serif">Impacto</option></select><select id="peso"><option value="400" ${e.peso==400?"selected":""}>Normal</option><option value="700" ${!e.peso||e.peso==700?"selected":""}>Negrito</option></select><label>Tam.</label><input type="range" id="ttam" min="${Math.round(H/40)}" max="${Math.round(H/2)}" value="${e.tam}"></div>`;}
     if(e.tipo==="campos"){const cp=doc.campos;h+=`<div class="campos" style="margin-top:10px">${[["nome","Nome"],["cargo","Cargo"],["tel","Telefone"],["email","E-mail"],["endereco","Endereço"],["site","Site"]].map(([k_,n])=>`<div><label>${n}</label><input data-campo="${k_}" value="${esc(cp[k_]||"")}"></div>`).join("")}</div><div class="linha" style="margin-top:8px"><label>Letra</label><input type="range" id="ttam" min="${Math.round(H/40)}" max="${Math.round(H/6)}" value="${e.tam}"></div>`;}
-    if(e.tipo==="seta"){h+=`<div class="linha" style="margin-top:10px"><label>Texto</label><input id="txtSeta" value="${esc(e.texto||"")}" style="flex:1;font:inherit;font-size:15px;border:1.5px solid var(--linha);border-radius:10px;padding:8px 10px"></div><div class="linha" style="margin-top:8px"><label>Seta</label></div>${paleta("cor",e.cor)}<div class="linha" style="margin-top:8px"><label>Letra</label></div>${paleta("corTexto",e.corTexto)}`;}
+    if(e.tipo==="seta"){h+=`<div class="linha" style="margin-top:10px"><label>Texto</label><input id="txtSeta" value="${esc(e.texto||"")}" style="flex:1;font:inherit;font-size:15px;border:1.5px solid var(--linha);border-radius:10px;padding:8px 10px"></div><div class="linha" style="margin-top:8px"><label>Direção</label>${["esquerda","cima","baixo","direita"].map(d=>`<button type="button" class="btn sec mini ${(e.dir||"direita")===d?"on":""}" data-dir="${d}" style="${(e.dir||"direita")===d?"background:var(--navy);color:#fff":""}">${{esquerda:"←",cima:"↑",baixo:"↓",direita:"→"}[d]}</button>`).join("")}<button type="button" class="btn sec mini" id="dupSeta">+ outra seta</button></div><div class="linha" style="margin-top:8px"><label>Seta</label></div>${paleta("cor",e.cor)}<div class="linha" style="margin-top:8px"><label>Letra</label></div>${paleta("corTexto",e.corTexto)}`;}
     if(e.tipo==="lista"){h+=`<div class="linha" style="margin-top:10px"><textarea id="itens" rows="6" style="flex:1;font-size:14px">${esc((e.itens||[]).map(x=>x[0]+" | "+x[1]).join("\n"))}</textarea></div><div class="linha" style="margin-top:8px"><label>Letra</label><input type="range" id="ttam" min="${Math.round(H/60)}" max="${Math.round(H/12)}" value="${e.tam}"></div>${paleta("cor",e.cor)}<small class="muted">Um produto por linha: nome | preço. Lista de exemplo; troque pelos produtos reais.</small>`;}
     if(e.tipo==="carimbo"){const cp=doc.campos;h+=`<div class="campos" style="margin-top:10px">${[["nome","Nome da empresa"],["razao","Razão social"],["cnpj","CNPJ (sai em negrito)"],["endereco","Endereço"],["tel","Telefone"]].map(([k_,n])=>`<div><label>${n}</label><input data-campo="${k_}" value="${esc(cp[k_]||"")}"></div>`).join("")}</div><div class="linha" style="margin-top:8px"><label>Letra</label><input type="range" id="ttam" min="${Math.round(H/20)}" max="${Math.round(H/5)}" value="${e.tam}"></div><small class="muted">Carimbo é só texto, sem logotipo.</small>`;}
     if(e.tipo==="qr"){h+=`<small class="muted">QR genérico para marcar o lugar; o QR real (site, cardápio ou WhatsApp) entra no arquivo de produção.</small>`;}
@@ -154,7 +154,9 @@ body.com-acoes{padding-bottom:calc(250px + env(safe-area-inset-bottom,0))}
     $("#tam").oninput=ev=>{escalar(e,(W*ev.target.value/100)/e.w);$("#tamv").textContent=Math.round(e.w/PX*10)/10+" cm";desenhar();};
     const b=$("#borda");if(b)b.oninput=ev=>{e.borda=+ev.target.value;b.nextElementSibling.textContent=e.borda?Math.round(e.borda/PX*10)/10+" cm":"sem";desenhar();};
     const t=$("#txt");if(t)t.oninput=()=>{e.texto=t.value;desenhar();};const f=$("#fonte");if(f)f.onchange=()=>{e.fonte=f.value;desenhar();};const pe=$("#peso");if(pe)pe.onchange=()=>{e.peso=+pe.value;desenhar();};
-    const tt=$("#ttam");if(tt)tt.oninput=()=>{e.tam=+tt.value;desenhar();};const ts=$("#txtSeta");if(ts)ts.oninput=()=>{e.texto=ts.value;e.nome="Seta · "+ts.value;renderLista();desenhar();};const it=$("#itens");if(it)it.oninput=()=>{e.itens=it.value.split("\n").map(l=>l.split("|").map(x=>x.trim())).filter(x=>x[0]).map(x=>[x[0],x[1]||""]);desenhar();};
+    const tt=$("#ttam");if(tt)tt.oninput=()=>{e.tam=+tt.value;desenhar();};$$("[data-dir]").forEach(b=>b.onclick=()=>{const nd=b.dataset.dir;const vertA=e.dir==="cima"||e.dir==="baixo",vertN=nd==="cima"||nd==="baixo";if(vertA!==vertN){const cxm=e.x+e.w/2,cym=e.y+e.h/2;[e.w,e.h]=[e.h,e.w];e.x=cxm-e.w/2;e.y=cym-e.h/2;}e.dir=nd;renderProps();desenhar();});
+    const ds=$("#dupSeta");if(ds)ds.onclick=()=>{const n=JSON.parse(JSON.stringify(e));n.id="s"+Date.now().toString(36);n.texto="Texto";n.nome="Seta · Texto";const vert=n.dir==="cima"||n.dir==="baixo";if(vert)n.x+=n.w*1.15;else n.y+=n.h*1.3;if(n.y+n.h>H)n.y=H-n.h;if(n.x+n.w>W)n.x=W-n.w;doc.el.push(n);sel=n;renderLista();renderProps();desenhar();};
+    const ts=$("#txtSeta");if(ts)ts.oninput=()=>{e.texto=ts.value;e.nome="Seta · "+ts.value;renderLista();desenhar();};const it=$("#itens");if(it)it.oninput=()=>{e.itens=it.value.split("\n").map(l=>l.split("|").map(x=>x.trim())).filter(x=>x[0]).map(x=>[x[0],x[1]||""]);desenhar();};
     $$("[data-campo]").forEach(i=>i.oninput=()=>{doc.campos[i.dataset.campo]=i.value;desenhar();});
     $$("[data-pal] button").forEach(bt=>bt.onclick=()=>{const pal=bt.closest("[data-pal]").dataset.pal;if(bt.dataset.mais!==undefined){const v=prompt("Cor em hexadecimal (ex.: #1C1635)");if(v&&/^#[0-9a-fA-F]{6}$/.test(v.trim()))aplicarCor(pal,v.trim());return;}aplicarCor(pal,bt.dataset.c);});
     function aplicarCor(pal,cor){if(pal==="cor"&&(e.tipo==="camada"||e.tipo==="imagem")){e.oculta=false;if(cor==="__transp")e.oculta=true;else if(cor==="__orig")e.usarCor=false;else{e.usarCor=true;e.cor=cor;}}else e[pal]=cor;renderProps();renderLista();desenhar();}
