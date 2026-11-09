@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>GênIO · Financeiro</title>
+<meta name="theme-color" content="#F1EEF8">
+<link rel="icon" href="../genio-favicon.png">
+<link rel="stylesheet" href="app.css?v=be09986185">
+</head>
+<body>
+<div class="w" id="app"></div>
+<script src="app.js?v=be09986185"></script>
+<script>
+(async()=>{
+  const {$,esc,sessao,nav,topo,dados,estado,cliente,nomeLoja}=App;
+  if(!await sessao())return;
+  const D=await dados();const e=estado();const sel=e.sel||{};
+  // o que existe hoje: seleções feitas nas visitas (sem preço — preços entram na fase do orçamento)
+  let itens=0,lojas=0,artes=0;for(const slug of Object.keys(sel)){const S=sel[slug];const n=Object.values(S).filter(v=>v&&v.q>0).length;if(n){lojas++;itens+=n;}}
+  for(const l of D.lojas){const c=await cliente(l);artes+=Object.keys(c.artes||{}).length;}
+  $("#app").innerHTML=`${topo()}<h1>Financeiro</h1><p class="sub">Comissões, recebimentos e repasses do representante.</p>
+  <section class="card"><h2>Este mês</h2><div class="fato"><span>Lojas com seleção</span><b>${lojas}</b></div><div class="fato"><span>Itens selecionados</span><b>${itens}</b></div><div class="fato"><span>Artes feitas</span><b>${artes}</b></div><div class="fato"><span>Vendas fechadas</span><b>—</b></div><div class="fato"><span>Comissão a receber</span><b>a confirmar</b></div></section>
+  <section class="card"><h2>Regras</h2><p class="muted" style="margin:0">Preço GênIO = preço do fornecedor (Printi/Kapazi, na faixa de quantidade) + arte e revisão. Comissão e divisão em rota dupla: a definir pelo dono. Nada aqui é valor real até o orçamento estar ligado ao servidor.</p></section>
+  ${nav("financeiro")}`;
+})();
+</script>
+</body>
+</html>

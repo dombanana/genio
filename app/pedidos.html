@@ -6,24 +6,46 @@
 <title>GênIO · Pedidos</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="app.css?v=6306b7a188">
+<link rel="stylesheet" href="app.css?v=be09986185">
 <style>.novo-ped{position:fixed;left:12px;right:12px;top:8vh;max-height:80vh;overflow:auto;background:#fff;border-radius:18px;padding:14px;z-index:75;box-shadow:0 10px 40px rgba(28,22,53,.3)}.novo-ped h3{margin:0 0 8px}.novo-ped input{width:100%;box-sizing:border-box;font:inherit;font-size:16px;border:1.5px solid var(--linha);border-radius:12px;padding:10px 12px;margin:0 0 8px}.lista-cli{display:grid;gap:4px}.lista-cli button{border:0;background:var(--lav);border-radius:12px;text-align:left;padding:10px 12px;font:inherit;display:grid}.lista-cli button small{color:var(--texto2);font-size:12px}.fato{display:grid;grid-template-columns:auto 1fr;gap:10px;padding:6px 0;border-top:1px solid var(--linha)}.fato:first-of-type{border-top:0}.fato span{color:var(--texto2)}</style>
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=6306b7a188"></script>
+<script src="app.js?v=be09986185"></script>
 <script>
 (async()=>{
   const {$,esc,sessao,dados,nav,topo,nomeLoja,estado}=App;
   if(!await sessao())return;
-  const D=await dados();const e=estado();const sel=e.sel||{};
-  const blocos=Object.entries(sel).map(([slug,S])=>{const its=Object.values(S).filter(v=>v&&v.q>0);if(!its.length)return "";const l=D.lojas.find(x=>x.slug===slug);const nome=l?nomeLoja(l.nome):slug;
-    return `<section class="card"><div style="display:flex;justify-content:space-between;gap:10px;align-items:center"><h2 style="margin:0">${esc(nome)}</h2><span class="chip dec">◷ A orçar</span></div><p style="margin:8px 0 10px">${its.map(i=>esc(i.nome)+(i.servico?"":" × "+i.q)).join(" · ")}</p><div style="display:flex;justify-content:space-between;align-items:center"><small class="muted">Preços: fase do orçamento</small><a href="produtos.html?l=${encodeURIComponent(slug)}">Ajustar →</a></div></section>`;}).filter(Boolean).join("");
+  const D=await dados();const e=estado();const sel=e.sel||{};const {qs,cliente,etapaDe,moverEtapa}=App;
+  const etapa=["entrada","processamento","saida"].includes(qs.get("etapa"))?qs.get("etapa"):"entrada";
+  const TIT={entrada:["Entrada","Pedidos em aberto: seleção, arte e orçamento."],processamento:["Produção","Pedidos confirmados, em produção no fornecedor."],saida:["Saída","Prontos para entrega / instalação."]};
+  // pedidos = lojas com itens selecionados (ou movidas de etapa); urgência = o que trava a etapa
+  const slugs=new Set([...Object.keys(sel).filter(k=>Object.values(sel[k]).some(v=>v&&v.q>0)),...Object.keys(e.pedidos||{})]);
+  const lista=[];for(const slug of slugs){const l=D.lojas.find(x=>x.slug===slug);if(!l)continue;const S=sel[slug]||{};const its=Object.entries(S).filter(([k,v])=>v&&v.q>0);const c=await cliente(l);const et=etapaDe(slug);const P=(e.pedidos||{})[slug]||{};
+    const alertas=[];let nivel="";
+    if(et==="entrada"){if(!(c.manual&&c.manual.editado)){alertas.push("logotipo não tratado");nivel="urgente";}const semArte=its.filter(([k,v])=>!v.servico&&!(c.artes||{})[k]);if(semArte.length){alertas.push(`sem arte: ${semArte.map(([k,v])=>v.nome||k).join(", ")}`);nivel=nivel||"atencao";}if(!its.length){alertas.push("nenhum item escolhido");nivel=nivel||"atencao";}}
+    if(et==="processamento"){const dias=P.hist?Math.floor((Date.now()-new Date(P.hist[P.hist.length-1].em))/864e5):0;if(dias>=10){alertas.push(`${dias} dias em produção`);nivel="urgente";}else if(dias>=7){alertas.push(`${dias} dias em produção`);nivel="atencao";}if(!P.fornecedorPedido){alertas.push("sem número do pedido no fornecedor");nivel=nivel||"atencao";}}
+    if(et==="saida"){const dias=P.hist?Math.floor((Date.now()-new Date(P.hist[P.hist.length-1].em))/864e5):0;if(dias>=3){alertas.push(`pronto há ${dias} dias sem entrega`);nivel="urgente";}else if(dias>=1){alertas.push(`pronto há ${dias} dia(s)`);nivel=nivel||"atencao";}if(!P.agendado){alertas.push("entrega não agendada");nivel=nivel||"atencao";}}
+    lista.push({l,slug,its,et,P,alertas,nivel});}
+  const cont={entrada:0,processamento:0,saida:0};lista.forEach(x=>{if(x.nivel==="urgente"&&cont[x.et]!==undefined)cont[x.et]++;});try{window.top.postMessage({genio:"urgencias",...cont},location.origin);}catch(e){}
+  const vis=lista.filter(x=>x.et===etapa).sort((a,b)=>(b.nivel==="urgente")-(a.nivel==="urgente")||(b.nivel==="atencao")-(a.nivel==="atencao"));
+  const prox={entrada:"processamento",processamento:"saida",saida:"entregue"}[etapa];const rotProx={entrada:"✓ Confirmar → produção",processamento:"✓ Pronto → saída",saida:"✓ Entregue"}[etapa];
+  const blocos=vis.map(x=>`<div class="ped ${x.nivel}"><div class="cab"><b>${esc(nomeLoja(x.l.nome))}</b><span class="muted" style="font-size:12px">${x.nivel==="urgente"?"🔴 urgente":x.nivel==="atencao"?"🟠 atenção":"🟢 em dia"}</span></div>
+      <div class="itens">${x.its.length?x.its.map(([k,v])=>esc(v.nome||k)+(v.q>1?" ×"+v.q:"")).join(" · "):"sem itens"}${x.P.fornecedorPedido?` · pedido ${esc(x.P.fornecedorPedido)}`:""}${x.P.agendado?` · entrega ${esc(x.P.agendado)}`:""}</div>
+      ${x.alertas.map(a=>`<div class="alerta">• ${esc(a)}</div>`).join("")}
+      <div class="acs"><a href="visita.html?l=${encodeURIComponent(x.slug)}">Abrir loja</a>${etapa==="entrada"?`<a href="produtos.html?l=${encodeURIComponent(x.slug)}">Produtos</a>`:""}${etapa==="processamento"?`<button type="button" data-np="${esc(x.slug)}">Nº do pedido</button>`:""}${etapa==="saida"?`<button type="button" data-ag="${esc(x.slug)}">Agendar entrega</button>`:""}<button type="button" class="ok" data-mv="${esc(x.slug)}" data-para="${prox}">${rotProx}</button>${etapa!=="entrada"?`<button type="button" data-volta="${esc(x.slug)}">← voltar</button>`:""}</div></div>`).join("");
   const avul=App.avulsos();
-  $("#app").innerHTML=`${topo()}<h1>Pedidos</h1><p class="sub">${blocos?"Seleções feitas nas visitas":"Nenhuma seleção ainda"}</p>
-  <button type="button" class="btn" id="novo" style="margin:0 0 12px;min-height:52px">＋ Novo pedido</button>
-  ${avul.length?`<section class="card"><h2>Pedidos avulsos</h2>${avul.map(a=>`<div class="fato"><span>${new Date(a.criado).toLocaleDateString("pt-BR")}</span><b><a href="visita.html?l=${encodeURIComponent(a.slug)}">${esc(a.nome)}</a></b></div>`).join("")}</section>`:""}
-  ${blocos||'<section class="card"><p>As seleções nascem na visita, em “Produtos e serviços”, ou num pedido novo.</p></section>'}${nav("pedidos")}`;
+  $("#app").innerHTML=`${topo()}<h1>${TIT[etapa][0]}</h1><p class="sub">${TIT[etapa][1]}</p>
+  <div class="etapas">${["entrada","processamento","saida"].map(k=>`<a href="pedidos.html?etapa=${k}" class="${k===etapa?"on":""}">${TIT[k][0]} <small>${lista.filter(x=>x.et===k).length}${cont[k]?` · <b style="color:#F0786B">${cont[k]}!</b>`:""}</small></a>`).join("")}</div>
+  ${etapa==="entrada"?`<button type="button" class="btn" id="novo" style="margin:0 0 12px;min-height:52px">＋ Novo pedido</button>`:""}
+  ${blocos||`<section class="card"><p>${etapa==="entrada"?"Nenhum pedido em aberto. As seleções nascem na visita, em “Produtos e serviços”, ou num pedido novo.":etapa==="processamento"?"Nada em produção.":"Nada aguardando entrega."}</p></section>`}
+  ${etapa==="entrada"&&avul.length?`<section class="card"><h2>Clientes avulsos</h2>${avul.map(a=>`<div class="fato"><span>${new Date(a.criado).toLocaleDateString("pt-BR")}</span><b><a href="visita.html?l=${encodeURIComponent(a.slug)}">${esc(a.nome)}</a></b></div>`).join("")}</section>`:""}
+  ${nav("pedidos")}`;
+  document.querySelectorAll("[data-mv]").forEach(b=>b.onclick=()=>{moverEtapa(b.dataset.mv,b.dataset.para);location.reload();});
+  document.querySelectorAll("[data-volta]").forEach(b=>b.onclick=()=>{moverEtapa(b.dataset.volta,{processamento:"entrada",saida:"processamento"}[etapa]);location.reload();});
+  document.querySelectorAll("[data-np]").forEach(b=>b.onclick=()=>{const v=prompt("Número do pedido no fornecedor");if(v!==null){moverEtapa(b.dataset.np,"processamento",{fornecedorPedido:v.trim()});location.reload();}});
+  document.querySelectorAll("[data-ag]").forEach(b=>b.onclick=()=>{const v=prompt("Entrega/instalação (data e hora)");if(v!==null){moverEtapa(b.dataset.ag,"saida",{agendado:v.trim()});location.reload();}});
+  if(!$("#novo"))return;
   // novo pedido: para qualquer pessoa — cliente da rota ou alguém novo (nome opcional, pode completar depois)
   $("#novo").onclick=()=>{const f=document.createElement("div");f.className="rec-fundo";f.style.zIndex=70;const m=document.createElement("div");m.className="novo-ped";
     m.innerHTML=`<h3>Novo pedido</h3><input id="np-nome" placeholder="Nome do cliente ou da empresa (opcional)" autocomplete="off"><input id="np-tel" placeholder="Telefone (opcional)" inputmode="tel"><div class="muted" style="font-size:13px;margin:8px 0 4px">ou escolha uma loja da rota:</div><input id="np-busca" placeholder="buscar na rota" autocomplete="off"><div class="lista-cli" id="np-lc"></div><div style="display:flex;gap:8px;margin-top:10px"><button type="button" class="btn" id="np-criar" style="min-height:46px">Criar pedido →</button><button type="button" class="btn sec" id="np-fechar" style="width:auto;min-height:46px;padding:0 14px">Fechar</button></div>`;

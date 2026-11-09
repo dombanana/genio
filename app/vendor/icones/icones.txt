@@ -4,3 +4,14 @@ rec.png https://cdn.jsdelivr.net/gh/microsoft/fluentui-emoji@main/assets/Red%20c
 microfone.png https://cdn.jsdelivr.net/gh/microsoft/fluentui-emoji@main/assets/Studio%20microphone/3D/studio_microphone_3d.png
 notas.png https://cdn.jsdelivr.net/gh/microsoft/fluentui-emoji@main/assets/Spiral%20notepad/3D/spiral_notepad_3d.png
 config.png https://cdn.jsdelivr.net/gh/microsoft/fluentui-emoji@main/assets/Gear/3D/gear_3d.png
+rec-audio.png https://cdn.jsdelivr.net/gh/microsoft/fluentui-emoji@main/assets/Studio%20microphone/3D/studio_microphone_3d.png
+rec-transcrever.png https://cdn.jsdelivr.net/gh/microsoft/fluentui-emoji@main/assets/Memo/3D/memo_3d.png
+rec-video.png https://cdn.jsdelivr.net/gh/microsoft/fluentui-emoji@main/assets/Video%20camera/3D/video_camera_3d.png
+rec-selfie.png https://cdn.jsdelivr.net/gh/microsoft/fluentui-emoji@main/assets/Selfie/3D/selfie_3d_default.png
+rec-foto.png https://cdn.jsdelivr.net/gh/microsoft/fluentui-emoji@main/assets/Camera%20with%20flash/3D/camera_with_flash_3d.png
+rec-tela.png https://cdn.jsdelivr.net/gh/microsoft/fluentui-emoji@main/assets/Mobile%20phone/3D/mobile_phone_3d.png
+financeiro.png https://cdn.jsdelivr.net/gh/microsoft/fluentui-emoji@main/assets/Money%20bag/3D/money_bag_3d.png
+ocorrencias.png https://cdn.jsdelivr.net/gh/microsoft/fluentui-emoji@main/assets/Warning/3D/warning_3d.png
+entrada.png https://cdn.jsdelivr.net/gh/microsoft/fluentui-emoji@main/assets/Inbox%20tray/3D/inbox_tray_3d.png
+processamento.png https://cdn.jsdelivr.net/gh/microsoft/fluentui-emoji@main/assets/Hammer%20and%20wrench/3D/hammer_and_wrench_3d.png
+saida.png https://cdn.jsdelivr.net/gh/microsoft/fluentui-emoji@main/assets/Delivery%20truck/3D/delivery_truck_3d.png
