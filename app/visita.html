@@ -6,7 +6,7 @@
 <title>GênIO · Visita</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="app.css?v=1e2baaa58b">
+<link rel="stylesheet" href="app.css?v=19daa66ccf">
 <style>
 .cab{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
 .fach{width:100%;aspect-ratio:16/9;border-radius:16px;overflow:hidden;background:var(--lav2);display:grid;place-items:center;position:relative}
@@ -21,7 +21,7 @@
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=1e2baaa58b"></script>
+<script src="app.js?v=19daa66ccf"></script>
 <script>
 (async()=>{
   const {$,$$,esc,qs,sessao,dados,ficha,estrelasHTML,estado,salvar,nav,topo,voltar,setorNome,nomeLoja,telFmt,cliente,gravarCliente,classificar,definirCliente,menuLongo,ligarLongo,ZONA,entradas,ligarEntradas,abrirLogotipo,logoPrincipal,removerLogo}=App;
@@ -40,7 +40,11 @@
   const horarioHoje=h=>{if(!h)return null;const d=["dom","seg","ter","qua","qui","sex","sáb"][new Date().getDay()];const m=h.split(" · ").find(p=>p.startsWith(d));return m?m.replace(d,"").trim():null;};
   const cn=L.nome_curiosidade||{};const curios=[cn.valor,(L.sobre||{}).valor].filter(Boolean);
   const leitura=(L.leitura||{}).valor||"";const desde=(leitura.match(/desde (\d{4})/)||[])[1];const razao=(leitura.match(/Razão social: ([^·]+)/)||[])[1];
-  const AV=L.avaliacoes||{};const ganchos=(AV.gatilhos||[]).map(g=>g.tema);
+  const AV=L.avaliacoes||{};const GAT=(AV.gatilhos||[]);const ganchos=GAT.map(g=>g.tema);
+  const PROD_NOME={capacho:"Capacho",placas:"Placa de preços",placa:"Placa",adesivos:"Adesivos",uniformes:"Uniformes",telefonia:"Atendente virtual (telefone/WhatsApp)",identidade:"Identidade visual completa",cardapio:"Cardápio"};
+  const prodNomes=p=>String(p||"").split("+").map(x=>PROD_NOME[x]||x).join(" + ");
+  // quebra-gelo: curiosidade + o que as avaliações sustentam; sem avaliação negativa, entra o padrão do setor
+  const falaGelo=()=>[`${nome}.`,...curios,...GAT.map(g=>`Nas avaliações falam de ${g.tema}: "${(g.trecho||"").replace(/…/g,"")}". ${g.argumento}`)].join(" ");
   function render(){
     const cands=candidatos();const logos=c.logos||[];const principal=logos[0]||null;const logo=(c.manual&&c.manual.tratado)||(principal&&principal.src)||null;const fach=(c.fachada&&c.fachada.src)||null;
     const pronto=!!(c.manual&&c.manual.editado);const e=estado();
@@ -57,6 +61,9 @@
       <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;align-items:center"><span class="chip ${pronto?"ok":logo?"dec":""}">${pronto?"✓ Logotipo tratado":logo?"◷ Falta tirar o fundo":"Sem logotipo"}</span>${logo?"":`<button type="button" class="btn sec sm" id="nomeLogo" style="width:auto;min-height:36px;padding:0 12px;font-size:14px">T Usar o nome como logotipo</button>`}${logo?`<button type="button" class="btn sec sm" id="editarLogo" style="width:auto;min-height:36px;padding:0 12px;font-size:14px">✂ Editar</button>${pronto?"":`<button type="button" class="btn sec sm" id="recAuto" style="width:auto;min-height:36px;padding:0 12px;font-size:14px">✦ Recorte automático</button>`}<a class="btn sec sm" href="manual.html?l=${encodeURIComponent(slug)}" style="width:auto;min-height:36px;padding:0 12px;font-size:14px;text-decoration:none">Editor avançado</a>`:""}</div>
       ${entradas(slug,"entL")}</section>
     ${curios.length?`<section class="card" style="border-left:5px solid var(--teal)"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><h2 style="margin:0">Curiosidade</h2><button class="btn sec sm" id="ouvir" type="button" style="width:auto;min-height:40px;padding:0 14px;font-size:14px">▶ Ouvir</button></div>${curios.map(t=>`<p style="margin:8px 0 0">${esc(t)}</p>`).join("")}${cn.nota&&cn.valor?`<small class="muted">${esc(cn.nota)}</small>`:""}</section>`:""}
+    ${GAT.length?`<section class="card" style="border-left:5px solid var(--marca)"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><h2 style="margin:0">Quebra-gelo</h2><button class="btn sec sm" id="ouvirGelo" type="button" style="width:auto;min-height:40px;padding:0 14px;font-size:14px">▶ Ouvir</button></div>
+      <small class="muted">O que as avaliações do Google sustentam — e qual inteligência resolve.</small>
+      ${GAT.map(g=>`<div class="gelo"><div class="tema">${esc(g.tema)}${g.nota?` <span class="muted">· ${g.nota}★</span>`:""}</div><blockquote>“${esc((g.trecho||"").replace(/^…|…$/g,""))}”${g.autor?` <span class="muted">— ${esc(g.autor)}</span>`:""}</blockquote><div class="arg"><b>→ ${esc(prodNomes(g.produto))}</b><br>${esc(g.argumento)}</div></div>`).join("")}</section>`:""}
     <section class="card"><h2>Antes de entrar</h2>
       ${razao?`<div class="fato"><span>Razão social</span><b>${esc(razao.trim())}</b></div>`:""}${desde?`<div class="fato"><span>Desde</span><b>${esc(desde)}</b></div>`:""}
       ${l.tel?`<div class="fato"><span>Telefone</span><b><a href="tel:+55${esc(String(l.tel).replace(/\D/g,"").replace(/^55/,""))}" class="lk">📞 ${esc(telFmt(l.tel))}</a> · <a href="https://wa.me/55${esc(String(l.tel).replace(/\D/g,"").replace(/^55/,""))}" target="_blank" rel="noopener" class="lk">WhatsApp</a></b></div>`:""}
@@ -71,6 +78,7 @@
     const editar=()=>{if(!principal)return location.href=`fontes.html?l=${encodeURIComponent(slug)}&tipo=busca`;abrirLogotipo(slug,principal.src,(principal.nome||"").replace(/^Logotipo ?·? ?/,""),"visita");};
     const ea=$("#edAvulso");if(ea)ea.onclick=()=>{const n=prompt("Nome do cliente/empresa",l.nome);if(n===null)return;const t=prompt("Telefone",l.tel||"");App.atualizarAvulso(slug,{nome:n.trim()||l.nome,tel:(t||"").trim()});location.reload();};
     // ler em voz alta (como na versão anterior): voz do aparelho, pt-BR; toque de novo para parar
+    const og=$("#ouvirGelo");if(og)og.onclick=()=>{if(!window.speechSynthesis){og.textContent="Sem voz";return;}if(speechSynthesis.speaking){speechSynthesis.cancel();og.textContent="▶ Ouvir";return;}const u=new SpeechSynthesisUtterance(falaGelo());u.lang="pt-BR";u.rate=1;u.onend=()=>{og.textContent="▶ Ouvir";};u.onerror=()=>{og.textContent="▶ Ouvir";};og.textContent="■ Parar";speechSynthesis.speak(u);};
     const ob=$("#ouvir");if(ob)ob.onclick=()=>{if(!window.speechSynthesis){ob.textContent="Sem voz";return;}if(speechSynthesis.speaking){speechSynthesis.cancel();ob.textContent="▶ Ouvir";return;}speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(`${nome}. ${curios.join(" ")}`);u.lang="pt-BR";u.rate=1;u.onend=()=>{ob.textContent="▶ Ouvir";};u.onerror=()=>{ob.textContent="▶ Ouvir";};ob.textContent="■ Parar";speechSynthesis.speak(u);};
     $("#logoArea").onclick=editar;
     const ra=$("#recAuto");if(ra)ra.onclick=async()=>{ra.disabled=true;ra.textContent="Recortando…";const r=await App.recortarLogo(l);if(!r.ok){alert("Não consegui: "+r.motivo);ra.disabled=false;ra.textContent="✦ Recorte automático";return;}c=await cliente(l);render();};

@@ -6,7 +6,7 @@
 <title>GênIO · Produtos e serviços</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="app.css?v=1e2baaa58b">
+<link rel="stylesheet" href="app.css?v=19daa66ccf">
 <style>
 .grade{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .prod{background:#fff;border-radius:18px;box-shadow:0 2px 10px rgba(28,22,53,.06);overflow:hidden;display:flex;flex-direction:column;position:relative}
@@ -32,7 +32,7 @@
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=1e2baaa58b"></script>
+<script src="app.js?v=19daa66ccf"></script>
 <script>
 (async()=>{
   const {$,$$,esc,qs,sessao,dados,nav,topo,voltar,setorNome,nomeLoja,estado,salvar,cliente,gravarCliente,definirCliente}=App;
@@ -41,7 +41,7 @@
   if(!l){$("#app").innerHTML=`${topo()}<p>Loja não encontrada.</p>${nav("rota")}`;return;}
   const nome=nomeLoja(l.nome);definirCliente(l);let c=await cliente(l);
   if(!(c.manual&&c.manual.editado)){location.href=`visita.html?l=${encodeURIComponent(slug)}`;return;}  // catálogo só depois do logotipo limpo
-  const G=await (await fetch("gabaritos.json?v=1e2baaa58b")).json();
+  const G=await (await fetch("gabaritos.json?v=19daa66ccf")).json();
   const CAT=[["capacho","Capacho personalizado","../img/cena-capacho.jpg"],["placas","Placas e sinalização","../img/cena-placas.jpg"],["adesivos","Adesivos e vitrines","../img/cena-adesivos.jpg"],["uniformes","Uniformes e camisetas","../img/cena-uniformes.jpg"],["impressos","Cartões de visita","../img/cena-cartoes.jpg"],["panfleto","Flyers e panfletos","../img/cat-impressos.jpg"],["banners","Banners e faixas","../img/cena-banners.jpg"],["parede","Adesivos de parede","../img/cat-parede.jpg"],["brindes","Sacolas e brindes","../img/cat-brindes.jpg"],["carimbo","Carimbos","../img/cat-brindes.jpg"]].map(([id,n,img])=>({id,nome:n,img}));
   const SERV=[{id:"mostraai",nome:"Mostra Aí · cardápio digital",desc:"Serviço mensal (AI Negócios)",ic:"📱"},{id:"postaai",nome:"Posta Aí · postagens",desc:"Conteúdo para as redes (AI Negócios)",ic:"📣"},{id:"inpi",nome:"Registro de marca (INPI)",desc:"Proteção do nome e do logo",ic:"®"}];
   const e=estado();e.sel=e.sel||{};const S=e.sel[slug]=e.sel[slug]||{};
@@ -53,7 +53,7 @@
     <div class="grade">${CAT.map(p=>{const s=S[p.id]||{q:0},A=artes[p.id];const mock=(A&&A.contexto)||(A&&A.png)||null;return `<div class="prod ${s.q>0?"sel":""}" data-p="${p.id}">
       <div class="cena" ${mock?"":`style="background-image:url('${p.img}')"`} data-ctx="${p.id}">${mock?`<img src="${mock}" alt="">`:""}</div>
       <b>${esc(p.nome)}</b><div class="st ${s.q>0?"ok":""}">${s.q>0?"✓ no orçamento":A?(A.doc&&A.doc.auto?"arte automática":"arte feita"):"sem arte"}${A&&A.contexto?" · no ambiente":""}</div>
-      ${p.id==="capacho"?`<a class="ir" href="capacho.html?l=${encodeURIComponent(slug)}" title="medidas livres · no local · ao vivo">${A?"Abrir no motor →":"Montar capacho →"}</a>`:`<a class="ir" href="editor.html?l=${encodeURIComponent(slug)}&p=${p.id}">${A?"Editar arte":"Criar arte"}</a>`}
+      ${p.id==="capacho"?`<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:0 12px 8px"><a class="ir" style="margin:0" href="capacho.html?l=${encodeURIComponent(slug)}">${A?"Editar →":"Montar →"}</a><a class="ir" style="margin:0;background:var(--navy);color:#fff" href="capacho.html?l=${encodeURIComponent(slug)}&ver=1" title="foto do local · ao vivo">👁 Visualizar</a></div>`:`<a class="ir" href="editor.html?l=${encodeURIComponent(slug)}&p=${p.id}">${A?"Editar arte":"Criar arte"}</a>`}
       <div class="qtd"><button data-m="-">−</button><span class="${s.q>0?"":"zero"}">${s.q>0?s.q+" un.":"não quero"}</span><button data-m="+">+</button></div></div>`;}).join("")}</div>
     <h2 style="margin:22px 0 10px">Serviços</h2>
     ${SERV.map(s=>{const on=!!(S[s.id]&&S[s.id].q>0);return `<div class="card serv"><span class="ic">${s.ic}</span><div><b>${esc(s.nome)}</b><small>${esc(s.desc)}${on?" · <b style='color:#0E8A84'>no orçamento</b>":""}</small></div><button class="tog ${on?"on":""}" data-t="${s.id}" aria-label="${esc(s.nome)}"></button></div>`;}).join("")}

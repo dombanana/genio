@@ -255,3 +255,8 @@ html.na-casca body.com-acoes{padding-bottom:110px}
 .pop-logo .img img{width:100%;height:100%;object-fit:contain;padding:14px;box-sizing:border-box}
 .pop-logo .img i{color:var(--texto2);font-style:normal}
 .pop-logo .rod{padding:10px 14px 12px}.pop-logo .rod b{display:block;font-size:16px}.pop-logo .rod small{color:var(--texto2);font-size:12px}
+/* quebra-gelo */
+.gelo{margin:10px 0 0;padding:10px 0 0;border-top:1px solid var(--linha)}
+.gelo .tema{font-weight:700;text-transform:capitalize}
+.gelo blockquote{margin:4px 0;padding:8px 12px;background:var(--lav);border-radius:10px;font-size:14px;line-height:1.4}
+.gelo .arg{font-size:14px;margin-top:4px}.gelo .arg b{color:var(--marca)}

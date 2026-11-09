@@ -142,12 +142,13 @@ def serper_avaliacoes(pid):
     return out, None
 # temas das avaliações que o nosso serviço resolve → argumento pronto para o vendedor
 GATILHOS = [
-    ("chão sujo / molhado", r"\b(suj[oa]s?|sujeira|imund|poeira|ch[aã]o (molhado|escorregadio|sujo)|piso (molhado|sujo|escorreg)|escorreg|lama|barro|molhad[oa])\b", "capacho", "Clientes já reclamam do chão: o capacho na entrada segura a sujeira e a água da rua antes de entrar."),
-    ("difícil de achar / sem identificação", r"\b(dif[ií]cil (de )?(achar|encontrar|localizar)|n[aã]o (achei|encontrei|vi a placa)|sem placa|placa (pequena|apagada|escondida)|escondid[oa]|mal sinalizad)\b", "placa", "Gente passa reto: placa e adesivo de vitrine com a marca resolvem na hora."),
-    ("fachada / aparência", r"\b(fachada|aparência|apar[eê]ncia|feio|feia|velh[oa]|descuidad|mal cuidad|bagun[cç]|desorganizad|cai(ndo|ndo aos peda[cç]os))\b", "adesivos", "A primeira impressão está pesando contra: identidade visual na entrada e na vitrine muda isso."),
-    ("preço sem placa", r"\b(sem pre[cç]o|pre[cç]o (n[aã]o|sem) (est[aá]|tem) (marcado|exposto)|n[aã]o tem pre[cç]o)\b", "placas", "Reclamação de preço escondido: placa de preços padronizada com a marca."),
-    ("atendimento sem identificação", r"\b(n[aã]o sabia quem (era|atendia)|uniforme|funcion[aá]rio[s]? (sem|n[aã]o) identific)\b", "uniformes", "Uniforme com a marca identifica a equipe e passa confiança."),
-    ("cheiro / higiene", r"\b(cheiro (ruim|forte|de mofo)|mofo|higiene|insalubr|barat[ao]s?|rato)\b", "capacho", "Higiene aparece nas avaliações: capacho e organização visual da entrada ajudam na percepção de limpeza."),
+    # (tema, regex, produto(s), argumento de quebra-gelo, precisa de contexto de LUGAR?)
+    ("higiene / chão sujo", r"\b(suj[oa]s?|sujeira|imund|poeira|ch[aã]o (molhado|escorregadio|sujo)|piso (molhado|sujo|escorreg)|escorreg|lama|barro|molhad[oa]|cheiro (ruim|forte|de mofo)|mofo|higiene|insalubr|barat[ao]s?|rato)\b", "capacho", "Higiene aparece nas avaliações: o capacho na entrada segura sujeira e água da rua e muda a percepção de limpeza logo na porta.", True),
+    ("atendimento demorado / não atende", r"\b(demor(a|ou|ado|ada)|lent[oa]|esper(ei|a|ando) (muito|horas|uma eternidade)|ningu[eé]m (atende|atendeu|me atendeu|aparece)|n[aã]o (atende|atendem|atenderam|respondem?|responderam)|mal atendid|atendimento (ruim|p[eé]ssimo|horr[ií]vel|lento|demorado)|telefone (n[aã]o|nunca) (atende|funciona)|whats(app)? (n[aã]o|nunca) responde|fila (enorme|grande|imensa))\b", "telefonia+placas", "Reclamam de atendimento e espera: a atendente virtual atende o telefone e o WhatsApp na hora, e a placa de preços responde o que mais perguntam antes de chamar alguém.", False),
+    ("preço caro / sem preço", r"\b(car[oa]s?|caríssim|pre[cç]o (alto|abusivo|salgado|absurdo)|abusiv|explora[cç][aã]o|n[aã]o (compensa|vale)|sem pre[cç]o|pre[cç]o (n[aã]o|sem) (est[aá]|tem) (marcado|exposto)|n[aã]o tem pre[cç]o|pre[cç]o (escondido|diferente do)|cobraram (mais|a mais))\b", "placas", "Preço é a queixa: placa de preços com a marca e desconto aplicado na hora nos itens em promoção — reprecificar vira coisa de um minuto.", False),
+    ("poucos funcionários / sem uniforme", r"\b(pouc[oa]s? (funcion[aá]ri|atendente|gente)|falta (de )?funcion[aá]ri|s[oó] (um|uma) (atendente|funcion[aá]ri|pessoa)|n[aã]o sabia quem (era|atendia|trabalhava)|uniforme|funcion[aá]rio[s]? (sem|n[aã]o) identific|quem [eé] funcion[aá]rio)\b", "uniformes", "Falam em pouca gente: muitas vezes a equipe é suficiente, mas sem uniforme ninguém sabe quem é funcionário — uniforme com a marca resolve a percepção.", False),
+    ("difícil de achar / sem identificação", r"\b(dif[ií]cil (de )?(achar|encontrar|localizar)|n[aã]o (achei|encontrei|vi a placa)|sem placa|placa (pequena|apagada|escondida)|escondid[oa]|mal sinalizad|passei (reto|direto))\b", "placa+adesivos", "Gente passa reto: placa e adesivo de vitrine com a marca resolvem na hora.", False),
+    ("fachada / identidade visual", r"\b(fachada|apar[eê]ncia|feio|feia|velh[oa]|descuidad|mal cuidad|bagun[cç]|desorganizad|cai(ndo|ndo aos peda[cç]os)|sem identidade|n[aã]o parece (uma )?loja|parece (abandonad|fechad))\b", "identidade", "A primeira impressão pesa contra: identidade visual completa — fachada, vitrine, placa, cartão, uniforme — muda isso.", True),
 ]
 CONTEXTO_LUGAR = r"\b(loja|lugar|local|ambiente|entrada|porta|ch[aã]o|piso|fachada|vitrine|placa|letreiro|banheiro|balc[aã]o|estabelecimento|espa[cç]o|corredor|box|mesa|sal[aã]o|atendimento|funcion[aá]ri)"
 def gatilhos(avals):
@@ -155,11 +156,11 @@ def gatilhos(avals):
     out = []
     for a in avals:
         t = (a.get("texto") or "").lower()
-        for tema, rx, prod, arg in GATILHOS:
+        for tema, rx, prod, arg, precisa_lugar in GATILHOS:
             m = re.search(rx, t, re.I)
             if m:
                 i = max(0, m.start() - 60); trecho = t[i:m.end() + 60].strip()
-                if not re.search(CONTEXTO_LUGAR, t[max(0, m.start() - 80):m.end() + 80], re.I):
+                if precisa_lugar and not re.search(CONTEXTO_LUGAR, t[max(0, m.start() - 80):m.end() + 80], re.I):
                     continue
                 out.append({"tema": tema, "produto": prod, "argumento": arg, "trecho": ("…" if i else "") + trecho + "…", "nota": a.get("nota"), "autor": a.get("autor")})
     # um por tema, priorizando notas baixas
