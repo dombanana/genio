@@ -6,12 +6,12 @@
 <title>GênIO · Notas</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="app.css?v=19daa66ccf">
+<link rel="stylesheet" href="app.css?v=db8a1cf1d4">
 <style>.sel-cli{position:fixed;left:12px;right:12px;top:10vh;max-height:78vh;overflow:auto;background:#fff;border-radius:18px;padding:14px;z-index:75;box-shadow:0 10px 40px rgba(28,22,53,.3)}.sel-cli h3{margin:0 0 8px}.sel-cli input{width:100%;box-sizing:border-box;font:inherit;font-size:16px;border:1.5px solid var(--linha);border-radius:12px;padding:10px 12px}.lista-cli{display:grid;gap:4px;margin-top:8px}.lista-cli button{border:0;background:var(--lav);border-radius:12px;text-align:left;padding:10px 12px;font:inherit;display:grid}.lista-cli button small{color:var(--texto2);font-size:12px}</style>
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=19daa66ccf"></script>
+<script src="app.js?v=db8a1cf1d4"></script>
 <script>
 (async()=>{
   const {$,$$,esc,sessao,nav,topo,listarNotas,gravarNota,apagarNota,nomeLoja}=App;
@@ -47,9 +47,9 @@
   const durF=s=>`${Math.floor(s/60)}:${String(Math.floor(s%60)).padStart(2,"0")}`;
   function painelRec(){const c=$("#recCard");if(!c)return;if(!API){c.innerHTML='<p class="muted" style="margin:0">O gravador funciona dentro do app (abra pela barra).</p>';return;}
     const E=API.estado();
-    if(!E.ativo){c.innerHTML=`<h2 style="margin:0 0 8px">Gravar</h2><div class="rec-tipos">${TIPOS.map(([k,ic,n])=>`<button type="button" data-t="${k}" class="${tipoSel===k?"on":""}" ${(k==="tela"&&!E.suporte.tela)||(k==="transcrever"&&!E.suporte.transcrever)?'disabled title="não disponível neste navegador"':""}><span>${ic}</span>${n}</button>`).join("")}</div>
+    if(!E.ativo){c.innerHTML=`<h2 style="margin:0 0 2px">Modo do REC</h2><small class="muted" style="display:block;margin:0 0 8px">O botão REC da barra grava neste modo com um toque; outro toque para.</small><div class="rec-tipos">${TIPOS.map(([k,ic,n])=>`<button type="button" data-t="${k}" class="${tipoSel===k?"on":""}" ${(k==="tela"&&!E.suporte.tela)||(k==="transcrever"&&!E.suporte.transcrever)?'disabled title="não disponível neste navegador"':""}><span>${ic}</span>${n}</button>`).join("")}</div>
       <div class="rec-opc"><label><input type="checkbox" id="rTela" ${telaAcesa?"checked":""} ${E.suporte.wake?"":"disabled"}> manter a tela acesa enquanto grava${E.suporte.wake?"":" (sem suporte)"}</label>${ultima?`<small class="muted">Nota vai para <b>${esc(ultima.nome)}</b></small>`:'<small class="muted">Sem loja aberta: a nota fica no dia</small>'}</div>
-      <button type="button" class="btn rec-go" id="rGo">● ${({audio:"Gravar áudio",transcrever:"Começar a transcrever","video-tras":"Gravar vídeo","video-frente":"Gravar vídeo (selfie)",foto:"Tirar foto",selfie:"Tirar selfie",tela:"Gravar a tela"})[tipoSel]}</button>
+      <button type="button" class="btn rec-go" id="rGo">● ${({audio:"Gravar áudio agora",transcrever:"Transcrever agora","video-tras":"Gravar vídeo agora","video-frente":"Gravar vídeo (selfie) agora",foto:"Tirar foto agora",selfie:"Tirar selfie agora",tela:"Gravar a tela agora"})[tipoSel]}</button>
       ${tipoSel==="tela"?'<small class="muted">No celular o Chrome não grava a tela; use o gravador do aparelho.</small>':tipoSel==="transcrever"?'<small class="muted">Transcrição pelo reconhecimento de voz do navegador (precisa de internet); salva só o texto.</small>':""}`;
       $$("#recCard [data-t]").forEach(b=>b.onclick=()=>{tipoSel=b.dataset.t;localStorage.setItem("rec-tipo",tipoSel);painelRec();});
       $("#rTela").onchange=ev=>{telaAcesa=ev.target.checked;localStorage.setItem("rec-tela",telaAcesa?"1":"0");};
