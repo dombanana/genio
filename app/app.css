@@ -381,3 +381,12 @@ svg.icone .w{fill:var(--ic-fundo)}
 .nota.solta{box-shadow:inset 4px 0 0 #F2A33A}
 .abas-v{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:0 0 8px}.abas-v button{font:inherit;font-weight:600;min-height:40px;border-radius:10px;border:1.5px solid var(--linha);background:#fff;cursor:pointer}.abas-v button.on{background:var(--marca);border-color:var(--marca);color:#fff}
 .rec-tipos button .ic-modo{display:block;width:26px;height:26px;margin:0 auto 4px;color:var(--marca2)}.rec-tipos button.on .ic-modo{color:inherit}
+
+/* pedidos: busca e filtros no topo */
+.filtros-p{margin:0 0 10px}
+.filtros-p input{width:100%;box-sizing:border-box;font:inherit;font-size:16px;border:1.5px solid var(--linha);border-radius:12px;padding:11px 14px;background:#fff;margin:0 0 8px}
+.filtros-p .fl{display:flex;gap:8px;overflow-x:auto;padding-bottom:2px}
+.filtros-p .fl button{flex:none;font:inherit;font-size:14px;font-weight:600;min-height:40px;padding:0 14px;border-radius:999px;border:1.5px solid var(--linha);background:#fff;color:var(--texto);cursor:pointer;white-space:nowrap}
+.filtros-p .fl button.on{background:var(--marca);border-color:var(--marca);color:#fff}
+.filtros-p .fl button.limpa{border:0;background:transparent;color:var(--marca);text-decoration:underline}
+.cont-f{font-size:13px;margin:0 0 6px}
