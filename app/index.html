@@ -8,19 +8,25 @@
 <link rel="icon" href="../genio-favicon.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
-<link rel="stylesheet" href="app.css?v=fa345e545e">
+<link rel="stylesheet" href="app.css?v=c56f326d06">
 <style>.leaflet-div-icon{background:transparent;border:0}.mapa svg.esq{width:100%;height:100%}</style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=fa345e545e"></script>
+<script src="app.js?v=c56f326d06"></script>
 <script>
 (async()=>{
   const {$,$$,esc,qs,sessao,eu,dados,estrelasHTML,estado,salvar,nav,topo,setorNome,nomeLoja}=App;
   if(!await sessao())return;
   let D;try{D=await dados();}catch(e){$("#app").innerHTML=`${topo()}<section class="card"><h2>Rota ainda não preparada</h2><p>A zona <b>${esc(App.ZONA)}</b> não tem captação pronta. Peça ao administrador para rodar a varredura.</p></section>${nav("rota")}`;return;}
   const e=estado();e.feitas=e.feitas||[];
+  if(!e.migFeitas){e.feitas=e.feitas.filter(s=>e.atend&&e.atend[s]&&e.atend[s].fim);e.migFeitas=1;salvar(e);}
+  // jornada da rota: ▶ começa a contar, ⏸ para e libera o planejamento, ■ encerra com o resumo do dia
+  e.jornadas=e.jornadas||{};const J=n=>e.jornadas[n]||null;
+  const tempoJ=j=>{if(!j)return 0;const fim=j.fim?new Date(j.fim):new Date();let t=fim-new Date(j.ini);for(const p of j.pausas||[])t-=((p.fim?new Date(p.fim):fim)-new Date(p.ini));return Math.max(0,t);};
+  const pausaJ=j=>{if(!j)return 0;const fim=j.fim?new Date(j.fim):new Date();return (j.pausas||[]).reduce((a,p)=>a+((p.fim?new Date(p.fim):fim)-new Date(p.ini)),0);};
+  const hms=ms=>{const m=Math.floor(ms/60000);return `${Math.floor(m/60)}h${String(m%60).padStart(2,"0")}`;};
   // agenda: todas as lojas da zona por estrelas, em dias de 50; cada dia tem uma data (pula domingo)
   const DIAS=App.diasDeRota(D);const hoje=App.hojeISO();
   const pedida=qs.get("dia")?+qs.get("dia"):0;const feitasSet=new Set(e.feitas);
@@ -28,7 +34,7 @@
   // abre a rota de hoje; sem rota hoje (sábado) ou com atraso, a pendente mais antiga; senão a próxima
   const atual=DIAS.find(d=>d.n===pedida)||DIAS.find(d=>d.data===hoje&&pend(d))||DIAS.find(d=>d.data<hoje&&pend(d))||DIAS.find(d=>d.data>hoje&&pend(d))||DIAS.find(d=>pend(d))||DIAS[0];
   const sel=atual.lojas;if(!sel.length){const dc0=App.dataCurta(atual.data);$("#app").innerHTML=`${topo()}<h1>Olá, ${esc(eu().nome.split(" ")[0])}</h1><p class="sub">${esc(D.zona.nome)} · ${dc0.sem} ${dc0.dia}/${dc0.mes}</p>
-    <div class="agenda">${DIAS.map(d=>{const q=d.lojas.filter(l=>feitasSet.has(l.slug)).length;const x=App.dataCurta(d.data);const st=d.vazio?"a captar":q>=d.lojas.length?"feita":d.data<hoje?"pendente":d.data===hoje?"hoje":"";return `<a href="?dia=${d.n}" class="${d===atual?"on":""} ${d.data===hoje?"hoje":""} ${d.data<hoje?"passado":""}"><span class="s">${x.sem}</span><span class="d">${x.dia}</span><span class="s">${x.mes}</span><span class="q">${d.vazio?"sem lojas":`${q?`<b>${q}</b>/`:""}${d.lojas.length} lojas`}</span>${st?`<span class="tag ${st}">${st}</span>`:""}</a>`;}).join("")}</div>
+    <div class="agenda">${DIAS.map(d=>{const q=d.lojas.filter(l=>feitasSet.has(l.slug)).length;const x=App.dataCurta(d.data);const st=d.vazio?"a captar":q>=d.lojas.length?"feita":d.data<hoje?"pendente":d.data===hoje?"hoje":"";const j=J(d.n);return `<a href="?dia=${d.n}" class="${d===atual?"on":""} ${d.data===hoje?"hoje":""} ${d.data<hoje?"passado":""} ${j&&j.status==="andando"?"andando":""}">${d===atual&&!d.vazio?`<span class="play ${j&&j.status==="andando"?"pausa":""} ${j&&j.status==="encerrada"?"fim":""}" data-play title="${j&&j.status==="andando"?"Pausar a rota":"Começar a rota"}">${j&&j.status==="andando"?"❚❚":j&&j.status==="encerrada"?"✓":"▶"}</span>`:""}<span class="s">${x.sem}</span><span class="d">${x.dia}</span><span class="s">${x.mes}</span><span class="q">${d.vazio?"sem lojas":`${q?`<b>${q}</b>/`:""}${d.lojas.length} lojas`}</span>${st?`<span class="tag ${st}">${st}</span>`:""}</a>`;}).join("")}</div>
     <section class="card"><h2>Sem rota neste dia</h2><p>As lojas desta zona (3 a 5 estrelas) preenchem ${DIAS.filter(d=>!d.vazio).length} dias de rota. Para preencher os próximos dias, a captação precisa varrer novas zonas — hoje está pausada por decisão do dono.</p></section>${nav("rota")}`;return;}
   // percurso do dia: encadeado ponto a ponto a partir da base (vizinho mais próximo)
   const dist=(a,b)=>Math.hypot((a.lat-b.lat)*111,(a.lng-b.lng)*111*Math.cos(a.lat*Math.PI/180));
@@ -37,18 +43,44 @@
   const filtro=qs.get("min")?+qs.get("min"):0;const vis=rota.filter(l=>l.estrelas>=filtro);
   const LOGO={},MINI={};for(const l of vis){const c=await App.cliente(l);LOGO[l.slug]=App.estadoLogo(c);MINI[l.slug]=(c.manual&&c.manual.tratado)||(c.logos&&c.logos[0]&&c.logos[0].src)||null;}const feitasDia=rota.filter(l=>feitasSet.has(l.slug)).length;const dc=App.dataCurta(atual.data);
   const feitas=new Set(e.feitas);const prox=rota.find(l=>!feitas.has(l.slug))||null;
+  const emRota=(J(atual.n)||{}).status==="andando";
+  // ordem da rota guardada para o "Próxima loja →" dos percursos de visita e de preparo
+  {const slugs=rota.map(l=>l.slug);if(!e.ordem||e.ordem.n!==atual.n||e.ordem.slugs.join()!==slugs.join()){e.ordem={n:atual.n,slugs};salvar(e);}}
   const cont=[5,4,3].map(n=>[n,rota.filter(l=>l.estrelas===n).length]).filter(x=>x[1]);
   $("#app").innerHTML=`${topo()}
   <h1>Olá, ${esc(eu().nome.split(" ")[0])}</h1><p class="sub">${esc(Z.nome)} · rota ${atual.n} · ${dc.sem} ${dc.dia}/${dc.mes} · ${rota.length} lojas · ${feitasDia} visitadas</p>
-  <div class="agenda">${DIAS.map(d=>{const q=d.lojas.filter(l=>feitasSet.has(l.slug)).length;const x=App.dataCurta(d.data);const st=d.vazio?"a captar":q>=d.lojas.length?"feita":d.data<hoje?"pendente":d.data===hoje?"hoje":"";return `<a href="?dia=${d.n}" class="${d===atual?"on":""} ${d.data===hoje?"hoje":""} ${d.data<hoje?"passado":""}"><span class="s">${x.sem}</span><span class="d">${x.dia}</span><span class="s">${x.mes}</span><span class="q">${d.vazio?"sem lojas":`${q?`<b>${q}</b>/`:""}${d.lojas.length} lojas`}</span>${st?`<span class="tag ${st}">${st}</span>`:""}</a>`;}).join("")}</div>
+  <div class="agenda">${DIAS.map(d=>{const q=d.lojas.filter(l=>feitasSet.has(l.slug)).length;const x=App.dataCurta(d.data);const st=d.vazio?"a captar":q>=d.lojas.length?"feita":d.data<hoje?"pendente":d.data===hoje?"hoje":"";const j=J(d.n);return `<a href="?dia=${d.n}" class="${d===atual?"on":""} ${d.data===hoje?"hoje":""} ${d.data<hoje?"passado":""} ${j&&j.status==="andando"?"andando":""}">${d===atual&&!d.vazio?`<span class="play ${j&&j.status==="andando"?"pausa":""} ${j&&j.status==="encerrada"?"fim":""}" data-play title="${j&&j.status==="andando"?"Pausar a rota":"Começar a rota"}">${j&&j.status==="andando"?"❚❚":j&&j.status==="encerrada"?"✓":"▶"}</span>`:""}<span class="s">${x.sem}</span><span class="d">${x.dia}</span><span class="s">${x.mes}</span><span class="q">${d.vazio?"sem lojas":`${q?`<b>${q}</b>/`:""}${d.lojas.length} lojas`}</span>${st?`<span class="tag ${st}">${st}</span>`:""}</a>`;}).join("")}</div>
+  ${(()=>{const j=J(atual.n);if(!j)return `<div class="jornada plan"><b>Planejamento</b><span>Toque ▶ no dia para começar a rota. Até lá, nada conta como visita.</span></div>`;
+    if(j.status==="encerrada")return `<div class="jornada fim"><b>Rota encerrada</b><span>${hms(tempoJ(j))} em rota · ${hms(pausaJ(j))} de intervalo · ${feitasDia}/${rota.length} lojas</span><button type="button" id="jResumo">Resumo</button></div>`;
+    return `<div class="jornada ${j.status}"><b>${j.status==="andando"?"Em rota":"Pausada · ajustes"}</b><span><b id="jT">${hms(tempoJ(j))}</b> · ${feitasDia}/${rota.length} lojas${pausaJ(j)?` · ${hms(pausaJ(j))} de intervalo`:""}</span><button type="button" data-play>${j.status==="andando"?"❚❚ Pausar":"▶ Retomar"}</button><button type="button" id="jFim">■ Encerrar</button></div>`;})()}
   ${atual.data!==hoje&&feitasDia<rota.length?`<div class="linha-rota"><span class="muted">Rota ${atual.n} agendada para ${dc.sem} ${dc.dia}/${dc.mes}${atual.data<hoje?" · ainda não feita":""}</span><button type="button" class="btn sec sm" id="reHoje" style="width:auto;min-height:36px;padding:0 12px;font-size:13px">Fazer hoje</button><label class="btn sec sm" style="width:auto;min-height:36px;padding:0 12px;font-size:13px;display:inline-grid;place-items:center;position:relative">Outra data<input type="date" id="reData" value="${atual.data}" style="position:absolute;inset:0;opacity:0;width:100%"></label></div>`:""}
   <section class="card" style="padding:12px 16px"><div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">${cont.map(([n,q])=>`<a href="?dia=${atual.n}&min=${n}" class="chip ${filtro===n?"ok":""}" style="text-decoration:none">${"★".repeat(n)} <b>${q}</b></a>`).join("")}${filtro?`<a href="?dia=${atual.n}" class="chip">todas</a>`:""}</div><small class="muted">Só lojas de 3 a 5 estrelas; 5 e 4 primeiro. <span class="leg-auto">Azul</span> = logotipo automático aguardando aprovação · <span class="leg-falta">âmbar</span> = logotipo ainda não organizado.</small></section>
   <div class="mapa" id="mapa"></div>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 6px"><button class="btn sec" id="recortarTodas" type="button" style="min-height:48px;font-size:14px">✂ Recortar logotipos em lote</button><button class="btn sec" id="gerarTodas" type="button" style="min-height:48px;font-size:14px">✦ Gerar produtos de todas</button></div><div class="muted" id="gerarSt" style="font-size:13px;margin:0 0 10px"></div>
-  <div class="lista">${vis.map((l,i)=>`<div class="desliza" data-slug="${esc(l.slug)}"><span class="acao reag">📅 Reagendar</span><span class="acao arq">Arquivar 🗂</span><a class="card loja-l ${e.feitas.includes(l.slug)?"feita":""} logo-${LOGO[l.slug]}" href="visita.html?l=${encodeURIComponent(l.slug)}" style="display:grid;color:inherit;text-decoration:none"><span class="n">${e.feitas.includes(l.slug)?"✓":l.parada}</span><span class="mini ${LOGO[l.slug]}" data-mini="${esc(l.slug)}">${MINI[l.slug]?`<img src="${esc(MINI[l.slug])}" alt="" loading="lazy">`:"<i>sem<br>logo</i>"}</span><div><b>${esc(nomeLoja(l.nome))}</b><small>${esc(setorNome(l.setor))} · ${esc((l.endereco||"").split(" · ")[0])}</small></div><div style="text-align:right">${estrelasHTML(l.estrelas)}<br><small class="${LOGO[l.slug]==="pronto"?"ok-logo":"falta-logo"}">${LOGO[l.slug]==="pronto"?"✓ logotipo pronto":LOGO[l.slug]==="falta"?"◷ falta tratar":"✦ falta logotipo"}</small>${l.reagendada?`<br><small class="reag-tag">📅 reagendada</small>`:""}</div></a></div>`).join("")}</div>
-  <p class="muted" style="font-size:13px;text-align:center;margin:6px 0 10px">Arraste a loja para a direita para reagendar · para a esquerda para arquivar</p>
+  <div style="display:${emRota?"none":"grid"};grid-template-columns:1fr 1fr;gap:8px;margin:0 0 6px"><button class="btn sec" id="recortarTodas" type="button" style="min-height:48px;font-size:14px">✂ Recortar logotipos em lote</button><button class="btn sec" id="gerarTodas" type="button" style="min-height:48px;font-size:14px">✦ Gerar produtos de todas</button></div><div class="muted" id="gerarSt" style="font-size:13px;margin:0 0 10px"></div>
+  <div class="lista">${vis.map((l,i)=>`<div class="desliza" data-slug="${esc(l.slug)}"><span class="acao reag">📅 Reagendar</span><span class="acao arq">Arquivar 🗂</span><a class="card loja-l ${e.feitas.includes(l.slug)?"feita":""} logo-${LOGO[l.slug]}" href="visita.html?l=${encodeURIComponent(l.slug)}&modo=${emRota?"visita":"preparo"}" style="display:grid;color:inherit;text-decoration:none"><span class="n">${e.feitas.includes(l.slug)?"✓":l.parada}</span><span class="mini ${LOGO[l.slug]}" data-mini="${esc(l.slug)}">${MINI[l.slug]?`<img src="${esc(MINI[l.slug])}" alt="" loading="lazy">`:"<i>sem<br>logo</i>"}</span><div><b>${esc(nomeLoja(l.nome))}</b><small>${esc(setorNome(l.setor))} · ${esc((l.endereco||"").split(" · ")[0])}</small></div><div style="text-align:right">${estrelasHTML(l.estrelas)}<br><small class="${LOGO[l.slug]==="pronto"?"ok-logo":"falta-logo"}">${LOGO[l.slug]==="pronto"?"✓ logotipo pronto":LOGO[l.slug]==="falta"?"◷ falta tratar":"✦ falta logotipo"}</small>${l.reagendada?`<br><small class="reag-tag">📅 reagendada</small>`:""}${(e.preparadas||{})[l.slug]&&!e.feitas.includes(l.slug)?`<br><small class="ok-logo">✓ preparada</small>`:""}</div></a></div>`).join("")}</div>
+  <p class="muted" style="font-size:13px;text-align:center;margin:6px 0 10px">${emRota?"Em rota: a ordem fica travada. Pause (❚❚) para reagendar, arquivar ou mudar a ordem.":"Arraste a loja para a direita para reagendar · para a esquerda para arquivar"}</p>
   ${(e.arquivadas||[]).length?`<details class="card" style="padding:12px 16px"><summary><b>Arquivadas (${e.arquivadas.length})</b></summary>${e.arquivadas.map(s=>{const lj=D.lojas.find(x=>x.slug===s);return `<div class="arq-l"><span>${esc(lj?nomeLoja(lj.nome):s)}</span><button type="button" class="btn sec sm" data-volta="${esc(s)}" style="width:auto;min-height:36px;padding:0 12px;font-size:13px">Voltar para a rota</button></div>`;}).join("")}</details>`:""}
   ${nav("rota")}`;
+  const agoraISO=()=>new Date().toISOString();
+  function tocar(){const j=J(atual.n);const t=agoraISO();
+    if(!j||j.status==="encerrada"){if(j&&j.status==="encerrada"&&!confirm("Esta rota já foi encerrada. Começar de novo?"))return;
+      for(const [n,o] of Object.entries(e.jornadas))if(o.status==="andando"&&+n!==atual.n){o.status="pausada";(o.pausas=o.pausas||[]).push({ini:t});}   // só uma rota anda por vez
+      if(atual.data!==hoje)App.reagendar(atual.n,hoje);   // play numa rota de outro dia: ela vem para hoje
+      const e2=estado();e2.jornadas=e2.jornadas||{};Object.assign(e2.jornadas,e.jornadas);e2.jornadas[atual.n]={ini:t,pausas:[],status:"andando",data:hoje};Promise.resolve(salvar(e2)).finally(()=>location.reload());return;}
+    if(j.status==="andando"){j.status="pausada";(j.pausas=j.pausas||[]).push({ini:t});}
+    else{j.status="andando";const p=(j.pausas||[]).slice(-1)[0];if(p&&!p.fim)p.fim=t;}
+    Promise.resolve(salvar(e)).finally(()=>location.reload());}
+  $$("[data-play]").forEach(b=>b.addEventListener("click",ev=>{ev.preventDefault();ev.stopPropagation();tocar();},true));
+  function resumo(){const j=J(atual.n);const pend=rota.filter(l=>!feitasSet.has(l.slug));const at=e.atend||{};const res=k=>rota.filter(l=>at[l.slug]&&at[l.slug].res===k).length;
+    const dUtil=(()=>{const d=new Date(hoje+"T12:00:00");do{d.setDate(d.getDate()+1);}while(d.getDay()===0||d.getDay()===6);return d.toISOString().slice(0,10);})();
+    const f=document.createElement("div");f.className="fundo";const m=document.createElement("div");m.className="menu-lado resumo";
+    m.innerHTML=`<b>Resumo da rota ${atual.n}</b><div class="res-g"><span>Tempo em rota<b>${hms(tempoJ(j))}</b></span><span>Intervalo<b>${hms(pausaJ(j))}</b></span><span>Lojas atendidas<b>${rota.length-pend.length}/${rota.length}</b></span><span>Vendeu<b>${res("vendeu")}</b></span><span>Voltar outro dia<b>${res("voltar")}</b></span><span>Sem interesse<b>${res("sem")}</b></span></div>
+      ${pend.length?`<button type="button" data-k="reag">📅 Reagendar ${pend.length} pendente(s) para ${App.dataCurta(dUtil).sem} ${App.dataCurta(dUtil).dia}/${App.dataCurta(dUtil).mes}</button>`:""}<button type="button" class="cancela" data-k="">Fechar</button>`;
+    document.body.append(f,m);const sai=()=>{f.remove();m.remove();};f.onclick=sai;m.querySelector(".cancela").onclick=sai;
+    const rb=m.querySelector("[data-k=reag]");if(rb)rb.onclick=async()=>{const e3=estado();e3.reag=e3.reag||{};pend.forEach(l=>{e3.reag[l.slug]=dUtil;});await salvar(e3);sai();location.reload();};}
+  const jf=$("#jFim");if(jf)jf.onclick=()=>{if(!confirm("Encerrar a rota de hoje?"))return;const j=J(atual.n);const t=agoraISO();const p=(j.pausas||[]).slice(-1)[0];if(p&&!p.fim)p.fim=t;j.fim=t;j.status="encerrada";salvar(e);resumo();};
+  const jr=$("#jResumo");if(jr)jr.onclick=resumo;
+  {const jt=$("#jT");const j=J(atual.n);if(jt&&j&&j.status==="andando")setInterval(()=>{jt.textContent=hms(tempoJ(j));},20000);}
   const rh=$("#reHoje");if(rh)rh.onclick=()=>{App.reagendar(atual.n,hoje);location.href=`?dia=${atual.n}`;};const rd=$("#reData");if(rd)rd.onchange=()=>{if(rd.value){App.reagendar(atual.n,rd.value);location.href=`?dia=${atual.n}`;}};
   // ---- arrastar a loja para o lado: direita reagenda, esquerda arquiva (grava no servidor)
   (()=>{const proxUtil=(n)=>{const d=new Date(hoje+"T12:00:00");let c=0;while(c<n){d.setDate(d.getDate()+1);if(d.getDay()!==0&&d.getDay()!==6)c++;}return d.toISOString().slice(0,10);};
@@ -59,6 +91,7 @@
       if(k==="data"){iso=await new Promise(res=>{const f=document.createElement("div");f.className="fundo";const m=document.createElement("div");m.className="menu-lado";m.innerHTML=`<b>Nova data · ${esc(nomeLoja(l.nome))}</b><input type="date" min="${hoje}" value="${am}" style="width:100%;font:inherit;font-size:17px;min-height:48px;padding:0 12px;border:1.5px solid var(--linha);border-radius:12px;margin:8px 0"><button type="button" data-k="ok">Confirmar</button><button type="button" class="cancela" data-k="">Cancelar</button>`;document.body.append(f,m);const sai=v=>{f.remove();m.remove();res(v);};f.onclick=()=>sai(null);m.querySelector("[data-k=ok]").onclick=()=>sai(m.querySelector("input").value||null);m.querySelector(".cancela").onclick=()=>sai(null);});if(!iso){el.style.transform="";return;}}
       const antes=(estado().reag||{})[l.slug]||null;App.reagendarLoja(l.slug,iso);el.closest(".desliza").classList.add("some");aviso(`${nomeLoja(l.nome)} → ${fmt(iso)}`,()=>App.reagendarLoja(l.slug,antes));}
     function arquivar(l,el){App.arquivarLoja(l.slug,true);el.closest(".desliza").classList.add("some");aviso(`${nomeLoja(l.nome)} arquivada`,()=>App.arquivarLoja(l.slug,false));}
+    if(emRota)return;
     $$(".desliza").forEach(cx=>{const el=cx.querySelector(".loja-l");const l=vis.find(x=>x.slug===cx.dataset.slug);let x0=0,y0=0,dx=0,modo=null,id=null;
       el.addEventListener("pointerdown",ev=>{if(ev.target.closest("[data-mini]"))return;x0=ev.clientX;y0=ev.clientY;dx=0;modo=null;id=ev.pointerId;});
       el.addEventListener("pointermove",ev=>{if(ev.pointerId!==id)return;const mx=ev.clientX-x0,my=ev.clientY-y0;if(!modo){if(Math.abs(mx)>12&&Math.abs(mx)>Math.abs(my)*1.4){modo="lado";try{el.setPointerCapture(id);}catch(e){}el.style.transition="none";}else if(Math.abs(my)>12){id=null;return;}else return;}

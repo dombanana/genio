@@ -429,3 +429,26 @@ svg.icone .w{fill:none}
 .cores-peca button.on{box-shadow:0 0 0 2.5px var(--marca)}
 .cores-peca button.marca{outline:2px dashed var(--marca2);outline-offset:1px}
 .prod.trocando .cena{opacity:.45;transition:opacity .2s}
+
+/* jornada da rota: ▶ no dia, barra de estado e resumo */
+.agenda a{position:relative}
+.agenda a .play{position:absolute;top:-2px;right:-2px;width:30px;height:30px;border-radius:50%;background:var(--marca);color:#fff;display:grid;place-items:center;font-size:12px;font-weight:800;box-shadow:0 2px 6px rgba(28,22,53,.25);z-index:2}
+.agenda a .play.pausa{background:#0E8A84;font-size:10px}.agenda a .play.fim{background:#0E8A84}
+.agenda a.andando{border-color:#0E8A84}
+.agenda{padding-top:8px}
+.jornada{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;background:#fff;border-radius:14px;padding:10px 14px;margin:0 0 10px;border-left:5px solid var(--linha)}
+.jornada>b{font-size:15px}.jornada>span{flex:1 1 180px;font-size:13px;color:var(--texto2)}.jornada>span b{color:var(--texto);font-size:15px}
+.jornada button{font:inherit;font-size:13px;font-weight:700;min-height:36px;padding:0 12px;border-radius:10px;border:1.5px solid var(--linha);background:#fff;color:var(--marca);cursor:pointer}
+.jornada.andando{border-left-color:#0E8A84}.jornada.pausada{border-left-color:#E6A700}.jornada.fim{border-left-color:var(--marca)}
+.res-g{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}.res-g span{background:var(--lav);border-radius:10px;padding:8px 10px;font-size:12px;color:var(--texto2)}.res-g b{display:block;font-size:18px;color:var(--texto)}
+/* percursos passo a passo (visita e preparo) */
+.passos{background:#fff;border-radius:16px;padding:12px 14px;margin:0 0 12px;border:2px solid var(--marca)}
+.passos .t{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--texto2);margin-bottom:8px}.passos .t b{color:var(--marca);font-size:14px}
+.passos ol{display:flex;gap:4px;list-style:none;margin:0 0 10px;padding:0}
+.passos li{flex:1;text-align:center;font-size:11px;color:var(--texto2);border-top:4px solid var(--linha);padding-top:5px;line-height:1.15}
+.passos li.ok{border-top-color:#0E8A84;color:#0E8A84}.passos li.agora{border-top-color:var(--marca);color:var(--marca);font-weight:700}
+.passos .acao-p{display:flex;gap:8px}.passos .acao-p .btn{flex:1}
+.resultado .ops{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.resultado .ops button{font:inherit;font-size:14px;font-weight:700;min-height:52px;border-radius:12px;border:1.5px solid var(--linha);background:#fff;cursor:pointer;color:var(--texto)}
+.resultado .ops button.on{border-color:var(--marca);background:var(--lav2);color:var(--marca)}
+.resultado .mot{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}.resultado .mot button{font:inherit;font-size:13px;padding:7px 12px;border-radius:999px;border:1px solid var(--linha);background:#fff;cursor:pointer}.resultado .mot button.on{background:var(--marca);color:#fff;border-color:var(--marca)}

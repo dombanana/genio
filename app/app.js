@@ -47,7 +47,7 @@ const App=(()=>{
   // ---- estado compartilhado no servidor (/api/estado/<chave>): lido uma vez por página, gravado a cada mudança
   const API=async(metodo,url,corpo)=>{const r=await fetch(url,{method:metodo,credentials:"same-origin",cache:"no-store",headers:corpo!==undefined?{"Content-Type":"application/json"}:{},body:corpo!==undefined?JSON.stringify(corpo):undefined});if(r.status===401){location.href="/?entrar=1&volta="+encodeURIComponent("app/"+location.pathname.split("/").pop()+location.search);throw new Error("sem sessão");}return r;};
   const lerChave=async k=>{try{const r=await API("GET",`/api/estado/${k}`);if(!r.ok)return null;return (await r.json()).valor;}catch(e){return null;}};
-  const _fila={};async function gravarChave(k,v){_fila[k]=v;if(_fila["_"+k])return;_fila["_"+k]=true;try{while(_fila[k]!==undefined){const val=_fila[k];delete _fila[k];const r=await API("PUT",`/api/estado/${k}`,{valor:val});if(!r.ok){console.warn("não gravou",k,r.status);avisarFalha("Não consegui gravar no servidor ("+r.status+"). Confira a conexão.");}}}catch(e){avisarFalha("Sem conexão com o servidor. A última alteração não foi gravada.");}finally{delete _fila["_"+k];}}
+  const _fila={};async function gravarChave(k,v){_fila[k]=v;if(_fila["_"+k])return new Promise(res=>{const t=setInterval(()=>{if(!_fila["_"+k]){clearInterval(t);res();}},80);});_fila["_"+k]=true;try{while(_fila[k]!==undefined){const val=_fila[k];delete _fila[k];const r=await API("PUT",`/api/estado/${k}`,{valor:val});if(!r.ok){console.warn("não gravou",k,r.status);avisarFalha("Não consegui gravar no servidor ("+r.status+"). Confira a conexão.");}}}catch(e){avisarFalha("Sem conexão com o servidor. A última alteração não foi gravada.");}finally{delete _fila["_"+k];}}
   let _aviso=0;function avisarFalha(t){if(Date.now()-_aviso<8000)return;_aviso=Date.now();try{const d=document.createElement("div");d.className="aviso-rede";d.textContent=t;document.body.appendChild(d);setTimeout(()=>d.remove(),6000);}catch(e){}}
   let EST={},AVU=[],OCO=[],METAS={};
   async function carregarEstado(){let [e,a,o,mt]=await Promise.all([lerChave("dia"),lerChave("avulsos"),lerChave("ocorrencias"),lerChave("metas")]);METAS=mt||{};if(!e||!Object.keys(e).length){const ant=await lerChave("dia-zona-cerealista");if(ant&&Object.keys(ant).length){e={feitas:ant.feitas||[],pedidos:ant.pedidos||{}};gravarChave("dia",e);}}EST=e||{};AVU=Array.isArray(a)?a:[];OCO=Array.isArray(o)?o:[];}
@@ -66,7 +66,7 @@ const App=(()=>{
     return Math.min(5,n);}
   const estrelasHTML=n=>`<span class="estrelas" title="${n} de 5">${"★".repeat(n)}<span class="off">${"★".repeat(5-n)}</span></span>`;
   // ---- estado do dia (feitas, seleções, pedidos): no servidor, compartilhado por todos os aparelhos da conta
-  const estado=()=>EST;const salvar=e=>{EST=e;gravarChave("dia",e);};
+  const estado=()=>EST;const salvar=e=>{EST=e;return gravarChave("dia",e);};
   // ---- fichas dos clientes (logotipo, manual, artes): no servidor (/api/clientes/<slug>); aqui só um espelho em memória da página
   const FICHAS={};
   async function carregarFichas(slugs){try{const r=await API("GET",`/api/clientes?slugs=${encodeURIComponent(slugs.join(","))}`);if(!r.ok)return;(await r.json()).clientes.forEach(f=>{FICHAS[f.slug]=f;});}catch(e){}}
@@ -193,7 +193,7 @@ const App=(()=>{
   // ---- arte automática: logotipo tratado centralizado preenchendo a área segura do gabarito, cor padrão do material
   const COR_PADRAO={capacho:"#2B2B2D",rigido:"#F4F1EA",vinil:null,tecido:"#F4F1EA",papel:"#FFFFFF",lona:"#FFFFFF",carimbo:null};
   const PRODUTOS_IDS=["capacho","placas","adesivos","uniformes","impressos","panfleto","banners","parede","brindes","carimbo","windbanner","faixa","folheto","camiseta","bone","avental"];
-  let _G=null;const gabaritos=async()=>_G||(_G=await (await fetch("gabaritos.json?v=fa345e545e")).json());
+  let _G=null;const gabaritos=async()=>_G||(_G=await (await fetch("gabaritos.json?v=c56f326d06")).json());
   const carregarImg=src=>new Promise(res=>{const i=new Image();i.crossOrigin="anonymous";i.onload=()=>res(i);i.onerror=()=>res(null);i.src=src;});
   // ---- carimbo: só texto — nome, razão social, CNPJ (negrito), endereço, telefone; nunca logotipo
   async function dadosCarimbo(l){const cad=await ficha(l.slug).catch(()=>null);const L=(cad&&cad.lacunas)||{};const leit=(L.leitura||{}).valor||"";const razao=((leit.match(/Razão social: ([^·]+)/)||[])[1]||"").trim();const cnpj=((leit.match(/CNPJ:? ?([\d./-]{14,18})/)||[])[1]||"");
@@ -237,7 +237,7 @@ const App=(()=>{
     const aw=W-2*(B+S),ah=H-2*(B+S);const f=Math.min(aw/LW,(P.ancora==="topo"?ah*0.45:ah)/LH);const w=LW*f,h=LH*f;const x=(W-w)/2,y=P.ancora==="topo"?B+S+ah*0.05:(H-h)/2;
     const fundo=P.sem_fundo?null:(COR_PADRAO[P.superficie]===undefined?"#FFFFFF":COR_PADRAO[P.superficie]);
     // kit de 14 setores (10/11): a maquete frontal do ramo da loja é a arte de partida de todos os produtos
-    await carregarScript("qr.js?v=fa345e545e");await carregarScript("impressos.js?v=fa345e545e");await carregarScript("kits14.js?v=fa345e545e");
+    await carregarScript("qr.js?v=c56f326d06");await carregarScript("impressos.js?v=c56f326d06");await carregarScript("kits14.js?v=c56f326d06");
     if(window.Kits14&&window.Kits14.ARQ[pid]){const K=await window.Kits14.montar(App,pid,c,l,{W,H,B,S,im,rec});
       if(K){const doc={fundo:K.fundo,fundoImg:null,el:K.el,campos:null,auto:true,kit:KIT14,setorKit:K.setorKit,kitRef:K.kitRef,W,H};const imgs={[c.manual.tratado]:im};
         const k=Math.min(1,1400/Math.max(W,H));const cv=document.createElement("canvas");cv.width=Math.round(W*k);cv.height=Math.round(H*k);const g=cv.getContext("2d");g.scale(k,k);

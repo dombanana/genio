@@ -6,7 +6,7 @@
 <title>GênIO · Visita</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="app.css?v=fa345e545e">
+<link rel="stylesheet" href="app.css?v=c56f326d06">
 <style>
 .cab{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
 .fach{width:100%;aspect-ratio:16/9;border-radius:16px;overflow:hidden;background:var(--lav2);display:grid;place-items:center;position:relative}
@@ -21,7 +21,7 @@
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=fa345e545e"></script>
+<script src="app.js?v=c56f326d06"></script>
 <script>
 (async()=>{
   const {$,$$,esc,qs,sessao,dados,ficha,estrelasHTML,estado,salvar,nav,topo,voltar,setorNome,nomeLoja,telFmt,cliente,gravarCliente,classificar,definirCliente,menuLongo,ligarLongo,ZONA,entradas,ligarEntradas,abrirLogotipo,logoPrincipal,removerLogo}=App;
@@ -83,17 +83,49 @@
     if(b.dataset.pq)gravarPesquisa({[b.dataset.pq]:p[b.dataset.pq]===b.dataset.v?"":b.dataset.v});
     else if("ja" in b.dataset){const o=b.dataset.ja;let ja=(p.ja||[]).slice();if(!o)ja=[];else ja=ja.includes(o)?ja.filter(x=>x!==o):ja.concat(o);gravarPesquisa({ja,jaVisto:true});}});
   document.addEventListener("change",ev=>{if(ev.target.id!=="pqSetor")return;l.setorSugerido=l.setorSugerido||l.setor;l.setor=ev.target.value;gravarPesquisa({setor:l.setor,setorSugerido:l.setorSugerido});});
+  // ---- percurso passo a passo: em rota (▶) é a visita; fora dela é o preparo da loja (decisão do dono, 10/11)
+  const emRotaAgora=()=>Object.values(estado().jornadas||{}).some(j=>j&&j.status==="andando");
+  const modo=qs.get("modo")||(emRotaAgora()?"visita":"preparo");
+  const hojeI=()=>App.hojeISO();
+  function proxima(cond){const e=estado();const o=(e.ordem&&e.ordem.slugs)||[];const i=o.indexOf(slug);const seq=[...o.slice(i+1),...o.slice(0,Math.max(0,i))];return seq.find(s=>cond(s,e))||null;}
+  const proxVisita=()=>proxima((s,e)=>!(e.feitas||[]).includes(s)&&!(e.arquivadas||[]).includes(s));
+  const proxPreparo=()=>proxima((s,e)=>!(e.preparadas||{})[s]&&!(e.arquivadas||[]).includes(s));
+  function passosHTML(){const e=estado();const A=(e.atend||{})[slug]||{};const p=c.pesquisa||{};const pq=PQ.filter(([k])=>p[k]).length;
+    let S,acao;
+    if(modo==="visita"){S=[["Cheguei",!!A.ini],["A loja",pq>=3||!!A.lojaOk],["Apresentação",!!A.apres],["Resultado",!!A.res],["Encerrar",!!A.fim]];
+      const i=S.findIndex(x=>!x[1]);const nx=proxVisita();
+      acao=[`<button type="button" class="btn" data-passo="ini">Cheguei · iniciar atendimento</button>`,
+        `<button type="button" class="btn sec" data-passo="verloja">Conferir a loja ↓</button><button type="button" class="btn" data-passo="lojaok">Loja conferida ✓</button>`,
+        `<a class="btn" data-passo="apres" href="produtos.html?l=${encodeURIComponent(slug)}">Apresentar produtos →</a>`,
+        `<button type="button" class="btn" data-passo="verres">Registrar o resultado ↓</button>`,
+        `<button type="button" class="btn" data-passo="fim">Encerrar atendimento</button>`][i]||(nx?`<a class="btn" href="visita.html?l=${encodeURIComponent(nx)}&modo=visita">Próxima loja →</a>`:`<a class="btn" href="index.html">Voltar à rota</a>`);
+      return `<div class="passos"><div class="t"><span>Percurso de visita · ${i<0?"concluído":"passo "+(i+1)+" de 5"}</span><b>${i<0?"✓ Atendimento encerrado":S[i][0]}</b></div><ol>${S.map((x,k)=>`<li class="${x[1]?"ok":k===i?"agora":""}">${x[1]?"✓ ":""}${x[0]}</li>`).join("")}</ol><div class="acao-p">${acao}</div></div>`;}
+    const sel=(e.sel||{})[slug]||{};const temSel=Object.values(sel).some(v=>v&&v.q>0);const pronto=!!(c.manual&&c.manual.editado);
+    S=[["Logotipo",pronto],["Dados",!!(p.setor||p.jaVisto)],["Artes",Object.keys(c.artes||{}).length>=3],["Proposta",temSel],["Pronta",!!(e.preparadas||{})[slug]]];
+    const i=S.findIndex(x=>!x[1]);const nx=proxPreparo();
+    acao=[`<button type="button" class="btn" data-passo="verlogo">Tratar o logotipo ↓</button>`,
+      `<button type="button" class="btn" data-passo="verloja">Conferir dados e segmento ↓</button>`,
+      `<a class="btn" href="produtos.html?l=${encodeURIComponent(slug)}">Gerar e revisar as artes →</a>`,
+      `<a class="btn" href="produtos.html?l=${encodeURIComponent(slug)}">Montar a proposta →</a>`,
+      `<button type="button" class="btn" data-passo="pronta">Marcar loja preparada ✓</button>`][i]||(nx?`<a class="btn" href="visita.html?l=${encodeURIComponent(nx)}&modo=preparo">Próxima loja →</a>`:`<a class="btn" href="index.html">Voltar à rota</a>`);
+    return `<div class="passos"><div class="t"><span>Preparo da loja · nada aqui conta como visita</span><b>${i<0?"✓ Loja preparada":"Passo "+(i+1)+" de 5 · "+S[i][0]}</b></div><ol>${S.map((x,k)=>`<li class="${x[1]?"ok":k===i?"agora":""}">${x[1]?"✓ ":""}${x[0]}</li>`).join("")}</ol><div class="acao-p">${acao}</div></div>`;}
+  const MOTIVOS=["Preço","Já tem fornecedor","Dono ausente","Sem verba agora","Não precisa","Outro"];
+  function resultadoHTML(){const A=(estado().atend||{})[slug]||{};
+    return `<section class="card resultado" id="resultado"><h2>Resultado da visita</h2><div class="ops"><button type="button" data-res="vendeu" class="${A.res==="vendeu"?"on":""}">✓ Vendeu</button><button type="button" data-res="voltar" class="${A.res==="voltar"?"on":""}">📅 Voltar outro dia</button><button type="button" data-res="sem" class="${A.res==="sem"?"on":""}">✕ Sem interesse</button></div>
+      ${A.res==="sem"?`<div class="mot">${MOTIVOS.map(m=>`<button type="button" data-mot="${esc(m)}" class="${A.motivo===m?"on":""}">${esc(m)}</button>`).join("")}</div>`:""}${A.res==="voltar"&&A.volta?`<p class="muted" style="margin:10px 0 0">Volta marcada para ${esc(A.volta.split("-").reverse().join("/"))}.</p>`:""}</section>`;}
   function render(){
     const cands=candidatos();const logos=c.logos||[];const principal=logos[0]||null;const logo=(c.manual&&c.manual.tratado)||(principal&&principal.src)||null;const fach=(c.fachada&&c.fachada.src)||null;
     const pronto=!!(c.manual&&c.manual.editado);const e=estado();
     $("#app").innerHTML=`${topo()}${voltar("index.html","Rota")}
     <div class="cab"><div><h1 style="margin-bottom:2px">${esc(nome)}${l.avulso?` <button type="button" id="edAvulso" class="btn sec sm" style="width:auto;min-height:32px;padding:0 10px;font-size:13px;vertical-align:middle">✎</button>`:""}</h1><p class="sub">${esc(setorNome(l.setor))} · <a href="${l.maps||(l.place_id?`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((l.endereco||l.nome)+", São Paulo")}&query_place_id=${encodeURIComponent(l.place_id)}`:(l.lat&&l.lng?`https://www.google.com/maps/search/?api=1&query=${l.lat},${l.lng}`:`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((l.endereco||l.nome)+", São Paulo")}`))}" target="_blank" rel="noopener" style="color:var(--marca);text-decoration:underline;text-underline-offset:3px">📍 ${esc(l.endereco||"ver no mapa")}</a></p></div><div style="padding-top:8px">${estrelasHTML(l.estrelas)}</div></div>
-    ${atendHTML()}
+    ${passosHTML()}
+    ${modo==="visita"?atendHTML():""}
     ${(()=>{const prod=(c.produtos||[])[0];const capa=fach?[fach,"Fachada"]:prod?[abs(prod.src),"Produto · sem fachada"]:logo?[logo,"Logotipo · sem fachada"]:null;
       return `<div class="fach" data-longo data-src="${esc(capa?capa[0]:"")}">${capa?`<img src="${esc(capa[0])}" alt="" ${capa[1]!=="Fachada"?'style="object-fit:contain;background:#fff"':""}><span class="sel">${capa[1]}</span>`:`<div class="nome-logo"><b>${esc(nome)}</b><small>${esc(setorNome(l.setor))}</small></div><span class="sel">Nome · sem imagem</span>`}</div>`;})()}
     ${mensagensHTML()}
     ${entradas(slug,"entG")}${L.site&&L.site.estado==="encontrado"?`<a class="btn sec" style="margin:-4px 0 10px;min-height:44px" href="fontes.html?l=${encodeURIComponent(slug)}&tipo=site">🌐 Imagens do site</a>`:""}
     ${pesquisaHTML()}
+    ${modo==="visita"?resultadoHTML():""}
     <section class="card"><h2>Imagens encontradas <small class="muted" style="font-weight:400;font-size:14px">· segure para classificar</small></h2>
       ${cands.length?`<div class="galeria">${cands.map((x,i)=>`<figure data-longo data-src="${esc(x.src)}" data-fonte="${esc(x.fonte||"")}">${x.papel?`<span class="pap ${x.papel==="logotipo"?"logo":x.papel==="fachada"?"fach":""}">${{logotipo:"Logotipo",fachada:"Fachada",produto:"Produto",arquivo:"Arquivo"}[x.papel]}</span>`:""}<img src="${esc(x.src)}" alt="" loading="lazy"></figure>`).join("")}</div>`:`<p class="muted">Nenhuma imagem ainda. Use o Site ou a Pesquisa de fotos.</p>`}</section>
     <section class="card"><h2>Logotipo${logos.length>1?` <small class="muted" style="font-weight:400;font-size:14px">· ${logos.length} salvos · toque para usar · segure para remover</small>`:""}</h2>
@@ -122,6 +154,22 @@
     const og=$("#ouvirGelo");if(og)og.onclick=()=>{if(!window.speechSynthesis){og.textContent="Sem voz";return;}if(speechSynthesis.speaking){speechSynthesis.cancel();og.textContent="▶ Ouvir";return;}const u=new SpeechSynthesisUtterance(falaGelo());u.lang="pt-BR";u.rate=1;u.onend=()=>{og.textContent="▶ Ouvir";};u.onerror=()=>{og.textContent="▶ Ouvir";};og.textContent="■ Parar";speechSynthesis.speak(u);};
     const ob=$("#ouvir");if(ob)ob.onclick=()=>{if(!window.speechSynthesis){ob.textContent="Sem voz";return;}if(speechSynthesis.speaking){speechSynthesis.cancel();ob.textContent="▶ Ouvir";return;}speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(`${nome}. ${curios.join(" ")}`);u.lang="pt-BR";u.rate=1;u.onend=()=>{ob.textContent="▶ Ouvir";};u.onerror=()=>{ob.textContent="▶ Ouvir";};ob.textContent="■ Parar";speechSynthesis.speak(u);};
     $("#logoArea").onclick=editar;
+    // passos do percurso
+    const marca=(mud)=>{const e=estado();e.atend=e.atend||{};e.atend[slug]={...(e.atend[slug]||{}),...mud};salvar(e);const y=scrollY;render();scrollTo(0,y);};
+    $$("[data-passo]").forEach(b=>b.addEventListener("click",ev=>{const k=b.dataset.passo;
+      if(k==="ini"){const a=document.getElementById("atIni");if(a)a.click();}
+      else if(k==="verloja"){const el=document.getElementById("pesq");if(el)el.scrollIntoView({behavior:"smooth",block:"start"});}
+      else if(k==="verlogo"){const el=document.getElementById("logoArea");if(el)el.scrollIntoView({behavior:"smooth",block:"center"});}
+      else if(k==="lojaok")marca({lojaOk:true});
+      else if(k==="apres"){ev.preventDefault();const e=estado();e.atend=e.atend||{};e.atend[slug]={...(e.atend[slug]||{}),apres:true};Promise.resolve(salvar(e)).finally(()=>{location.href=b.href;});}
+      else if(k==="verres"){const el=document.getElementById("resultado");if(el)el.scrollIntoView({behavior:"smooth",block:"center"});}
+      else if(k==="fim"){const A=(estado().atend||{})[slug]||{};if(!A.res){alert("Antes de encerrar, registre o resultado da visita.");const el=document.getElementById("resultado");if(el)el.scrollIntoView({behavior:"smooth",block:"center"});return;}const a=document.getElementById("atFim");if(a)a.click();}
+      else if(k==="pronta"){const e=estado();e.preparadas={...(e.preparadas||{}),[slug]:hojeI()};salvar(e);const y=scrollY;render();scrollTo(0,y);}}));
+    $$("[data-res]").forEach(b=>b.onclick=async()=>{const k=b.dataset.res;
+      if(k==="voltar"){const am=(()=>{const d=new Date(hojeI()+"T12:00:00");do{d.setDate(d.getDate()+1);}while(d.getDay()===0||d.getDay()===6);return d.toISOString().slice(0,10);})();
+        const iso=prompt("Voltar em que dia? (AAAA-MM-DD)",am);if(!iso||!/^\d{4}-\d{2}-\d{2}$/.test(iso))return;App.reagendarLoja(slug,iso);marca({res:"voltar",volta:iso});return;}
+      marca({res:k,motivo:k==="sem"?((estado().atend||{})[slug]||{}).motivo||null:null});});
+    $$("[data-mot]").forEach(b=>b.onclick=()=>marca({motivo:b.dataset.mot}));
     const ap=$("#aprovarLogo");if(ap)ap.onclick=async()=>{ap.disabled=true;ap.textContent="Aprovando…";const r=await App.aprovarLogo(l);if(r&&!r.ok&&!r.ja)alert("Aprovado. O recorte automático não saiu agora ("+r.motivo+"); use ✂ Editar ou tente de novo.");location.reload();};
     const ra=$("#recAuto");if(ra)ra.onclick=async()=>{ra.disabled=true;ra.textContent="Recortando…";const r=await App.recortarLogo(l);if(!r.ok){alert("Não consegui: "+r.motivo);ra.disabled=false;ra.textContent="✦ Recorte automático";return;}c=await cliente(l);render();};
     const nl=$("#nomeLogo");if(nl)nl.onclick=async()=>{const cv=document.createElement("canvas");const g=cv.getContext("2d");const linhas=nome.length>18?nome.split(/\s+(?=\S+$)|\s-\s| · /).filter(Boolean):[nome];const tam=120;g.font=`700 ${tam}px Rubik, system-ui, sans-serif`;const w=Math.ceil(Math.max(...linhas.map(t=>g.measureText(t).width))+tam*0.6);cv.width=w;cv.height=Math.ceil(linhas.length*tam*1.2+tam*0.5);const g2=cv.getContext("2d");g2.font=`700 ${tam}px Rubik, system-ui, sans-serif`;g2.fillStyle="#1C1635";g2.textAlign="center";g2.textBaseline="top";linhas.forEach((t,i)=>g2.fillText(t,w/2,tam*0.25+i*tam*1.2));
