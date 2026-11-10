@@ -145,20 +145,20 @@
    "modo_reaproveitamento": "ambas_variantes_genericas",
    "plano": [
     [
-     936,
-     407
+     897.8,
+     390.9
     ],
     [
-     1045,
-     407
+     1083.2,
+     390.9
     ],
     [
-     1045,
-     453
+     1083.2,
+     469.1
     ],
     [
-     936,
-     453
+     897.8,
+     469.1
     ]
    ],
    "modo": "caixa",
@@ -384,7 +384,7 @@
    "produto": "Papéis carimbados",
    "superficie": "papel",
    "material_recolor": false,
-   "aplicacao": "impressao_total",
+   "aplicacao": "carimbos",
    "arquivo": "../00_Bases_Compartilhadas/SEM_ARTE/10_carimbos_papeis.jpg",
    "demo": "../00_Bases_Compartilhadas/COM_ARTE/10_carimbos_papeis.jpg",
    "sha256_base": "b09255496403b463c82153f7d1cda52b013f2befb324de48ab96b4c3cff88074",
@@ -419,7 +419,92 @@
     0,
     0
    ],
-   "qualidade": "duvidosa"
+   "qualidade": "duvidosa",
+   "carimbos": {
+    "grande": [
+     [
+      410.0,
+      560.0
+     ],
+     [
+      1192.0,
+      509.0
+     ],
+     [
+      1246.0,
+      849.0
+     ],
+     [
+      425.0,
+      888.0
+     ]
+    ],
+    "pago": [
+     [
+      175.9,
+      139.1
+     ],
+     [
+      351.7,
+      94.5
+     ],
+     [
+      364.4,
+      144.6
+     ],
+     [
+      188.5,
+      189.2
+     ]
+    ],
+    "recebido": [
+     [
+      245.9,
+      214.3
+     ],
+     [
+      511.1,
+      166.0
+     ],
+     [
+      520.7,
+      218.8
+     ],
+     [
+      255.6,
+      267.1
+     ]
+    ],
+    "redondo": {
+     "centro": [
+      414,
+      340
+     ],
+     "eixos": [
+      152,
+      140
+     ],
+     "ang": 0
+    },
+    "data": [
+     [
+      384.1,
+      441.7
+     ],
+     [
+      690.5,
+      402.3
+     ],
+     [
+      697.7,
+      458.7
+     ],
+     [
+      391.4,
+      498.1
+     ]
+    ]
+   }
   },
   "11": {
    "produto": "Wind banner",
@@ -557,20 +642,20 @@
    "modo_reaproveitamento": "ambas_variantes_genericas",
    "plano": [
     [
-     829,
-     299
+     614.3,
+     281.2
     ],
     [
-     914,
-     299
+     892.7,
+     281.2
     ],
     [
-     914,
-     358
+     892.7,
+     420.4
     ],
     [
-     829,
-     358
+     614.3,
+     420.4
     ]
    ],
    "modo": "manual",
@@ -639,20 +724,20 @@
    "modo_reaproveitamento": "ambas_variantes_genericas",
    "plano": [
     [
-     670,
-     329
+     619.7,
+     308.4
     ],
     [
-     853,
-     329
+     903.3,
+     308.4
     ],
     [
-     853,
-     404
+     903.3,
+     424.6
     ],
     [
-     670,
-     404
+     619.7,
+     424.6
     ]
    ],
    "modo": "caixa",

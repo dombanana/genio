@@ -86,6 +86,10 @@ def layout_frontal(arte_bgra, P, largura_rel=0.7, cor_fundo=None, cheio=False):
         tela[..., :3] = cor_fundo.astype(np.uint8); tela[..., 3] = 255
     ah, aw = arte_bgra.shape[:2]; mw, mh = (W, H) if cheio else (W * 0.88 * largura_rel, H * 0.88)
     s = min(mw / aw, mh / ah, W / aw, H / ah); nw, nh = max(1, int(aw * s)), max(1, int(ah * s))  # nunca maior que o plano
+    if cheio:   # arte de sangria (a superfície inteira impressa, borda opaca): cobre o plano todo, sem faixa de papel cru
+        al = arte_bgra[..., 3]; borda = np.concatenate([al[:3].ravel(), al[-3:].ravel(), al[:, :3].ravel(), al[:, -3:].ravel()])
+        if borda.mean() > 200:
+            nw, nh = W, H
     arte = cv2.resize(arte_bgra, (nw, nh), interpolation=cv2.INTER_AREA)
     x0, y0 = (W - nw) // 2, (H - nh) // 2
     if P.get("ancora") == "topo":
@@ -155,7 +159,15 @@ def aplicar(setor, pid, arte_path, saida, material=None, arte_cor=None, largura=
     if aplic == "impressao_carimbo":
         largura = min(largura, 0.32)
     tela = layout_frontal(arte, P, largura, fundo, cheio)
-    proj = projetar(tela, P, img.shape)
+    if P.get("paineis"):   # folheto dobrado com painéis em planos diferentes: cada faixa da arte vai para o seu painel
+        n = len(P["paineis"]); H0, W0 = tela.shape[:2]; proj = np.zeros((img.shape[0], img.shape[1], 4), np.uint8)
+        for i, q in enumerate(P["paineis"]):
+            x0, x1 = int(W0 * i / n), int(W0 * (i + 1) / n); faixa = np.ascontiguousarray(tela[:, x0:x1])
+            M = cv2.getPerspectiveTransform(np.float32([[0, 0], [x1 - x0, 0], [x1 - x0, H0], [0, H0]]), np.float32(q))
+            w = cv2.warpPerspective(faixa, M, (img.shape[1], img.shape[0]), flags=cv2.INTER_LINEAR, borderValue=(0, 0, 0, 0))
+            proj = np.where(w[..., 3:4] > proj[..., 3:4], w, proj)
+    else:
+        proj = projetar(tela, P, img.shape)
     a = (proj[..., 3].astype(np.float32) / 255.0)
     if aplic == "vinil_recortado" and P["superficie"] == "vidro":
         a *= 0.9  # reflexo do vidro continua passando um pouco
@@ -167,6 +179,120 @@ def aplicar(setor, pid, arte_path, saida, material=None, arte_cor=None, largura=
         k = (oc.astype(np.float32) / 255.0)[..., None]; out = out * (1 - k) + img.astype(np.float32) * k
     out = np.clip(out, 0, 255).astype(np.uint8)
     cv2.imwrite(saida, out, [cv2.IMWRITE_JPEG_QUALITY, 88])
+    return saida
+
+# ---------------------------------------------------------------- carimbos (papéis carimbados)
+# Cada foto do kit tem as marcas medidas (calibracao.json → produtos.10.carimbos): o carimbo grande da empresa,
+# PAGO, RECEBIDO, a data e o carimbo redondo. Cada marca é desenhada de frente e entra na perspectiva da folha
+# em que está, com tinta de carimbo (falha de tinta, borda irregular) multiplicada sobre o papel.
+FONTES = os.path.join(os.path.dirname(os.path.abspath(__file__)), "fontes")
+MESES = ["JAN", "FEV", "MAR", "ABR", "MAI", "JUN", "JUL", "AGO", "SET", "OUT", "NOV", "DEZ"]
+
+def _fonte(tam, negrito=True):
+    from PIL import ImageFont
+    for f in (os.path.join(FONTES, "DejaVuSans-Bold.ttf" if negrito else "DejaVuSans.ttf"), "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"):
+        if os.path.exists(f):
+            return ImageFont.truetype(f, int(tam))
+    return ImageFont.load_default()
+
+def _lados(q):
+    q = np.float32(q); w = (np.linalg.norm(q[1] - q[0]) + np.linalg.norm(q[2] - q[3])) / 2; h = (np.linalg.norm(q[3] - q[0]) + np.linalg.norm(q[2] - q[1])) / 2
+    return float(w), float(h)
+
+def _texto_caixa(texto, w, h, borda=True):
+    """carimbo retangular: moldura + texto em negrito centralizado, ocupando a caixa"""
+    from PIL import Image, ImageDraw
+    W, H = int(w * 3), int(h * 3); im = Image.new("L", (W, H), 0); g = ImageDraw.Draw(im)
+    lw = max(4, int(H * 0.075))
+    if borda:
+        g.rectangle([lw // 2, lw // 2, W - lw // 2 - 1, H - lw // 2 - 1], outline=255, width=lw)
+    tam = H * 0.62
+    while tam > 8:
+        f = _fonte(tam); bb = g.textbbox((0, 0), texto, font=f)
+        if bb[2] - bb[0] <= W - 4.2 * lw and bb[3] - bb[1] <= H - 3.4 * lw:
+            break
+        tam *= 0.94
+    bb = g.textbbox((0, 0), texto, font=f); g.text(((W - (bb[2] - bb[0])) / 2 - bb[0], (H - (bb[3] - bb[1])) / 2 - bb[1]), texto, font=f, fill=255)
+    return np.array(im)
+
+def _redondo(nome, logo_alpha, lado=900):
+    """carimbo redondo: dois anéis, o nome da loja em arco no alto e a marca (silhueta do logotipo) no centro"""
+    from PIL import Image, ImageDraw
+    im = Image.new("L", (lado, lado), 0); g = ImageDraw.Draw(im); c = lado / 2; R = lado * 0.48
+    g.ellipse([c - R, c - R, c + R, c + R], outline=255, width=int(lado * 0.022))
+    r2 = lado * 0.35; g.ellipse([c - r2, c - r2, c + r2, c + r2], outline=255, width=int(lado * 0.011))
+    nome = (nome or "").upper()[:28]
+    if nome:
+        tam = lado * 0.085; f = _fonte(tam); rt = (R + r2) / 2
+        larg = [g.textbbox((0, 0), ch, font=f)[2] for ch in nome]; tot = sum(larg) + tam * 0.12 * (len(nome) - 1)
+        lim = np.pi * 0.95   # o nome fica no arco de cima, sem descer pelos lados
+        if tot / rt > lim:
+            tam = tam * lim * rt / tot; f = _fonte(tam); larg = [g.textbbox((0, 0), ch, font=f)[2] for ch in nome]; tot = sum(larg) + tam * 0.12 * (len(nome) - 1)
+        a = -np.pi / 2 - (tot / rt) / 2
+        for ch, lw in zip(nome, larg):
+            ac = a + (lw / 2) / rt; x, y = c + rt * np.cos(ac), c + rt * np.sin(ac)
+            t = Image.new("L", (int(tam * 2), int(tam * 2)), 0); ImageDraw.Draw(t).text((tam, tam), ch, font=f, fill=255, anchor="mm")
+            t = t.rotate(-np.degrees(ac) - 90, resample=Image.BICUBIC); im.paste(255, (int(x - t.width / 2), int(y - t.height / 2)), t)
+            a += (lw + tam * 0.12) / rt
+        for ang in (np.pi * 0.62, np.pi * 0.38):   # duas estrelinhas embaixo
+            x, y = c + rt * np.cos(ang), c + rt * np.sin(ang); s = lado * 0.022
+            pts = [(x + s * np.cos(np.pi / 2 + k * 4 * np.pi / 5), y - s * np.sin(np.pi / 2 + k * 4 * np.pi / 5)) for k in range(5)]; g.polygon(pts, fill=255)
+    if logo_alpha is not None:
+        la = logo_alpha; ys, xs = np.where(la > 40)
+        if len(xs):
+            la = la[ys.min():ys.max() + 1, xs.min():xs.max() + 1]; caixa = r2 * 1.35; k = min(caixa / la.shape[1], caixa * 0.8 / la.shape[0])
+            la = cv2.resize(la, (max(1, int(la.shape[1] * k)), max(1, int(la.shape[0] * k))), interpolation=cv2.INTER_AREA)
+            arr = np.array(im); y0, x0 = int(c - la.shape[0] / 2), int(c - la.shape[1] / 2); arr[y0:y0 + la.shape[0], x0:x0 + la.shape[1]] = np.maximum(arr[y0:y0 + la.shape[0], x0:x0 + la.shape[1]], la)
+            return arr
+    sig = "".join(p[0] for p in (nome or "?").split()[:2]) or "?"
+    f = _fonte(lado * 0.2); bb = g.textbbox((0, 0), sig, font=f); g.text((c - (bb[2] - bb[0]) / 2 - bb[0], c - (bb[3] - bb[1]) / 2 - bb[1]), sig, font=f, fill=255)
+    return np.array(im)
+
+def _tinta(alpha, semente):
+    """falha de tinta de carimbo: grão, falhas maiores e borda levemente borrada"""
+    rs = np.random.RandomState(semente); h, w = alpha.shape
+    grao = cv2.GaussianBlur(rs.rand(h, w).astype(np.float32), (0, 0), 1.2); falha = cv2.GaussianBlur(rs.rand(max(2, h // 8), max(2, w // 8)).astype(np.float32), (0, 0), 1.0)
+    falha = cv2.resize(falha, (w, h)); m = np.clip((grao * 0.6 + falha * 0.4 - 0.18) * 3.0, 0.35, 1.0)
+    return (cv2.GaussianBlur(alpha.astype(np.float32), (0, 0), 0.8) * m).clip(0, 255).astype(np.uint8)
+
+def _no_papel(out, alpha, quad, cor, opac=0.9):
+    """alpha frontal → perspectiva da folha; tinta multiplicada sobre o papel (a textura do papel aparece)"""
+    h, w = alpha.shape; M = cv2.getPerspectiveTransform(np.float32([[0, 0], [w, 0], [w, h], [0, h]]), np.float32(quad))
+    a = cv2.warpPerspective(alpha, M, (out.shape[1], out.shape[0]), flags=cv2.INTER_AREA if w > 400 else cv2.INTER_LINEAR).astype(np.float32) / 255 * opac
+    tinta = out.astype(np.float32) * (cor[None, None, :] / 255.0)
+    return out.astype(np.float32) * (1 - a[..., None]) + tinta * a[..., None]
+
+def carimbar(setor, grande_png, saida, nome=None, logo_png=None, data=None, tinta="#22252E"):
+    pasta, P, img = carregar(setor, "10"); C = P["carimbos"]; cor = hex2bgr(tinta); out = img.copy().astype(np.float32)
+    import datetime
+    d = data or datetime.date.today(); dtxt = f"{d.day:02d} {MESES[d.month - 1]} {d.year}"
+    for k, (tipo, txt) in enumerate((("pago", "PAGO"), ("recebido", "RECEBIDO"), ("data", dtxt))):
+        if tipo in C:
+            w, h = _lados(C[tipo]); out = _no_papel(out, _tinta(_texto_caixa(txt, w, h), 11 + k), C[tipo], cor)
+    if "redondo" in C:
+        R = C["redondo"]; la = None
+        if logo_png:
+            lg = cv2.imread(logo_png, cv2.IMREAD_UNCHANGED)
+            if lg is not None:
+                la = lg[..., 3] if lg.ndim == 3 and lg.shape[2] == 4 else 255 - cv2.cvtColor(lg, cv2.COLOR_BGR2GRAY)
+        q = np.float32(cv2.boxPoints((tuple(R["centro"]), tuple(R["eixos"]), R["ang"])))
+        q = q[np.argsort(q[:, 1])]; q = np.vstack([q[:2][np.argsort(q[:2, 0])], q[2:][np.argsort(q[2:, 0])[::-1]]])
+        out = _no_papel(out, _tinta(_redondo(nome, la), 23), q, cor)
+    if grande_png and "grande" in C:
+        g = cv2.imread(grande_png, cv2.IMREAD_UNCHANGED)
+        if g is not None:
+            if g.ndim == 3 and g.shape[2] == 4:
+                a = g[..., 3].astype(np.float32) * (1 - cv2.cvtColor(g[..., :3], cv2.COLOR_BGR2GRAY).astype(np.float32) / 255 * 0.85)   # o que é escuro e opaco é tinta
+            else:
+                a = 255 - cv2.cvtColor(g, cv2.COLOR_BGR2GRAY).astype(np.float32)
+            a = a.clip(0, 255).astype(np.uint8); ys, xs = np.where(a > 30)
+            if len(xs):
+                a = a[ys.min():ys.max() + 1, xs.min():xs.max() + 1]
+            w, h = _lados(C["grande"]); W, H = int(w * 2), int(h * 2); k = min(W / a.shape[1], H / a.shape[0])
+            a = cv2.resize(a, (max(1, int(a.shape[1] * k)), max(1, int(a.shape[0] * k))), interpolation=cv2.INTER_AREA)
+            tela = np.zeros((H, W), np.uint8); y0, x0 = (H - a.shape[0]) // 2, (W - a.shape[1]) // 2; tela[y0:y0 + a.shape[0], x0:x0 + a.shape[1]] = a
+            out = _no_papel(out, _tinta(tela, 31), C["grande"], cor)
+    cv2.imwrite(saida, np.clip(out, 0, 255).astype(np.uint8), [cv2.IMWRITE_JPEG_QUALITY, 88])
     return saida
 
 if __name__ == "__main__":

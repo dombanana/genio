@@ -137,20 +137,20 @@
    "sha256_base": "c84a02a102b6b0f6f3060f5601248df51e4a76da1766a569def06c2eefb48a22",
    "plano": [
     [
-     880,
-     300
+     817.0,
+     254.5
     ],
     [
-     1060,
-     300
+     1123.0,
+     254.5
     ],
     [
-     1060,
-     430
+     1123.0,
+     475.5
     ],
     [
-     880,
-     430
+     817.0,
+     475.5
     ]
    ],
    "modo": "manual",
@@ -164,7 +164,25 @@
     0,
     0
    ],
-   "qualidade": "marcada a olho na foto (grade), 10/11"
+   "qualidade": "marcada a olho na foto (grade), 10/11",
+   "plano_original": [
+    [
+     880.0,
+     300.0
+    ],
+    [
+     1060.0,
+     300.0
+    ],
+    [
+     1060.0,
+     430.0
+    ],
+    [
+     880.0,
+     430.0
+    ]
+   ]
   },
   "05": {
    "produto": "Cartão de visita",
@@ -366,7 +384,7 @@
    "produto": "Papéis carimbados",
    "superficie": "papel",
    "material_recolor": false,
-   "aplicacao": "impressao_total",
+   "aplicacao": "carimbos",
    "arquivo": "SEM_ARTE/10_carimbos_papeis.jpg",
    "demo": "COM_ARTE/10_carimbos_papeis.jpg",
    "sha256_base": "6d2d01d1d505c2c7a3bc3df6d558b1e598cf8a10d2333c27a56c24833ece53ee",
@@ -399,7 +417,92 @@
     0,
     0
    ],
-   "qualidade": "ok"
+   "qualidade": "ok",
+   "carimbos": {
+    "grande": [
+     [
+      496.0,
+      570.0
+     ],
+     [
+      1231.0,
+      533.0
+     ],
+     [
+      1294.0,
+      856.0
+     ],
+     [
+      515.0,
+      890.0
+     ]
+    ],
+    "pago": [
+     [
+      267.2,
+      196.4
+     ],
+     [
+      430.6,
+      161.9
+     ],
+     [
+      443.0,
+      220.7
+     ],
+     [
+      279.6,
+      255.2
+     ]
+    ],
+    "recebido": [
+     [
+      323.8,
+      274.5
+     ],
+     [
+      569.5,
+      227.6
+     ],
+     [
+      579.7,
+      281.0
+     ],
+     [
+      334.0,
+      327.9
+     ]
+    ],
+    "redondo": {
+     "centro": [
+      520.8,
+      381.9
+     ],
+     "eixos": [
+      162.9,
+      171.1
+     ],
+     "ang": 131.6
+    },
+    "data": [
+     [
+      627.6,
+      463.4
+     ],
+     [
+      914.3,
+      428.5
+     ],
+     [
+      921.0,
+      482.9
+     ],
+     [
+      634.2,
+      517.8
+     ]
+    ]
+   }
   },
   "11": {
    "produto": "Wind banner",
@@ -529,20 +632,20 @@
    "sha256_base": "b7f0c627bcdbb17a8dca6125e1c7284c375b44cfa4ed93780fbc1ed417742cd4",
    "plano": [
     [
-     829,
-     315
+     642.2,
+     314.3
     ],
     [
-     919,
-     315
+     899.8,
+     314.3
     ],
     [
-     919,
-     374
+     899.8,
+     443.1
     ],
     [
-     829,
-     374
+     642.2,
+     443.1
     ]
    ],
    "modo": "manual",
@@ -556,7 +659,25 @@
     0,
     0
    ],
-   "qualidade": "revisada no caimento (demo com a área marcada), 10/11"
+   "qualidade": "revisada no caimento (demo com a área marcada), 10/11",
+   "plano_original": [
+    [
+     829.0,
+     315.0
+    ],
+    [
+     919.0,
+     315.0
+    ],
+    [
+     919.0,
+     374.0
+    ],
+    [
+     829.0,
+     374.0
+    ]
+   ]
   },
   "15": {
    "produto": "Boné",
@@ -607,20 +728,20 @@
    "sha256_base": "8477e8813a89bcffa9a2ef1c6b8fea4f2518ec4dab308162ae69580ba90fec02",
    "plano": [
     [
-     680,
-     275
+     634.6,
+     240.6
     ],
     [
-     845,
-     275
+     890.4,
+     240.6
     ],
     [
-     845,
-     400
+     890.4,
+     434.4
     ],
     [
-     680,
-     400
+     634.6,
+     434.4
     ]
    ],
    "modo": "manual",
@@ -634,7 +755,25 @@
     0,
     0
    ],
-   "qualidade": "marcada a olho na foto (grade), 10/11"
+   "qualidade": "marcada a olho na foto (grade), 10/11",
+   "plano_original": [
+    [
+     680.0,
+     275.0
+    ],
+    [
+     845.0,
+     275.0
+    ],
+    [
+     845.0,
+     400.0
+    ],
+    [
+     680.0,
+     400.0
+    ]
+   ]
   }
  }
 }

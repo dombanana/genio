@@ -485,7 +485,41 @@ def kit_aplicar(d):
     if len(raw) > 6_000_000:
         raise ValueError("arte grande demais")
     material = d.get("material") if re.match(r"^#[0-9a-fA-F]{6}$", d.get("material") or "") else None
-    h = hashlib.sha256(raw + f"|{kit}|{pid}|{material}|k14v4".encode()).hexdigest()[:20]
+    # carimbo: as marcas do kit (PAGO, RECEBIDO, data, redondo com a marca) + o carimbo grande da empresa, cada uma na sua folha
+    if pid == "10" and os.path.isdir(os.path.join(RAIZ, "brand", "kits14")):
+        _, P10, _img = aplicar.carregar(kit, "10")
+        if P10.get("carimbos"):
+            slug = re.sub(r"[^a-z0-9-]", "", str(d.get("slug") or ""))[:80]; ficha = {}
+            try:
+                ficha = (DADOS.cliente_ler(slug) if slug else {}) or {}
+            except Exception:
+                ficha = {}
+            nome = str(d.get("nome") or (ficha or {}).get("nome") or "")[:40]; logo_raw = None
+            src = ((ficha or {}).get("manual") or {}).get("tratado") or ""
+            if src.startswith("/api/arq/"):
+                try:
+                    _, col, ident, nm = src.split("/")[2:6]; logo_raw = DADOS.arquivo(col, ident, nm)[1]
+                except Exception:
+                    logo_raw = None
+            hoje = time.strftime("%Y-%m-%d")
+            h = hashlib.sha256(raw + (logo_raw or b"") + f"|{kit}|10|{nome}|{hoje}|carimbo2".encode()).hexdigest()[:20]
+            pasta = os.path.join(ESTADO_DIR, "kits"); os.makedirs(pasta, exist_ok=True); saida = os.path.join(pasta, h + ".jpg")
+            if not os.path.exists(saida):
+                tmps = []
+                try:
+                    with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as f:
+                        f.write(raw); tmps.append(f.name)
+                    lp = None
+                    if logo_raw:
+                        with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as f:
+                            f.write(logo_raw); lp = f.name; tmps.append(lp)
+                    aplicar.carimbar(kit, tmps[0], saida, nome, lp)
+                finally:
+                    for t in tmps:
+                        try: os.remove(t)
+                        except Exception: pass
+            return {"kit": kit, "produto": "10", "referencia": False, "jpg": "data:image/jpeg;base64," + base64.b64encode(open(saida, "rb").read()).decode()}
+    h = hashlib.sha256(raw + f"|{kit}|{pid}|{material}|k14v5".encode()).hexdigest()[:20]
     pasta = os.path.join(ESTADO_DIR, "kits"); os.makedirs(pasta, exist_ok=True); saida = os.path.join(pasta, h + ".jpg")
     if not os.path.exists(saida):
         with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as f:
