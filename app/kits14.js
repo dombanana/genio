@@ -173,17 +173,21 @@
           // quanto mais estreito, mais a frase cresce (até 2,5×) e quebra em linhas equilibradas para caber na largura
           const k=Math.min(2.5,Math.max(1,ar/1.6));
           // quebra preferindo depois de "·" e ","; faixa de horário (12:00 – 15:00) nunca se separa; "·" no fim da linha sai
+          const cola=t=>String(t).replace(/\s*[–-]\s*(?=\d)/g,"\u0001–\u0001").replace(/(^|\s)(\p{L}{2,3})\s+(?=\d)/gu,"$1$2\u0001");
+          const maiorPeca=t=>Math.max(...cola(t).split(/\s+/).map(x=>cv.measureText(x.split("\u0001").join(" ")).width));
           const quebra=(t,mx)=>{const G="\u0001",w=x=>cv.measureText(x.split(G).join(" ")).width,ls=[];let cur="";
             const add=pc=>{const x=cur?cur+" "+pc:pc;if(w(x)>mx&&cur){ls.push(cur);cur=pc;}else cur=x;};
-            String(t).replace(/\s*[–-]\s*(?=\d)/g,G+"–"+G).replace(/(^|\s)(\p{L}{2,3})\s+(?=\d)/gu,"$1$2"+G).split(/(?<=[·,])\s+/).forEach(f=>{if(w(f)<=mx)add(f);else f.split(/\s+/).forEach(add);});
+            cola(t).split(/(?<=[·,])\s+/).forEach(f=>{if(w(f)<=mx)add(f);else f.split(/\s+/).forEach(add);});
             if(cur)ls.push(cur);return ls.map(l=>l.split(G).join(" ").replace(/\s*·$/,""));};
           linhas.forEach(l=>{if(!l.els.every(e=>e.tipo==="texto"))return;
             l.els.forEach(e=>{if(!e.texto)return;const cx0=e.x+e.w/2;
               if(k>1){e.tam*=k;e.w*=k;e.h*=k;e.x=cx0-e.w/2;}
-              if(e.w*sM<=lim*1.15)return;   // passou pouco: a arte toda encolhe um tico, sem quebrar
-              cv.font=`${e.peso||700} ${e.tam}px ${e.fonte}`;const mx=lim/sM,W=cv.measureText(String(e.texto)).width,nl=Math.ceil(W/mx);
-              let ls=quebra(e.texto,mx);for(let t=W/nl;t<=mx;t*=1.03){const x=quebra(e.texto,t);if(x.length<=nl){ls=x;break;}}
-              if(ls.length<2)return;const h1=e.h;e.texto=ls.join("\n");e.w=Math.max(...ls.map(t=>cv.measureText(t).width))*1.02;e.h=h1+e.tam*(e.alt||1.2)*(ls.length-1);e.x=cx0-e.w/2;e.alinh="center";});
+              const mx=lim/sM;if(e.w<=mx)return;
+              if(e.w<=mx*1.15){const f=mx/e.w;e.tam*=f;e.w*=f;e.h*=f;e.x=cx0-e.w/2;return;}   // passou pouco: só a frase diminui um tico, sem quebrar
+              cv.font=`${e.peso||700} ${e.tam}px ${e.fonte}`;const W=cv.measureText(String(e.texto)).width,nl=Math.ceil(W/mx);
+              let ls=quebra(e.texto,mx);for(let t=Math.max(W/nl,maiorPeca(e.texto));t<=mx;t*=1.03){const x=quebra(e.texto,t);if(x.length<=nl){ls=x;break;}}
+              if(ls.length>=2){const h1=e.h;e.texto=ls.join("\n");e.w=Math.max(...ls.map(t=>cv.measureText(t).width))*1.02;e.h=h1+e.tam*(e.alt||1.2)*(ls.length-1);e.x=cx0-e.w/2;e.alinh="center";}
+              if(e.w>mx){const f=mx/e.w;e.tam*=f;e.w*=f;e.h*=f;e.x=cx0-e.w/2;}});   // pedaço que não quebra (horário): só esse texto diminui, a marca não
             l.x0=Math.min(...l.els.map(e=>e.x));l.x1=Math.max(...l.els.map(e=>e.x+e.w));l.y1=Math.max(...l.els.map(e=>e.y+e.h));});
           linhas.forEach((l,i)=>{larg[i]=l.x1-l.x0;alt[i]=l.y1-l.y0;});
           pilha(tw,th,aqui);}
