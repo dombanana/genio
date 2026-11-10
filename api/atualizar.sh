@@ -78,7 +78,7 @@ if ! grep -rqs "client_max_body_size 64m" /etc/nginx/sites-enabled /etc/nginx/co
   nginx -t >/dev/null 2>&1 && systemctl reload nginx || echo "nginx: teste falhou $(date -Is)" >> /var/lib/genio/esteira.log
 fi
 
-if [ "$antes" != "$depois" ] && ! git diff --quiet "$antes" "$depois" -- api/genio_api.py api/dados.py api/genio-api.service api/kits api/captacao.py; then
+if [ "$antes" != "$depois" ] && ! git diff --quiet "$antes" "$depois" -- api/genio_api.py api/dados.py api/mostra.py api/mostrai_segmentos.json api/genio-api.service api/kits api/captacao.py; then
   systemctl restart genio-api
 fi
 

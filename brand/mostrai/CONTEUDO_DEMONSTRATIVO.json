@@ -1,0 +1,646 @@
+[
+  {
+    "segmento": "01_Cafeteria",
+    "rotulo": "CAFETERIA",
+    "estabelecimento": "GIO",
+    "titulo": "CAFÉ & BOAS PAUSAS",
+    "itens": [
+      {
+        "nome": "Espresso",
+        "valor_exibido": "R$ 6,00"
+      },
+      {
+        "nome": "Cappuccino",
+        "valor_exibido": "R$ 12,00"
+      },
+      {
+        "nome": "Café coado",
+        "valor_exibido": "R$ 8,00"
+      },
+      {
+        "nome": "Chocolate quente",
+        "valor_exibido": "R$ 13,00"
+      }
+    ],
+    "destaque": {
+      "rotulo": "COMBO DA CASA",
+      "texto": "Cappuccino + croissant",
+      "valor_exibido": "R$ 22,00"
+    },
+    "paleta": {
+      "nome": "Cafeteria",
+      "principal": "#59382D",
+      "destaque": "#C98245",
+      "fundo": "#FFF9F1",
+      "texto": "#2B201A",
+      "texto_sobre_principal": "#FFFFFF",
+      "nota": "Marrom predominante; caramelo em detalhes",
+      "origem": "diretriz visual do projeto; nao regra universal do setor",
+      "distribuicao_sugerida": {
+        "base_neutra": 0.6,
+        "principal": 0.3,
+        "destaque": 0.1
+      }
+    },
+    "jpg_referencia": "JPG/01_Cafeteria_Mostrai.jpg",
+    "origem": "Exemplo fictício para orientar implementação; substituir dados antes de publicar"
+  },
+  {
+    "segmento": "02_Restaurante",
+    "rotulo": "RESTAURANTE",
+    "estabelecimento": "GIO",
+    "titulo": "SABORES DO DIA",
+    "itens": [
+      {
+        "nome": "Prato executivo",
+        "valor_exibido": "R$ 32,90"
+      },
+      {
+        "nome": "Massa da casa",
+        "valor_exibido": "R$ 38,90"
+      },
+      {
+        "nome": "Salada especial",
+        "valor_exibido": "R$ 27,90"
+      },
+      {
+        "nome": "Suco natural",
+        "valor_exibido": "R$ 9,00"
+      }
+    ],
+    "destaque": {
+      "rotulo": "ALMOÇO COMPLETO",
+      "texto": "Executivo + suco",
+      "valor_exibido": "R$ 39,90"
+    },
+    "paleta": {
+      "nome": "Restaurante",
+      "principal": "#1F6B45",
+      "destaque": "#C44236",
+      "fundo": "#FFFFFF",
+      "texto": "#173C29",
+      "texto_sobre_principal": "#FFFFFF",
+      "nota": "Verde, branco e vermelho; verde principal e vermelho de destaque",
+      "origem": "diretriz visual do projeto; nao regra universal do setor",
+      "distribuicao_sugerida": {
+        "base_neutra": 0.6,
+        "principal": 0.3,
+        "destaque": 0.1
+      }
+    },
+    "jpg_referencia": "JPG/02_Restaurante_Mostrai.jpg",
+    "origem": "Exemplo fictício para orientar implementação; substituir dados antes de publicar"
+  },
+  {
+    "segmento": "03_Padaria",
+    "rotulo": "PADARIA",
+    "estabelecimento": "GIO",
+    "titulo": "FRESQUINHO PRA VOCÊ",
+    "itens": [
+      {
+        "nome": "Pão francês",
+        "valor_exibido": "R$ 19,90/kg"
+      },
+      {
+        "nome": "Pão de queijo",
+        "valor_exibido": "R$ 5,00/un"
+      },
+      {
+        "nome": "Café coado",
+        "valor_exibido": "R$ 6,00"
+      },
+      {
+        "nome": "Fatia de bolo",
+        "valor_exibido": "R$ 9,00"
+      }
+    ],
+    "destaque": {
+      "rotulo": "COMBO DO CAFÉ",
+      "texto": "Café + pão na chapa",
+      "valor_exibido": "R$ 12,90"
+    },
+    "paleta": {
+      "nome": "Padaria",
+      "principal": "#D4A124",
+      "destaque": "#CE8D18",
+      "fundo": "#FFF9E8",
+      "texto": "#51280F",
+      "texto_sobre_principal": "#51280F",
+      "nota": "Amarelo/dourado como referência de setor; marrom para leitura",
+      "origem": "diretriz visual do projeto; nao regra universal do setor",
+      "distribuicao_sugerida": {
+        "base_neutra": 0.6,
+        "principal": 0.3,
+        "destaque": 0.1
+      }
+    },
+    "jpg_referencia": "JPG/03_Padaria_Mostrai.jpg",
+    "origem": "Exemplo fictício para orientar implementação; substituir dados antes de publicar"
+  },
+  {
+    "segmento": "04_Clinica",
+    "rotulo": "CLÍNICA",
+    "estabelecimento": "GIO",
+    "titulo": "CUIDADO E ATENDIMENTO",
+    "itens": [
+      {
+        "nome": "Consulta clínica",
+        "valor_exibido": "R$ 180,00"
+      },
+      {
+        "nome": "Consulta de retorno",
+        "valor_exibido": "Consulte"
+      },
+      {
+        "nome": "Avaliação preventiva",
+        "valor_exibido": "R$ 220,00"
+      },
+      {
+        "nome": "Agendamento",
+        "valor_exibido": "Na recepção"
+      }
+    ],
+    "destaque": {
+      "rotulo": "EM DESTAQUE",
+      "texto": "Agenda da semana aberta",
+      "valor_exibido": "CONSULTE HORÁRIOS"
+    },
+    "paleta": {
+      "nome": "Clínica",
+      "principal": "#126D80",
+      "destaque": "#84B8B8",
+      "fundo": "#FFFFFF",
+      "texto": "#163C43",
+      "texto_sobre_principal": "#FFFFFF",
+      "nota": "Azul-petróleo e branco",
+      "origem": "diretriz visual do projeto; nao regra universal do setor",
+      "distribuicao_sugerida": {
+        "base_neutra": 0.6,
+        "principal": 0.3,
+        "destaque": 0.1
+      }
+    },
+    "jpg_referencia": "JPG/04_Clinica_Mostrai.jpg",
+    "origem": "Exemplo fictício para orientar implementação; substituir dados antes de publicar"
+  },
+  {
+    "segmento": "05_Estetica",
+    "rotulo": "ESTÉTICA",
+    "estabelecimento": "GIO",
+    "titulo": "SEU MOMENTO DE CUIDADO",
+    "itens": [
+      {
+        "nome": "Limpeza de pele",
+        "valor_exibido": "R$ 150,00"
+      },
+      {
+        "nome": "Massagem relaxante",
+        "valor_exibido": "R$ 120,00"
+      },
+      {
+        "nome": "Design de sobrancelhas",
+        "valor_exibido": "R$ 45,00"
+      },
+      {
+        "nome": "Avaliação",
+        "valor_exibido": "Agende"
+      }
+    ],
+    "destaque": {
+      "rotulo": "COMBO BEM-ESTAR",
+      "texto": "Limpeza + massagem",
+      "valor_exibido": "R$ 249,00"
+    },
+    "paleta": {
+      "nome": "Clínica estética",
+      "principal": "#775467",
+      "destaque": "#BD9F82",
+      "fundo": "#FFFAF7",
+      "texto": "#372C34",
+      "texto_sobre_principal": "#FFFFFF",
+      "nota": "Malva e bege",
+      "origem": "diretriz visual do projeto; nao regra universal do setor",
+      "distribuicao_sugerida": {
+        "base_neutra": 0.6,
+        "principal": 0.3,
+        "destaque": 0.1
+      }
+    },
+    "jpg_referencia": "JPG/05_Estetica_Mostrai.jpg",
+    "origem": "Exemplo fictício para orientar implementação; substituir dados antes de publicar"
+  },
+  {
+    "segmento": "06_Salao",
+    "rotulo": "SALÃO",
+    "estabelecimento": "GIO",
+    "titulo": "RENOVE SEU VISUAL",
+    "itens": [
+      {
+        "nome": "Corte",
+        "valor_exibido": "R$ 70,00"
+      },
+      {
+        "nome": "Escova",
+        "valor_exibido": "R$ 55,00"
+      },
+      {
+        "nome": "Hidratação",
+        "valor_exibido": "R$ 80,00"
+      },
+      {
+        "nome": "Coloração",
+        "valor_exibido": "A partir de R$ 160,00"
+      }
+    ],
+    "destaque": {
+      "rotulo": "COMBO DA SEMANA",
+      "texto": "Corte + hidratação",
+      "valor_exibido": "R$ 129,00"
+    },
+    "paleta": {
+      "nome": "Salão",
+      "principal": "#37303D",
+      "destaque": "#BD8E6A",
+      "fundo": "#FAF7F2",
+      "texto": "#29222F",
+      "texto_sobre_principal": "#FFFFFF",
+      "nota": "Grafite e cobre",
+      "origem": "diretriz visual do projeto; nao regra universal do setor",
+      "distribuicao_sugerida": {
+        "base_neutra": 0.6,
+        "principal": 0.3,
+        "destaque": 0.1
+      }
+    },
+    "jpg_referencia": "JPG/06_Salao_Mostrai.jpg",
+    "origem": "Exemplo fictício para orientar implementação; substituir dados antes de publicar"
+  },
+  {
+    "segmento": "07_Imobiliaria",
+    "rotulo": "IMOBILIÁRIA",
+    "estabelecimento": "GIO",
+    "titulo": "ENCONTRE SEU ESPAÇO",
+    "itens": [
+      {
+        "nome": "Apartamento · 2 quartos",
+        "valor_exibido": "R$ 320 mil"
+      },
+      {
+        "nome": "Casa · 3 quartos",
+        "valor_exibido": "R$ 680 mil"
+      },
+      {
+        "nome": "Sala comercial · locação",
+        "valor_exibido": "R$ 1.800/mês"
+      },
+      {
+        "nome": "Agende uma visita",
+        "valor_exibido": "Fale com a equipe"
+      }
+    ],
+    "destaque": {
+      "rotulo": "IMÓVEL EM DESTAQUE",
+      "texto": "Apartamento · 2 quartos",
+      "valor_exibido": "R$ 320 MIL"
+    },
+    "paleta": {
+      "nome": "Imobiliária",
+      "principal": "#243E61",
+      "destaque": "#C49A56",
+      "fundo": "#FFFFFF",
+      "texto": "#1B2C43",
+      "texto_sobre_principal": "#FFFFFF",
+      "nota": "Azul e dourado de destaque",
+      "origem": "diretriz visual do projeto; nao regra universal do setor",
+      "distribuicao_sugerida": {
+        "base_neutra": 0.6,
+        "principal": 0.3,
+        "destaque": 0.1
+      }
+    },
+    "jpg_referencia": "JPG/07_Imobiliaria_Mostrai.jpg",
+    "origem": "Exemplo fictício para orientar implementação; substituir dados antes de publicar"
+  },
+  {
+    "segmento": "08_Loja_Roupas",
+    "rotulo": "MODA",
+    "estabelecimento": "GIO",
+    "titulo": "ESCOLHAS PARA SEU ESTILO",
+    "itens": [
+      {
+        "nome": "Camiseta básica",
+        "valor_exibido": "R$ 49,90"
+      },
+      {
+        "nome": "Calça jeans",
+        "valor_exibido": "R$ 129,90"
+      },
+      {
+        "nome": "Camisa casual",
+        "valor_exibido": "R$ 99,90"
+      },
+      {
+        "nome": "Vestido",
+        "valor_exibido": "R$ 159,90"
+      }
+    ],
+    "destaque": {
+      "rotulo": "OFERTA DA SEMANA",
+      "texto": "2 camisetas básicas",
+      "valor_exibido": "R$ 89,90"
+    },
+    "paleta": {
+      "nome": "Loja de roupas",
+      "principal": "#4F394B",
+      "destaque": "#C0969D",
+      "fundo": "#FFFAFC",
+      "texto": "#30242D",
+      "texto_sobre_principal": "#FFFFFF",
+      "nota": "Ameixa e rosé",
+      "origem": "diretriz visual do projeto; nao regra universal do setor",
+      "distribuicao_sugerida": {
+        "base_neutra": 0.6,
+        "principal": 0.3,
+        "destaque": 0.1
+      }
+    },
+    "jpg_referencia": "JPG/08_Loja_Roupas_Mostrai.jpg",
+    "origem": "Exemplo fictício para orientar implementação; substituir dados antes de publicar"
+  },
+  {
+    "segmento": "09_Pet_Shop",
+    "rotulo": "PET SHOP",
+    "estabelecimento": "GIO",
+    "titulo": "CARINHO EM CADA ESCOLHA",
+    "itens": [
+      {
+        "nome": "Banho · pequeno porte",
+        "valor_exibido": "R$ 55,00"
+      },
+      {
+        "nome": "Banho e tosa · pequeno porte",
+        "valor_exibido": "R$ 90,00"
+      },
+      {
+        "nome": "Petisco · 100 g",
+        "valor_exibido": "R$ 14,90"
+      },
+      {
+        "nome": "Brinquedo",
+        "valor_exibido": "R$ 24,90"
+      }
+    ],
+    "destaque": {
+      "rotulo": "COMBO DE CUIDADO",
+      "texto": "Banho + hidratação · pequeno porte",
+      "valor_exibido": "R$ 69,90"
+    },
+    "paleta": {
+      "nome": "Pet shop",
+      "principal": "#176E73",
+      "destaque": "#E1A34F",
+      "fundo": "#FFFCF4",
+      "texto": "#133F42",
+      "texto_sobre_principal": "#FFFFFF",
+      "nota": "Turquesa e amarelo de destaque",
+      "origem": "diretriz visual do projeto; nao regra universal do setor",
+      "distribuicao_sugerida": {
+        "base_neutra": 0.6,
+        "principal": 0.3,
+        "destaque": 0.1
+      }
+    },
+    "jpg_referencia": "JPG/09_Pet_Shop_Mostrai.jpg",
+    "origem": "Exemplo fictício para orientar implementação; substituir dados antes de publicar"
+  },
+  {
+    "segmento": "10_Farmacia",
+    "rotulo": "FARMÁCIA",
+    "estabelecimento": "GIO",
+    "titulo": "CUIDADO NO SEU DIA",
+    "itens": [
+      {
+        "nome": "Sabonete · 90 g",
+        "valor_exibido": "R$ 3,99"
+      },
+      {
+        "nome": "Shampoo · 350 ml",
+        "valor_exibido": "R$ 19,90"
+      },
+      {
+        "nome": "Creme dental · 90 g",
+        "valor_exibido": "R$ 7,90"
+      },
+      {
+        "nome": "Protetor solar · 120 ml",
+        "valor_exibido": "R$ 39,90"
+      }
+    ],
+    "destaque": {
+      "rotulo": "OFERTA DA SEMANA",
+      "texto": "Kit higiene pessoal",
+      "valor_exibido": "R$ 29,90"
+    },
+    "paleta": {
+      "nome": "Farmácia",
+      "principal": "#1C7861",
+      "destaque": "#79B7AC",
+      "fundo": "#FFFFFF",
+      "texto": "#173D31",
+      "texto_sobre_principal": "#FFFFFF",
+      "nota": "Verde e branco",
+      "origem": "diretriz visual do projeto; nao regra universal do setor",
+      "distribuicao_sugerida": {
+        "base_neutra": 0.6,
+        "principal": 0.3,
+        "destaque": 0.1
+      }
+    },
+    "jpg_referencia": "JPG/10_Farmacia_Mostrai.jpg",
+    "origem": "Exemplo fictício para orientar implementação; substituir dados antes de publicar"
+  },
+  {
+    "segmento": "11_Academia",
+    "rotulo": "ACADEMIA",
+    "estabelecimento": "GIO",
+    "titulo": "SEU RITMO, SEU TREINO",
+    "itens": [
+      {
+        "nome": "Plano mensal",
+        "valor_exibido": "R$ 119,90/mês"
+      },
+      {
+        "nome": "Plano trimestral",
+        "valor_exibido": "R$ 329,90"
+      },
+      {
+        "nome": "Aula avulsa",
+        "valor_exibido": "R$ 25,00"
+      },
+      {
+        "nome": "Avaliação física",
+        "valor_exibido": "R$ 60,00"
+      }
+    ],
+    "destaque": {
+      "rotulo": "CONHEÇA A ACADEMIA",
+      "texto": "Aula experimental",
+      "valor_exibido": "AGENDE NA RECEPÇÃO"
+    },
+    "paleta": {
+      "nome": "Academia",
+      "principal": "#203746",
+      "destaque": "#C1B538",
+      "fundo": "#FFFFFF",
+      "texto": "#182A36",
+      "texto_sobre_principal": "#FFFFFF",
+      "nota": "Azul-grafite e lima de destaque",
+      "origem": "diretriz visual do projeto; nao regra universal do setor",
+      "distribuicao_sugerida": {
+        "base_neutra": 0.6,
+        "principal": 0.3,
+        "destaque": 0.1
+      }
+    },
+    "jpg_referencia": "JPG/11_Academia_Mostrai.jpg",
+    "origem": "Exemplo fictício para orientar implementação; substituir dados antes de publicar"
+  },
+  {
+    "segmento": "12_Autopecas",
+    "rotulo": "OFICINA",
+    "estabelecimento": "GIO",
+    "titulo": "SEU CARRO, NOSSO CUIDADO",
+    "itens": [
+      {
+        "nome": "Alinhamento",
+        "valor_exibido": "R$ 89,90"
+      },
+      {
+        "nome": "Balanceamento · por roda",
+        "valor_exibido": "R$ 25,00"
+      },
+      {
+        "nome": "Palhetas · par",
+        "valor_exibido": "A partir de R$ 49,90"
+      },
+      {
+        "nome": "Revisão",
+        "valor_exibido": "Solicite orçamento"
+      }
+    ],
+    "destaque": {
+      "rotulo": "COMBO DA SEMANA",
+      "texto": "Alinhamento + 4 balanceamentos",
+      "valor_exibido": "R$ 169,90"
+    },
+    "paleta": {
+      "nome": "Autopeças/oficina",
+      "principal": "#34434F",
+      "destaque": "#D37C25",
+      "fundo": "#FFFFFF",
+      "texto": "#243039",
+      "texto_sobre_principal": "#FFFFFF",
+      "nota": "Grafite e laranja",
+      "origem": "diretriz visual do projeto; nao regra universal do setor",
+      "distribuicao_sugerida": {
+        "base_neutra": 0.6,
+        "principal": 0.3,
+        "destaque": 0.1
+      }
+    },
+    "jpg_referencia": "JPG/12_Autopecas_Mostrai.jpg",
+    "origem": "Exemplo fictício para orientar implementação; substituir dados antes de publicar"
+  },
+  {
+    "segmento": "13_Escritorio",
+    "rotulo": "SERVIÇOS",
+    "estabelecimento": "GIO",
+    "titulo": "SOLUÇÕES PARA O SEU DIA",
+    "itens": [
+      {
+        "nome": "Impressão A4 P&B",
+        "valor_exibido": "R$ 0,50/página"
+      },
+      {
+        "nome": "Impressão A4 colorida",
+        "valor_exibido": "R$ 2,00/página"
+      },
+      {
+        "nome": "Digitalização",
+        "valor_exibido": "R$ 1,00/página"
+      },
+      {
+        "nome": "Encadernação",
+        "valor_exibido": "A partir de R$ 12,00"
+      }
+    ],
+    "destaque": {
+      "rotulo": "COMBO PRÁTICO",
+      "texto": "50 impressões P&B + encadernação",
+      "valor_exibido": "R$ 34,90"
+    },
+    "paleta": {
+      "nome": "Escritório/serviços",
+      "principal": "#334C62",
+      "destaque": "#7FA3AC",
+      "fundo": "#FFFFFF",
+      "texto": "#233444",
+      "texto_sobre_principal": "#FFFFFF",
+      "nota": "Azul e cinza",
+      "origem": "diretriz visual do projeto; nao regra universal do setor",
+      "distribuicao_sugerida": {
+        "base_neutra": 0.6,
+        "principal": 0.3,
+        "destaque": 0.1
+      }
+    },
+    "jpg_referencia": "JPG/13_Escritorio_Mostrai.jpg",
+    "origem": "Exemplo fictício para orientar implementação; substituir dados antes de publicar"
+  },
+  {
+    "segmento": "14_Mercado",
+    "rotulo": "MERCADO",
+    "estabelecimento": "GIO",
+    "titulo": "OFERTAS PARA SUA CASA",
+    "itens": [
+      {
+        "nome": "Banana",
+        "valor_exibido": "R$ 4,99/kg"
+      },
+      {
+        "nome": "Tomate",
+        "valor_exibido": "R$ 6,99/kg"
+      },
+      {
+        "nome": "Arroz · 5 kg",
+        "valor_exibido": "R$ 24,90"
+      },
+      {
+        "nome": "Leite · 1 L",
+        "valor_exibido": "R$ 4,79"
+      }
+    ],
+    "destaque": {
+      "rotulo": "DESTAQUE DO DIA",
+      "texto": "Banana selecionada",
+      "valor_exibido": "R$ 4,99/KG"
+    },
+    "paleta": {
+      "nome": "Mercado",
+      "principal": "#466B38",
+      "destaque": "#D9A637",
+      "fundo": "#FFFCF4",
+      "texto": "#2B4022",
+      "texto_sobre_principal": "#FFFFFF",
+      "nota": "Verde e amarelo de destaque",
+      "origem": "diretriz visual do projeto; nao regra universal do setor",
+      "distribuicao_sugerida": {
+        "base_neutra": 0.6,
+        "principal": 0.3,
+        "destaque": 0.1
+      }
+    },
+    "jpg_referencia": "JPG/14_Mercado_Mostrai.jpg",
+    "origem": "Exemplo fictício para orientar implementação; substituir dados antes de publicar"
+  }
+]

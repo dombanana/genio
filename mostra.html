@@ -3,60 +3,93 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Mostra Aí</title>
+<title>Mostraí</title>
 <meta name="robots" content="noindex">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800;900&display=swap">
 <style>
-:root{--esc:#1C1635;--vivo:#6933C5;--vivo2:#B9A6F0;--fundo:#1C1635;--texto:#fff;--texto2:rgba(255,255,255,.72)}
+:root{--P:#1C1635;--sP:#fff;--A:#C98245;--sA:#1C1635;--F:#FFFDF8;--T:#1C1635;--T2:rgba(28,22,53,.62);--L:rgba(28,22,53,.14)}
 *{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%;background:var(--fundo);color:var(--texto);font-family:Rubik,"Segoe UI",system-ui,sans-serif;overflow:hidden}
-.tela{height:100%;display:grid;grid-template-rows:auto 1fr auto;padding:3vh 4vw;gap:2vh}
-header{display:flex;align-items:center;gap:2.5vw}
-header .logo{height:11vh;max-width:28vw;object-fit:contain;background:#fff;border-radius:1.4vh;padding:1vh 1.4vw}
-header .logo.esc{background:transparent;padding:0}
-header h1{font-size:5.2vh;font-weight:800;line-height:1.05}
-header small{display:block;font-size:2.4vh;color:var(--texto2);font-weight:500;margin-top:.6vh;letter-spacing:.08em;text-transform:uppercase}
-header .hora{margin-left:auto;font-size:4vh;font-weight:700;color:var(--texto2);font-variant-numeric:tabular-nums}
-main{display:grid;grid-template-columns:1fr 1fr;grid-auto-rows:1fr;gap:1.6vh 2vw;align-content:stretch;min-height:0}
-.it{display:flex;align-items:center;justify-content:space-between;gap:2vw;padding:1.8vh 2.2vw;border-radius:1.8vh;background:rgba(255,255,255,.08);border:.3vh solid rgba(255,255,255,.08);min-height:0;overflow:hidden}
-.it b{font-size:3.6vh;font-weight:700;line-height:1.1}
-.it small{display:block;font-size:2.2vh;color:var(--texto2);margin-top:.5vh;font-weight:400}
-.it .p{font-size:4vh;font-weight:800;white-space:nowrap;font-variant-numeric:tabular-nums}
-.it.dest{grid-column:1/-1;background:var(--vivo);border-color:var(--vivo);color:var(--txtVivo,#fff)}
-.it.dest b{font-size:5vh}.it.dest .p{font-size:6vh}.it.dest small{color:inherit;opacity:.85}
-.it.dest .tag{font-size:2vh;font-weight:800;letter-spacing:.12em;text-transform:uppercase;opacity:.9;display:block;margin-bottom:.6vh}
-footer{display:flex;align-items:center;gap:2vw;font-size:2.6vh;color:var(--texto2);min-height:4.5vh}
+html,body{height:100%;background:#000;overflow:hidden}
+/* palco fixo 1080×1920 (retrato 9:16), ajustado por escala à tela real; a fonte nunca encolhe por excesso de itens */
+#palco{position:absolute;left:50%;top:50%;width:1080px;height:1920px;transform-origin:center;background:var(--F);color:var(--T);font-family:Rubik,"Segoe UI",system-ui,sans-serif;display:flex;flex-direction:column;overflow:hidden}
+header{background:var(--P);color:var(--sP);padding:44px 60px 40px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;min-height:220px;flex:none}
+header img{max-height:150px;max-width:640px;object-fit:contain;background:#fff;border-radius:22px;padding:14px 26px}
+header h1{font-size:92px;font-weight:900;line-height:1;letter-spacing:.01em;text-wrap:balance}
+header h1.longo{font-size:66px}
+header small{display:block;margin-top:14px;font-size:30px;font-weight:600;letter-spacing:.34em;text-transform:uppercase;opacity:.9}
+.titulo{flex:none;padding:34px 60px 30px;text-align:center;font-size:62px;font-weight:800;line-height:1.08;text-transform:uppercase;letter-spacing:.01em;text-wrap:balance}
+.foto{flex:1 1 300px;min-height:260px;max-height:540px;margin:0 44px;border-radius:28px;background:var(--L) center/cover no-repeat}
+main{flex:none;display:flex;flex-direction:column;justify-content:center;padding:14px 60px}
+.sem-foto main{flex:1;min-height:0}
+.it{display:flex;align-items:baseline;justify-content:space-between;gap:36px;padding:27px 0;border-bottom:3px solid var(--L)}
+.it:last-child{border-bottom:0}
+.it b{font-size:54px;font-weight:600;line-height:1.1}
+.it b small{display:block;font-size:32px;font-weight:400;color:var(--T2);margin-top:6px}
+.it .p{font-size:58px;font-weight:800;white-space:nowrap;font-variant-numeric:tabular-nums}
+.sem-foto .it{padding:40px 0}.sem-foto .it b{font-size:62px}.sem-foto .it .p{font-size:66px}
+.dest{flex:none;margin:0 44px 30px;border-radius:34px;background:var(--P);color:var(--sP);padding:0 44px 40px;text-align:center}
+.dest .rot{display:inline-block;background:var(--A);color:var(--sA);font-size:36px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:14px 40px;border-radius:0 0 22px 22px}
+.dest .txt{font-size:46px;font-weight:500;margin-top:22px;line-height:1.15;text-wrap:balance}
+.dest .val{font-size:132px;font-weight:900;line-height:1;margin-top:14px;font-variant-numeric:tabular-nums}
+.dest .val.txtv{font-size:74px;text-transform:uppercase;margin-top:20px}
+.dest .ate{font-size:28px;opacity:.85;margin-top:16px}
+footer{flex:none;height:92px;border-top:3px solid var(--L);display:flex;align-items:center;gap:28px;padding:0 60px;font-size:28px;color:var(--T2)}
+footer .marca{font-weight:800;font-size:36px;color:var(--T);letter-spacing:-.01em}
 footer .aviso{flex:1;white-space:nowrap;overflow:hidden}
-footer .aviso span{display:inline-block;padding-left:100%;animation:rola 22s linear infinite}
+footer .aviso span{display:inline-block;padding-left:100%;animation:rola 24s linear infinite}
 @keyframes rola{to{transform:translateX(-100%)}}
-footer .pag{display:flex;gap:.8vh}footer .pag i{width:1.4vh;height:1.4vh;border-radius:50%;background:rgba(255,255,255,.25)}footer .pag i.on{background:var(--vivo2)}
-.vazio{grid-column:1/-1;display:grid;place-items:center;text-align:center;color:var(--texto2);font-size:3.4vh;line-height:1.4}
-.erro{height:100%;display:grid;place-items:center;text-align:center;padding:6vw;font-size:3.5vh}
+footer .pag{display:flex;gap:10px}footer .pag i{width:16px;height:16px;border-radius:50%;background:var(--L)}footer .pag i.on{background:var(--P)}
+footer .off{width:16px;height:16px;border-radius:50%;background:#E6A700}
+.vazio{text-align:center;color:var(--T2);font-size:44px;line-height:1.4}
 .troca{animation:entra .5s ease}
-@keyframes entra{from{opacity:0;transform:translateY(1.5vh)}to{opacity:1;transform:none}}
-@media (orientation:portrait){main{grid-template-columns:1fr}.it b{font-size:2.8vh}.it .p{font-size:3vh}.it.dest b{font-size:3.6vh}.it.dest .p{font-size:4.2vh}header h1{font-size:3.6vh}}
+@keyframes entra{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+.erro{position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:6vw;font:600 4vmin Rubik,system-ui,sans-serif;color:#fff}
 </style>
 </head>
 <body>
-<div class="tela" id="tela"></div>
+<div id="palco"></div>
 <script>
 (()=>{
-  const c=new URLSearchParams(location.search).get("c")||"";const $=s=>document.querySelector(s);
-  if(!c){document.body.innerHTML='<div class="erro">Falta o código do Mostra Aí no endereço.</div>';return;}
-  const hex2=h=>{h=(h||"#000").replace("#","");if(h.length===3)h=h.split("").map(x=>x+x).join("");const n=parseInt(h,16);return [(n>>16)&255,(n>>8)&255,n&255];};
-  const lum=h=>{const [r,g,b]=hex2(h);return .2126*r+.7152*g+.0722*b;};const sat=h=>{const [r,g,b]=hex2(h).map(v=>v/255);const mx=Math.max(r,g,b),mn=Math.min(r,g,b);return mx?(mx-mn)/mx:0;};
+  const c=new URLSearchParams(location.search).get("c")||"";const $=s=>document.querySelector(s);const palco=$("#palco");
+  if(!c){document.body.innerHTML='<div class="erro">Falta o código do Mostraí no endereço.</div>';return;}
+  const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]));
+  const hex2=h=>{h=String(h||"#000").replace("#","");if(h.length===3)h=h.split("").map(x=>x+x).join("");const n=parseInt(h,16)||0;return [(n>>16)&255,(n>>8)&255,n&255];};
+  const rl=h=>{const [r,g,b]=hex2(h).map(v=>{v/=255;return v<=.03928?v/12.92:Math.pow((v+.055)/1.055,2.4);});return .2126*r+.7152*g+.0722*b;};
+  const contraste=(a,b)=>{const x=rl(a),y=rl(b);return (Math.max(x,y)+.05)/(Math.min(x,y)+.05);};
+  const sat=h=>{const [r,g,b]=hex2(h).map(v=>v/255);const mx=Math.max(r,g,b),mn=Math.min(r,g,b);return mx?(mx-mn)/mx:0;};
   const mix=(a,b,t)=>{const A=hex2(a),B=hex2(b);return "#"+A.map((v,i)=>Math.round(v+(B[i]-v)*t).toString(16).padStart(2,"0")).join("");};
-  function tema(cores){cores=(cores||[]).filter(Boolean);const esc=cores.find(h=>lum(h)<70)||mix(cores[0]||"#1C1635","#0B1020",.7);let vivo=cores.find(h=>sat(h)>.3&&lum(h)>45&&lum(h)<215&&h!==esc)||cores.find(h=>h!==esc)||"#6933C5";if(lum(vivo)<40)vivo=mix(vivo,"#fff",.35);
-    const r=document.documentElement.style;r.setProperty("--esc",esc);r.setProperty("--fundo",esc);r.setProperty("--vivo",vivo);r.setProperty("--vivo2",mix(vivo,"#fff",.45));r.setProperty("--txtVivo",lum(vivo)<140?"#fff":esc);}
-  const hora=()=>{const d=new Date();return String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0");};
-  let E=null,pag=0,POR=7;
-  function desenhar(){if(!E)return;const ativos=(E.itens||[]).filter(i=>i.ativo!==false&&i.nome);const dest=ativos.filter(i=>i.destaque),com=ativos.filter(i=>!i.destaque);
-    const porPag=Math.max(1,POR-(dest.length?2:0));const pags=Math.max(1,Math.ceil(com.length/porPag));pag=pag%pags;const vis=com.slice(pag*porPag,pag*porPag+porPag);const d1=dest[pag%Math.max(1,dest.length)];
-    const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]));const preco=p=>p?(/^\s*R\$/.test(p)?p:"R$ "+p):"";
-    $("#tela").innerHTML=`<header>${E.logo?`<img class="logo ${lum(getComputedStyle(document.documentElement).getPropertyValue("--esc").trim()||"#000")>150?"esc":""}" src="${esc(E.logo)}" alt="">`:""}<div><h1>${esc(E.nome)}</h1><small>${esc(E.titulo||"")}</small></div><div class="hora">${hora()}</div></header>
-      <main class="troca">${ativos.length?`${d1?`<div class="it dest"><div><span class="tag">Destaque</span><b>${esc(d1.nome)}</b>${d1.desc?`<small>${esc(d1.desc)}</small>`:""}</div><span class="p">${esc(preco(d1.preco))}</span></div>`:""}${vis.map(i=>`<div class="it"><div><b>${esc(i.nome)}</b>${i.desc?`<small>${esc(i.desc)}</small>`:""}</div><span class="p">${esc(preco(i.preco))}</span></div>`).join("")}`:`<div class="vazio">Programação em preparo.<br>Os itens aparecem aqui assim que forem lançados.</div>`}</main>
-      <footer>${E.aviso?`<div class="aviso"><span>${esc(E.aviso)}</span></div>`:`<div class="aviso"></div>`}${pags>1?`<div class="pag">${Array.from({length:pags},(_,i)=>`<i class="${i===pag?"on":""}"></i>`).join("")}</div>`:""}</footer>`;}
-  async function puxar(){try{const r=await fetch(`/api/mostra/${encodeURIComponent(c)}${E?"?v="+E.v:""}`,{cache:"no-store"});if(r.status===404){document.body.innerHTML='<div class="erro">Este Mostra Aí não existe ou foi desligado.</div>';return;}const d=await r.json();if(d.igual)return;E=d;tema(E.cores);pag=0;desenhar();}catch(e){}}
-  puxar();setInterval(puxar,3000);setInterval(()=>{pag++;desenhar();},9000);setInterval(()=>{const h=$(".hora");if(h)h.textContent=hora();},15000);
+  const sobre=h=>contraste(h,"#FFFFFF")>=3?"#FFFFFF":"#1B1B1B";
+  // identidade aprovada do cliente primeiro; sem ela, a paleta de referência do segmento
+  function tema(E){const pal=E.paleta||{};const cs=(E.cores||[]).filter(h=>/^#[0-9a-f]{6}$/i.test(h||""));
+    let P=pal.principal||"#1C1635",A=pal.destaque||"#C98245",F=pal.fundo||"#FFFDF8",T=pal.texto||"#1C1635";
+    if(cs.length){const fortes=cs.filter(h=>contraste(h,"#FFFFFF")>=3).sort((a,b)=>sat(b)-sat(a));P=fortes[0]||mix(cs[0],"#000000",.45);
+      A=cs.find(h=>h!==P&&sat(h)>.25&&contraste(h,P)>=1.6)||mix(P,"#FFFFFF",.55);F=mix(P,"#FFFFFF",.95);T=mix(P,"#000000",.6);}
+    const r=palco.style;r.setProperty("--P",P);r.setProperty("--sP",sobre(P));r.setProperty("--A",A);if(contraste(A,P)<1.6)A=sobre(P);r.setProperty("--sA",contraste(A,"#FFFFFF")>=3?"#FFFFFF":(contraste(A,P)>=3?P:mix(P,"#000000",.5)));
+    r.setProperty("--F",F);r.setProperty("--T",T);const [tr,tg,tb]=hex2(T);r.setProperty("--T2",`rgba(${tr},${tg},${tb},.62)`);r.setProperty("--L",`rgba(${tr},${tg},${tb},.14)`);}
+  // palco 1080×1920 ajustado à tela; TV em pé ligada a um TV Box (que entrega imagem deitada) → gira o palco
+  function ajustar(){const W=innerWidth,H=innerHeight;const g=(E&&W>H)?(E.giro||0):0;const [w,h]=g?[1920,1080]:[1080,1920];const k=Math.min(W/w,H/h);palco.style.transform=`translate(-50%,-50%) rotate(${g}deg) scale(${k})`;}
+  const preco=p=>{p=String(p||"").trim();return /^\d/.test(p)?"R$ "+p:p;};
+  const hoje=()=>{const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");};
+  const dataBR=s=>s.slice(8,10)+"/"+s.slice(5,7);
+  let E=null,pag=0,fora=false;const POR=4;
+  function desenhar(){if(!E)return;const ativos=(E.itens||[]).filter(i=>i.ativo!==false&&i.nome);const pags=Math.max(1,Math.ceil(ativos.length/POR));pag=pag%pags;const vis=ativos.slice(pag*POR,pag*POR+POR);
+    const D=E.destaque||{};const temD=(D.texto||D.valor)&&!(D.ate&&D.ate<hoje());const val=preco(D.valor);
+    palco.className=E.foto?"":"sem-foto";
+    palco.innerHTML=`<header>${E.logo?`<img src="${esc(E.logo)}" alt="${esc(E.nome)}">`:`<h1 class="${String(E.nome||"").length>16?"longo":""}">${esc(E.nome)}</h1>`}${E.rotulo?`<small>${esc(E.rotulo)}</small>`:""}</header>
+      ${E.titulo?`<div class="titulo">${esc(E.titulo)}</div>`:""}
+      ${E.foto?`<div class="foto" style="background-image:url('${esc(E.foto)}')"></div>`:""}
+      <main class="troca">${vis.length?vis.map(i=>`<div class="it"><b>${esc(i.nome)}${i.desc?`<small>${esc(i.desc)}</small>`:""}</b><span class="p">${esc(preco(i.preco))}</span></div>`).join(""):`<div class="vazio">Programação em preparo.<br>Os itens aparecem aqui assim que forem lançados.</div>`}</main>
+      ${temD?`<section class="dest">${D.rotulo?`<span class="rot">${esc(D.rotulo)}</span>`:""}${D.texto?`<div class="txt">${esc(D.texto)}</div>`:""}${val?`<div class="val ${/^R\$/.test(val)&&val.length<=12?"":"txtv"}">${esc(val)}</div>`:""}${D.ate?`<div class="ate">válido até ${dataBR(D.ate)}</div>`:""}</section>`:""}
+      <footer><span class="marca">mostraí</span>${E.aviso?`<div class="aviso"><span>${esc(E.aviso)}</span></div>`:`<div class="aviso"></div>`}${fora?`<i class="off" title="sem conexão: mostrando o último conteúdo"></i>`:""}${pags>1?`<div class="pag">${Array.from({length:pags},(_,i)=>`<i class="${i===pag?"on":""}"></i>`).join("")}</div>`:""}</footer>`;ajustar();}
+  // último conteúdo válido fica guardado só para a tela não apagar quando a internet cai; a fonte é sempre o servidor
+  const guarda={ler(){try{return JSON.parse(localStorage.getItem("mostrai-"+c)||"null");}catch(e){return null;}},por(v){try{localStorage.setItem("mostrai-"+c,JSON.stringify(v));}catch(e){}}};
+  async function puxar(){try{const r=await fetch(`/api/mostra/${encodeURIComponent(c)}${E&&!fora?"?v="+E.v:""}`,{cache:"no-store"});if(r.status===404){document.body.innerHTML='<div class="erro">Este Mostraí não existe ou foi desligado.</div>';return;}if(!r.ok)throw 0;const d=await r.json();const voltou=fora;fora=false;if(d.igual){if(voltou)desenhar();return;}E=d;guarda.por(E);tema(E);pag=0;desenhar();}
+    catch(e){if(!E){E=guarda.ler();if(E)tema(E);}if(!fora){fora=true;desenhar();}}}
+  let tempo=null;function girarPagina(){clearTimeout(tempo);const n=E?(E.itens||[]).filter(i=>i.ativo!==false&&i.nome).slice(pag*POR,pag*POR+POR).length:POR;tempo=setTimeout(()=>{pag++;desenhar();girarPagina();},6000+n*1500);}
+  puxar().then(girarPagina);setInterval(puxar,3000);addEventListener("resize",ajustar);
+  // oferta vence à meia-noite mesmo sem ninguém mexer
+  setInterval(desenhar,10*60*1000);
+  const acordada=async()=>{try{if(navigator.wakeLock)await navigator.wakeLock.request("screen");}catch(e){}};acordada();document.addEventListener("visibilitychange",()=>{if(!document.hidden)acordada();});
   document.addEventListener("click",()=>{if(document.fullscreenEnabled&&!document.fullscreenElement)document.documentElement.requestFullscreen().catch(()=>{});});
 })();
 </script>

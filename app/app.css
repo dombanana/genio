@@ -289,3 +289,14 @@ html.na-casca body.com-acoes{padding-bottom:110px}
 .etapas{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:0 0 12px}.etapas a{text-decoration:none;color:var(--texto);background:#fff;border-radius:12px;padding:8px;text-align:center;font-size:13px;font-weight:600}.etapas a.on{background:var(--navy);color:#fff}
 
 .aviso-rede{position:fixed;left:12px;right:12px;bottom:84px;z-index:9999;background:#B42318;color:#fff;padding:12px 14px;border-radius:12px;font-weight:700;box-shadow:0 6px 20px rgba(0,0,0,.25)}
+
+.mostra-acao{grid-column:1/-1;display:grid;gap:10px;margin-top:10px}
+.mostrai-ref{width:100%;max-height:260px;object-fit:cover;object-position:center 30%;border-radius:12px;display:block}
+.planos{display:grid;gap:6px}
+.plano{display:flex;justify-content:space-between;align-items:center;gap:10px;text-align:left;font:inherit;padding:10px 12px;border-radius:12px;border:1px solid #D9D2F0;background:#fff;color:inherit;cursor:pointer}
+.plano b{font-size:14px;white-space:nowrap}.plano small{font-size:12px;color:var(--texto2);text-align:right}
+.plano.on{border-color:var(--roxo,#6933C5);background:#EFEAFB}.plano.on b{color:var(--roxo,#6933C5)}
+
+html{touch-action:pan-x pan-y}
+.trava-giro{position:absolute;right:8px;top:8px;z-index:5;min-height:40px;padding:0 12px;border-radius:999px;border:1px solid #D9D2F0;background:rgba(255,255,255,.94);color:var(--texto2,#5B5675);font:600 13px Rubik,system-ui,sans-serif;cursor:pointer;touch-action:manipulation}
+.trava-giro.livre{background:var(--roxo,#6933C5);border-color:var(--roxo,#6933C5);color:#fff}

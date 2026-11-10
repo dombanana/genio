@@ -723,18 +723,18 @@ class H(BaseHTTPRequestHandler):
             if p.startswith("/api/mostra/"):
                 partes = p.split("/")   # /api/mostra/<token>[/logo.ext]
                 try:
-                    if len(partes) == 5 and partes[4].startswith("logo."):
+                    if len(partes) == 5 and partes[4].startswith(("logo.", "foto.")):
                         ct, raw = MOSTRA.logo(partes[3], partes[4])
                         return self._send(200, body=raw, ctype=ct, cache="public, max-age=600")
                     est = MOSTRA.ler(partes[3]) if len(partes) == 4 else None
                     if not est:
-                        return self._erro(404, "este Mostra Aí não existe")
+                        return self._erro(404, "este Mostraí não existe")
                     qs = {k: v[0] for k, v in _parse_qs(urlparse(self.path).query or "").items()}
                     if qs.get("v") and str(est.get("v")) == qs["v"]:
                         return self._send(200, {"v": est["v"], "igual": True})
                     return self._send(200, est)
                 except (ValueError, FileNotFoundError):
-                    return self._erro(404, "este Mostra Aí não existe")
+                    return self._erro(404, "este Mostraí não existe")
             if p.startswith("/api/arq/"):
                 if not self._eu():
                     return self._erro(401, "entre com a sua conta")
@@ -866,11 +866,18 @@ class H(BaseHTTPRequestHandler):
     def do_PUT(self):
         p = urlparse(self.path).path.rstrip("/")
         try:
+            if p.startswith("/api/mostra/") and p.endswith("/foto") and len(p.split("/")) == 5:   # foto principal da tela
+                try:
+                    return self._send(200, MOSTRA.foto_gravar(p.split("/")[3], self._json().get("foto")))
+                except FileNotFoundError:
+                    return self._erro(404, "este Mostraí não existe")
+                except ValueError as e:
+                    return self._erro(400, str(e))
             if p.startswith("/api/mostra/") and len(p.split("/")) == 4:   # programação do cliente: o código é a chave
                 try:
                     return self._send(200, MOSTRA.gravar(p.split("/")[3], self._json()))
                 except (ValueError, FileNotFoundError):
-                    return self._erro(404, "este Mostra Aí não existe")
+                    return self._erro(404, "este Mostraí não existe")
             eu = self._eu()
             if not eu:
                 return self._erro(401, "entre com a sua conta")
@@ -923,7 +930,7 @@ class H(BaseHTTPRequestHandler):
                     return self._send(200, marca_preparar(self._json()))
                 except Exception as e:
                     return self._erro(500, "preparo falhou: " + str(e)[:160])
-            if p == "/api/mostra":   # acionar o Mostra Aí de uma loja (vendedor logado) → links
+            if p == "/api/mostra":   # acionar o Mostraí de uma loja (vendedor logado) → links
                 eu = self._eu()
                 if not eu:
                     return self._erro(401, "entre com a sua conta")
@@ -935,7 +942,7 @@ class H(BaseHTTPRequestHandler):
                     DADOS.cliente_gravar(slug, ficha, eu["nome"])
                     return self._send(200, {"token": est["token"], "tela": f"/mostra.html?c={est['token']}", "programacao": f"/programacao.html?c={est['token']}", "estado": est})
                 except Exception as e:
-                    return self._erro(500, "Mostra Aí: " + str(e)[:200])
+                    return self._erro(500, "Mostraí: " + str(e)[:200])
             if p == "/api/kit/aplicar":
                 if not self._eu():
                     return self._erro(401, "entre com a sua conta")

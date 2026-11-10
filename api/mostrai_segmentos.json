@@ -1,0 +1,268 @@
+{
+ "01_Cafeteria": {
+  "rotulo": "CAFETERIA",
+  "titulo": "CAFÉ & BOAS PAUSAS",
+  "itens": [
+   "Espresso",
+   "Cappuccino",
+   "Café coado",
+   "Chocolate quente"
+  ],
+  "destaque_rotulo": "COMBO DA CASA",
+  "paleta": {
+   "principal": "#59382D",
+   "destaque": "#C98245",
+   "fundo": "#FFF9F1",
+   "texto": "#2B201A",
+   "texto_sobre_principal": "#FFFFFF"
+  },
+  "jpg": "/brand/mostrai/JPG/01_Cafeteria_Mostrai.jpg"
+ },
+ "02_Restaurante": {
+  "rotulo": "RESTAURANTE",
+  "titulo": "SABORES DO DIA",
+  "itens": [
+   "Prato executivo",
+   "Massa da casa",
+   "Salada especial",
+   "Suco natural"
+  ],
+  "destaque_rotulo": "ALMOÇO COMPLETO",
+  "paleta": {
+   "principal": "#1F6B45",
+   "destaque": "#C44236",
+   "fundo": "#FFFFFF",
+   "texto": "#173C29",
+   "texto_sobre_principal": "#FFFFFF"
+  },
+  "jpg": "/brand/mostrai/JPG/02_Restaurante_Mostrai.jpg"
+ },
+ "03_Padaria": {
+  "rotulo": "PADARIA",
+  "titulo": "FRESQUINHO PRA VOCÊ",
+  "itens": [
+   "Pão francês",
+   "Pão de queijo",
+   "Café coado",
+   "Fatia de bolo"
+  ],
+  "destaque_rotulo": "COMBO DO CAFÉ",
+  "paleta": {
+   "principal": "#D4A124",
+   "destaque": "#CE8D18",
+   "fundo": "#FFF9E8",
+   "texto": "#51280F",
+   "texto_sobre_principal": "#51280F"
+  },
+  "jpg": "/brand/mostrai/JPG/03_Padaria_Mostrai.jpg"
+ },
+ "04_Clinica": {
+  "rotulo": "CLÍNICA",
+  "titulo": "CUIDADO E ATENDIMENTO",
+  "itens": [
+   "Consulta clínica",
+   "Consulta de retorno",
+   "Avaliação preventiva",
+   "Agendamento"
+  ],
+  "destaque_rotulo": "EM DESTAQUE",
+  "paleta": {
+   "principal": "#126D80",
+   "destaque": "#84B8B8",
+   "fundo": "#FFFFFF",
+   "texto": "#163C43",
+   "texto_sobre_principal": "#FFFFFF"
+  },
+  "jpg": "/brand/mostrai/JPG/04_Clinica_Mostrai.jpg"
+ },
+ "05_Estetica": {
+  "rotulo": "ESTÉTICA",
+  "titulo": "SEU MOMENTO DE CUIDADO",
+  "itens": [
+   "Limpeza de pele",
+   "Massagem relaxante",
+   "Design de sobrancelhas",
+   "Avaliação"
+  ],
+  "destaque_rotulo": "COMBO BEM-ESTAR",
+  "paleta": {
+   "principal": "#775467",
+   "destaque": "#BD9F82",
+   "fundo": "#FFFAF7",
+   "texto": "#372C34",
+   "texto_sobre_principal": "#FFFFFF"
+  },
+  "jpg": "/brand/mostrai/JPG/05_Estetica_Mostrai.jpg"
+ },
+ "06_Salao": {
+  "rotulo": "SALÃO",
+  "titulo": "RENOVE SEU VISUAL",
+  "itens": [
+   "Corte",
+   "Escova",
+   "Hidratação",
+   "Coloração"
+  ],
+  "destaque_rotulo": "COMBO DA SEMANA",
+  "paleta": {
+   "principal": "#37303D",
+   "destaque": "#BD8E6A",
+   "fundo": "#FAF7F2",
+   "texto": "#29222F",
+   "texto_sobre_principal": "#FFFFFF"
+  },
+  "jpg": "/brand/mostrai/JPG/06_Salao_Mostrai.jpg"
+ },
+ "07_Imobiliaria": {
+  "rotulo": "IMOBILIÁRIA",
+  "titulo": "ENCONTRE SEU ESPAÇO",
+  "itens": [
+   "Apartamento · 2 quartos",
+   "Casa · 3 quartos",
+   "Sala comercial · locação",
+   "Agende uma visita"
+  ],
+  "destaque_rotulo": "IMÓVEL EM DESTAQUE",
+  "paleta": {
+   "principal": "#243E61",
+   "destaque": "#C49A56",
+   "fundo": "#FFFFFF",
+   "texto": "#1B2C43",
+   "texto_sobre_principal": "#FFFFFF"
+  },
+  "jpg": "/brand/mostrai/JPG/07_Imobiliaria_Mostrai.jpg"
+ },
+ "08_Loja_Roupas": {
+  "rotulo": "MODA",
+  "titulo": "ESCOLHAS PARA SEU ESTILO",
+  "itens": [
+   "Camiseta básica",
+   "Calça jeans",
+   "Camisa casual",
+   "Vestido"
+  ],
+  "destaque_rotulo": "OFERTA DA SEMANA",
+  "paleta": {
+   "principal": "#4F394B",
+   "destaque": "#C0969D",
+   "fundo": "#FFFAFC",
+   "texto": "#30242D",
+   "texto_sobre_principal": "#FFFFFF"
+  },
+  "jpg": "/brand/mostrai/JPG/08_Loja_Roupas_Mostrai.jpg"
+ },
+ "09_Pet_Shop": {
+  "rotulo": "PET SHOP",
+  "titulo": "CARINHO EM CADA ESCOLHA",
+  "itens": [
+   "Banho · pequeno porte",
+   "Banho e tosa · pequeno porte",
+   "Petisco · 100 g",
+   "Brinquedo"
+  ],
+  "destaque_rotulo": "COMBO DE CUIDADO",
+  "paleta": {
+   "principal": "#176E73",
+   "destaque": "#E1A34F",
+   "fundo": "#FFFCF4",
+   "texto": "#133F42",
+   "texto_sobre_principal": "#FFFFFF"
+  },
+  "jpg": "/brand/mostrai/JPG/09_Pet_Shop_Mostrai.jpg"
+ },
+ "10_Farmacia": {
+  "rotulo": "FARMÁCIA",
+  "titulo": "CUIDADO NO SEU DIA",
+  "itens": [
+   "Sabonete · 90 g",
+   "Shampoo · 350 ml",
+   "Creme dental · 90 g",
+   "Protetor solar · 120 ml"
+  ],
+  "destaque_rotulo": "OFERTA DA SEMANA",
+  "paleta": {
+   "principal": "#1C7861",
+   "destaque": "#79B7AC",
+   "fundo": "#FFFFFF",
+   "texto": "#173D31",
+   "texto_sobre_principal": "#FFFFFF"
+  },
+  "jpg": "/brand/mostrai/JPG/10_Farmacia_Mostrai.jpg"
+ },
+ "11_Academia": {
+  "rotulo": "ACADEMIA",
+  "titulo": "SEU RITMO, SEU TREINO",
+  "itens": [
+   "Plano mensal",
+   "Plano trimestral",
+   "Aula avulsa",
+   "Avaliação física"
+  ],
+  "destaque_rotulo": "CONHEÇA A ACADEMIA",
+  "paleta": {
+   "principal": "#203746",
+   "destaque": "#C1B538",
+   "fundo": "#FFFFFF",
+   "texto": "#182A36",
+   "texto_sobre_principal": "#FFFFFF"
+  },
+  "jpg": "/brand/mostrai/JPG/11_Academia_Mostrai.jpg"
+ },
+ "12_Autopecas": {
+  "rotulo": "OFICINA",
+  "titulo": "SEU CARRO, NOSSO CUIDADO",
+  "itens": [
+   "Alinhamento",
+   "Balanceamento · por roda",
+   "Palhetas · par",
+   "Revisão"
+  ],
+  "destaque_rotulo": "COMBO DA SEMANA",
+  "paleta": {
+   "principal": "#34434F",
+   "destaque": "#D37C25",
+   "fundo": "#FFFFFF",
+   "texto": "#243039",
+   "texto_sobre_principal": "#FFFFFF"
+  },
+  "jpg": "/brand/mostrai/JPG/12_Autopecas_Mostrai.jpg"
+ },
+ "13_Escritorio": {
+  "rotulo": "SERVIÇOS",
+  "titulo": "SOLUÇÕES PARA O SEU DIA",
+  "itens": [
+   "Impressão A4 P&B",
+   "Impressão A4 colorida",
+   "Digitalização",
+   "Encadernação"
+  ],
+  "destaque_rotulo": "COMBO PRÁTICO",
+  "paleta": {
+   "principal": "#334C62",
+   "destaque": "#7FA3AC",
+   "fundo": "#FFFFFF",
+   "texto": "#233444",
+   "texto_sobre_principal": "#FFFFFF"
+  },
+  "jpg": "/brand/mostrai/JPG/13_Escritorio_Mostrai.jpg"
+ },
+ "14_Mercado": {
+  "rotulo": "MERCADO",
+  "titulo": "OFERTAS PARA SUA CASA",
+  "itens": [
+   "Banana",
+   "Tomate",
+   "Arroz · 5 kg",
+   "Leite · 1 L"
+  ],
+  "destaque_rotulo": "DESTAQUE DO DIA",
+  "paleta": {
+   "principal": "#466B38",
+   "destaque": "#D9A637",
+   "fundo": "#FFFCF4",
+   "texto": "#2B4022",
+   "texto_sobre_principal": "#FFFFFF"
+  },
+  "jpg": "/brand/mostrai/JPG/14_Mercado_Mostrai.jpg"
+ }
+}

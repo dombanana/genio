@@ -1,0 +1,21 @@
+MOSTRAÍ — TV VERTICAL PARA 14 SEGMENTOS
+
+14 imagens individuais JPG de referência. Cada imagem mostra uma TV instalada em modo retrato, com mix de produtos ou serviços, preços e um destaque promocional.
+São demonstrações visuais; não incluem aplicativo, painel administrativo ou atualização online implementada.
+
+LÓGICA PARA O SISTEMA QUE SERÁ PROGRAMADO
+1. O comerciante mantém catálogo, preços, unidades, fotos, disponibilidade e período da promoção em um painel online.
+2. O sistema valida os campos e publica uma página HTML específica para cada estabelecimento/tela.
+3. A TV ou player abre essa URL em tela cheia, com orientação retrato. Referência de layout: 1080 x 1920, proporção 9:16; adaptar à resolução real do equipamento.
+4. Priorizar nome da loja, imagem principal, até quatro itens por página e uma promoção de destaque. Usar valores grandes, alto contraste e preços com unidade.
+5. Se houver muitos itens, dividir em páginas. Não diminuir a fonte até prejudicar a leitura à distância. A duração de cada página depende da quantidade de conteúdo.
+6. Após publicar uma alteração, atualizar os dados exibidos preservando o último conteúdo válido durante perda de conexão. A infraestrutura de atualização e cache precisa ser implementada.
+7. Respeitar a identidade aprovada do cliente. As cores de cada segmento são somente referências.
+8. Mostrar condições reais, validade, disponibilidade e qualificadores de preços. Não publicar ofertas vencidas. Para ramos regulamentados, revisar conteúdo com o responsável pelo estabelecimento antes de usar.
+
+Todos os estabelecimentos GIO, produtos, imóveis, valores e ofertas destas imagens são fictícios e ilustrativos. Não representam anúncios reais.
+O nome mostraí identifica o painel digital; GIO é o estabelecimento fictício.
+
+TIPO DOS ARQUIVOS
+Os JPGs são mockups fotográficos da TV instalada no comércio. Não são capturas frontais do conteúdo da tela nem páginas HTML prontas. O outro sistema deve reconstruir o conteúdo em HTML com dados reais, usando estes exemplos para direção visual. Não exibir a fotografia de uma TV dentro da própria TV.
+CONTEUDO_DEMONSTRATIVO.json contém títulos, itens e valores ilustrativos separados por segmento. CATALOGO.json lista dimensões e hashes. PROMPTS_GERACAO.json registra a direção visual utilizada.

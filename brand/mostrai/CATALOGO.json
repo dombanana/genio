@@ -1,0 +1,170 @@
+[
+  {
+    "segmento": "01_Cafeteria",
+    "nome": "CAFETERIA",
+    "jpg": "JPG/01_Cafeteria_Mostrai.jpg",
+    "dimensoes_px": [
+      1024,
+      1536
+    ],
+    "sha256": "7f6a96d58dccc4f8afa03fceab658106a1d37d44f9f693188e44fa00afb2c5ac",
+    "tipo": "mockup_fotografico_tv_vertical",
+    "conteudo_ficticio": true
+  },
+  {
+    "segmento": "02_Restaurante",
+    "nome": "RESTAURANTE",
+    "jpg": "JPG/02_Restaurante_Mostrai.jpg",
+    "dimensoes_px": [
+      1024,
+      1536
+    ],
+    "sha256": "1cb955335b2807bd503bf19bf7380155dcf5a67de6cc414be6e9414af63d0ee6",
+    "tipo": "mockup_fotografico_tv_vertical",
+    "conteudo_ficticio": true
+  },
+  {
+    "segmento": "03_Padaria",
+    "nome": "PADARIA",
+    "jpg": "JPG/03_Padaria_Mostrai.jpg",
+    "dimensoes_px": [
+      1024,
+      1536
+    ],
+    "sha256": "3d376c95a89f2008fd075f0777b9b4bf92b4fb5c2b101c3c342eaeeb361b4269",
+    "tipo": "mockup_fotografico_tv_vertical",
+    "conteudo_ficticio": true
+  },
+  {
+    "segmento": "04_Clinica",
+    "nome": "CLÍNICA",
+    "jpg": "JPG/04_Clinica_Mostrai.jpg",
+    "dimensoes_px": [
+      1024,
+      1536
+    ],
+    "sha256": "1767299f7aff82e2b6937056ec2757f1f61057e8e3cf3dd6ead646c5cbcb4903",
+    "tipo": "mockup_fotografico_tv_vertical",
+    "conteudo_ficticio": true
+  },
+  {
+    "segmento": "05_Estetica",
+    "nome": "ESTÉTICA",
+    "jpg": "JPG/05_Estetica_Mostrai.jpg",
+    "dimensoes_px": [
+      1024,
+      1536
+    ],
+    "sha256": "ba78d5c165944882367ca3bc6134c10a8fc88ce61c8bda14b46f6ab91e973d74",
+    "tipo": "mockup_fotografico_tv_vertical",
+    "conteudo_ficticio": true
+  },
+  {
+    "segmento": "06_Salao",
+    "nome": "SALÃO",
+    "jpg": "JPG/06_Salao_Mostrai.jpg",
+    "dimensoes_px": [
+      1024,
+      1536
+    ],
+    "sha256": "9db3ec4f892e8c8c8e9b4d0309cfb1cb59e6ce9bcf8542ddce3739c501594fa6",
+    "tipo": "mockup_fotografico_tv_vertical",
+    "conteudo_ficticio": true
+  },
+  {
+    "segmento": "07_Imobiliaria",
+    "nome": "IMOBILIÁRIA",
+    "jpg": "JPG/07_Imobiliaria_Mostrai.jpg",
+    "dimensoes_px": [
+      1024,
+      1536
+    ],
+    "sha256": "6e429ff689585d527e2125f0625612214e00334ee82c55727729da8c16939432",
+    "tipo": "mockup_fotografico_tv_vertical",
+    "conteudo_ficticio": true
+  },
+  {
+    "segmento": "08_Loja_Roupas",
+    "nome": "MODA",
+    "jpg": "JPG/08_Loja_Roupas_Mostrai.jpg",
+    "dimensoes_px": [
+      1024,
+      1536
+    ],
+    "sha256": "25be85e922f3fe372a85508d0ec0a7fd2b384f8ff2cfd524354f154c676f8551",
+    "tipo": "mockup_fotografico_tv_vertical",
+    "conteudo_ficticio": true
+  },
+  {
+    "segmento": "09_Pet_Shop",
+    "nome": "PET SHOP",
+    "jpg": "JPG/09_Pet_Shop_Mostrai.jpg",
+    "dimensoes_px": [
+      1024,
+      1536
+    ],
+    "sha256": "06fe96ba363e33763928bb65708d131ad033d523327f062e3914ffd71ec28ca5",
+    "tipo": "mockup_fotografico_tv_vertical",
+    "conteudo_ficticio": true
+  },
+  {
+    "segmento": "10_Farmacia",
+    "nome": "FARMÁCIA",
+    "jpg": "JPG/10_Farmacia_Mostrai.jpg",
+    "dimensoes_px": [
+      1024,
+      1536
+    ],
+    "sha256": "de68f0105fdb92e1bad45f34a5c57a99c007a9404464eee201507dc5fb07f406",
+    "tipo": "mockup_fotografico_tv_vertical",
+    "conteudo_ficticio": true
+  },
+  {
+    "segmento": "11_Academia",
+    "nome": "ACADEMIA",
+    "jpg": "JPG/11_Academia_Mostrai.jpg",
+    "dimensoes_px": [
+      1024,
+      1536
+    ],
+    "sha256": "3efdb7b16d489efbf87cec90d8586bf13fb50c0acad95eb29d754c309f2633b6",
+    "tipo": "mockup_fotografico_tv_vertical",
+    "conteudo_ficticio": true
+  },
+  {
+    "segmento": "12_Autopecas",
+    "nome": "OFICINA",
+    "jpg": "JPG/12_Autopecas_Mostrai.jpg",
+    "dimensoes_px": [
+      1024,
+      1536
+    ],
+    "sha256": "b5753441aa16280a082da6c897f9c58e9575d2c84dc0d05693b409c29f5ce83f",
+    "tipo": "mockup_fotografico_tv_vertical",
+    "conteudo_ficticio": true
+  },
+  {
+    "segmento": "13_Escritorio",
+    "nome": "SERVIÇOS",
+    "jpg": "JPG/13_Escritorio_Mostrai.jpg",
+    "dimensoes_px": [
+      1024,
+      1536
+    ],
+    "sha256": "b320e7cd55a07d9cfa8cf5c480a134f771fccd369b67d12cffc7450e01ef4fa7",
+    "tipo": "mockup_fotografico_tv_vertical",
+    "conteudo_ficticio": true
+  },
+  {
+    "segmento": "14_Mercado",
+    "nome": "MERCADO",
+    "jpg": "JPG/14_Mercado_Mostrai.jpg",
+    "dimensoes_px": [
+      1024,
+      1536
+    ],
+    "sha256": "bae11c385594034ffa376a3bce97fac70052a7ecf1a2d5f93b94e3b13b36c4dc",
+    "tipo": "mockup_fotografico_tv_vertical",
+    "conteudo_ficticio": true
+  }
+]

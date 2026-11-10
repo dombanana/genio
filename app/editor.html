@@ -2,11 +2,11 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover,user-scalable=no">
 <title>GênIO · Edição do produto</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="app.css?v=83658f04e8">
+<link rel="stylesheet" href="app.css?v=95b95dac54">
 <style>
 body.com-acoes{padding-bottom:calc(250px + env(safe-area-inset-bottom,0))}
 .prancheta{position:relative;background:repeating-conic-gradient(#e9e5f3 0 25%,#fff 0 50%) 0 0/18px 18px;border-radius:16px;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;height:min(72vw,460px);margin:0 0 8px}
@@ -36,11 +36,11 @@ body.com-acoes{padding-bottom:calc(250px + env(safe-area-inset-bottom,0))}
 .ia textarea{width:100%;box-sizing:border-box;font:inherit;font-size:14px;border:1.5px solid var(--linha);border-radius:10px;padding:8px 10px;min-height:64px}
 .acs{display:flex;gap:8px;flex-wrap:wrap}.acs button{border:0;background:var(--lav);color:var(--marca);border-radius:12px;min-height:42px;padding:0 12px;font:inherit;font-weight:700;font-size:14px}
 </style>
-</head>
+<script>window.giroLivre=false;</script></head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=83658f04e8"></script>
-<script src="qr.js?v=83658f04e8"></script>
+<script src="app.js?v=95b95dac54"></script>
+<script src="qr.js?v=95b95dac54"></script>
 <script>
 (async()=>{
   const {$,$$,esc,qs,sessao,dados,ficha,nav,topo,voltar,nomeLoja,telFmt,cliente,gravarCliente,definirCliente,setorNome}=App;
@@ -49,7 +49,7 @@ body.com-acoes{padding-bottom:calc(250px + env(safe-area-inset-bottom,0))}
   if(!l){$("#app").innerHTML=`${topo()}<p>Loja não encontrada.</p>${nav("rota")}`;return;}
   const nome=nomeLoja(l.nome);definirCliente(l);let c=await App.garantirCamadas(l);const man=c.manual||null;
   // gabarito da gráfica: área total = produto + sangria; a guia mostra corte (vermelho) e segurança (verde-água)
-  const G=await (await fetch("gabaritos.json?v=83658f04e8")).json();const P=G.produtos[pid]||G.produtos.capacho;
+  const G=await (await fetch("gabaritos.json?v=95b95dac54")).json();const P=G.produtos[pid]||G.produtos.capacho;
   const sang=P.sangria_mm!=null?P.sangria_mm:G.sangria_mm,seg=P.seguranca_mm!=null?P.seguranca_mm:G.seguranca_mm;
   const PX=Math.min(100,Math.floor(3000/Math.max(P.w_cm+sang/5,P.h_cm+sang/5)));  // px por cm (teto 3000 px)
   const W=Math.round((P.w_cm+2*sang/10)*PX),H=Math.round((P.h_cm+2*sang/10)*PX),B=Math.round(sang/10*PX),S=Math.round(seg/10*PX);
@@ -87,7 +87,7 @@ body.com-acoes{padding-bottom:calc(250px + env(safe-area-inset-bottom,0))}
     $("#app").innerHTML=`${topo()}${voltar(`produtos.html?l=${encodeURIComponent(slug)}`,"Produtos")}
     <h1 style="font-size:24px;margin-bottom:2px">${esc(P.nome)}${DUAS?` <span class="sub" style="font-weight:400">· ${FACE}</span>`:""}</h1><p class="sub">${esc(nome)}${CARIMBO?' · só texto, CNPJ em negrito':''}</p>
     ${DUAS?`<div class="faces" style="display:flex;gap:8px;margin:0 0 10px"><a class="btn sec sm ${FACE==="frente"?"on":""}" style="flex:1;min-height:38px;text-decoration:none" href="editor.html?l=${encodeURIComponent(slug)}&p=${pid}">Frente</a><a class="btn sec sm ${FACE==="verso"?"on":""}" style="flex:1;min-height:38px;text-decoration:none" href="editor.html?l=${encodeURIComponent(slug)}&p=${pid}&face=verso">Verso</a></div>`:""}
-    <div class="prancheta" id="pr"><canvas id="cv"></canvas></div>
+    <div class="prancheta" id="pr"><canvas id="cv"></canvas><button type="button" class="trava-giro ${giroLivre?"livre":""}" id="travaGiro">${giroLivre?"⟳ Giro livre":"🔒 Giro travado"}</button></div>
     <div class="medida-ed"><span>${P.w_cm} × ${P.h_cm} cm${sang?` · sangria ${sang} mm`:""} · segurança ${seg} mm${P.a_confirmar?" · <b style='color:#B7791F'>medida a confirmar</b>":""}</span><span id="selnome">${sel?esc(sel.nome||sel.tipo):"toque num elemento · pinça amplia"}</span></div>${P.fonte?`<details class="forn" style="margin:2px 0 8px;font-size:13px;color:var(--texto2)"><summary>${esc(P.fonte)}</summary>${Object.entries(P.opcoes||{}).map(([k,v])=>`<div><b>${esc(k)}:</b> ${esc(v)}</div>`).join("")}</details>`:""}
     <div class="ferr" style="grid-template-columns:repeat(8,1fr)">${[["ret","▭","Retângulo"],["qua","◻","Quadrado"],["tri","△","Triângulo"],["cir","○","Círculo"],["seta","➜","Seta"],["txt","T","Texto"]].concat(CARIMBO?[]:[["logo","✦","Marca"]]).map(([id,ic,n])=>`<button type="button" data-add="${id}"><span class="ic">${ic}</span>${n}</button>`).join("")}<button type="button" id="ferrBorracha" class="${borracha?"on":""}"><span class="ic">🧽</span>Borracha</button></div>
     ${borracha?`<div class="painel"><div class="linha"><label>Borracha${sel&&(sel.tipo==="camada"||sel.tipo==="imagem")?` em <b>${esc(sel.nome)}</b>`:" · toque numa camada do logotipo"}</label><input type="range" id="pincel" min="1" max="12" value="${pincel||4}"><button type="button" class="btn sec mini" id="desfazerB" ${desfazer.length?"":"disabled"}>↶ Desfazer</button></div><small class="muted">Arraste sobre a prancheta para apagar partes da camada selecionada.</small></div>`:""}
@@ -186,8 +186,10 @@ body.com-acoes{padding-bottom:calc(250px + env(safe-area-inset-bottom,0))}
       const ti=$("#tirarIA");if(ti)ti.onclick=()=>{doc.fundoImg=null;render();};}
     // gestos: 1 dedo move/redimensiona o elemento (ou arrasta a prancheta se não tocar em nada); 2 dedos = pinça
     const pr=$("#pr");let drag=null,pan=null,pinch=null,tocouVazio=null;const ptrs=new Map();
+    // giro: travado (pinça só amplia, alinhamento mantido) ou livre (pinça só gira, sem ampliar)
+    {const tg=$("#travaGiro");["pointerdown","pointerup"].forEach(n=>tg.addEventListener(n,ev=>ev.stopPropagation()));tg.onclick=()=>{giroLivre=!giroLivre;tg.classList.toggle("livre",giroLivre);tg.textContent=giroLivre?"⟳ Giro livre":"🔒 Giro travado";};}
     const pos=ev=>{const b=cv.getBoundingClientRect();return {x:(ev.clientX-b.left)/b.width*W,y:(ev.clientY-b.top)/b.height*H};};
-    pr.addEventListener("pointerdown",ev=>{try{pr.setPointerCapture(ev.pointerId);}catch(e){}ptrs.set(ev.pointerId,ev);
+    pr.addEventListener("pointerdown",ev=>{if(ev.target.id==="travaGiro")return;try{pr.setPointerCapture(ev.pointerId);}catch(e){}ptrs.set(ev.pointerId,ev);
       if(ptrs.size===2){drag=null;pan=null;guiaCentro=null;const [a,b]=[...ptrs.values()];pinch={d:Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY),ang:Math.atan2(b.clientY-a.clientY,b.clientX-a.clientX),z,px,py,cx:(a.clientX+b.clientX)/2,cy:(a.clientY+b.clientY)/2,
           el:sel?{rot:sel.rot||0,w:sel.w,h:sel.h,x:sel.x,y:sel.y,tam:sel.tam,grupo:sel.grupo==="logo"?doc.el.filter(e=>e.grupo==="logo").map(e=>({e,x:e.x,y:e.y,w:e.w,h:e.h,rot:e.rot||0})):null}:null};return;}
       const p=pos(ev);
@@ -200,9 +202,9 @@ body.com-acoes{padding-bottom:calc(250px + env(safe-area-inset-bottom,0))}
       if(sel)drag={modo:"mov",p,x:sel.x,y:sel.y,grupo:sel.grupo==="logo"?doc.el.filter(e=>e.grupo==="logo").map(e=>({e,x:e.x,y:e.y})):null};else pan={x:ev.clientX,y:ev.clientY,px,py};desenhar();});
     pr.addEventListener("pointermove",ev=>{if(!ptrs.has(ev.pointerId))return;ptrs.set(ev.pointerId,ev);
       if(pinch&&ptrs.size===2){const [a,b]=[...ptrs.values()];const d=Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY);const ang=Math.atan2(b.clientY-a.clientY,b.clientX-a.clientX);
-        if(pinch.el&&sel){const f=d/pinch.d;let dr=(ang-pinch.ang)*180/Math.PI;if(Math.abs(dr)<2)dr=0;const snap=r=>{const n=Math.round(r/90)*90;return Math.abs(r-n)<3?n:r;};const E=pinch.el;
-          if(E.grupo){const x0=Math.min(...E.grupo.map(g=>g.x)),y0=Math.min(...E.grupo.map(g=>g.y)),x1=Math.max(...E.grupo.map(g=>g.x+g.w)),y1=Math.max(...E.grupo.map(g=>g.y+g.h));const cxm=(x0+x1)/2,cym=(y0+y1)/2;E.grupo.forEach(g=>{g.e.w=g.w*f;g.e.h=g.h*f;g.e.x=cxm+(g.x+g.w/2-cxm)*f-g.e.w/2;g.e.y=cym+(g.y+g.h/2-cym)*f-g.e.h/2;g.e.rot=snap(g.rot+dr);});}
-          else{const cxm=E.x+E.w/2,cym=E.y+E.h/2;if(sel.tipo==="texto"||sel.tipo==="campos"||sel.tipo==="lista"||sel.tipo==="carimbo"){sel.tam=Math.max(6,Math.round(E.tam*f));sel.w=E.w*f;}else{sel.w=E.w*f;sel.h=E.h*f;}sel.x=cxm-sel.w/2;sel.y=cym-sel.h/2;sel.rot=snap(E.rot+dr);}
+        if(pinch.el&&sel){const f=giroLivre?1:d/pinch.d;let dr=giroLivre?(ang-pinch.ang)*180/Math.PI:0;if(Math.abs(dr)<2)dr=0;const snap=r=>{const n=Math.round(r/90)*90;return Math.abs(r-n)<3?n:r;};const E=pinch.el;
+          if(E.grupo){const x0=Math.min(...E.grupo.map(g=>g.x)),y0=Math.min(...E.grupo.map(g=>g.y)),x1=Math.max(...E.grupo.map(g=>g.x+g.w)),y1=Math.max(...E.grupo.map(g=>g.y+g.h));const cxm=(x0+x1)/2,cym=(y0+y1)/2;E.grupo.forEach(g=>{g.e.w=g.w*f;g.e.h=g.h*f;g.e.x=cxm+(g.x+g.w/2-cxm)*f-g.e.w/2;g.e.y=cym+(g.y+g.h/2-cym)*f-g.e.h/2;g.e.rot=dr?snap(g.rot+dr):g.rot;});}
+          else{const cxm=E.x+E.w/2,cym=E.y+E.h/2;if(sel.tipo==="texto"||sel.tipo==="campos"||sel.tipo==="lista"||sel.tipo==="carimbo"){sel.tam=Math.max(6,Math.round(E.tam*f));sel.w=E.w*f;}else{sel.w=E.w*f;sel.h=E.h*f;}sel.x=cxm-sel.w/2;sel.y=cym-sel.h/2;sel.rot=dr?snap(E.rot+dr):E.rot;}
           $("#selnome").textContent=`${sel.nome||sel.tipo} · ${Math.round(sel.rot||0)}°`;desenhar();return;}
         z=Math.min(6,Math.max(1,pinch.z*d/pinch.d));const mx=(a.clientX+b.clientX)/2,my=(a.clientY+b.clientY)/2;px=pinch.px+(mx-pinch.cx);py=pinch.py+(my-pinch.cy);encaixe();return;}
       if(pan){px=pan.px+(ev.clientX-pan.x);py=pan.py+(ev.clientY-pan.y);encaixe();return;}

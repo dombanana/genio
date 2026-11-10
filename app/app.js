@@ -191,7 +191,7 @@ const App=(()=>{
   // ---- arte automática: logotipo tratado centralizado preenchendo a área segura do gabarito, cor padrão do material
   const COR_PADRAO={capacho:"#2B2B2D",rigido:"#F4F1EA",vinil:null,tecido:"#F4F1EA",papel:"#FFFFFF",lona:"#FFFFFF",carimbo:null};
   const PRODUTOS_IDS=["capacho","placas","adesivos","uniformes","impressos","panfleto","banners","parede","brindes","carimbo","windbanner","faixa","folheto","camiseta","bone","avental"];
-  let _G=null;const gabaritos=async()=>_G||(_G=await (await fetch("gabaritos.json?v=83658f04e8")).json());
+  let _G=null;const gabaritos=async()=>_G||(_G=await (await fetch("gabaritos.json?v=95b95dac54")).json());
   const carregarImg=src=>new Promise(res=>{const i=new Image();i.crossOrigin="anonymous";i.onload=()=>res(i);i.onerror=()=>res(null);i.src=src;});
   // ---- carimbo: só texto — nome, razão social, CNPJ (negrito), endereço, telefone; nunca logotipo
   async function dadosCarimbo(l){const cad=await ficha(l.slug).catch(()=>null);const L=(cad&&cad.lacunas)||{};const leit=(L.leitura||{}).valor||"";const razao=((leit.match(/Razão social: ([^·]+)/)||[])[1]||"").trim();const cnpj=((leit.match(/CNPJ:? ?([\d./-]{14,18})/)||[])[1]||"");
@@ -235,7 +235,7 @@ const App=(()=>{
     const aw=W-2*(B+S),ah=H-2*(B+S);const f=Math.min(aw/LW,(P.ancora==="topo"?ah*0.45:ah)/LH);const w=LW*f,h=LH*f;const x=(W-w)/2,y=P.ancora==="topo"?B+S+ah*0.05:(H-h)/2;
     const fundo=P.sem_fundo?null:(COR_PADRAO[P.superficie]===undefined?"#FFFFFF":COR_PADRAO[P.superficie]);
     // kit de 14 setores (10/11): a maquete frontal do ramo da loja é a arte de partida de todos os produtos
-    await carregarScript("qr.js?v=83658f04e8");await carregarScript("impressos.js?v=83658f04e8");await carregarScript("kits14.js?v=83658f04e8");
+    await carregarScript("qr.js?v=95b95dac54");await carregarScript("impressos.js?v=95b95dac54");await carregarScript("kits14.js?v=95b95dac54");
     if(window.Kits14&&window.Kits14.ARQ[pid]){const K=await window.Kits14.montar(App,pid,c,l,{W,H,B,S,im,rec});
       if(K){const doc={fundo:K.fundo,fundoImg:null,el:K.el,campos:null,auto:true,kit:KIT14,setorKit:K.setorKit,kitRef:K.kitRef,W,H};const imgs={[c.manual.tratado]:im};
         const k=Math.min(1,1400/Math.max(W,H));const cv=document.createElement("canvas");cv.width=Math.round(W*k);cv.height=Math.round(H*k);const g=cv.getContext("2d");g.scale(k,k);
@@ -366,4 +366,24 @@ const App=(()=>{
   function ligarLongo(root,fn){$$("[data-longo]",root).forEach(el=>{let t=null,p=null;el.addEventListener("pointerdown",ev=>{p={x:ev.clientX,y:ev.clientY};t=setTimeout(()=>{t=null;if(navigator.vibrate)navigator.vibrate(12);fn(el);},450);});
     const c=ev=>{if(t&&p&&ev.type==="pointermove"&&Math.hypot(ev.clientX-p.x,ev.clientY-p.y)<8)return;clearTimeout(t);t=null;};el.addEventListener("pointermove",c);el.addEventListener("pointerup",c);el.addEventListener("pointercancel",c);el.addEventListener("contextmenu",ev=>ev.preventDefault());});}
   return {$,$$,esc,qs,ZONA,zonaDe,get PLANO(){return PLANO;},setorNome,nomeLoja,telFmt,ini,sessao,eu,dados,ficha,estrelas,estrelasHTML,estado,salvar,abrirVendas,lerCliente,gravarCliente,cliente,lerChave,gravarChave,API,definirCliente,classificar,logoPrincipal,removerLogo,estadoLogo,ROTULO_LOGO,aprovarLogo,escolherImagem,abrirLogotipo,entradas,ligarEntradas,artePadrao,gerarProdutos,contextualizar,aparar,assarRecortes,desenharElementos,desenharTexto,desenharQR,desenharVetor,carregarScript,recortarLogo,PRODUTOS_IDS,separarCores,garantirCamadas,dadosCarimbo,desenharCarimbo,cenaCarimbo,desenharLista,desenharSeta,listarNotas,gravarNota,apagarNota,diasDeRota,reagendar,hojeISO,dataCurta,META,ICONES,NA_CASCA,avulsos,novoAvulso,atualizarAvulso,ocorrenciasManuais,gravarOcorrencias,ocorrenciasAuto,ETAPAS,etapaDe,moverEtapa,nav,topo,voltar,acoes,menuLongo,ligarLongo};
+})();
+
+// ---- tela travada: a pinça não amplia o app; só as artes abrem (prancheta, logotipo e imagens de arte, que têm a própria pinça)
+(function(){
+  const ARTE=".prancheta,.palco,.galeria-ctx img,[data-zoom]";
+  ["gesturestart","gesturechange","gestureend"].forEach(n=>document.addEventListener(n,e=>e.preventDefault(),{passive:false}));
+  document.addEventListener("touchmove",e=>{if(e.touches.length>1)e.preventDefault();},{passive:false});
+  document.addEventListener("wheel",e=>{if(e.ctrlKey)e.preventDefault();},{passive:false});
+  let ult=0;document.addEventListener("touchend",e=>{const t=Date.now();if(t-ult<320&&!(e.target.closest&&e.target.closest("input,textarea,select,button,a,"+ARTE)))e.preventDefault();ult=t;},{passive:false});
+  // imagem de arte: pinça amplia, um dedo arrasta quando ampliada, dois toques voltam ao tamanho
+  let Z=null,toque=0;
+  const aplicar=()=>{if(Z)Z.im.style.transform=`translate(${Z.x}px,${Z.y}px) scale(${Z.z})`;};
+  document.addEventListener("touchstart",e=>{const im=e.target.closest&&e.target.closest(".galeria-ctx img,img[data-zoom]");if(!im)return;
+    if(!Z||Z.im!==im){Z={im,z:1,x:0,y:0};im.style.transformOrigin="center";im.style.willChange="transform";im.style.touchAction="none";}
+    const t=e.touches;if(t.length===2){Z.p={d:Math.hypot(t[0].clientX-t[1].clientX,t[0].clientY-t[1].clientY),z:Z.z,x:Z.x,y:Z.y,cx:(t[0].clientX+t[1].clientX)/2,cy:(t[0].clientY+t[1].clientY)/2};Z.m=null;}
+    else if(t.length===1){const ag=Date.now();if(ag-toque<300){Z.z=1;Z.x=0;Z.y=0;aplicar();}toque=ag;Z.m=Z.z>1?{x:t[0].clientX,y:t[0].clientY,x0:Z.x,y0:Z.y}:null;}},{passive:true});
+  document.addEventListener("touchmove",e=>{if(!Z)return;const t=e.touches;
+    if(t.length===2&&Z.p){const d=Math.hypot(t[0].clientX-t[1].clientX,t[0].clientY-t[1].clientY);Z.z=Math.min(6,Math.max(1,Z.p.z*d/Z.p.d));Z.x=Z.p.x+((t[0].clientX+t[1].clientX)/2-Z.p.cx);Z.y=Z.p.y+((t[0].clientY+t[1].clientY)/2-Z.p.cy);if(Z.z===1){Z.x=0;Z.y=0;}aplicar();}
+    else if(t.length===1&&Z.m){Z.x=Z.m.x0+(t[0].clientX-Z.m.x);Z.y=Z.m.y0+(t[0].clientY-Z.m.y);aplicar();e.preventDefault();}},{passive:false});
+  document.addEventListener("touchend",e=>{if(Z&&e.touches.length<2)Z.p=null;if(Z&&!e.touches.length)Z.m=null;},{passive:true});
 })();

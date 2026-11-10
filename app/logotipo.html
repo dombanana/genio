@@ -2,11 +2,11 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover,user-scalable=no">
 <title>GênIO · Logotipo</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="app.css?v=83658f04e8">
+<link rel="stylesheet" href="app.css?v=95b95dac54">
 <style>
 body.com-acoes{padding-bottom:calc(150px + env(safe-area-inset-bottom,0))}
 .palco{position:relative;height:min(50vh,480px);background:repeating-conic-gradient(#e9e5f3 0 25%,#fff 0 50%) 0 0/18px 18px;border-radius:16px;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
@@ -27,7 +27,7 @@ body.com-acoes{padding-bottom:calc(150px + env(safe-area-inset-bottom,0))}
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=83658f04e8"></script>
+<script src="app.js?v=95b95dac54"></script>
 <script>
 (async()=>{
   const {$,$$,esc,qs,sessao,dados,nav,topo,voltar,nomeLoja,cliente,gravarCliente,definirCliente}=App;
@@ -40,7 +40,7 @@ body.com-acoes{padding-bottom:calc(150px + env(safe-area-inset-bottom,0))}
   const voltaHref=de==="fontes"?`fontes.html?l=${encodeURIComponent(slug)}&tipo=${esc(qs.get("tipo")||"busca")}`:`visita.html?l=${encodeURIComponent(slug)}`;
   $("#app").innerHTML=`${topo()}${voltar(voltaHref,de==="fontes"?"Pesquisa":"Visita")}
   <h1 style="font-size:24px;margin-bottom:2px">Logotipo</h1><p class="sub">${esc(nome)}${fonte?` · ${esc(fonte)}`:""}</p>
-  <div class="palco" id="palco"><canvas id="cv"></canvas><canvas id="sel"></canvas><div class="caixa" id="caixa"></div>${[0,1,2,3].map(i=>`<div class="alca" data-i="${i}"></div>`).join("")}</div>
+  <div class="palco" id="palco"><canvas id="cv"></canvas><canvas id="sel"></canvas><div class="caixa" id="caixa"></div><button type="button" class="trava-giro" id="travaGiro">🔒 Giro travado</button>${[0,1,2,3].map(i=>`<div class="alca" data-i="${i}"></div>`).join("")}</div>
   <div class="dica" id="st">Carregando a imagem…</div>
   <div class="modos"><button type="button" data-m="ver" class="on">👆 Ver · pinça</button><button type="button" data-m="area">▭ Marcar área</button><button type="button" data-m="fundo">✂ Tirar fundo</button></div>
   <div id="opc"></div>
@@ -48,7 +48,7 @@ body.com-acoes{padding-bottom:calc(150px + env(safe-area-inset-bottom,0))}
   ${nav("rota")}`;document.body.classList.add("com-acoes");
   const palco=$("#palco"),cv=$("#cv"),cx=cv.getContext("2d",{willReadFrequently:true}),sel=$("#sel"),sx=sel.getContext("2d"),caixa=$("#caixa"),alcas=$$(".alca");
   let W,H,base=null,hist=[],modo="ver",ferr="varinha",tol=28,pincel=18,contiguo=true,selMask=null,nSel=0,R=null;
-  let z=1,px=0,py=0,rotV=0;  // zoom, deslocamento e giro em visualização
+  let z=1,px=0,py=0,rotV=0,giroLivre=false;  // zoom, deslocamento e giro em visualização
   const encaixe=()=>{const pw=palco.clientWidth,ph=palco.clientHeight;const s=Math.min(pw/W,ph/H)*z;[cv,sel].forEach(c=>{c.style.width=W+"px";c.style.height=H+"px";c.style.transform=`translate(${px+(pw-W*s)/2}px,${py+(ph-H*s)/2}px) scale(${s}) translate(${W/2}px,${H/2}px) rotate(${rotV}deg) translate(${-W/2}px,${-H/2}px)`;});desenharCaixa();};
   function carregar(src){return new Promise(res=>{const im=new Image();im.crossOrigin="anonymous";im.onload=()=>{const s=Math.min(1,1400/Math.max(im.width,im.height));W=Math.round(im.width*s);H=Math.round(im.height*s);cv.width=sel.width=W;cv.height=sel.height=H;cx.drawImage(im,0,0,W,H);
       try{base=cx.getImageData(0,0,W,H);}catch(e){return res("bloqueada");}encaixe();res("ok");};im.onerror=()=>res("erro");im.src=src;});}
@@ -63,7 +63,8 @@ body.com-acoes{padding-bottom:calc(150px + env(safe-area-inset-bottom,0))}
   const aplicar=()=>cx.putImageData(base,0,0);
   // ---- gestos: 1 dedo (ver: arrasta · área: marca · fundo: ferramenta) · 2 dedos: pinça sempre
   const ptrs=new Map();let pinch=null,drag=null,press=null,timer=null,alca=null,pint=false;
-  palco.addEventListener("pointerdown",ev=>{try{palco.setPointerCapture(ev.pointerId);}catch(e){}ptrs.set(ev.pointerId,ev);
+  {const tg=$("#travaGiro");tg.onclick=()=>{giroLivre=!giroLivre;tg.classList.toggle("livre",giroLivre);tg.textContent=giroLivre?"⟳ Giro livre":"🔒 Giro travado";};}
+  palco.addEventListener("pointerdown",ev=>{if(ev.target.id==="travaGiro")return;try{palco.setPointerCapture(ev.pointerId);}catch(e){}ptrs.set(ev.pointerId,ev);
     if(ptrs.size===2){clearTimeout(timer);press=null;pint=false;const [a,b]=[...ptrs.values()];pinch={d:Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY),ang:Math.atan2(b.clientY-a.clientY,b.clientX-a.clientX),rot:0,z,px,py,cx:(a.clientX+b.clientX)/2,cy:(a.clientY+b.clientY)/2};return;}
     const a=ev.target.closest(".alca");if(a&&modo==="area"){alca=+a.dataset.i;return;}
     if(modo==="ver"){drag={x:ev.clientX,y:ev.clientY,px,py};return;}
@@ -73,7 +74,7 @@ body.com-acoes{padding-bottom:calc(150px + env(safe-area-inset-bottom,0))}
       if(ferr==="borracha"||ferr==="recuperar"){guardar();pint=true;pincelar(p);}
       if(ferr==="gotas"){const i=(p.y*W+p.x)*4;$("#st").textContent=`Cor tocada: #${[base.data[i],base.data[i+1],base.data[i+2]].map(v=>v.toString(16).padStart(2,"0")).join("")}`;}}});
   palco.addEventListener("pointermove",ev=>{if(!ptrs.has(ev.pointerId))return;ptrs.set(ev.pointerId,ev);
-    if(pinch&&ptrs.size===2){const [a,b]=[...ptrs.values()];const d=Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY);z=Math.min(8,Math.max(1,pinch.z*d/pinch.d));const mx=(a.clientX+b.clientX)/2,my=(a.clientY+b.clientY)/2;px=pinch.px+(mx-pinch.cx);py=pinch.py+(my-pinch.cy);
+    if(pinch&&ptrs.size===2){const [a,b]=[...ptrs.values()];const d=Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY);if(!giroLivre){z=Math.min(8,Math.max(1,pinch.z*d/pinch.d));const mx=(a.clientX+b.clientX)/2,my=(a.clientY+b.clientY)/2;px=pinch.px+(mx-pinch.cx);py=pinch.py+(my-pinch.cy);encaixe();return;}
       // giro com a pinça (endireitar): mostra ao vivo; aplica na imagem ao soltar; encaixa em 0/90/180/270
       let dr=(Math.atan2(b.clientY-a.clientY,b.clientX-a.clientX)-pinch.ang)*180/Math.PI;if(Math.abs(dr)<2)dr=0;const n=Math.round(dr/90)*90;if(Math.abs(dr-n)<3)dr=n;pinch.rot=dr;rotV=dr;encaixe();$("#st").textContent=dr?`Girando ${dr>0?"+":""}${Math.round(dr)}° · solte para aplicar`:`${W}×${H} px`;return;}
     if(drag){px=drag.px+(ev.clientX-drag.x);py=drag.py+(ev.clientY-drag.y);encaixe();return;}

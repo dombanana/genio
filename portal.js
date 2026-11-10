@@ -35,7 +35,7 @@ const G=(()=>{
     {id:"banners",nome:"Banners e faixas",img:"img/cena-banners.jpg?v=3d7a2206ab"},
     {id:"brindes",nome:"Brindes e carimbos",img:"img/cat-brindes.jpg?v=3d7a2206ab"},
     {id:"parede",nome:"Adesivos de parede",img:"img/cat-parede.jpg?v=3d7a2206ab"},
-    {id:"mostraai",nome:"Mostra Aí · cardápio digital",img:"img/cena-mostraai.jpg?v=3d7a2206ab"}];
+    {id:"mostraai",nome:"Mostraí · cardápio digital",img:"img/cena-mostraai.jpg?v=3d7a2206ab"}];
   // fotos: imagens do catálogo GenIO (brand/catalogo no repositório), produto isolado em fundo lavanda; só foto e título
   // cartão do catálogo (referência do dono, 04/11): título à esquerda, cena do produto à direita; o cartão inteiro é o link; sem link, "Em breve" explícito
   const cardMod=(m,link)=>{const d=`<b>${esc(m.nome)}${m.on?"":'<span class="tag">Em breve</span>'}</b><div class="cena" style="background-image:url('${m.img}')"></div>`;
