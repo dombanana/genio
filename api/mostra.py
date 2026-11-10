@@ -79,6 +79,14 @@ def criar(slug, ficha, loja, por=None):
                "v": 1, "criado": time.strftime("%Y-%m-%dT%H:%M:%S"), "por": por,
                "destaque": {"rotulo": G["destaque_rotulo"], "texto": "", "valor": "", "ate": ""},
                "itens": [{"id": f"i{i+1}", "nome": n, "preco": "", "desc": "", "ativo": True} for i, n in enumerate(G["itens"])]}
+    # segmento conferido na visita mudou e o lojista ainda não lançou preço: a tela acompanha o segmento certo
+    seg_novo = segmento((loja or {}).get("setor") or est.get("setor"))
+    if est.get("segmento") != seg_novo and not any((i.get("preco") or "").strip() for i in est.get("itens", [])) and not (est.get("destaque") or {}).get("valor"):
+        G = SEGMENTOS[seg_novo]
+        est.update({"segmento": seg_novo, "setor": (loja or {}).get("setor") or est.get("setor"), "rotulo": G["rotulo"], "titulo": G["titulo"], "paleta": G["paleta"],
+                    "destaque": {"rotulo": G["destaque_rotulo"], "texto": "", "valor": "", "ate": ""},
+                    "itens": [{"id": f"i{i+1}", "nome": n, "preco": "", "desc": "", "ativo": True} for i, n in enumerate(G["itens"])]})
+        est["v"] = int(est.get("v") or 1) + 1
     if not est.get("segmento"):   # telas criadas antes do pacote de 14 segmentos
         seg = segmento(est.get("setor")); G = SEGMENTOS[seg]
         est.update({"segmento": seg, "rotulo": G["rotulo"], "paleta": G["paleta"]})

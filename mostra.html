@@ -62,7 +62,7 @@ footer .off{width:16px;height:16px;border-radius:50%;background:#E6A700}
   // identidade aprovada do cliente primeiro; sem ela, a paleta de referência do segmento
   function tema(E){const pal=E.paleta||{};const cs=(E.cores||[]).filter(h=>/^#[0-9a-f]{6}$/i.test(h||""));
     let P=pal.principal||"#1C1635",A=pal.destaque||"#C98245",F=pal.fundo||"#FFFDF8",T=pal.texto||"#1C1635";
-    if(cs.length){const fortes=cs.filter(h=>contraste(h,"#FFFFFF")>=3).sort((a,b)=>sat(b)-sat(a));P=fortes[0]||mix(cs[0],"#000000",.45);
+    if(cs.length){const fortes=cs.filter(h=>contraste(h,"#FFFFFF")>=3);P=fortes[0]||mix(cs[0],"#000000",.45);
       A=cs.find(h=>h!==P&&sat(h)>.25&&contraste(h,P)>=1.6)||mix(P,"#FFFFFF",.55);F=mix(P,"#FFFFFF",.95);T=mix(P,"#000000",.6);}
     const r=palco.style;r.setProperty("--P",P);r.setProperty("--sP",sobre(P));r.setProperty("--A",A);if(contraste(A,P)<1.6)A=sobre(P);r.setProperty("--sA",contraste(A,"#FFFFFF")>=3?"#FFFFFF":(contraste(A,P)>=3?P:mix(P,"#000000",.5)));
     r.setProperty("--F",F);r.setProperty("--T",T);const [tr,tg,tb]=hex2(T);r.setProperty("--T2",`rgba(${tr},${tg},${tb},.62)`);r.setProperty("--L",`rgba(${tr},${tg},${tb},.14)`);}
