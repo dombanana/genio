@@ -31,6 +31,50 @@ def _destaque(d):
     return {"rotulo": str(d.get("rotulo") or "")[:28], "texto": str(d.get("texto") or "")[:60], "valor": str(d.get("valor") or "")[:22],
             "ate": ate if re.match(r"^\d{4}-\d{2}-\d{2}$", ate) else ""}
 
+HEX = re.compile(r"^#[0-9a-fA-F]{6}$")
+MODELOS = ("lista", "sem-foto", "vitrine", "combo")
+
+def _item(it, i):
+    return {"id": re.sub(r"[^a-z0-9]", "", str(it.get("id") or f"i{i+1}"))[:16] or f"i{i+1}",
+            "nome": str(it.get("nome") or "")[:60], "preco": str(it.get("preco") or "")[:20],
+            "desc": str(it.get("desc") or "")[:40], "apartir": it.get("apartir") is True, "ativo": it.get("ativo", True) is not False}
+
+def _telas(lista, antigas, token):
+    """telas do carrossel: cada uma com modelo, foto própria e os seus itens (o preço ligado àquela foto)"""
+    fotos = {t.get("id"): t.get("foto") for t in (antigas or [])}
+    out = []
+    for k, t in enumerate(lista[:20]):
+        if not isinstance(t, dict):
+            continue
+        tid = re.sub(r"[^a-z0-9]", "", str(t.get("id") or f"t{k+1}"))[:16] or f"t{k+1}"
+        itens = [_item(it, i) for i, it in enumerate((t.get("itens") or [])[:12]) if isinstance(it, dict)]
+        # foto: só as desta tela guardadas no servidor; sem o campo, fica a que já estava; null tira
+        f = t.get("foto")
+        foto = f if isinstance(f, str) and f.startswith(f"/api/mostra/{token}/") else (None if ("foto" in t and f is None) else fotos.get(tid))
+        out.append({"id": tid, "modelo": t.get("modelo") if t.get("modelo") in MODELOS else "lista", "foto": foto, "itens": itens})
+    return out
+
+def _estilo(e, ant):
+    e = e if isinstance(e, dict) else {}; out = dict(ant or {})
+    if e.get("fonte") in ("moderna", "elegante", "impacto"): out["fonte"] = e["fonte"]
+    if e.get("tamanho") in ("auto", "P", "M", "G"): out["tamanho"] = e["tamanho"]
+    if e.get("logo_pos") in ("centro", "esquerda", "canto"): out["logo_pos"] = e["logo_pos"]
+    if e.get("logo_tam") in ("P", "M", "G"): out["logo_tam"] = e["logo_tam"]
+    if isinstance(e.get("rodape"), bool): out["rodape"] = e["rodape"]
+    if e.get("combo") in ("todas", "nenhuma"): out["combo"] = e["combo"]
+    try:
+        if e.get("tempo") is not None: out["tempo"] = max(5, min(60, int(e["tempo"])))
+    except (TypeError, ValueError):
+        pass
+    if isinstance(e.get("cores"), dict):
+        out["cores"] = {k: (v if HEX.match(str(v or "")) else "") for k, v in e["cores"].items() if k in ("fundo", "faixa", "destaque", "texto")}
+    return out
+
+def publico(est):
+    """o que a tela e a programação recebem: o estado + o que o ramo sugere (complemento certo e itens de partida)"""
+    G = SEGMENTOS.get(est.get("segmento") or "") or {}
+    return {**est, "complemento": G.get("complemento") or {"rotulo": "Complemento", "exemplo": ""}, "sugestoes": G.get("sugestoes") or []}
+
 def _arq(token):
     return os.path.join(PASTA, token + ".json")
 
@@ -104,16 +148,14 @@ def gravar(token, mud):
     est = ler(token)
     if not est:
         raise FileNotFoundError
-    if isinstance(mud.get("itens"), list):
-        itens = []
-        for i, it in enumerate(mud["itens"][:60]):
-            if not isinstance(it, dict):
-                continue
-            itens.append({"id": re.sub(r"[^a-z0-9]", "", str(it.get("id") or f"i{i+1}"))[:16] or f"i{i+1}",
-                          "nome": str(it.get("nome") or "")[:60], "preco": str(it.get("preco") or "")[:20],
-                          "desc": str(it.get("desc") or "")[:40], "ativo": it.get("ativo", True) is not False})
-        est["itens"] = itens
-    for k, n in (("titulo", 40), ("aviso", 140)):
+    if isinstance(mud.get("telas"), list):
+        est["telas"] = _telas(mud["telas"], est.get("telas"), token)
+        est["itens"] = [it for t in est["telas"] for it in t["itens"]]
+    elif isinstance(mud.get("itens"), list):
+        est["itens"] = [_item(it, i) for i, it in enumerate(mud["itens"][:60]) if isinstance(it, dict)]
+    if "estilo" in mud:
+        est["estilo"] = _estilo(mud["estilo"], est.get("estilo"))
+    for k, n in (("titulo", 40), ("aviso", 70)):
         if k in mud:
             est[k] = str(mud[k] or "")[:n]
     if "destaque" in mud:
@@ -133,7 +175,7 @@ def gravar(token, mud):
     _escrever(token, est)
     return est
 
-def foto_gravar(token, data_url):
+def foto_gravar(token, data_url, tela=None):
     """foto principal da tela (JPEG já reduzido no aparelho de quem envia); fica no servidor"""
     import base64
     est = ler(token)
@@ -145,18 +187,26 @@ def foto_gravar(token, data_url):
     raw = base64.b64decode(m.group(2)); ext = {"jpeg": "jpg"}.get(m.group(1), m.group(1))
     if len(raw) > 4_000_000:
         raise ValueError("foto grande demais")
+    tela = re.sub(r"[^a-z0-9]", "", str(tela or ""))[:16]
+    alvo = next((t for t in (est.get("telas") or []) if t.get("id") == tela), None) if tela else None
+    base = f"foto-{tela}" if alvo else "foto"
     pasta = os.path.join(PASTA, token); os.makedirs(pasta, exist_ok=True)
     for f in os.listdir(pasta):
-        if f.startswith("foto."):
+        if f.startswith(base + "."):
             os.remove(os.path.join(pasta, f))
-    with open(os.path.join(pasta, "foto." + ext), "wb") as f:
+    with open(os.path.join(pasta, base + "." + ext), "wb") as f:
         f.write(raw)
-    est["v"] = int(est.get("v") or 1) + 1; est["foto"] = f"/api/mostra/{token}/foto.{ext}?v={est['v']}"; est["atualizado"] = time.strftime("%Y-%m-%dT%H:%M:%S")
+    est["v"] = int(est.get("v") or 1) + 1; url = f"/api/mostra/{token}/{base}.{ext}?v={est['v']}"
+    if alvo:
+        alvo["foto"] = url
+    else:
+        est["foto"] = url
+    est["atualizado"] = time.strftime("%Y-%m-%dT%H:%M:%S")
     _escrever(token, est)
     return est
 
 def logo(token, nome):
-    if not TOKEN.match(token or "") or not re.match(r"^(logo|foto)\.[a-z0-9]{1,5}$", nome or ""):
+    if not TOKEN.match(token or "") or not re.match(r"^(logo|foto|foto-[a-z0-9]{1,16})\.[a-z0-9]{1,5}$", nome or ""):
         raise ValueError("caminho inválido")
     ext = nome.rsplit(".", 1)[1]
     mime = {v: k for k, v in DADOS.EXT.items()}.get(ext, "application/octet-stream")

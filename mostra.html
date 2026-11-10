@@ -5,57 +5,80 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <title>Mostraí</title>
 <meta name="robots" content="noindex">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800;900&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800;900&family=Playfair+Display:wght@600;700;800;900&family=Oswald:wght@400;500;600;700&display=swap">
 <style>
 :root{--P:#1C1635;--sP:#fff;--A:#C98245;--sA:#1C1635;--F:#FFFDF8;--T:#1C1635;--T2:rgba(28,22,53,.62);--L:rgba(28,22,53,.14)}
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;width:100%;background:#000;overflow:hidden}
-/* a moldura fixa do tamanho da tela segura o palco: o palco de 1080 px nunca alarga a página no celular */
+/* a moldura fixa do tamanho da tela segura o palco: o palco nunca alarga a página no celular */
 #moldura{position:fixed;inset:0;overflow:hidden;contain:strict}
-/* palco fixo 1080×1920 (retrato 9:16), ajustado por escala à tela real; a fonte nunca encolhe por excesso de itens */
-#palco{--d:1;position:absolute;left:0;top:0;width:1080px;height:1920px;transform-origin:0 0;background:var(--F);color:var(--T);font-family:Rubik,"Segoe UI",system-ui,sans-serif;display:flex;flex-direction:column;overflow:hidden}
-header{background:var(--P);color:var(--sP);padding:44px 60px 40px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;min-height:220px;flex:none}
-header img{max-height:150px;max-width:640px;object-fit:contain;background:#fff;border-radius:22px;padding:14px 26px}
-header h1{font-size:92px;font-weight:900;line-height:1;letter-spacing:.01em;text-wrap:balance}
-header h1.longo{font-size:66px}
-header small{display:block;margin-top:14px;font-size:30px;font-weight:600;letter-spacing:.34em;text-transform:uppercase;opacity:.9}
-.titulo{flex:none;padding:34px 60px 30px;text-align:center;font-size:62px;font-weight:800;line-height:1.08;text-transform:uppercase;letter-spacing:.01em;text-wrap:balance}
-.foto{flex:1 1 300px;min-height:260px;max-height:var(--fh,540px);margin:0 44px;border-radius:28px;background:var(--L) center/cover no-repeat}
-main{flex:1 0 auto;display:flex;flex-direction:column;justify-content:center;padding:14px 60px}
-.sem-foto main{flex:1;min-height:0}
-.it{display:flex;align-items:baseline;justify-content:space-between;gap:36px;padding:calc(27px*var(--d)) 0;border-bottom:3px solid var(--L)}
-.it:last-child{border-bottom:0}
-.it b{font-size:calc(54px*var(--d));font-weight:600;line-height:1.1}
-.it b small{display:block;font-size:max(24px,calc(32px*var(--d)));font-weight:400;color:var(--T2);margin-top:6px}
-.it .p{font-size:calc(58px*var(--d));font-weight:800;white-space:nowrap;font-variant-numeric:tabular-nums}
-.sem-foto .it{padding:calc(40px*var(--d)) 0}.sem-foto .it b{font-size:calc(62px*var(--d))}.sem-foto .it .p{font-size:calc(66px*var(--d))}
-.cheio .foto{min-height:180px}.sem-espaco .foto{display:none}
-/* TV deitada (paisagem): marca, foto e oferta à esquerda; a lista inteira à direita */
-.pais{flex:1;min-height:0;display:grid;grid-template-columns:37% 1fr}
-.pais aside{min-height:0;display:flex;flex-direction:column;overflow:hidden;background:var(--P)}
-.pais aside header{flex:1 1 auto;min-height:200px}
-.pais aside .foto{flex:1 1 300px;min-height:220px;max-height:none;margin:0 36px 30px}
-.pais aside .dest .val{font-size:110px}.pais aside .dest .txt{font-size:40px}
-.pais aside .dest{margin:0 36px 36px;background:color-mix(in srgb,var(--P) 82%,#000)}
-.pais .col{min-height:0;display:flex;flex-direction:column;overflow:hidden}
-.pais .titulo{text-align:left;padding:48px 70px 18px}
-.pais main{flex:1;min-height:0;padding:10px 70px 20px}
-.dest{flex:none;margin:0 44px 30px;border-radius:34px;background:var(--P);color:var(--sP);padding:0 44px 40px;text-align:center}
-.dest .rot{display:inline-block;background:var(--A);color:var(--sA);font-size:36px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:14px 40px;border-radius:0 0 22px 22px}
-.dest .txt{font-size:46px;font-weight:500;margin-top:22px;line-height:1.15;text-wrap:balance}
-.dest .val{font-size:132px;font-weight:900;line-height:1;margin-top:14px;font-variant-numeric:tabular-nums}
-.dest .val.txtv{font-size:74px;text-transform:uppercase;margin-top:20px}
-.dest .ate{font-size:28px;opacity:.85;margin-top:16px}
-footer{flex:none;height:92px;border-top:3px solid var(--L);display:flex;align-items:center;gap:28px;padding:0 60px;font-size:28px;color:var(--T2)}
-footer .marca{font-weight:800;font-size:36px;color:var(--T);letter-spacing:-.01em}
-footer .aviso{flex:1;white-space:nowrap;overflow:hidden}
-footer .aviso span{display:inline-block;padding-left:100%;animation:rola 24s linear infinite}
-@keyframes rola{to{transform:translateX(-100%)}}
-footer .pag{display:flex;gap:10px}footer .pag i{width:16px;height:16px;border-radius:50%;background:var(--L)}footer .pag i.on{background:var(--P)}
-footer .off{width:16px;height:16px;border-radius:50%;background:#E6A700}
-.vazio{text-align:center;color:var(--T2);font-size:44px;line-height:1.4}
-.troca{animation:entra .5s ease}
-@keyframes entra{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+/* palco fixo: 1080×1920 em pé, 1920×1080 deitado. Todos os tamanhos são fixos (molde): nada se mexe na troca de tela */
+#palco{position:absolute;left:0;top:0;transform-origin:0 0;background:var(--F);color:var(--T);font-family:var(--fonte,Rubik),"Segoe UI",system-ui,sans-serif;overflow:hidden}
+.pg{position:absolute;inset:0;display:flex;flex-direction:column;background:var(--F);transition:opacity .8s ease}
+.pg.entra{opacity:0}
+/* faixa da marca */
+.faixa{flex:none;height:var(--faixaH);background:var(--P);color:var(--sP);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;padding:0 60px;text-align:center}
+.faixa.esquerda{flex-direction:row;justify-content:space-between;text-align:right;gap:40px}
+.faixa.canto{flex-direction:row;justify-content:flex-start;gap:36px}
+.faixa.canto .tit{flex:1;min-width:0;text-align:center;font-size:52px}
+.faixa.esquerda .tit{flex:1;min-width:0}
+.faixa.esquerda .logo,.faixa.canto .logo{max-width:58%}
+.logo{flex:none;height:var(--logoH);display:flex;align-items:center;justify-content:center;max-width:860px}
+.faixa.esquerda .logo,.faixa.canto .logo{justify-content:flex-start}
+.faixa.canto .logo{height:calc(var(--logoH)*.72)}
+.logo img{height:100%;max-width:100%;object-fit:contain}
+.logo.placa{background:var(--placa);border-radius:22px;padding:14px 28px}
+.logo h1{font-size:calc(var(--logoH)*.46);font-weight:800;line-height:1;white-space:nowrap}
+.tit{font-size:50px;font-weight:700;line-height:1.05;text-transform:uppercase;letter-spacing:.02em}
+/* foto da tela */
+.foto{flex:none;height:var(--fotoH);background:var(--L) center/cover no-repeat}
+.foto.vazia{background:color-mix(in srgb,var(--P) 88%,#fff);display:grid;place-items:center}
+.foto.vazia .logo{opacity:.18;height:45%}
+/* lista: linhas fixas, alinhadas no alto; linha sem item fica vazia */
+.lista{flex:none;height:var(--listaH);padding:14px 60px 0;display:flex;flex-direction:column}
+.it{flex:none;height:var(--row);display:flex;align-items:center;justify-content:space-between;gap:30px}
+.it.cheio{border-bottom:2px solid var(--L)}
+.it .n{min-width:0;flex:1}
+.it .n b{display:block;font-size:var(--nome);font-weight:600;line-height:1.12;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.it .n small{display:block;font-size:var(--desc);font-weight:400;color:var(--T2);margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.it .p{flex:none;text-align:right;font-size:var(--preco);font-weight:800;line-height:1.05;white-space:nowrap;font-variant-numeric:tabular-nums}
+.it .p i{display:block;font-style:normal;font-size:var(--desc);font-weight:500;color:var(--T2);margin-bottom:2px}
+/* oferta (combo) */
+.combo{flex:none;height:var(--comboH);margin:0 44px 30px;border-radius:30px;background:var(--P);color:var(--sP);position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:46px 40px 18px}
+.combo .rot{position:absolute;top:0;left:50%;transform:translateX(-50%);background:var(--A);color:var(--sA);font-size:30px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:12px 38px;border-radius:0 0 20px 20px;white-space:nowrap}
+.combo .txt{font-size:40px;font-weight:500;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.combo .val{font-size:var(--valC,108px);font-weight:900;line-height:1.05;font-variant-numeric:tabular-nums;white-space:nowrap}
+.combo .val.palavra{font-size:calc(var(--valC,108px)*.62);text-transform:uppercase}
+.combo .ate{font-size:26px;opacity:.85;margin-top:4px}
+.combo.grande{--valC:170px;height:auto;padding-top:80px;padding-bottom:50px}.combo.grande .txt{font-size:56px}.combo.grande .rot{font-size:38px}
+/* vitrine: uma foto grande e um item */
+.vit{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px 70px}
+.vit b{font-size:84px;font-weight:700;line-height:1.08}
+.vit small{font-size:38px;color:var(--T2);margin-top:12px}
+.vit i{font-style:normal;font-size:38px;color:var(--T2);margin-top:30px}
+.vit .p{font-size:150px;font-weight:900;line-height:1;font-variant-numeric:tabular-nums;margin-top:10px}
+.esp{flex:1}
+/* rodapé: aviso parado e legível + assinatura discreta */
+.rod{flex:none;height:var(--rodH);display:flex;align-items:center;gap:24px;padding:0 60px;border-top:2px solid var(--L);color:var(--T2)}
+.rod .marca{font-family:Rubik,system-ui,sans-serif;font-weight:800;font-size:28px;color:var(--T);opacity:.75}
+.rod .sep{width:2px;height:30px;background:var(--L)}
+.rod .av{flex:1;font-size:30px;color:var(--T);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rod .pag{display:flex;gap:10px}.rod .pag i{width:14px;height:14px;border-radius:50%;background:var(--L)}.rod .pag i.on{background:var(--P)}
+.rod .off{width:14px;height:14px;border-radius:50%;background:#E6A700}
+/* deitada: marca, foto e oferta à esquerda; título e lista à direita */
+.pg.pais{display:grid;grid-template-columns:var(--colE) minmax(0,1fr);grid-template-rows:1fr var(--rodH)}
+.pg.pais .ce{grid-row:1;display:flex;flex-direction:column;background:var(--P);min-height:0}
+.pg.pais .cd{grid-row:1;display:flex;flex-direction:column;min-height:0}
+.pg.pais .rod{grid-column:1 / span 2}
+.pg.pais .ce .faixa{height:auto;flex:none;padding:44px 50px 34px}
+.pg.pais .ce .foto{flex:1;height:auto;margin:0 40px 30px;border-radius:26px}
+.pg.pais .ce .combo{margin:0 40px 40px;background:color-mix(in srgb,var(--P) 82%,#000)}
+.pg.pais .ce.so-marca .faixa{flex:1}
+.pg.pais .cd .tit{flex:none;height:var(--titH);display:flex;align-items:flex-end;padding:0 70px 18px;color:var(--T)}
+.pg.pais .cd .lista{padding:6px 70px 0}
+.pg.pais.m-vitrine .ce{background:none}.pg.pais.m-vitrine .ce .foto{margin:0;border-radius:0}
+.pg.pais .vit .p{font-size:124px;white-space:nowrap}.pg.pais .vit b{font-size:72px}
+.pg.pais .cd>.faixa{flex:none;height:auto;padding:40px 60px}
 .erro{position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:6vw;font:600 4vmin Rubik,system-ui,sans-serif;color:#fff}
 </style>
 </head>
@@ -63,75 +86,104 @@ footer .off{width:16px;height:16px;border-radius:50%;background:#E6A700}
 <div id="moldura"><div id="palco"></div></div>
 <script>
 (()=>{
-  const c=new URLSearchParams(location.search).get("c")||"";const $=s=>document.querySelector(s);const palco=$("#palco");
+  const q=new URLSearchParams(location.search);const c=q.get("c")||"";const PREVIA=q.has("previa");const FIXA=q.get("tela");const $=s=>document.querySelector(s);const palco=$("#palco");
   if(!c){document.body.innerHTML='<div class="erro">Falta o código do Mostraí no endereço.</div>';return;}
   const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]));
   const hex2=h=>{h=String(h||"#000").replace("#","");if(h.length===3)h=h.split("").map(x=>x+x).join("");const n=parseInt(h,16)||0;return [(n>>16)&255,(n>>8)&255,n&255];};
-  const rl=h=>{const [r,g,b]=hex2(h).map(v=>{v/=255;return v<=.03928?v/12.92:Math.pow((v+.055)/1.055,2.4);});return .2126*r+.7152*g+.0722*b;};
+  const rlRGB=a=>{const [r,g,b]=a.map(v=>{v/=255;return v<=.03928?v/12.92:Math.pow((v+.055)/1.055,2.4);});return .2126*r+.7152*g+.0722*b;};
+  const rl=h=>rlRGB(hex2(h));
   const contraste=(a,b)=>{const x=rl(a),y=rl(b);return (Math.max(x,y)+.05)/(Math.min(x,y)+.05);};
   const sat=h=>{const [r,g,b]=hex2(h).map(v=>v/255);const mx=Math.max(r,g,b),mn=Math.min(r,g,b);return mx?(mx-mn)/mx:0;};
   const mix=(a,b,t)=>{const A=hex2(a),B=hex2(b);return "#"+A.map((v,i)=>Math.round(v+(B[i]-v)*t).toString(16).padStart(2,"0")).join("");};
   const sobre=h=>contraste(h,"#FFFFFF")>=3?"#FFFFFF":"#1B1B1B";
-  // identidade aprovada do cliente primeiro; sem ela, a paleta de referência do segmento
-  function tema(E){const pal=E.paleta||{};const cs=(E.cores||[]).filter(h=>/^#[0-9a-f]{6}$/i.test(h||""));
+  const FONTES={moderna:"Rubik",elegante:"'Playfair Display'",impacto:"Oswald"};
+  // tamanho da letra: fixo em px do palco (o lado curto da TV é sempre 1080) → igual em qualquer TV e em qualquer tela
+  const ESCALA={G:{nome:66,preco:70,desc:34,row:162},M:{nome:56,preco:60,desc:30,row:138},P:{nome:48,preco:52,desc:27,row:118}};
+  const LOGO_H={P:180,M:230,G:290};
+  let E=null,ST={},PAGS=[],pag=0,fora=false,placa=null,lay0="";
+  // identidade aprovada do cliente primeiro; sem ela, a paleta do segmento; o lojista pode trocar cada cor no Avançado
+  function tema(){const pal=E.paleta||{};const cs=(E.cores||[]).filter(h=>/^#[0-9a-f]{6}$/i.test(h||""));const K=(ST.cores)||{};
     let P=pal.principal||"#1C1635",A=pal.destaque||"#C98245",F=pal.fundo||"#FFFDF8",T=pal.texto||"#1C1635";
     if(cs.length){const fortes=cs.filter(h=>contraste(h,"#FFFFFF")>=3);P=fortes[0]||mix(cs[0],"#000000",.45);
       A=cs.find(h=>h!==P&&sat(h)>.25&&contraste(h,P)>=1.6)||mix(P,"#FFFFFF",.55);F=mix(P,"#FFFFFF",.95);T=mix(P,"#000000",.6);}
-    const r=palco.style;r.setProperty("--P",P);r.setProperty("--sP",sobre(P));r.setProperty("--A",A);if(contraste(A,P)<1.6)A=sobre(P);r.setProperty("--sA",contraste(A,"#FFFFFF")>=3?"#FFFFFF":(contraste(A,P)>=3?P:mix(P,"#000000",.5)));
-    r.setProperty("--F",F);r.setProperty("--T",T);const [tr,tg,tb]=hex2(T);r.setProperty("--T2",`rgba(${tr},${tg},${tb},.62)`);r.setProperty("--L",`rgba(${tr},${tg},${tb},.14)`);}
-  // diagramação prevista: TV em pé (retrato) ou deitada (paisagem), tamanho da TV e itens por tela.
-  // TV maior → palco lógico maior (mesmas letras em px ficam proporcionalmente menores e sobra respiro para mais linhas)
-  const ESC={0:1,32:1,43:1.08,50:1.18,55:1.25,65:1.38,75:1.5,85:1.6};
-  const CAP={retrato:{0:4,32:4,43:4,50:5,55:5,65:6,75:8,85:8},paisagem:{0:5,32:5,43:5,50:6,55:6,65:8,75:8,85:10}};
-  function modo(){const m=document.getElementById("moldura").getBoundingClientRect();const deitada=m.width>m.height;const f=(E&&E.formato)||"auto";
-    if(E&&E.giro&&deitada&&f!=="paisagem")return {lay:"retrato",g:E.giro};
+    if(K.faixa)P=K.faixa;if(K.destaque)A=K.destaque;if(K.fundo)F=K.fundo;if(K.texto)T=K.texto;
+    if(contraste(T,F)<3)T=sobre(F);
+    const r=palco.style;r.setProperty("--P",P);r.setProperty("--sP",sobre(P));if(contraste(A,P)<1.6&&!K.destaque)A=mix(P,"#FFFFFF",.6);r.setProperty("--A",A);
+    r.setProperty("--sA",contraste(A,"#FFFFFF")>=3?"#FFFFFF":"#1B1B1B");r.setProperty("--F",F);r.setProperty("--T",T);
+    const [tr,tg,tb]=hex2(T);r.setProperty("--T2",`rgba(${tr},${tg},${tb},.64)`);r.setProperty("--L",`rgba(${tr},${tg},${tb},.14)`);
+    r.setProperty("--fonte",FONTES[ST.fonte]||"Rubik");
+    // logotipo sem pílula: placa só quando o logo some na faixa (mesma regra das artes)
+    placa=null;if(E.logo){const im=new Image();im.onload=()=>{try{const cv=document.createElement("canvas");const k=Math.min(1,160/Math.max(im.width,im.height));cv.width=Math.max(1,Math.round(im.width*k));cv.height=Math.max(1,Math.round(im.height*k));
+      const g=cv.getContext("2d");g.drawImage(im,0,0,cv.width,cv.height);const d=g.getImageData(0,0,cv.width,cv.height).data;let s=0,n=0;for(let i=0;i<d.length;i+=4)if(d[i+3]>140){s+=rlRGB([d[i],d[i+1],d[i+2]]);n++;}
+      if(n){const lum=s/n,lp=rl(P);const ct=(Math.max(lum,lp)+.05)/(Math.min(lum,lp)+.05);const nova=ct<2.2?(lum>.4?"#1B1B1B":"#FFFFFF"):null;if(nova!==placa){placa=nova;desenhar(false);}}}catch(e){}};im.src=E.logo;}}
+  function modo(){const m=$("#moldura").getBoundingClientRect();const deitada=m.width>m.height;const f=E.formato||"auto";
+    if(E.giro&&deitada&&f!=="paisagem")return {lay:"retrato",g:E.giro};
     return {lay:f==="retrato"?"retrato":f==="paisagem"?"paisagem":(deitada?"paisagem":"retrato"),g:0};}
-  function dims(lay){const s=ESC[(E&&E.polegadas)||0]||1;return lay==="paisagem"?[Math.round(1920*s),Math.round(1080*s)]:[Math.round(1080*s),Math.round(1920*s)];}
-  // palco ajustado à tela; TV em pé ligada a um TV Box (que entrega imagem deitada) → gira o palco
-  function ajustar(){const m=document.getElementById("moldura").getBoundingClientRect();const W=m.width,H=m.height;if(!W||!H)return;const M=modo();
-    if(E&&palco.dataset.lay&&palco.dataset.lay!==M.lay){desenhar();return;}
-    const [pw,ph]=dims(M.lay);const [w,h]=M.g?[ph,pw]:[pw,ph];const k=Math.min(W/w,H/h);
-    // centro do palco no centro da tela; giro em torno do próprio centro
-    palco.style.transform=`translate(${W/2}px,${H/2}px) rotate(${M.g}deg) scale(${k}) translate(${-pw/2}px,${-ph/2}px)`;}
-  // itens por tela: escolhido pelo lojista ou automático pelo tamanho da TV; páginas equilibradas (7 itens com 4 por tela → 4 + 3)
-  function porPagina(n,lay){const cap=(E&&E.linhas)||CAP[lay][(E&&E.polegadas)||0]||4;if(n<=cap)return Math.max(1,n);const pags=Math.ceil(n/cap);return Math.ceil(n/pags);}
-  // densidade: a letra só diminui o necessário para caber; sem caber nem assim, a foto sai antes de a letra ficar pequena demais
-  function caber(n){const pais=palco.querySelector(".pais");const set=d=>palco.style.setProperty("--d",d);
-    if(pais){// deitada: a lista ocupa a coluna inteira; a letra cresce até o maior tamanho que cabe (busca binária)
-      const as=pais.querySelector("aside");if(as.scrollHeight>as.clientHeight+2&&as.querySelector(".foto"))palco.classList.add("sem-espaco");
-      const mn=pais.querySelector("main");const cabe=()=>{const cs=getComputedStyle(mn);const disp=mn.clientHeight-parseFloat(cs.paddingTop)-parseFloat(cs.paddingBottom);let t=0;for(const x of mn.children)t+=x.offsetHeight;return t<=disp;};
-      let lo=.5,hi=n<=4?1.3:1.2;set(hi);if(!cabe()){for(let i=0;i<9;i++){const m=(lo+hi)/2;set(m);if(cabe())lo=m;else hi=m;}set(Math.floor(lo*100)/100);}return;}
-    // em pé: a maior letra (até o tamanho-base) que cabe sem espremer a foto; não cabendo nem pequena, a foto sai
-    const estoura=()=>palco.scrollHeight>palco.clientHeight+2;const ph=palco.clientHeight;
-    const cabe=()=>{if(estoura())return false;const f=palco.querySelector(".foto");return !f||getComputedStyle(f).display==="none"||f.offsetHeight>=ph*.15;};
-    const busca=(lo,hi)=>{set(hi);if(cabe())return hi;set(lo);if(!cabe())return null;for(let i=0;i<9;i++){const m=(lo+hi)/2;set(m);if(cabe())lo=m;else hi=m;}return Math.floor(lo*100)/100;};
-    const tet=palco.querySelector(".foto")?1:1.3;let d=busca(.6,tet);if(d===null&&palco.querySelector(".foto")){palco.classList.add("sem-espaco");d=busca(.55,1.3);}set(d===null?.55:d);}
-  const preco=p=>{p=String(p||"").trim();return /^\d/.test(p)?"R$ "+p:p;};
+  const tamanho=()=>ST.tamanho&&ST.tamanho!=="auto"?ST.tamanho:((E.polegadas||0)&&E.polegadas<=43?"G":"M");
   const hoje=()=>{const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");};
+  const comboAtivo=()=>{const D=E.destaque||{};return !!((D.texto||D.valor)&&!(D.ate&&D.ate<hoje()));};
+  // molde: medidas fixas por posição da TV e modelo de tela; as linhas da lista saem do molde, não do conteúdo
+  function molde(lay,modelo){const S=ESCALA[tamanho()];const logoH=LOGO_H[ST.logo_tam||"M"];const pos=ST.logo_pos||"centro";
+    const rodH=ST.rodape===false?58:86;const temC=modelo!=="combo"&&modelo!=="vitrine"&&ST.combo!=="nenhuma"&&comboAtivo();const comboH=temC?300:0;const tit=!!E.titulo;
+    if(lay==="retrato"){const faixaH=pos==="centro"?70+logoH+(tit?76:0):pos==="canto"?70+Math.max(logoH*.72,70):70+logoH;
+      const fotoH=modelo==="lista"||modelo==="combo"?480:modelo==="vitrine"?900:0;
+      const listaH=1920-faixaH-fotoH-(temC?comboH+30:0)-rodH-14;return {S,logoH,faixaH,fotoH,comboH,rodH,listaH,linhas:Math.max(1,Math.floor((listaH-14)/S.row)),temC};}
+    const titH=tit?140:50;const listaH=1080-rodH-titH-6;return {S,logoH:Math.min(logoH,200),faixaH:0,fotoH:0,comboH,rodH,listaH,titH,linhas:Math.max(1,Math.floor((listaH-6)/S.row)),temC};}
+  // telas do carrossel: cada uma com a sua foto e os seus itens; sem telas cadastradas, uma tela de lista com a foto principal
+  function telas(){return (E.telas&&E.telas.length)?E.telas:[{id:"t1",modelo:E.foto?"lista":"sem-foto",foto:E.foto,itens:E.itens||[]}];}
+  function paginas(lay){const out=[];for(const t of telas()){const ativos=(t.itens||[]).filter(i=>i.ativo!==false&&i.nome);const mod=t.modelo||"lista";const foto=t.foto||null;
+      if(mod==="combo"){if(comboAtivo())out.push({t,mod,foto,itens:[]});continue;}
+      if(mod==="vitrine"){(ativos.length?ativos:[null]).forEach(i=>out.push({t,mod,foto,itens:i?[i]:[]}));continue;}
+      const n=molde(lay,mod).linhas;if(!ativos.length){out.push({t,mod,foto,itens:[]});continue;}for(let k=0;k<ativos.length;k+=n)out.push({t,mod,foto,itens:ativos.slice(k,k+n)});}
+    return out.length?out:[{t:{},mod:"sem-foto",foto:null,itens:[]}];}
+  const preco=p=>{p=String(p||"").trim();return /^\d/.test(p)?"R$ "+p:p;};
   const dataBR=s=>s.slice(8,10)+"/"+s.slice(5,7);
-  let E=null,pag=0,fora=false;
-  function desenhar(){if(!E)return;const M=modo();const [pw,ph]=dims(M.lay);palco.style.width=pw+"px";palco.style.height=ph+"px";palco.style.setProperty("--fh",Math.round(ph*.29)+"px");palco.dataset.lay=M.lay;
-    const ativos=(E.itens||[]).filter(i=>i.ativo!==false&&i.nome);const POR=porPagina(ativos.length,M.lay);const pags=Math.max(1,Math.ceil(ativos.length/POR));pag=pag%pags;const vis=ativos.slice(pag*POR,pag*POR+POR);
-    const D=E.destaque||{};const temD=(D.texto||D.valor)&&!(D.ate&&D.ate<hoje());const val=preco(D.valor);
-    palco.className=(E.foto?"":"sem-foto")+(vis.length>=6?" cheio":"");
-    const cab=`<header>${E.logo?`<img src="${esc(E.logo)}" alt="${esc(E.nome)}">`:`<h1 class="${String(E.nome||"").length>16?"longo":""}">${esc(E.nome)}</h1>`}${E.rotulo?`<small>${esc(E.rotulo)}</small>`:""}</header>`;
-    const tit=E.titulo?`<div class="titulo">${esc(E.titulo)}</div>`:"";
-    const foto=E.foto?`<div class="foto" style="background-image:url('${esc(E.foto)}')"></div>`:"";
-    const lista=`<main class="troca">${vis.length?vis.map(i=>`<div class="it"><b>${esc(i.nome)}${i.desc?`<small>${esc(i.desc)}</small>`:""}</b><span class="p">${esc(preco(i.preco))}</span></div>`).join(""):`<div class="vazio">Programação em preparo.<br>Os itens aparecem aqui assim que forem lançados.</div>`}</main>`;
-    const dest=temD?`<section class="dest">${D.rotulo?`<span class="rot">${esc(D.rotulo)}</span>`:""}${D.texto?`<div class="txt">${esc(D.texto)}</div>`:""}${val?`<div class="val ${/^R\$/.test(val)&&val.length<=12?"":"txtv"}">${esc(val)}</div>`:""}${D.ate?`<div class="ate">válido até ${dataBR(D.ate)}</div>`:""}</section>`:"";
-    const rod=`<footer><span class="marca">mostraí</span>${E.aviso?`<div class="aviso"><span>${esc(E.aviso)}</span></div>`:`<div class="aviso"></div>`}${fora?`<i class="off" title="sem conexão: mostrando o último conteúdo"></i>`:""}${pags>1?`<div class="pag">${Array.from({length:pags},(_,i)=>`<i class="${i===pag?"on":""}"></i>`).join("")}</div>`:""}</footer>`;
-    palco.innerHTML=M.lay==="paisagem"?`<div class="pais"><aside>${cab}${foto}${dest}</aside><section class="col">${tit}${lista}</section></div>${rod}`:`${cab}${tit}${foto}${lista}${dest}${rod}`;
-    caber(vis.length);ajustar();}
+  const logoHTML=()=>`<div class="logo ${placa?"placa":""}" ${placa?`style="--placa:${placa}"`:""}>${E.logo?`<img src="${esc(E.logo)}" alt="${esc(E.nome)}">`:`<h1>${esc(E.nome)}</h1>`}</div>`;
+  const faixaHTML=semTit=>`<div class="faixa ${ST.logo_pos||"centro"}">${logoHTML()}${E.titulo&&!semTit?`<div class="tit">${esc(E.titulo)}</div>`:""}</div>`;
+  const fotoHTML=f=>f?`<div class="foto" style="background-image:url('${esc(f)}')"></div>`:`<div class="foto vazia">${logoHTML()}</div>`;
+  function comboHTML(grande){const D=E.destaque||{};const val=preco(D.valor);
+    return `<section class="combo ${grande?"grande":""}">${D.rotulo?`<span class="rot">${esc(D.rotulo)}</span>`:""}${D.texto?`<div class="txt">${esc(D.texto)}</div>`:""}${val?`<div class="val ${/^R\$/.test(val)&&val.length<=12?"":"palavra"}">${esc(val)}</div>`:""}${D.ate?`<div class="ate">válido até ${dataBR(D.ate)}</div>`:""}</section>`;}
+  function listaHTML(itens,n){let h="";for(let k=0;k<n;k++){const i=itens[k];h+=i?`<div class="it cheio"><div class="n"><b>${esc(i.nome)}</b>${i.desc?`<small>${esc(i.desc)}</small>`:""}</div><div class="p">${i.apartir&&i.preco?"<i>a partir de</i>":""}${esc(preco(i.preco))}</div></div>`:`<div class="it"></div>`;}return `<div class="lista">${h}</div>`;}
+  function vitHTML(i){return i?`<div class="vit"><b>${esc(i.nome)}</b>${i.desc?`<small>${esc(i.desc)}</small>`:""}${i.apartir&&i.preco?"<i>a partir de</i>":""}${i.preco?`<div class="p">${esc(preco(i.preco))}</div>`:""}</div>`:`<div class="vit"><small>Escolha o item desta vitrine na programação.</small></div>`;}
+  function rodHTML(){return `<footer class="rod"><span class="marca">mostraí</span>${ST.rodape!==false&&E.aviso?`<span class="sep"></span><span class="av">${esc(E.aviso)}</span>`:`<span class="esp"></span>`}${fora?`<i class="off" title="sem conexão: mostrando o último conteúdo"></i>`:""}${PAGS.length>1&&FIXA==null?`<div class="pag">${PAGS.map((_,i)=>`<i class="${i===pag?"on":""}"></i>`).join("")}</div>`:""}</footer>`;}
+  function paginaHTML(P,lay){const M=molde(lay,P.mod);const vars=`--nome:${M.S.nome}px;--preco:${M.S.preco}px;--desc:${M.S.desc}px;--row:${M.S.row}px;--logoH:${M.logoH}px;--faixaH:${M.faixaH}px;--fotoH:${M.fotoH}px;--comboH:${M.comboH}px;--rodH:${M.rodH}px;--listaH:${M.listaH}px;--titH:${M.titH||0}px;--colE:${P.mod==="vitrine"?1100:760}px`;
+    if(lay==="retrato"){let corpo="";
+      if(P.mod==="vitrine")corpo=fotoHTML(P.foto)+vitHTML(P.itens[0]);
+      else if(P.mod==="combo")corpo=(P.foto?fotoHTML(P.foto):"")+`<div class="esp" style="display:flex;flex-direction:column;justify-content:center;padding-top:30px">${comboHTML(true)}</div>`;
+      else corpo=(P.mod==="lista"?fotoHTML(P.foto):"")+listaHTML(P.itens,M.linhas)+`<div class="esp"></div>`+(M.temC?comboHTML(false):"");
+      return `<div class="pg" style="${vars}">${faixaHTML(P.mod==="vitrine")}${corpo}${rodHTML()}</div>`;}
+    let ce="",cd="";
+    if(P.mod==="vitrine"){ce=fotoHTML(P.foto);cd=`${faixaHTML(true)}${vitHTML(P.itens[0])}`;}
+    else if(P.mod==="combo"){ce=faixaHTML(true)+(P.foto?fotoHTML(P.foto):"");cd=`${E.titulo?`<div class="tit">${esc(E.titulo)}</div>`:""}<div style="flex:1;display:flex;flex-direction:column;justify-content:center;padding:30px">${comboHTML(true)}</div>`;}
+    else{ce=faixaHTML(true)+(P.mod==="lista"?fotoHTML(P.foto):"")+(M.temC?comboHTML(false):"");cd=`<div class="tit">${esc(E.titulo||"")}</div>${listaHTML(P.itens,M.linhas)}`;}
+    return `<div class="pg pais m-${P.mod}" style="${vars}"><div class="ce ${P.mod!=="lista"&&P.mod!=="vitrine"&&!P.foto?"so-marca":""}">${ce}</div><div class="cd">${cd}</div>${rodHTML()}</div>`;}
+  // nome longo: encolhe só aquele nome, até 82%; passando disso, reticências
+  function caberNomes(pg){pg.querySelectorAll(".it .n b").forEach(b=>{const base=parseFloat(getComputedStyle(b).fontSize);let f=1;while(b.scrollWidth>b.clientWidth+1&&f>.83){f-=.03;b.style.fontSize=(base*f)+"px";}});}
+  const dims=lay=>lay==="paisagem"?[1920,1080]:[1080,1920];
+  function ajustar(){const m=$("#moldura").getBoundingClientRect();const W=m.width,H=m.height;if(!W||!H||!E)return;const M=modo();
+    if(lay0&&M.lay!==lay0){montar();return;}
+    const [pw,ph]=dims(M.lay);const [w,h]=M.g?[ph,pw]:[pw,ph];const k=Math.min(W/w,H/h);
+    palco.style.width=pw+"px";palco.style.height=ph+"px";
+    palco.style.transform=`translate(${W/2}px,${H/2}px) rotate(${M.g}deg) scale(${k}) translate(${-pw/2}px,${-ph/2}px)`;}
+  // troca de tela: a nova entra por cima com fade; o molde é o mesmo, então só o conteúdo muda
+  function desenhar(fade){if(!E||!PAGS.length)return;const lay=modo().lay;lay0=lay;const [pw,ph]=dims(lay);palco.style.width=pw+"px";palco.style.height=ph+"px";const P=PAGS[pag%PAGS.length];
+    const t=document.createElement("div");t.innerHTML=paginaHTML(P,lay);const pg=t.firstElementChild;if(fade)pg.classList.add("entra");palco.appendChild(pg);caberNomes(pg);
+    const velhas=[...palco.querySelectorAll(".pg")].filter(x=>x!==pg);
+    if(fade){void pg.offsetWidth;pg.classList.remove("entra");setTimeout(()=>velhas.forEach(v=>v.remove()),900);}else velhas.forEach(v=>v.remove());ajustar();}
+  function montar(){const lay=modo().lay;lay0=lay;PAGS=paginas(lay);
+    if(FIXA!=null){const i=PAGS.findIndex(p=>p.t&&p.t.id===FIXA);pag=i>=0?i:((+FIXA||0)%PAGS.length);}else pag=pag%PAGS.length;desenhar(false);}
   // último conteúdo válido fica guardado só para a tela não apagar quando a internet cai; a fonte é sempre o servidor
-  const guarda={ler(){try{return JSON.parse(localStorage.getItem("mostrai-"+c)||"null");}catch(e){return null;}},por(v){try{localStorage.setItem("mostrai-"+c,JSON.stringify(v));}catch(e){}}};
-  async function puxar(){try{const r=await fetch(`/api/mostra/${encodeURIComponent(c)}${E&&!fora?"?v="+E.v:""}`,{cache:"no-store"});if(r.status===404){document.body.innerHTML='<div class="erro">Este Mostraí não existe ou foi desligado.</div>';return;}if(!r.ok)throw 0;const d=await r.json();const voltou=fora;fora=false;if(d.igual){if(voltou)desenhar();return;}E=d;guarda.por(E);tema(E);pag=0;desenhar();}
-    catch(e){if(!E){E=guarda.ler();if(E)tema(E);}if(!fora){fora=true;desenhar();}}}
-  let tempo=null;function girarPagina(){clearTimeout(tempo);const n=palco.querySelectorAll(".it").length||4;tempo=setTimeout(()=>{pag++;desenhar();girarPagina();},6000+n*1500);}
-  puxar().then(girarPagina);setInterval(puxar,3000);addEventListener("resize",ajustar);addEventListener("orientationchange",()=>setTimeout(ajustar,300));if(window.visualViewport)visualViewport.addEventListener("resize",ajustar);if(document.fonts)document.fonts.ready.then(()=>{if(E)desenhar();});
+  const guarda={ler(){try{return JSON.parse(localStorage.getItem("mostrai-"+c)||"null");}catch(e){return null;}},por(v){if(PREVIA)return;try{localStorage.setItem("mostrai-"+c,JSON.stringify(v));}catch(e){}}};
+  function aplicar(d){E=d;ST=E.estilo||{};tema();montar();}
+  async function puxar(){try{const r=await fetch(`/api/mostra/${encodeURIComponent(c)}${E&&!fora?"?v="+E.v:""}`,{cache:"no-store"});if(r.status===404){document.body.innerHTML='<div class="erro">Este Mostraí não existe ou foi desligado.</div>';return;}if(!r.ok)throw 0;const d=await r.json();const voltou=fora;fora=false;if(d.igual){if(voltou)desenhar(false);return;}guarda.por(d);aplicar(d);}
+    catch(e){if(!E){const g=guarda.ler();if(g)aplicar(g);}if(!fora){fora=true;desenhar(false);}}}
+  let tempo=null;function girar(){clearTimeout(tempo);if(FIXA!=null)return;tempo=setTimeout(()=>{if(PAGS.length>1){pag=(pag+1)%PAGS.length;desenhar(true);}girar();},Math.max(5,(ST&&ST.tempo)||10)*1000);}
+  puxar().then(girar);setInterval(puxar,3000);addEventListener("resize",ajustar);addEventListener("orientationchange",()=>setTimeout(ajustar,300));if(window.visualViewport)visualViewport.addEventListener("resize",ajustar);
+  if(document.fonts)document.fonts.ready.then(()=>{if(E)desenhar(false);});
   // oferta vence à meia-noite mesmo sem ninguém mexer
-  setInterval(desenhar,10*60*1000);
-  const acordada=async()=>{try{if(navigator.wakeLock)await navigator.wakeLock.request("screen");}catch(e){}};acordada();document.addEventListener("visibilitychange",()=>{if(!document.hidden)acordada();});
-  document.addEventListener("click",()=>{if(document.fullscreenEnabled&&!document.fullscreenElement)document.documentElement.requestFullscreen().catch(()=>{});});
+  setInterval(()=>{if(E)montar();},10*60*1000);
+  if(!PREVIA){const acordada=async()=>{try{if(navigator.wakeLock)await navigator.wakeLock.request("screen");}catch(e){}};acordada();document.addEventListener("visibilitychange",()=>{if(!document.hidden)acordada();});
+    document.addEventListener("click",()=>{if(document.fullscreenEnabled&&!document.fullscreenElement)document.documentElement.requestFullscreen().catch(()=>{});});}
 })();
 </script>
 </body>

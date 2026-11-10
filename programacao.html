@@ -5,43 +5,71 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Mostraí · Programação</title>
 <meta name="robots" content="noindex">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700;800&family=Playfair+Display:wght@700&family=Oswald:wght@600&display=swap">
 <style>
-:root{--roxo:#6933C5;--esc:#1C1635;--lav:#EFEAFB;--texto2:#5B5675;--ok:#0E8A84}
+:root{--roxo:#6933C5;--esc:#1C1635;--lav:#EFEAFB;--texto2:#5B5675;--ok:#0E8A84;--linha:#D9D2F0}
 *{box-sizing:border-box}
 body{margin:0 auto;max-width:640px;background:#F6F3FC;color:var(--esc);font-family:Rubik,"Segoe UI",system-ui,sans-serif;padding:16px 16px 120px}
 h1{font-size:22px;margin:0 0 2px}.sub{color:var(--texto2);margin:0 0 14px;font-size:14px}
-h2{font-size:15px;margin:0 0 10px}
+h2{font-size:16px;margin:0 0 10px}
 .card{background:#fff;border-radius:16px;padding:14px;margin-bottom:12px;box-shadow:0 1px 4px rgba(28,22,53,.06)}
-label{display:block;font-size:13px;color:var(--texto2);margin:10px 0 4px}label:first-of-type{margin-top:0}
-input[type=text],input[type=date],select{width:100%;font:inherit;font-size:16px;padding:10px 12px;border:1px solid #D9D2F0;border-radius:10px;background:#fff;color:inherit}
+label{display:block;font-size:13px;color:var(--texto2);margin:10px 0 4px}
+input[type=text],input[type=date],select{width:100%;font:inherit;font-size:16px;padding:10px 12px;border:1px solid var(--linha);border-radius:10px;background:#fff;color:inherit}
 .dois{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.previa{margin:12px auto 0;width:52%;aspect-ratio:9/16;border-radius:10px;overflow:hidden;background:#000;box-shadow:0 0 0 6px #1C1635}.previa.pais{width:100%;aspect-ratio:16/9}.previa iframe{width:100%;height:100%;border:0;display:block;pointer-events:none}
-.it{display:grid;grid-template-columns:1fr 104px;gap:8px;align-items:start;padding:12px 0;border-top:1px solid #EEE9F8}
-.it:first-child{border-top:0}
-.it .linha2{grid-column:1/-1;display:flex;gap:8px;align-items:center}
-.it .linha2 input{flex:1;min-width:0;font-size:14px;padding:8px 10px}
-.tog{display:inline-flex;align-items:center;gap:6px;font:inherit;font-size:13px;padding:8px 10px;border-radius:999px;border:1px solid #D9D2F0;background:#fff;color:var(--texto2);cursor:pointer;white-space:nowrap}
-.tog.on{background:var(--lav);color:var(--roxo);border-color:#C9B8F2;font-weight:700}
-.mini{font:inherit;font-size:13px;min-width:36px;padding:8px 9px;border-radius:8px;border:1px solid #D9D2F0;background:#fff;cursor:pointer}
-.mini.rm{color:#B42318}
-.it.off input{opacity:.55}
-.add{width:100%;min-height:46px;border-radius:12px;border:2px dashed #C9B8F2;background:transparent;color:var(--roxo);font:700 15px Rubik,system-ui;cursor:pointer;margin-bottom:12px}
+/* prévia fixa no alto: mostra exatamente a tela escolhida */
+.previa-box{position:sticky;top:0;z-index:5;background:#F6F3FC;padding:6px 0 10px;margin:0 0 4px}
+.previa{margin:0 auto;width:30%;aspect-ratio:9/16;border-radius:10px;overflow:hidden;background:#000;box-shadow:0 0 0 5px var(--esc)}.previa.pais{width:64%;aspect-ratio:16/9}.previa iframe{width:100%;height:100%;border:0;display:block;pointer-events:none}
+.chips{display:flex;gap:6px;overflow-x:auto;justify-content:center;margin-top:10px;padding-bottom:2px}
+.chip{flex:none;font:inherit;font-size:13px;font-weight:600;min-height:34px;padding:0 12px;border-radius:999px;border:1px solid var(--linha);background:#fff;color:var(--texto2);cursor:pointer}
+.chip.on{background:var(--roxo);border-color:var(--roxo);color:#fff}
+/* telas */
+.tela{border:2px solid #E6E0F5}
+.tela.ativa{border-color:var(--roxo)}
+.tela-cab{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.tela-cab b{font-size:16px;flex:none}
+.tela-cab select{flex:1;min-width:0;font-size:14px;padding:8px 10px}
 .foto{display:block;width:100%;aspect-ratio:2/1;border-radius:12px;border:2px dashed #C9B8F2;background:#FAF8FE center/cover no-repeat;color:var(--roxo);font:700 15px Rubik,system-ui;cursor:pointer}
 .foto.tem{border-style:solid;color:transparent}
-.tirar{margin-top:8px;border:0;background:none;color:#B42318;font:inherit;font-size:13px;cursor:pointer;padding:6px 0}
-.estado{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid #E6E0F5;padding:10px 16px calc(10px + env(safe-area-inset-bottom));display:flex;align-items:center;gap:10px;font-size:14px}
+.tirar{border:0;background:none;color:#B42318;font:inherit;font-size:13px;cursor:pointer;padding:6px 0}
+.it{display:grid;grid-template-columns:1fr 104px;gap:8px;align-items:start;padding:12px 0;border-top:1px solid #EEE9F8}
+.it .linha2{grid-column:1/-1;display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.it .linha2 input{flex:1 1 120px;min-width:0;font-size:14px;padding:8px 10px}
+.tog{display:inline-flex;align-items:center;gap:6px;font:inherit;font-size:13px;padding:8px 10px;border-radius:999px;border:1px solid var(--linha);background:#fff;color:var(--texto2);cursor:pointer;white-space:nowrap}
+.tog.on{background:var(--lav);color:var(--roxo);border-color:#C9B8F2;font-weight:700}
+.mini{font:inherit;font-size:13px;min-width:36px;padding:8px 9px;border-radius:8px;border:1px solid var(--linha);background:#fff;cursor:pointer}
+.mini.rm{color:#B42318}
+.it.off input{opacity:.55}
+.cabe{font-size:13px;color:var(--texto2);margin:8px 0 0}.cabe.mais{color:#9A5B00}
+.add{width:100%;min-height:44px;border-radius:12px;border:2px dashed #C9B8F2;background:transparent;color:var(--roxo);font:700 15px Rubik,system-ui;cursor:pointer;margin-top:10px}
+.sug{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.sug button{font:inherit;font-size:13px;padding:7px 10px;border-radius:999px;border:1px dashed #C9B8F2;background:#FAF8FE;color:var(--roxo);cursor:pointer}
+/* avançado */
+details.av>summary{list-style:none;cursor:pointer;font-weight:700;font-size:16px;display:flex;align-items:center;justify-content:space-between}
+details.av>summary::-webkit-details-marker{display:none}
+details.av>summary::after{content:"▾";color:var(--roxo)}details.av[open]>summary::after{content:"▴"}
+.grupo{margin-top:14px}.grupo>span{display:block;font-size:13px;color:var(--texto2);margin-bottom:6px}
+.opc{display:flex;gap:6px;flex-wrap:wrap}
+.opc button{font:inherit;font-size:14px;min-height:40px;padding:0 14px;border-radius:10px;border:1px solid var(--linha);background:#fff;color:var(--esc);cursor:pointer}
+.opc button.on{border:2px solid var(--roxo);color:var(--roxo);font-weight:700}
+.cores{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.cores button{width:34px;height:34px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1px var(--linha);cursor:pointer;padding:0}
+.cores button.on{box-shadow:0 0 0 3px var(--roxo)}
+.cores button.auto{width:auto;border-radius:999px;padding:0 12px;font:inherit;font-size:13px;background:#fff;color:var(--texto2)}
+.cores input[type=color]{width:38px;height:38px;border:0;padding:0;background:none;cursor:pointer}
+.estado{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid #E6E0F5;padding:10px 16px calc(10px + env(safe-area-inset-bottom));display:flex;align-items:center;gap:10px;font-size:14px;z-index:9}
 .estado .pt{width:10px;height:10px;border-radius:50%;background:#ccc}.estado .pt.ok{background:var(--ok)}.estado .pt.env{background:#E6A700}.estado .pt.erro{background:#B42318}
 .estado a{margin-left:auto;color:var(--roxo);font-weight:700;text-decoration:none}
 .erro{padding:40px 20px;text-align:center}
 .conv{display:flex;flex-direction:column;gap:8px;max-height:300px;overflow:auto;margin:0 0 10px}
 .m{max-width:84%;border-radius:14px;padding:8px 12px;font-size:15px}.m.cliente{align-self:flex-end;background:var(--roxo);color:#fff}.m.genio{align-self:flex-start;background:var(--lav)}
 .m small{display:block;font-size:11px;opacity:.75;margin-top:3px}
-textarea{width:100%;box-sizing:border-box;font:inherit;font-size:16px;padding:10px 12px;border:1px solid #D9D2F0;border-radius:10px;resize:vertical}
+textarea{width:100%;box-sizing:border-box;font:inherit;font-size:16px;padding:10px 12px;border:1px solid var(--linha);border-radius:10px;resize:vertical}
 .enviar{margin-top:8px;width:100%;min-height:46px;border:0;border-radius:12px;background:var(--roxo);color:#fff;font:700 15px Rubik,system-ui;cursor:pointer}
 </style>
 </head>
 <body>
+<div id="cab"></div>
+<div class="previa-box" id="pv" hidden></div>
 <div id="app"></div>
 <input type="file" id="arq" accept="image/*" hidden>
 <div class="estado" id="estado"><span class="pt" id="pt"></span><span id="txt">Carregando…</span><a id="verTela" href="#" target="_blank" rel="noopener">Ver a tela ↗</a></div>
@@ -51,46 +79,90 @@ textarea{width:100%;box-sizing:border-box;font:inherit;font-size:16px;padding:10
   const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]));
   if(!c){$("#app").innerHTML='<div class="erro">Falta o código no endereço.</div>';return;}
   const URL_API=`/api/mostra/${encodeURIComponent(c)}`;$("#verTela").href=`/mostra.html?c=${encodeURIComponent(c)}`;
-  let E=null,timer=null,enviando=false,pendente=false;
+  let E=null,ST={},timer=null,enviando=false,pendente=false,atual=0,fotoAlvo=null;
   const estado=(k,t)=>{$("#pt").className="pt "+k;$("#txt").textContent=t;};
   const agora=()=>{const h=new Date();return String(h.getHours()).padStart(2,"0")+":"+String(h.getMinutes()).padStart(2,"0");};
-  function render(){const it=E.itens||[];const D=E.destaque=E.destaque||{rotulo:"",texto:"",valor:"",ate:""};
-    $("#app").innerHTML=`<h1>${esc(E.nome)}</h1><p class="sub">O que você muda aqui aparece na TV em poucos segundos.</p>
-    <div class="card"><label>Título da tela</label><input type="text" id="titulo" value="${esc(E.titulo||"")}" maxlength="40">
-      <label>Foto principal</label><button type="button" class="foto ${E.foto?"tem":""}" id="foto" ${E.foto?`style="background-image:url('${esc(E.foto)}')"`:""}>${E.foto?"trocar":"+ Escolher foto"}</button>${E.foto?`<button type="button" class="tirar" id="semFoto">Tirar a foto</button>`:""}</div>
-    <div class="card" id="lista"><h2>Itens · ${porTxt()}, a tela troca sozinha</h2>${it.map((x,i)=>`<div class="it ${x.ativo===false?"off":""}" data-i="${i}"><input type="text" data-k="nome" value="${esc(x.nome)}" placeholder="Nome do item" maxlength="60"><input type="text" data-k="preco" value="${esc(x.preco)}" placeholder="R$" inputmode="decimal" maxlength="20">
-      <div class="linha2"><input type="text" data-k="desc" value="${esc(x.desc||"")}" placeholder="kg, 350 ml…" maxlength="40"><button type="button" class="tog ${x.ativo!==false?"on":""}" data-a="ativo">${x.ativo!==false?"● Na tela":"○ Fora"}</button><button type="button" class="mini" data-a="sobe" aria-label="subir">↑</button><button type="button" class="mini" data-a="desce" aria-label="descer">↓</button><button type="button" class="mini rm" data-a="rm" aria-label="remover">✕</button></div></div>`).join("")}</div>
-    <button type="button" class="add" id="add">+ Adicionar item</button>
-    <div class="card"><h2>Destaque · a oferta em letras grandes</h2><div class="dois"><div><label>Chamada</label><input type="text" id="dRot" value="${esc(D.rotulo)}" maxlength="28" placeholder="OFERTA DA SEMANA"></div><div><label>Valor</label><input type="text" id="dVal" value="${esc(D.valor)}" maxlength="22" placeholder="R$"></div></div>
-      <label>O que é</label><input type="text" id="dTxt" value="${esc(D.texto)}" maxlength="60" placeholder="Ex.: café + pão na chapa">
+  const novoId=p=>p+Date.now().toString(36).slice(-6)+Math.random().toString(36).slice(2,4);
+  const MODELOS=[["lista","Lista com foto"],["sem-foto","Só lista"],["vitrine","Vitrine · 1 item grande"],["combo","Combo · a oferta"]];
+  const hoje=()=>{const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");};
+  // mesma conta do molde da TV (mostra.html): quantas linhas cabem por página neste modelo
+  function cabem(mod){const row={G:162,M:138,P:118}[ST.tamanho&&ST.tamanho!=="auto"?ST.tamanho:((E.polegadas||0)&&E.polegadas<=43?"G":"M")];const logoH={P:180,M:230,G:290}[ST.logo_tam||"M"];const pos=ST.logo_pos||"centro";
+    const D=E.destaque||{};const temC=ST.combo!=="nenhuma"&&(D.texto||D.valor)&&!(D.ate&&D.ate<hoje());const rodH=ST.rodape===false?58:86;
+    if(E.formato==="paisagem"){const titH=E.titulo?140:50;return Math.max(1,Math.floor((1080-rodH-titH-12)/row));}
+    const faixaH=pos==="centro"?70+logoH+(E.titulo?76:0):pos==="canto"?70+Math.max(logoH*.72,70):70+logoH;const fotoH=mod==="lista"?480:0;
+    return Math.max(1,Math.floor((1920-faixaH-fotoH-(temC?330:0)-rodH-28)/row));}
+  function previa(){const t=E.telas[atual];return `<div class="previa ${E.formato==="paisagem"?"pais":""}"><iframe id="ifr" src="mostra.html?c=${encodeURIComponent(c)}&previa=1&tela=${encodeURIComponent(t?t.id:"0")}" title="Prévia da TV" tabindex="-1"></iframe></div>
+    <div class="chips">${E.telas.map((t,i)=>`<button type="button" class="chip ${i===atual?"on":""}" data-tela="${i}">Tela ${i+1}</button>`).join("")}</div>`;}
+  function itemHTML(x,ti,i){const C=E.complemento||{};return `<div class="it ${x.ativo===false?"off":""}" data-t="${ti}" data-i="${i}"><input type="text" data-k="nome" value="${esc(x.nome)}" placeholder="Nome do item" maxlength="60"><input type="text" data-k="preco" value="${esc(x.preco)}" placeholder="R$" inputmode="decimal" maxlength="20">
+      <div class="linha2"><input type="text" data-k="desc" value="${esc(x.desc||"")}" placeholder="${esc((C.rotulo||"Complemento")+(C.exemplo?": "+C.exemplo:""))}" maxlength="40"><button type="button" class="tog ${x.apartir?"on":""}" data-a="apartir">a partir de</button><button type="button" class="tog ${x.ativo!==false?"on":""}" data-a="ativo">${x.ativo!==false?"● Na tela":"○ Fora"}</button><button type="button" class="mini" data-a="sobe" aria-label="subir">↑</button><button type="button" class="mini" data-a="desce" aria-label="descer">↓</button><button type="button" class="mini rm" data-a="rm" aria-label="remover">✕</button></div></div>`;}
+  function telaHTML(t,ti){const usados=new Set(E.telas.flatMap(x=>x.itens.map(i=>i.nome.toLowerCase())));const sug=(E.sugestoes||[]).filter(s=>!usados.has(s.nome.toLowerCase())).slice(0,8);
+    const n=t.itens.filter(i=>i.ativo!==false&&i.nome).length;const cap=cabem(t.modelo);const comFoto=t.modelo!=="sem-foto";const comItens=t.modelo!=="combo";
+    return `<div class="card tela ${ti===atual?"ativa":""}" data-tela-card="${ti}"><div class="tela-cab"><b>Tela ${ti+1}</b><select data-modelo="${ti}">${MODELOS.map(([k,v])=>`<option value="${k}" ${t.modelo===k?"selected":""}>${v}</option>`).join("")}</select><button type="button" class="mini" data-ta="sobe" aria-label="subir tela">↑</button><button type="button" class="mini" data-ta="desce" aria-label="descer tela">↓</button><button type="button" class="mini rm" data-ta="rm" aria-label="remover tela">✕</button></div>
+      ${comFoto?`<button type="button" class="foto ${t.foto?"tem":""}" data-foto="${ti}" ${t.foto?`style="background-image:url('${esc(t.foto)}')"`:""}>${t.foto?"trocar":"+ Foto desta tela"}</button>${t.foto?`<button type="button" class="tirar" data-semfoto="${ti}">Tirar a foto</button>`:""}`:""}
+      ${t.modelo==="combo"?`<p class="cabe">Esta tela mostra a oferta do quadro "Combo", em letras grandes.</p>`:""}
+      ${comItens?`${t.itens.map((x,i)=>itemHTML(x,ti,i)).join("")}
+      <p class="cabe ${t.modelo!=="vitrine"&&n>cap?"mais":""}">${t.modelo==="vitrine"?"Vitrine: cada item aparece sozinho, grande, com esta foto.":n>cap?`${n} itens: cabem ${cap} por página; esta tela vira ${Math.ceil(n/cap)} páginas com a mesma foto.`:`${n} de ${cap} linhas usadas nesta tela.`}</p>
+      <button type="button" class="add" data-add="${ti}">+ Item nesta tela</button>${sug.length?`<div class="sug">${sug.map(s=>`<button type="button" data-sug="${ti}" data-n="${esc(s.nome)}" data-d="${esc(s.desc||"")}">+ ${esc(s.nome)}${s.desc?` · ${esc(s.desc)}`:""}</button>`).join("")}</div>`:""}`:""}</div>`;}
+  const PAL=["#FFFFFF","#F6F1E7","#1B1B1B","#1F3A5F","#7A1F2B","#2E7D32","#C9A227","#E8762B"];
+  function coresHTML(k,rot){const v=(ST.cores||{})[k]||"";const marca=(E.cores||[]).filter(h=>/^#[0-9a-f]{6}$/i.test(h));const lista=[...new Set([...marca,...PAL].map(h=>h.toUpperCase()))];
+    return `<div class="grupo"><span>${rot}</span><div class="cores"><button type="button" class="auto ${v?"":"on"}" data-cor="${k}" data-v="">Automático</button>${lista.map(h=>`<button type="button" data-cor="${k}" data-v="${h}" class="${v.toUpperCase()===h?"on":""}" style="background:${h}" aria-label="${h}"></button>`).join("")}<input type="color" data-corlivre="${k}" value="${v||"#888888"}" aria-label="outra cor"></div></div>`;}
+  const opc=(k,rot,ops)=>`<div class="grupo"><span>${rot}</span><div class="opc">${ops.map(([v,t,st])=>`<button type="button" data-st="${k}" data-v="${v}" class="${String(ST[k]===undefined?ops[0][0]:ST[k])===String(v)?"on":""}" ${st?`style="${st}"`:""}>${t}</button>`).join("")}</div></div>`;
+  function render(){const D=E.destaque=E.destaque||{rotulo:"",texto:"",valor:"",ate:""};const y=scrollY;
+    $("#app").innerHTML=`<div class="card"><label style="margin-top:0">Título (aparece em todas as telas)</label><input type="text" id="titulo" value="${esc(E.titulo||"")}" maxlength="40"></div>
+    <h2 style="margin:16px 2px 8px">Telas · cada uma com a sua foto e os seus itens</h2>
+    ${E.telas.map((t,i)=>telaHTML(t,i)).join("")}
+    <button type="button" class="add" id="novaTela" style="margin:0 0 12px">+ Nova tela</button>
+    <div class="card"><h2>Combo · a oferta em letras grandes</h2><div class="dois"><div><label style="margin-top:0">Chamada</label><input type="text" id="dRot" value="${esc(D.rotulo)}" maxlength="28" placeholder="COMBO DA SEMANA"></div><div><label style="margin-top:0">Valor</label><input type="text" id="dVal" value="${esc(D.valor)}" maxlength="22" placeholder="R$"></div></div>
+      <label>O que é</label><input type="text" id="dTxt" value="${esc(D.texto)}" maxlength="60" placeholder="Ex.: corte + barba">
       <label>Válido até (some sozinho depois)</label><input type="date" id="dAte" value="${esc(D.ate)}"></div>
-    <div class="card"><label>Aviso no rodapé (opcional)</label><input type="text" id="aviso" value="${esc(E.aviso||"")}" maxlength="140" placeholder="Ex.: hoje até as 20h · aceitamos Pix">
-</div>
-    <div class="card"><h2>Tela da TV · a diagramação se ajusta</h2>
-      <div class="dois"><div><label>Posição da TV</label><select id="formato"><option value="auto">Automático</option><option value="retrato">Em pé</option><option value="paisagem">Deitada</option></select></div>
-      <div><label>Tamanho da TV</label><select id="polegadas"><option value="0">Não sei</option><option value="32">Até 32"</option><option value="43">40 a 43"</option><option value="50">50"</option><option value="55">55 a 58"</option><option value="65">60 a 65"</option><option value="75">70 a 75"</option><option value="85">80" ou mais</option></select></div></div>
-      <label>Itens por tela</label><select id="linhas"><option value="0">Automático (pelo tamanho)</option><option value="4">Até 4 itens</option><option value="5">Até 5 itens</option><option value="6">Até 6 itens</option><option value="8">Até 8 itens</option><option value="10">Até 10 itens</option></select>
-      <div id="giroBox" ${E.formato==="paisagem"?'hidden':''}><label>TV em pé: a imagem está de lado?</label><select id="giro"><option value="0">Não, está certa</option><option value="90">Girar para a direita</option><option value="270">Girar para a esquerda</option></select></div>
-      <div class="previa ${E.formato==="paisagem"?"pais":""}"><iframe src="mostra.html?c=${encodeURIComponent(c)}&previa=1" title="Prévia da TV" loading="lazy" tabindex="-1"></iframe></div>
-      <p class="sub" style="margin:6px 0 0">Prévia ${E.formato==="paisagem"?"deitada":"em pé"} · atualiza em poucos segundos depois de cada mudança.</p></div>
-    <div class="card"><h2 style="font-size:16px;margin:0 0 8px">Fale com o seu atendente</h2><div class="conv" id="conv"></div><textarea id="msgTxt" rows="2" placeholder="Escreva sua mensagem"></textarea><button type="button" class="enviar" id="msgEnviar">Enviar</button></div>`;
-    $("#msgEnviar").onclick=enviarMsg;desenharConv();
-    $("#giro").value=String(E.giro||0);$("#formato").value=E.formato||"auto";$("#polegadas").value=String(E.polegadas||0);$("#linhas").value=String(E.linhas||0);
-    const liga=(id,f)=>{$(id).oninput=()=>{f($(id).value);agendar();};};
+    <div class="card"><label style="margin-top:0">Aviso no rodapé (curto, fica parado)</label><input type="text" id="aviso" value="${esc(E.aviso||"")}" maxlength="70" placeholder="Ex.: aceitamos Pix · agende pelo WhatsApp"></div>
+    <div class="card"><h2>Tela da TV</h2>
+      <div class="dois"><div><label style="margin-top:0">Posição</label><select id="formato"><option value="auto">Automático</option><option value="retrato">Em pé</option><option value="paisagem">Deitada</option></select></div>
+      <div><label style="margin-top:0">Tamanho</label><select id="polegadas"><option value="0">Não sei</option><option value="32">Até 32"</option><option value="43">40 a 43"</option><option value="50">50"</option><option value="55">55 a 58"</option><option value="65">60 a 65"</option><option value="75">70 a 75"</option><option value="85">80" ou mais</option></select></div></div>
+      <div ${E.formato==="paisagem"?"hidden":""}><label>TV em pé: a imagem está de lado?</label><select id="giro"><option value="0">Não, está certa</option><option value="90">Girar para a direita</option><option value="270">Girar para a esquerda</option></select></div></div>
+    <div class="card"><details class="av" id="avancado" ${abertoAv?"open":""}><summary>Avançado · cores, letra e logotipo</summary>
+      ${coresHTML("faixa","Cor da faixa (logotipo e combo)")}${coresHTML("fundo","Cor do fundo")}${coresHTML("texto","Cor do texto")}${coresHTML("destaque","Cor de destaque (etiqueta do combo)")}
+      ${opc("fonte","Fonte",[["moderna","Moderna","font-family:Rubik"],["elegante","Elegante","font-family:'Playfair Display'"],["impacto","Impacto","font-family:Oswald"]])}
+      ${opc("tamanho","Tamanho da letra",[["auto","Automático"],["P","Pequena"],["M","Média"],["G","Grande"]])}
+      ${opc("logo_pos","Posição do logotipo",[["centro","No alto, centro"],["esquerda","No alto, esquerda"],["canto","No canto"]])}
+      ${opc("logo_tam","Tamanho do logotipo",[["M","Médio"],["P","Pequeno"],["G","Grande"]])}
+      ${opc("combo","Combo nas telas de lista",[["todas","Mostrar"],["nenhuma","Não mostrar"]])}
+      ${opc("rodape","Aviso no rodapé",[["true","Mostrar"],["false","Esconder"]])}
+      ${opc("tempo","Tempo de cada tela",[[10,"10 s"],[6,"6 s"],[8,"8 s"],[12,"12 s"],[15,"15 s"],[20,"20 s"],[30,"30 s"]])}
+    </details></div>
+    <div class="card"><h2>Fale com o seu atendente</h2><div class="conv" id="conv"></div><textarea id="msgTxt" rows="2" placeholder="Escreva sua mensagem"></textarea><button type="button" class="enviar" id="msgEnviar">Enviar</button></div>`;
+    scrollTo(0,y);ligar();const chave=atual+"|"+(E.formato||"")+"|"+E.telas.map(t=>t.id).join(",");if(chave!==chavePv){chavePv=chave;recarregarPrevia();}else marcarChips();}
+  let chavePv="";
+  const marcarChips=()=>$$("[data-tela]").forEach(b=>b.classList.toggle("on",+b.dataset.tela===atual));
+  let abertoAv=false;
+  const recarregarPrevia=()=>{const pv=$("#pv");pv.hidden=false;pv.innerHTML=previa();ligarChips();};
+  function ligarChips(){$$("[data-tela]").forEach(b=>b.onclick=()=>{atual=+b.dataset.tela;render();const el=$(`[data-tela-card="${atual}"]`);if(el)el.scrollIntoView({behavior:"smooth",block:"center"});});}
+  function ligar(){$("#msgEnviar").onclick=enviarMsg;desenharConv();
+    $("#giro").value=String(E.giro||0);$("#formato").value=E.formato||"auto";$("#polegadas").value=String(E.polegadas||0);
+    const liga=(id,f)=>{$(id).oninput=()=>{f($(id).value);agendar();};};const D=E.destaque;
     liga("#titulo",v=>E.titulo=v);liga("#aviso",v=>E.aviso=v);liga("#dRot",v=>D.rotulo=v);liga("#dVal",v=>D.valor=v);liga("#dTxt",v=>D.texto=v);liga("#dAte",v=>D.ate=v);
     $("#giro").onchange=()=>{E.giro=+$("#giro").value;agendar();};
     $("#formato").onchange=()=>{E.formato=$("#formato").value;agendar();render();};
     $("#polegadas").onchange=()=>{E.polegadas=+$("#polegadas").value;agendar();render();};
-    $("#linhas").onchange=()=>{E.linhas=+$("#linhas").value;agendar();render();};
-    $("#foto").onclick=()=>$("#arq").click();const sf=$("#semFoto");if(sf)sf.onclick=()=>{E.foto=null;semFoto=true;render();agendar();};
-    $$("#lista input").forEach(inp=>inp.oninput=()=>{const i=+inp.closest(".it").dataset.i;E.itens[i][inp.dataset.k]=inp.value;agendar();});
-    $$("#lista [data-a]").forEach(b=>b.onclick=()=>{const i=+b.closest(".it").dataset.i;const a=b.dataset.a;const L=E.itens;
-      if(a==="ativo")L[i].ativo=L[i].ativo===false;else if(a==="rm")L.splice(i,1);else if(a==="sobe"&&i>0)[L[i-1],L[i]]=[L[i],L[i-1]];else if(a==="desce"&&i<L.length-1)[L[i+1],L[i]]=[L[i],L[i+1]];
-      render();agendar();});
-    $("#add").onclick=()=>{E.itens.push({id:"i"+Date.now().toString(36),nome:"",preco:"",desc:"",ativo:true});render();agendar();setTimeout(()=>{const ins=$$("#lista .it input[data-k=nome]");ins[ins.length-1]&&ins[ins.length-1].focus();},50);};}
-  let semFoto=false;
-  // mesma conta da tela da TV (mostra.html): automático pelo tamanho e pela posição
-  function porTxt(){if(E.linhas)return "até "+E.linhas+" por tela, páginas equilibradas";const cap={retrato:{0:4,32:4,43:4,50:5,55:5,65:6,75:8,85:8},paisagem:{0:5,32:5,43:5,50:6,55:6,65:8,75:8,85:10}}[E.formato==="paisagem"?"paisagem":"retrato"][E.polegadas||0]||4;return "até "+cap+" por tela";}
+    $("#avancado").ontoggle=()=>{abertoAv=$("#avancado").open;};
+    $$("[data-tela-card]").forEach(el=>el.addEventListener("focusin",()=>{const i=+el.dataset.telaCard;if(i!==atual){atual=i;$$("[data-tela-card]").forEach(x=>x.classList.toggle("ativa",+x.dataset.telaCard===i));chavePv=atual+"|"+(E.formato||"")+"|"+E.telas.map(t=>t.id).join(",");recarregarPrevia();}}));
+    $$("[data-modelo]").forEach(s=>s.onchange=()=>{E.telas[+s.dataset.modelo].modelo=s.value;atual=+s.dataset.modelo;agendar();render();});
+    $$("[data-ta]").forEach(b=>b.onclick=()=>{const ti=+b.closest("[data-tela-card]").dataset.telaCard;const L=E.telas;const a=b.dataset.ta;
+      if(a==="rm"){if(L.length<2)return alert("A TV precisa de pelo menos uma tela.");if(!confirm(`Tirar a Tela ${ti+1} da TV?`))return;L.splice(ti,1);atual=Math.min(atual,L.length-1);}
+      else if(a==="sobe"&&ti>0){[L[ti-1],L[ti]]=[L[ti],L[ti-1]];atual=ti-1;}else if(a==="desce"&&ti<L.length-1){[L[ti+1],L[ti]]=[L[ti],L[ti+1]];atual=ti+1;}render();agendar();});
+    $$("[data-foto]").forEach(b=>b.onclick=()=>{fotoAlvo=+b.dataset.foto;$("#arq").click();});
+    $$("[data-semfoto]").forEach(b=>b.onclick=()=>{E.telas[+b.dataset.semfoto].foto=null;render();agendar();});
+    $$(".tela .it input").forEach(inp=>inp.oninput=()=>{const it=inp.closest(".it");E.telas[+it.dataset.t].itens[+it.dataset.i][inp.dataset.k]=inp.value;agendar();});
+    $$(".tela .it [data-a]").forEach(b=>b.onclick=()=>{const it=b.closest(".it");const ti=+it.dataset.t,i=+it.dataset.i;const L=E.telas[ti].itens;const a=b.dataset.a;
+      if(a==="ativo")L[i].ativo=L[i].ativo===false;else if(a==="apartir")L[i].apartir=!L[i].apartir;else if(a==="rm")L.splice(i,1);else if(a==="sobe"&&i>0)[L[i-1],L[i]]=[L[i],L[i-1]];else if(a==="desce"&&i<L.length-1)[L[i+1],L[i]]=[L[i],L[i+1]];
+      atual=ti;render();agendar();});
+    $$("[data-add]").forEach(b=>b.onclick=()=>{const ti=+b.dataset.add;E.telas[ti].itens.push({id:novoId("i"),nome:"",preco:"",desc:"",apartir:false,ativo:true});atual=ti;render();agendar();
+      setTimeout(()=>{const ins=$$(`.it[data-t="${ti}"] input[data-k=nome]`);ins[ins.length-1]&&ins[ins.length-1].focus();},50);});
+    $$("[data-sug]").forEach(b=>b.onclick=()=>{const ti=+b.dataset.sug;E.telas[ti].itens.push({id:novoId("i"),nome:b.dataset.n,preco:"",desc:b.dataset.d,apartir:false,ativo:true});atual=ti;render();agendar();});
+    $("#novaTela").onclick=()=>{E.telas.push({id:novoId("t"),modelo:"lista",foto:null,itens:[]});atual=E.telas.length-1;render();agendar();setTimeout(()=>{const el=$(`[data-tela-card="${atual}"]`);if(el)el.scrollIntoView({behavior:"smooth",block:"center"});},60);};
+    $$("[data-cor]").forEach(b=>b.onclick=()=>{ST.cores={...(ST.cores||{}),[b.dataset.cor]:b.dataset.v};render();agendar();});
+    $$("[data-corlivre]").forEach(inp=>inp.onchange=()=>{ST.cores={...(ST.cores||{}),[inp.dataset.corlivre]:inp.value.toUpperCase()};render();agendar();});
+    $$("[data-st]").forEach(b=>b.onclick=()=>{const k=b.dataset.st;let v=b.dataset.v;if(k==="rodape")v=v==="true";if(k==="tempo")v=+v;ST[k]=v;render();agendar();});}
   let CONV=[];const hm=iso=>{const d=new Date(iso);return d.toLocaleDateString("pt-BR",{day:"2-digit",month:"2-digit"})+" "+d.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});};
   function desenharConv(){const el=$("#conv");if(!el)return;el.innerHTML=CONV.length?CONV.map(m=>`<div class="m ${m.de}">${esc(m.texto)}<small>${m.de==="cliente"?"Você":"Atendimento"} · ${hm(m.em)}</small></div>`).join(""):'<p class="sub" style="margin:0">Dúvidas, ajustes ou pedidos: escreva aqui que o seu atendente responde.</p>';el.scrollTop=el.scrollHeight;}
   async function puxarConv(){try{const r=await fetch(`/api/mostra/${encodeURIComponent(c)}/mensagens`,{cache:"no-store"});if(!r.ok)return;const d=await r.json();if(JSON.stringify(d.mensagens)!==JSON.stringify(CONV)){CONV=d.mensagens||[];desenharConv();}}catch(e){}}
@@ -100,16 +172,22 @@ textarea{width:100%;box-sizing:border-box;font:inherit;font-size:16px;padding:10
   setInterval(puxarConv,20000);
   function agendar(){pendente=true;estado("env","Enviando…");clearTimeout(timer);timer=setTimeout(enviar,600);}
   async function enviar(){if(enviando){pendente=true;return;}enviando=true;pendente=false;
-    try{const corpo={itens:E.itens,titulo:E.titulo,aviso:E.aviso,destaque:E.destaque,giro:E.giro||0,formato:E.formato||"auto",polegadas:E.polegadas||0,linhas:E.linhas||0};if(semFoto){corpo.foto=null;semFoto=false;}
+    try{E.estilo=ST;const corpo={telas:E.telas,titulo:E.titulo,aviso:E.aviso,destaque:E.destaque,giro:E.giro||0,formato:E.formato||"auto",polegadas:E.polegadas||0,estilo:ST};
       const r=await fetch(URL_API,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(corpo)});if(!r.ok)throw new Error(r.status);const d=await r.json();E.v=d.v;estado("ok","Na tela · "+agora());}
     catch(e){estado("erro","Não foi: confira a internet e mexa de novo.");}
     enviando=false;if(pendente)enviar();}
-  // foto: reduzida aqui (1080 px de largura) e guardada no servidor
-  $("#arq").onchange=async ev=>{const f=ev.target.files[0];ev.target.value="";if(!f)return;estado("env","Enviando a foto…");
-    try{const im=await createImageBitmap(f);const k=Math.min(1,1080/im.width);const cv=document.createElement("canvas");cv.width=Math.round(im.width*k);cv.height=Math.round(im.height*k);cv.getContext("2d").drawImage(im,0,0,cv.width,cv.height);
-      const r=await fetch(URL_API+"/foto",{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify({foto:cv.toDataURL("image/jpeg",.84)})});if(!r.ok)throw new Error(r.status);const d=await r.json();E.foto=d.foto;E.v=d.v;render();estado("ok","Na tela · "+agora());}
+  // foto de cada tela: reduzida aqui (1080 px de largura) e guardada no servidor, ligada àquela tela
+  $("#arq").onchange=async ev=>{const f=ev.target.files[0];ev.target.value="";if(!f||fotoAlvo==null)return;const t=E.telas[fotoAlvo];estado("env","Enviando a foto…");
+    try{clearTimeout(timer);while(enviando)await new Promise(r=>setTimeout(r,150));await enviar();
+      const im=await createImageBitmap(f);const k=Math.min(1,1080/im.width);const cv=document.createElement("canvas");cv.width=Math.round(im.width*k);cv.height=Math.round(im.height*k);cv.getContext("2d").drawImage(im,0,0,cv.width,cv.height);
+      const r=await fetch(URL_API+"/foto",{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify({foto:cv.toDataURL("image/jpeg",.84),tela:t.id})});if(!r.ok)throw new Error(r.status);const d=await r.json();
+      const nova=(d.telas||[]).find(x=>x.id===t.id);t.foto=nova?nova.foto:d.foto;E.v=d.v;atual=fotoAlvo;render();estado("ok","Na tela · "+agora());}
     catch(e){estado("erro","A foto não subiu: tente de novo.");}};
-  (async()=>{try{const r=await fetch(URL_API,{cache:"no-store"});if(!r.ok)throw 0;E=await r.json();(E.itens||[]).forEach(i=>delete i.destaque);render();puxarConv();estado("ok","Na tela");}catch(e){$("#app").innerHTML='<div class="erro">Este Mostraí não existe ou foi desligado.</div>';estado("erro","Sem programação");}})();
+  (async()=>{try{const r=await fetch(URL_API,{cache:"no-store"});if(!r.ok)throw 0;E=await r.json();ST=E.estilo||{};
+      // telas antigas (lista única + foto principal) viram a Tela 1, com a mesma foto e os mesmos itens
+      if(!E.telas||!E.telas.length)E.telas=[{id:"t1",modelo:E.foto?"lista":"sem-foto",foto:E.foto||null,itens:(E.itens||[]).map(i=>({...i}))}];
+      E.telas.forEach(t=>{t.itens=t.itens||[];t.itens.forEach(i=>{if(!i.id)i.id=novoId("i");});});
+      $("#cab").innerHTML=`<h1>${esc(E.nome)}</h1><p class="sub">O que você muda aqui aparece na TV em poucos segundos.</p>`;render();puxarConv();estado("ok","Na tela");}catch(e){$("#app").innerHTML='<div class="erro">Este Mostraí não existe ou foi desligado.</div>';estado("erro","Sem programação");}})();
 })();
 </script>
 </body>

@@ -741,7 +741,7 @@ class H(BaseHTTPRequestHandler):
             if p.startswith("/api/mostra/"):
                 partes = p.split("/")   # /api/mostra/<token>[/logo.ext]
                 try:
-                    if len(partes) == 5 and partes[4].startswith(("logo.", "foto.")):
+                    if len(partes) == 5 and partes[4].startswith(("logo.", "foto.", "foto-")):
                         ct, raw = MOSTRA.logo(partes[3], partes[4])
                         return self._send(200, body=raw, ctype=ct, cache="public, max-age=600")
                     if len(partes) == 5 and partes[4] == "mensagens":
@@ -755,7 +755,7 @@ class H(BaseHTTPRequestHandler):
                     qs = {k: v[0] for k, v in _parse_qs(urlparse(self.path).query or "").items()}
                     if qs.get("v") and str(est.get("v")) == qs["v"]:
                         return self._send(200, {"v": est["v"], "igual": True})
-                    return self._send(200, est)
+                    return self._send(200, MOSTRA.publico(est))
                 except (ValueError, FileNotFoundError):
                     return self._erro(404, "este Mostraí não existe")
             if p.startswith("/api/arq/"):
@@ -906,7 +906,7 @@ class H(BaseHTTPRequestHandler):
         try:
             if p.startswith("/api/mostra/") and p.endswith("/foto") and len(p.split("/")) == 5:   # foto principal da tela
                 try:
-                    return self._send(200, MOSTRA.foto_gravar(p.split("/")[3], self._json().get("foto")))
+                    return self._send(200, MOSTRA.foto_gravar(p.split("/")[3], (j := self._json()).get("foto"), j.get("tela")))
                 except FileNotFoundError:
                     return self._erro(404, "este Mostraí não existe")
                 except ValueError as e:
@@ -923,7 +923,7 @@ class H(BaseHTTPRequestHandler):
                     return self._erro(400, str(e))
             if p.startswith("/api/mostra/") and len(p.split("/")) == 4:   # programação do cliente: o código é a chave
                 try:
-                    return self._send(200, MOSTRA.gravar(p.split("/")[3], self._json()))
+                    return self._send(200, MOSTRA.publico(MOSTRA.gravar(p.split("/")[3], self._json())))
                 except (ValueError, FileNotFoundError):
                     return self._erro(404, "este Mostraí não existe")
             eu = self._eu()

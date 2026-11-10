@@ -16,7 +16,62 @@
    "texto": "#2B201A",
    "texto_sobre_principal": "#FFFFFF"
   },
-  "jpg": "/brand/mostrai/JPG/01_Cafeteria_Mostrai.jpg"
+  "jpg": "/brand/mostrai/JPG/01_Cafeteria_Mostrai.jpg",
+  "complemento": {
+   "rotulo": "Tamanho",
+   "exemplo": "P · 150 ml",
+   "apartir": false
+  },
+  "sugestoes": [
+   {
+    "nome": "Espresso",
+    "desc": "curto"
+   },
+   {
+    "nome": "Espresso duplo",
+    "desc": ""
+   },
+   {
+    "nome": "Cappuccino",
+    "desc": "M · 240 ml"
+   },
+   {
+    "nome": "Latte",
+    "desc": "M · 300 ml"
+   },
+   {
+    "nome": "Café coado",
+    "desc": "200 ml"
+   },
+   {
+    "nome": "Mocha",
+    "desc": "M · 300 ml"
+   },
+   {
+    "nome": "Chocolate quente",
+    "desc": "M · 240 ml"
+   },
+   {
+    "nome": "Chá",
+    "desc": "300 ml"
+   },
+   {
+    "nome": "Pão de queijo",
+    "desc": "un"
+   },
+   {
+    "nome": "Croissant",
+    "desc": "un"
+   },
+   {
+    "nome": "Bolo da casa",
+    "desc": "fatia"
+   },
+   {
+    "nome": "Combo café + pão de queijo",
+    "desc": ""
+   }
+  ]
  },
  "02_Restaurante": {
   "rotulo": "RESTAURANTE",
@@ -35,7 +90,54 @@
    "texto": "#173C29",
    "texto_sobre_principal": "#FFFFFF"
   },
-  "jpg": "/brand/mostrai/JPG/02_Restaurante_Mostrai.jpg"
+  "jpg": "/brand/mostrai/JPG/02_Restaurante_Mostrai.jpg",
+  "complemento": {
+   "rotulo": "Porção",
+   "exemplo": "serve 1",
+   "apartir": false
+  },
+  "sugestoes": [
+   {
+    "nome": "Prato executivo",
+    "desc": "serve 1"
+   },
+   {
+    "nome": "Prato do dia",
+    "desc": "serve 1"
+   },
+   {
+    "nome": "Parmegiana",
+    "desc": "serve 2"
+   },
+   {
+    "nome": "Massa da casa",
+    "desc": "serve 1"
+   },
+   {
+    "nome": "Salada especial",
+    "desc": "serve 1"
+   },
+   {
+    "nome": "Grelhado com acompanhamentos",
+    "desc": "serve 1"
+   },
+   {
+    "nome": "Porção de fritas",
+    "desc": "serve 2"
+   },
+   {
+    "nome": "Sobremesa do dia",
+    "desc": ""
+   },
+   {
+    "nome": "Suco natural",
+    "desc": "500 ml"
+   },
+   {
+    "nome": "Refrigerante",
+    "desc": "lata 350 ml"
+   }
+  ]
  },
  "03_Padaria": {
   "rotulo": "PADARIA",
@@ -54,7 +156,62 @@
    "texto": "#51280F",
    "texto_sobre_principal": "#51280F"
   },
-  "jpg": "/brand/mostrai/JPG/03_Padaria_Mostrai.jpg"
+  "jpg": "/brand/mostrai/JPG/03_Padaria_Mostrai.jpg",
+  "complemento": {
+   "rotulo": "Unidade",
+   "exemplo": "kg · un",
+   "apartir": false
+  },
+  "sugestoes": [
+   {
+    "nome": "Pão francês",
+    "desc": "kg"
+   },
+   {
+    "nome": "Pão de queijo",
+    "desc": "un"
+   },
+   {
+    "nome": "Pão na chapa",
+    "desc": "un"
+   },
+   {
+    "nome": "Misto quente",
+    "desc": "un"
+   },
+   {
+    "nome": "Café coado",
+    "desc": "200 ml"
+   },
+   {
+    "nome": "Pingado",
+    "desc": "200 ml"
+   },
+   {
+    "nome": "Fatia de bolo",
+    "desc": "fatia"
+   },
+   {
+    "nome": "Sonho",
+    "desc": "un"
+   },
+   {
+    "nome": "Coxinha",
+    "desc": "un"
+   },
+   {
+    "nome": "Pão de forma da casa",
+    "desc": "un"
+   },
+   {
+    "nome": "Torta salgada",
+    "desc": "fatia"
+   },
+   {
+    "nome": "Suco natural",
+    "desc": "300 ml"
+   }
+  ]
  },
  "04_Clinica": {
   "rotulo": "CLÍNICA",
@@ -73,7 +230,46 @@
    "texto": "#163C43",
    "texto_sobre_principal": "#FFFFFF"
   },
-  "jpg": "/brand/mostrai/JPG/04_Clinica_Mostrai.jpg"
+  "jpg": "/brand/mostrai/JPG/04_Clinica_Mostrai.jpg",
+  "complemento": {
+   "rotulo": "Duração",
+   "exemplo": "30 min",
+   "apartir": true
+  },
+  "sugestoes": [
+   {
+    "nome": "Consulta clínica",
+    "desc": "30 min"
+   },
+   {
+    "nome": "Consulta de retorno",
+    "desc": "20 min"
+   },
+   {
+    "nome": "Avaliação preventiva",
+    "desc": "40 min"
+   },
+   {
+    "nome": "Exame de rotina",
+    "desc": ""
+   },
+   {
+    "nome": "Atendimento particular",
+    "desc": ""
+   },
+   {
+    "nome": "Atendimento por convênio",
+    "desc": ""
+   },
+   {
+    "nome": "Teleconsulta",
+    "desc": "30 min"
+   },
+   {
+    "nome": "Procedimento simples",
+    "desc": ""
+   }
+  ]
  },
  "05_Estetica": {
   "rotulo": "ESTÉTICA",
@@ -92,7 +288,54 @@
    "texto": "#372C34",
    "texto_sobre_principal": "#FFFFFF"
   },
-  "jpg": "/brand/mostrai/JPG/05_Estetica_Mostrai.jpg"
+  "jpg": "/brand/mostrai/JPG/05_Estetica_Mostrai.jpg",
+  "complemento": {
+   "rotulo": "Duração",
+   "exemplo": "60 min",
+   "apartir": true
+  },
+  "sugestoes": [
+   {
+    "nome": "Limpeza de pele",
+    "desc": "60 min"
+   },
+   {
+    "nome": "Massagem relaxante",
+    "desc": "50 min"
+   },
+   {
+    "nome": "Drenagem linfática",
+    "desc": "50 min"
+   },
+   {
+    "nome": "Design de sobrancelhas",
+    "desc": "30 min"
+   },
+   {
+    "nome": "Depilação",
+    "desc": ""
+   },
+   {
+    "nome": "Peeling",
+    "desc": "40 min"
+   },
+   {
+    "nome": "Manicure",
+    "desc": "40 min"
+   },
+   {
+    "nome": "Pedicure",
+    "desc": "50 min"
+   },
+   {
+    "nome": "Avaliação",
+    "desc": "20 min"
+   },
+   {
+    "nome": "Pacote mensal",
+    "desc": "4 sessões"
+   }
+  ]
  },
  "06_Salao": {
   "rotulo": "SALÃO",
@@ -111,7 +354,62 @@
    "texto": "#29222F",
    "texto_sobre_principal": "#FFFFFF"
   },
-  "jpg": "/brand/mostrai/JPG/06_Salao_Mostrai.jpg"
+  "jpg": "/brand/mostrai/JPG/06_Salao_Mostrai.jpg",
+  "complemento": {
+   "rotulo": "Duração",
+   "exemplo": "40 min",
+   "apartir": true
+  },
+  "sugestoes": [
+   {
+    "nome": "Corte feminino",
+    "desc": "50 min"
+   },
+   {
+    "nome": "Corte masculino",
+    "desc": "30 min"
+   },
+   {
+    "nome": "Barba",
+    "desc": "20 min"
+   },
+   {
+    "nome": "Corte + barba",
+    "desc": "50 min"
+   },
+   {
+    "nome": "Escova",
+    "desc": "40 min"
+   },
+   {
+    "nome": "Hidratação",
+    "desc": "40 min"
+   },
+   {
+    "nome": "Coloração",
+    "desc": "2 h"
+   },
+   {
+    "nome": "Luzes / mechas",
+    "desc": "3 h"
+   },
+   {
+    "nome": "Progressiva",
+    "desc": "3 h"
+   },
+   {
+    "nome": "Penteado",
+    "desc": "1 h"
+   },
+   {
+    "nome": "Sobrancelha",
+    "desc": "15 min"
+   },
+   {
+    "nome": "Manicure",
+    "desc": "40 min"
+   }
+  ]
  },
  "07_Imobiliaria": {
   "rotulo": "IMOBILIÁRIA",
@@ -130,7 +428,46 @@
    "texto": "#1B2C43",
    "texto_sobre_principal": "#FFFFFF"
   },
-  "jpg": "/brand/mostrai/JPG/07_Imobiliaria_Mostrai.jpg"
+  "jpg": "/brand/mostrai/JPG/07_Imobiliaria_Mostrai.jpg",
+  "complemento": {
+   "rotulo": "Detalhe",
+   "exemplo": "2 quartos · 60 m²",
+   "apartir": false
+  },
+  "sugestoes": [
+   {
+    "nome": "Apartamento",
+    "desc": "2 quartos · 60 m²"
+   },
+   {
+    "nome": "Casa",
+    "desc": "3 quartos · 120 m²"
+   },
+   {
+    "nome": "Sala comercial",
+    "desc": "locação · 40 m²"
+   },
+   {
+    "nome": "Kitnet",
+    "desc": "locação"
+   },
+   {
+    "nome": "Terreno",
+    "desc": "300 m²"
+   },
+   {
+    "nome": "Avaliação de imóvel",
+    "desc": ""
+   },
+   {
+    "nome": "Administração de aluguel",
+    "desc": ""
+   },
+   {
+    "nome": "Agende uma visita",
+    "desc": ""
+   }
+  ]
  },
  "08_Loja_Roupas": {
   "rotulo": "MODA",
@@ -149,7 +486,54 @@
    "texto": "#30242D",
    "texto_sobre_principal": "#FFFFFF"
   },
-  "jpg": "/brand/mostrai/JPG/08_Loja_Roupas_Mostrai.jpg"
+  "jpg": "/brand/mostrai/JPG/08_Loja_Roupas_Mostrai.jpg",
+  "complemento": {
+   "rotulo": "Tamanhos",
+   "exemplo": "P ao GG",
+   "apartir": false
+  },
+  "sugestoes": [
+   {
+    "nome": "Camiseta básica",
+    "desc": "P ao GG"
+   },
+   {
+    "nome": "Calça jeans",
+    "desc": "36 ao 48"
+   },
+   {
+    "nome": "Camisa casual",
+    "desc": "P ao GG"
+   },
+   {
+    "nome": "Vestido",
+    "desc": "P ao G"
+   },
+   {
+    "nome": "Bermuda",
+    "desc": "38 ao 48"
+   },
+   {
+    "nome": "Blusa",
+    "desc": "P ao G"
+   },
+   {
+    "nome": "Jaqueta",
+    "desc": "P ao GG"
+   },
+   {
+    "nome": "Tênis",
+    "desc": "34 ao 44"
+   },
+   {
+    "nome": "Acessórios",
+    "desc": ""
+   },
+   {
+    "nome": "Coleção nova",
+    "desc": ""
+   }
+  ]
  },
  "09_Pet_Shop": {
   "rotulo": "PET SHOP",
@@ -168,7 +552,54 @@
    "texto": "#133F42",
    "texto_sobre_principal": "#FFFFFF"
   },
-  "jpg": "/brand/mostrai/JPG/09_Pet_Shop_Mostrai.jpg"
+  "jpg": "/brand/mostrai/JPG/09_Pet_Shop_Mostrai.jpg",
+  "complemento": {
+   "rotulo": "Porte",
+   "exemplo": "pequeno porte",
+   "apartir": true
+  },
+  "sugestoes": [
+   {
+    "nome": "Banho",
+    "desc": "pequeno porte"
+   },
+   {
+    "nome": "Banho",
+    "desc": "médio porte"
+   },
+   {
+    "nome": "Banho",
+    "desc": "grande porte"
+   },
+   {
+    "nome": "Banho e tosa",
+    "desc": "pequeno porte"
+   },
+   {
+    "nome": "Tosa higiênica",
+    "desc": ""
+   },
+   {
+    "nome": "Ração",
+    "desc": "15 kg"
+   },
+   {
+    "nome": "Petisco",
+    "desc": "100 g"
+   },
+   {
+    "nome": "Consulta veterinária",
+    "desc": ""
+   },
+   {
+    "nome": "Vacina",
+    "desc": ""
+   },
+   {
+    "nome": "Brinquedo",
+    "desc": ""
+   }
+  ]
  },
  "10_Farmacia": {
   "rotulo": "FARMÁCIA",
@@ -187,7 +618,54 @@
    "texto": "#173D31",
    "texto_sobre_principal": "#FFFFFF"
   },
-  "jpg": "/brand/mostrai/JPG/10_Farmacia_Mostrai.jpg"
+  "jpg": "/brand/mostrai/JPG/10_Farmacia_Mostrai.jpg",
+  "complemento": {
+   "rotulo": "Tamanho",
+   "exemplo": "350 ml",
+   "apartir": false
+  },
+  "sugestoes": [
+   {
+    "nome": "Protetor solar",
+    "desc": "120 ml"
+   },
+   {
+    "nome": "Shampoo",
+    "desc": "350 ml"
+   },
+   {
+    "nome": "Condicionador",
+    "desc": "350 ml"
+   },
+   {
+    "nome": "Sabonete",
+    "desc": "90 g"
+   },
+   {
+    "nome": "Creme dental",
+    "desc": "90 g"
+   },
+   {
+    "nome": "Hidratante",
+    "desc": "200 ml"
+   },
+   {
+    "nome": "Vitamina C",
+    "desc": "30 cáps."
+   },
+   {
+    "nome": "Fralda",
+    "desc": "pacote"
+   },
+   {
+    "nome": "Aferição de pressão",
+    "desc": ""
+   },
+   {
+    "nome": "Teste de glicemia",
+    "desc": ""
+   }
+  ]
  },
  "11_Academia": {
   "rotulo": "ACADEMIA",
@@ -206,7 +684,50 @@
    "texto": "#182A36",
    "texto_sobre_principal": "#FFFFFF"
   },
-  "jpg": "/brand/mostrai/JPG/11_Academia_Mostrai.jpg"
+  "jpg": "/brand/mostrai/JPG/11_Academia_Mostrai.jpg",
+  "complemento": {
+   "rotulo": "Período",
+   "exemplo": "mensal",
+   "apartir": false
+  },
+  "sugestoes": [
+   {
+    "nome": "Plano mensal",
+    "desc": "livre"
+   },
+   {
+    "nome": "Plano trimestral",
+    "desc": "livre"
+   },
+   {
+    "nome": "Plano anual",
+    "desc": "livre"
+   },
+   {
+    "nome": "Plano 3x por semana",
+    "desc": "mensal"
+   },
+   {
+    "nome": "Aula avulsa",
+    "desc": ""
+   },
+   {
+    "nome": "Pilates",
+    "desc": "2x por semana"
+   },
+   {
+    "nome": "Funcional",
+    "desc": "3x por semana"
+   },
+   {
+    "nome": "Avaliação física",
+    "desc": ""
+   },
+   {
+    "nome": "Personal",
+    "desc": "por aula"
+   }
+  ]
  },
  "12_Autopecas": {
   "rotulo": "OFICINA",
@@ -225,7 +746,54 @@
    "texto": "#243039",
    "texto_sobre_principal": "#FFFFFF"
   },
-  "jpg": "/brand/mostrai/JPG/12_Autopecas_Mostrai.jpg"
+  "jpg": "/brand/mostrai/JPG/12_Autopecas_Mostrai.jpg",
+  "complemento": {
+   "rotulo": "Detalhe",
+   "exemplo": "por roda",
+   "apartir": true
+  },
+  "sugestoes": [
+   {
+    "nome": "Alinhamento",
+    "desc": ""
+   },
+   {
+    "nome": "Balanceamento",
+    "desc": "por roda"
+   },
+   {
+    "nome": "Troca de óleo",
+    "desc": "com filtro"
+   },
+   {
+    "nome": "Palhetas",
+    "desc": "par"
+   },
+   {
+    "nome": "Pastilha de freio",
+    "desc": "par"
+   },
+   {
+    "nome": "Revisão",
+    "desc": ""
+   },
+   {
+    "nome": "Bateria",
+    "desc": "60 Ah"
+   },
+   {
+    "nome": "Pneu",
+    "desc": "aro 14"
+   },
+   {
+    "nome": "Diagnóstico",
+    "desc": ""
+   },
+   {
+    "nome": "Higienização do ar",
+    "desc": ""
+   }
+  ]
  },
  "13_Escritorio": {
   "rotulo": "SERVIÇOS",
@@ -244,7 +812,54 @@
    "texto": "#233444",
    "texto_sobre_principal": "#FFFFFF"
   },
-  "jpg": "/brand/mostrai/JPG/13_Escritorio_Mostrai.jpg"
+  "jpg": "/brand/mostrai/JPG/13_Escritorio_Mostrai.jpg",
+  "complemento": {
+   "rotulo": "Detalhe",
+   "exemplo": "por página",
+   "apartir": false
+  },
+  "sugestoes": [
+   {
+    "nome": "Impressão A4 P&B",
+    "desc": "por página"
+   },
+   {
+    "nome": "Impressão A4 colorida",
+    "desc": "por página"
+   },
+   {
+    "nome": "Cópia",
+    "desc": "por página"
+   },
+   {
+    "nome": "Digitalização",
+    "desc": "por página"
+   },
+   {
+    "nome": "Encadernação",
+    "desc": ""
+   },
+   {
+    "nome": "Plastificação",
+    "desc": "A4"
+   },
+   {
+    "nome": "Foto 3x4",
+    "desc": "6 un."
+   },
+   {
+    "nome": "Currículo",
+    "desc": ""
+   },
+   {
+    "nome": "Conserto de celular",
+    "desc": ""
+   },
+   {
+    "nome": "Película",
+    "desc": ""
+   }
+  ]
  },
  "14_Mercado": {
   "rotulo": "MERCADO",
@@ -263,6 +878,61 @@
    "texto": "#2B4022",
    "texto_sobre_principal": "#FFFFFF"
   },
-  "jpg": "/brand/mostrai/JPG/14_Mercado_Mostrai.jpg"
+  "jpg": "/brand/mostrai/JPG/14_Mercado_Mostrai.jpg",
+  "complemento": {
+   "rotulo": "Unidade",
+   "exemplo": "kg · un · L",
+   "apartir": false
+  },
+  "sugestoes": [
+   {
+    "nome": "Banana",
+    "desc": "kg"
+   },
+   {
+    "nome": "Tomate",
+    "desc": "kg"
+   },
+   {
+    "nome": "Batata",
+    "desc": "kg"
+   },
+   {
+    "nome": "Arroz",
+    "desc": "5 kg"
+   },
+   {
+    "nome": "Feijão",
+    "desc": "1 kg"
+   },
+   {
+    "nome": "Leite",
+    "desc": "1 L"
+   },
+   {
+    "nome": "Café",
+    "desc": "500 g"
+   },
+   {
+    "nome": "Açúcar",
+    "desc": "1 kg"
+   },
+   {
+    "nome": "Ovos",
+    "desc": "dúzia"
+   },
+   {
+    "nome": "Óleo",
+    "desc": "900 ml"
+   },
+   {
+    "nome": "Pão",
+    "desc": "kg"
+   },
+   {
+    "nome": "Refrigerante",
+    "desc": "2 L"
+   }
+  ]
  }
 }
