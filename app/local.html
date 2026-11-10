@@ -6,7 +6,7 @@
 <title>GênIO · Ver no local</title>
 <meta name="theme-color" content="#000000">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="app.css?v=cb0b72d59e">
+<link rel="stylesheet" href="app.css?v=6712124963">
 <style>
 html,body{height:100%;margin:0;background:#000;overflow:hidden;touch-action:none}
 #palco{position:fixed;inset:0;overflow:hidden;touch-action:none}
@@ -35,7 +35,7 @@ html,body{height:100%;margin:0;background:#000;overflow:hidden;touch-action:none
   <div class="linha"><button type="button" class="pill" id="mescla">Estampado</button><button type="button" id="foto" aria-label="Fotografar"></button><button type="button" class="pill" id="zerar">Recentrar</button></div>
 </div>
 <div class="msg" id="msg">Abrindo a câmera…</div>
-<script src="app.js?v=cb0b72d59e"></script>
+<script src="app.js?v=6712124963"></script>
 <script>
 (async()=>{
   const {$,esc,qs,sessao,dados,cliente,nomeLoja,classificar}=App;
@@ -45,7 +45,7 @@ html,body{height:100%;margin:0;background:#000;overflow:hidden;touch-action:none
   const erro=t=>{$("#msg").innerHTML=`<div>${t}<br><a class="btn" href="${volta}" style="text-decoration:none">Voltar</a></div>`;};
   if(!l)return erro("Loja não encontrada.");
   const c=await cliente(l);const A=(c.artes||{})[pid];if(!A)return erro("Este produto ainda não tem arte. Gere os produtos primeiro.");
-  const G=await fetch("gabaritos.json?v=cb0b72d59e").then(r=>r.json()).catch(()=>({produtos:{}}));const P=(G.produtos||{})[pid]||{};
+  const G=await fetch("gabaritos.json?v=6712124963").then(r=>r.json()).catch(()=>({produtos:{}}));const P=(G.produtos||{})[pid]||{};
   $("#tit").textContent=`${P.nome||pid} · ${nomeLoja(l.nome)}`;
   // peça com fundo (placa, banner, faixa, papel) entra inteira; recorte e estampa (vinil, tecido, carimbo) entram só com a arte
   const src=(P.sem_fundo||P.superficie==="carimbo")?(A.pngArte||A.png):(A.png||A.pngArte);

@@ -151,11 +151,16 @@
         const n=linhas.length,larg=linhas.map(l=>l.x1-l.x0),alt=linhas.map(l=>l.y1-l.y0),soma=v=>v.reduce((x,y)=>x+y,0);
         // blocos lado a lado (faixa) ou empilhados (retrato) numa área Wv×Hv; put(l,s,X,Y) leva o bloco ao lugar
         // na faixa, a marca ocupa a altura; a frase (só texto) cresce com a largura que sobrar, até ~30% da altura útil
-        const lado=(Wv,Hv,put)=>{const p=Math.min(Wv,Hv)*0.08,gx=Wv*0.04;const s=Math.min((Hv-2*p)/Math.max(...alt),(Wv-2*p-gx*(n-1))/soma(larg));
-          const tx=linhas.map(l=>l.els.every(e=>e.tipo==="texto"));const fixo=soma(larg.map((w,i)=>tx[i]?0:w*s)),livre=Wv-2*p-gx*(n-1)-fixo,lt=soma(larg.map((w,i)=>tx[i]?w:0));
-          const sc=linhas.map((l,i)=>tx[i]?Math.max(s,Math.min(s*2.5,0.3*(Hv-2*p)/alt[i],lt?livre/lt:s)):s);
-          const tot=soma(larg.map((w,i)=>w*sc[i]));
-          let x=(Wv-(tot+gx*(n-1)))/2;linhas.forEach((l,i)=>{put(l,sc[i],x,(Hv-alt[i]*sc[i])/2);x+=larg[i]*sc[i]+gx;});};
+        const lado=(Wv,Hv,put)=>{   // frases vizinhas (só texto, próximas) viram uma coluna só, para ficarem maiores
+          const bl=[];linhas.forEach(l=>{const t=l.els.every(e=>e.tipo==="texto"),u=bl[bl.length-1];
+            if(t&&u&&u.t&&l.y0-u.y1<1.5*(l.y1-l.y0)){u.els.push(...l.els);u.y1=Math.max(u.y1,l.y1);u.x0=Math.min(u.x0,l.x0);u.x1=Math.max(u.x1,l.x1);}
+            else bl.push({els:[...l.els],y0:l.y0,y1:l.y1,x0:l.x0,x1:l.x1,t});});
+          const m=bl.length,lg=bl.map(l=>l.x1-l.x0),al=bl.map(l=>l.y1-l.y0);
+          const p=Math.min(Wv,Hv)*0.08,gx=Wv*0.04;const s=Math.min((Hv-2*p)/Math.max(...al),(Wv-2*p-gx*(m-1))/soma(lg));
+          const fixo=soma(lg.map((w,i)=>bl[i].t?0:w*s)),livre=Wv-2*p-gx*(m-1)-fixo,lt=soma(lg.map((w,i)=>bl[i].t?w:0));
+          const sc=bl.map((l,i)=>l.t?Math.max(s,Math.min(s*2.5,(l.els.length>1?0.6:0.3)*(Hv-2*p)/al[i],lt?livre/lt:s)):s);
+          const tot=soma(lg.map((w,i)=>w*sc[i]));
+          let x=(Wv-(tot+gx*(m-1)))/2;bl.forEach((l,i)=>{put(l,sc[i],x,(Hv-al[i]*sc[i])/2);x+=lg[i]*sc[i]+gx;});};
         const pilha=(Wv,Hv,put)=>{const p=Math.min(Wv,Hv)*0.08;const s=Math.min((Wv-2*p)/Math.max(...larg),(Hv-2*p)/(soma(alt)*1.3));
           const gap=(Hv-2*p-soma(alt)*s)/(n+1);let y=p+gap;linhas.forEach((l,i)=>{put(l,s,(Wv-larg[i]*s)/2,y);y+=alt[i]*s+gap;});};
         const aqui=(l,s,X,Y)=>esc(l,s,B+X,B+Y);
