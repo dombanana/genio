@@ -420,4 +420,5 @@ svg.icone .w{fill:none}
 .atend button{font:inherit;font-weight:700;font-size:15px;min-height:46px;padding:0 16px;border-radius:12px;border:0;cursor:pointer}
 .atend .ini{background:var(--marca);color:#fff}.atend .fim{background:#C62828;color:#fff}.atend.rodando{box-shadow:inset 4px 0 0 #C62828}
 @media (max-width:420px){.topo .papel{display:none}.meta-chip{gap:6px;padding:5px 8px}}
-.metas-f{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.metas-f label{font-size:13px;color:var(--texto2);font-weight:600}.metas-f input{display:block;width:100%;box-sizing:border-box;font:inherit;font-size:17px;margin-top:4px;border:1.5px solid var(--linha);border-radius:10px;padding:9px 10px}
+.metas-f{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.metas-f label{font-size:13px;color:var(--texto2);font-weight:600}.metas-f input{display:block;width:100%;box-sizing:border-box;font:inherit;font-size:17px;margin-top:4px;border:1.5px solid var(--linha);border-radius:10px;padding:9px 10px}
+.meta-pop .mp-g.dois{grid-template-columns:repeat(2,1fr)}.meta-pop .mp-g.dois b{font-size:19px}

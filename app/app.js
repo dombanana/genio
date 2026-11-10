@@ -193,7 +193,7 @@ const App=(()=>{
   // ---- arte automática: logotipo tratado centralizado preenchendo a área segura do gabarito, cor padrão do material
   const COR_PADRAO={capacho:"#2B2B2D",rigido:"#F4F1EA",vinil:null,tecido:"#F4F1EA",papel:"#FFFFFF",lona:"#FFFFFF",carimbo:null};
   const PRODUTOS_IDS=["capacho","placas","adesivos","uniformes","impressos","panfleto","banners","parede","brindes","carimbo","windbanner","faixa","folheto","camiseta","bone","avental"];
-  let _G=null;const gabaritos=async()=>_G||(_G=await (await fetch("gabaritos.json?v=629270c666")).json());
+  let _G=null;const gabaritos=async()=>_G||(_G=await (await fetch("gabaritos.json?v=10986b215b")).json());
   const carregarImg=src=>new Promise(res=>{const i=new Image();i.crossOrigin="anonymous";i.onload=()=>res(i);i.onerror=()=>res(null);i.src=src;});
   // ---- carimbo: só texto — nome, razão social, CNPJ (negrito), endereço, telefone; nunca logotipo
   async function dadosCarimbo(l){const cad=await ficha(l.slug).catch(()=>null);const L=(cad&&cad.lacunas)||{};const leit=(L.leitura||{}).valor||"";const razao=((leit.match(/Razão social: ([^·]+)/)||[])[1]||"").trim();const cnpj=((leit.match(/CNPJ:? ?([\d./-]{14,18})/)||[])[1]||"");
@@ -237,7 +237,7 @@ const App=(()=>{
     const aw=W-2*(B+S),ah=H-2*(B+S);const f=Math.min(aw/LW,(P.ancora==="topo"?ah*0.45:ah)/LH);const w=LW*f,h=LH*f;const x=(W-w)/2,y=P.ancora==="topo"?B+S+ah*0.05:(H-h)/2;
     const fundo=P.sem_fundo?null:(COR_PADRAO[P.superficie]===undefined?"#FFFFFF":COR_PADRAO[P.superficie]);
     // kit de 14 setores (10/11): a maquete frontal do ramo da loja é a arte de partida de todos os produtos
-    await carregarScript("qr.js?v=629270c666");await carregarScript("impressos.js?v=629270c666");await carregarScript("kits14.js?v=629270c666");
+    await carregarScript("qr.js?v=10986b215b");await carregarScript("impressos.js?v=10986b215b");await carregarScript("kits14.js?v=10986b215b");
     if(window.Kits14&&window.Kits14.ARQ[pid]){const K=await window.Kits14.montar(App,pid,c,l,{W,H,B,S,im,rec});
       if(K){const doc={fundo:K.fundo,fundoImg:null,el:K.el,campos:null,auto:true,kit:KIT14,setorKit:K.setorKit,kitRef:K.kitRef,W,H};const imgs={[c.manual.tratado]:im};
         const k=Math.min(1,1400/Math.max(W,H));const cv=document.createElement("canvas");cv.width=Math.round(W*k);cv.height=Math.round(H*k);const g=cv.getContext("2d");g.scale(k,k);
@@ -384,7 +384,8 @@ const App=(()=>{
   // ---- desempenho: venda = pedido confirmado (saiu da Entrada); atendimento = loja com início e fim marcados na visita
   const diaDe=iso=>{const d=new Date(iso);d.setMinutes(d.getMinutes()-d.getTimezoneOffset());return d.toISOString().slice(0,10);};
   function desempenho(){const e=EST||{};const hoje=hojeISO(),mes=hoje.slice(0,7);
-    const vendas=Object.values(e.pedidos||{}).map(p=>(p.hist||[]).find(h=>h.etapa!=="entrada")).filter(Boolean).map(h=>diaDe(h.em));
+    const vendasP=Object.values(e.pedidos||{}).map(p=>({p,h:(p.hist||[]).find(h=>h.etapa!=="entrada")})).filter(x=>x.h).map(x=>({dia:diaDe(x.h.em),valor:+x.p.valor||0}));const vendas=vendasP.map(x=>x.dia);
+    const doMes=vendasP.filter(x=>x.dia.slice(0,7)===mes);const receita=doMes.reduce((s,x)=>s+x.valor,0);const semValor=doMes.filter(x=>!x.valor).length;const pc=+METAS.comissao||0;
     const at=Object.entries(e.atend||{}).filter(([s,x])=>x&&x.ini&&x.fim).map(([s,x])=>({s,ini:new Date(x.ini),fim:new Date(x.fim),dia:diaDe(x.ini)}));
     const vendSlugs=new Set(Object.entries(e.pedidos||{}).filter(([s,p])=>(p.hist||[]).some(h=>h.etapa!=="entrada")).map(([s])=>s));
     const atHoje=at.filter(x=>x.dia===hoje),atMes=at.filter(x=>x.dia.slice(0,7)===mes);
@@ -394,7 +395,8 @@ const App=(()=>{
     const ciclo=ciclos.length?ciclos.reduce((s,c)=>s+c,0)/ciclos.length:media;const jornada=(+METAS.jornada||8)*60;
     const conv=atMes.length?Math.round(100*atMes.filter(x=>vendSlugs.has(x.s)).length/atMes.length):null;
     const aberto=Object.entries(e.atend||{}).find(([s,x])=>x&&x.ini&&!x.fim);
-    return {vDia:vendas.filter(d=>d===hoje).length,vMes:vendas.filter(d=>d.slice(0,7)===mes).length,mDia:+METAS.dia||0,mMes:+METAS.mes||0,atHoje:atHoje.length,atMes:atMes.length,media,ciclo,projecao:ciclo?Math.floor(jornada/ciclo):0,conv,aberto};}
+    return {receita,comissao:pc?receita*pc/100:null,pc,semValor,vDia:vendas.filter(d=>d===hoje).length,vMes:vendas.filter(d=>d.slice(0,7)===mes).length,mDia:+METAS.dia||0,mMes:+METAS.mes||0,atHoje:atHoje.length,atMes:atMes.length,media,ciclo,projecao:ciclo?Math.floor(jornada/ciclo):0,conv,aberto};}
+  const brl=v=>"R$ "+Number(v||0).toLocaleString("pt-BR",{minimumFractionDigits:2,maximumFractionDigits:2});
   const chipMeta=()=>{const d=desempenho();const ok=x=>x[1]&&x[0]>=x[1];const it=(rot,v,m)=>`<span class="mc ${m&&v>=m?"bateu":""}"><small>${rot}</small><b>${v}${m?"/"+m:""}</b>${m?`<i style="--p:${Math.min(1,v/m)}"></i>`:""}</span>`;
     return `<button type="button" class="meta-chip ${ok([d.vDia,d.mDia])?"bateu":""}" id="metaBtn" aria-label="Metas e conversão">${d.aberto?'<span class="rodando" title="atendimento em andamento"></span>':""}${it("Dia",d.vDia,d.mDia)}${it("Mês",d.vMes,d.mMes)}<span class="mc"><small>Conv.</small><b>${d.conv===null?"–":d.conv+"%"}</b></span></button>`;};
   const topo=()=>`<header class="topo"><div class="logo">Gên<i>IO</i></div><div class="papel">Representante</div><div class="fill"></div>${chipMeta()}<button type="button" class="avatar" id="avatarBtn" title="${esc(eu().nome)}" aria-label="Conta">${esc(ini(eu().nome))}</button></header>`;
@@ -402,6 +404,7 @@ const App=(()=>{
     const d=desempenho();const barra=(rot,v,m)=>`<div class="mp-l"><div><b>${rot}</b><span>${v} venda(s)${m?` de ${m}`:""}${m&&v>=m?' · <em>meta batida ✓</em>':""}</span></div>${m?`<i style="--p:${Math.min(1,v/m)}" class="${v>=m?"ok":""}"></i>`:'<small>meta não definida</small>'}</div>`;
     const mm=x=>x?Math.round(x)+" min":"–";const p=document.createElement("div");p.className="meta-pop";
     p.innerHTML=`${barra("Hoje",d.vDia,d.mDia)}${barra("Mês",d.vMes,d.mMes)}
+      <div class="mp-g dois"><div><small>Receita no mês</small><b>${brl(d.receita)}</b><span>${d.semValor?d.semValor+" venda(s) sem valor":"vendas confirmadas"}</span></div><div><small>Comissão no mês</small><b>${d.comissao===null?"–":brl(d.comissao)}</b><span>${d.pc?d.pc.toLocaleString("pt-BR")+"% da receita":"defina a % em Ajustar metas"}</span></div></div>
       <div class="mp-g"><div><small>Conversão no mês</small><b>${d.conv===null?"–":d.conv+"%"}</b><span>${d.atMes} atendimento(s)</span></div><div><small>Tempo médio na loja</small><b>${mm(d.media)}</b><span>${d.atHoje} hoje</span></div><div><small>Lojas por dia</small><b>${d.projecao||"–"}</b><span>ciclo de ${mm(d.ciclo)} com deslocamento</span></div></div>
       <a href="config.html#metas" class="mp-aj">Ajustar metas</a>`;document.body.appendChild(p);});
   document.addEventListener("click",ev=>{const b=ev.target.closest("#avatarBtn");const aberto=document.querySelector(".menu-conta");if(!b){if(aberto&&!ev.target.closest(".menu-conta"))aberto.remove();return;}if(aberto){aberto.remove();return;}
