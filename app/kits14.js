@@ -184,7 +184,9 @@
               if(k>1){e.tam*=k;e.w*=k;e.h*=k;e.x=cx0-e.w/2;}
               const mx=lim/sM;if(e.w<=mx)return;
               if(e.w<=mx*1.15){const f=mx/e.w;e.tam*=f;e.w*=f;e.h*=f;e.x=cx0-e.w/2;return;}   // passou pouco: só a frase diminui um tico, sem quebrar
-              cv.font=`${e.peso||700} ${e.tam}px ${e.fonte}`;const W=cv.measureText(String(e.texto)).width,nl=Math.ceil(W/mx);
+              cv.font=`${e.peso||700} ${e.tam}px ${e.fonte}`;
+              {const mp=maiorPeca(e.texto)*1.03;if(mp>mx){const f=mx/mp;e.tam*=f;e.w*=f;e.h*=f;e.x=cx0-e.w/2;cv.font=`${e.peso||700} ${e.tam}px ${e.fonte}`;}}   // o pedaço que não quebra (horário) cabe primeiro
+              const W=cv.measureText(String(e.texto)).width,nl=Math.ceil(W/mx);
               let ls=quebra(e.texto,mx);for(let t=Math.max(W/nl,maiorPeca(e.texto));t<=mx;t*=1.03){const x=quebra(e.texto,t);if(x.length<=nl){ls=x;break;}}
               if(ls.length>=2){const h1=e.h;e.texto=ls.join("\n");e.w=Math.max(...ls.map(t=>cv.measureText(t).width))*1.02;e.h=h1+e.tam*(e.alt||1.2)*(ls.length-1);e.x=cx0-e.w/2;e.alinh="center";}
               if(e.w>mx){const f=mx/e.w;e.tam*=f;e.w*=f;e.h*=f;e.x=cx0-e.w/2;}});   // pedaço que não quebra (horário): só esse texto diminui, a marca não
