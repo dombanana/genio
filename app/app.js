@@ -193,7 +193,7 @@ const App=(()=>{
   // ---- arte automática: logotipo tratado centralizado preenchendo a área segura do gabarito, cor padrão do material
   const COR_PADRAO={capacho:"#2B2B2D",rigido:"#F4F1EA",vinil:null,tecido:"#F4F1EA",papel:"#FFFFFF",lona:"#FFFFFF",carimbo:null};
   const PRODUTOS_IDS=["capacho","placas","adesivos","uniformes","impressos","panfleto","banners","parede","brindes","carimbo","windbanner","faixa","folheto","camiseta","bone","avental"];
-  let _G=null;const gabaritos=async()=>_G||(_G=await (await fetch("gabaritos.json?v=f006b4aaf3")).json());
+  let _G=null;const gabaritos=async()=>_G||(_G=await (await fetch("gabaritos.json?v=03d4cf51ea")).json());
   const carregarImg=src=>new Promise(res=>{const i=new Image();i.crossOrigin="anonymous";i.onload=()=>res(i);i.onerror=()=>res(null);i.src=src;});
   // ---- carimbo: só texto — nome, razão social, CNPJ (negrito), endereço, telefone; nunca logotipo
   async function dadosCarimbo(l){const cad=await ficha(l.slug).catch(()=>null);const L=(cad&&cad.lacunas)||{};const leit=(L.leitura||{}).valor||"";const razao=((leit.match(/Razão social: ([^·]+)/)||[])[1]||"").trim();const cnpj=((leit.match(/CNPJ:? ?([\d./-]{14,18})/)||[])[1]||"");
@@ -237,7 +237,7 @@ const App=(()=>{
     const aw=W-2*(B+S),ah=H-2*(B+S);const f=Math.min(aw/LW,(P.ancora==="topo"?ah*0.45:ah)/LH);const w=LW*f,h=LH*f;const x=(W-w)/2,y=P.ancora==="topo"?B+S+ah*0.05:(H-h)/2;
     const fundo=P.sem_fundo?null:(COR_PADRAO[P.superficie]===undefined?"#FFFFFF":COR_PADRAO[P.superficie]);
     // kit de 14 setores (10/11): a maquete frontal do ramo da loja é a arte de partida de todos os produtos
-    await carregarScript("qr.js?v=f006b4aaf3");await carregarScript("impressos.js?v=f006b4aaf3");await carregarScript("kits14.js?v=f006b4aaf3");
+    await carregarScript("qr.js?v=03d4cf51ea");await carregarScript("impressos.js?v=03d4cf51ea");await carregarScript("kits14.js?v=03d4cf51ea");
     if(window.Kits14&&window.Kits14.ARQ[pid]){const K=await window.Kits14.montar(App,pid,c,l,{W,H,B,S,im,rec});
       if(K){const doc={fundo:K.fundo,fundoImg:null,el:K.el,campos:null,auto:true,kit:KIT14,setorKit:K.setorKit,kitRef:K.kitRef,W,H};const imgs={[c.manual.tratado]:im};
         const k=Math.min(1,1400/Math.max(W,H));const cv=document.createElement("canvas");cv.width=Math.round(W*k);cv.height=Math.round(H*k);const g=cv.getContext("2d");g.scale(k,k);
@@ -373,7 +373,7 @@ const App=(()=>{
   async function ocorrenciasAuto(D){const out=[];const e=estado();const sel=e.sel||{};const hoje=hojeISO();
     for(const l of D.lojas){const c=await cliente(l);const S=sel[l.slug]||{};const pedidos=Object.entries(S).filter(([k,v])=>v&&v.q>0&&!v.servico).map(([k])=>k);
       if(pedidos.length&&!(c.manual&&c.manual.editado))out.push({nivel:"urgente",loja:l,texto:"Pedido com itens, mas o logotipo não está tratado",acao:`visita.html?l=${encodeURIComponent(l.slug)}`});
-      for(const pid of pedidos){const A=(c.artes||{})[pid];if(!A)out.push({nivel:"urgente",loja:l,texto:`Item "${(S[pid].nome||pid)}" no orçamento sem arte`,acao:pid==="capacho"?`capacho.html?l=${encodeURIComponent(l.slug)}`:`editor.html?l=${encodeURIComponent(l.slug)}&p=${pid}`});}
+      for(const pid of pedidos){const A=(c.artes||{})[pid];if(!A)out.push({nivel:"urgente",loja:l,texto:`Item "${(S[pid].nome||pid)}" no orçamento sem arte`,acao:pid==="capacho"?`capacho.html?l=${encodeURIComponent(l.slug)}&n=${encodeURIComponent(nomeLoja(l.nome))}`:`editor.html?l=${encodeURIComponent(l.slug)}&p=${pid}`});}
       if(l.avulso&&(!l.tel||/^Pedido avulso/.test(l.nome)))out.push({nivel:"atencao",loja:l,texto:"Cliente avulso sem nome ou telefone",acao:`visita.html?l=${encodeURIComponent(l.slug)}`});
       if((c.logos||[]).length&&!(c.manual&&c.manual.editado)&&e.feitas&&e.feitas.includes(l.slug))out.push({nivel:"atencao",loja:l,texto:"Visitada, logotipo escolhido e ainda sem recorte",acao:`visita.html?l=${encodeURIComponent(l.slug)}`});}
     try{const notas=await listarNotas();const velhas=notas.filter(n=>!n.loja&&n.em.slice(0,10)<hoje);if(velhas.length)out.push({nivel:"atencao",texto:`${velhas.length} nota(s) de dias anteriores sem cliente`,acao:"notas.html"});}catch(e){}

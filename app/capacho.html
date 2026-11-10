@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="pt-BR">
 <head>
-<meta charset="utf-8">
+<meta charset="utf-8"><script>try{var _n=new URLSearchParams(location.search).get("n");if(_n){localStorage.setItem("genio-cliente",_n);localStorage.removeItem("genio-cliente-dados");}}catch(e){}</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#6933C5">
 <link rel="manifest" href="manifest.webmanifest">
@@ -3909,6 +3909,23 @@ async function sessRestore(){let o=null;try{o=await sessRead();}catch(e){}
   document.addEventListener("pointerdown",function(ev){var st=ev.target.closest("#artStage");if(!st)return;var x=ev.clientX,y=ev.clientY,ok=true;var t=setTimeout(function(){try{if(ok&&typeof AG!=="undefined"&&AG&&AG.mode==="move")menuLogo();}catch(e){}},550);
     var mv=function(e){if(Math.hypot(e.clientX-x,e.clientY-y)>8){ok=false;clearTimeout(t);}},up=function(){clearTimeout(t);document.removeEventListener("pointermove",mv,true);document.removeEventListener("pointerup",up,true);document.removeEventListener("pointercancel",up,true);};
     document.addEventListener("pointermove",mv,true);document.addEventListener("pointerup",up,true);document.addEventListener("pointercancel",up,true);},true);
+})();
+</script><script>
+(function(){
+  var qs=new URLSearchParams(location.search),slug=qs.get("l")||"",nome=(qs.get("n")||"").trim();if(!slug||!nome)return;
+  function hex(h){h=(h||"").replace("#","");return [parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)];}
+  function maisPerto(cor){var c=hex(cor),best=null,bd=1e9;KAPAZI_CORES.forEach(function(k){var v=hex(k[2]),d=(v[0]-c[0])*(v[0]-c[0])*0.3+(v[1]-c[1])*(v[1]-c[1])*0.59+(v[2]-c[2])*(v[2]-c[2])*0.11;if(d<bd){bd=d;best=k[0];}});return best;}
+  var n=0,t=setInterval(async function(){n++;var pronto=false;try{pronto=typeof Q!=="undefined"&&Q&&Q.cliente&&(Q.cliente.nome||"").trim().toLowerCase()===nome.toLowerCase();}catch(e){}
+    if(!pronto){if(n>80)clearInterval(t);return;}clearInterval(t);
+    try{var r=await fetch("/api/clientes/"+encodeURIComponent(slug),{credentials:"same-origin",cache:"no-store"});if(!r.ok)return;var f=await r.json();var A=f.artes&&f.artes.capacho;if(!A)return;
+      var tArte=Date.parse(A.em||0)||0,tProj=Date.parse(Q.atualizado||Q.criado||0)||0;
+      if(Q.id&&tProj>=tArte)return;   // o projeto do motor foi mexido depois da arte: vale o projeto
+      if(Q.id){document.querySelector("#newQuote").click();Q.cliente.nome=nome;fillClient();}
+      if(A.material&&/^#[0-9a-f]{6}$/i.test(A.material)){Q.spec.fundo=maisPerto(A.material);fillSpec();renderThumb();}
+      var src=f.manual&&f.manual.tratado;
+      if(src&&!LOGOQ.length&&LOGO_ORIGEM!=="identidade"){LOGO_ORIGEM="identidade";var b=await (await fetch(src,{credentials:"same-origin"})).blob();openPartK("logo");LOGOQ.push(new File([b],"marca-tratada.png",{type:b.type||"image/png"}));nextLogoFromQueue();}
+    }catch(e){}
+  },150);
 })();
 </script></body>
 </html>

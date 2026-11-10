@@ -6,7 +6,7 @@
 <title>GênIO · Produtos e serviços</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="app.css?v=f006b4aaf3">
+<link rel="stylesheet" href="app.css?v=03d4cf51ea">
 <style>
 .grade{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .prod{background:#fff;border-radius:18px;box-shadow:0 2px 10px rgba(28,22,53,.06);overflow:hidden;display:flex;flex-direction:column;position:relative}
@@ -34,8 +34,8 @@
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=f006b4aaf3"></script>
-<script src="qr.js?v=f006b4aaf3"></script>
+<script src="app.js?v=03d4cf51ea"></script>
+<script src="qr.js?v=03d4cf51ea"></script>
 <script>
 (async()=>{
   const {$,$$,esc,qs,sessao,dados,nav,topo,voltar,setorNome,nomeLoja,estado,salvar,cliente,gravarCliente,definirCliente}=App;
@@ -44,8 +44,8 @@
   if(!l){$("#app").innerHTML=`${topo()}<p>Loja não encontrada.</p>${nav("rota")}`;return;}
   const nome=nomeLoja(l.nome);definirCliente(l);let c=await cliente(l);
   if(!(c.manual&&c.manual.editado)){location.href=`visita.html?l=${encodeURIComponent(slug)}`;return;}  // catálogo só depois do logotipo limpo
-  const G=await (await fetch("gabaritos.json?v=f006b4aaf3")).json();
-  await App.carregarScript("kits14.js?v=f006b4aaf3");
+  const G=await (await fetch("gabaritos.json?v=03d4cf51ea")).json();
+  await App.carregarScript("kits14.js?v=03d4cf51ea");
   // os 16 produtos do kit de 14 setores (10/11); a foto de cada um é a do ramo da loja
   const CAT=await Promise.all([["capacho","Capacho"],["placas","Placa"],["adesivos","Adesivo de vitrine"],["uniformes","Camisa polo"],["impressos","Cartão de visita"],["panfleto",/padaria|restaurante|bar|cafeteria/.test(l.setor||"")?"Flyer · cardápio":"Flyer · produtos e serviços"],["banners","Banner retrátil"],["parede","Adesivo de parede · rotas"],["brindes","Ecobag"],["carimbo","Carimbo"],["windbanner","Wind banner"],["faixa","Faixa"],["folheto","Folheto promocional"],["camiseta","Camiseta"],["bone","Boné"],["avental","Avental"]].map(async([id,n])=>({id,nome:n,img:await Kits14.foto(l.setor,id,true)})));
   const SERV=[{id:"mostraai",nome:"Mostraí · TV de ofertas",desc:"Sua TV em pé com itens, preços e destaque · muda pelo celular",ic:"📺"},{id:"postaai",nome:"Posta Aí · postagens",desc:"Conteúdo para as redes (AI Negócios)",ic:"📣"},{id:"inpi",nome:"Registro de marca (INPI)",desc:"Proteção do nome e do logo",ic:"®"}];
@@ -73,7 +73,7 @@
     ${(()=>{const UNI=["uniformes","camiseta","bone","avental"];const cartao=p=>{const s=S[p.id]||{q:0},A=artes[p.id];const mock=(A&&A.contexto)||(A&&A.png)||null;return `<div class="prod ${s.q>0?"sel":""}" data-p="${p.id}">
       <div class="cena" ${mock?"":`style="background-image:url('${p.img}')"`} data-ctx="${p.id}">${mock?`<img src="${mock}" alt="">`:""}</div>
       <b>${esc(p.nome)}</b><div class="st ${s.q>0?"ok":""}">${s.q>0?"✓ no orçamento":A?(A.doc&&A.doc.auto?"arte automática":"arte feita"):"sem arte"}${A&&A.contexto?" · no ambiente":""}</div>
-      ${p.id==="capacho"?`<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:0 12px 8px"><a class="ir" style="margin:0" href="capacho.html?l=${encodeURIComponent(slug)}">${A?"Editar →":"Montar →"}</a><a class="ir" style="margin:0;background:var(--navy);color:#fff" href="capacho.html?l=${encodeURIComponent(slug)}&ver=1" title="foto do local · ao vivo">👁 Visualizar</a></div>`:(A?`<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:0 12px 8px"><a class="ir" style="margin:0" href="editor.html?l=${encodeURIComponent(slug)}&p=${p.id}">Editar →</a><a class="ir" style="margin:0;background:var(--navy);color:#fff" href="local.html?l=${encodeURIComponent(slug)}&p=${p.id}" title="câmera ao vivo · a peça no lugar">👁 No local</a></div>`:`<a class="ir" href="editor.html?l=${encodeURIComponent(slug)}&p=${p.id}">Criar arte</a>`)}
+      ${p.id==="capacho"?`<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:0 12px 8px"><a class="ir" style="margin:0" href="capacho.html?l=${encodeURIComponent(slug)}&n=${encodeURIComponent(nomeLoja(l.nome))}">${A?"Editar →":"Montar →"}</a><a class="ir" style="margin:0;background:var(--navy);color:#fff" href="capacho.html?l=${encodeURIComponent(slug)}&n=${encodeURIComponent(nomeLoja(l.nome))}&ver=1" title="foto do local · ao vivo">👁 Visualizar</a></div>`:(A?`<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:0 12px 8px"><a class="ir" style="margin:0" href="editor.html?l=${encodeURIComponent(slug)}&p=${p.id}">Editar →</a><a class="ir" style="margin:0;background:var(--navy);color:#fff" href="local.html?l=${encodeURIComponent(slug)}&p=${p.id}" title="câmera ao vivo · a peça no lugar">👁 No local</a></div>`:`<a class="ir" href="editor.html?l=${encodeURIComponent(slug)}&p=${p.id}">Criar arte</a>`)}
       ${UNI_CORES.has(p.id)&&(A||(c.manual&&c.manual.editado))?coresPeca(p.id,A||{}):""}<div class="qtd"><button data-m="-">−</button><span class="${s.q>0?"":"zero"}">${s.q>0?s.q+" un.":"não quero"}</span><button data-m="+">+</button></div></div>`;};
       return `<div class="grade">${CAT.filter(p=>!UNI.includes(p.id)).map(cartao).join("")}</div><h2 style="margin:22px 0 10px">Uniforme</h2><div class="grade">${UNI.map(id=>CAT.find(p=>p.id===id)).filter(Boolean).map(cartao).join("")}</div>`;})()}
     <h2 style="margin:22px 0 10px">Serviços</h2>
@@ -97,7 +97,7 @@
     $$(".plano").forEach(b=>b.onclick=()=>{porPlano(b.dataset.plano);salvar(e);render();});
     $$(".tog").forEach(b=>b.onclick=()=>{const id=b.dataset.t;if(id==="mostraai"){if(S.mostraai&&S.mostraai.q>0)S.mostraai.q=0;else porPlano((S.mostraai&&S.mostraai.plano)||"comodato");salvar(e);render();return;}const s=S[id]=S[id]||{q:0,nome:SERV.find(x=>x.id===id).nome,servico:true};s.q=s.q>0?0:1;salvar(e);render();});
     // item do kit com arte: tocar volta para a edição daquela arte
-    $$(".cena[data-ctx]").forEach(el=>{let t0=0,mv=false;el.addEventListener("pointerdown",()=>{t0=Date.now();mv=false;});el.addEventListener("pointermove",()=>{mv=true;});el.addEventListener("pointerup",()=>{if(mv||Date.now()-t0>450)return;const A=artes[el.dataset.ctx];if(A&&A.contexto){const g=document.createElement("div");g.className="galeria-ctx";g.innerHTML=`<div class="top"><b>${esc(CAT.find(x=>x.id===el.dataset.ctx).nome)}</b><span><a class="btn sec sm" style="width:auto;display:inline-grid;min-height:40px;padding:0 12px;text-decoration:none;margin-right:6px" href="editor.html?l=${encodeURIComponent(slug)}&p=${el.dataset.ctx}">${A.verso?"Editar frente":"Editar"}</a>${A.verso?`<a class="btn sec sm" style="width:auto;display:inline-grid;min-height:40px;padding:0 12px;text-decoration:none;margin-right:6px" href="editor.html?l=${encodeURIComponent(slug)}&p=${el.dataset.ctx}&face=verso">Editar verso</a>`:""}<button class="btn sec sm" id="fechar" style="width:auto;min-height:40px;padding:0 12px">Fechar</button></span></div><div class="rolo"><img src="${A.contexto}" alt="">${A.verso?`<div class="faces2"><figure><img src="${A.png}" alt=""><figcaption>Frente</figcaption></figure><figure><img src="${A.verso.png}" alt=""><figcaption>Verso</figcaption></figure></div>`:""}</div>`;document.body.appendChild(g);g.querySelector("#fechar").onclick=()=>g.remove();}else location.href=el.dataset.ctx==="capacho"?`capacho.html?l=${encodeURIComponent(slug)}`:`editor.html?l=${encodeURIComponent(slug)}&p=${el.dataset.ctx}`;});});
+    $$(".cena[data-ctx]").forEach(el=>{let t0=0,mv=false;el.addEventListener("pointerdown",()=>{t0=Date.now();mv=false;});el.addEventListener("pointermove",()=>{mv=true;});el.addEventListener("pointerup",()=>{if(mv||Date.now()-t0>450)return;const A=artes[el.dataset.ctx];if(A&&A.contexto){const g=document.createElement("div");g.className="galeria-ctx";g.innerHTML=`<div class="top"><b>${esc(CAT.find(x=>x.id===el.dataset.ctx).nome)}</b><span><a class="btn sec sm" style="width:auto;display:inline-grid;min-height:40px;padding:0 12px;text-decoration:none;margin-right:6px" href="editor.html?l=${encodeURIComponent(slug)}&p=${el.dataset.ctx}">${A.verso?"Editar frente":"Editar"}</a>${A.verso?`<a class="btn sec sm" style="width:auto;display:inline-grid;min-height:40px;padding:0 12px;text-decoration:none;margin-right:6px" href="editor.html?l=${encodeURIComponent(slug)}&p=${el.dataset.ctx}&face=verso">Editar verso</a>`:""}<button class="btn sec sm" id="fechar" style="width:auto;min-height:40px;padding:0 12px">Fechar</button></span></div><div class="rolo"><img src="${A.contexto}" alt="">${A.verso?`<div class="faces2"><figure><img src="${A.png}" alt=""><figcaption>Frente</figcaption></figure><figure><img src="${A.verso.png}" alt=""><figcaption>Verso</figcaption></figure></div>`:""}</div>`;document.body.appendChild(g);g.querySelector("#fechar").onclick=()=>g.remove();}else location.href=el.dataset.ctx==="capacho"?`capacho.html?l=${encodeURIComponent(slug)}&n=${encodeURIComponent(nomeLoja(l.nome))}`:`editor.html?l=${encodeURIComponent(slug)}&p=${el.dataset.ctx}`;});});
     $("#todos").onclick=async()=>{const b=$("#todos");b.disabled=true;const r=await App.gerarProdutos(l,pid=>{b.textContent=`Gerando ${CAT.find(x=>x.id===pid).nome}…`;});c=await cliente(l);render();if(r.falhas.length)alert("Não consegui em: "+r.falhas.join(" · "));};
     const cb=$("#ctx");if(cb)cb.onclick=async()=>{cb.disabled=true;const ids=Object.keys(artes);let k=0,falhas=[];
       for(const id of ids){const A=artes[id];cb.textContent=`Aplicando ${CAT.find(x=>x.id===id).nome}… (${++k}/${ids.length})`;
