@@ -485,7 +485,7 @@ def kit_aplicar(d):
     if len(raw) > 6_000_000:
         raise ValueError("arte grande demais")
     material = d.get("material") if re.match(r"^#[0-9a-fA-F]{6}$", d.get("material") or "") else None
-    h = hashlib.sha256(raw + f"|{kit}|{pid}|{material}|k14v3".encode()).hexdigest()[:20]
+    h = hashlib.sha256(raw + f"|{kit}|{pid}|{material}|k14v4".encode()).hexdigest()[:20]
     pasta = os.path.join(ESTADO_DIR, "kits"); os.makedirs(pasta, exist_ok=True); saida = os.path.join(pasta, h + ".jpg")
     if not os.path.exists(saida):
         with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as f:

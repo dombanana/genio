@@ -20,12 +20,19 @@ def hex2bgr(h):
 def carregar(setor, pid):
     base = KITS14 if os.path.isdir(os.path.join(KITS14, setor)) else KITS
     pasta = os.path.join(base, setor); cal = json.load(open(os.path.join(pasta, "calibracao.json")))
-    P = cal["produtos"][pid]; img = cv2.imread(os.path.normpath(os.path.join(pasta, P["arquivo"])), cv2.IMREAD_COLOR)
+    P = cal["produtos"][pid]; arq = os.path.normpath(os.path.join(pasta, P["arquivo"])); img = cv2.imread(arq, cv2.IMREAD_COLOR)
+    masc = arq.rsplit(".", 1)[0] + ".mascara.png"   # peça de tecido recortada (uniformes): permite trocar a cor do tecido
+    if os.path.exists(masc):
+        P = dict(P); P["_mascara"] = masc
     return pasta, P, img
 
 def mascara_material(img, P):
     """Máscara do material cuja cor pode mudar. Plano para superfícies planas; para tecido, a região clara
     e pouco saturada ligada ao plano (mesma peça)."""
+    if P.get("_mascara"):
+        mm = cv2.imread(P["_mascara"], cv2.IMREAD_GRAYSCALE)
+        if mm is not None and mm.shape[:2] == img.shape[:2]:
+            return mm
     h, w = img.shape[:2]; m = np.zeros((h, w), np.uint8)
     cv2.fillPoly(m, [np.array(P["plano"], np.int32)], 255)
     if P.get("material_poly"):
@@ -132,7 +139,7 @@ def aplicar(setor, pid, arte_path, saida, material=None, arte_cor=None, largura=
         arte = arte[ys.min():ys.max() + 1, xs.min():xs.max() + 1]
     base = img.copy()
     mmat = mascara_material(img, P)
-    cor_mat = hex2bgr(material) if (material and P.get("material_recolor")) else None
+    cor_mat = hex2bgr(material) if (material and (P.get("material_recolor") or P.get("_mascara"))) else None
     if cor_mat is not None:
         base = recolorir(base, mmat, cor_mat)
     aplic = P.get("aplicacao")
