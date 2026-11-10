@@ -1,23 +1,210 @@
 {
-  "_nota": "Medidas dos produtos conforme as páginas da Printi (08/11/2026). Sangria 3 mm e margem de segurança 3 mm (Guia de impressão Printi). Substituir pelos gabaritos oficiais (PDF/AI) quando baixados — o editor desenha a guia a partir destes números.",
-  "sangria_mm": 3,
-  "seguranca_mm": 3,
-  "produtos": {
-    "capacho":   {"nome": "Capacho",            "w_cm": 120,  "h_cm": 60,   "superficie": "capacho", "fonte": "Kapazi/produção própria", "sangria_mm": 0, "seguranca_mm": 20},
-    "placas":    {"nome": "Placa",              "w_cm": 60,   "h_cm": 40,   "superficie": "rigido",  "fonte": "Printi · placa"},
-    "adesivos":  {"nome": "Adesivo de vitrine", "w_cm": 100,  "h_cm": 60,   "superficie": "vinil",   "fonte": "Printi · adesivo (vinil transparente/perfurado)", "sem_fundo": true},
-    "uniformes": {"nome": "Camisa polo · peito","w_cm": 12,   "h_cm": 12,   "superficie": "tecido",  "fonte": "bordado/serigrafia", "sangria_mm": 0, "sem_fundo": true},
-    "impressos": {"nome": "Cartão de visita",   "w_cm": 9,    "h_cm": 5,    "superficie": "papel",   "fonte": "kit GênIO RA 90×50 · Printi cartão 9×5 couché 300g", "cartao": true, "ia": true, "faces": 2},
-    "panfleto":  {"nome": "Flyer A5",           "w_cm": 14.8, "h_cm": 21,   "superficie": "papel",   "fonte": "kit GênIO RA A5 · Printi flyer A5 couché", "ia": true, "faces": 2},
-    "banners":   {"nome": "Banner roll-up",     "w_cm": 80,   "h_cm": 200,  "superficie": "lona",    "fonte": "Printi · roll-up 80×200 lona 440g", "ia": true, "ancora": "topo", "rodape_oculto_cm": 10},
-    "parede":    {"nome": "Adesivo de parede · rotas", "w_cm": 59.4, "h_cm": 42, "superficie": "vinil",   "fonte": "Printi · adesivo de parede A2", "sem_fundo": true},
-    "brindes":   {"nome": "Ecobag · frente",    "w_cm": 25,   "h_cm": 30,   "superficie": "tecido",  "fonte": "kit 14 setores · medida a confirmar com o fornecedor", "sem_fundo": true, "sangria_mm": 0, "a_confirmar": true},
-    "carimbo":   {"nome": "Carimbo",            "w_cm": 6,    "h_cm": 4,    "superficie": "carimbo", "fonte": "produção própria", "sangria_mm": 0, "mono": true},
-    "windbanner":{"nome": "Wind banner",        "w_cm": 60,   "h_cm": 270,  "superficie": "tecido",  "fonte": "kit 14 setores · pedir o gabarito real do fabricante antes do corte", "a_confirmar": true},
-    "faixa":     {"nome": "Faixa horizontal",   "w_cm": 200,  "h_cm": 50,   "superficie": "lona",    "fonte": "kit 14 setores · medida a confirmar (ilhós fora da arte)", "a_confirmar": true},
-    "folheto":   {"nome": "Folheto promocional","w_cm": 29.7, "h_cm": 21,   "superficie": "papel",   "fonte": "kit 14 setores · 3 painéis (A4 com 2 dobras) · a confirmar", "a_confirmar": true},
-    "camiseta":  {"nome": "Camiseta · peito",   "w_cm": 10,   "h_cm": 10,   "superficie": "tecido",  "fonte": "kit 14 setores · área de estampa a confirmar", "sem_fundo": true, "sangria_mm": 0, "a_confirmar": true},
-    "bone":      {"nome": "Boné · frente",      "w_cm": 10,   "h_cm": 6,    "superficie": "tecido",  "fonte": "kit 14 setores · bordado frontal a confirmar", "sem_fundo": true, "sangria_mm": 0, "a_confirmar": true},
-    "avental":   {"nome": "Avental · peito",    "w_cm": 18,   "h_cm": 14,   "superficie": "tecido",  "fonte": "kit 14 setores · área de estampa a confirmar", "sem_fundo": true, "sangria_mm": 0, "a_confirmar": true}
+ "_nota": "Medidas dos fornecedores consultadas em 10/11/2026 (Printi e GIV Online). Padrão = opção real mais próxima da maquete do kit de 14 setores; 'opcoes' lista o que cada gráfica oferece. Preços são de tabela (1ª faixa de quantidade), sem frete, para referência — não são cobrança.",
+ "sangria_mm": 3,
+ "seguranca_mm": 3,
+ "produtos": {
+  "capacho": {
+   "nome": "Capacho",
+   "w_cm": 120,
+   "h_cm": 60,
+   "superficie": "capacho",
+   "fonte": "GIV · capacho fibra de vinil preto 6 mm, impressão digital UV 1 cor · também Kapazi/produção própria",
+   "sangria_mm": 0,
+   "seguranca_mm": 20,
+   "opcoes": {
+    "GIV": "60×40 · 80×60 · 120×60 cm; fibra de vinil preto 6 mm; UV 1×0; 3 dias úteis; R$ 81,99 (60×40, 1 un.)"
+   }
+  },
+  "placas": {
+   "nome": "Placa",
+   "w_cm": 55,
+   "h_cm": 40,
+   "superficie": "rigido",
+   "fonte": "GIV · placa de acrílico 3 mm com kit para instalação (afastadores), DTF UV com verniz",
+   "opcoes": {
+    "GIV": "acrílico branco/preto/transparente 3 mm: 35×25 · 40×21,5 · 55×40 · 70×50 · 90×60 cm; 2 dias úteis; a partir de R$ 126,99 (35×25)",
+    "Printi": "não oferece placa"
+   }
+  },
+  "adesivos": {
+   "nome": "Adesivo de vitrine",
+   "w_cm": 72,
+   "h_cm": 100,
+   "superficie": "vinil",
+   "fonte": "GIV · adesivo para vitrine (vinil transparente 150 g, branco 120 g ou perfurado 120 g; meio-corte)",
+   "sem_fundo": true,
+   "opcoes": {
+    "GIV": "21×29,7 até 72×300 cm e tamanho livre; transparente/branco/perfurado; 3 dias úteis",
+    "GIV recorte": "vinil recortado sem impressão (preto, branco, ouro, cores, jateado), largura 96 cm",
+    "Printi": "adesivos grandes 200×200 · 400×200 cm, vinil fosco/brilho/removível"
+   }
+  },
+  "uniformes": {
+   "nome": "Camisa polo · peito",
+   "w_cm": 12,
+   "h_cm": 12,
+   "superficie": "tecido",
+   "fonte": "GIV · camisa polo malha piquet (branca/preta, P–EG, masc./fem.) · área do peito a confirmar",
+   "sangria_mm": 0,
+   "sem_fundo": true,
+   "opcoes": {
+    "GIV": "polo piquet; 4 dias úteis; R$ 91,99 (1 un.), R$ 74,40 (10 un.)"
+   },
+   "a_confirmar": true
+  },
+  "impressos": {
+   "nome": "Cartão de visita",
+   "w_cm": 9,
+   "h_cm": 4.8,
+   "superficie": "papel",
+   "fonte": "Printi · cartão 9×4,8 cm (couché fosco/brilho 300 g, cartão 300 g)",
+   "cartao": true,
+   "ia": true,
+   "faces": 2,
+   "opcoes": {
+    "Printi": "9×4,8 · 9×4,8 cantos arred. · 8×5 cm; frente ou frente e verso; laminação fosca/soft touch, verniz UV local, hot stamping; 100 un. R$ 44,59 · 1.000 un. R$ 101,84",
+    "GIV": "8,8×4,8 ou 5×5 cm; couché 300 g / brilho 250–300 g; 4×0, 4×1, 4×4"
+   }
+  },
+  "panfleto": {
+   "nome": "Flyer A5",
+   "w_cm": 14.8,
+   "h_cm": 21,
+   "superficie": "papel",
+   "fonte": "Printi · flyer A5 (couché fosco/brilho 90 g … cartão 300 g)",
+   "ia": true,
+   "faces": 2,
+   "opcoes": {
+    "Printi": "A5 · A7 · A4; frente ou frente e verso; refile ou serrilha; 250 un. R$ 112,32 · 1.000 un. R$ 215,28",
+    "GIV": "folheto couché brilho 90–250 g: 10×14 · 14×20 · 20×28 cm …"
+   }
+  },
+  "banners": {
+   "nome": "Banner roll-up",
+   "w_cm": 80,
+   "h_cm": 200,
+   "superficie": "lona",
+   "fonte": "GIV/Printi · banner roll-up 80×200 cm, lona brilho 340–440 g, estrutura de alumínio",
+   "ia": true,
+   "ancora": "topo",
+   "rodape_oculto_cm": 10,
+   "opcoes": {
+    "GIV": "80×200; lona brilho 340 g; sem estrutura R$ 35,99 · com roll-up R$ 333,99; 2 dias úteis",
+    "Printi": "banner lona 280/440 g, 30×90 · 50×90 · 90×120 cm…, ilhós ou bastão e cordão"
+   }
+  },
+  "parede": {
+   "nome": "Adesivo de parede · rotas",
+   "w_cm": 59.4,
+   "h_cm": 42,
+   "superficie": "vinil",
+   "fonte": "Printi · adesivo de parede A2 (vinil fosco, brilho ou removível branco; corte retangular/especial)",
+   "sem_fundo": true,
+   "opcoes": {
+    "Printi": "A3 · A2 · A1 e livre; vinil fosco/brilho/removível; laminação fosca opcional; 1 un. R$ 26,16",
+    "GIV": "70×100 até 70×300 cm; vinil branco fosco 120 g; 1 un. R$ 39,99"
+   }
+  },
+  "brindes": {
+   "nome": "Ecobag · frente",
+   "w_cm": 25,
+   "h_cm": 30,
+   "superficie": "tecido",
+   "fonte": "Printi/GIV · ecobag algodão cru, serigrafia 1–2 cores · área de impressão a confirmar",
+   "sem_fundo": true,
+   "sangria_mm": 0,
+   "a_confirmar": true,
+   "opcoes": {
+    "Printi": "30×40 cm; silk 1 ou 2 lados, 1–2 cores; 10 un. R$ 32,06/un",
+    "GIV": "30,5×29 · 35×34 · 40×39 cm; serigrafia 1 cor; 10 un. R$ 36,90/un"
+   }
+  },
+  "carimbo": {
+   "nome": "Carimbo",
+   "w_cm": 5.9,
+   "h_cm": 3.9,
+   "superficie": "carimbo",
+   "fonte": "GIV · Carimbo CNPJ 59×39 mm (automático, 1 cor)",
+   "sangria_mm": 0,
+   "mono": true,
+   "opcoes": {
+    "GIV": "Carimbo CNPJ 59×39 mm R$ 38,99 · automático 17×46 mm R$ 64,99 · de bolso 14×36 mm R$ 60,99; 5 dias úteis"
+   }
+  },
+  "windbanner": {
+   "nome": "Wind banner",
+   "w_cm": 65,
+   "h_cm": 190,
+   "superficie": "tecido",
+   "fonte": "GIV · wind banner kit completo P (tecido poliéster 98 g, sublimação 4×4, dupla-face costurado, base plástica e haste)",
+   "opcoes": {
+    "GIV": "P 65×190 · M 65×245 · G 65×300 cm; modelos faca, pena, vela, ângulo, retangular; 1 dia útil; P R$ 153,99",
+    "Printi": "não oferece"
+   }
+  },
+  "faixa": {
+   "nome": "Faixa horizontal",
+   "w_cm": 200,
+   "h_cm": 40,
+   "superficie": "lona",
+   "fonte": "GIV · faixa impressa lona brilho/fosca 340 g, bastão e 4 ilhoses",
+   "opcoes": {
+    "GIV": "200×40 · 200×60 · 300×40 … 500×60 cm e livre; 2 dias úteis; 200×40 R$ 49,99",
+    "Printi": "90×30 · 90×40 · 80×120 … e livre; lona 280/440 g; ilhós ou bastão e ilhós; a partir de R$ 28,26"
+   }
+  },
+  "folheto": {
+   "nome": "Folheto promocional",
+   "w_cm": 30,
+   "h_cm": 20,
+   "superficie": "papel",
+   "fonte": "Printi · folder 2 dobras DL (fechado 10×20, aberto 30×20, 6 páginas, carteira ou sanfona)",
+   "opcoes": {
+    "Printi": "fechado DL 10×20 · A4 · A6; 6 ou 8 páginas; couché 90–115 g; 250 un. R$ 291,48",
+    "GIV": "folder 2 dobras 20×9,5 (aberto 20×28) · 14×10 · 20×14 · 28×20; couché 90–150 g; 4×4"
+   }
+  },
+  "camiseta": {
+   "nome": "Camiseta · peito",
+   "w_cm": 10,
+   "h_cm": 10,
+   "superficie": "tecido",
+   "fonte": "GIV · camiseta básica unissex 100% algodão (branca/preta, P–EG) · área de estampa a confirmar",
+   "sem_fundo": true,
+   "sangria_mm": 0,
+   "a_confirmar": true,
+   "opcoes": {
+    "GIV": "4 dias úteis; R$ 68,99 (1 un.), R$ 57,90 (10 un.)"
+   }
+  },
+  "bone": {
+   "nome": "Boné · frente",
+   "w_cm": 16.5,
+   "h_cm": 9.8,
+   "superficie": "tecido",
+   "fonte": "GIV · boné trucker, área de personalização 165×98 mm, DTF têxtil 5×0 com branco",
+   "sem_fundo": true,
+   "sangria_mm": 0,
+   "opcoes": {
+    "GIV": "6 dias úteis; R$ 79,99 (1 un.), R$ 61,60 (5 un.)"
+   }
+  },
+  "avental": {
+   "nome": "Avental · peito",
+   "w_cm": 18,
+   "h_cm": 14,
+   "superficie": "tecido",
+   "fonte": "GIV · avental tecnosport (corpo inteiro, meio corpo ou serviços gerais; M/G) · área de estampa a confirmar",
+   "sem_fundo": true,
+   "sangria_mm": 0,
+   "a_confirmar": true,
+   "opcoes": {
+    "GIV": "4 dias úteis; R$ 26,99 (1 un.), R$ 23,60 (10 un.)"
+   }
   }
+ },
+ "servicos_fornecedor": {
+  "GIV": "criação de arte R$ 45,99 (capacho R$ 29,99) · revisão de arquivo R$ 16,99 (capacho R$ 9,99)",
+  "Printi": "designer contratado após o pedido (valor não informado na página)"
+ }
 }
