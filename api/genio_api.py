@@ -457,12 +457,23 @@ RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ESTADO_DIR = os.path.dirname(CHAVES_ARQ) if os.path.dirname(CHAVES_ARQ) else "/var/lib/genio"
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__))); import dados as DADOS; import mostra as MOSTRA  # fichas, notas e estado do app: fonte única no servidor
 MAX_FICHA = 60 * 1024 * 1024  # ficha com artes em base64 (vira arquivos no servidor)
-KIT_IDS = {"capacho": "01", "placas": "02", "adesivos": "03", "uniformes": "04", "impressos": "05", "panfleto": "06", "banners": "07", "parede": "08", "brindes": "09", "carimbo": "10"}
+KIT_IDS = {"capacho": "01", "placas": "02", "adesivos": "03", "uniformes": "04", "impressos": "05", "panfleto": "06", "banners": "07", "parede": "08", "brindes": "09", "carimbo": "10",
+           "windbanner": "11", "faixa": "12", "folheto": "13", "camiseta": "14", "bone": "15", "avental": "16"}
+# setor do app → pasta do kit de 14 setores (o mesmo mapa de app/kits14.js)
+SETOR_KIT14 = {"cafeteria": "01_Cafeteria", "restaurante": "02_Restaurante", "bar": "02_Restaurante", "padaria": "03_Padaria", "clínica/consultório": "04_Clinica",
+    "estética": "05_Estetica", "salão/barbearia": "06_Salao", "escritório/imobiliária": "07_Imobiliaria", "loja de roupas/calçados": "08_Loja_Roupas",
+    "floricultura/presentes": "08_Loja_Roupas", "pet": "09_Pet_Shop", "farmácia": "10_Farmacia", "ótica": "10_Farmacia", "academia/estúdio": "11_Academia",
+    "autopeças/oficina": "12_Autopecas", "celular/assistência": "13_Escritorio", "escola/curso": "13_Escritorio", "cereais/empório": "14_Mercado",
+    "mercado/hortifruti": "14_Mercado", "embalagens/utilidades": "14_Mercado", "comércio": "14_Mercado"}
 def kit_aplicar(d):
     """Contextualização: a arte feita no editor (PNG transparente, base64) aplicada na capa calibrada do kit do setor."""
     import hashlib, tempfile
     sys.path.insert(0, os.path.join(RAIZ, "api", "kits")); import aplicar, gerar_kit
-    setor = (d.get("setor") or "").split("/")[0]; kit, ref = gerar_kit.kit_para(setor)
+    setor_app = d.get("setor") or ""
+    if os.path.isdir(os.path.join(RAIZ, "brand", "kits14")):
+        kit = SETOR_KIT14.get(setor_app) or SETOR_KIT14.get(setor_app.split("/")[0] if setor_app else "", "14_Mercado"); ref = False
+    else:
+        kit, ref = gerar_kit.kit_para(setor_app.split("/")[0])
     pid = KIT_IDS.get(d.get("produto"), d.get("produto")); png = d.get("png") or ""
     if png.startswith("/api/arq/"):
         _, col, ident, nome = png.split("/")[2:6]
@@ -474,7 +485,7 @@ def kit_aplicar(d):
     if len(raw) > 6_000_000:
         raise ValueError("arte grande demais")
     material = d.get("material") if re.match(r"^#[0-9a-fA-F]{6}$", d.get("material") or "") else None
-    h = hashlib.sha256(raw + f"|{kit}|{pid}|{material}|v2".encode()).hexdigest()[:20]
+    h = hashlib.sha256(raw + f"|{kit}|{pid}|{material}|k14v2".encode()).hexdigest()[:20]
     pasta = os.path.join(ESTADO_DIR, "kits"); os.makedirs(pasta, exist_ok=True); saida = os.path.join(pasta, h + ".jpg")
     if not os.path.exists(saida):
         with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as f:

@@ -6,7 +6,7 @@
 <title>GênIO · Edição do produto</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="app.css?v=6e77cf19c1">
+<link rel="stylesheet" href="app.css?v=1898e34e6b">
 <style>
 body.com-acoes{padding-bottom:calc(250px + env(safe-area-inset-bottom,0))}
 .prancheta{position:relative;background:repeating-conic-gradient(#e9e5f3 0 25%,#fff 0 50%) 0 0/18px 18px;border-radius:16px;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;height:min(72vw,460px);margin:0 0 8px}
@@ -39,8 +39,8 @@ body.com-acoes{padding-bottom:calc(250px + env(safe-area-inset-bottom,0))}
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=6e77cf19c1"></script>
-<script src="qr.js?v=6e77cf19c1"></script>
+<script src="app.js?v=1898e34e6b"></script>
+<script src="qr.js?v=1898e34e6b"></script>
 <script>
 (async()=>{
   const {$,$$,esc,qs,sessao,dados,ficha,nav,topo,voltar,nomeLoja,telFmt,cliente,gravarCliente,definirCliente,setorNome}=App;
@@ -49,7 +49,7 @@ body.com-acoes{padding-bottom:calc(250px + env(safe-area-inset-bottom,0))}
   if(!l){$("#app").innerHTML=`${topo()}<p>Loja não encontrada.</p>${nav("rota")}`;return;}
   const nome=nomeLoja(l.nome);definirCliente(l);let c=await App.garantirCamadas(l);const man=c.manual||null;
   // gabarito da gráfica: área total = produto + sangria; a guia mostra corte (vermelho) e segurança (verde-água)
-  const G=await (await fetch("gabaritos.json?v=6e77cf19c1")).json();const P=G.produtos[pid]||G.produtos.capacho;
+  const G=await (await fetch("gabaritos.json?v=1898e34e6b")).json();const P=G.produtos[pid]||G.produtos.capacho;
   const sang=P.sangria_mm!=null?P.sangria_mm:G.sangria_mm,seg=P.seguranca_mm!=null?P.seguranca_mm:G.seguranca_mm;
   const PX=Math.min(100,Math.floor(3000/Math.max(P.w_cm+sang/5,P.h_cm+sang/5)));  // px por cm (teto 3000 px)
   const W=Math.round((P.w_cm+2*sang/10)*PX),H=Math.round((P.h_cm+2*sang/10)*PX),B=Math.round(sang/10*PX),S=Math.round(seg/10*PX);
@@ -113,7 +113,8 @@ body.com-acoes{padding-bottom:calc(250px + env(safe-area-inset-bottom,0))}
   async function desenhar(comGuia=guia,comFundo=true,comSel=true){
     cx.clearRect(0,0,W,H);if(comFundo&&doc.fundo){cx.fillStyle=doc.fundo;cx.fillRect(0,0,W,H);}
     if(comFundo&&doc.fundoImg){const im=await img(doc.fundoImg);if(im){const s=Math.max(W/im.naturalWidth,H/im.naturalHeight);cx.drawImage(im,(W-im.naturalWidth*s)/2,(H-im.naturalHeight*s)/2,im.naturalWidth*s,im.naturalHeight*s);}}
-    for(const e of doc.el){cx.save();if(e.rot){const cxm=e.x+e.w/2,cym=e.y+e.h/2;cx.translate(cxm,cym);cx.rotate(e.rot*Math.PI/180);cx.translate(-cxm,-cym);}
+    for(const e of doc.el){if(!comFundo&&e.sem)continue;  // superfície neutra do kit (placa, faixa…) não vai para a arte aplicada na foto
+      cx.save();if(e.rot){const cxm=e.x+e.w/2,cym=e.y+e.h/2;cx.translate(cxm,cym);cx.rotate(e.rot*Math.PI/180);cx.translate(-cxm,-cym);}
       if(e.tipo==="camada"||e.tipo==="imagem"){const im=e.oculta?null:await img(e.src);if(im){
           if(e.borda>0){const t=tintar(im,e.bordaCor||"#fff",e.w,e.h);const b=e.borda;for(let a=0;a<360;a+=30){cx.drawImage(t,e.x+Math.cos(a*Math.PI/180)*b,e.y+Math.sin(a*Math.PI/180)*b,e.w,e.h);}}
           if(e.usarCor&&e.cor)cx.drawImage(tintar(im,e.cor,e.w,e.h),e.x,e.y,e.w,e.h);else cx.drawImage(im,e.x,e.y,e.w,e.h);}}
@@ -126,6 +127,7 @@ body.com-acoes{padding-bottom:calc(250px + env(safe-area-inset-bottom,0))}
       else if(e.tipo==="carimbo"){App.desenharCarimbo(cx,e,doc.campos||{});}
       else if(e.tipo==="lista"){App.desenharLista(cx,e);}
       else if(e.tipo==="seta"){App.desenharSeta(cx,e);}
+      else if(e.tipo==="vetor"){App.desenharVetor(cx,e);}
       else if(e.tipo==="qr"){App.desenharQR(cx,e);e.h=e.w;}
       cx.restore();}
     if(comGuia){cx.save();desenharGuia(cx);cx.restore();}

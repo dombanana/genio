@@ -1,0 +1,749 @@
+{
+  "versao": 2,
+  "autorizacao": "Reaproveitamento aprovado pelo usuário; cenas icônicas próprias de oficina, mercado e farmácia.",
+  "regra": "Consultar modo por produto. Pares genéricos compartilham COM_ARTE e SEM_ARTE; a personalização setorial deve usar Artes_Frontais e REGRAS_MONTAGEM.json.",
+  "bases_planejadas": 79,
+  "itens": {
+    "13_Escritorio_01_capacho": {
+      "setor_destino": "13_Escritorio",
+      "produto": "01_capacho",
+      "setor_origem": "00_Bases_Compartilhadas",
+      "com_arte_origem": "00_Bases_Compartilhadas/COM_ARTE/01_capacho.jpg",
+      "sem_arte_origem": "00_Bases_Compartilhadas/SEM_ARTE/01_capacho.jpg",
+      "modo": "ambas_variantes_genericas",
+      "nota": "Par genérico GIO reaproveitado. A foto COM_ARTE demonstra a aplicação; para personalizar, usar a arte frontal e a paleta do setor/cliente. Não representa arte setorial já aplicada."
+    },
+    "13_Escritorio_02_placa": {
+      "setor_destino": "13_Escritorio",
+      "produto": "02_placa",
+      "setor_origem": "00_Bases_Compartilhadas",
+      "com_arte_origem": "00_Bases_Compartilhadas/COM_ARTE/02_placa.jpg",
+      "sem_arte_origem": "00_Bases_Compartilhadas/SEM_ARTE/02_placa.jpg",
+      "modo": "ambas_variantes_genericas",
+      "nota": "Par genérico GIO reaproveitado. A foto COM_ARTE demonstra a aplicação; para personalizar, usar a arte frontal e a paleta do setor/cliente. Não representa arte setorial já aplicada."
+    },
+    "13_Escritorio_03_adesivo_vitrine": {
+      "setor_destino": "13_Escritorio",
+      "produto": "03_adesivo_vitrine",
+      "setor_origem": "00_Bases_Compartilhadas",
+      "com_arte_origem": "00_Bases_Compartilhadas/COM_ARTE/03_adesivo_vitrine.jpg",
+      "sem_arte_origem": "00_Bases_Compartilhadas/SEM_ARTE/03_adesivo_vitrine.jpg",
+      "modo": "ambas_variantes_genericas",
+      "nota": "Par genérico GIO reaproveitado. A foto COM_ARTE demonstra a aplicação; para personalizar, usar a arte frontal e a paleta do setor/cliente. Não representa arte setorial já aplicada."
+    },
+    "13_Escritorio_04_uniforme_polo": {
+      "setor_destino": "13_Escritorio",
+      "produto": "04_uniforme_polo",
+      "setor_origem": "00_Bases_Compartilhadas",
+      "com_arte_origem": "00_Bases_Compartilhadas/COM_ARTE/04_uniforme_polo.jpg",
+      "sem_arte_origem": "00_Bases_Compartilhadas/SEM_ARTE/04_uniforme_polo.jpg",
+      "modo": "ambas_variantes_genericas",
+      "nota": "Par genérico GIO reaproveitado. A foto COM_ARTE demonstra a aplicação; para personalizar, usar a arte frontal e a paleta do setor/cliente. Não representa arte setorial já aplicada."
+    },
+    "13_Escritorio_05_cartao": {
+      "setor_destino": "13_Escritorio",
+      "produto": "05_cartao",
+      "setor_origem": "00_Bases_Compartilhadas",
+      "com_arte_origem": "00_Bases_Compartilhadas/COM_ARTE/05_cartao.jpg",
+      "sem_arte_origem": "00_Bases_Compartilhadas/SEM_ARTE/05_cartao.jpg",
+      "modo": "ambas_variantes_genericas",
+      "nota": "Par genérico GIO reaproveitado. A foto COM_ARTE demonstra a aplicação; para personalizar, usar a arte frontal e a paleta do setor/cliente. Não representa arte setorial já aplicada."
+    },
+    "13_Escritorio_06_flyer_cardapio": {
+      "setor_destino": "13_Escritorio",
+      "produto": "06_flyer_cardapio",
+      "setor_origem": "00_Bases_Compartilhadas",
+      "com_arte_origem": "00_Bases_Compartilhadas/COM_ARTE/06_flyer_cardapio.jpg",
+      "sem_arte_origem": "00_Bases_Compartilhadas/SEM_ARTE/06_flyer_cardapio.jpg",
+      "modo": "ambas_variantes_genericas",
+      "nota": "Par genérico GIO reaproveitado. A foto COM_ARTE demonstra a aplicação; para personalizar, usar a arte frontal e a paleta do setor/cliente. Não representa arte setorial já aplicada."
+    },
+    "13_Escritorio_07_banner_retratil": {
+      "setor_destino": "13_Escritorio",
+      "produto": "07_banner_retratil",
+      "setor_origem": "00_Bases_Compartilhadas",
+      "com_arte_origem": "00_Bases_Compartilhadas/COM_ARTE/07_banner_retratil.jpg",
+      "sem_arte_origem": "00_Bases_Compartilhadas/SEM_ARTE/07_banner_retratil.jpg",
+      "modo": "ambas_variantes_genericas",
+      "nota": "Par genérico GIO reaproveitado. A foto COM_ARTE demonstra a aplicação; para personalizar, usar a arte frontal e a paleta do setor/cliente. Não representa arte setorial já aplicada."
+    },
+    "13_Escritorio_08_adesivo_parede_rotas": {
+      "setor_destino": "13_Escritorio",
+      "produto": "08_adesivo_parede_rotas",
+      "setor_origem": "00_Bases_Compartilhadas",
+      "com_arte_origem": "00_Bases_Compartilhadas/COM_ARTE/08_adesivo_parede_rotas.jpg",
+      "sem_arte_origem": "00_Bases_Compartilhadas/SEM_ARTE/08_adesivo_parede_rotas.jpg",
+      "modo": "ambas_variantes_genericas",
+      "nota": "Par genérico GIO reaproveitado. A foto COM_ARTE demonstra a aplicação; para personalizar, usar a arte frontal e a paleta do setor/cliente. Não representa arte setorial já aplicada."
+    },
+    "13_Escritorio_09_ecobag": {
+      "setor_destino": "13_Escritorio",
+      "produto": "09_ecobag",
+      "setor_origem": "00_Bases_Compartilhadas",
+      "com_arte_origem": "00_Bases_Compartilhadas/COM_ARTE/09_ecobag.jpg",
+      "sem_arte_origem": "00_Bases_Compartilhadas/SEM_ARTE/09_ecobag.jpg",
+      "modo": "ambas_variantes_genericas",
+      "nota": "Par genérico GIO reaproveitado. A foto COM_ARTE demonstra a aplicação; para personalizar, usar a arte frontal e a paleta do setor/cliente. Não representa arte setorial já aplicada."
+    },
+    "13_Escritorio_10_carimbos_papeis": {
+      "setor_destino": "13_Escritorio",
+      "produto": "10_carimbos_papeis",
+      "setor_origem": "00_Bases_Compartilhadas",
+      "com_arte_origem": "00_Bases_Compartilhadas/COM_ARTE/10_carimbos_papeis.jpg",
+      "sem_arte_origem": "00_Bases_Compartilhadas/SEM_ARTE/10_carimbos_papeis.jpg",
+      "modo": "ambas_variantes_genericas",
+      "nota": "Par genérico GIO reaproveitado. A foto COM_ARTE demonstra a aplicação; para personalizar, usar a arte frontal e a paleta do setor/cliente. Não representa arte setorial já aplicada."
+    },
+    "13_Escritorio_11_wind_banner": {
+      "setor_destino": "13_Escritorio",
+      "produto": "11_wind_banner",
+      "setor_origem": "00_Bases_Compartilhadas",
+      "com_arte_origem": "00_Bases_Compartilhadas/COM_ARTE/11_wind_banner.jpg",
+      "sem_arte_origem": "00_Bases_Compartilhadas/SEM_ARTE/11_wind_banner.jpg",
+      "modo": "ambas_variantes_genericas",
+      "nota": "Par genérico GIO reaproveitado. A foto COM_ARTE demonstra a aplicação; para personalizar, usar a arte frontal e a paleta do setor/cliente. Não representa arte setorial já aplicada."
+    },
+    "13_Escritorio_12_faixa_horizontal": {
+      "setor_destino": "13_Escritorio",
+      "produto": "12_faixa_horizontal",
+      "setor_origem": "00_Bases_Compartilhadas",
+      "com_arte_origem": "00_Bases_Compartilhadas/COM_ARTE/12_faixa_horizontal.jpg",
+      "sem_arte_origem": "00_Bases_Compartilhadas/SEM_ARTE/12_faixa_horizontal.jpg",
+      "modo": "ambas_variantes_genericas",
+      "nota": "Par genérico GIO reaproveitado. A foto COM_ARTE demonstra a aplicação; para personalizar, usar a arte frontal e a paleta do setor/cliente. Não representa arte setorial já aplicada."
+    },
+    "13_Escritorio_13_folheto_promocional": {
+      "setor_destino": "13_Escritorio",
+      "produto": "13_folheto_promocional",
+      "setor_origem": "00_Bases_Compartilhadas",
+      "com_arte_origem": "00_Bases_Compartilhadas/COM_ARTE/13_folheto_promocional.jpg",
+      "sem_arte_origem": "00_Bases_Compartilhadas/SEM_ARTE/13_folheto_promocional.jpg",
+      "modo": "ambas_variantes_genericas",
+      "nota": "Par genérico GIO reaproveitado. A foto COM_ARTE demonstra a aplicação; para personalizar, usar a arte frontal e a paleta do setor/cliente. Não representa arte setorial já aplicada."
+    },
+    "13_Escritorio_14_camiseta": {
+      "setor_destino": "13_Escritorio",
+      "produto": "14_camiseta",
+      "setor_origem": "00_Bases_Compartilhadas",
+      "com_arte_origem": "00_Bases_Compartilhadas/COM_ARTE/14_camiseta.jpg",
+      "sem_arte_origem": "00_Bases_Compartilhadas/SEM_ARTE/14_camiseta.jpg",
+      "modo": "ambas_variantes_genericas",
+      "nota": "Par genérico GIO reaproveitado. A foto COM_ARTE demonstra a aplicação; para personalizar, usar a arte frontal e a paleta do setor/cliente. Não representa arte setorial já aplicada."
+    },
+    "13_Escritorio_15_bone": {
+      "setor_destino": "13_Escritorio",
+      "produto": "15_bone",
+      "setor_origem": "00_Bases_Compartilhadas",
+      "com_arte_origem": "00_Bases_Compartilhadas/COM_ARTE/15_bone.jpg",
+      "sem_arte_origem": "00_Bases_Compartilhadas/SEM_ARTE/15_bone.jpg",
+      "modo": "ambas_variantes_genericas",
+      "nota": "Par genérico GIO reaproveitado. A foto COM_ARTE demonstra a aplicação; para personalizar, usar a arte frontal e a paleta do setor/cliente. Não representa arte setorial já aplicada."
+    },
+    "13_Escritorio_16_avental": {
+      "setor_destino": "13_Escritorio",
+      "produto": "16_avental",
+      "setor_origem": "00_Bases_Compartilhadas",
+      "com_arte_origem": "00_Bases_Compartilhadas/COM_ARTE/16_avental.jpg",
+      "sem_arte_origem": "00_Bases_Compartilhadas/SEM_ARTE/16_avental.jpg",
+      "modo": "ambas_variantes_genericas",
+      "nota": "Par genérico GIO reaproveitado. A foto COM_ARTE demonstra a aplicação; para personalizar, usar a arte frontal e a paleta do setor/cliente. Não representa arte setorial já aplicada."
+    },
+    "10_Farmacia_02_placa": {
+      "setor_destino": "10_Farmacia",
+      "produto": "02_placa",
+      "setor_origem": "00_Bases_Compartilhadas",
+      "com_arte_origem": "00_Bases_Compartilhadas/COM_ARTE/02_placa.jpg",
+      "sem_arte_origem": "00_Bases_Compartilhadas/SEM_ARTE/02_placa.jpg",
+      "modo": "ambas_variantes_genericas",
+      "nota": "Par genérico GIO reaproveitado. A foto COM_ARTE demonstra a aplicação; para personalizar, usar a arte frontal e a paleta do setor/cliente. Não representa arte setorial já aplicada."
+    },
+    "10_Farmacia_04_uniforme_polo": {
+      "setor_destino": "10_Farmacia",
+      "produto": "04_uniforme_polo",
+      "setor_origem": "00_Bases_Compartilhadas",
+      "com_arte_origem": "00_Bases_Compartilhadas/COM_ARTE/04_uniforme_polo.jpg",
+      "sem_arte_origem": "00_Bases_Compartilhadas/SEM_ARTE/04_uniforme_polo.jpg",
+      "modo": "ambas_variantes_genericas",
+      "nota": "Par genérico GIO reaproveitado. A foto COM_ARTE demonstra a aplicação; para personalizar, usar a arte frontal e a paleta do setor/cliente. Não representa arte setorial já aplicada."
+    },
+    "10_Farmacia_05_cartao": {
+      "setor_destino": "10_Farmacia",
+      "produto": "05_cartao",
+      "setor_origem": "00_Bases_Compartilhadas",
+      "com_arte_origem": "00_Bases_Compartilhadas/COM_ARTE/05_cartao.jpg",
+      "sem_arte_origem": "00_Bases_Compartilhadas/SEM_ARTE/05_cartao.jpg",
+      "modo": "ambas_variantes_genericas",
+      "nota": "Par genérico GIO reaproveitado. A foto COM_ARTE demonstra a aplicação; para personalizar, usar a arte frontal e a paleta do setor/cliente. Não representa arte setorial já aplicada."
+    },
+    "10_Farmacia_06_flyer_cardapio": {
+      "setor_destino": "10_Farmacia",
+      "produto": "06_flyer_cardapio",
+      "setor_origem": "00_Bases_Compartilhadas",
+      "com_arte_origem": "00_Bases_Compartilhadas/COM_ARTE/06_flyer_cardapio.jpg",
+      "sem_arte_origem": "00_Bases_Compartilhadas/SEM_ARTE/06_flyer_cardapio.jpg",
+      "modo": "ambas_variantes_genericas",
+      "nota": "Par genérico GIO reaproveitado. A foto COM_ARTE demonstra a aplicação; para personalizar, usar a arte frontal e a paleta do setor/cliente. Não representa arte setorial já aplicada."
+    },
+    "10_Farmacia_09_ecobag": {
+      "setor_destino": "10_Farmacia",
+      "produto": "09_ecobag",
+      "setor_origem": "00_Bases_Compartilhadas",
+      "com_arte_origem": "00_Bases_Compartilhadas/COM_ARTE/09_ecobag.jpg",
+      "sem_arte_origem": "00_Bases_Compartilhadas/SEM_ARTE/09_ecobag.jpg",
+      "modo": "ambas_variantes_genericas",
+      "nota": "Par genérico GIO reaproveitado. A foto COM_ARTE demonstra a aplicação; para personalizar, usar a arte frontal e a paleta do setor/cliente. Não representa arte setorial já aplicada."
+    },
+    "10_Farmacia_10_carimbos_papeis": {
+      "setor_destino": "10_Farmacia",
+      "produto": "10_carimbos_papeis",
+      "setor_origem": "00_Bases_Compartilhadas",
+      "com_arte_origem": "00_Bases_Compartilhadas/COM_ARTE/10_carimbos_papeis.jpg",
+      "sem_arte_origem": "00_Bases_Compartilhadas/SEM_ARTE/10_carimbos_papeis.jpg",
+      "modo": "ambas_variantes_genericas",
+      "nota": "Par genérico GIO reaproveitado. A foto COM_ARTE demonstra a aplicação; para personalizar, usar a arte frontal e a paleta do setor/cliente. Não representa arte setorial já aplicada."
+    },
+    "10_Farmacia_13_folheto_promocional": {
+      "setor_destino": "10_Farmacia",
+      "produto": "13_folheto_promocional",
+      "setor_origem": "00_Bases_Compartilhadas",
+      "com_arte_origem": "00_Bases_Compartilhadas/COM_ARTE/13_folheto_promocional.jpg",
+      "sem_arte_origem": "00_Bases_Compartilhadas/SEM_ARTE/13_folheto_promocional.jpg",
+      "modo": "ambas_variantes_genericas",
+      "nota": "Par genérico GIO reaproveitado. A foto COM_ARTE demonstra a aplicação; para personalizar, usar a arte frontal e a paleta do setor/cliente. Não representa arte setorial já aplicada."
+    },
+    "10_Farmacia_14_camiseta": {
+      "setor_destino": "10_Farmacia",
+      "produto": "14_camiseta",
+      "setor_origem": "00_Bases_Compartilhadas",
+      "com_arte_origem": "00_Bases_Compartilhadas/COM_ARTE/14_camiseta.jpg",
+      "sem_arte_origem": "00_Bases_Compartilhadas/SEM_ARTE/14_camiseta.jpg",
+      "modo": "ambas_variantes_genericas",
+      "nota": "Par genérico GIO reaproveitado. A foto COM_ARTE demonstra a aplicação; para personalizar, usar a arte frontal e a paleta do setor/cliente. Não representa arte setorial já aplicada."
+    },
+    "10_Farmacia_15_bone": {
+      "setor_destino": "10_Farmacia",
+      "produto": "15_bone",
+      "setor_origem": "00_Bases_Compartilhadas",
+      "com_arte_origem": "00_Bases_Compartilhadas/COM_ARTE/15_bone.jpg",
+      "sem_arte_origem": "00_Bases_Compartilhadas/SEM_ARTE/15_bone.jpg",
+      "modo": "ambas_variantes_genericas",
+      "nota": "Par genérico GIO reaproveitado. A foto COM_ARTE demonstra a aplicação; para personalizar, usar a arte frontal e a paleta do setor/cliente. Não representa arte setorial já aplicada."
+    },
+    "10_Farmacia_16_avental": {
+      "setor_destino": "10_Farmacia",
+      "produto": "16_avental",
+      "setor_origem": "00_Bases_Compartilhadas",
+      "com_arte_origem": "00_Bases_Compartilhadas/COM_ARTE/16_avental.jpg",
+      "sem_arte_origem": "00_Bases_Compartilhadas/SEM_ARTE/16_avental.jpg",
+      "modo": "ambas_variantes_genericas",
+      "nota": "Par genérico GIO reaproveitado. A foto COM_ARTE demonstra a aplicação; para personalizar, usar a arte frontal e a paleta do setor/cliente. Não representa arte setorial já aplicada."
+    },
+    "14_Mercado_02_placa": {
+      "setor_destino": "14_Mercado",
+      "produto": "02_placa",
+      "setor_origem": "00_Bases_Compartilhadas",
+      "com_arte_origem": "00_Bases_Compartilhadas/COM_ARTE/02_placa.jpg",
+      "sem_arte_origem": "00_Bases_Compartilhadas/SEM_ARTE/02_placa.jpg",
+      "modo": "ambas_variantes_genericas",
+      "nota": "Par genérico GIO reaproveitado. A foto COM_ARTE demonstra a aplicação; para personalizar, usar a arte frontal e a paleta do setor/cliente. Não representa arte setorial já aplicada."
+    },
+    "14_Mercado_04_uniforme_polo": {
+      "setor_destino": "14_Mercado",
+      "produto": "04_uniforme_polo",
+      "setor_origem": "00_Bases_Compartilhadas",
+      "com_arte_origem": "00_Bases_Compartilhadas/COM_ARTE/04_uniforme_polo.jpg",
+      "sem_arte_origem": "00_Bases_Compartilhadas/SEM_ARTE/04_uniforme_polo.jpg",
+      "modo": "ambas_variantes_genericas",
+      "nota": "Par genérico GIO reaproveitado. A foto COM_ARTE demonstra a aplicação; para personalizar, usar a arte frontal e a paleta do setor/cliente. Não representa arte setorial já aplicada."
+    },
+    "14_Mercado_05_cartao": {
+      "setor_destino": "14_Mercado",
+      "produto": "05_cartao",
+      "setor_origem": "00_Bases_Compartilhadas",
+      "com_arte_origem": "00_Bases_Compartilhadas/COM_ARTE/05_cartao.jpg",
+      "sem_arte_origem": "00_Bases_Compartilhadas/SEM_ARTE/05_cartao.jpg",
+      "modo": "ambas_variantes_genericas",
+      "nota": "Par genérico GIO reaproveitado. A foto COM_ARTE demonstra a aplicação; para personalizar, usar a arte frontal e a paleta do setor/cliente. Não representa arte setorial já aplicada."
+    },
+    "14_Mercado_06_flyer_cardapio": {
+      "setor_destino": "14_Mercado",
+      "produto": "06_flyer_cardapio",
+      "setor_origem": "00_Bases_Compartilhadas",
+      "com_arte_origem": "00_Bases_Compartilhadas/COM_ARTE/06_flyer_cardapio.jpg",
+      "sem_arte_origem": "00_Bases_Compartilhadas/SEM_ARTE/06_flyer_cardapio.jpg",
+      "modo": "ambas_variantes_genericas",
+      "nota": "Par genérico GIO reaproveitado. A foto COM_ARTE demonstra a aplicação; para personalizar, usar a arte frontal e a paleta do setor/cliente. Não representa arte setorial já aplicada."
+    },
+    "14_Mercado_09_ecobag": {
+      "setor_destino": "14_Mercado",
+      "produto": "09_ecobag",
+      "setor_origem": "00_Bases_Compartilhadas",
+      "com_arte_origem": "00_Bases_Compartilhadas/COM_ARTE/09_ecobag.jpg",
+      "sem_arte_origem": "00_Bases_Compartilhadas/SEM_ARTE/09_ecobag.jpg",
+      "modo": "ambas_variantes_genericas",
+      "nota": "Par genérico GIO reaproveitado. A foto COM_ARTE demonstra a aplicação; para personalizar, usar a arte frontal e a paleta do setor/cliente. Não representa arte setorial já aplicada."
+    },
+    "14_Mercado_10_carimbos_papeis": {
+      "setor_destino": "14_Mercado",
+      "produto": "10_carimbos_papeis",
+      "setor_origem": "00_Bases_Compartilhadas",
+      "com_arte_origem": "00_Bases_Compartilhadas/COM_ARTE/10_carimbos_papeis.jpg",
+      "sem_arte_origem": "00_Bases_Compartilhadas/SEM_ARTE/10_carimbos_papeis.jpg",
+      "modo": "ambas_variantes_genericas",
+      "nota": "Par genérico GIO reaproveitado. A foto COM_ARTE demonstra a aplicação; para personalizar, usar a arte frontal e a paleta do setor/cliente. Não representa arte setorial já aplicada."
+    },
+    "14_Mercado_13_folheto_promocional": {
+      "setor_destino": "14_Mercado",
+      "produto": "13_folheto_promocional",
+      "setor_origem": "00_Bases_Compartilhadas",
+      "com_arte_origem": "00_Bases_Compartilhadas/COM_ARTE/13_folheto_promocional.jpg",
+      "sem_arte_origem": "00_Bases_Compartilhadas/SEM_ARTE/13_folheto_promocional.jpg",
+      "modo": "ambas_variantes_genericas",
+      "nota": "Par genérico GIO reaproveitado. A foto COM_ARTE demonstra a aplicação; para personalizar, usar a arte frontal e a paleta do setor/cliente. Não representa arte setorial já aplicada."
+    },
+    "14_Mercado_14_camiseta": {
+      "setor_destino": "14_Mercado",
+      "produto": "14_camiseta",
+      "setor_origem": "00_Bases_Compartilhadas",
+      "com_arte_origem": "00_Bases_Compartilhadas/COM_ARTE/14_camiseta.jpg",
+      "sem_arte_origem": "00_Bases_Compartilhadas/SEM_ARTE/14_camiseta.jpg",
+      "modo": "ambas_variantes_genericas",
+      "nota": "Par genérico GIO reaproveitado. A foto COM_ARTE demonstra a aplicação; para personalizar, usar a arte frontal e a paleta do setor/cliente. Não representa arte setorial já aplicada."
+    },
+    "14_Mercado_15_bone": {
+      "setor_destino": "14_Mercado",
+      "produto": "15_bone",
+      "setor_origem": "00_Bases_Compartilhadas",
+      "com_arte_origem": "00_Bases_Compartilhadas/COM_ARTE/15_bone.jpg",
+      "sem_arte_origem": "00_Bases_Compartilhadas/SEM_ARTE/15_bone.jpg",
+      "modo": "ambas_variantes_genericas",
+      "nota": "Par genérico GIO reaproveitado. A foto COM_ARTE demonstra a aplicação; para personalizar, usar a arte frontal e a paleta do setor/cliente. Não representa arte setorial já aplicada."
+    },
+    "14_Mercado_16_avental": {
+      "setor_destino": "14_Mercado",
+      "produto": "16_avental",
+      "setor_origem": "00_Bases_Compartilhadas",
+      "com_arte_origem": "00_Bases_Compartilhadas/COM_ARTE/16_avental.jpg",
+      "sem_arte_origem": "00_Bases_Compartilhadas/SEM_ARTE/16_avental.jpg",
+      "modo": "ambas_variantes_genericas",
+      "nota": "Par genérico GIO reaproveitado. A foto COM_ARTE demonstra a aplicação; para personalizar, usar a arte frontal e a paleta do setor/cliente. Não representa arte setorial já aplicada."
+    },
+    "09_Pet_Shop_04_uniforme_polo": {
+      "setor_destino": "09_Pet_Shop",
+      "produto": "04_uniforme_polo",
+      "setor_origem": "08_Loja_Roupas",
+      "com_arte_origem": "08_Loja_Roupas/Fotos_Produtos/COM_ARTE/04_uniforme_polo.jpg",
+      "sem_arte_origem": "08_Loja_Roupas/Fotos_Produtos/SEM_ARTE/04_uniforme_polo.jpg",
+      "nota": "Enquadramento próximo de produto em fundo neutro da loja de roupas, aprovado somente após revisão; fotos amplas continuam no ambiente próprio do setor.",
+      "modo": "adaptar_arte_por_edicao_e_compartilhar_base_sem_arte",
+      "requer_validacao_fundo": true,
+      "base_aprovada": true,
+      "revisao_fundo": "Aprovado na revisão visual: parede/balcão neutro, sem araras ou roupas no fundo."
+    },
+    "09_Pet_Shop_05_cartao": {
+      "setor_destino": "09_Pet_Shop",
+      "produto": "05_cartao",
+      "setor_origem": "08_Loja_Roupas",
+      "com_arte_origem": "08_Loja_Roupas/Fotos_Produtos/COM_ARTE/05_cartao.jpg",
+      "sem_arte_origem": "08_Loja_Roupas/Fotos_Produtos/SEM_ARTE/05_cartao.jpg",
+      "nota": "Enquadramento próximo de produto em fundo neutro da loja de roupas, aprovado somente após revisão; fotos amplas continuam no ambiente próprio do setor.",
+      "modo": "adaptar_arte_por_edicao_e_compartilhar_base_sem_arte",
+      "requer_validacao_fundo": true,
+      "base_aprovada": true,
+      "revisao_fundo": "Aprovado na revisão visual: parede/balcão neutro, sem araras ou roupas no fundo."
+    },
+    "09_Pet_Shop_06_flyer_cardapio": {
+      "setor_destino": "09_Pet_Shop",
+      "produto": "06_flyer_cardapio",
+      "setor_origem": "04_Clinica",
+      "com_arte_origem": "04_Clinica/Fotos_Produtos/COM_ARTE/06_flyer_cardapio.jpg",
+      "sem_arte_origem": "04_Clinica/Fotos_Produtos/SEM_ARTE/06_flyer_cardapio.jpg",
+      "nota": "Close de papel sobre balcão neutro, sem elementos médicos específicos; evita reutilizar o flyer da moda que tem roupas visíveis no fundo.",
+      "modo": "adaptar_arte_por_edicao_e_compartilhar_base_sem_arte",
+      "requer_validacao_fundo": false,
+      "base_aprovada": true
+    },
+    "09_Pet_Shop_09_ecobag": {
+      "setor_destino": "09_Pet_Shop",
+      "produto": "09_ecobag",
+      "setor_origem": "08_Loja_Roupas",
+      "com_arte_origem": "08_Loja_Roupas/Fotos_Produtos/COM_ARTE/09_ecobag.jpg",
+      "sem_arte_origem": "08_Loja_Roupas/Fotos_Produtos/SEM_ARTE/09_ecobag.jpg",
+      "nota": "Enquadramento próximo de produto em fundo neutro da loja de roupas, aprovado somente após revisão; fotos amplas continuam no ambiente próprio do setor.",
+      "modo": "adaptar_arte_por_edicao_e_compartilhar_base_sem_arte",
+      "requer_validacao_fundo": true,
+      "base_aprovada": true,
+      "revisao_fundo": "Aprovado na revisão visual: parede/balcão neutro, sem araras ou roupas no fundo."
+    },
+    "09_Pet_Shop_10_carimbos_papeis": {
+      "setor_destino": "09_Pet_Shop",
+      "produto": "10_carimbos_papeis",
+      "setor_origem": "00_Bases_Compartilhadas",
+      "com_arte_origem": "00_Bases_Compartilhadas/COM_ARTE/10_carimbos_papeis.jpg",
+      "sem_arte_origem": "00_Bases_Compartilhadas/SEM_ARTE/10_carimbos_papeis.jpg",
+      "modo": "ambas_variantes_genericas",
+      "nota": "Par genérico GIO reaproveitado. A foto COM_ARTE demonstra a aplicação; para personalizar, usar a arte frontal e a paleta do setor/cliente. Não representa arte setorial já aplicada."
+    },
+    "09_Pet_Shop_14_camiseta": {
+      "setor_destino": "09_Pet_Shop",
+      "produto": "14_camiseta",
+      "setor_origem": "08_Loja_Roupas",
+      "com_arte_origem": "08_Loja_Roupas/Fotos_Produtos/COM_ARTE/14_camiseta.jpg",
+      "sem_arte_origem": "08_Loja_Roupas/Fotos_Produtos/SEM_ARTE/14_camiseta.jpg",
+      "nota": "Enquadramento próximo de produto em fundo neutro da loja de roupas, aprovado somente após revisão; fotos amplas continuam no ambiente próprio do setor.",
+      "modo": "adaptar_arte_por_edicao_e_compartilhar_base_sem_arte",
+      "requer_validacao_fundo": true,
+      "base_aprovada": true,
+      "revisao_fundo": "Aprovado na revisão visual: parede/balcão neutro, sem araras ou roupas no fundo."
+    },
+    "09_Pet_Shop_15_bone": {
+      "setor_destino": "09_Pet_Shop",
+      "produto": "15_bone",
+      "setor_origem": "08_Loja_Roupas",
+      "com_arte_origem": "08_Loja_Roupas/Fotos_Produtos/COM_ARTE/15_bone.jpg",
+      "sem_arte_origem": "08_Loja_Roupas/Fotos_Produtos/SEM_ARTE/15_bone.jpg",
+      "nota": "Enquadramento próximo de produto em fundo neutro da loja de roupas, aprovado somente após revisão; fotos amplas continuam no ambiente próprio do setor.",
+      "modo": "adaptar_arte_por_edicao_e_compartilhar_base_sem_arte",
+      "requer_validacao_fundo": true,
+      "base_aprovada": true,
+      "revisao_fundo": "Aprovado na revisão visual: parede/balcão neutro, sem araras ou roupas no fundo."
+    },
+    "09_Pet_Shop_16_avental": {
+      "setor_destino": "09_Pet_Shop",
+      "produto": "16_avental",
+      "setor_origem": "00_Bases_Compartilhadas",
+      "com_arte_origem": "00_Bases_Compartilhadas/COM_ARTE/16_avental.jpg",
+      "sem_arte_origem": "00_Bases_Compartilhadas/SEM_ARTE/16_avental.jpg",
+      "modo": "ambas_variantes_genericas",
+      "nota": "Par genérico GIO reaproveitado. A foto COM_ARTE demonstra a aplicação; para personalizar, usar a arte frontal e a paleta do setor/cliente. Não representa arte setorial já aplicada."
+    },
+    "11_Academia_04_uniforme_polo": {
+      "setor_destino": "11_Academia",
+      "produto": "04_uniforme_polo",
+      "setor_origem": "00_Bases_Compartilhadas",
+      "com_arte_origem": "00_Bases_Compartilhadas/COM_ARTE/04_uniforme_polo.jpg",
+      "sem_arte_origem": "00_Bases_Compartilhadas/SEM_ARTE/04_uniforme_polo.jpg",
+      "modo": "ambas_variantes_genericas",
+      "nota": "Par genérico GIO reaproveitado. A foto COM_ARTE demonstra a aplicação; para personalizar, usar a arte frontal e a paleta do setor/cliente. Não representa arte setorial já aplicada."
+    },
+    "11_Academia_05_cartao": {
+      "setor_destino": "11_Academia",
+      "produto": "05_cartao",
+      "setor_origem": "00_Bases_Compartilhadas",
+      "com_arte_origem": "00_Bases_Compartilhadas/COM_ARTE/05_cartao.jpg",
+      "sem_arte_origem": "00_Bases_Compartilhadas/SEM_ARTE/05_cartao.jpg",
+      "modo": "ambas_variantes_genericas",
+      "nota": "Par genérico GIO reaproveitado. A foto COM_ARTE demonstra a aplicação; para personalizar, usar a arte frontal e a paleta do setor/cliente. Não representa arte setorial já aplicada."
+    },
+    "11_Academia_06_flyer_cardapio": {
+      "setor_destino": "11_Academia",
+      "produto": "06_flyer_cardapio",
+      "setor_origem": "00_Bases_Compartilhadas",
+      "com_arte_origem": "00_Bases_Compartilhadas/COM_ARTE/06_flyer_cardapio.jpg",
+      "sem_arte_origem": "00_Bases_Compartilhadas/SEM_ARTE/06_flyer_cardapio.jpg",
+      "modo": "ambas_variantes_genericas",
+      "nota": "Par genérico GIO reaproveitado. A foto COM_ARTE demonstra a aplicação; para personalizar, usar a arte frontal e a paleta do setor/cliente. Não representa arte setorial já aplicada."
+    },
+    "11_Academia_09_ecobag": {
+      "setor_destino": "11_Academia",
+      "produto": "09_ecobag",
+      "setor_origem": "00_Bases_Compartilhadas",
+      "com_arte_origem": "00_Bases_Compartilhadas/COM_ARTE/09_ecobag.jpg",
+      "sem_arte_origem": "00_Bases_Compartilhadas/SEM_ARTE/09_ecobag.jpg",
+      "modo": "ambas_variantes_genericas",
+      "nota": "Par genérico GIO reaproveitado. A foto COM_ARTE demonstra a aplicação; para personalizar, usar a arte frontal e a paleta do setor/cliente. Não representa arte setorial já aplicada."
+    },
+    "11_Academia_10_carimbos_papeis": {
+      "setor_destino": "11_Academia",
+      "produto": "10_carimbos_papeis",
+      "setor_origem": "00_Bases_Compartilhadas",
+      "com_arte_origem": "00_Bases_Compartilhadas/COM_ARTE/10_carimbos_papeis.jpg",
+      "sem_arte_origem": "00_Bases_Compartilhadas/SEM_ARTE/10_carimbos_papeis.jpg",
+      "modo": "ambas_variantes_genericas",
+      "nota": "Par genérico GIO reaproveitado. A foto COM_ARTE demonstra a aplicação; para personalizar, usar a arte frontal e a paleta do setor/cliente. Não representa arte setorial já aplicada."
+    },
+    "11_Academia_14_camiseta": {
+      "setor_destino": "11_Academia",
+      "produto": "14_camiseta",
+      "setor_origem": "00_Bases_Compartilhadas",
+      "com_arte_origem": "00_Bases_Compartilhadas/COM_ARTE/14_camiseta.jpg",
+      "sem_arte_origem": "00_Bases_Compartilhadas/SEM_ARTE/14_camiseta.jpg",
+      "modo": "ambas_variantes_genericas",
+      "nota": "Par genérico GIO reaproveitado. A foto COM_ARTE demonstra a aplicação; para personalizar, usar a arte frontal e a paleta do setor/cliente. Não representa arte setorial já aplicada."
+    },
+    "11_Academia_15_bone": {
+      "setor_destino": "11_Academia",
+      "produto": "15_bone",
+      "setor_origem": "00_Bases_Compartilhadas",
+      "com_arte_origem": "00_Bases_Compartilhadas/COM_ARTE/15_bone.jpg",
+      "sem_arte_origem": "00_Bases_Compartilhadas/SEM_ARTE/15_bone.jpg",
+      "modo": "ambas_variantes_genericas",
+      "nota": "Par genérico GIO reaproveitado. A foto COM_ARTE demonstra a aplicação; para personalizar, usar a arte frontal e a paleta do setor/cliente. Não representa arte setorial já aplicada."
+    },
+    "11_Academia_16_avental": {
+      "setor_destino": "11_Academia",
+      "produto": "16_avental",
+      "setor_origem": "00_Bases_Compartilhadas",
+      "com_arte_origem": "00_Bases_Compartilhadas/COM_ARTE/16_avental.jpg",
+      "sem_arte_origem": "00_Bases_Compartilhadas/SEM_ARTE/16_avental.jpg",
+      "modo": "ambas_variantes_genericas",
+      "nota": "Par genérico GIO reaproveitado. A foto COM_ARTE demonstra a aplicação; para personalizar, usar a arte frontal e a paleta do setor/cliente. Não representa arte setorial já aplicada."
+    },
+    "10_Farmacia_03_adesivo_vitrine": {
+      "setor_destino": "10_Farmacia",
+      "produto": "03_adesivo_vitrine",
+      "setor_origem": "00_Bases_Compartilhadas",
+      "com_arte_origem": "00_Bases_Compartilhadas/COM_ARTE/03_adesivo_vitrine.jpg",
+      "sem_arte_origem": "00_Bases_Compartilhadas/SEM_ARTE/03_adesivo_vitrine.jpg",
+      "modo": "ambas_variantes_genericas",
+      "nota": "Par genérico GIO reaproveitado. A foto COM_ARTE demonstra a aplicação; para personalizar, usar a arte frontal e a paleta do setor/cliente. Não representa arte setorial já aplicada."
+    },
+    "10_Farmacia_07_banner_retratil": {
+      "setor_destino": "10_Farmacia",
+      "produto": "07_banner_retratil",
+      "setor_origem": "00_Bases_Compartilhadas",
+      "com_arte_origem": "00_Bases_Compartilhadas/COM_ARTE/07_banner_retratil.jpg",
+      "sem_arte_origem": "00_Bases_Compartilhadas/SEM_ARTE/07_banner_retratil.jpg",
+      "modo": "ambas_variantes_genericas",
+      "nota": "Par genérico GIO reaproveitado. A foto COM_ARTE demonstra a aplicação; para personalizar, usar a arte frontal e a paleta do setor/cliente. Não representa arte setorial já aplicada."
+    },
+    "10_Farmacia_12_faixa_horizontal": {
+      "setor_destino": "10_Farmacia",
+      "produto": "12_faixa_horizontal",
+      "setor_origem": "00_Bases_Compartilhadas",
+      "com_arte_origem": "00_Bases_Compartilhadas/COM_ARTE/12_faixa_horizontal.jpg",
+      "sem_arte_origem": "00_Bases_Compartilhadas/SEM_ARTE/12_faixa_horizontal.jpg",
+      "modo": "ambas_variantes_genericas",
+      "nota": "Par genérico GIO reaproveitado. A foto COM_ARTE demonstra a aplicação; para personalizar, usar a arte frontal e a paleta do setor/cliente. Não representa arte setorial já aplicada."
+    },
+    "11_Academia_01_capacho": {
+      "setor_destino": "11_Academia",
+      "produto": "01_capacho",
+      "setor_origem": "00_Bases_Compartilhadas",
+      "com_arte_origem": "00_Bases_Compartilhadas/COM_ARTE/01_capacho.jpg",
+      "sem_arte_origem": "00_Bases_Compartilhadas/SEM_ARTE/01_capacho.jpg",
+      "modo": "ambas_variantes_genericas",
+      "nota": "Par genérico GIO reaproveitado. A foto COM_ARTE demonstra a aplicação; para personalizar, usar a arte frontal e a paleta do setor/cliente. Não representa arte setorial já aplicada."
+    },
+    "11_Academia_02_placa": {
+      "setor_destino": "11_Academia",
+      "produto": "02_placa",
+      "setor_origem": "00_Bases_Compartilhadas",
+      "com_arte_origem": "00_Bases_Compartilhadas/COM_ARTE/02_placa.jpg",
+      "sem_arte_origem": "00_Bases_Compartilhadas/SEM_ARTE/02_placa.jpg",
+      "modo": "ambas_variantes_genericas",
+      "nota": "Par genérico GIO reaproveitado. A foto COM_ARTE demonstra a aplicação; para personalizar, usar a arte frontal e a paleta do setor/cliente. Não representa arte setorial já aplicada."
+    },
+    "11_Academia_03_adesivo_vitrine": {
+      "setor_destino": "11_Academia",
+      "produto": "03_adesivo_vitrine",
+      "setor_origem": "00_Bases_Compartilhadas",
+      "com_arte_origem": "00_Bases_Compartilhadas/COM_ARTE/03_adesivo_vitrine.jpg",
+      "sem_arte_origem": "00_Bases_Compartilhadas/SEM_ARTE/03_adesivo_vitrine.jpg",
+      "modo": "ambas_variantes_genericas",
+      "nota": "Par genérico GIO reaproveitado. A foto COM_ARTE demonstra a aplicação; para personalizar, usar a arte frontal e a paleta do setor/cliente. Não representa arte setorial já aplicada."
+    },
+    "11_Academia_07_banner_retratil": {
+      "setor_destino": "11_Academia",
+      "produto": "07_banner_retratil",
+      "setor_origem": "00_Bases_Compartilhadas",
+      "com_arte_origem": "00_Bases_Compartilhadas/COM_ARTE/07_banner_retratil.jpg",
+      "sem_arte_origem": "00_Bases_Compartilhadas/SEM_ARTE/07_banner_retratil.jpg",
+      "modo": "ambas_variantes_genericas",
+      "nota": "Par genérico GIO reaproveitado. A foto COM_ARTE demonstra a aplicação; para personalizar, usar a arte frontal e a paleta do setor/cliente. Não representa arte setorial já aplicada."
+    },
+    "11_Academia_08_adesivo_parede_rotas": {
+      "setor_destino": "11_Academia",
+      "produto": "08_adesivo_parede_rotas",
+      "setor_origem": "00_Bases_Compartilhadas",
+      "com_arte_origem": "00_Bases_Compartilhadas/COM_ARTE/08_adesivo_parede_rotas.jpg",
+      "sem_arte_origem": "00_Bases_Compartilhadas/SEM_ARTE/08_adesivo_parede_rotas.jpg",
+      "modo": "ambas_variantes_genericas",
+      "nota": "Par genérico GIO reaproveitado. A foto COM_ARTE demonstra a aplicação; para personalizar, usar a arte frontal e a paleta do setor/cliente. Não representa arte setorial já aplicada."
+    },
+    "11_Academia_11_wind_banner": {
+      "setor_destino": "11_Academia",
+      "produto": "11_wind_banner",
+      "setor_origem": "00_Bases_Compartilhadas",
+      "com_arte_origem": "00_Bases_Compartilhadas/COM_ARTE/11_wind_banner.jpg",
+      "sem_arte_origem": "00_Bases_Compartilhadas/SEM_ARTE/11_wind_banner.jpg",
+      "modo": "ambas_variantes_genericas",
+      "nota": "Par genérico GIO reaproveitado. A foto COM_ARTE demonstra a aplicação; para personalizar, usar a arte frontal e a paleta do setor/cliente. Não representa arte setorial já aplicada."
+    },
+    "11_Academia_12_faixa_horizontal": {
+      "setor_destino": "11_Academia",
+      "produto": "12_faixa_horizontal",
+      "setor_origem": "00_Bases_Compartilhadas",
+      "com_arte_origem": "00_Bases_Compartilhadas/COM_ARTE/12_faixa_horizontal.jpg",
+      "sem_arte_origem": "00_Bases_Compartilhadas/SEM_ARTE/12_faixa_horizontal.jpg",
+      "modo": "ambas_variantes_genericas",
+      "nota": "Par genérico GIO reaproveitado. A foto COM_ARTE demonstra a aplicação; para personalizar, usar a arte frontal e a paleta do setor/cliente. Não representa arte setorial já aplicada."
+    },
+    "11_Academia_13_folheto_promocional": {
+      "setor_destino": "11_Academia",
+      "produto": "13_folheto_promocional",
+      "setor_origem": "00_Bases_Compartilhadas",
+      "com_arte_origem": "00_Bases_Compartilhadas/COM_ARTE/13_folheto_promocional.jpg",
+      "sem_arte_origem": "00_Bases_Compartilhadas/SEM_ARTE/13_folheto_promocional.jpg",
+      "modo": "ambas_variantes_genericas",
+      "nota": "Par genérico GIO reaproveitado. A foto COM_ARTE demonstra a aplicação; para personalizar, usar a arte frontal e a paleta do setor/cliente. Não representa arte setorial já aplicada."
+    },
+    "12_Autopecas_02_placa": {
+      "setor_destino": "12_Autopecas",
+      "produto": "02_placa",
+      "setor_origem": "00_Bases_Compartilhadas",
+      "com_arte_origem": "00_Bases_Compartilhadas/COM_ARTE/02_placa.jpg",
+      "sem_arte_origem": "00_Bases_Compartilhadas/SEM_ARTE/02_placa.jpg",
+      "modo": "ambas_variantes_genericas",
+      "nota": "Par genérico GIO reaproveitado. A foto COM_ARTE demonstra a aplicação; para personalizar, usar a arte frontal e a paleta do setor/cliente. Não representa arte setorial já aplicada."
+    },
+    "12_Autopecas_03_adesivo_vitrine": {
+      "setor_destino": "12_Autopecas",
+      "produto": "03_adesivo_vitrine",
+      "setor_origem": "00_Bases_Compartilhadas",
+      "com_arte_origem": "00_Bases_Compartilhadas/COM_ARTE/03_adesivo_vitrine.jpg",
+      "sem_arte_origem": "00_Bases_Compartilhadas/SEM_ARTE/03_adesivo_vitrine.jpg",
+      "modo": "ambas_variantes_genericas",
+      "nota": "Par genérico GIO reaproveitado. A foto COM_ARTE demonstra a aplicação; para personalizar, usar a arte frontal e a paleta do setor/cliente. Não representa arte setorial já aplicada."
+    },
+    "12_Autopecas_04_uniforme_polo": {
+      "setor_destino": "12_Autopecas",
+      "produto": "04_uniforme_polo",
+      "setor_origem": "00_Bases_Compartilhadas",
+      "com_arte_origem": "00_Bases_Compartilhadas/COM_ARTE/04_uniforme_polo.jpg",
+      "sem_arte_origem": "00_Bases_Compartilhadas/SEM_ARTE/04_uniforme_polo.jpg",
+      "modo": "ambas_variantes_genericas",
+      "nota": "Par genérico GIO reaproveitado. A foto COM_ARTE demonstra a aplicação; para personalizar, usar a arte frontal e a paleta do setor/cliente. Não representa arte setorial já aplicada."
+    },
+    "12_Autopecas_05_cartao": {
+      "setor_destino": "12_Autopecas",
+      "produto": "05_cartao",
+      "setor_origem": "00_Bases_Compartilhadas",
+      "com_arte_origem": "00_Bases_Compartilhadas/COM_ARTE/05_cartao.jpg",
+      "sem_arte_origem": "00_Bases_Compartilhadas/SEM_ARTE/05_cartao.jpg",
+      "modo": "ambas_variantes_genericas",
+      "nota": "Par genérico GIO reaproveitado. A foto COM_ARTE demonstra a aplicação; para personalizar, usar a arte frontal e a paleta do setor/cliente. Não representa arte setorial já aplicada."
+    },
+    "12_Autopecas_06_flyer_cardapio": {
+      "setor_destino": "12_Autopecas",
+      "produto": "06_flyer_cardapio",
+      "setor_origem": "00_Bases_Compartilhadas",
+      "com_arte_origem": "00_Bases_Compartilhadas/COM_ARTE/06_flyer_cardapio.jpg",
+      "sem_arte_origem": "00_Bases_Compartilhadas/SEM_ARTE/06_flyer_cardapio.jpg",
+      "modo": "ambas_variantes_genericas",
+      "nota": "Par genérico GIO reaproveitado. A foto COM_ARTE demonstra a aplicação; para personalizar, usar a arte frontal e a paleta do setor/cliente. Não representa arte setorial já aplicada."
+    },
+    "12_Autopecas_07_banner_retratil": {
+      "setor_destino": "12_Autopecas",
+      "produto": "07_banner_retratil",
+      "setor_origem": "00_Bases_Compartilhadas",
+      "com_arte_origem": "00_Bases_Compartilhadas/COM_ARTE/07_banner_retratil.jpg",
+      "sem_arte_origem": "00_Bases_Compartilhadas/SEM_ARTE/07_banner_retratil.jpg",
+      "modo": "ambas_variantes_genericas",
+      "nota": "Par genérico GIO reaproveitado. A foto COM_ARTE demonstra a aplicação; para personalizar, usar a arte frontal e a paleta do setor/cliente. Não representa arte setorial já aplicada."
+    },
+    "12_Autopecas_09_ecobag": {
+      "setor_destino": "12_Autopecas",
+      "produto": "09_ecobag",
+      "setor_origem": "00_Bases_Compartilhadas",
+      "com_arte_origem": "00_Bases_Compartilhadas/COM_ARTE/09_ecobag.jpg",
+      "sem_arte_origem": "00_Bases_Compartilhadas/SEM_ARTE/09_ecobag.jpg",
+      "modo": "ambas_variantes_genericas",
+      "nota": "Par genérico GIO reaproveitado. A foto COM_ARTE demonstra a aplicação; para personalizar, usar a arte frontal e a paleta do setor/cliente. Não representa arte setorial já aplicada."
+    },
+    "12_Autopecas_10_carimbos_papeis": {
+      "setor_destino": "12_Autopecas",
+      "produto": "10_carimbos_papeis",
+      "setor_origem": "00_Bases_Compartilhadas",
+      "com_arte_origem": "00_Bases_Compartilhadas/COM_ARTE/10_carimbos_papeis.jpg",
+      "sem_arte_origem": "00_Bases_Compartilhadas/SEM_ARTE/10_carimbos_papeis.jpg",
+      "modo": "ambas_variantes_genericas",
+      "nota": "Par genérico GIO reaproveitado. A foto COM_ARTE demonstra a aplicação; para personalizar, usar a arte frontal e a paleta do setor/cliente. Não representa arte setorial já aplicada."
+    },
+    "12_Autopecas_12_faixa_horizontal": {
+      "setor_destino": "12_Autopecas",
+      "produto": "12_faixa_horizontal",
+      "setor_origem": "00_Bases_Compartilhadas",
+      "com_arte_origem": "00_Bases_Compartilhadas/COM_ARTE/12_faixa_horizontal.jpg",
+      "sem_arte_origem": "00_Bases_Compartilhadas/SEM_ARTE/12_faixa_horizontal.jpg",
+      "modo": "ambas_variantes_genericas",
+      "nota": "Par genérico GIO reaproveitado. A foto COM_ARTE demonstra a aplicação; para personalizar, usar a arte frontal e a paleta do setor/cliente. Não representa arte setorial já aplicada."
+    },
+    "12_Autopecas_13_folheto_promocional": {
+      "setor_destino": "12_Autopecas",
+      "produto": "13_folheto_promocional",
+      "setor_origem": "00_Bases_Compartilhadas",
+      "com_arte_origem": "00_Bases_Compartilhadas/COM_ARTE/13_folheto_promocional.jpg",
+      "sem_arte_origem": "00_Bases_Compartilhadas/SEM_ARTE/13_folheto_promocional.jpg",
+      "modo": "ambas_variantes_genericas",
+      "nota": "Par genérico GIO reaproveitado. A foto COM_ARTE demonstra a aplicação; para personalizar, usar a arte frontal e a paleta do setor/cliente. Não representa arte setorial já aplicada."
+    },
+    "12_Autopecas_14_camiseta": {
+      "setor_destino": "12_Autopecas",
+      "produto": "14_camiseta",
+      "setor_origem": "00_Bases_Compartilhadas",
+      "com_arte_origem": "00_Bases_Compartilhadas/COM_ARTE/14_camiseta.jpg",
+      "sem_arte_origem": "00_Bases_Compartilhadas/SEM_ARTE/14_camiseta.jpg",
+      "modo": "ambas_variantes_genericas",
+      "nota": "Par genérico GIO reaproveitado. A foto COM_ARTE demonstra a aplicação; para personalizar, usar a arte frontal e a paleta do setor/cliente. Não representa arte setorial já aplicada."
+    },
+    "12_Autopecas_15_bone": {
+      "setor_destino": "12_Autopecas",
+      "produto": "15_bone",
+      "setor_origem": "00_Bases_Compartilhadas",
+      "com_arte_origem": "00_Bases_Compartilhadas/COM_ARTE/15_bone.jpg",
+      "sem_arte_origem": "00_Bases_Compartilhadas/SEM_ARTE/15_bone.jpg",
+      "modo": "ambas_variantes_genericas",
+      "nota": "Par genérico GIO reaproveitado. A foto COM_ARTE demonstra a aplicação; para personalizar, usar a arte frontal e a paleta do setor/cliente. Não representa arte setorial já aplicada."
+    },
+    "12_Autopecas_16_avental": {
+      "setor_destino": "12_Autopecas",
+      "produto": "16_avental",
+      "setor_origem": "00_Bases_Compartilhadas",
+      "com_arte_origem": "00_Bases_Compartilhadas/COM_ARTE/16_avental.jpg",
+      "sem_arte_origem": "00_Bases_Compartilhadas/SEM_ARTE/16_avental.jpg",
+      "modo": "ambas_variantes_genericas",
+      "nota": "Par genérico GIO reaproveitado. A foto COM_ARTE demonstra a aplicação; para personalizar, usar a arte frontal e a paleta do setor/cliente. Não representa arte setorial já aplicada."
+    },
+    "14_Mercado_03_adesivo_vitrine": {
+      "setor_destino": "14_Mercado",
+      "produto": "03_adesivo_vitrine",
+      "setor_origem": "00_Bases_Compartilhadas",
+      "com_arte_origem": "00_Bases_Compartilhadas/COM_ARTE/03_adesivo_vitrine.jpg",
+      "sem_arte_origem": "00_Bases_Compartilhadas/SEM_ARTE/03_adesivo_vitrine.jpg",
+      "modo": "ambas_variantes_genericas",
+      "nota": "Par genérico GIO reaproveitado. A foto COM_ARTE demonstra a aplicação; para personalizar, usar a arte frontal e a paleta do setor/cliente. Não representa arte setorial já aplicada."
+    },
+    "14_Mercado_07_banner_retratil": {
+      "setor_destino": "14_Mercado",
+      "produto": "07_banner_retratil",
+      "setor_origem": "00_Bases_Compartilhadas",
+      "com_arte_origem": "00_Bases_Compartilhadas/COM_ARTE/07_banner_retratil.jpg",
+      "sem_arte_origem": "00_Bases_Compartilhadas/SEM_ARTE/07_banner_retratil.jpg",
+      "modo": "ambas_variantes_genericas",
+      "nota": "Par genérico GIO reaproveitado. A foto COM_ARTE demonstra a aplicação; para personalizar, usar a arte frontal e a paleta do setor/cliente. Não representa arte setorial já aplicada."
+    },
+    "14_Mercado_12_faixa_horizontal": {
+      "setor_destino": "14_Mercado",
+      "produto": "12_faixa_horizontal",
+      "setor_origem": "00_Bases_Compartilhadas",
+      "com_arte_origem": "00_Bases_Compartilhadas/COM_ARTE/12_faixa_horizontal.jpg",
+      "sem_arte_origem": "00_Bases_Compartilhadas/SEM_ARTE/12_faixa_horizontal.jpg",
+      "modo": "ambas_variantes_genericas",
+      "nota": "Par genérico GIO reaproveitado. A foto COM_ARTE demonstra a aplicação; para personalizar, usar a arte frontal e a paleta do setor/cliente. Não representa arte setorial já aplicada."
+    }
+  },
+  "cenas_iconicas": {
+    "setores": [
+      "10_Farmacia",
+      "12_Autopecas",
+      "14_Mercado"
+    ],
+    "produtos": [
+      "01_capacho",
+      "08_adesivo_parede_rotas",
+      "11_wind_banner"
+    ]
+  },
+  "fallback_oficina": "Demais materiais usam bases genéricas; ambiente de imobiliária/escritório pode representar a área de atendimento."
+}

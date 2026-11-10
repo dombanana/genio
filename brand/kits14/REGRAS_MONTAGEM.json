@@ -1,0 +1,267 @@
+{
+  "versao": 2,
+  "natureza": "especificacao de montagem; nao implementa funcionalidades",
+  "precedencia": [
+    "identidade_aprovada_cliente",
+    "preferencia_explicita_cliente",
+    "paleta_padrao_setor"
+  ],
+  "paletas_setor": {
+    "01_Cafeteria": {
+      "nome": "Cafeteria",
+      "principal": "#59382D",
+      "destaque": "#C98245",
+      "fundo": "#FFF9F1",
+      "texto": "#2B201A",
+      "texto_sobre_principal": "#FFFFFF",
+      "nota": "Marrom predominante; caramelo em detalhes",
+      "origem": "diretriz visual do projeto; nao regra universal do setor",
+      "distribuicao_sugerida": {
+        "base_neutra": 0.6,
+        "principal": 0.3,
+        "destaque": 0.1
+      }
+    },
+    "02_Restaurante": {
+      "nome": "Restaurante",
+      "principal": "#1F6B45",
+      "destaque": "#C44236",
+      "fundo": "#FFFFFF",
+      "texto": "#173C29",
+      "texto_sobre_principal": "#FFFFFF",
+      "nota": "Verde, branco e vermelho; verde principal e vermelho de destaque",
+      "origem": "diretriz visual do projeto; nao regra universal do setor",
+      "distribuicao_sugerida": {
+        "base_neutra": 0.6,
+        "principal": 0.3,
+        "destaque": 0.1
+      }
+    },
+    "03_Padaria": {
+      "nome": "Padaria",
+      "principal": "#D4A124",
+      "destaque": "#CE8D18",
+      "fundo": "#FFF9E8",
+      "texto": "#51280F",
+      "texto_sobre_principal": "#51280F",
+      "nota": "Amarelo/dourado como referência de setor; marrom para leitura",
+      "origem": "diretriz visual do projeto; nao regra universal do setor",
+      "distribuicao_sugerida": {
+        "base_neutra": 0.6,
+        "principal": 0.3,
+        "destaque": 0.1
+      }
+    },
+    "04_Clinica": {
+      "nome": "Clínica",
+      "principal": "#126D80",
+      "destaque": "#84B8B8",
+      "fundo": "#FFFFFF",
+      "texto": "#163C43",
+      "texto_sobre_principal": "#FFFFFF",
+      "nota": "Azul-petróleo e branco",
+      "origem": "diretriz visual do projeto; nao regra universal do setor",
+      "distribuicao_sugerida": {
+        "base_neutra": 0.6,
+        "principal": 0.3,
+        "destaque": 0.1
+      }
+    },
+    "05_Estetica": {
+      "nome": "Clínica estética",
+      "principal": "#775467",
+      "destaque": "#BD9F82",
+      "fundo": "#FFFAF7",
+      "texto": "#372C34",
+      "texto_sobre_principal": "#FFFFFF",
+      "nota": "Malva e bege",
+      "origem": "diretriz visual do projeto; nao regra universal do setor",
+      "distribuicao_sugerida": {
+        "base_neutra": 0.6,
+        "principal": 0.3,
+        "destaque": 0.1
+      }
+    },
+    "06_Salao": {
+      "nome": "Salão",
+      "principal": "#37303D",
+      "destaque": "#BD8E6A",
+      "fundo": "#FAF7F2",
+      "texto": "#29222F",
+      "texto_sobre_principal": "#FFFFFF",
+      "nota": "Grafite e cobre",
+      "origem": "diretriz visual do projeto; nao regra universal do setor",
+      "distribuicao_sugerida": {
+        "base_neutra": 0.6,
+        "principal": 0.3,
+        "destaque": 0.1
+      }
+    },
+    "07_Imobiliaria": {
+      "nome": "Imobiliária",
+      "principal": "#243E61",
+      "destaque": "#C49A56",
+      "fundo": "#FFFFFF",
+      "texto": "#1B2C43",
+      "texto_sobre_principal": "#FFFFFF",
+      "nota": "Azul e dourado de destaque",
+      "origem": "diretriz visual do projeto; nao regra universal do setor",
+      "distribuicao_sugerida": {
+        "base_neutra": 0.6,
+        "principal": 0.3,
+        "destaque": 0.1
+      }
+    },
+    "08_Loja_Roupas": {
+      "nome": "Loja de roupas",
+      "principal": "#4F394B",
+      "destaque": "#C0969D",
+      "fundo": "#FFFAFC",
+      "texto": "#30242D",
+      "texto_sobre_principal": "#FFFFFF",
+      "nota": "Ameixa e rosé",
+      "origem": "diretriz visual do projeto; nao regra universal do setor",
+      "distribuicao_sugerida": {
+        "base_neutra": 0.6,
+        "principal": 0.3,
+        "destaque": 0.1
+      }
+    },
+    "09_Pet_Shop": {
+      "nome": "Pet shop",
+      "principal": "#176E73",
+      "destaque": "#E1A34F",
+      "fundo": "#FFFCF4",
+      "texto": "#133F42",
+      "texto_sobre_principal": "#FFFFFF",
+      "nota": "Turquesa e amarelo de destaque",
+      "origem": "diretriz visual do projeto; nao regra universal do setor",
+      "distribuicao_sugerida": {
+        "base_neutra": 0.6,
+        "principal": 0.3,
+        "destaque": 0.1
+      }
+    },
+    "10_Farmacia": {
+      "nome": "Farmácia",
+      "principal": "#1C7861",
+      "destaque": "#79B7AC",
+      "fundo": "#FFFFFF",
+      "texto": "#173D31",
+      "texto_sobre_principal": "#FFFFFF",
+      "nota": "Verde e branco",
+      "origem": "diretriz visual do projeto; nao regra universal do setor",
+      "distribuicao_sugerida": {
+        "base_neutra": 0.6,
+        "principal": 0.3,
+        "destaque": 0.1
+      }
+    },
+    "11_Academia": {
+      "nome": "Academia",
+      "principal": "#203746",
+      "destaque": "#C1B538",
+      "fundo": "#FFFFFF",
+      "texto": "#182A36",
+      "texto_sobre_principal": "#FFFFFF",
+      "nota": "Azul-grafite e lima de destaque",
+      "origem": "diretriz visual do projeto; nao regra universal do setor",
+      "distribuicao_sugerida": {
+        "base_neutra": 0.6,
+        "principal": 0.3,
+        "destaque": 0.1
+      }
+    },
+    "13_Escritorio": {
+      "nome": "Escritório/serviços",
+      "principal": "#334C62",
+      "destaque": "#7FA3AC",
+      "fundo": "#FFFFFF",
+      "texto": "#233444",
+      "texto_sobre_principal": "#FFFFFF",
+      "nota": "Azul e cinza",
+      "origem": "diretriz visual do projeto; nao regra universal do setor",
+      "distribuicao_sugerida": {
+        "base_neutra": 0.6,
+        "principal": 0.3,
+        "destaque": 0.1
+      }
+    },
+    "14_Mercado": {
+      "nome": "Mercado",
+      "principal": "#466B38",
+      "destaque": "#D9A637",
+      "fundo": "#FFFCF4",
+      "texto": "#2B4022",
+      "texto_sobre_principal": "#FFFFFF",
+      "nota": "Verde e amarelo de destaque",
+      "origem": "diretriz visual do projeto; nao regra universal do setor",
+      "distribuicao_sugerida": {
+        "base_neutra": 0.6,
+        "principal": 0.3,
+        "destaque": 0.1
+      }
+    },
+    "12_Autopecas": {
+      "nome": "Oficina / autopeças",
+      "principal": "#34434F",
+      "destaque": "#D37C25",
+      "fundo": "#FFFFFF",
+      "texto": "#24313A",
+      "texto_sobre_principal": "#FFFFFF",
+      "origem": "referência do projeto"
+    }
+  },
+  "contraste": {
+    "texto_normal_minimo": 4.5,
+    "texto_grande_minimo": 3.0,
+    "logotipo_politica_interna_minimo": 4.5,
+    "regra_logo": "preferir variante original, branca ou preta aprovada; nunca recolorir a marca sem variante autorizada",
+    "observacao": "WCAG nao impoe esse minimo a logotipos; o limite para logos e uma politica interna do GênIO, e nao certificacao de impressao"
+  },
+  "qr": {
+    "modulos_escuros": "#101820",
+    "fundo": "#FFFFFF",
+    "quiet_zone_modulos": 4,
+    "permitir_esticamento": false,
+    "destino_exemplo": "https://example.com/",
+    "bloquear_producao_com_destino_exemplo": true
+  },
+  "material": {
+    "cor_independente_da_arte": true,
+    "alterar_foto_inteira": false,
+    "usar_paleta_real_do_fornecedor": true,
+    "capacho_sem_degrade": true,
+    "camisa_roxa_ou_mochila_preta": "usar marca branca ou Gên branco com IO azul, conforme variante aprovada; nunca roxo sobre roxo"
+  },
+  "geometria": {
+    "preservar_proporcao_logo": true,
+    "cortar_marca": false,
+    "modo_encaixe": "contain",
+    "fotografias": "exigem mascara, quadrilatero, oclusoes e perfil de textura aferidos",
+    "inventar_calibracao": false
+  },
+  "dados": {
+    "inventar_cnpj_endereco_contato": false,
+    "campo_sem_fonte": "deixar vazio ou pedir ao cliente",
+    "identificadores_dos_exemplos": "ficticios; bloquear impressao final ate substituicao"
+  },
+  "revisao": {
+    "catalogo_exemplo_nao_e_calibracao": true,
+    "cores_digital_nao_garantem_cor_de_tinta_ou_linha": true,
+    "fabricacao_exige_gabarito_fornecedor": true
+  },
+  "fallback_ambiente": {
+    "oficina_autopecas": {
+      "ambiente_base": "07_Imobiliaria/00_Ambiente_Referencia.jpg",
+      "escopo": "materiais genéricos de atendimento; cenas icônicas têm ambiente próprio de oficina",
+      "kit_proprio": "somente cenas icônicas"
+    }
+  },
+  "reaproveitamento": {
+    "manifesto": "REAPROVEITAMENTO.json",
+    "base_generica": "00_Bases_Compartilhadas",
+    "paleta_generica": "somente demonstracao; usar precedencia de identidade e paletas_setor",
+    "aplicacao_setorial": "usar Artes_Frontais; calibrar SEM_ARTE antes de aplicar"
+  }
+}

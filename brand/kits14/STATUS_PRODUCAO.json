@@ -1,0 +1,118 @@
+{
+  "atualizado_utc": "2026-11-10T03:54:39.102200+00:00",
+  "concluido": true,
+  "escopo": {
+    "setores": 14,
+    "produtos_por_setor": 16,
+    "variantes_por_produto": 2,
+    "arquivos_fotograficos_previstos": 448,
+    "jpg_frontais_previstos": 448,
+    "svg_frontais_previstos": 448
+  },
+  "fotos_disponiveis": 448,
+  "fotos_unicas_por_sha256": 313,
+  "bases_compartilhadas_planejadas": 79,
+  "pares_fotograficos_completos": 224,
+  "setores": [
+    {
+      "setor": "01_Cafeteria",
+      "fotos_com_arte": 16,
+      "fotos_sem_arte": 16,
+      "pares_completos": 16,
+      "produtos_pendentes": []
+    },
+    {
+      "setor": "02_Restaurante",
+      "fotos_com_arte": 16,
+      "fotos_sem_arte": 16,
+      "pares_completos": 16,
+      "produtos_pendentes": []
+    },
+    {
+      "setor": "03_Padaria",
+      "fotos_com_arte": 16,
+      "fotos_sem_arte": 16,
+      "pares_completos": 16,
+      "produtos_pendentes": []
+    },
+    {
+      "setor": "04_Clinica",
+      "fotos_com_arte": 16,
+      "fotos_sem_arte": 16,
+      "pares_completos": 16,
+      "produtos_pendentes": []
+    },
+    {
+      "setor": "05_Estetica",
+      "fotos_com_arte": 16,
+      "fotos_sem_arte": 16,
+      "pares_completos": 16,
+      "produtos_pendentes": []
+    },
+    {
+      "setor": "06_Salao",
+      "fotos_com_arte": 16,
+      "fotos_sem_arte": 16,
+      "pares_completos": 16,
+      "produtos_pendentes": []
+    },
+    {
+      "setor": "07_Imobiliaria",
+      "fotos_com_arte": 16,
+      "fotos_sem_arte": 16,
+      "pares_completos": 16,
+      "produtos_pendentes": []
+    },
+    {
+      "setor": "08_Loja_Roupas",
+      "fotos_com_arte": 16,
+      "fotos_sem_arte": 16,
+      "pares_completos": 16,
+      "produtos_pendentes": []
+    },
+    {
+      "setor": "09_Pet_Shop",
+      "fotos_com_arte": 16,
+      "fotos_sem_arte": 16,
+      "pares_completos": 16,
+      "produtos_pendentes": []
+    },
+    {
+      "setor": "10_Farmacia",
+      "fotos_com_arte": 16,
+      "fotos_sem_arte": 16,
+      "pares_completos": 16,
+      "produtos_pendentes": []
+    },
+    {
+      "setor": "11_Academia",
+      "fotos_com_arte": 16,
+      "fotos_sem_arte": 16,
+      "pares_completos": 16,
+      "produtos_pendentes": []
+    },
+    {
+      "setor": "12_Autopecas",
+      "fotos_com_arte": 16,
+      "fotos_sem_arte": 16,
+      "pares_completos": 16,
+      "produtos_pendentes": []
+    },
+    {
+      "setor": "13_Escritorio",
+      "fotos_com_arte": 16,
+      "fotos_sem_arte": 16,
+      "pares_completos": 16,
+      "produtos_pendentes": []
+    },
+    {
+      "setor": "14_Mercado",
+      "fotos_com_arte": 16,
+      "fotos_sem_arte": 16,
+      "pares_completos": 16,
+      "produtos_pendentes": []
+    }
+  ],
+  "integracao": "máscaras, coordenadas, oclusões e calibração ainda precisam ser aferidas no sistema; JPGs não são rastreamento RA implementado",
+  "observacao_contagem": "Arquivos disponíveis incluem pares genéricos e bases sem arte compartilhadas. Não representam a mesma quantidade de novas gerações independentes."
+}

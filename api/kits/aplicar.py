@@ -12,13 +12,15 @@ import numpy as np, cv2
 
 RAIZ = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 KITS = os.path.join(RAIZ, "brand", "kits")
+KITS14 = os.path.join(RAIZ, "brand", "kits14")   # kit de 14 setores (10/11/2026): pares COM/SEM_ARTE calibrados pela diferença
 
 def hex2bgr(h):
     h = h.lstrip("#"); return np.array([int(h[4:6], 16), int(h[2:4], 16), int(h[0:2], 16)], np.float32)
 
 def carregar(setor, pid):
-    pasta = os.path.join(KITS, setor); cal = json.load(open(os.path.join(pasta, "calibracao.json")))
-    P = cal["produtos"][pid]; img = cv2.imread(os.path.join(pasta, P["arquivo"]), cv2.IMREAD_COLOR)
+    base = KITS14 if os.path.isdir(os.path.join(KITS14, setor)) else KITS
+    pasta = os.path.join(base, setor); cal = json.load(open(os.path.join(pasta, "calibracao.json")))
+    P = cal["produtos"][pid]; img = cv2.imread(os.path.normpath(os.path.join(pasta, P["arquivo"])), cv2.IMREAD_COLOR)
     return pasta, P, img
 
 def mascara_material(img, P):
@@ -31,7 +33,7 @@ def mascara_material(img, P):
         hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
         m &= ((hsv[..., 1] < 90) & (hsv[..., 2] > 100)).astype(np.uint8) * 255
         return cv2.morphologyEx(m, cv2.MORPH_CLOSE, np.ones((7, 7), np.uint8))
-    if P["superficie"] == "tecido":
+    if P["superficie"] == "tecido" and P.get("material_bbox"):
         # GrabCut dentro da caixa do material (calibrada), semeado pelo plano de impressão; depois só a parte clara e pouco saturada
         x0, y0, x1, y1 = P["material_bbox"]
         gc = np.full((h, w), cv2.GC_BGD, np.uint8); gc[y0:y1, x0:x1] = cv2.GC_PR_FGD

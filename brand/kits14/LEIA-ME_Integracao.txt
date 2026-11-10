@@ -1,0 +1,57 @@
+GÊNIO — KITS DE REFERÊNCIA PARA 14 SETORES
+
+ESTRUTURA E ESCOPO
+Consulte STATUS_PRODUCAO.json para a contagem atual e pendências por setor.
+Fotos_Produtos/COM_ARTE e SEM_ARTE: fotografias sintéticas individuais pareadas.
+Artes_Frontais/COM_ARTE e SEM_ARTE: maquetes vetoriais em JPG e SVG editável.
+São duas categorias diferentes: arte frontal não equivale a fotografia aplicada.
+00_Ambiente_Referencia.jpg: ambiente específico de cada setor.
+03_Padaria/Primeiro_Kit_Original: primeiro kit da padaria preservado integralmente.
+PASSO_A_PASSO_PARA_A_INTELIGENCIA.md/.txt: instruções de montagem.
+REGRAS_MONTAGEM.json: precedência de identidade, paletas e regras dos produtos.
+CATALOGO_ARQUIVOS.json: arquivos existentes, dimensões e SHA-256.
+catalogo_14_setores.json: metadados de layout das artes frontais.
+A cor do setor é sugestão inicial. A identidade aprovada do cliente prevalece.
+Este pacote fornece referências visuais, não funcionalidades de aplicativo.
+
+PRODUTOS
+01 Capacho
+02 Placa
+03 Adesivo de vitrine
+04 Uniforme polo
+05 Cartão de visita — logo e caixa colorida contendo QR e dados
+06 Flyer — cardápio em alimentação; produtos/serviços nos demais setores
+07 Banner retrátil — preservado como produto distinto do wind banner
+08 Adesivo de parede com rotas e destinos
+09 Ecobag
+10 Papéis carimbados — marcas diferentes e carimbo comercial em primeiro plano
+11 Wind banner / bandeira de vento — texto corrido girado 90 graus
+12 Faixa horizontal
+13 Folheto promocional com três painéis
+14 Camiseta de gola redonda
+15 Boné
+16 Avental
+
+PARA A INTEGRAÇÃO
+Usar o JPG individual de cada produto, nunca recortar um painel para produção.
+Cada par de foto mantém a mesma dimensão e o enquadramento de referência; a
+calibração, as máscaras, os quatro cantos e oclusões devem ser aferidos antes
+ de automatizar a troca de arte. Os pares fotográficos não são máscaras exatas.
+As maquetes frontais são um outro tipo de arquivo e não devem ser tratadas como
+fotos de ambiente. O catálogo distingue os tipos explicitamente.
+Os SVGs são layouts editáveis de referência, com textos em DejaVu Sans/Serif;
+não são gabaritos de corte nem arquivos finais com sangria/CMYK do fornecedor.
+No vinil de parede, conservar a transparência da arte de recorte na aplicação.
+Não imprimir os contornos ilustrativos dos objetos como parte do adesivo.
+No wind banner, solicitar ao fabricante o gabarito da bandeira real antes do corte.
+Nenhuma funcionalidade de aplicativo ou rastreamento de RA foi implementada aqui.
+
+DADOS E QR CODES
+Todos os dados comerciais são fictícios. CNPJ 00.000.000/0000-00 é inválido de
+propósito; telefone e endereço são exemplos, para substituir pelos dados reais.
+Os QR dos cartões frontais foram gerados e decodificados em teste: apontam para
+https://example.com/?setor=PASTA_DO_SETOR, uma URL demonstrativa.
+Os QR nas fotos sintéticas são apenas representação visual e não foram validados.
+Antes de imprimir, substituir o destino e validar o QR no tamanho final.
+Preços e serviços são ilustrativos; nenhum cadastro profissional ou licença é
+atribuído a empresa real.

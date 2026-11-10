@@ -6,12 +6,18 @@
     "capacho":   {"nome": "Capacho",            "w_cm": 120,  "h_cm": 60,   "superficie": "capacho", "fonte": "Kapazi/produção própria", "sangria_mm": 0, "seguranca_mm": 20},
     "placas":    {"nome": "Placa",              "w_cm": 60,   "h_cm": 40,   "superficie": "rigido",  "fonte": "Printi · placa"},
     "adesivos":  {"nome": "Adesivo de vitrine", "w_cm": 100,  "h_cm": 60,   "superficie": "vinil",   "fonte": "Printi · adesivo (vinil transparente/perfurado)", "sem_fundo": true},
-    "uniformes": {"nome": "Camisa polo · peito","w_cm": 12,   "h_cm": 12,   "superficie": "tecido",  "fonte": "bordado/serigrafia", "sangria_mm": 0},
+    "uniformes": {"nome": "Camisa polo · peito","w_cm": 12,   "h_cm": 12,   "superficie": "tecido",  "fonte": "bordado/serigrafia", "sangria_mm": 0, "sem_fundo": true},
     "impressos": {"nome": "Cartão de visita",   "w_cm": 9,    "h_cm": 5,    "superficie": "papel",   "fonte": "kit GênIO RA 90×50 · Printi cartão 9×5 couché 300g", "cartao": true, "ia": true, "faces": 2},
     "panfleto":  {"nome": "Flyer A5",           "w_cm": 14.8, "h_cm": 21,   "superficie": "papel",   "fonte": "kit GênIO RA A5 · Printi flyer A5 couché", "ia": true, "faces": 2},
     "banners":   {"nome": "Banner roll-up",     "w_cm": 80,   "h_cm": 200,  "superficie": "lona",    "fonte": "Printi · roll-up 80×200 lona 440g", "ia": true, "ancora": "topo", "rodape_oculto_cm": 10},
-    "parede":    {"nome": "Adesivo de parede",  "w_cm": 42,   "h_cm": 59.4, "superficie": "vinil",   "fonte": "Printi · adesivo de parede A2", "sem_fundo": true},
-    "brindes":   {"nome": "Sacola · adesivo",   "w_cm": 10,   "h_cm": 14,   "superficie": "papel",   "fonte": "Printi · sacola kraft com adesivo 10×14"},
-    "carimbo":   {"nome": "Carimbo",            "w_cm": 6,    "h_cm": 4,    "superficie": "carimbo", "fonte": "produção própria", "sangria_mm": 0, "mono": true}
+    "parede":    {"nome": "Adesivo de parede · rotas", "w_cm": 59.4, "h_cm": 42, "superficie": "vinil",   "fonte": "Printi · adesivo de parede A2", "sem_fundo": true},
+    "brindes":   {"nome": "Ecobag · frente",    "w_cm": 25,   "h_cm": 30,   "superficie": "tecido",  "fonte": "kit 14 setores · medida a confirmar com o fornecedor", "sem_fundo": true, "sangria_mm": 0, "a_confirmar": true},
+    "carimbo":   {"nome": "Carimbo",            "w_cm": 6,    "h_cm": 4,    "superficie": "carimbo", "fonte": "produção própria", "sangria_mm": 0, "mono": true},
+    "windbanner":{"nome": "Wind banner",        "w_cm": 60,   "h_cm": 270,  "superficie": "tecido",  "fonte": "kit 14 setores · pedir o gabarito real do fabricante antes do corte", "a_confirmar": true},
+    "faixa":     {"nome": "Faixa horizontal",   "w_cm": 200,  "h_cm": 50,   "superficie": "lona",    "fonte": "kit 14 setores · medida a confirmar (ilhós fora da arte)", "a_confirmar": true},
+    "folheto":   {"nome": "Folheto promocional","w_cm": 29.7, "h_cm": 21,   "superficie": "papel",   "fonte": "kit 14 setores · 3 painéis (A4 com 2 dobras) · a confirmar", "a_confirmar": true},
+    "camiseta":  {"nome": "Camiseta · peito",   "w_cm": 10,   "h_cm": 10,   "superficie": "tecido",  "fonte": "kit 14 setores · área de estampa a confirmar", "sem_fundo": true, "sangria_mm": 0, "a_confirmar": true},
+    "bone":      {"nome": "Boné · frente",      "w_cm": 10,   "h_cm": 6,    "superficie": "tecido",  "fonte": "kit 14 setores · bordado frontal a confirmar", "sem_fundo": true, "sangria_mm": 0, "a_confirmar": true},
+    "avental":   {"nome": "Avental · peito",    "w_cm": 18,   "h_cm": 14,   "superficie": "tecido",  "fonte": "kit 14 setores · área de estampa a confirmar", "sem_fundo": true, "sangria_mm": 0, "a_confirmar": true}
   }
 }

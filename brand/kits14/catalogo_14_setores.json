@@ -1,0 +1,3908 @@
+[
+  {
+    "setor": "01_Cafeteria",
+    "produto": "01_capacho",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1200,
+    "altura_px": 800,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "01_Cafeteria/Artes_Frontais/COM_ARTE/01_capacho.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1200,
+      800
+    ],
+    "sem_arte": "01_Cafeteria/Artes_Frontais/SEM_ARTE/01_capacho.jpg"
+  },
+  {
+    "setor": "01_Cafeteria",
+    "produto": "02_placa",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1000,
+    "altura_px": 650,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "01_Cafeteria/Artes_Frontais/COM_ARTE/02_placa.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1000,
+      650
+    ],
+    "sem_arte": "01_Cafeteria/Artes_Frontais/SEM_ARTE/02_placa.jpg"
+  },
+  {
+    "setor": "01_Cafeteria",
+    "produto": "03_adesivo_vitrine",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 900,
+    "altura_px": 1200,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "01_Cafeteria/Artes_Frontais/COM_ARTE/03_adesivo_vitrine.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      900,
+      1200
+    ],
+    "sem_arte": "01_Cafeteria/Artes_Frontais/SEM_ARTE/03_adesivo_vitrine.jpg"
+  },
+  {
+    "setor": "01_Cafeteria",
+    "produto": "04_uniforme_polo",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 900,
+    "altura_px": 1100,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "01_Cafeteria/Artes_Frontais/COM_ARTE/04_uniforme_polo.jpg",
+    "superficie_bbox_px": [
+      500,
+      300,
+      150,
+      110
+    ],
+    "sem_arte": "01_Cafeteria/Artes_Frontais/SEM_ARTE/04_uniforme_polo.jpg"
+  },
+  {
+    "setor": "01_Cafeteria",
+    "produto": "05_cartao",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 900,
+    "altura_px": 500,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "01_Cafeteria/Artes_Frontais/COM_ARTE/05_cartao.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      900,
+      500
+    ],
+    "qr_bbox_px": [
+      580,
+      50,
+      185,
+      185
+    ],
+    "qr_url": "https://example.com/?setor=01_Cafeteria",
+    "sem_arte": "01_Cafeteria/Artes_Frontais/SEM_ARTE/05_cartao.jpg"
+  },
+  {
+    "setor": "01_Cafeteria",
+    "produto": "06_flyer_cardapio",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1050,
+    "altura_px": 1485,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "01_Cafeteria/Artes_Frontais/COM_ARTE/06_flyer_cardapio.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1050,
+      1485
+    ],
+    "sem_arte": "01_Cafeteria/Artes_Frontais/SEM_ARTE/06_flyer_cardapio.jpg"
+  },
+  {
+    "setor": "01_Cafeteria",
+    "produto": "07_banner_retratil",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 700,
+    "altura_px": 1600,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "01_Cafeteria/Artes_Frontais/COM_ARTE/07_banner_retratil.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      700,
+      1600
+    ],
+    "sem_arte": "01_Cafeteria/Artes_Frontais/SEM_ARTE/07_banner_retratil.jpg"
+  },
+  {
+    "setor": "01_Cafeteria",
+    "produto": "08_adesivo_parede_rotas",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1200,
+    "altura_px": 1000,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "01_Cafeteria/Artes_Frontais/COM_ARTE/08_adesivo_parede_rotas.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1200,
+      1000
+    ],
+    "sem_arte": "01_Cafeteria/Artes_Frontais/SEM_ARTE/08_adesivo_parede_rotas.jpg"
+  },
+  {
+    "setor": "01_Cafeteria",
+    "produto": "09_ecobag",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 900,
+    "altura_px": 1100,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "01_Cafeteria/Artes_Frontais/COM_ARTE/09_ecobag.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      900,
+      1100
+    ],
+    "sem_arte": "01_Cafeteria/Artes_Frontais/SEM_ARTE/09_ecobag.jpg"
+  },
+  {
+    "setor": "01_Cafeteria",
+    "produto": "10_carimbos_papeis",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1300,
+    "altura_px": 1000,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "01_Cafeteria/Artes_Frontais/COM_ARTE/10_carimbos_papeis.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1300,
+      1000
+    ],
+    "sem_arte": "01_Cafeteria/Artes_Frontais/SEM_ARTE/10_carimbos_papeis.jpg"
+  },
+  {
+    "setor": "01_Cafeteria",
+    "produto": "11_wind_banner",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 500,
+    "altura_px": 1600,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "01_Cafeteria/Artes_Frontais/COM_ARTE/11_wind_banner.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      500,
+      1600
+    ],
+    "sem_arte": "01_Cafeteria/Artes_Frontais/SEM_ARTE/11_wind_banner.jpg"
+  },
+  {
+    "setor": "01_Cafeteria",
+    "produto": "12_faixa_horizontal",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1600,
+    "altura_px": 500,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "01_Cafeteria/Artes_Frontais/COM_ARTE/12_faixa_horizontal.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1600,
+      500
+    ],
+    "sem_arte": "01_Cafeteria/Artes_Frontais/SEM_ARTE/12_faixa_horizontal.jpg"
+  },
+  {
+    "setor": "01_Cafeteria",
+    "produto": "13_folheto_promocional",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1500,
+    "altura_px": 1000,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "01_Cafeteria/Artes_Frontais/COM_ARTE/13_folheto_promocional.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1500,
+      1000
+    ],
+    "sem_arte": "01_Cafeteria/Artes_Frontais/SEM_ARTE/13_folheto_promocional.jpg"
+  },
+  {
+    "setor": "01_Cafeteria",
+    "produto": "14_camiseta",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 900,
+    "altura_px": 1100,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "01_Cafeteria/Artes_Frontais/COM_ARTE/14_camiseta.jpg",
+    "superficie_bbox_px": [
+      500,
+      300,
+      150,
+      110
+    ],
+    "sem_arte": "01_Cafeteria/Artes_Frontais/SEM_ARTE/14_camiseta.jpg"
+  },
+  {
+    "setor": "01_Cafeteria",
+    "produto": "15_bone",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1000,
+    "altura_px": 800,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "01_Cafeteria/Artes_Frontais/COM_ARTE/15_bone.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1000,
+      800
+    ],
+    "sem_arte": "01_Cafeteria/Artes_Frontais/SEM_ARTE/15_bone.jpg"
+  },
+  {
+    "setor": "01_Cafeteria",
+    "produto": "16_avental",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 900,
+    "altura_px": 1100,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "01_Cafeteria/Artes_Frontais/COM_ARTE/16_avental.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      900,
+      1100
+    ],
+    "sem_arte": "01_Cafeteria/Artes_Frontais/SEM_ARTE/16_avental.jpg"
+  },
+  {
+    "setor": "02_Restaurante",
+    "produto": "01_capacho",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1200,
+    "altura_px": 800,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "02_Restaurante/Artes_Frontais/COM_ARTE/01_capacho.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1200,
+      800
+    ],
+    "sem_arte": "02_Restaurante/Artes_Frontais/SEM_ARTE/01_capacho.jpg"
+  },
+  {
+    "setor": "02_Restaurante",
+    "produto": "02_placa",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1000,
+    "altura_px": 650,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "02_Restaurante/Artes_Frontais/COM_ARTE/02_placa.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1000,
+      650
+    ],
+    "sem_arte": "02_Restaurante/Artes_Frontais/SEM_ARTE/02_placa.jpg"
+  },
+  {
+    "setor": "02_Restaurante",
+    "produto": "03_adesivo_vitrine",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 900,
+    "altura_px": 1200,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "02_Restaurante/Artes_Frontais/COM_ARTE/03_adesivo_vitrine.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      900,
+      1200
+    ],
+    "sem_arte": "02_Restaurante/Artes_Frontais/SEM_ARTE/03_adesivo_vitrine.jpg"
+  },
+  {
+    "setor": "02_Restaurante",
+    "produto": "04_uniforme_polo",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 900,
+    "altura_px": 1100,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "02_Restaurante/Artes_Frontais/COM_ARTE/04_uniforme_polo.jpg",
+    "superficie_bbox_px": [
+      500,
+      300,
+      150,
+      110
+    ],
+    "sem_arte": "02_Restaurante/Artes_Frontais/SEM_ARTE/04_uniforme_polo.jpg"
+  },
+  {
+    "setor": "02_Restaurante",
+    "produto": "05_cartao",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 900,
+    "altura_px": 500,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "02_Restaurante/Artes_Frontais/COM_ARTE/05_cartao.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      900,
+      500
+    ],
+    "qr_bbox_px": [
+      580,
+      50,
+      185,
+      185
+    ],
+    "qr_url": "https://example.com/?setor=02_Restaurante",
+    "sem_arte": "02_Restaurante/Artes_Frontais/SEM_ARTE/05_cartao.jpg"
+  },
+  {
+    "setor": "02_Restaurante",
+    "produto": "06_flyer_cardapio",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1050,
+    "altura_px": 1485,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "02_Restaurante/Artes_Frontais/COM_ARTE/06_flyer_cardapio.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1050,
+      1485
+    ],
+    "sem_arte": "02_Restaurante/Artes_Frontais/SEM_ARTE/06_flyer_cardapio.jpg"
+  },
+  {
+    "setor": "02_Restaurante",
+    "produto": "07_banner_retratil",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 700,
+    "altura_px": 1600,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "02_Restaurante/Artes_Frontais/COM_ARTE/07_banner_retratil.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      700,
+      1600
+    ],
+    "sem_arte": "02_Restaurante/Artes_Frontais/SEM_ARTE/07_banner_retratil.jpg"
+  },
+  {
+    "setor": "02_Restaurante",
+    "produto": "08_adesivo_parede_rotas",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1200,
+    "altura_px": 1000,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "02_Restaurante/Artes_Frontais/COM_ARTE/08_adesivo_parede_rotas.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1200,
+      1000
+    ],
+    "sem_arte": "02_Restaurante/Artes_Frontais/SEM_ARTE/08_adesivo_parede_rotas.jpg"
+  },
+  {
+    "setor": "02_Restaurante",
+    "produto": "09_ecobag",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 900,
+    "altura_px": 1100,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "02_Restaurante/Artes_Frontais/COM_ARTE/09_ecobag.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      900,
+      1100
+    ],
+    "sem_arte": "02_Restaurante/Artes_Frontais/SEM_ARTE/09_ecobag.jpg"
+  },
+  {
+    "setor": "02_Restaurante",
+    "produto": "10_carimbos_papeis",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1300,
+    "altura_px": 1000,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "02_Restaurante/Artes_Frontais/COM_ARTE/10_carimbos_papeis.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1300,
+      1000
+    ],
+    "sem_arte": "02_Restaurante/Artes_Frontais/SEM_ARTE/10_carimbos_papeis.jpg"
+  },
+  {
+    "setor": "02_Restaurante",
+    "produto": "11_wind_banner",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 500,
+    "altura_px": 1600,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "02_Restaurante/Artes_Frontais/COM_ARTE/11_wind_banner.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      500,
+      1600
+    ],
+    "sem_arte": "02_Restaurante/Artes_Frontais/SEM_ARTE/11_wind_banner.jpg"
+  },
+  {
+    "setor": "02_Restaurante",
+    "produto": "12_faixa_horizontal",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1600,
+    "altura_px": 500,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "02_Restaurante/Artes_Frontais/COM_ARTE/12_faixa_horizontal.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1600,
+      500
+    ],
+    "sem_arte": "02_Restaurante/Artes_Frontais/SEM_ARTE/12_faixa_horizontal.jpg"
+  },
+  {
+    "setor": "02_Restaurante",
+    "produto": "13_folheto_promocional",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1500,
+    "altura_px": 1000,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "02_Restaurante/Artes_Frontais/COM_ARTE/13_folheto_promocional.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1500,
+      1000
+    ],
+    "sem_arte": "02_Restaurante/Artes_Frontais/SEM_ARTE/13_folheto_promocional.jpg"
+  },
+  {
+    "setor": "02_Restaurante",
+    "produto": "14_camiseta",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 900,
+    "altura_px": 1100,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "02_Restaurante/Artes_Frontais/COM_ARTE/14_camiseta.jpg",
+    "superficie_bbox_px": [
+      500,
+      300,
+      150,
+      110
+    ],
+    "sem_arte": "02_Restaurante/Artes_Frontais/SEM_ARTE/14_camiseta.jpg"
+  },
+  {
+    "setor": "02_Restaurante",
+    "produto": "15_bone",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1000,
+    "altura_px": 800,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "02_Restaurante/Artes_Frontais/COM_ARTE/15_bone.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1000,
+      800
+    ],
+    "sem_arte": "02_Restaurante/Artes_Frontais/SEM_ARTE/15_bone.jpg"
+  },
+  {
+    "setor": "02_Restaurante",
+    "produto": "16_avental",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 900,
+    "altura_px": 1100,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "02_Restaurante/Artes_Frontais/COM_ARTE/16_avental.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      900,
+      1100
+    ],
+    "sem_arte": "02_Restaurante/Artes_Frontais/SEM_ARTE/16_avental.jpg"
+  },
+  {
+    "setor": "03_Padaria",
+    "produto": "01_capacho",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1200,
+    "altura_px": 800,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "03_Padaria/Artes_Frontais/COM_ARTE/01_capacho.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1200,
+      800
+    ],
+    "sem_arte": "03_Padaria/Artes_Frontais/SEM_ARTE/01_capacho.jpg"
+  },
+  {
+    "setor": "03_Padaria",
+    "produto": "02_placa",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1000,
+    "altura_px": 650,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "03_Padaria/Artes_Frontais/COM_ARTE/02_placa.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1000,
+      650
+    ],
+    "sem_arte": "03_Padaria/Artes_Frontais/SEM_ARTE/02_placa.jpg"
+  },
+  {
+    "setor": "03_Padaria",
+    "produto": "03_adesivo_vitrine",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 900,
+    "altura_px": 1200,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "03_Padaria/Artes_Frontais/COM_ARTE/03_adesivo_vitrine.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      900,
+      1200
+    ],
+    "sem_arte": "03_Padaria/Artes_Frontais/SEM_ARTE/03_adesivo_vitrine.jpg"
+  },
+  {
+    "setor": "03_Padaria",
+    "produto": "04_uniforme_polo",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 900,
+    "altura_px": 1100,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "03_Padaria/Artes_Frontais/COM_ARTE/04_uniforme_polo.jpg",
+    "superficie_bbox_px": [
+      500,
+      300,
+      150,
+      110
+    ],
+    "sem_arte": "03_Padaria/Artes_Frontais/SEM_ARTE/04_uniforme_polo.jpg"
+  },
+  {
+    "setor": "03_Padaria",
+    "produto": "05_cartao",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 900,
+    "altura_px": 500,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "03_Padaria/Artes_Frontais/COM_ARTE/05_cartao.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      900,
+      500
+    ],
+    "qr_bbox_px": [
+      580,
+      50,
+      185,
+      185
+    ],
+    "qr_url": "https://example.com/?setor=03_Padaria",
+    "sem_arte": "03_Padaria/Artes_Frontais/SEM_ARTE/05_cartao.jpg"
+  },
+  {
+    "setor": "03_Padaria",
+    "produto": "06_flyer_cardapio",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1050,
+    "altura_px": 1485,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "03_Padaria/Artes_Frontais/COM_ARTE/06_flyer_cardapio.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1050,
+      1485
+    ],
+    "sem_arte": "03_Padaria/Artes_Frontais/SEM_ARTE/06_flyer_cardapio.jpg"
+  },
+  {
+    "setor": "03_Padaria",
+    "produto": "07_banner_retratil",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 700,
+    "altura_px": 1600,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "03_Padaria/Artes_Frontais/COM_ARTE/07_banner_retratil.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      700,
+      1600
+    ],
+    "sem_arte": "03_Padaria/Artes_Frontais/SEM_ARTE/07_banner_retratil.jpg"
+  },
+  {
+    "setor": "03_Padaria",
+    "produto": "08_adesivo_parede_rotas",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1200,
+    "altura_px": 1000,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "03_Padaria/Artes_Frontais/COM_ARTE/08_adesivo_parede_rotas.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1200,
+      1000
+    ],
+    "sem_arte": "03_Padaria/Artes_Frontais/SEM_ARTE/08_adesivo_parede_rotas.jpg"
+  },
+  {
+    "setor": "03_Padaria",
+    "produto": "09_ecobag",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 900,
+    "altura_px": 1100,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "03_Padaria/Artes_Frontais/COM_ARTE/09_ecobag.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      900,
+      1100
+    ],
+    "sem_arte": "03_Padaria/Artes_Frontais/SEM_ARTE/09_ecobag.jpg"
+  },
+  {
+    "setor": "03_Padaria",
+    "produto": "10_carimbos_papeis",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1300,
+    "altura_px": 1000,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "03_Padaria/Artes_Frontais/COM_ARTE/10_carimbos_papeis.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1300,
+      1000
+    ],
+    "sem_arte": "03_Padaria/Artes_Frontais/SEM_ARTE/10_carimbos_papeis.jpg"
+  },
+  {
+    "setor": "03_Padaria",
+    "produto": "11_wind_banner",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 500,
+    "altura_px": 1600,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "03_Padaria/Artes_Frontais/COM_ARTE/11_wind_banner.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      500,
+      1600
+    ],
+    "sem_arte": "03_Padaria/Artes_Frontais/SEM_ARTE/11_wind_banner.jpg"
+  },
+  {
+    "setor": "03_Padaria",
+    "produto": "12_faixa_horizontal",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1600,
+    "altura_px": 500,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "03_Padaria/Artes_Frontais/COM_ARTE/12_faixa_horizontal.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1600,
+      500
+    ],
+    "sem_arte": "03_Padaria/Artes_Frontais/SEM_ARTE/12_faixa_horizontal.jpg"
+  },
+  {
+    "setor": "03_Padaria",
+    "produto": "13_folheto_promocional",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1500,
+    "altura_px": 1000,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "03_Padaria/Artes_Frontais/COM_ARTE/13_folheto_promocional.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1500,
+      1000
+    ],
+    "sem_arte": "03_Padaria/Artes_Frontais/SEM_ARTE/13_folheto_promocional.jpg"
+  },
+  {
+    "setor": "03_Padaria",
+    "produto": "14_camiseta",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 900,
+    "altura_px": 1100,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "03_Padaria/Artes_Frontais/COM_ARTE/14_camiseta.jpg",
+    "superficie_bbox_px": [
+      500,
+      300,
+      150,
+      110
+    ],
+    "sem_arte": "03_Padaria/Artes_Frontais/SEM_ARTE/14_camiseta.jpg"
+  },
+  {
+    "setor": "03_Padaria",
+    "produto": "15_bone",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1000,
+    "altura_px": 800,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "03_Padaria/Artes_Frontais/COM_ARTE/15_bone.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1000,
+      800
+    ],
+    "sem_arte": "03_Padaria/Artes_Frontais/SEM_ARTE/15_bone.jpg"
+  },
+  {
+    "setor": "03_Padaria",
+    "produto": "16_avental",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 900,
+    "altura_px": 1100,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "03_Padaria/Artes_Frontais/COM_ARTE/16_avental.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      900,
+      1100
+    ],
+    "sem_arte": "03_Padaria/Artes_Frontais/SEM_ARTE/16_avental.jpg"
+  },
+  {
+    "setor": "04_Clinica",
+    "produto": "01_capacho",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1200,
+    "altura_px": 800,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "04_Clinica/Artes_Frontais/COM_ARTE/01_capacho.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1200,
+      800
+    ],
+    "sem_arte": "04_Clinica/Artes_Frontais/SEM_ARTE/01_capacho.jpg"
+  },
+  {
+    "setor": "04_Clinica",
+    "produto": "02_placa",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1000,
+    "altura_px": 650,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "04_Clinica/Artes_Frontais/COM_ARTE/02_placa.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1000,
+      650
+    ],
+    "sem_arte": "04_Clinica/Artes_Frontais/SEM_ARTE/02_placa.jpg"
+  },
+  {
+    "setor": "04_Clinica",
+    "produto": "03_adesivo_vitrine",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 900,
+    "altura_px": 1200,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "04_Clinica/Artes_Frontais/COM_ARTE/03_adesivo_vitrine.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      900,
+      1200
+    ],
+    "sem_arte": "04_Clinica/Artes_Frontais/SEM_ARTE/03_adesivo_vitrine.jpg"
+  },
+  {
+    "setor": "04_Clinica",
+    "produto": "04_uniforme_polo",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 900,
+    "altura_px": 1100,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "04_Clinica/Artes_Frontais/COM_ARTE/04_uniforme_polo.jpg",
+    "superficie_bbox_px": [
+      500,
+      300,
+      150,
+      110
+    ],
+    "sem_arte": "04_Clinica/Artes_Frontais/SEM_ARTE/04_uniforme_polo.jpg"
+  },
+  {
+    "setor": "04_Clinica",
+    "produto": "05_cartao",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 900,
+    "altura_px": 500,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "04_Clinica/Artes_Frontais/COM_ARTE/05_cartao.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      900,
+      500
+    ],
+    "qr_bbox_px": [
+      580,
+      50,
+      185,
+      185
+    ],
+    "qr_url": "https://example.com/?setor=04_Clinica",
+    "sem_arte": "04_Clinica/Artes_Frontais/SEM_ARTE/05_cartao.jpg"
+  },
+  {
+    "setor": "04_Clinica",
+    "produto": "06_flyer_cardapio",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1050,
+    "altura_px": 1485,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "04_Clinica/Artes_Frontais/COM_ARTE/06_flyer_cardapio.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1050,
+      1485
+    ],
+    "sem_arte": "04_Clinica/Artes_Frontais/SEM_ARTE/06_flyer_cardapio.jpg"
+  },
+  {
+    "setor": "04_Clinica",
+    "produto": "07_banner_retratil",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 700,
+    "altura_px": 1600,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "04_Clinica/Artes_Frontais/COM_ARTE/07_banner_retratil.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      700,
+      1600
+    ],
+    "sem_arte": "04_Clinica/Artes_Frontais/SEM_ARTE/07_banner_retratil.jpg"
+  },
+  {
+    "setor": "04_Clinica",
+    "produto": "08_adesivo_parede_rotas",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1200,
+    "altura_px": 1000,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "04_Clinica/Artes_Frontais/COM_ARTE/08_adesivo_parede_rotas.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1200,
+      1000
+    ],
+    "sem_arte": "04_Clinica/Artes_Frontais/SEM_ARTE/08_adesivo_parede_rotas.jpg"
+  },
+  {
+    "setor": "04_Clinica",
+    "produto": "09_ecobag",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 900,
+    "altura_px": 1100,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "04_Clinica/Artes_Frontais/COM_ARTE/09_ecobag.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      900,
+      1100
+    ],
+    "sem_arte": "04_Clinica/Artes_Frontais/SEM_ARTE/09_ecobag.jpg"
+  },
+  {
+    "setor": "04_Clinica",
+    "produto": "10_carimbos_papeis",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1300,
+    "altura_px": 1000,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "04_Clinica/Artes_Frontais/COM_ARTE/10_carimbos_papeis.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1300,
+      1000
+    ],
+    "sem_arte": "04_Clinica/Artes_Frontais/SEM_ARTE/10_carimbos_papeis.jpg"
+  },
+  {
+    "setor": "04_Clinica",
+    "produto": "11_wind_banner",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 500,
+    "altura_px": 1600,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "04_Clinica/Artes_Frontais/COM_ARTE/11_wind_banner.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      500,
+      1600
+    ],
+    "sem_arte": "04_Clinica/Artes_Frontais/SEM_ARTE/11_wind_banner.jpg"
+  },
+  {
+    "setor": "04_Clinica",
+    "produto": "12_faixa_horizontal",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1600,
+    "altura_px": 500,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "04_Clinica/Artes_Frontais/COM_ARTE/12_faixa_horizontal.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1600,
+      500
+    ],
+    "sem_arte": "04_Clinica/Artes_Frontais/SEM_ARTE/12_faixa_horizontal.jpg"
+  },
+  {
+    "setor": "04_Clinica",
+    "produto": "13_folheto_promocional",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1500,
+    "altura_px": 1000,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "04_Clinica/Artes_Frontais/COM_ARTE/13_folheto_promocional.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1500,
+      1000
+    ],
+    "sem_arte": "04_Clinica/Artes_Frontais/SEM_ARTE/13_folheto_promocional.jpg"
+  },
+  {
+    "setor": "04_Clinica",
+    "produto": "14_camiseta",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 900,
+    "altura_px": 1100,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "04_Clinica/Artes_Frontais/COM_ARTE/14_camiseta.jpg",
+    "superficie_bbox_px": [
+      500,
+      300,
+      150,
+      110
+    ],
+    "sem_arte": "04_Clinica/Artes_Frontais/SEM_ARTE/14_camiseta.jpg"
+  },
+  {
+    "setor": "04_Clinica",
+    "produto": "15_bone",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1000,
+    "altura_px": 800,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "04_Clinica/Artes_Frontais/COM_ARTE/15_bone.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1000,
+      800
+    ],
+    "sem_arte": "04_Clinica/Artes_Frontais/SEM_ARTE/15_bone.jpg"
+  },
+  {
+    "setor": "04_Clinica",
+    "produto": "16_avental",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 900,
+    "altura_px": 1100,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "04_Clinica/Artes_Frontais/COM_ARTE/16_avental.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      900,
+      1100
+    ],
+    "sem_arte": "04_Clinica/Artes_Frontais/SEM_ARTE/16_avental.jpg"
+  },
+  {
+    "setor": "05_Estetica",
+    "produto": "01_capacho",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1200,
+    "altura_px": 800,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "05_Estetica/Artes_Frontais/COM_ARTE/01_capacho.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1200,
+      800
+    ],
+    "sem_arte": "05_Estetica/Artes_Frontais/SEM_ARTE/01_capacho.jpg"
+  },
+  {
+    "setor": "05_Estetica",
+    "produto": "02_placa",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1000,
+    "altura_px": 650,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "05_Estetica/Artes_Frontais/COM_ARTE/02_placa.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1000,
+      650
+    ],
+    "sem_arte": "05_Estetica/Artes_Frontais/SEM_ARTE/02_placa.jpg"
+  },
+  {
+    "setor": "05_Estetica",
+    "produto": "03_adesivo_vitrine",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 900,
+    "altura_px": 1200,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "05_Estetica/Artes_Frontais/COM_ARTE/03_adesivo_vitrine.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      900,
+      1200
+    ],
+    "sem_arte": "05_Estetica/Artes_Frontais/SEM_ARTE/03_adesivo_vitrine.jpg"
+  },
+  {
+    "setor": "05_Estetica",
+    "produto": "04_uniforme_polo",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 900,
+    "altura_px": 1100,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "05_Estetica/Artes_Frontais/COM_ARTE/04_uniforme_polo.jpg",
+    "superficie_bbox_px": [
+      500,
+      300,
+      150,
+      110
+    ],
+    "sem_arte": "05_Estetica/Artes_Frontais/SEM_ARTE/04_uniforme_polo.jpg"
+  },
+  {
+    "setor": "05_Estetica",
+    "produto": "05_cartao",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 900,
+    "altura_px": 500,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "05_Estetica/Artes_Frontais/COM_ARTE/05_cartao.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      900,
+      500
+    ],
+    "qr_bbox_px": [
+      580,
+      50,
+      185,
+      185
+    ],
+    "qr_url": "https://example.com/?setor=05_Estetica",
+    "sem_arte": "05_Estetica/Artes_Frontais/SEM_ARTE/05_cartao.jpg"
+  },
+  {
+    "setor": "05_Estetica",
+    "produto": "06_flyer_cardapio",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1050,
+    "altura_px": 1485,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "05_Estetica/Artes_Frontais/COM_ARTE/06_flyer_cardapio.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1050,
+      1485
+    ],
+    "sem_arte": "05_Estetica/Artes_Frontais/SEM_ARTE/06_flyer_cardapio.jpg"
+  },
+  {
+    "setor": "05_Estetica",
+    "produto": "07_banner_retratil",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 700,
+    "altura_px": 1600,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "05_Estetica/Artes_Frontais/COM_ARTE/07_banner_retratil.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      700,
+      1600
+    ],
+    "sem_arte": "05_Estetica/Artes_Frontais/SEM_ARTE/07_banner_retratil.jpg"
+  },
+  {
+    "setor": "05_Estetica",
+    "produto": "08_adesivo_parede_rotas",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1200,
+    "altura_px": 1000,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "05_Estetica/Artes_Frontais/COM_ARTE/08_adesivo_parede_rotas.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1200,
+      1000
+    ],
+    "sem_arte": "05_Estetica/Artes_Frontais/SEM_ARTE/08_adesivo_parede_rotas.jpg"
+  },
+  {
+    "setor": "05_Estetica",
+    "produto": "09_ecobag",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 900,
+    "altura_px": 1100,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "05_Estetica/Artes_Frontais/COM_ARTE/09_ecobag.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      900,
+      1100
+    ],
+    "sem_arte": "05_Estetica/Artes_Frontais/SEM_ARTE/09_ecobag.jpg"
+  },
+  {
+    "setor": "05_Estetica",
+    "produto": "10_carimbos_papeis",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1300,
+    "altura_px": 1000,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "05_Estetica/Artes_Frontais/COM_ARTE/10_carimbos_papeis.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1300,
+      1000
+    ],
+    "sem_arte": "05_Estetica/Artes_Frontais/SEM_ARTE/10_carimbos_papeis.jpg"
+  },
+  {
+    "setor": "05_Estetica",
+    "produto": "11_wind_banner",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 500,
+    "altura_px": 1600,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "05_Estetica/Artes_Frontais/COM_ARTE/11_wind_banner.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      500,
+      1600
+    ],
+    "sem_arte": "05_Estetica/Artes_Frontais/SEM_ARTE/11_wind_banner.jpg"
+  },
+  {
+    "setor": "05_Estetica",
+    "produto": "12_faixa_horizontal",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1600,
+    "altura_px": 500,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "05_Estetica/Artes_Frontais/COM_ARTE/12_faixa_horizontal.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1600,
+      500
+    ],
+    "sem_arte": "05_Estetica/Artes_Frontais/SEM_ARTE/12_faixa_horizontal.jpg"
+  },
+  {
+    "setor": "05_Estetica",
+    "produto": "13_folheto_promocional",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1500,
+    "altura_px": 1000,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "05_Estetica/Artes_Frontais/COM_ARTE/13_folheto_promocional.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1500,
+      1000
+    ],
+    "sem_arte": "05_Estetica/Artes_Frontais/SEM_ARTE/13_folheto_promocional.jpg"
+  },
+  {
+    "setor": "05_Estetica",
+    "produto": "14_camiseta",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 900,
+    "altura_px": 1100,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "05_Estetica/Artes_Frontais/COM_ARTE/14_camiseta.jpg",
+    "superficie_bbox_px": [
+      500,
+      300,
+      150,
+      110
+    ],
+    "sem_arte": "05_Estetica/Artes_Frontais/SEM_ARTE/14_camiseta.jpg"
+  },
+  {
+    "setor": "05_Estetica",
+    "produto": "15_bone",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1000,
+    "altura_px": 800,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "05_Estetica/Artes_Frontais/COM_ARTE/15_bone.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1000,
+      800
+    ],
+    "sem_arte": "05_Estetica/Artes_Frontais/SEM_ARTE/15_bone.jpg"
+  },
+  {
+    "setor": "05_Estetica",
+    "produto": "16_avental",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 900,
+    "altura_px": 1100,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "05_Estetica/Artes_Frontais/COM_ARTE/16_avental.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      900,
+      1100
+    ],
+    "sem_arte": "05_Estetica/Artes_Frontais/SEM_ARTE/16_avental.jpg"
+  },
+  {
+    "setor": "06_Salao",
+    "produto": "01_capacho",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1200,
+    "altura_px": 800,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "06_Salao/Artes_Frontais/COM_ARTE/01_capacho.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1200,
+      800
+    ],
+    "sem_arte": "06_Salao/Artes_Frontais/SEM_ARTE/01_capacho.jpg"
+  },
+  {
+    "setor": "06_Salao",
+    "produto": "02_placa",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1000,
+    "altura_px": 650,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "06_Salao/Artes_Frontais/COM_ARTE/02_placa.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1000,
+      650
+    ],
+    "sem_arte": "06_Salao/Artes_Frontais/SEM_ARTE/02_placa.jpg"
+  },
+  {
+    "setor": "06_Salao",
+    "produto": "03_adesivo_vitrine",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 900,
+    "altura_px": 1200,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "06_Salao/Artes_Frontais/COM_ARTE/03_adesivo_vitrine.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      900,
+      1200
+    ],
+    "sem_arte": "06_Salao/Artes_Frontais/SEM_ARTE/03_adesivo_vitrine.jpg"
+  },
+  {
+    "setor": "06_Salao",
+    "produto": "04_uniforme_polo",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 900,
+    "altura_px": 1100,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "06_Salao/Artes_Frontais/COM_ARTE/04_uniforme_polo.jpg",
+    "superficie_bbox_px": [
+      500,
+      300,
+      150,
+      110
+    ],
+    "sem_arte": "06_Salao/Artes_Frontais/SEM_ARTE/04_uniforme_polo.jpg"
+  },
+  {
+    "setor": "06_Salao",
+    "produto": "05_cartao",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 900,
+    "altura_px": 500,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "06_Salao/Artes_Frontais/COM_ARTE/05_cartao.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      900,
+      500
+    ],
+    "qr_bbox_px": [
+      580,
+      50,
+      185,
+      185
+    ],
+    "qr_url": "https://example.com/?setor=06_Salao",
+    "sem_arte": "06_Salao/Artes_Frontais/SEM_ARTE/05_cartao.jpg"
+  },
+  {
+    "setor": "06_Salao",
+    "produto": "06_flyer_cardapio",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1050,
+    "altura_px": 1485,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "06_Salao/Artes_Frontais/COM_ARTE/06_flyer_cardapio.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1050,
+      1485
+    ],
+    "sem_arte": "06_Salao/Artes_Frontais/SEM_ARTE/06_flyer_cardapio.jpg"
+  },
+  {
+    "setor": "06_Salao",
+    "produto": "07_banner_retratil",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 700,
+    "altura_px": 1600,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "06_Salao/Artes_Frontais/COM_ARTE/07_banner_retratil.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      700,
+      1600
+    ],
+    "sem_arte": "06_Salao/Artes_Frontais/SEM_ARTE/07_banner_retratil.jpg"
+  },
+  {
+    "setor": "06_Salao",
+    "produto": "08_adesivo_parede_rotas",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1200,
+    "altura_px": 1000,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "06_Salao/Artes_Frontais/COM_ARTE/08_adesivo_parede_rotas.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1200,
+      1000
+    ],
+    "sem_arte": "06_Salao/Artes_Frontais/SEM_ARTE/08_adesivo_parede_rotas.jpg"
+  },
+  {
+    "setor": "06_Salao",
+    "produto": "09_ecobag",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 900,
+    "altura_px": 1100,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "06_Salao/Artes_Frontais/COM_ARTE/09_ecobag.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      900,
+      1100
+    ],
+    "sem_arte": "06_Salao/Artes_Frontais/SEM_ARTE/09_ecobag.jpg"
+  },
+  {
+    "setor": "06_Salao",
+    "produto": "10_carimbos_papeis",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1300,
+    "altura_px": 1000,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "06_Salao/Artes_Frontais/COM_ARTE/10_carimbos_papeis.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1300,
+      1000
+    ],
+    "sem_arte": "06_Salao/Artes_Frontais/SEM_ARTE/10_carimbos_papeis.jpg"
+  },
+  {
+    "setor": "06_Salao",
+    "produto": "11_wind_banner",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 500,
+    "altura_px": 1600,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "06_Salao/Artes_Frontais/COM_ARTE/11_wind_banner.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      500,
+      1600
+    ],
+    "sem_arte": "06_Salao/Artes_Frontais/SEM_ARTE/11_wind_banner.jpg"
+  },
+  {
+    "setor": "06_Salao",
+    "produto": "12_faixa_horizontal",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1600,
+    "altura_px": 500,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "06_Salao/Artes_Frontais/COM_ARTE/12_faixa_horizontal.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1600,
+      500
+    ],
+    "sem_arte": "06_Salao/Artes_Frontais/SEM_ARTE/12_faixa_horizontal.jpg"
+  },
+  {
+    "setor": "06_Salao",
+    "produto": "13_folheto_promocional",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1500,
+    "altura_px": 1000,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "06_Salao/Artes_Frontais/COM_ARTE/13_folheto_promocional.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1500,
+      1000
+    ],
+    "sem_arte": "06_Salao/Artes_Frontais/SEM_ARTE/13_folheto_promocional.jpg"
+  },
+  {
+    "setor": "06_Salao",
+    "produto": "14_camiseta",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 900,
+    "altura_px": 1100,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "06_Salao/Artes_Frontais/COM_ARTE/14_camiseta.jpg",
+    "superficie_bbox_px": [
+      500,
+      300,
+      150,
+      110
+    ],
+    "sem_arte": "06_Salao/Artes_Frontais/SEM_ARTE/14_camiseta.jpg"
+  },
+  {
+    "setor": "06_Salao",
+    "produto": "15_bone",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1000,
+    "altura_px": 800,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "06_Salao/Artes_Frontais/COM_ARTE/15_bone.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1000,
+      800
+    ],
+    "sem_arte": "06_Salao/Artes_Frontais/SEM_ARTE/15_bone.jpg"
+  },
+  {
+    "setor": "06_Salao",
+    "produto": "16_avental",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 900,
+    "altura_px": 1100,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "06_Salao/Artes_Frontais/COM_ARTE/16_avental.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      900,
+      1100
+    ],
+    "sem_arte": "06_Salao/Artes_Frontais/SEM_ARTE/16_avental.jpg"
+  },
+  {
+    "setor": "07_Imobiliaria",
+    "produto": "01_capacho",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1200,
+    "altura_px": 800,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "07_Imobiliaria/Artes_Frontais/COM_ARTE/01_capacho.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1200,
+      800
+    ],
+    "sem_arte": "07_Imobiliaria/Artes_Frontais/SEM_ARTE/01_capacho.jpg"
+  },
+  {
+    "setor": "07_Imobiliaria",
+    "produto": "02_placa",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1000,
+    "altura_px": 650,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "07_Imobiliaria/Artes_Frontais/COM_ARTE/02_placa.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1000,
+      650
+    ],
+    "sem_arte": "07_Imobiliaria/Artes_Frontais/SEM_ARTE/02_placa.jpg"
+  },
+  {
+    "setor": "07_Imobiliaria",
+    "produto": "03_adesivo_vitrine",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 900,
+    "altura_px": 1200,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "07_Imobiliaria/Artes_Frontais/COM_ARTE/03_adesivo_vitrine.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      900,
+      1200
+    ],
+    "sem_arte": "07_Imobiliaria/Artes_Frontais/SEM_ARTE/03_adesivo_vitrine.jpg"
+  },
+  {
+    "setor": "07_Imobiliaria",
+    "produto": "04_uniforme_polo",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 900,
+    "altura_px": 1100,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "07_Imobiliaria/Artes_Frontais/COM_ARTE/04_uniforme_polo.jpg",
+    "superficie_bbox_px": [
+      500,
+      300,
+      150,
+      110
+    ],
+    "sem_arte": "07_Imobiliaria/Artes_Frontais/SEM_ARTE/04_uniforme_polo.jpg"
+  },
+  {
+    "setor": "07_Imobiliaria",
+    "produto": "05_cartao",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 900,
+    "altura_px": 500,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "07_Imobiliaria/Artes_Frontais/COM_ARTE/05_cartao.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      900,
+      500
+    ],
+    "qr_bbox_px": [
+      580,
+      50,
+      185,
+      185
+    ],
+    "qr_url": "https://example.com/?setor=07_Imobiliaria",
+    "sem_arte": "07_Imobiliaria/Artes_Frontais/SEM_ARTE/05_cartao.jpg"
+  },
+  {
+    "setor": "07_Imobiliaria",
+    "produto": "06_flyer_cardapio",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1050,
+    "altura_px": 1485,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "07_Imobiliaria/Artes_Frontais/COM_ARTE/06_flyer_cardapio.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1050,
+      1485
+    ],
+    "sem_arte": "07_Imobiliaria/Artes_Frontais/SEM_ARTE/06_flyer_cardapio.jpg"
+  },
+  {
+    "setor": "07_Imobiliaria",
+    "produto": "07_banner_retratil",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 700,
+    "altura_px": 1600,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "07_Imobiliaria/Artes_Frontais/COM_ARTE/07_banner_retratil.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      700,
+      1600
+    ],
+    "sem_arte": "07_Imobiliaria/Artes_Frontais/SEM_ARTE/07_banner_retratil.jpg"
+  },
+  {
+    "setor": "07_Imobiliaria",
+    "produto": "08_adesivo_parede_rotas",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1200,
+    "altura_px": 1000,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "07_Imobiliaria/Artes_Frontais/COM_ARTE/08_adesivo_parede_rotas.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1200,
+      1000
+    ],
+    "sem_arte": "07_Imobiliaria/Artes_Frontais/SEM_ARTE/08_adesivo_parede_rotas.jpg"
+  },
+  {
+    "setor": "07_Imobiliaria",
+    "produto": "09_ecobag",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 900,
+    "altura_px": 1100,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "07_Imobiliaria/Artes_Frontais/COM_ARTE/09_ecobag.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      900,
+      1100
+    ],
+    "sem_arte": "07_Imobiliaria/Artes_Frontais/SEM_ARTE/09_ecobag.jpg"
+  },
+  {
+    "setor": "07_Imobiliaria",
+    "produto": "10_carimbos_papeis",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1300,
+    "altura_px": 1000,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "07_Imobiliaria/Artes_Frontais/COM_ARTE/10_carimbos_papeis.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1300,
+      1000
+    ],
+    "sem_arte": "07_Imobiliaria/Artes_Frontais/SEM_ARTE/10_carimbos_papeis.jpg"
+  },
+  {
+    "setor": "07_Imobiliaria",
+    "produto": "11_wind_banner",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 500,
+    "altura_px": 1600,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "07_Imobiliaria/Artes_Frontais/COM_ARTE/11_wind_banner.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      500,
+      1600
+    ],
+    "sem_arte": "07_Imobiliaria/Artes_Frontais/SEM_ARTE/11_wind_banner.jpg"
+  },
+  {
+    "setor": "07_Imobiliaria",
+    "produto": "12_faixa_horizontal",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1600,
+    "altura_px": 500,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "07_Imobiliaria/Artes_Frontais/COM_ARTE/12_faixa_horizontal.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1600,
+      500
+    ],
+    "sem_arte": "07_Imobiliaria/Artes_Frontais/SEM_ARTE/12_faixa_horizontal.jpg"
+  },
+  {
+    "setor": "07_Imobiliaria",
+    "produto": "13_folheto_promocional",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1500,
+    "altura_px": 1000,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "07_Imobiliaria/Artes_Frontais/COM_ARTE/13_folheto_promocional.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1500,
+      1000
+    ],
+    "sem_arte": "07_Imobiliaria/Artes_Frontais/SEM_ARTE/13_folheto_promocional.jpg"
+  },
+  {
+    "setor": "07_Imobiliaria",
+    "produto": "14_camiseta",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 900,
+    "altura_px": 1100,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "07_Imobiliaria/Artes_Frontais/COM_ARTE/14_camiseta.jpg",
+    "superficie_bbox_px": [
+      500,
+      300,
+      150,
+      110
+    ],
+    "sem_arte": "07_Imobiliaria/Artes_Frontais/SEM_ARTE/14_camiseta.jpg"
+  },
+  {
+    "setor": "07_Imobiliaria",
+    "produto": "15_bone",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1000,
+    "altura_px": 800,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "07_Imobiliaria/Artes_Frontais/COM_ARTE/15_bone.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1000,
+      800
+    ],
+    "sem_arte": "07_Imobiliaria/Artes_Frontais/SEM_ARTE/15_bone.jpg"
+  },
+  {
+    "setor": "07_Imobiliaria",
+    "produto": "16_avental",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 900,
+    "altura_px": 1100,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "07_Imobiliaria/Artes_Frontais/COM_ARTE/16_avental.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      900,
+      1100
+    ],
+    "sem_arte": "07_Imobiliaria/Artes_Frontais/SEM_ARTE/16_avental.jpg"
+  },
+  {
+    "setor": "08_Loja_Roupas",
+    "produto": "01_capacho",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1200,
+    "altura_px": 800,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "08_Loja_Roupas/Artes_Frontais/COM_ARTE/01_capacho.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1200,
+      800
+    ],
+    "sem_arte": "08_Loja_Roupas/Artes_Frontais/SEM_ARTE/01_capacho.jpg"
+  },
+  {
+    "setor": "08_Loja_Roupas",
+    "produto": "02_placa",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1000,
+    "altura_px": 650,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "08_Loja_Roupas/Artes_Frontais/COM_ARTE/02_placa.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1000,
+      650
+    ],
+    "sem_arte": "08_Loja_Roupas/Artes_Frontais/SEM_ARTE/02_placa.jpg"
+  },
+  {
+    "setor": "08_Loja_Roupas",
+    "produto": "03_adesivo_vitrine",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 900,
+    "altura_px": 1200,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "08_Loja_Roupas/Artes_Frontais/COM_ARTE/03_adesivo_vitrine.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      900,
+      1200
+    ],
+    "sem_arte": "08_Loja_Roupas/Artes_Frontais/SEM_ARTE/03_adesivo_vitrine.jpg"
+  },
+  {
+    "setor": "08_Loja_Roupas",
+    "produto": "04_uniforme_polo",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 900,
+    "altura_px": 1100,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "08_Loja_Roupas/Artes_Frontais/COM_ARTE/04_uniforme_polo.jpg",
+    "superficie_bbox_px": [
+      500,
+      300,
+      150,
+      110
+    ],
+    "sem_arte": "08_Loja_Roupas/Artes_Frontais/SEM_ARTE/04_uniforme_polo.jpg"
+  },
+  {
+    "setor": "08_Loja_Roupas",
+    "produto": "05_cartao",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 900,
+    "altura_px": 500,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "08_Loja_Roupas/Artes_Frontais/COM_ARTE/05_cartao.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      900,
+      500
+    ],
+    "qr_bbox_px": [
+      580,
+      50,
+      185,
+      185
+    ],
+    "qr_url": "https://example.com/?setor=08_Loja_Roupas",
+    "sem_arte": "08_Loja_Roupas/Artes_Frontais/SEM_ARTE/05_cartao.jpg"
+  },
+  {
+    "setor": "08_Loja_Roupas",
+    "produto": "06_flyer_cardapio",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1050,
+    "altura_px": 1485,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "08_Loja_Roupas/Artes_Frontais/COM_ARTE/06_flyer_cardapio.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1050,
+      1485
+    ],
+    "sem_arte": "08_Loja_Roupas/Artes_Frontais/SEM_ARTE/06_flyer_cardapio.jpg"
+  },
+  {
+    "setor": "08_Loja_Roupas",
+    "produto": "07_banner_retratil",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 700,
+    "altura_px": 1600,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "08_Loja_Roupas/Artes_Frontais/COM_ARTE/07_banner_retratil.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      700,
+      1600
+    ],
+    "sem_arte": "08_Loja_Roupas/Artes_Frontais/SEM_ARTE/07_banner_retratil.jpg"
+  },
+  {
+    "setor": "08_Loja_Roupas",
+    "produto": "08_adesivo_parede_rotas",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1200,
+    "altura_px": 1000,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "08_Loja_Roupas/Artes_Frontais/COM_ARTE/08_adesivo_parede_rotas.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1200,
+      1000
+    ],
+    "sem_arte": "08_Loja_Roupas/Artes_Frontais/SEM_ARTE/08_adesivo_parede_rotas.jpg"
+  },
+  {
+    "setor": "08_Loja_Roupas",
+    "produto": "09_ecobag",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 900,
+    "altura_px": 1100,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "08_Loja_Roupas/Artes_Frontais/COM_ARTE/09_ecobag.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      900,
+      1100
+    ],
+    "sem_arte": "08_Loja_Roupas/Artes_Frontais/SEM_ARTE/09_ecobag.jpg"
+  },
+  {
+    "setor": "08_Loja_Roupas",
+    "produto": "10_carimbos_papeis",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1300,
+    "altura_px": 1000,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "08_Loja_Roupas/Artes_Frontais/COM_ARTE/10_carimbos_papeis.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1300,
+      1000
+    ],
+    "sem_arte": "08_Loja_Roupas/Artes_Frontais/SEM_ARTE/10_carimbos_papeis.jpg"
+  },
+  {
+    "setor": "08_Loja_Roupas",
+    "produto": "11_wind_banner",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 500,
+    "altura_px": 1600,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "08_Loja_Roupas/Artes_Frontais/COM_ARTE/11_wind_banner.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      500,
+      1600
+    ],
+    "sem_arte": "08_Loja_Roupas/Artes_Frontais/SEM_ARTE/11_wind_banner.jpg"
+  },
+  {
+    "setor": "08_Loja_Roupas",
+    "produto": "12_faixa_horizontal",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1600,
+    "altura_px": 500,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "08_Loja_Roupas/Artes_Frontais/COM_ARTE/12_faixa_horizontal.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1600,
+      500
+    ],
+    "sem_arte": "08_Loja_Roupas/Artes_Frontais/SEM_ARTE/12_faixa_horizontal.jpg"
+  },
+  {
+    "setor": "08_Loja_Roupas",
+    "produto": "13_folheto_promocional",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1500,
+    "altura_px": 1000,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "08_Loja_Roupas/Artes_Frontais/COM_ARTE/13_folheto_promocional.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1500,
+      1000
+    ],
+    "sem_arte": "08_Loja_Roupas/Artes_Frontais/SEM_ARTE/13_folheto_promocional.jpg"
+  },
+  {
+    "setor": "08_Loja_Roupas",
+    "produto": "14_camiseta",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 900,
+    "altura_px": 1100,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "08_Loja_Roupas/Artes_Frontais/COM_ARTE/14_camiseta.jpg",
+    "superficie_bbox_px": [
+      500,
+      300,
+      150,
+      110
+    ],
+    "sem_arte": "08_Loja_Roupas/Artes_Frontais/SEM_ARTE/14_camiseta.jpg"
+  },
+  {
+    "setor": "08_Loja_Roupas",
+    "produto": "15_bone",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1000,
+    "altura_px": 800,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "08_Loja_Roupas/Artes_Frontais/COM_ARTE/15_bone.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1000,
+      800
+    ],
+    "sem_arte": "08_Loja_Roupas/Artes_Frontais/SEM_ARTE/15_bone.jpg"
+  },
+  {
+    "setor": "08_Loja_Roupas",
+    "produto": "16_avental",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 900,
+    "altura_px": 1100,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "08_Loja_Roupas/Artes_Frontais/COM_ARTE/16_avental.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      900,
+      1100
+    ],
+    "sem_arte": "08_Loja_Roupas/Artes_Frontais/SEM_ARTE/16_avental.jpg"
+  },
+  {
+    "setor": "09_Pet_Shop",
+    "produto": "01_capacho",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1200,
+    "altura_px": 800,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "09_Pet_Shop/Artes_Frontais/COM_ARTE/01_capacho.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1200,
+      800
+    ],
+    "sem_arte": "09_Pet_Shop/Artes_Frontais/SEM_ARTE/01_capacho.jpg"
+  },
+  {
+    "setor": "09_Pet_Shop",
+    "produto": "02_placa",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1000,
+    "altura_px": 650,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "09_Pet_Shop/Artes_Frontais/COM_ARTE/02_placa.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1000,
+      650
+    ],
+    "sem_arte": "09_Pet_Shop/Artes_Frontais/SEM_ARTE/02_placa.jpg"
+  },
+  {
+    "setor": "09_Pet_Shop",
+    "produto": "03_adesivo_vitrine",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 900,
+    "altura_px": 1200,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "09_Pet_Shop/Artes_Frontais/COM_ARTE/03_adesivo_vitrine.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      900,
+      1200
+    ],
+    "sem_arte": "09_Pet_Shop/Artes_Frontais/SEM_ARTE/03_adesivo_vitrine.jpg"
+  },
+  {
+    "setor": "09_Pet_Shop",
+    "produto": "04_uniforme_polo",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 900,
+    "altura_px": 1100,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "09_Pet_Shop/Artes_Frontais/COM_ARTE/04_uniforme_polo.jpg",
+    "superficie_bbox_px": [
+      500,
+      300,
+      150,
+      110
+    ],
+    "sem_arte": "09_Pet_Shop/Artes_Frontais/SEM_ARTE/04_uniforme_polo.jpg"
+  },
+  {
+    "setor": "09_Pet_Shop",
+    "produto": "05_cartao",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 900,
+    "altura_px": 500,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "09_Pet_Shop/Artes_Frontais/COM_ARTE/05_cartao.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      900,
+      500
+    ],
+    "qr_bbox_px": [
+      580,
+      50,
+      185,
+      185
+    ],
+    "qr_url": "https://example.com/?setor=09_Pet_Shop",
+    "sem_arte": "09_Pet_Shop/Artes_Frontais/SEM_ARTE/05_cartao.jpg"
+  },
+  {
+    "setor": "09_Pet_Shop",
+    "produto": "06_flyer_cardapio",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1050,
+    "altura_px": 1485,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "09_Pet_Shop/Artes_Frontais/COM_ARTE/06_flyer_cardapio.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1050,
+      1485
+    ],
+    "sem_arte": "09_Pet_Shop/Artes_Frontais/SEM_ARTE/06_flyer_cardapio.jpg"
+  },
+  {
+    "setor": "09_Pet_Shop",
+    "produto": "07_banner_retratil",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 700,
+    "altura_px": 1600,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "09_Pet_Shop/Artes_Frontais/COM_ARTE/07_banner_retratil.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      700,
+      1600
+    ],
+    "sem_arte": "09_Pet_Shop/Artes_Frontais/SEM_ARTE/07_banner_retratil.jpg"
+  },
+  {
+    "setor": "09_Pet_Shop",
+    "produto": "08_adesivo_parede_rotas",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1200,
+    "altura_px": 1000,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "09_Pet_Shop/Artes_Frontais/COM_ARTE/08_adesivo_parede_rotas.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1200,
+      1000
+    ],
+    "sem_arte": "09_Pet_Shop/Artes_Frontais/SEM_ARTE/08_adesivo_parede_rotas.jpg"
+  },
+  {
+    "setor": "09_Pet_Shop",
+    "produto": "09_ecobag",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 900,
+    "altura_px": 1100,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "09_Pet_Shop/Artes_Frontais/COM_ARTE/09_ecobag.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      900,
+      1100
+    ],
+    "sem_arte": "09_Pet_Shop/Artes_Frontais/SEM_ARTE/09_ecobag.jpg"
+  },
+  {
+    "setor": "09_Pet_Shop",
+    "produto": "10_carimbos_papeis",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1300,
+    "altura_px": 1000,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "09_Pet_Shop/Artes_Frontais/COM_ARTE/10_carimbos_papeis.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1300,
+      1000
+    ],
+    "sem_arte": "09_Pet_Shop/Artes_Frontais/SEM_ARTE/10_carimbos_papeis.jpg"
+  },
+  {
+    "setor": "09_Pet_Shop",
+    "produto": "11_wind_banner",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 500,
+    "altura_px": 1600,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "09_Pet_Shop/Artes_Frontais/COM_ARTE/11_wind_banner.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      500,
+      1600
+    ],
+    "sem_arte": "09_Pet_Shop/Artes_Frontais/SEM_ARTE/11_wind_banner.jpg"
+  },
+  {
+    "setor": "09_Pet_Shop",
+    "produto": "12_faixa_horizontal",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1600,
+    "altura_px": 500,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "09_Pet_Shop/Artes_Frontais/COM_ARTE/12_faixa_horizontal.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1600,
+      500
+    ],
+    "sem_arte": "09_Pet_Shop/Artes_Frontais/SEM_ARTE/12_faixa_horizontal.jpg"
+  },
+  {
+    "setor": "09_Pet_Shop",
+    "produto": "13_folheto_promocional",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1500,
+    "altura_px": 1000,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "09_Pet_Shop/Artes_Frontais/COM_ARTE/13_folheto_promocional.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1500,
+      1000
+    ],
+    "sem_arte": "09_Pet_Shop/Artes_Frontais/SEM_ARTE/13_folheto_promocional.jpg"
+  },
+  {
+    "setor": "09_Pet_Shop",
+    "produto": "14_camiseta",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 900,
+    "altura_px": 1100,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "09_Pet_Shop/Artes_Frontais/COM_ARTE/14_camiseta.jpg",
+    "superficie_bbox_px": [
+      500,
+      300,
+      150,
+      110
+    ],
+    "sem_arte": "09_Pet_Shop/Artes_Frontais/SEM_ARTE/14_camiseta.jpg"
+  },
+  {
+    "setor": "09_Pet_Shop",
+    "produto": "15_bone",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1000,
+    "altura_px": 800,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "09_Pet_Shop/Artes_Frontais/COM_ARTE/15_bone.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1000,
+      800
+    ],
+    "sem_arte": "09_Pet_Shop/Artes_Frontais/SEM_ARTE/15_bone.jpg"
+  },
+  {
+    "setor": "09_Pet_Shop",
+    "produto": "16_avental",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 900,
+    "altura_px": 1100,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "09_Pet_Shop/Artes_Frontais/COM_ARTE/16_avental.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      900,
+      1100
+    ],
+    "sem_arte": "09_Pet_Shop/Artes_Frontais/SEM_ARTE/16_avental.jpg"
+  },
+  {
+    "setor": "10_Farmacia",
+    "produto": "01_capacho",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1200,
+    "altura_px": 800,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "10_Farmacia/Artes_Frontais/COM_ARTE/01_capacho.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1200,
+      800
+    ],
+    "sem_arte": "10_Farmacia/Artes_Frontais/SEM_ARTE/01_capacho.jpg"
+  },
+  {
+    "setor": "10_Farmacia",
+    "produto": "02_placa",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1000,
+    "altura_px": 650,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "10_Farmacia/Artes_Frontais/COM_ARTE/02_placa.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1000,
+      650
+    ],
+    "sem_arte": "10_Farmacia/Artes_Frontais/SEM_ARTE/02_placa.jpg"
+  },
+  {
+    "setor": "10_Farmacia",
+    "produto": "03_adesivo_vitrine",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 900,
+    "altura_px": 1200,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "10_Farmacia/Artes_Frontais/COM_ARTE/03_adesivo_vitrine.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      900,
+      1200
+    ],
+    "sem_arte": "10_Farmacia/Artes_Frontais/SEM_ARTE/03_adesivo_vitrine.jpg"
+  },
+  {
+    "setor": "10_Farmacia",
+    "produto": "04_uniforme_polo",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 900,
+    "altura_px": 1100,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "10_Farmacia/Artes_Frontais/COM_ARTE/04_uniforme_polo.jpg",
+    "superficie_bbox_px": [
+      500,
+      300,
+      150,
+      110
+    ],
+    "sem_arte": "10_Farmacia/Artes_Frontais/SEM_ARTE/04_uniforme_polo.jpg"
+  },
+  {
+    "setor": "10_Farmacia",
+    "produto": "05_cartao",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 900,
+    "altura_px": 500,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "10_Farmacia/Artes_Frontais/COM_ARTE/05_cartao.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      900,
+      500
+    ],
+    "qr_bbox_px": [
+      580,
+      50,
+      185,
+      185
+    ],
+    "qr_url": "https://example.com/?setor=10_Farmacia",
+    "sem_arte": "10_Farmacia/Artes_Frontais/SEM_ARTE/05_cartao.jpg"
+  },
+  {
+    "setor": "10_Farmacia",
+    "produto": "06_flyer_cardapio",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1050,
+    "altura_px": 1485,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "10_Farmacia/Artes_Frontais/COM_ARTE/06_flyer_cardapio.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1050,
+      1485
+    ],
+    "sem_arte": "10_Farmacia/Artes_Frontais/SEM_ARTE/06_flyer_cardapio.jpg"
+  },
+  {
+    "setor": "10_Farmacia",
+    "produto": "07_banner_retratil",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 700,
+    "altura_px": 1600,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "10_Farmacia/Artes_Frontais/COM_ARTE/07_banner_retratil.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      700,
+      1600
+    ],
+    "sem_arte": "10_Farmacia/Artes_Frontais/SEM_ARTE/07_banner_retratil.jpg"
+  },
+  {
+    "setor": "10_Farmacia",
+    "produto": "08_adesivo_parede_rotas",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1200,
+    "altura_px": 1000,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "10_Farmacia/Artes_Frontais/COM_ARTE/08_adesivo_parede_rotas.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1200,
+      1000
+    ],
+    "sem_arte": "10_Farmacia/Artes_Frontais/SEM_ARTE/08_adesivo_parede_rotas.jpg"
+  },
+  {
+    "setor": "10_Farmacia",
+    "produto": "09_ecobag",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 900,
+    "altura_px": 1100,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "10_Farmacia/Artes_Frontais/COM_ARTE/09_ecobag.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      900,
+      1100
+    ],
+    "sem_arte": "10_Farmacia/Artes_Frontais/SEM_ARTE/09_ecobag.jpg"
+  },
+  {
+    "setor": "10_Farmacia",
+    "produto": "10_carimbos_papeis",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1300,
+    "altura_px": 1000,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "10_Farmacia/Artes_Frontais/COM_ARTE/10_carimbos_papeis.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1300,
+      1000
+    ],
+    "sem_arte": "10_Farmacia/Artes_Frontais/SEM_ARTE/10_carimbos_papeis.jpg"
+  },
+  {
+    "setor": "10_Farmacia",
+    "produto": "11_wind_banner",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 500,
+    "altura_px": 1600,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "10_Farmacia/Artes_Frontais/COM_ARTE/11_wind_banner.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      500,
+      1600
+    ],
+    "sem_arte": "10_Farmacia/Artes_Frontais/SEM_ARTE/11_wind_banner.jpg"
+  },
+  {
+    "setor": "10_Farmacia",
+    "produto": "12_faixa_horizontal",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1600,
+    "altura_px": 500,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "10_Farmacia/Artes_Frontais/COM_ARTE/12_faixa_horizontal.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1600,
+      500
+    ],
+    "sem_arte": "10_Farmacia/Artes_Frontais/SEM_ARTE/12_faixa_horizontal.jpg"
+  },
+  {
+    "setor": "10_Farmacia",
+    "produto": "13_folheto_promocional",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1500,
+    "altura_px": 1000,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "10_Farmacia/Artes_Frontais/COM_ARTE/13_folheto_promocional.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1500,
+      1000
+    ],
+    "sem_arte": "10_Farmacia/Artes_Frontais/SEM_ARTE/13_folheto_promocional.jpg"
+  },
+  {
+    "setor": "10_Farmacia",
+    "produto": "14_camiseta",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 900,
+    "altura_px": 1100,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "10_Farmacia/Artes_Frontais/COM_ARTE/14_camiseta.jpg",
+    "superficie_bbox_px": [
+      500,
+      300,
+      150,
+      110
+    ],
+    "sem_arte": "10_Farmacia/Artes_Frontais/SEM_ARTE/14_camiseta.jpg"
+  },
+  {
+    "setor": "10_Farmacia",
+    "produto": "15_bone",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1000,
+    "altura_px": 800,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "10_Farmacia/Artes_Frontais/COM_ARTE/15_bone.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1000,
+      800
+    ],
+    "sem_arte": "10_Farmacia/Artes_Frontais/SEM_ARTE/15_bone.jpg"
+  },
+  {
+    "setor": "10_Farmacia",
+    "produto": "16_avental",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 900,
+    "altura_px": 1100,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "10_Farmacia/Artes_Frontais/COM_ARTE/16_avental.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      900,
+      1100
+    ],
+    "sem_arte": "10_Farmacia/Artes_Frontais/SEM_ARTE/16_avental.jpg"
+  },
+  {
+    "setor": "11_Academia",
+    "produto": "01_capacho",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1200,
+    "altura_px": 800,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "11_Academia/Artes_Frontais/COM_ARTE/01_capacho.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1200,
+      800
+    ],
+    "sem_arte": "11_Academia/Artes_Frontais/SEM_ARTE/01_capacho.jpg"
+  },
+  {
+    "setor": "11_Academia",
+    "produto": "02_placa",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1000,
+    "altura_px": 650,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "11_Academia/Artes_Frontais/COM_ARTE/02_placa.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1000,
+      650
+    ],
+    "sem_arte": "11_Academia/Artes_Frontais/SEM_ARTE/02_placa.jpg"
+  },
+  {
+    "setor": "11_Academia",
+    "produto": "03_adesivo_vitrine",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 900,
+    "altura_px": 1200,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "11_Academia/Artes_Frontais/COM_ARTE/03_adesivo_vitrine.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      900,
+      1200
+    ],
+    "sem_arte": "11_Academia/Artes_Frontais/SEM_ARTE/03_adesivo_vitrine.jpg"
+  },
+  {
+    "setor": "11_Academia",
+    "produto": "04_uniforme_polo",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 900,
+    "altura_px": 1100,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "11_Academia/Artes_Frontais/COM_ARTE/04_uniforme_polo.jpg",
+    "superficie_bbox_px": [
+      500,
+      300,
+      150,
+      110
+    ],
+    "sem_arte": "11_Academia/Artes_Frontais/SEM_ARTE/04_uniforme_polo.jpg"
+  },
+  {
+    "setor": "11_Academia",
+    "produto": "05_cartao",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 900,
+    "altura_px": 500,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "11_Academia/Artes_Frontais/COM_ARTE/05_cartao.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      900,
+      500
+    ],
+    "qr_bbox_px": [
+      580,
+      50,
+      185,
+      185
+    ],
+    "qr_url": "https://example.com/?setor=11_Academia",
+    "sem_arte": "11_Academia/Artes_Frontais/SEM_ARTE/05_cartao.jpg"
+  },
+  {
+    "setor": "11_Academia",
+    "produto": "06_flyer_cardapio",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1050,
+    "altura_px": 1485,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "11_Academia/Artes_Frontais/COM_ARTE/06_flyer_cardapio.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1050,
+      1485
+    ],
+    "sem_arte": "11_Academia/Artes_Frontais/SEM_ARTE/06_flyer_cardapio.jpg"
+  },
+  {
+    "setor": "11_Academia",
+    "produto": "07_banner_retratil",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 700,
+    "altura_px": 1600,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "11_Academia/Artes_Frontais/COM_ARTE/07_banner_retratil.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      700,
+      1600
+    ],
+    "sem_arte": "11_Academia/Artes_Frontais/SEM_ARTE/07_banner_retratil.jpg"
+  },
+  {
+    "setor": "11_Academia",
+    "produto": "08_adesivo_parede_rotas",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1200,
+    "altura_px": 1000,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "11_Academia/Artes_Frontais/COM_ARTE/08_adesivo_parede_rotas.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1200,
+      1000
+    ],
+    "sem_arte": "11_Academia/Artes_Frontais/SEM_ARTE/08_adesivo_parede_rotas.jpg"
+  },
+  {
+    "setor": "11_Academia",
+    "produto": "09_ecobag",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 900,
+    "altura_px": 1100,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "11_Academia/Artes_Frontais/COM_ARTE/09_ecobag.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      900,
+      1100
+    ],
+    "sem_arte": "11_Academia/Artes_Frontais/SEM_ARTE/09_ecobag.jpg"
+  },
+  {
+    "setor": "11_Academia",
+    "produto": "10_carimbos_papeis",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1300,
+    "altura_px": 1000,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "11_Academia/Artes_Frontais/COM_ARTE/10_carimbos_papeis.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1300,
+      1000
+    ],
+    "sem_arte": "11_Academia/Artes_Frontais/SEM_ARTE/10_carimbos_papeis.jpg"
+  },
+  {
+    "setor": "11_Academia",
+    "produto": "11_wind_banner",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 500,
+    "altura_px": 1600,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "11_Academia/Artes_Frontais/COM_ARTE/11_wind_banner.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      500,
+      1600
+    ],
+    "sem_arte": "11_Academia/Artes_Frontais/SEM_ARTE/11_wind_banner.jpg"
+  },
+  {
+    "setor": "11_Academia",
+    "produto": "12_faixa_horizontal",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1600,
+    "altura_px": 500,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "11_Academia/Artes_Frontais/COM_ARTE/12_faixa_horizontal.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1600,
+      500
+    ],
+    "sem_arte": "11_Academia/Artes_Frontais/SEM_ARTE/12_faixa_horizontal.jpg"
+  },
+  {
+    "setor": "11_Academia",
+    "produto": "13_folheto_promocional",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1500,
+    "altura_px": 1000,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "11_Academia/Artes_Frontais/COM_ARTE/13_folheto_promocional.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1500,
+      1000
+    ],
+    "sem_arte": "11_Academia/Artes_Frontais/SEM_ARTE/13_folheto_promocional.jpg"
+  },
+  {
+    "setor": "11_Academia",
+    "produto": "14_camiseta",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 900,
+    "altura_px": 1100,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "11_Academia/Artes_Frontais/COM_ARTE/14_camiseta.jpg",
+    "superficie_bbox_px": [
+      500,
+      300,
+      150,
+      110
+    ],
+    "sem_arte": "11_Academia/Artes_Frontais/SEM_ARTE/14_camiseta.jpg"
+  },
+  {
+    "setor": "11_Academia",
+    "produto": "15_bone",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1000,
+    "altura_px": 800,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "11_Academia/Artes_Frontais/COM_ARTE/15_bone.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1000,
+      800
+    ],
+    "sem_arte": "11_Academia/Artes_Frontais/SEM_ARTE/15_bone.jpg"
+  },
+  {
+    "setor": "11_Academia",
+    "produto": "16_avental",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 900,
+    "altura_px": 1100,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "11_Academia/Artes_Frontais/COM_ARTE/16_avental.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      900,
+      1100
+    ],
+    "sem_arte": "11_Academia/Artes_Frontais/SEM_ARTE/16_avental.jpg"
+  },
+  {
+    "setor": "12_Autopecas",
+    "produto": "01_capacho",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1200,
+    "altura_px": 800,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "12_Autopecas/Artes_Frontais/COM_ARTE/01_capacho.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1200,
+      800
+    ],
+    "sem_arte": "12_Autopecas/Artes_Frontais/SEM_ARTE/01_capacho.jpg"
+  },
+  {
+    "setor": "12_Autopecas",
+    "produto": "02_placa",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1000,
+    "altura_px": 650,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "12_Autopecas/Artes_Frontais/COM_ARTE/02_placa.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1000,
+      650
+    ],
+    "sem_arte": "12_Autopecas/Artes_Frontais/SEM_ARTE/02_placa.jpg"
+  },
+  {
+    "setor": "12_Autopecas",
+    "produto": "03_adesivo_vitrine",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 900,
+    "altura_px": 1200,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "12_Autopecas/Artes_Frontais/COM_ARTE/03_adesivo_vitrine.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      900,
+      1200
+    ],
+    "sem_arte": "12_Autopecas/Artes_Frontais/SEM_ARTE/03_adesivo_vitrine.jpg"
+  },
+  {
+    "setor": "12_Autopecas",
+    "produto": "04_uniforme_polo",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 900,
+    "altura_px": 1100,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "12_Autopecas/Artes_Frontais/COM_ARTE/04_uniforme_polo.jpg",
+    "superficie_bbox_px": [
+      500,
+      300,
+      150,
+      110
+    ],
+    "sem_arte": "12_Autopecas/Artes_Frontais/SEM_ARTE/04_uniforme_polo.jpg"
+  },
+  {
+    "setor": "12_Autopecas",
+    "produto": "05_cartao",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 900,
+    "altura_px": 500,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "12_Autopecas/Artes_Frontais/COM_ARTE/05_cartao.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      900,
+      500
+    ],
+    "qr_bbox_px": [
+      580,
+      50,
+      185,
+      185
+    ],
+    "qr_url": "https://example.com/?setor=12_Autopecas",
+    "sem_arte": "12_Autopecas/Artes_Frontais/SEM_ARTE/05_cartao.jpg"
+  },
+  {
+    "setor": "12_Autopecas",
+    "produto": "06_flyer_cardapio",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1050,
+    "altura_px": 1485,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "12_Autopecas/Artes_Frontais/COM_ARTE/06_flyer_cardapio.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1050,
+      1485
+    ],
+    "sem_arte": "12_Autopecas/Artes_Frontais/SEM_ARTE/06_flyer_cardapio.jpg"
+  },
+  {
+    "setor": "12_Autopecas",
+    "produto": "07_banner_retratil",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 700,
+    "altura_px": 1600,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "12_Autopecas/Artes_Frontais/COM_ARTE/07_banner_retratil.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      700,
+      1600
+    ],
+    "sem_arte": "12_Autopecas/Artes_Frontais/SEM_ARTE/07_banner_retratil.jpg"
+  },
+  {
+    "setor": "12_Autopecas",
+    "produto": "08_adesivo_parede_rotas",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1200,
+    "altura_px": 1000,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "12_Autopecas/Artes_Frontais/COM_ARTE/08_adesivo_parede_rotas.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1200,
+      1000
+    ],
+    "sem_arte": "12_Autopecas/Artes_Frontais/SEM_ARTE/08_adesivo_parede_rotas.jpg"
+  },
+  {
+    "setor": "12_Autopecas",
+    "produto": "09_ecobag",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 900,
+    "altura_px": 1100,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "12_Autopecas/Artes_Frontais/COM_ARTE/09_ecobag.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      900,
+      1100
+    ],
+    "sem_arte": "12_Autopecas/Artes_Frontais/SEM_ARTE/09_ecobag.jpg"
+  },
+  {
+    "setor": "12_Autopecas",
+    "produto": "10_carimbos_papeis",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1300,
+    "altura_px": 1000,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "12_Autopecas/Artes_Frontais/COM_ARTE/10_carimbos_papeis.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1300,
+      1000
+    ],
+    "sem_arte": "12_Autopecas/Artes_Frontais/SEM_ARTE/10_carimbos_papeis.jpg"
+  },
+  {
+    "setor": "12_Autopecas",
+    "produto": "11_wind_banner",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 500,
+    "altura_px": 1600,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "12_Autopecas/Artes_Frontais/COM_ARTE/11_wind_banner.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      500,
+      1600
+    ],
+    "sem_arte": "12_Autopecas/Artes_Frontais/SEM_ARTE/11_wind_banner.jpg"
+  },
+  {
+    "setor": "12_Autopecas",
+    "produto": "12_faixa_horizontal",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1600,
+    "altura_px": 500,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "12_Autopecas/Artes_Frontais/COM_ARTE/12_faixa_horizontal.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1600,
+      500
+    ],
+    "sem_arte": "12_Autopecas/Artes_Frontais/SEM_ARTE/12_faixa_horizontal.jpg"
+  },
+  {
+    "setor": "12_Autopecas",
+    "produto": "13_folheto_promocional",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1500,
+    "altura_px": 1000,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "12_Autopecas/Artes_Frontais/COM_ARTE/13_folheto_promocional.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1500,
+      1000
+    ],
+    "sem_arte": "12_Autopecas/Artes_Frontais/SEM_ARTE/13_folheto_promocional.jpg"
+  },
+  {
+    "setor": "12_Autopecas",
+    "produto": "14_camiseta",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 900,
+    "altura_px": 1100,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "12_Autopecas/Artes_Frontais/COM_ARTE/14_camiseta.jpg",
+    "superficie_bbox_px": [
+      500,
+      300,
+      150,
+      110
+    ],
+    "sem_arte": "12_Autopecas/Artes_Frontais/SEM_ARTE/14_camiseta.jpg"
+  },
+  {
+    "setor": "12_Autopecas",
+    "produto": "15_bone",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1000,
+    "altura_px": 800,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "12_Autopecas/Artes_Frontais/COM_ARTE/15_bone.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1000,
+      800
+    ],
+    "sem_arte": "12_Autopecas/Artes_Frontais/SEM_ARTE/15_bone.jpg"
+  },
+  {
+    "setor": "12_Autopecas",
+    "produto": "16_avental",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 900,
+    "altura_px": 1100,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "12_Autopecas/Artes_Frontais/COM_ARTE/16_avental.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      900,
+      1100
+    ],
+    "sem_arte": "12_Autopecas/Artes_Frontais/SEM_ARTE/16_avental.jpg"
+  },
+  {
+    "setor": "13_Escritorio",
+    "produto": "01_capacho",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1200,
+    "altura_px": 800,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "13_Escritorio/Artes_Frontais/COM_ARTE/01_capacho.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1200,
+      800
+    ],
+    "sem_arte": "13_Escritorio/Artes_Frontais/SEM_ARTE/01_capacho.jpg"
+  },
+  {
+    "setor": "13_Escritorio",
+    "produto": "02_placa",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1000,
+    "altura_px": 650,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "13_Escritorio/Artes_Frontais/COM_ARTE/02_placa.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1000,
+      650
+    ],
+    "sem_arte": "13_Escritorio/Artes_Frontais/SEM_ARTE/02_placa.jpg"
+  },
+  {
+    "setor": "13_Escritorio",
+    "produto": "03_adesivo_vitrine",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 900,
+    "altura_px": 1200,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "13_Escritorio/Artes_Frontais/COM_ARTE/03_adesivo_vitrine.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      900,
+      1200
+    ],
+    "sem_arte": "13_Escritorio/Artes_Frontais/SEM_ARTE/03_adesivo_vitrine.jpg"
+  },
+  {
+    "setor": "13_Escritorio",
+    "produto": "04_uniforme_polo",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 900,
+    "altura_px": 1100,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "13_Escritorio/Artes_Frontais/COM_ARTE/04_uniforme_polo.jpg",
+    "superficie_bbox_px": [
+      500,
+      300,
+      150,
+      110
+    ],
+    "sem_arte": "13_Escritorio/Artes_Frontais/SEM_ARTE/04_uniforme_polo.jpg"
+  },
+  {
+    "setor": "13_Escritorio",
+    "produto": "05_cartao",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 900,
+    "altura_px": 500,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "13_Escritorio/Artes_Frontais/COM_ARTE/05_cartao.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      900,
+      500
+    ],
+    "qr_bbox_px": [
+      580,
+      50,
+      185,
+      185
+    ],
+    "qr_url": "https://example.com/?setor=13_Escritorio",
+    "sem_arte": "13_Escritorio/Artes_Frontais/SEM_ARTE/05_cartao.jpg"
+  },
+  {
+    "setor": "13_Escritorio",
+    "produto": "06_flyer_cardapio",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1050,
+    "altura_px": 1485,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "13_Escritorio/Artes_Frontais/COM_ARTE/06_flyer_cardapio.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1050,
+      1485
+    ],
+    "sem_arte": "13_Escritorio/Artes_Frontais/SEM_ARTE/06_flyer_cardapio.jpg"
+  },
+  {
+    "setor": "13_Escritorio",
+    "produto": "07_banner_retratil",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 700,
+    "altura_px": 1600,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "13_Escritorio/Artes_Frontais/COM_ARTE/07_banner_retratil.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      700,
+      1600
+    ],
+    "sem_arte": "13_Escritorio/Artes_Frontais/SEM_ARTE/07_banner_retratil.jpg"
+  },
+  {
+    "setor": "13_Escritorio",
+    "produto": "08_adesivo_parede_rotas",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1200,
+    "altura_px": 1000,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "13_Escritorio/Artes_Frontais/COM_ARTE/08_adesivo_parede_rotas.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1200,
+      1000
+    ],
+    "sem_arte": "13_Escritorio/Artes_Frontais/SEM_ARTE/08_adesivo_parede_rotas.jpg"
+  },
+  {
+    "setor": "13_Escritorio",
+    "produto": "09_ecobag",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 900,
+    "altura_px": 1100,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "13_Escritorio/Artes_Frontais/COM_ARTE/09_ecobag.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      900,
+      1100
+    ],
+    "sem_arte": "13_Escritorio/Artes_Frontais/SEM_ARTE/09_ecobag.jpg"
+  },
+  {
+    "setor": "13_Escritorio",
+    "produto": "10_carimbos_papeis",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1300,
+    "altura_px": 1000,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "13_Escritorio/Artes_Frontais/COM_ARTE/10_carimbos_papeis.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1300,
+      1000
+    ],
+    "sem_arte": "13_Escritorio/Artes_Frontais/SEM_ARTE/10_carimbos_papeis.jpg"
+  },
+  {
+    "setor": "13_Escritorio",
+    "produto": "11_wind_banner",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 500,
+    "altura_px": 1600,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "13_Escritorio/Artes_Frontais/COM_ARTE/11_wind_banner.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      500,
+      1600
+    ],
+    "sem_arte": "13_Escritorio/Artes_Frontais/SEM_ARTE/11_wind_banner.jpg"
+  },
+  {
+    "setor": "13_Escritorio",
+    "produto": "12_faixa_horizontal",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1600,
+    "altura_px": 500,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "13_Escritorio/Artes_Frontais/COM_ARTE/12_faixa_horizontal.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1600,
+      500
+    ],
+    "sem_arte": "13_Escritorio/Artes_Frontais/SEM_ARTE/12_faixa_horizontal.jpg"
+  },
+  {
+    "setor": "13_Escritorio",
+    "produto": "13_folheto_promocional",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1500,
+    "altura_px": 1000,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "13_Escritorio/Artes_Frontais/COM_ARTE/13_folheto_promocional.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1500,
+      1000
+    ],
+    "sem_arte": "13_Escritorio/Artes_Frontais/SEM_ARTE/13_folheto_promocional.jpg"
+  },
+  {
+    "setor": "13_Escritorio",
+    "produto": "14_camiseta",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 900,
+    "altura_px": 1100,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "13_Escritorio/Artes_Frontais/COM_ARTE/14_camiseta.jpg",
+    "superficie_bbox_px": [
+      500,
+      300,
+      150,
+      110
+    ],
+    "sem_arte": "13_Escritorio/Artes_Frontais/SEM_ARTE/14_camiseta.jpg"
+  },
+  {
+    "setor": "13_Escritorio",
+    "produto": "15_bone",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1000,
+    "altura_px": 800,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "13_Escritorio/Artes_Frontais/COM_ARTE/15_bone.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1000,
+      800
+    ],
+    "sem_arte": "13_Escritorio/Artes_Frontais/SEM_ARTE/15_bone.jpg"
+  },
+  {
+    "setor": "13_Escritorio",
+    "produto": "16_avental",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 900,
+    "altura_px": 1100,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "13_Escritorio/Artes_Frontais/COM_ARTE/16_avental.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      900,
+      1100
+    ],
+    "sem_arte": "13_Escritorio/Artes_Frontais/SEM_ARTE/16_avental.jpg"
+  },
+  {
+    "setor": "14_Mercado",
+    "produto": "01_capacho",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1200,
+    "altura_px": 800,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "14_Mercado/Artes_Frontais/COM_ARTE/01_capacho.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1200,
+      800
+    ],
+    "sem_arte": "14_Mercado/Artes_Frontais/SEM_ARTE/01_capacho.jpg"
+  },
+  {
+    "setor": "14_Mercado",
+    "produto": "02_placa",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1000,
+    "altura_px": 650,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "14_Mercado/Artes_Frontais/COM_ARTE/02_placa.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1000,
+      650
+    ],
+    "sem_arte": "14_Mercado/Artes_Frontais/SEM_ARTE/02_placa.jpg"
+  },
+  {
+    "setor": "14_Mercado",
+    "produto": "03_adesivo_vitrine",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 900,
+    "altura_px": 1200,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "14_Mercado/Artes_Frontais/COM_ARTE/03_adesivo_vitrine.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      900,
+      1200
+    ],
+    "sem_arte": "14_Mercado/Artes_Frontais/SEM_ARTE/03_adesivo_vitrine.jpg"
+  },
+  {
+    "setor": "14_Mercado",
+    "produto": "04_uniforme_polo",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 900,
+    "altura_px": 1100,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "14_Mercado/Artes_Frontais/COM_ARTE/04_uniforme_polo.jpg",
+    "superficie_bbox_px": [
+      500,
+      300,
+      150,
+      110
+    ],
+    "sem_arte": "14_Mercado/Artes_Frontais/SEM_ARTE/04_uniforme_polo.jpg"
+  },
+  {
+    "setor": "14_Mercado",
+    "produto": "05_cartao",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 900,
+    "altura_px": 500,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "14_Mercado/Artes_Frontais/COM_ARTE/05_cartao.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      900,
+      500
+    ],
+    "qr_bbox_px": [
+      580,
+      50,
+      185,
+      185
+    ],
+    "qr_url": "https://example.com/?setor=14_Mercado",
+    "sem_arte": "14_Mercado/Artes_Frontais/SEM_ARTE/05_cartao.jpg"
+  },
+  {
+    "setor": "14_Mercado",
+    "produto": "06_flyer_cardapio",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1050,
+    "altura_px": 1485,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "14_Mercado/Artes_Frontais/COM_ARTE/06_flyer_cardapio.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1050,
+      1485
+    ],
+    "sem_arte": "14_Mercado/Artes_Frontais/SEM_ARTE/06_flyer_cardapio.jpg"
+  },
+  {
+    "setor": "14_Mercado",
+    "produto": "07_banner_retratil",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 700,
+    "altura_px": 1600,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "14_Mercado/Artes_Frontais/COM_ARTE/07_banner_retratil.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      700,
+      1600
+    ],
+    "sem_arte": "14_Mercado/Artes_Frontais/SEM_ARTE/07_banner_retratil.jpg"
+  },
+  {
+    "setor": "14_Mercado",
+    "produto": "08_adesivo_parede_rotas",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1200,
+    "altura_px": 1000,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "14_Mercado/Artes_Frontais/COM_ARTE/08_adesivo_parede_rotas.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1200,
+      1000
+    ],
+    "sem_arte": "14_Mercado/Artes_Frontais/SEM_ARTE/08_adesivo_parede_rotas.jpg"
+  },
+  {
+    "setor": "14_Mercado",
+    "produto": "09_ecobag",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 900,
+    "altura_px": 1100,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "14_Mercado/Artes_Frontais/COM_ARTE/09_ecobag.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      900,
+      1100
+    ],
+    "sem_arte": "14_Mercado/Artes_Frontais/SEM_ARTE/09_ecobag.jpg"
+  },
+  {
+    "setor": "14_Mercado",
+    "produto": "10_carimbos_papeis",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1300,
+    "altura_px": 1000,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "14_Mercado/Artes_Frontais/COM_ARTE/10_carimbos_papeis.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1300,
+      1000
+    ],
+    "sem_arte": "14_Mercado/Artes_Frontais/SEM_ARTE/10_carimbos_papeis.jpg"
+  },
+  {
+    "setor": "14_Mercado",
+    "produto": "11_wind_banner",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 500,
+    "altura_px": 1600,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "14_Mercado/Artes_Frontais/COM_ARTE/11_wind_banner.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      500,
+      1600
+    ],
+    "sem_arte": "14_Mercado/Artes_Frontais/SEM_ARTE/11_wind_banner.jpg"
+  },
+  {
+    "setor": "14_Mercado",
+    "produto": "12_faixa_horizontal",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1600,
+    "altura_px": 500,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "14_Mercado/Artes_Frontais/COM_ARTE/12_faixa_horizontal.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1600,
+      500
+    ],
+    "sem_arte": "14_Mercado/Artes_Frontais/SEM_ARTE/12_faixa_horizontal.jpg"
+  },
+  {
+    "setor": "14_Mercado",
+    "produto": "13_folheto_promocional",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1500,
+    "altura_px": 1000,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "14_Mercado/Artes_Frontais/COM_ARTE/13_folheto_promocional.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1500,
+      1000
+    ],
+    "sem_arte": "14_Mercado/Artes_Frontais/SEM_ARTE/13_folheto_promocional.jpg"
+  },
+  {
+    "setor": "14_Mercado",
+    "produto": "14_camiseta",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 900,
+    "altura_px": 1100,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "14_Mercado/Artes_Frontais/COM_ARTE/14_camiseta.jpg",
+    "superficie_bbox_px": [
+      500,
+      300,
+      150,
+      110
+    ],
+    "sem_arte": "14_Mercado/Artes_Frontais/SEM_ARTE/14_camiseta.jpg"
+  },
+  {
+    "setor": "14_Mercado",
+    "produto": "15_bone",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 1000,
+    "altura_px": 800,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "14_Mercado/Artes_Frontais/COM_ARTE/15_bone.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      1000,
+      800
+    ],
+    "sem_arte": "14_Mercado/Artes_Frontais/SEM_ARTE/15_bone.jpg"
+  },
+  {
+    "setor": "14_Mercado",
+    "produto": "16_avental",
+    "tipo": "maquete_frontal_vetorial",
+    "largura_px": 900,
+    "altura_px": 1100,
+    "fontes": "DejaVu Sans e DejaVu Serif",
+    "calibracao": "arte_frontal; adaptar ao gabarito do fornecedor",
+    "com_arte": "14_Mercado/Artes_Frontais/COM_ARTE/16_avental.jpg",
+    "superficie_bbox_px": [
+      0,
+      0,
+      900,
+      1100
+    ],
+    "sem_arte": "14_Mercado/Artes_Frontais/SEM_ARTE/16_avental.jpg"
+  }
+]

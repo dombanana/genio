@@ -1,0 +1,640 @@
+{
+ "setor": "03_Padaria",
+ "versao_kit": 2,
+ "calibrado_em": "2026-11-10",
+ "metodo": "diferença COM_ARTE×SEM_ARTE (medida nas fotos do kit, não estimada)",
+ "unidade": "px na imagem original 1536x1024",
+ "ordem_cantos": "topo-esq, topo-dir, inf-dir, inf-esq",
+ "produtos": {
+  "01": {
+   "produto": "Capacho",
+   "superficie": "fibra",
+   "material_recolor": true,
+   "aplicacao": "impressao_total",
+   "fundo_arte": "cor_material",
+   "borda_px": 14,
+   "margem": 0.06,
+   "arquivo": "SEM_ARTE/01_capacho.jpg",
+   "demo": "COM_ARTE/01_capacho.jpg",
+   "sha256_base": "fce7a318b483439574e55e132c6d8b0dda95fbd32c7a245a493ba31c0178838f",
+   "plano": [
+    [
+     61,
+     501
+    ],
+    [
+     973,
+     357
+    ],
+    [
+     1442,
+     568
+    ],
+    [
+     354,
+     939
+    ]
+   ],
+   "modo": "quadrilatero+superficie",
+   "area_rel": 0.2687,
+   "px": [
+    1536,
+    1024
+   ],
+   "limiar": 18,
+   "deslocamento": [
+    0,
+    0
+   ],
+   "qualidade": "ok"
+  },
+  "02": {
+   "produto": "Placa",
+   "superficie": "rigida",
+   "material_recolor": true,
+   "aplicacao": "impressao_total",
+   "oclusoes": "parafusos",
+   "arquivo": "SEM_ARTE/02_placa.jpg",
+   "demo": "COM_ARTE/02_placa.jpg",
+   "sha256_base": "a7fc0abca8924e5f3857018c76335b76cd0dab6bdff1a2ee1e6606ae1b51c9a0",
+   "plano": [
+    [
+     396,
+     191
+    ],
+    [
+     1327,
+     73
+    ],
+    [
+     1337,
+     843
+    ],
+    [
+     396,
+     793
+    ]
+   ],
+   "modo": "manual",
+   "area_rel": 0.3098,
+   "px": [
+    1536,
+    1024
+   ],
+   "limiar": 8,
+   "deslocamento": [
+    0,
+    0
+   ],
+   "qualidade": "marcada a olho na foto (grade), 10/11"
+  },
+  "03": {
+   "produto": "Adesivo de vitrine",
+   "superficie": "vidro",
+   "material_recolor": false,
+   "aplicacao": "vinil_recortado",
+   "arquivo": "SEM_ARTE/03_adesivo_vitrine.jpg",
+   "demo": "COM_ARTE/03_adesivo_vitrine.jpg",
+   "sha256_base": "df7fea5aedc789460864f833b18acc2e2e723cf68f9e1ff3ac52c497e6aea3bf",
+   "plano": [
+    [
+     363,
+     117
+    ],
+    [
+     1088,
+     117
+    ],
+    [
+     1088,
+     720
+    ],
+    [
+     363,
+     720
+    ]
+   ],
+   "modo": "caixa",
+   "area_rel": 0.2779,
+   "px": [
+    1536,
+    1024
+   ],
+   "limiar": 18,
+   "deslocamento": [
+    0,
+    0
+   ],
+   "qualidade": "ok"
+  },
+  "04": {
+   "produto": "Uniforme polo",
+   "superficie": "tecido",
+   "material_recolor": false,
+   "aplicacao": "bordado_peito",
+   "arquivo": "SEM_ARTE/04_uniforme_polo.jpg",
+   "demo": "COM_ARTE/04_uniforme_polo.jpg",
+   "sha256_base": "94f068ee6f60de9fedb4215365f91237c6bbf3b2d2f3060593c29a911324a23a",
+   "plano": [
+    [
+     870,
+     267
+    ],
+    [
+     961,
+     267
+    ],
+    [
+     961,
+     351
+    ],
+    [
+     870,
+     351
+    ]
+   ],
+   "modo": "caixa",
+   "area_rel": 0.0049,
+   "px": [
+    1536,
+    1024
+   ],
+   "limiar": 28,
+   "deslocamento": [
+    0,
+    0
+   ],
+   "qualidade": "ok"
+  },
+  "05": {
+   "produto": "Cartão de visita",
+   "superficie": "papel",
+   "material_recolor": false,
+   "aplicacao": "impressao_total",
+   "arquivo": "SEM_ARTE/05_cartao.jpg",
+   "demo": "COM_ARTE/05_cartao.jpg",
+   "sha256_base": "245f8821d9045188e44dacf97e572f38e6a000174978de5cfa58e1c2f6851446",
+   "plano": [
+    [
+     456,
+     252
+    ],
+    [
+     1310,
+     390
+    ],
+    [
+     1158,
+     823
+    ],
+    [
+     247,
+     656
+    ]
+   ],
+   "modo": "manual",
+   "area_rel": 0.3019,
+   "px": [
+    1536,
+    1024
+   ],
+   "limiar": 18,
+   "deslocamento": [
+    0,
+    0
+   ],
+   "qualidade": "marcada a olho na foto (grade), 10/11"
+  },
+  "06": {
+   "produto": "Flyer",
+   "superficie": "papel",
+   "material_recolor": false,
+   "aplicacao": "impressao_total",
+   "arquivo": "SEM_ARTE/06_flyer_cardapio.jpg",
+   "demo": "COM_ARTE/06_flyer_cardapio.jpg",
+   "sha256_base": "1a17635e1f1a5cf99739df9225e518bebb2c5ccb18c34f78b3fcc17883d78f1b",
+   "plano": [
+    [
+     714,
+     61
+    ],
+    [
+     1291,
+     159
+    ],
+    [
+     1051,
+     959
+    ],
+    [
+     339,
+     791
+    ]
+   ],
+   "modo": "quadrilatero+superficie",
+   "area_rel": 0.3395,
+   "px": [
+    1536,
+    1024
+   ],
+   "limiar": 18,
+   "deslocamento": [
+    0,
+    0
+   ],
+   "qualidade": "ok"
+  },
+  "07": {
+   "produto": "Banner retrátil",
+   "superficie": "lona",
+   "material_recolor": false,
+   "aplicacao": "impressao_total",
+   "ancora": "topo",
+   "arquivo": "SEM_ARTE/07_banner_retratil.jpg",
+   "demo": "COM_ARTE/07_banner_retratil.jpg",
+   "sha256_base": "b889a1157abcb0d23ebfdd22461d2c52d7e9ae72f60bcf6fd1c4cba08e7784a6",
+   "plano": [
+    [
+     783,
+     52
+    ],
+    [
+     1099,
+     26
+    ],
+    [
+     1095,
+     931
+    ],
+    [
+     783,
+     900
+    ]
+   ],
+   "modo": "quadrilatero+superficie",
+   "area_rel": 0.175,
+   "px": [
+    1536,
+    1024
+   ],
+   "limiar": 18,
+   "deslocamento": [
+    0,
+    0
+   ],
+   "qualidade": "ok"
+  },
+  "08": {
+   "produto": "Adesivo de parede",
+   "superficie": "parede",
+   "material_recolor": false,
+   "aplicacao": "vinil_recortado",
+   "arquivo": "SEM_ARTE/08_adesivo_parede_rotas.jpg",
+   "demo": "COM_ARTE/08_adesivo_parede_rotas.jpg",
+   "sha256_base": "5faea568d92d17a74add9d6c7f0e4bf7722e84271723c2fddefdb623dda240ac",
+   "plano": [
+    [
+     412,
+     60
+    ],
+    [
+     1153,
+     60
+    ],
+    [
+     1153,
+     751
+    ],
+    [
+     412,
+     751
+    ]
+   ],
+   "modo": "caixa",
+   "area_rel": 0.3255,
+   "px": [
+    1536,
+    1024
+   ],
+   "limiar": 18,
+   "deslocamento": [
+    0,
+    0
+   ],
+   "qualidade": "ok"
+  },
+  "09": {
+   "produto": "Ecobag",
+   "superficie": "tecido",
+   "material_recolor": false,
+   "aplicacao": "serigrafia",
+   "arquivo": "SEM_ARTE/09_ecobag.jpg",
+   "demo": "COM_ARTE/09_ecobag.jpg",
+   "sha256_base": "84545003363d5f2a072c5e528aada7a8e2f6c638790eb6af59e1871f8d209d5d",
+   "plano": [
+    [
+     723,
+     464
+    ],
+    [
+     1126,
+     464
+    ],
+    [
+     1126,
+     764
+    ],
+    [
+     723,
+     764
+    ]
+   ],
+   "modo": "caixa",
+   "area_rel": 0.0769,
+   "px": [
+    1536,
+    1024
+   ],
+   "limiar": 18,
+   "deslocamento": [
+    0,
+    0
+   ],
+   "qualidade": "ok"
+  },
+  "10": {
+   "produto": "Papéis carimbados",
+   "superficie": "papel",
+   "material_recolor": false,
+   "aplicacao": "impressao_total",
+   "arquivo": "SEM_ARTE/10_carimbos_papeis.jpg",
+   "demo": "COM_ARTE/10_carimbos_papeis.jpg",
+   "sha256_base": "6bd58c92f8ce7b0097c280685a7e66d175ecdb76237f70695003037940c04195",
+   "plano": [
+    [
+     519,
+     242
+    ],
+    [
+     1346,
+     242
+    ],
+    [
+     1346,
+     973
+    ],
+    [
+     519,
+     973
+    ]
+   ],
+   "modo": "caixa",
+   "area_rel": 0.3844,
+   "px": [
+    1536,
+    1024
+   ],
+   "limiar": 28,
+   "deslocamento": [
+    0,
+    0
+   ],
+   "qualidade": "ok"
+  },
+  "11": {
+   "produto": "Wind banner",
+   "superficie": "tecido",
+   "material_recolor": true,
+   "aplicacao": "impressao_total",
+   "fundo_arte": "cor_material",
+   "arquivo": "SEM_ARTE/11_wind_banner.jpg",
+   "demo": "COM_ARTE/11_wind_banner.jpg",
+   "sha256_base": "35798a9b15d8ad020506ac96c8dff1b6fe5cf01e5b74979c3fca6041316eecdc",
+   "plano": [
+    [
+     1004,
+     87
+    ],
+    [
+     1182,
+     31
+    ],
+    [
+     1142,
+     734
+    ],
+    [
+     940,
+     763
+    ]
+   ],
+   "modo": "quadrilatero+superficie",
+   "area_rel": 0.0819,
+   "px": [
+    1536,
+    1024
+   ],
+   "limiar": 18,
+   "deslocamento": [
+    0,
+    0
+   ],
+   "qualidade": "ok"
+  },
+  "12": {
+   "produto": "Faixa horizontal",
+   "superficie": "lona",
+   "material_recolor": false,
+   "aplicacao": "impressao_total",
+   "arquivo": "SEM_ARTE/12_faixa_horizontal.jpg",
+   "demo": "COM_ARTE/12_faixa_horizontal.jpg",
+   "sha256_base": "c2d1e7f1755ebb20f472a5777da286d77024d69043b39335e8f05e3ad173ae7c",
+   "plano": [
+    [
+     512,
+     163
+    ],
+    [
+     1955,
+     136
+    ],
+    [
+     1983,
+     485
+    ],
+    [
+     533,
+     503
+    ]
+   ],
+   "modo": "quadrilatero+superficie",
+   "area_rel": 0.3172,
+   "px": [
+    2172,
+    724
+   ],
+   "limiar": 18,
+   "deslocamento": [
+    0,
+    0
+   ],
+   "qualidade": "ok"
+  },
+  "13": {
+   "produto": "Folheto promocional",
+   "superficie": "papel",
+   "material_recolor": false,
+   "aplicacao": "impressao_total",
+   "arquivo": "SEM_ARTE/13_folheto_promocional.jpg",
+   "demo": "COM_ARTE/13_folheto_promocional.jpg",
+   "sha256_base": "1da18b828e3d42f39c39d66389076adc69c4cc00c4d9fb6a7dbaa24077956f5a",
+   "plano": [
+    [
+     225,
+     247
+    ],
+    [
+     902,
+     192
+    ],
+    [
+     1164,
+     804
+    ],
+    [
+     377,
+     945
+    ]
+   ],
+   "modo": "quadrilatero+superficie",
+   "area_rel": 0.3177,
+   "px": [
+    1536,
+    1024
+   ],
+   "limiar": 18,
+   "deslocamento": [
+    0,
+    0
+   ],
+   "qualidade": "ok"
+  },
+  "14": {
+   "produto": "Camiseta",
+   "superficie": "tecido",
+   "material_recolor": false,
+   "aplicacao": "serigrafia",
+   "arquivo": "SEM_ARTE/14_camiseta.jpg",
+   "demo": "COM_ARTE/14_camiseta.jpg",
+   "sha256_base": "5cf0e6337cb0ed5293f1d81ad847b731a5595002a74727abc154921968d2a0bb",
+   "plano": [
+    [
+     920,
+     361
+    ],
+    [
+     1001,
+     361
+    ],
+    [
+     1001,
+     443
+    ],
+    [
+     920,
+     443
+    ]
+   ],
+   "modo": "caixa",
+   "area_rel": 0.0042,
+   "px": [
+    1536,
+    1024
+   ],
+   "limiar": 28,
+   "deslocamento": [
+    0,
+    0
+   ],
+   "qualidade": "ok"
+  },
+  "15": {
+   "produto": "Boné",
+   "superficie": "tecido",
+   "material_recolor": false,
+   "aplicacao": "bordado_peito",
+   "arquivo": "SEM_ARTE/15_bone.jpg",
+   "demo": "COM_ARTE/15_bone.jpg",
+   "sha256_base": "25711b18f0489f80506bd07fd119e7c46740aa32374b467b58bc410310fc1cef",
+   "plano": [
+    [
+     680,
+     372
+    ],
+    [
+     949,
+     372
+    ],
+    [
+     949,
+     595
+    ],
+    [
+     680,
+     595
+    ]
+   ],
+   "modo": "caixa",
+   "area_rel": 0.0381,
+   "px": [
+    1536,
+    1024
+   ],
+   "limiar": 28,
+   "deslocamento": [
+    0,
+    0
+   ],
+   "qualidade": "ok"
+  },
+  "16": {
+   "produto": "Avental",
+   "superficie": "tecido",
+   "material_recolor": false,
+   "aplicacao": "serigrafia",
+   "arquivo": "SEM_ARTE/16_avental.jpg",
+   "demo": "COM_ARTE/16_avental.jpg",
+   "sha256_base": "32207ca2ca4ae066e10359e175cacd786c4556af556bd2fbe8257e56a7cf81c4",
+   "plano": [
+    [
+     737,
+     286
+    ],
+    [
+     914,
+     286
+    ],
+    [
+     914,
+     441
+    ],
+    [
+     737,
+     441
+    ]
+   ],
+   "modo": "caixa",
+   "area_rel": 0.0174,
+   "px": [
+    1536,
+    1024
+   ],
+   "limiar": 28,
+   "deslocamento": [
+    0,
+    0
+   ],
+   "qualidade": "ok"
+  }
+ }
+}
