@@ -172,7 +172,11 @@
           const cv=document.createElement("canvas").getContext("2d");
           // quanto mais estreito, mais a frase cresce (até 2,5×) e quebra em linhas equilibradas para caber na largura
           const k=Math.min(2.5,Math.max(1,ar/1.6));
-          const quebra=(t,mx)=>{const pal=String(t).split(/\s+/),ls=[];let cur="";pal.forEach(w=>{const x=cur?cur+" "+w:w;if(cv.measureText(x).width>mx&&cur){ls.push(cur);cur=w;}else cur=x;});if(cur)ls.push(cur);return ls;};
+          // quebra preferindo depois de "·" e ","; faixa de horário (12:00 – 15:00) nunca se separa; "·" no fim da linha sai
+          const quebra=(t,mx)=>{const G="\u0001",w=x=>cv.measureText(x.split(G).join(" ")).width,ls=[];let cur="";
+            const add=pc=>{const x=cur?cur+" "+pc:pc;if(w(x)>mx&&cur){ls.push(cur);cur=pc;}else cur=x;};
+            String(t).replace(/\s*[–-]\s*(?=\d)/g,G+"–"+G).replace(/(^|\s)(\p{L}{2,3})\s+(?=\d)/gu,"$1$2"+G).split(/(?<=[·,])\s+/).forEach(f=>{if(w(f)<=mx)add(f);else f.split(/\s+/).forEach(add);});
+            if(cur)ls.push(cur);return ls.map(l=>l.split(G).join(" ").replace(/\s*·$/,""));};
           linhas.forEach(l=>{if(!l.els.every(e=>e.tipo==="texto"))return;
             l.els.forEach(e=>{if(!e.texto)return;const cx0=e.x+e.w/2;
               if(k>1){e.tam*=k;e.w*=k;e.h*=k;e.x=cx0-e.w/2;}
