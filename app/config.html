@@ -6,7 +6,7 @@
 <title>GênIO · Configuração</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="app.css?v=7ea83155b3">
+<link rel="stylesheet" href="app.css?v=629270c666">
 <style>
 .forn{display:grid;grid-template-columns:1fr;gap:6px;margin:8px 0 0}
 .forn .it{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;background:var(--lav);border-radius:12px;padding:10px 12px}
@@ -19,11 +19,12 @@
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=7ea83155b3"></script>
+<script src="app.js?v=629270c666"></script>
 <script>
 (async()=>{
   const {$,$$,esc,sessao,nav,topo}=App;
   if(!await sessao())return;
+  await App.dados().catch(()=>null);
   const API=(()=>{try{return window.top.REC_API||null;}catch(e){return null;}})();
   let tipoSel=localStorage.getItem("rec-tipo")||"audio",telaAcesa=localStorage.getItem("rec-tela")!=="0";
   const TIPOS=[["audio","","Áudio"],["transcrever","","Transcrever"],["video-tras","","Vídeo"],["foto","","Foto"]];if(!TIPOS.some(t=>t[0]===tipoSel)){tipoSel="audio";try{localStorage.setItem("rec-tipo","audio");}catch(e){}}
@@ -38,9 +39,13 @@
       <div class="rec-tipos">${TIPOS.map(([k,ic,n])=>`<button type="button" data-t="${k}" class="${tipoSel===k?"on":""}" ${(k==="transcrever"&&!E.suporte.transcrever)?'disabled title="não disponível neste navegador"':""}><span class="ic-modo">${App.ICONES.recModo(k)}</span>${n}</button>`).join("")}</div>
       <div class="rec-opc"><label><input type="checkbox" id="rTela" ${telaAcesa?"checked":""} ${E.suporte.wake?"":"disabled"}> manter a tela acesa enquanto grava${E.suporte.wake?"":" (sem suporte)"}</label></div>
       ${tipoSel.startsWith("video")?'<small class="muted">O vídeo abre a câmera do próprio celular; ao terminar, ele volta e fica nas notas.</small>':tipoSel==="transcrever"?'<small class="muted">Transcrição pelo reconhecimento de voz do navegador (precisa de internet); salva só o texto.</small>':""}</section>
+    <section class="card" id="metas"><h2>Metas de venda</h2><small class="muted" style="display:block;margin:0 0 8px">Venda = pedido confirmado (sai da Entrada). Aparecem ao lado do seu nome, no topo.</small>
+      <div class="metas-f"><label>Meta do dia<input type="number" min="0" inputmode="numeric" id="mDia" value="${App.METAS.dia||""}" placeholder="vendas"></label><label>Meta do mês<input type="number" min="0" inputmode="numeric" id="mMes" value="${App.METAS.mes||""}" placeholder="vendas"></label><label>Jornada (horas)<input type="number" min="1" max="14" inputmode="numeric" id="mJor" value="${App.METAS.jornada||8}"></label></div></section>
     <section class="card"><h2>Fornecedores por item</h2><small class="muted">Quem produz cada item e observações. Preços entram na fase do orçamento.</small>
       <div class="forn">${Object.entries(F).map(([k,v])=>`<div class="it"><div><b>${esc(v.item)}</b><small>${esc(v.fornecedor||"a definir")}${v.obs?" · "+esc(v.obs):""}${v.link?` · <a href="${esc(v.link)}" target="_blank" rel="noopener">site</a>`:""}</small></div><button type="button" data-f="${k}">Editar</button></div>`).join("")}</div></section>
     ${nav("config")}`;
+    ["mDia","mMes","mJor"].forEach(id=>{const i=$("#"+id);if(i)i.onchange=()=>{const m={...App.METAS,dia:+$("#mDia").value||0,mes:+$("#mMes").value||0,jornada:+$("#mJor").value||8};App.gravarChave("metas",m);Object.assign(App.METAS,m);};});
+    if(location.hash==="#metas"&&!render._r){render._r=1;setTimeout(()=>{const s=$("#metas");if(s)s.scrollIntoView({block:"start"});},50);}
     $$("#app [data-t]").forEach(b=>b.onclick=()=>{tipoSel=b.dataset.t;localStorage.setItem("rec-tipo",tipoSel);render();});
     $("#rTela").onchange=ev=>{telaAcesa=ev.target.checked;localStorage.setItem("rec-tela",telaAcesa?"1":"0");};
     $$("[data-f]").forEach(b=>b.onclick=()=>{const k=b.dataset.f,v=F[k];const f=document.createElement("div");f.className="rec-fundo";f.style.zIndex=70;const m=document.createElement("div");m.className="ed-forn";

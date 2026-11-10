@@ -6,7 +6,7 @@
 <title>GênIO · Visita</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="app.css?v=7ea83155b3">
+<link rel="stylesheet" href="app.css?v=629270c666">
 <style>
 .cab{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
 .fach{width:100%;aspect-ratio:16/9;border-radius:16px;overflow:hidden;background:var(--lav2);display:grid;place-items:center;position:relative}
@@ -21,7 +21,7 @@
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=7ea83155b3"></script>
+<script src="app.js?v=629270c666"></script>
 <script>
 (async()=>{
   const {$,$$,esc,qs,sessao,dados,ficha,estrelasHTML,estado,salvar,nav,topo,voltar,setorNome,nomeLoja,telFmt,cliente,gravarCliente,classificar,definirCliente,menuLongo,ligarLongo,ZONA,entradas,ligarEntradas,abrirLogotipo,logoPrincipal,removerLogo}=App;
@@ -45,6 +45,19 @@
   const prodNomes=p=>String(p||"").split("+").map(x=>PROD_NOME[x]||x).join(" + ");
   // quebra-gelo: curiosidade + o que as avaliações sustentam; sem avaliação negativa, entra o padrão do setor
   const falaGelo=()=>[`${nome}.`,...curios,...GAT.map(g=>`Nas avaliações falam de ${g.tema}: "${(g.trecho||"").replace(/…/g,"")}". ${g.argumento}`)].join(" ");
+  // ---- atendimento: início e fim marcados aqui; o tempo de cada loja alimenta média, ciclo e conversão (chip de metas)
+  const fmtT=ms=>{const s=Math.max(0,Math.floor(ms/1000));return `${Math.floor(s/60)}:${String(s%60).padStart(2,"0")}`;};
+  function atendHTML(){const A=(estado().atend||{})[slug]||{};
+    if(A.ini&&!A.fim)return `<div class="atend rodando"><div class="t"><small>Em atendimento</small><b id="atT">${fmtT(Date.now()-new Date(A.ini))}</b></div><button type="button" class="fim" id="atFim">Terminar atendimento</button></div>`;
+    if(A.ini&&A.fim)return `<div class="atend"><div class="t"><small>Atendimento feito</small><b>${Math.max(1,Math.round((new Date(A.fim)-new Date(A.ini))/6e4))} min</b></div><button type="button" class="ini" id="atIni" style="background:var(--lav);color:var(--marca)">Recomeçar</button></div>`;
+    return `<div class="atend"><div class="t"><small>Atendimento</small><b>Não iniciado</b></div><button type="button" class="ini" id="atIni">Iniciar atendimento</button></div>`;}
+  setInterval(()=>{const t=document.getElementById("atT");const A=(estado().atend||{})[slug];if(t&&A&&A.ini&&!A.fim)t.textContent=fmtT(Date.now()-new Date(A.ini));},1000);
+  document.addEventListener("click",ev=>{const ini=ev.target.closest&&ev.target.closest("#atIni"),fim=ev.target.closest&&ev.target.closest("#atFim");if(!ini&&!fim)return;const e=estado();e.atend=e.atend||{};const agora=new Date().toISOString();
+    if(ini){// outra loja em andamento termina agora
+      for(const [s,x] of Object.entries(e.atend))if(s!==slug&&x&&x.ini&&!x.fim)x.fim=agora;
+      e.atend[slug]={ini:agora};}
+    else{e.atend[slug]={...e.atend[slug],fim:agora};if(!(e.feitas||[]).includes(slug))e.feitas=[...(e.feitas||[]),slug];}
+    salvar(e);const y=scrollY;render();scrollTo(0,y);});
   // ---- mensagens do cliente (painel dele / Mostraí): conversa no servidor; abrir a loja marca como lidas
   let MSGS=[];try{const r=await fetch(`/api/mensagens/${encodeURIComponent(slug)}`,{credentials:"same-origin",cache:"no-store"});if(r.ok)MSGS=(await r.json()).mensagens||[];}catch(err){}
   if(MSGS.some(m=>!m.lida)){fetch(`/api/mensagens/${encodeURIComponent(slug)}/lidas`,{method:"PUT",credentials:"same-origin",headers:{"Content-Type":"application/json"},body:"{}"}).then(()=>{try{window.top.postMessage({genio:"avisos"},location.origin);}catch(err){}}).catch(()=>{});}
@@ -75,6 +88,7 @@
     const pronto=!!(c.manual&&c.manual.editado);const e=estado();
     $("#app").innerHTML=`${topo()}${voltar("index.html","Rota")}
     <div class="cab"><div><h1 style="margin-bottom:2px">${esc(nome)}${l.avulso?` <button type="button" id="edAvulso" class="btn sec sm" style="width:auto;min-height:32px;padding:0 10px;font-size:13px;vertical-align:middle">✎</button>`:""}</h1><p class="sub">${esc(setorNome(l.setor))} · <a href="${l.maps||(l.place_id?`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((l.endereco||l.nome)+", São Paulo")}&query_place_id=${encodeURIComponent(l.place_id)}`:(l.lat&&l.lng?`https://www.google.com/maps/search/?api=1&query=${l.lat},${l.lng}`:`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((l.endereco||l.nome)+", São Paulo")}`))}" target="_blank" rel="noopener" style="color:var(--marca);text-decoration:underline;text-underline-offset:3px">📍 ${esc(l.endereco||"ver no mapa")}</a></p></div><div style="padding-top:8px">${estrelasHTML(l.estrelas)}</div></div>
+    ${atendHTML()}
     ${(()=>{const prod=(c.produtos||[])[0];const capa=fach?[fach,"Fachada"]:prod?[abs(prod.src),"Produto · sem fachada"]:logo?[logo,"Logotipo · sem fachada"]:null;
       return `<div class="fach" data-longo data-src="${esc(capa?capa[0]:"")}">${capa?`<img src="${esc(capa[0])}" alt="" ${capa[1]!=="Fachada"?'style="object-fit:contain;background:#fff"':""}><span class="sel">${capa[1]}</span>`:`<div class="nome-logo"><b>${esc(nome)}</b><small>${esc(setorNome(l.setor))}</small></div><span class="sel">Nome · sem imagem</span>`}</div>`;})()}
     ${mensagensHTML()}

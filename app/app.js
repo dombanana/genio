@@ -49,8 +49,8 @@ const App=(()=>{
   const lerChave=async k=>{try{const r=await API("GET",`/api/estado/${k}`);if(!r.ok)return null;return (await r.json()).valor;}catch(e){return null;}};
   const _fila={};async function gravarChave(k,v){_fila[k]=v;if(_fila["_"+k])return;_fila["_"+k]=true;try{while(_fila[k]!==undefined){const val=_fila[k];delete _fila[k];const r=await API("PUT",`/api/estado/${k}`,{valor:val});if(!r.ok){console.warn("não gravou",k,r.status);avisarFalha("Não consegui gravar no servidor ("+r.status+"). Confira a conexão.");}}}catch(e){avisarFalha("Sem conexão com o servidor. A última alteração não foi gravada.");}finally{delete _fila["_"+k];}}
   let _aviso=0;function avisarFalha(t){if(Date.now()-_aviso<8000)return;_aviso=Date.now();try{const d=document.createElement("div");d.className="aviso-rede";d.textContent=t;document.body.appendChild(d);setTimeout(()=>d.remove(),6000);}catch(e){}}
-  let EST={},AVU=[],OCO=[];
-  async function carregarEstado(){let [e,a,o]=await Promise.all([lerChave("dia"),lerChave("avulsos"),lerChave("ocorrencias")]);if(!e||!Object.keys(e).length){const ant=await lerChave("dia-zona-cerealista");if(ant&&Object.keys(ant).length){e={feitas:ant.feitas||[],pedidos:ant.pedidos||{}};gravarChave("dia",e);}}EST=e||{};AVU=Array.isArray(a)?a:[];OCO=Array.isArray(o)?o:[];}
+  let EST={},AVU=[],OCO=[],METAS={};
+  async function carregarEstado(){let [e,a,o,mt]=await Promise.all([lerChave("dia"),lerChave("avulsos"),lerChave("ocorrencias"),lerChave("metas")]);METAS=mt||{};if(!e||!Object.keys(e).length){const ant=await lerChave("dia-zona-cerealista");if(ant&&Object.keys(ant).length){e={feitas:ant.feitas||[],pedidos:ant.pedidos||{}};gravarChave("dia",e);}}EST=e||{};AVU=Array.isArray(a)?a:[];OCO=Array.isArray(o)?o:[];}
   const avulsos=()=>AVU;
   function novoAvulso(dadosA){const a={slug:"avulso-"+Date.now().toString(36),nome:(dadosA&&dadosA.nome)||("Pedido avulso "+new Date().toLocaleDateString("pt-BR")),tel:(dadosA&&dadosA.tel)||"",endereco:(dadosA&&dadosA.endereco)||"",setor:(dadosA&&dadosA.setor)||"comércio",criado:new Date().toISOString()};
     AVU.unshift(a);gravarChave("avulsos",AVU);if(D)D.lojas.push({...a,estrelas:0,avulso:true,dia:99,ordem:0});return a;}
@@ -193,7 +193,7 @@ const App=(()=>{
   // ---- arte automática: logotipo tratado centralizado preenchendo a área segura do gabarito, cor padrão do material
   const COR_PADRAO={capacho:"#2B2B2D",rigido:"#F4F1EA",vinil:null,tecido:"#F4F1EA",papel:"#FFFFFF",lona:"#FFFFFF",carimbo:null};
   const PRODUTOS_IDS=["capacho","placas","adesivos","uniformes","impressos","panfleto","banners","parede","brindes","carimbo","windbanner","faixa","folheto","camiseta","bone","avental"];
-  let _G=null;const gabaritos=async()=>_G||(_G=await (await fetch("gabaritos.json?v=7ea83155b3")).json());
+  let _G=null;const gabaritos=async()=>_G||(_G=await (await fetch("gabaritos.json?v=629270c666")).json());
   const carregarImg=src=>new Promise(res=>{const i=new Image();i.crossOrigin="anonymous";i.onload=()=>res(i);i.onerror=()=>res(null);i.src=src;});
   // ---- carimbo: só texto — nome, razão social, CNPJ (negrito), endereço, telefone; nunca logotipo
   async function dadosCarimbo(l){const cad=await ficha(l.slug).catch(()=>null);const L=(cad&&cad.lacunas)||{};const leit=(L.leitura||{}).valor||"";const razao=((leit.match(/Razão social: ([^·]+)/)||[])[1]||"").trim();const cnpj=((leit.match(/CNPJ:? ?([\d./-]{14,18})/)||[])[1]||"");
@@ -237,7 +237,7 @@ const App=(()=>{
     const aw=W-2*(B+S),ah=H-2*(B+S);const f=Math.min(aw/LW,(P.ancora==="topo"?ah*0.45:ah)/LH);const w=LW*f,h=LH*f;const x=(W-w)/2,y=P.ancora==="topo"?B+S+ah*0.05:(H-h)/2;
     const fundo=P.sem_fundo?null:(COR_PADRAO[P.superficie]===undefined?"#FFFFFF":COR_PADRAO[P.superficie]);
     // kit de 14 setores (10/11): a maquete frontal do ramo da loja é a arte de partida de todos os produtos
-    await carregarScript("qr.js?v=7ea83155b3");await carregarScript("impressos.js?v=7ea83155b3");await carregarScript("kits14.js?v=7ea83155b3");
+    await carregarScript("qr.js?v=629270c666");await carregarScript("impressos.js?v=629270c666");await carregarScript("kits14.js?v=629270c666");
     if(window.Kits14&&window.Kits14.ARQ[pid]){const K=await window.Kits14.montar(App,pid,c,l,{W,H,B,S,im,rec});
       if(K){const doc={fundo:K.fundo,fundoImg:null,el:K.el,campos:null,auto:true,kit:KIT14,setorKit:K.setorKit,kitRef:K.kitRef,W,H};const imgs={[c.manual.tratado]:im};
         const k=Math.min(1,1400/Math.max(W,H));const cv=document.createElement("canvas");cv.width=Math.round(W*k);cv.height=Math.round(H*k);const g=cv.getContext("2d");g.scale(k,k);
@@ -381,7 +381,29 @@ const App=(()=>{
     return out;}
   const nav=on=>NA_CASCA?"":`<nav class="nav"><a href="index.html" class="${on==="rota"?"on":""}"><span class="ic">${ICONES.rota}</span>Rota</a><a href="pedidos.html" class="${on==="pedidos"?"on":""}"><span class="ic">${ICONES.pedidos}</span>Pedidos</a><a href="perfil.html" class="${on==="perfil"?"on":""}"><span class="ic">${ICONES.perfil}</span>Perfil</a><a href="notas.html" class="${on==="notas"?"on":""}"><span class="ic">${ICONES.notasLista}</span>Notas</a></nav>`;
   // avatar (canto superior direito) abre o menu da conta: Perfil · Configuração · Sair
-  const topo=()=>`<header class="topo"><div class="logo">Gên<i>IO</i></div><div class="papel">Representante</div><div class="fill"></div><button type="button" class="avatar" id="avatarBtn" title="${esc(eu().nome)}" aria-label="Conta">${esc(ini(eu().nome))}</button></header>`;
+  // ---- desempenho: venda = pedido confirmado (saiu da Entrada); atendimento = loja com início e fim marcados na visita
+  const diaDe=iso=>{const d=new Date(iso);d.setMinutes(d.getMinutes()-d.getTimezoneOffset());return d.toISOString().slice(0,10);};
+  function desempenho(){const e=EST||{};const hoje=hojeISO(),mes=hoje.slice(0,7);
+    const vendas=Object.values(e.pedidos||{}).map(p=>(p.hist||[]).find(h=>h.etapa!=="entrada")).filter(Boolean).map(h=>diaDe(h.em));
+    const at=Object.entries(e.atend||{}).filter(([s,x])=>x&&x.ini&&x.fim).map(([s,x])=>({s,ini:new Date(x.ini),fim:new Date(x.fim),dia:diaDe(x.ini)}));
+    const vendSlugs=new Set(Object.entries(e.pedidos||{}).filter(([s,p])=>(p.hist||[]).some(h=>h.etapa!=="entrada")).map(([s])=>s));
+    const atHoje=at.filter(x=>x.dia===hoje),atMes=at.filter(x=>x.dia.slice(0,7)===mes);
+    const mins=atMes.map(x=>(x.fim-x.ini)/6e4).filter(m=>m>0&&m<300);const media=mins.length?mins.reduce((s,m)=>s+m,0)/mins.length:0;
+    // ciclo do dia = do primeiro início ao último fim, dividido pelas lojas (inclui deslocamento)
+    const dias={};atMes.forEach(x=>{(dias[x.dia]=dias[x.dia]||[]).push(x);});const ciclos=Object.values(dias).filter(d=>d.length>1).map(d=>(Math.max(...d.map(x=>x.fim))-Math.min(...d.map(x=>x.ini)))/6e4/d.length);
+    const ciclo=ciclos.length?ciclos.reduce((s,c)=>s+c,0)/ciclos.length:media;const jornada=(+METAS.jornada||8)*60;
+    const conv=atMes.length?Math.round(100*atMes.filter(x=>vendSlugs.has(x.s)).length/atMes.length):null;
+    const aberto=Object.entries(e.atend||{}).find(([s,x])=>x&&x.ini&&!x.fim);
+    return {vDia:vendas.filter(d=>d===hoje).length,vMes:vendas.filter(d=>d.slice(0,7)===mes).length,mDia:+METAS.dia||0,mMes:+METAS.mes||0,atHoje:atHoje.length,atMes:atMes.length,media,ciclo,projecao:ciclo?Math.floor(jornada/ciclo):0,conv,aberto};}
+  const chipMeta=()=>{const d=desempenho();const ok=x=>x[1]&&x[0]>=x[1];const it=(rot,v,m)=>`<span class="mc ${m&&v>=m?"bateu":""}"><small>${rot}</small><b>${v}${m?"/"+m:""}</b>${m?`<i style="--p:${Math.min(1,v/m)}"></i>`:""}</span>`;
+    return `<button type="button" class="meta-chip ${ok([d.vDia,d.mDia])?"bateu":""}" id="metaBtn" aria-label="Metas e conversão">${d.aberto?'<span class="rodando" title="atendimento em andamento"></span>':""}${it("Dia",d.vDia,d.mDia)}${it("Mês",d.vMes,d.mMes)}<span class="mc"><small>Conv.</small><b>${d.conv===null?"–":d.conv+"%"}</b></span></button>`;};
+  const topo=()=>`<header class="topo"><div class="logo">Gên<i>IO</i></div><div class="papel">Representante</div><div class="fill"></div>${chipMeta()}<button type="button" class="avatar" id="avatarBtn" title="${esc(eu().nome)}" aria-label="Conta">${esc(ini(eu().nome))}</button></header>`;
+  document.addEventListener("click",ev=>{const b=ev.target.closest("#metaBtn");const ab=document.querySelector(".meta-pop");if(!b){if(ab&&!ev.target.closest(".meta-pop"))ab.remove();return;}if(ab){ab.remove();return;}
+    const d=desempenho();const barra=(rot,v,m)=>`<div class="mp-l"><div><b>${rot}</b><span>${v} venda(s)${m?` de ${m}`:""}${m&&v>=m?' · <em>meta batida ✓</em>':""}</span></div>${m?`<i style="--p:${Math.min(1,v/m)}" class="${v>=m?"ok":""}"></i>`:'<small>meta não definida</small>'}</div>`;
+    const mm=x=>x?Math.round(x)+" min":"–";const p=document.createElement("div");p.className="meta-pop";
+    p.innerHTML=`${barra("Hoje",d.vDia,d.mDia)}${barra("Mês",d.vMes,d.mMes)}
+      <div class="mp-g"><div><small>Conversão no mês</small><b>${d.conv===null?"–":d.conv+"%"}</b><span>${d.atMes} atendimento(s)</span></div><div><small>Tempo médio na loja</small><b>${mm(d.media)}</b><span>${d.atHoje} hoje</span></div><div><small>Lojas por dia</small><b>${d.projecao||"–"}</b><span>ciclo de ${mm(d.ciclo)} com deslocamento</span></div></div>
+      <a href="config.html#metas" class="mp-aj">Ajustar metas</a>`;document.body.appendChild(p);});
   document.addEventListener("click",ev=>{const b=ev.target.closest("#avatarBtn");const aberto=document.querySelector(".menu-conta");if(!b){if(aberto&&!ev.target.closest(".menu-conta"))aberto.remove();return;}if(aberto){aberto.remove();return;}
     const m=document.createElement("div");m.className="menu-conta";m.innerHTML=`<div class="quem"><b>${esc(eu().nome)}</b><small>${esc(eu().email||"")}</small></div><a href="perfil.html">${ICONES.perfil}<span>Perfil</span></a><a href="financeiro.html">${ICONES.financeiro}<span>Financeiro</span></a><a href="config.html">${ICONES.config}<span>Configuração</span></a><a href="/api/sair" class="sair"><span>Sair</span></a>`;document.body.appendChild(m);});
   const voltar=(href,txt)=>`<div class="faixa"><a href="${href}">${esc(txt)}</a></div>`;
@@ -392,7 +414,7 @@ const App=(()=>{
   // toque longo em elementos [data-longo]: chama fn(el) após 450 ms sem mover
   function ligarLongo(root,fn){$$("[data-longo]",root).forEach(el=>{let t=null,p=null;el.addEventListener("pointerdown",ev=>{p={x:ev.clientX,y:ev.clientY};t=setTimeout(()=>{t=null;if(navigator.vibrate)navigator.vibrate(12);fn(el);},450);});
     const c=ev=>{if(t&&p&&ev.type==="pointermove"&&Math.hypot(ev.clientX-p.x,ev.clientY-p.y)<8)return;clearTimeout(t);t=null;};el.addEventListener("pointermove",c);el.addEventListener("pointerup",c);el.addEventListener("pointercancel",c);el.addEventListener("contextmenu",ev=>ev.preventDefault());});}
-  return {$,$$,esc,qs,ZONA,zonaDe,arquivarLoja,reagendarLoja,get PLANO(){return PLANO;},setorNome,nomeLoja,telFmt,ini,sessao,eu,dados,ficha,estrelas,estrelasHTML,estado,salvar,abrirVendas,lerCliente,gravarCliente,cliente,lerChave,gravarChave,API,definirCliente,classificar,logoPrincipal,removerLogo,estadoLogo,ROTULO_LOGO,aprovarLogo,escolherImagem,abrirLogotipo,entradas,ligarEntradas,artePadrao,gerarProdutos,contextualizar,aparar,assarRecortes,desenharElementos,desenharTexto,desenharQR,desenharVetor,carregarScript,recortarLogo,PRODUTOS_IDS,separarCores,garantirCamadas,dadosCarimbo,desenharCarimbo,cenaCarimbo,desenharLista,desenharSeta,listarNotas,gravarNota,apagarNota,diasDeRota,reagendar,hojeISO,dataCurta,META,ICONES,NA_CASCA,avulsos,novoAvulso,atualizarAvulso,ocorrenciasManuais,gravarOcorrencias,ocorrenciasAuto,ETAPAS,etapaDe,moverEtapa,nav,topo,voltar,acoes,menuLongo,ligarLongo};
+  return {$,$$,esc,qs,ZONA,zonaDe,desempenho,get METAS(){return METAS;},arquivarLoja,reagendarLoja,get PLANO(){return PLANO;},setorNome,nomeLoja,telFmt,ini,sessao,eu,dados,ficha,estrelas,estrelasHTML,estado,salvar,abrirVendas,lerCliente,gravarCliente,cliente,lerChave,gravarChave,API,definirCliente,classificar,logoPrincipal,removerLogo,estadoLogo,ROTULO_LOGO,aprovarLogo,escolherImagem,abrirLogotipo,entradas,ligarEntradas,artePadrao,gerarProdutos,contextualizar,aparar,assarRecortes,desenharElementos,desenharTexto,desenharQR,desenharVetor,carregarScript,recortarLogo,PRODUTOS_IDS,separarCores,garantirCamadas,dadosCarimbo,desenharCarimbo,cenaCarimbo,desenharLista,desenharSeta,listarNotas,gravarNota,apagarNota,diasDeRota,reagendar,hojeISO,dataCurta,META,ICONES,NA_CASCA,avulsos,novoAvulso,atualizarAvulso,ocorrenciasManuais,gravarOcorrencias,ocorrenciasAuto,ETAPAS,etapaDe,moverEtapa,nav,topo,voltar,acoes,menuLongo,ligarLongo};
 })();
 
 // ---- tela travada: a pinça não amplia o app; só as artes abrem (prancheta, logotipo e imagens de arte, que têm a própria pinça)
