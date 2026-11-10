@@ -125,7 +125,17 @@
     0,
     0
    ],
-   "qualidade": "ok"
+   "qualidade": "ok",
+   "ref_cm": [
+    80,
+    72
+   ],
+   "vidro": [
+    305,
+    50,
+    1315,
+    890
+   ]
   },
   "04": {
    "produto": "Uniforme polo",

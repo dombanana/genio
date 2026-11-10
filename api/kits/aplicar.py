@@ -155,8 +155,39 @@ def oclusoes(img, P):
             m = cv2.GaussianBlur(m, (3, 3), 0)
     return m
 
-def aplicar(setor, pid, arte_path, saida, material=None, arte_cor=None, largura=0.7, cheio=False):
+def plano_no_tamanho(P, w_cm, h_cm, shape):
+    """vitrine: o plano calibrado é a área da demonstração, que vale P["ref_cm"] (largura × altura em cm).
+    O adesivo escolhido (retrato ou paisagem) entra no mesmo vidro, na escala real, centrado na área da demonstração;
+    se não couber na foto, encolhe por igual (proporção sempre a do adesivo)."""
+    rw, rh = P.get("ref_cm") or [80, 72]
+    q = np.float32(P["plano"]); M = cv2.getPerspectiveTransform(np.float32([[0, 0], [1, 0], [1, 1], [0, 1]]), q)
+    def quad(f):
+        u = (w_cm / rw) * f / 2; v = (h_cm / rh) * f / 2
+        pts = np.float32([[[0.5 - u, 0.5 - v], [0.5 + u, 0.5 - v], [0.5 + u, 0.5 + v], [0.5 - u, 0.5 + v]]])
+        return cv2.perspectiveTransform(pts, M)[0]
+    H, W = shape[:2]
+    # área útil: o vidro medido na foto (sem caixilho, puxador ou rodapé), com folga de 2%; sem medida, a foto inteira
+    x0, y0, x1, y1 = P.get("vidro") or [0, 0, W, H]
+    fx, fy = (x1 - x0) * 0.02, (y1 - y0) * 0.02
+    x0, y0, x1, y1 = x0 + fx, y0 + fy, x1 - fx, y1 - fy
+    f = 1.0
+    for _ in range(60):   # tamanho real enquanto couber no vidro; se não couber, encolhe por igual
+        p = quad(f)
+        if np.ptp(p[:, 0]) <= x1 - x0 and np.ptp(p[:, 1]) <= y1 - y0:
+            break
+        f *= 0.97
+    p = quad(f)
+    # cabe, mas saiu do vidro: desliza para dentro (fica o mais perto possível do lugar da demonstração)
+    dx = max(0.0, x0 - p[:, 0].min()) - max(0.0, p[:, 0].max() - x1)
+    dy = max(0.0, y0 - p[:, 1].min()) - max(0.0, p[:, 1].max() - y1)
+    p = p + np.float32([dx, dy])
+    return p.tolist(), round(f, 2)
+
+
+def aplicar(setor, pid, arte_path, saida, material=None, arte_cor=None, largura=0.7, cheio=False, tamanho_cm=None):
     pasta, P, img = carregar(setor, pid)
+    if tamanho_cm and P.get("superficie") == "vidro":
+        P = dict(P); P["plano"], P["_escala"] = plano_no_tamanho(P, float(tamanho_cm[0]), float(tamanho_cm[1]), img.shape)
     arte = cv2.imread(arte_path, cv2.IMREAD_UNCHANGED)
     if arte is None:
         raise SystemExit("arte não encontrada: " + arte_path)

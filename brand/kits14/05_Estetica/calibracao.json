@@ -125,7 +125,17 @@
     0,
     0
    ],
-   "qualidade": "revisada no caimento (demo com a área marcada), 10/11"
+   "qualidade": "revisada no caimento (demo com a área marcada), 10/11",
+   "ref_cm": [
+    80,
+    72
+   ],
+   "vidro": [
+    190,
+    10,
+    1445,
+    1015
+   ]
   },
   "04": {
    "produto": "Uniforme polo",

@@ -576,13 +576,19 @@ def kit_aplicar(d):
                         try: os.remove(t)
                         except Exception: pass
             return {"kit": kit, "produto": "10", "referencia": False, "jpg": "data:image/jpeg;base64," + base64.b64encode(open(saida, "rb").read()).decode()}
-    h = hashlib.sha256(raw + f"|{kit}|{pid}|{material}|k14v7".encode()).hexdigest()[:20]
+    tam = None
+    try:
+        if d.get("w_cm") and d.get("h_cm"):
+            tam = (max(5.0, min(1000.0, float(d["w_cm"]))), max(5.0, min(1000.0, float(d["h_cm"]))))
+    except (TypeError, ValueError):
+        tam = None
+    h = hashlib.sha256(raw + f"|{kit}|{pid}|{material}|{tam}|k14v8".encode()).hexdigest()[:20]
     pasta = os.path.join(ESTADO_DIR, "kits"); os.makedirs(pasta, exist_ok=True); saida = os.path.join(pasta, h + ".jpg")
     if not os.path.exists(saida):
         with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as f:
             f.write(raw); tmp = f.name
         try:
-            aplicar.aplicar(kit, pid, tmp, saida, material, None, 1.0, cheio=True)
+            aplicar.aplicar(kit, pid, tmp, saida, material, None, 1.0, cheio=True, tamanho_cm=tam)
         finally:
             try: os.remove(tmp)
             except Exception: pass

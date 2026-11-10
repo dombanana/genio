@@ -143,6 +143,28 @@
         e.x=ox+e.x*k;e.y=oy+e.y*k;e.w*=k;e.h*=k;if(e.tam)e.tam=Math.round(e.tam*k*10)/10;if(e.borda)e.borda*=k;if(e.raio)e.raio*=k;}
       // cartão sem o painel do QR: a arte que sobrou volta para o centro da face
       if(semPainelQR&&nId==="05"){const arte=el.filter(e=>!e.superficie);if(arte.length){const x0=Math.min(...arte.map(e=>e.x)),x1=Math.max(...arte.map(e=>e.x+e.w));const dx=W/2-(x0+x1)/2;arte.forEach(e=>{e.x+=dx;});}}
+      // vitrine em retrato ou em faixa: a arte se reorganiza no formato escolhido (decisão do dono, 10/11)
+      if(nId==="03"){const arte=el.filter(e=>!e.superficie);if(arte.length){const bb=uni(arte);const pad=Math.min(tw,th)*0.07;
+        const linhas=[];arte.slice().sort((a,b)=>(a.y+a.h/2)-(b.y+b.h/2)).forEach(e=>{const cy=e.y+e.h/2;const L=linhas.find(l=>cy>=l.y0&&cy<=l.y1);
+          if(L){L.els.push(e);L.y0=Math.min(L.y0,e.y);L.y1=Math.max(L.y1,e.y+e.h);L.x0=Math.min(L.x0,e.x);L.x1=Math.max(L.x1,e.x+e.w);}else linhas.push({els:[e],y0:e.y,y1:e.y+e.h,x0:e.x,x1:e.x+e.w});});
+        const esc=(l,s,X,Y)=>l.els.forEach(e=>{e.x=X+(e.x-l.x0)*s;e.y=Y+(e.y-l.y0)*s;e.w*=s;e.h*=s;if(e.tam)e.tam=Math.round(e.tam*s*10)/10;if(e.borda)e.borda*=s;if(e.raio)e.raio*=s;});
+        const n=linhas.length,larg=linhas.map(l=>l.x1-l.x0),alt=linhas.map(l=>l.y1-l.y0),soma=v=>v.reduce((x,y)=>x+y,0);
+        // blocos lado a lado (faixa) ou empilhados (retrato) numa área Wv×Hv; put(l,s,X,Y) leva o bloco ao lugar
+        // na faixa, a marca ocupa a altura; a frase (só texto) cresce com a largura que sobrar, até ~30% da altura útil
+        const lado=(Wv,Hv,put)=>{const p=Math.min(Wv,Hv)*0.08,gx=Wv*0.04;const s=Math.min((Hv-2*p)/Math.max(...alt),(Wv-2*p-gx*(n-1))/soma(larg));
+          const tx=linhas.map(l=>l.els.every(e=>e.tipo==="texto"));const fixo=soma(larg.map((w,i)=>tx[i]?0:w*s)),livre=Wv-2*p-gx*(n-1)-fixo,lt=soma(larg.map((w,i)=>tx[i]?w:0));
+          const sc=linhas.map((l,i)=>tx[i]?Math.max(s,Math.min(s*2.5,0.3*(Hv-2*p)/alt[i],lt?livre/lt:s)):s);
+          const tot=soma(larg.map((w,i)=>w*sc[i]));
+          let x=(Wv-(tot+gx*(n-1)))/2;linhas.forEach((l,i)=>{put(l,sc[i],x,(Hv-alt[i]*sc[i])/2);x+=larg[i]*sc[i]+gx;});};
+        const pilha=(Wv,Hv,put)=>{const p=Math.min(Wv,Hv)*0.08;const s=Math.min((Wv-2*p)/Math.max(...larg),(Hv-2*p)/(soma(alt)*1.3));
+          const gap=(Hv-2*p-soma(alt)*s)/(n+1);let y=p+gap;linhas.forEach((l,i)=>{put(l,s,(Wv-larg[i]*s)/2,y);y+=alt[i]*s+gap;});};
+        const aqui=(l,s,X,Y)=>esc(l,s,B+X,B+Y);
+        const ar=th/tw;
+        if(ar>=2.2){   // faixa em pé: a arte deitada e girada 90° (lê de baixo para cima), como se faz em vidro estreito
+          const gira=(l,s,X,Y)=>{esc(l,s,X,Y);l.els.forEach(e=>{const vx=e.x+e.w/2,vy=e.y+e.h/2;e.x=B+vy-e.w/2;e.y=B+th-vx-e.h/2;e.rot=(e.rot||0)-90;});};
+          (n>1&&th/tw>=1.6?lado:pilha)(th,tw,gira);}
+        else if(ar>1.02)pilha(tw,th,aqui);   // retrato: blocos um embaixo do outro, ocupando a largura
+        else if(tw/th>=1.6&&n>1)lado(tw,th,aqui);}}   // faixa deitada: blocos lado a lado
       // 8. cor base na superfície (a esticada até a sangria, as do kit e o painel principal da peça)
       if(base&&!SEM_SUPERFICIE.has(nId)){for(const e of el){const grande=(e.tipo==="forma"||e.tipo==="vetor")&&e.w*e.h>=W*H*0.5&&e.grupo!=="logo";if(!(e.superficie||grande))continue;
           if(e.tipo==="forma"&&e.cor&&e.cor!=="transparent"){e.cor=base;delete e.sem;}else if(e.tipo==="vetor"&&e.fill&&e.fill!=="transparent"){e.fill=base;delete e.sem;}}
@@ -164,12 +186,19 @@
         if(base&&contraste(cinza,at)<3&&contraste(cinza,base)>=3){const atrasEl=[...el.slice(0,el.indexOf(L))].reverse().find(e=>((e.tipo==="forma"&&e.cor&&e.cor!=="transparent")||(e.tipo==="vetor"&&e.fill&&e.fill!=="transparent"))&&L.x+L.w/2>=e.x&&L.x+L.w/2<=e.x+e.w&&L.y+L.h/2>=e.y&&L.y+L.h/2<=e.y+e.h);
           if(atrasEl&&!atrasEl.superficie){if(atrasEl.tipo==="forma")atrasEl.cor=base;else atrasEl.fill=base;continue;}}
         if((!SEM_SUPERFICIE.has(nId)||(nId==="08"&&luz>170)||nId==="09"||nId==="03")&&(Math.abs(lum(at)-luz)<70||contraste(cinza,at)<2.5)){const p=Math.min(L.w,L.h)*0.14;
-          el.splice(el.indexOf(L),0,{tipo:"forma",forma:"ret",id:id(),nome:"Apoio da marca",x:L.x-p,y:L.y-p,w:L.w+2*p,h:L.h+2*p,cor:lum(at)<128?"#ffffff":(base&&contraste(base,"#ffffff")>2?base:pal.T),borda:0,bordaCor:"#fff",raio:p,kit:true});}}
+          el.splice(el.indexOf(L),0,{tipo:"forma",forma:"ret",id:id(),nome:"Apoio da marca",x:L.x-p,y:L.y-p,w:L.w+2*p,h:L.h+2*p,cor:lum(at)<128?"#ffffff":(base&&contraste(base,"#ffffff")>2?base:pal.T),borda:0,bordaCor:"#fff",raio:p,kit:true,rot:L.rot||0});}}
+      // vitrine: o apoio da marca não pode passar da borda do adesivo; se passar, a arte toda encolhe e volta ao centro
+      if(nId==="03"){const {W:GW,H:GH,B:GB}=geo;const aw=GW-2*GB,ah=GH-2*GB;const arte=el.filter(e=>!e.superficie);
+        const cx=e=>{const de=Math.abs(Math.round((e.rot||0)/90))%2===1;const w=de?e.h:e.w,h=de?e.w:e.h;const c={x:e.x+e.w/2,y:e.y+e.h/2};return {x0:c.x-w/2,y0:c.y-h/2,x1:c.x+w/2,y1:c.y+h/2};};
+        if(arte.length){const bs=arte.map(cx);const x0=Math.min(...bs.map(b=>b.x0)),y0=Math.min(...bs.map(b=>b.y0)),x1=Math.max(...bs.map(b=>b.x1)),y1=Math.max(...bs.map(b=>b.y1));
+          const m=Math.min(aw,ah)*0.05;if(x0<GB+m-0.5||y0<GB+m-0.5||x1>GB+aw-m+0.5||y1>GB+ah-m+0.5){
+            const f=Math.min(1,(aw-2*m)/(x1-x0),(ah-2*m)/(y1-y0));const bx=(x0+x1)/2,by=(y0+y1)/2,ax=GB+aw/2,ay=GB+ah/2;
+            arte.forEach(e=>{const c={x:ax+(e.x+e.w/2-bx)*f,y:ay+(e.y+e.h/2-by)*f};e.w*=f;e.h*=f;e.x=c.x-e.w/2;e.y=c.y-e.h/2;if(e.tam)e.tam=Math.round(e.tam*f*10)/10;if(e.borda)e.borda*=f;if(e.raio)e.raio*=f;});}}}
       const fundoEl=el.find(e=>e.superficie&&e.tipo==="forma"&&e.w===W&&e.h===H);
       const fundo=SEM_SUPERFICIE.has(nId)?null:(fundoEl?fundoEl.cor:"#fffdf7");
       // região que a foto do kit recebe: a superfície inteira quando há superfície (placa, cartão, faixa…); senão a caixa da arte
       const esticou=el.some(e=>e.superficie&&e.w===W&&e.h===H);
-      const kitRef=sup?(esticou?{x:B,y:B,w:tw,h:th}:{x:ox+corte.x*k,y:oy+corte.y*k,w:corte.w*k,h:corte.h*k}):{x:ox+ref.x*k,y:oy+ref.y*k,w:ref.w*k,h:ref.h*k};
+      const kitRef=nId==="03"?{x:B,y:B,w:tw,h:th}:sup?(esticou?{x:B,y:B,w:tw,h:th}:{x:ox+corte.x*k,y:oy+corte.y*k,w:corte.w*k,h:corte.h*k}):{x:ox+ref.x*k,y:oy+ref.y*k,w:ref.w*k,h:ref.h*k};
       // tecidos: a cor base tinge a peça na foto (camiseta, polo, boné, avental, ecobag)
       const material=TEXTEIS.has(nId)?(base||null):(fundo||null);
       return {el,fundo,material,base,fundoMarca:fm,kitRef,paleta:pal,setorKit:setor,arquivo:arq};
