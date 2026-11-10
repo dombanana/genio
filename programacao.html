@@ -16,6 +16,7 @@ h2{font-size:15px;margin:0 0 10px}
 label{display:block;font-size:13px;color:var(--texto2);margin:10px 0 4px}label:first-of-type{margin-top:0}
 input[type=text],input[type=date],select{width:100%;font:inherit;font-size:16px;padding:10px 12px;border:1px solid #D9D2F0;border-radius:10px;background:#fff;color:inherit}
 .dois{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.previa{margin:12px auto 0;width:52%;aspect-ratio:9/16;border-radius:10px;overflow:hidden;background:#000;box-shadow:0 0 0 6px #1C1635}.previa.pais{width:100%;aspect-ratio:16/9}.previa iframe{width:100%;height:100%;border:0;display:block;pointer-events:none}
 .it{display:grid;grid-template-columns:1fr 104px;gap:8px;align-items:start;padding:12px 0;border-top:1px solid #EEE9F8}
 .it:first-child{border-top:0}
 .it .linha2{grid-column:1/-1;display:flex;gap:8px;align-items:center}
@@ -57,20 +58,30 @@ textarea{width:100%;box-sizing:border-box;font:inherit;font-size:16px;padding:10
     $("#app").innerHTML=`<h1>${esc(E.nome)}</h1><p class="sub">O que você muda aqui aparece na TV em poucos segundos.</p>
     <div class="card"><label>Título da tela</label><input type="text" id="titulo" value="${esc(E.titulo||"")}" maxlength="40">
       <label>Foto principal</label><button type="button" class="foto ${E.foto?"tem":""}" id="foto" ${E.foto?`style="background-image:url('${esc(E.foto)}')"`:""}>${E.foto?"trocar":"+ Escolher foto"}</button>${E.foto?`<button type="button" class="tirar" id="semFoto">Tirar a foto</button>`:""}</div>
-    <div class="card" id="lista"><h2>Itens · 4 por página, a tela troca sozinha</h2>${it.map((x,i)=>`<div class="it ${x.ativo===false?"off":""}" data-i="${i}"><input type="text" data-k="nome" value="${esc(x.nome)}" placeholder="Nome do item" maxlength="60"><input type="text" data-k="preco" value="${esc(x.preco)}" placeholder="R$" inputmode="decimal" maxlength="20">
+    <div class="card" id="lista"><h2>Itens · ${porTxt()}, a tela troca sozinha</h2>${it.map((x,i)=>`<div class="it ${x.ativo===false?"off":""}" data-i="${i}"><input type="text" data-k="nome" value="${esc(x.nome)}" placeholder="Nome do item" maxlength="60"><input type="text" data-k="preco" value="${esc(x.preco)}" placeholder="R$" inputmode="decimal" maxlength="20">
       <div class="linha2"><input type="text" data-k="desc" value="${esc(x.desc||"")}" placeholder="kg, 350 ml…" maxlength="40"><button type="button" class="tog ${x.ativo!==false?"on":""}" data-a="ativo">${x.ativo!==false?"● Na tela":"○ Fora"}</button><button type="button" class="mini" data-a="sobe" aria-label="subir">↑</button><button type="button" class="mini" data-a="desce" aria-label="descer">↓</button><button type="button" class="mini rm" data-a="rm" aria-label="remover">✕</button></div></div>`).join("")}</div>
     <button type="button" class="add" id="add">+ Adicionar item</button>
     <div class="card"><h2>Destaque · a oferta em letras grandes</h2><div class="dois"><div><label>Chamada</label><input type="text" id="dRot" value="${esc(D.rotulo)}" maxlength="28" placeholder="OFERTA DA SEMANA"></div><div><label>Valor</label><input type="text" id="dVal" value="${esc(D.valor)}" maxlength="22" placeholder="R$"></div></div>
       <label>O que é</label><input type="text" id="dTxt" value="${esc(D.texto)}" maxlength="60" placeholder="Ex.: café + pão na chapa">
       <label>Válido até (some sozinho depois)</label><input type="date" id="dAte" value="${esc(D.ate)}"></div>
     <div class="card"><label>Aviso no rodapé (opcional)</label><input type="text" id="aviso" value="${esc(E.aviso||"")}" maxlength="140" placeholder="Ex.: hoje até as 20h · aceitamos Pix">
-      <label>TV em pé: a imagem está de lado?</label><select id="giro"><option value="0">Não, está certa</option><option value="90">Girar para a direita</option><option value="270">Girar para a esquerda</option></select></div>
+</div>
+    <div class="card"><h2>Tela da TV · a diagramação se ajusta</h2>
+      <div class="dois"><div><label>Posição da TV</label><select id="formato"><option value="auto">Automático</option><option value="retrato">Em pé (retrato)</option><option value="paisagem">Deitada (paisagem)</option></select></div>
+      <div><label>Tamanho da TV</label><select id="polegadas"><option value="0">Não sei</option><option value="32">Até 32"</option><option value="43">40 a 43"</option><option value="50">50"</option><option value="55">55 a 58"</option><option value="65">60 a 65"</option><option value="75">70 a 75"</option><option value="85">80" ou mais</option></select></div></div>
+      <label>Itens por tela</label><select id="linhas"><option value="0">Automático (pelo tamanho da TV)</option><option value="4">4 itens</option><option value="5">5 itens</option><option value="6">6 itens</option><option value="8">8 itens</option><option value="10">10 itens</option></select>
+      <div id="giroBox" ${E.formato==="paisagem"?'hidden':''}><label>TV em pé: a imagem está de lado?</label><select id="giro"><option value="0">Não, está certa</option><option value="90">Girar para a direita</option><option value="270">Girar para a esquerda</option></select></div>
+      <div class="previa ${E.formato==="paisagem"?"pais":""}"><iframe src="mostra.html?c=${encodeURIComponent(c)}&previa=1" title="Prévia da TV" loading="lazy" tabindex="-1"></iframe></div>
+      <p class="sub" style="margin:6px 0 0">Prévia ${E.formato==="paisagem"?"deitada":"em pé"} · atualiza em poucos segundos depois de cada mudança.</p></div>
     <div class="card"><h2 style="font-size:16px;margin:0 0 8px">Fale com o seu atendente</h2><div class="conv" id="conv"></div><textarea id="msgTxt" rows="2" placeholder="Escreva sua mensagem"></textarea><button type="button" class="enviar" id="msgEnviar">Enviar</button></div>`;
     $("#msgEnviar").onclick=enviarMsg;desenharConv();
-    $("#giro").value=String(E.giro||0);
+    $("#giro").value=String(E.giro||0);$("#formato").value=E.formato||"auto";$("#polegadas").value=String(E.polegadas||0);$("#linhas").value=String(E.linhas||0);
     const liga=(id,f)=>{$(id).oninput=()=>{f($(id).value);agendar();};};
     liga("#titulo",v=>E.titulo=v);liga("#aviso",v=>E.aviso=v);liga("#dRot",v=>D.rotulo=v);liga("#dVal",v=>D.valor=v);liga("#dTxt",v=>D.texto=v);liga("#dAte",v=>D.ate=v);
     $("#giro").onchange=()=>{E.giro=+$("#giro").value;agendar();};
+    $("#formato").onchange=()=>{E.formato=$("#formato").value;agendar();render();};
+    $("#polegadas").onchange=()=>{E.polegadas=+$("#polegadas").value;agendar();render();};
+    $("#linhas").onchange=()=>{E.linhas=+$("#linhas").value;agendar();render();};
     $("#foto").onclick=()=>$("#arq").click();const sf=$("#semFoto");if(sf)sf.onclick=()=>{E.foto=null;semFoto=true;render();agendar();};
     $$("#lista input").forEach(inp=>inp.oninput=()=>{const i=+inp.closest(".it").dataset.i;E.itens[i][inp.dataset.k]=inp.value;agendar();});
     $$("#lista [data-a]").forEach(b=>b.onclick=()=>{const i=+b.closest(".it").dataset.i;const a=b.dataset.a;const L=E.itens;
@@ -78,6 +89,8 @@ textarea{width:100%;box-sizing:border-box;font:inherit;font-size:16px;padding:10
       render();agendar();});
     $("#add").onclick=()=>{E.itens.push({id:"i"+Date.now().toString(36),nome:"",preco:"",desc:"",ativo:true});render();agendar();setTimeout(()=>{const ins=$$("#lista .it input[data-k=nome]");ins[ins.length-1]&&ins[ins.length-1].focus();},50);};}
   let semFoto=false;
+  // mesma conta da tela da TV (mostra.html): automático pelo tamanho e pela posição
+  function porTxt(){if(E.linhas)return E.linhas+" por tela";const cap={retrato:{0:4,32:4,43:4,50:5,55:5,65:6,75:8,85:8},paisagem:{0:5,32:5,43:5,50:6,55:6,65:8,75:8,85:10}}[E.formato==="paisagem"?"paisagem":"retrato"][E.polegadas||0]||4;return "até "+cap+" por tela";}
   let CONV=[];const hm=iso=>{const d=new Date(iso);return d.toLocaleDateString("pt-BR",{day:"2-digit",month:"2-digit"})+" "+d.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});};
   function desenharConv(){const el=$("#conv");if(!el)return;el.innerHTML=CONV.length?CONV.map(m=>`<div class="m ${m.de}">${esc(m.texto)}<small>${m.de==="cliente"?"Você":"Atendimento"} · ${hm(m.em)}</small></div>`).join(""):'<p class="sub" style="margin:0">Dúvidas, ajustes ou pedidos: escreva aqui que o seu atendente responde.</p>';el.scrollTop=el.scrollHeight;}
   async function puxarConv(){try{const r=await fetch(`/api/mostra/${encodeURIComponent(c)}/mensagens`,{cache:"no-store"});if(!r.ok)return;const d=await r.json();if(JSON.stringify(d.mensagens)!==JSON.stringify(CONV)){CONV=d.mensagens||[];desenharConv();}}catch(e){}}
@@ -87,7 +100,7 @@ textarea{width:100%;box-sizing:border-box;font:inherit;font-size:16px;padding:10
   setInterval(puxarConv,20000);
   function agendar(){pendente=true;estado("env","Enviando…");clearTimeout(timer);timer=setTimeout(enviar,600);}
   async function enviar(){if(enviando){pendente=true;return;}enviando=true;pendente=false;
-    try{const corpo={itens:E.itens,titulo:E.titulo,aviso:E.aviso,destaque:E.destaque,giro:E.giro||0};if(semFoto){corpo.foto=null;semFoto=false;}
+    try{const corpo={itens:E.itens,titulo:E.titulo,aviso:E.aviso,destaque:E.destaque,giro:E.giro||0,formato:E.formato||"auto",polegadas:E.polegadas||0,linhas:E.linhas||0};if(semFoto){corpo.foto=null;semFoto=false;}
       const r=await fetch(URL_API,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(corpo)});if(!r.ok)throw new Error(r.status);const d=await r.json();E.v=d.v;estado("ok","Na tela · "+agora());}
     catch(e){estado("erro","Não foi: confira a internet e mexa de novo.");}
     enviando=false;if(pendente)enviar();}

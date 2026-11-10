@@ -13,22 +13,33 @@ html,body{height:100%;width:100%;background:#000;overflow:hidden}
 /* a moldura fixa do tamanho da tela segura o palco: o palco de 1080 px nunca alarga a página no celular */
 #moldura{position:fixed;inset:0;overflow:hidden;contain:strict}
 /* palco fixo 1080×1920 (retrato 9:16), ajustado por escala à tela real; a fonte nunca encolhe por excesso de itens */
-#palco{position:absolute;left:0;top:0;width:1080px;height:1920px;transform-origin:0 0;background:var(--F);color:var(--T);font-family:Rubik,"Segoe UI",system-ui,sans-serif;display:flex;flex-direction:column;overflow:hidden}
+#palco{--d:1;position:absolute;left:0;top:0;width:1080px;height:1920px;transform-origin:0 0;background:var(--F);color:var(--T);font-family:Rubik,"Segoe UI",system-ui,sans-serif;display:flex;flex-direction:column;overflow:hidden}
 header{background:var(--P);color:var(--sP);padding:44px 60px 40px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;min-height:220px;flex:none}
 header img{max-height:150px;max-width:640px;object-fit:contain;background:#fff;border-radius:22px;padding:14px 26px}
 header h1{font-size:92px;font-weight:900;line-height:1;letter-spacing:.01em;text-wrap:balance}
 header h1.longo{font-size:66px}
 header small{display:block;margin-top:14px;font-size:30px;font-weight:600;letter-spacing:.34em;text-transform:uppercase;opacity:.9}
 .titulo{flex:none;padding:34px 60px 30px;text-align:center;font-size:62px;font-weight:800;line-height:1.08;text-transform:uppercase;letter-spacing:.01em;text-wrap:balance}
-.foto{flex:1 1 300px;min-height:260px;max-height:540px;margin:0 44px;border-radius:28px;background:var(--L) center/cover no-repeat}
-main{flex:none;display:flex;flex-direction:column;justify-content:center;padding:14px 60px}
+.foto{flex:1 1 300px;min-height:260px;max-height:var(--fh,540px);margin:0 44px;border-radius:28px;background:var(--L) center/cover no-repeat}
+main{flex:1 0 auto;display:flex;flex-direction:column;justify-content:center;padding:14px 60px}
 .sem-foto main{flex:1;min-height:0}
-.it{display:flex;align-items:baseline;justify-content:space-between;gap:36px;padding:27px 0;border-bottom:3px solid var(--L)}
+.it{display:flex;align-items:baseline;justify-content:space-between;gap:36px;padding:calc(27px*var(--d)) 0;border-bottom:3px solid var(--L)}
 .it:last-child{border-bottom:0}
-.it b{font-size:54px;font-weight:600;line-height:1.1}
-.it b small{display:block;font-size:32px;font-weight:400;color:var(--T2);margin-top:6px}
-.it .p{font-size:58px;font-weight:800;white-space:nowrap;font-variant-numeric:tabular-nums}
-.sem-foto .it{padding:40px 0}.sem-foto .it b{font-size:62px}.sem-foto .it .p{font-size:66px}
+.it b{font-size:calc(54px*var(--d));font-weight:600;line-height:1.1}
+.it b small{display:block;font-size:max(24px,calc(32px*var(--d)));font-weight:400;color:var(--T2);margin-top:6px}
+.it .p{font-size:calc(58px*var(--d));font-weight:800;white-space:nowrap;font-variant-numeric:tabular-nums}
+.sem-foto .it{padding:calc(40px*var(--d)) 0}.sem-foto .it b{font-size:calc(62px*var(--d))}.sem-foto .it .p{font-size:calc(66px*var(--d))}
+.cheio .foto{min-height:180px}.sem-espaco .foto{display:none}
+/* TV deitada (paisagem): marca, foto e oferta à esquerda; a lista inteira à direita */
+.pais{flex:1;min-height:0;display:grid;grid-template-columns:37% 1fr}
+.pais aside{min-height:0;display:flex;flex-direction:column;overflow:hidden;background:var(--P)}
+.pais aside header{flex:1 1 auto;min-height:200px}
+.pais aside .foto{flex:1 1 300px;min-height:220px;max-height:none;margin:0 36px 30px}
+.pais aside .dest .val{font-size:110px}.pais aside .dest .txt{font-size:40px}
+.pais aside .dest{margin:0 36px 36px;background:color-mix(in srgb,var(--P) 82%,#000)}
+.pais .col{min-height:0;display:flex;flex-direction:column;overflow:hidden}
+.pais .titulo{text-align:left;padding:48px 70px 18px}
+.pais main{flex:1;min-height:0;padding:10px 70px 20px}
 .dest{flex:none;margin:0 44px 30px;border-radius:34px;background:var(--P);color:var(--sP);padding:0 44px 40px;text-align:center}
 .dest .rot{display:inline-block;background:var(--A);color:var(--sA);font-size:36px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:14px 40px;border-radius:0 0 22px 22px}
 .dest .txt{font-size:46px;font-weight:500;margin-top:22px;line-height:1.15;text-wrap:balance}
@@ -68,29 +79,55 @@ footer .off{width:16px;height:16px;border-radius:50%;background:#E6A700}
       A=cs.find(h=>h!==P&&sat(h)>.25&&contraste(h,P)>=1.6)||mix(P,"#FFFFFF",.55);F=mix(P,"#FFFFFF",.95);T=mix(P,"#000000",.6);}
     const r=palco.style;r.setProperty("--P",P);r.setProperty("--sP",sobre(P));r.setProperty("--A",A);if(contraste(A,P)<1.6)A=sobre(P);r.setProperty("--sA",contraste(A,"#FFFFFF")>=3?"#FFFFFF":(contraste(A,P)>=3?P:mix(P,"#000000",.5)));
     r.setProperty("--F",F);r.setProperty("--T",T);const [tr,tg,tb]=hex2(T);r.setProperty("--T2",`rgba(${tr},${tg},${tb},.62)`);r.setProperty("--L",`rgba(${tr},${tg},${tb},.14)`);}
-  // palco 1080×1920 ajustado à tela; TV em pé ligada a um TV Box (que entrega imagem deitada) → gira o palco
-  function ajustar(){const m=document.getElementById("moldura").getBoundingClientRect();const W=m.width,H=m.height;if(!W||!H)return;const g=(E&&W>H)?(E.giro||0):0;const [w,h]=g?[1920,1080]:[1080,1920];const k=Math.min(W/w,H/h);
+  // diagramação prevista: TV em pé (retrato) ou deitada (paisagem), tamanho da TV e itens por tela.
+  // TV maior → palco lógico maior (mesmas letras em px ficam proporcionalmente menores e sobra respiro para mais linhas)
+  const ESC={0:1,32:1,43:1.08,50:1.18,55:1.25,65:1.38,75:1.5,85:1.6};
+  const CAP={retrato:{0:4,32:4,43:4,50:5,55:5,65:6,75:8,85:8},paisagem:{0:5,32:5,43:5,50:6,55:6,65:8,75:8,85:10}};
+  function modo(){const m=document.getElementById("moldura").getBoundingClientRect();const deitada=m.width>m.height;const f=(E&&E.formato)||"auto";
+    if(E&&E.giro&&deitada&&f!=="paisagem")return {lay:"retrato",g:E.giro};
+    return {lay:f==="retrato"?"retrato":f==="paisagem"?"paisagem":(deitada?"paisagem":"retrato"),g:0};}
+  function dims(lay){const s=ESC[(E&&E.polegadas)||0]||1;return lay==="paisagem"?[Math.round(1920*s),Math.round(1080*s)]:[Math.round(1080*s),Math.round(1920*s)];}
+  // palco ajustado à tela; TV em pé ligada a um TV Box (que entrega imagem deitada) → gira o palco
+  function ajustar(){const m=document.getElementById("moldura").getBoundingClientRect();const W=m.width,H=m.height;if(!W||!H)return;const M=modo();
+    if(E&&palco.dataset.lay&&palco.dataset.lay!==M.lay){desenhar();return;}
+    const [pw,ph]=dims(M.lay);const [w,h]=M.g?[ph,pw]:[pw,ph];const k=Math.min(W/w,H/h);
     // centro do palco no centro da tela; giro em torno do próprio centro
-    palco.style.transform=`translate(${W/2}px,${H/2}px) rotate(${g}deg) scale(${k}) translate(-540px,-960px)`;}
+    palco.style.transform=`translate(${W/2}px,${H/2}px) rotate(${M.g}deg) scale(${k}) translate(${-pw/2}px,${-ph/2}px)`;}
+  // itens por tela: escolhido pelo lojista ou automático pelo tamanho da TV; páginas equilibradas (7 itens com 4 por tela → 4 + 3)
+  function porPagina(n,lay){const cap=(E&&E.linhas)||CAP[lay][(E&&E.polegadas)||0]||4;if(n<=cap)return Math.max(1,n);const pags=Math.ceil(n/cap);return Math.ceil(n/pags);}
+  // densidade: a letra só diminui o necessário para caber; sem caber nem assim, a foto sai antes de a letra ficar pequena demais
+  function caber(n){const pais=palco.querySelector(".pais");const set=d=>palco.style.setProperty("--d",d);
+    if(pais){// deitada: a lista ocupa a coluna inteira; a letra cresce até o maior tamanho que cabe (busca binária)
+      const as=pais.querySelector("aside");if(as.scrollHeight>as.clientHeight+2&&as.querySelector(".foto"))palco.classList.add("sem-espaco");
+      const mn=pais.querySelector("main");const cabe=()=>{const cs=getComputedStyle(mn);const disp=mn.clientHeight-parseFloat(cs.paddingTop)-parseFloat(cs.paddingBottom);let t=0;for(const x of mn.children)t+=x.offsetHeight;return t<=disp;};
+      let lo=.5,hi=n<=4?1.3:1.2;set(hi);if(!cabe()){for(let i=0;i<9;i++){const m=(lo+hi)/2;set(m);if(cabe())lo=m;else hi=m;}set(Math.floor(lo*100)/100);}return;}
+    // em pé: a maior letra (até o tamanho-base) que cabe sem espremer a foto; não cabendo nem pequena, a foto sai
+    const estoura=()=>palco.scrollHeight>palco.clientHeight+2;const ph=palco.clientHeight;
+    const cabe=()=>{if(estoura())return false;const f=palco.querySelector(".foto");return !f||getComputedStyle(f).display==="none"||f.offsetHeight>=ph*.15;};
+    const busca=(lo,hi)=>{set(hi);if(cabe())return hi;set(lo);if(!cabe())return null;for(let i=0;i<9;i++){const m=(lo+hi)/2;set(m);if(cabe())lo=m;else hi=m;}return Math.floor(lo*100)/100;};
+    let d=busca(.6,1);if(d===null&&palco.querySelector(".foto")){palco.classList.add("sem-espaco");d=busca(.55,1);}set(d===null?.55:d);}
   const preco=p=>{p=String(p||"").trim();return /^\d/.test(p)?"R$ "+p:p;};
   const hoje=()=>{const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");};
   const dataBR=s=>s.slice(8,10)+"/"+s.slice(5,7);
-  let E=null,pag=0,fora=false;const POR=4;
-  function desenhar(){if(!E)return;const ativos=(E.itens||[]).filter(i=>i.ativo!==false&&i.nome);const pags=Math.max(1,Math.ceil(ativos.length/POR));pag=pag%pags;const vis=ativos.slice(pag*POR,pag*POR+POR);
+  let E=null,pag=0,fora=false;
+  function desenhar(){if(!E)return;const M=modo();const [pw,ph]=dims(M.lay);palco.style.width=pw+"px";palco.style.height=ph+"px";palco.style.setProperty("--fh",Math.round(ph*.29)+"px");palco.dataset.lay=M.lay;
+    const ativos=(E.itens||[]).filter(i=>i.ativo!==false&&i.nome);const POR=porPagina(ativos.length,M.lay);const pags=Math.max(1,Math.ceil(ativos.length/POR));pag=pag%pags;const vis=ativos.slice(pag*POR,pag*POR+POR);
     const D=E.destaque||{};const temD=(D.texto||D.valor)&&!(D.ate&&D.ate<hoje());const val=preco(D.valor);
-    palco.className=E.foto?"":"sem-foto";
-    palco.innerHTML=`<header>${E.logo?`<img src="${esc(E.logo)}" alt="${esc(E.nome)}">`:`<h1 class="${String(E.nome||"").length>16?"longo":""}">${esc(E.nome)}</h1>`}${E.rotulo?`<small>${esc(E.rotulo)}</small>`:""}</header>
-      ${E.titulo?`<div class="titulo">${esc(E.titulo)}</div>`:""}
-      ${E.foto?`<div class="foto" style="background-image:url('${esc(E.foto)}')"></div>`:""}
-      <main class="troca">${vis.length?vis.map(i=>`<div class="it"><b>${esc(i.nome)}${i.desc?`<small>${esc(i.desc)}</small>`:""}</b><span class="p">${esc(preco(i.preco))}</span></div>`).join(""):`<div class="vazio">Programação em preparo.<br>Os itens aparecem aqui assim que forem lançados.</div>`}</main>
-      ${temD?`<section class="dest">${D.rotulo?`<span class="rot">${esc(D.rotulo)}</span>`:""}${D.texto?`<div class="txt">${esc(D.texto)}</div>`:""}${val?`<div class="val ${/^R\$/.test(val)&&val.length<=12?"":"txtv"}">${esc(val)}</div>`:""}${D.ate?`<div class="ate">válido até ${dataBR(D.ate)}</div>`:""}</section>`:""}
-      <footer><span class="marca">mostraí</span>${E.aviso?`<div class="aviso"><span>${esc(E.aviso)}</span></div>`:`<div class="aviso"></div>`}${fora?`<i class="off" title="sem conexão: mostrando o último conteúdo"></i>`:""}${pags>1?`<div class="pag">${Array.from({length:pags},(_,i)=>`<i class="${i===pag?"on":""}"></i>`).join("")}</div>`:""}</footer>`;ajustar();}
+    palco.className=(E.foto?"":"sem-foto")+(vis.length>=6?" cheio":"");
+    const cab=`<header>${E.logo?`<img src="${esc(E.logo)}" alt="${esc(E.nome)}">`:`<h1 class="${String(E.nome||"").length>16?"longo":""}">${esc(E.nome)}</h1>`}${E.rotulo?`<small>${esc(E.rotulo)}</small>`:""}</header>`;
+    const tit=E.titulo?`<div class="titulo">${esc(E.titulo)}</div>`:"";
+    const foto=E.foto?`<div class="foto" style="background-image:url('${esc(E.foto)}')"></div>`:"";
+    const lista=`<main class="troca">${vis.length?vis.map(i=>`<div class="it"><b>${esc(i.nome)}${i.desc?`<small>${esc(i.desc)}</small>`:""}</b><span class="p">${esc(preco(i.preco))}</span></div>`).join(""):`<div class="vazio">Programação em preparo.<br>Os itens aparecem aqui assim que forem lançados.</div>`}</main>`;
+    const dest=temD?`<section class="dest">${D.rotulo?`<span class="rot">${esc(D.rotulo)}</span>`:""}${D.texto?`<div class="txt">${esc(D.texto)}</div>`:""}${val?`<div class="val ${/^R\$/.test(val)&&val.length<=12?"":"txtv"}">${esc(val)}</div>`:""}${D.ate?`<div class="ate">válido até ${dataBR(D.ate)}</div>`:""}</section>`:"";
+    const rod=`<footer><span class="marca">mostraí</span>${E.aviso?`<div class="aviso"><span>${esc(E.aviso)}</span></div>`:`<div class="aviso"></div>`}${fora?`<i class="off" title="sem conexão: mostrando o último conteúdo"></i>`:""}${pags>1?`<div class="pag">${Array.from({length:pags},(_,i)=>`<i class="${i===pag?"on":""}"></i>`).join("")}</div>`:""}</footer>`;
+    palco.innerHTML=M.lay==="paisagem"?`<div class="pais"><aside>${cab}${foto}${dest}</aside><section class="col">${tit}${lista}</section></div>${rod}`:`${cab}${tit}${foto}${lista}${dest}${rod}`;
+    caber(vis.length);ajustar();}
   // último conteúdo válido fica guardado só para a tela não apagar quando a internet cai; a fonte é sempre o servidor
   const guarda={ler(){try{return JSON.parse(localStorage.getItem("mostrai-"+c)||"null");}catch(e){return null;}},por(v){try{localStorage.setItem("mostrai-"+c,JSON.stringify(v));}catch(e){}}};
   async function puxar(){try{const r=await fetch(`/api/mostra/${encodeURIComponent(c)}${E&&!fora?"?v="+E.v:""}`,{cache:"no-store"});if(r.status===404){document.body.innerHTML='<div class="erro">Este Mostraí não existe ou foi desligado.</div>';return;}if(!r.ok)throw 0;const d=await r.json();const voltou=fora;fora=false;if(d.igual){if(voltou)desenhar();return;}E=d;guarda.por(E);tema(E);pag=0;desenhar();}
     catch(e){if(!E){E=guarda.ler();if(E)tema(E);}if(!fora){fora=true;desenhar();}}}
-  let tempo=null;function girarPagina(){clearTimeout(tempo);const n=E?(E.itens||[]).filter(i=>i.ativo!==false&&i.nome).slice(pag*POR,pag*POR+POR).length:POR;tempo=setTimeout(()=>{pag++;desenhar();girarPagina();},6000+n*1500);}
-  puxar().then(girarPagina);setInterval(puxar,3000);addEventListener("resize",ajustar);addEventListener("orientationchange",()=>setTimeout(ajustar,300));if(window.visualViewport)visualViewport.addEventListener("resize",ajustar);
+  let tempo=null;function girarPagina(){clearTimeout(tempo);const n=palco.querySelectorAll(".it").length||4;tempo=setTimeout(()=>{pag++;desenhar();girarPagina();},6000+n*1500);}
+  puxar().then(girarPagina);setInterval(puxar,3000);addEventListener("resize",ajustar);addEventListener("orientationchange",()=>setTimeout(ajustar,300));if(window.visualViewport)visualViewport.addEventListener("resize",ajustar);if(document.fonts)document.fonts.ready.then(()=>{if(E)desenhar();});
   // oferta vence à meia-noite mesmo sem ninguém mexer
   setInterval(desenhar,10*60*1000);
   const acordada=async()=>{try{if(navigator.wakeLock)await navigator.wakeLock.request("screen");}catch(e){}};acordada();document.addEventListener("visibilitychange",()=>{if(!document.hidden)acordada();});

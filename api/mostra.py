@@ -120,6 +120,13 @@ def gravar(token, mud):
         est["destaque"] = _destaque(mud["destaque"])
     if mud.get("giro") in (0, 90, 270):
         est["giro"] = mud["giro"]
+    # diagramação: formato da TV (auto/retrato/paisagem), tamanho em polegadas (0 = não informado) e itens por tela (0 = automático)
+    if mud.get("formato") in ("auto", "retrato", "paisagem"):
+        est["formato"] = mud["formato"]
+    if mud.get("polegadas") in (0, 32, 43, 50, 55, 65, 75, 85):
+        est["polegadas"] = mud["polegadas"]
+    if mud.get("linhas") in (0, 4, 5, 6, 8, 10):
+        est["linhas"] = mud["linhas"]
     if mud.get("foto") is None and "foto" in mud:
         est["foto"] = None
     est["v"] = int(est.get("v") or 1) + 1; est["atualizado"] = time.strftime("%Y-%m-%dT%H:%M:%S")
