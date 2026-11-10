@@ -488,6 +488,37 @@ def disco_uso():
                 mb, n = tam(c); pastas["dados/" + sub] = {"mb": mb, "arquivos": n}
     return {"disco_total_gb": round(u.total / 1e9, 1), "disco_usado_gb": round(u.used / 1e9, 1), "disco_livre_gb": round(u.free / 1e9, 1), "pastas": pastas}
 
+def peca_provar(d):
+    """Provar a peça na foto: recorte da peça, troca de cor (mantém a luz) e posição da logo pelas medidas da peça.
+    A foto e o recorte ficam em cache pelo id; trocar a cor manda só {id, cor}."""
+    import numpy as np, cv2
+    sys.path.insert(0, os.path.join(RAIZ, "api", "kits")); import provar
+    pasta = os.path.join(ESTADO_DIR, "provas"); os.makedirs(pasta, exist_ok=True)
+    peca = d.get("peca") if d.get("peca") in provar.REGRA else "camiseta"
+    pid = re.sub(r"[^a-f0-9]", "", str(d.get("id") or ""))[:24]
+    if d.get("foto"):
+        raw = base64.b64decode(str(d["foto"]).split(",", 1)[-1]); pid = hashlib.sha256(raw).hexdigest()[:24]
+        img = cv2.imdecode(np.frombuffer(raw, np.uint8), cv2.IMREAD_COLOR)
+        if img is None:
+            raise ValueError("foto ilegível")
+        k = min(1.0, 1600 / max(img.shape[:2])); img = cv2.resize(img, None, fx=k, fy=k, interpolation=cv2.INTER_AREA) if k < 1 else img
+        cv2.imwrite(os.path.join(pasta, pid + ".jpg"), img, [cv2.IMWRITE_JPEG_QUALITY, 88])
+    img = cv2.imread(os.path.join(pasta, pid + ".jpg"))
+    if img is None:
+        raise ValueError("foto não encontrada: mande de novo")
+    ponto = d.get("ponto") if isinstance(d.get("ponto"), list) and len(d["ponto"]) == 2 else None
+    mp = os.path.join(pasta, f"{pid}.{peca}.png")
+    if ponto or not os.path.exists(mp):
+        m = provar.recortar(img, ponto)
+        if m is None:
+            raise ValueError("não achei a peça: toque em cima dela")
+        cv2.imwrite(mp, m)
+    m = cv2.imread(mp, cv2.IMREAD_GRAYSCALE); med = provar.medir(m, peca)
+    cor = d.get("cor") if re.match(r"^#[0-9a-fA-F]{6}$", d.get("cor") or "") else None
+    out = provar.tingir(img, m, cor) if cor else img
+    ok, jpg = cv2.imencode(".jpg", out, [cv2.IMWRITE_JPEG_QUALITY, 86])
+    return {"id": pid, "peca": peca, "w": int(img.shape[1]), "h": int(img.shape[0]), "medidas": med, "jpg": "data:image/jpeg;base64," + base64.b64encode(jpg.tobytes()).decode()}
+
 def kit_aplicar(d):
     """Contextualização: a arte feita no editor (PNG transparente, base64) aplicada na capa calibrada do kit do setor."""
     import hashlib, tempfile
@@ -1057,6 +1088,13 @@ class H(BaseHTTPRequestHandler):
                     return self._send(200, {"token": est["token"], "tela": f"/mostra.html?c={est['token']}", "programacao": f"/programacao.html?c={est['token']}", "estado": est})
                 except Exception as e:
                     return self._erro(500, "Mostraí: " + str(e)[:200])
+            if p == "/api/provar":
+                if not self._eu():
+                    return self._erro(401, "entre com a sua conta")
+                try:
+                    return self._send(200, peca_provar(self._json_grande()))
+                except Exception as e:
+                    return self._erro(500, "provar: " + str(e)[:160])
             if p == "/api/kit/aplicar":
                 if not self._eu():
                     return self._erro(401, "entre com a sua conta")
