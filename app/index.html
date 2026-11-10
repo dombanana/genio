@@ -8,13 +8,13 @@
 <link rel="icon" href="../genio-favicon.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
-<link rel="stylesheet" href="app.css?v=38fb6db041">
+<link rel="stylesheet" href="app.css?v=65fe89596d">
 <style>.leaflet-div-icon{background:transparent;border:0}.mapa svg.esq{width:100%;height:100%}</style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=38fb6db041"></script>
+<script src="app.js?v=65fe89596d"></script>
 <script>
 (async()=>{
   const {$,$$,esc,qs,sessao,eu,dados,estrelasHTML,estado,salvar,nav,topo,setorNome,nomeLoja}=App;
@@ -34,7 +34,7 @@
   // abre a rota de hoje; sem rota hoje (sábado) ou com atraso, a pendente mais antiga; senão a próxima
   const atual=DIAS.find(d=>d.n===pedida)||DIAS.find(d=>d.data===hoje&&pend(d))||DIAS.find(d=>d.data<hoje&&pend(d))||DIAS.find(d=>d.data>hoje&&pend(d))||DIAS.find(d=>pend(d))||DIAS[0];
   const sel=atual.lojas;if(!sel.length){const dc0=App.dataCurta(atual.data);$("#app").innerHTML=`${topo()}<h1>Olá, ${esc(eu().nome.split(" ")[0])}</h1><p class="sub">${esc(D.zona.nome)} · ${dc0.sem} ${dc0.dia}/${dc0.mes}</p>
-    <div class="agenda">${DIAS.map(d=>{const q=d.lojas.filter(l=>feitasSet.has(l.slug)).length;const x=App.dataCurta(d.data);const st=d.vazio?"a captar":q>=d.lojas.length?"feita":d.data<hoje?"pendente":d.data===hoje?"hoje":"";const j=J(d.n);return `<a href="?dia=${d.n}" class="${d===atual?"on":""} ${d.data===hoje?"hoje":""} ${d.data<hoje?"passado":""} ${j&&j.status==="andando"?"andando":""}">${d===atual&&!d.vazio?`<span class="play ${j&&j.status==="andando"?"pausa":""} ${j&&j.status==="encerrada"?"fim":""}" data-play title="${j&&j.status==="andando"?"Pausar a rota":"Começar a rota"}">${j&&j.status==="andando"?"❚❚":j&&j.status==="encerrada"?"✓":"▶"}</span>`:""}<span class="s">${x.sem}</span><span class="d">${x.dia}</span><span class="s">${x.mes}</span><span class="q">${d.vazio?"sem lojas":`${q?`<b>${q}</b>/`:""}${d.lojas.length} lojas`}</span>${st?`<span class="tag ${st}">${st}</span>`:""}</a>`;}).join("")}</div>
+    <div class="agenda">${DIAS.map(d=>{const q=d.lojas.filter(l=>feitasSet.has(l.slug)).length;const x=App.dataCurta(d.data);const st=d.vazio?"a captar":q>=d.lojas.length?"feita":d.data<hoje?"pendente":d.data===hoje?"hoje":"";const j=J(d.n);return `<a href="?dia=${d.n}" class="${d===atual?"on":""} ${d.data===hoje?"hoje":""} ${d.data<hoje?"passado":""} ${j&&j.status==="andando"?"andando":""}"><span class="s">${x.sem}</span><span class="d">${x.dia}</span><span class="s">${x.mes}</span>${d===atual&&!d.vazio?`<span class="play ${j&&j.status==="andando"?"pausa":""} ${j&&j.status==="encerrada"?"fim":""}" data-play title="${j&&j.status==="andando"?"Pausar a rota":"Começar a rota"}">${j&&j.status==="andando"?"❚❚":j&&j.status==="encerrada"?"✓":"▶"}</span>`:""}${st?`<span class="tag ${st}">${st}</span>`:""}</a>`;}).join("")}</div>
     <section class="card"><h2>Sem rota neste dia</h2><p>As lojas desta zona (3 a 5 estrelas) preenchem ${DIAS.filter(d=>!d.vazio).length} dias de rota. Para preencher os próximos dias, a captação precisa varrer novas zonas — hoje está pausada por decisão do dono.</p></section>${nav("rota")}`;return;}
   // percurso do dia: encadeado ponto a ponto a partir da base (vizinho mais próximo)
   const dist=(a,b)=>Math.hypot((a.lat-b.lat)*111,(a.lng-b.lng)*111*Math.cos(a.lat*Math.PI/180));
@@ -49,7 +49,7 @@
   const cont=[5,4,3].map(n=>[n,rota.filter(l=>l.estrelas===n).length]).filter(x=>x[1]);
   $("#app").innerHTML=`${topo()}
   <h1>Olá, ${esc(eu().nome.split(" ")[0])}</h1><p class="sub">${esc(Z.nome)} · rota ${atual.n} · ${dc.sem} ${dc.dia}/${dc.mes} · ${rota.length} lojas · ${feitasDia} visitadas</p>
-  <div class="agenda">${DIAS.map(d=>{const q=d.lojas.filter(l=>feitasSet.has(l.slug)).length;const x=App.dataCurta(d.data);const st=d.vazio?"a captar":q>=d.lojas.length?"feita":d.data<hoje?"pendente":d.data===hoje?"hoje":"";const j=J(d.n);return `<a href="?dia=${d.n}" class="${d===atual?"on":""} ${d.data===hoje?"hoje":""} ${d.data<hoje?"passado":""} ${j&&j.status==="andando"?"andando":""}">${d===atual&&!d.vazio?`<span class="play ${j&&j.status==="andando"?"pausa":""} ${j&&j.status==="encerrada"?"fim":""}" data-play title="${j&&j.status==="andando"?"Pausar a rota":"Começar a rota"}">${j&&j.status==="andando"?"❚❚":j&&j.status==="encerrada"?"✓":"▶"}</span>`:""}<span class="s">${x.sem}</span><span class="d">${x.dia}</span><span class="s">${x.mes}</span><span class="q">${d.vazio?"sem lojas":`${q?`<b>${q}</b>/`:""}${d.lojas.length} lojas`}</span>${st?`<span class="tag ${st}">${st}</span>`:""}</a>`;}).join("")}</div>
+  <div class="agenda">${DIAS.map(d=>{const q=d.lojas.filter(l=>feitasSet.has(l.slug)).length;const x=App.dataCurta(d.data);const st=d.vazio?"a captar":q>=d.lojas.length?"feita":d.data<hoje?"pendente":d.data===hoje?"hoje":"";const j=J(d.n);return `<a href="?dia=${d.n}" class="${d===atual?"on":""} ${d.data===hoje?"hoje":""} ${d.data<hoje?"passado":""} ${j&&j.status==="andando"?"andando":""}"><span class="s">${x.sem}</span><span class="d">${x.dia}</span><span class="s">${x.mes}</span>${d===atual&&!d.vazio?`<span class="play ${j&&j.status==="andando"?"pausa":""} ${j&&j.status==="encerrada"?"fim":""}" data-play title="${j&&j.status==="andando"?"Pausar a rota":"Começar a rota"}">${j&&j.status==="andando"?"❚❚":j&&j.status==="encerrada"?"✓":"▶"}</span>`:""}${st?`<span class="tag ${st}">${st}</span>`:""}</a>`;}).join("")}</div>
   ${(()=>{const j=J(atual.n);if(!j)return `<div class="jornada plan"><b>Planejamento</b><span>Toque ▶ no dia para começar a rota. Até lá, nada conta como visita.</span></div>`;
     if(j.status==="encerrada")return `<div class="jornada fim"><b>Rota encerrada</b><span>${hms(tempoJ(j))} em rota · ${hms(pausaJ(j))} de intervalo · ${feitasDia}/${rota.length} lojas</span><button type="button" id="jResumo">Resumo</button></div>`;
     return `<div class="jornada ${j.status}"><b>${j.status==="andando"?"Em rota":"Pausada · ajustes"}</b><span><b id="jT">${hms(tempoJ(j))}</b> · ${feitasDia}/${rota.length} lojas${pausaJ(j)?` · ${hms(pausaJ(j))} de intervalo`:""}</span><button type="button" data-play>${j.status==="andando"?"❚❚ Pausar":"▶ Retomar"}</button><button type="button" id="jFim">■ Encerrar</button></div>`;})()}

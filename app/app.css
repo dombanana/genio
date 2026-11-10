@@ -432,10 +432,9 @@ svg.icone .w{fill:none}
 
 /* jornada da rota: ▶ no dia, barra de estado e resumo */
 .agenda a{position:relative}
-.agenda a .play{position:absolute;top:-2px;right:-2px;width:30px;height:30px;border-radius:50%;background:var(--marca);color:#fff;display:grid;place-items:center;font-size:12px;font-weight:800;box-shadow:0 2px 6px rgba(28,22,53,.25);z-index:2}
+.agenda a .play{justify-self:center;margin-top:4px;width:30px;height:30px;border-radius:50%;background:var(--marca);color:#fff;display:grid;place-items:center;font-size:12px;font-weight:800;box-shadow:0 2px 6px rgba(28,22,53,.25);z-index:2}
 .agenda a .play.pausa{background:#0E8A84;font-size:10px}.agenda a .play.fim{background:#0E8A84}
 .agenda a.andando{border-color:#0E8A84}
-.agenda{padding-top:8px}
 .jornada{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;background:#fff;border-radius:14px;padding:10px 14px;margin:0 0 10px;border-left:5px solid var(--linha)}
 .jornada>b{font-size:15px}.jornada>span{flex:1 1 180px;font-size:13px;color:var(--texto2)}.jornada>span b{color:var(--texto);font-size:15px}
 .jornada button{font:inherit;font-size:13px;font-weight:700;min-height:36px;padding:0 12px;border-radius:10px;border:1.5px solid var(--linha);background:#fff;color:var(--marca);cursor:pointer}
