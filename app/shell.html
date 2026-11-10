@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#6933C5">
 <link rel="icon" href="../genio-favicon.png">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="stylesheet" href="app.css?v=a7b7cac413">
+<link rel="stylesheet" href="app.css?v=f443d2d852">
 <style>html,body{height:100%;overflow:hidden;padding:0}</style>
 </head>
 <body>
@@ -15,7 +15,7 @@
   <iframe id="tela" allow="camera; microphone; geolocation; display-capture; screen-wake-lock" title="GênIO"></iframe>
   <nav class="nav" id="barra"></nav>
 </div>
-<script src="app.js?v=a7b7cac413"></script>
+<script src="app.js?v=f443d2d852"></script>
 <script>
 (()=>{
   const {$,esc,ICONES,gravarNota}=App;
@@ -47,7 +47,7 @@
     $("#rec").onclick=async()=>{if(REC.ativo){await parar();return;}const tipo=localStorage.getItem("rec-tipo")||"audio",tela=localStorage.getItem("rec-tela")!=="0";
       // foto e vídeo usam a câmera do próprio celular (o navegador não grava vídeo direito); áudio e transcrição gravam aqui
       try{if(tipo==="foto"){await foto(false);if(atual.startsWith("notas"))fr.contentWindow.location.reload();return;}
-        if(tipo==="video-tras"||tipo==="video-frente"){await video(tipo==="video-frente");if(atual.startsWith("notas"))fr.contentWindow.location.reload();return;}
+        if(tipo==="video-tras"||tipo==="video-frente"){await video(false);if(atual.startsWith("notas"))fr.contentWindow.location.reload();return;}
         await iniciar(tipo==="transcrever"?"transcrever":"audio",{telaAcesa:tela});}catch(e){alert(e.message);}};
     $("#barra").querySelectorAll("[data-ir]").forEach(a=>a.onclick=ev=>{ev.preventDefault();ir(a.dataset.ir);});pintarMonitor();}
   // conferência das ocorrências em segundo plano: a própria tela de pedidos conta (mesma regra) e avisa a casca

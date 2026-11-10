@@ -6,7 +6,7 @@
 <title>GênIO · Configuração</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="app.css?v=a7b7cac413">
+<link rel="stylesheet" href="app.css?v=f443d2d852">
 <style>
 .forn{display:grid;grid-template-columns:1fr;gap:6px;margin:8px 0 0}
 .forn .it{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;background:var(--lav);border-radius:12px;padding:10px 12px}
@@ -19,14 +19,14 @@
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=a7b7cac413"></script>
+<script src="app.js?v=f443d2d852"></script>
 <script>
 (async()=>{
   const {$,$$,esc,sessao,nav,topo}=App;
   if(!await sessao())return;
   const API=(()=>{try{return window.top.REC_API||null;}catch(e){return null;}})();
   let tipoSel=localStorage.getItem("rec-tipo")||"audio",telaAcesa=localStorage.getItem("rec-tela")!=="0";
-  const TIPOS=[["audio","","Áudio"],["transcrever","","Transcrever"],["video-tras","","Vídeo · traseira"],["video-frente","","Vídeo · frontal"],["foto","","Foto"]];if(!TIPOS.some(t=>t[0]===tipoSel)){tipoSel="audio";try{localStorage.setItem("rec-tipo","audio");}catch(e){}}
+  const TIPOS=[["audio","","Áudio"],["transcrever","","Transcrever"],["video-tras","","Vídeo"],["foto","","Foto"]];if(!TIPOS.some(t=>t[0]===tipoSel)){tipoSel="audio";try{localStorage.setItem("rec-tipo","audio");}catch(e){}}
   // fornecedores por item (gravado no aparelho até existir conta no servidor)
   const PADRAO={capacho:{item:"Capacho",fornecedor:"Kapazi",obs:"23 cores de vinil · produção própria"},placas:{item:"Placas e sinalização",fornecedor:"Printi"},adesivos:{item:"Adesivos e vitrines",fornecedor:"Printi"},uniformes:{item:"Uniformes e camisetas",fornecedor:"Printi",obs:"polo bordada · camiseta clássica/premium"},impressos:{item:"Cartões de visita",fornecedor:"Printi"},panfleto:{item:"Flyers e panfletos",fornecedor:"Printi"},banners:{item:"Banners e faixas",fornecedor:"Printi"},parede:{item:"Adesivos de parede",fornecedor:"Printi"},brindes:{item:"Sacolas e brindes",fornecedor:"Printi"},carimbo:{item:"Carimbos",fornecedor:"produção própria"},mostraai:{item:"Mostra Aí · cardápio digital",fornecedor:"AI Negócios"},postaai:{item:"Posta Aí · postagens",fornecedor:"AI Negócios"},telefonia:{item:"Atendente virtual (telefone)",fornecedor:"a definir"},inpi:{item:"Registro de marca",fornecedor:"a definir"}};
   let FORN=(await App.lerChave("fornecedores"))||{};  // fornecedores por item: no servidor, iguais para todos
