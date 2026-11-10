@@ -19,23 +19,23 @@
    "sha256_base": "be2cbe14d3e0dd5ec9e5924ac3e398f3bbe386d6a4702a63adbd30b795ade43b",
    "plano": [
     [
-     277,
-     591
+     278,
+     592
     ],
     [
-     1269,
-     593
+     1282,
+     592
     ],
     [
-     1429,
-     924
+     1455,
+     935
     ],
     [
-     126,
-     875
+     95,
+     935
     ]
    ],
-   "modo": "quadrilatero+superficie",
+   "modo": "manual",
    "area_rel": 0.2243,
    "px": [
     1536,
@@ -46,7 +46,7 @@
     0,
     0
    ],
-   "qualidade": "ok"
+   "qualidade": "revisada no caimento (demo com a área marcada), 10/11"
   },
   "02": {
    "produto": "Placa",
@@ -294,23 +294,23 @@
    "sha256_base": "4e0e9f87b92859b3a5f8b001efd96fead49aeee286bb3650807422428d6ceaef",
    "plano": [
     [
-     680,
+     649,
      53
     ],
     [
-     1120,
+     1187,
      53
     ],
     [
-     1120,
-     897
+     1187,
+     899
     ],
     [
-     680,
-     897
+     649,
+     899
     ]
    ],
-   "modo": "caixa",
+   "modo": "manual",
    "area_rel": 0.2361,
    "px": [
     1536,
@@ -321,7 +321,7 @@
     0,
     0
    ],
-   "qualidade": "ok"
+   "qualidade": "revisada no caimento (demo com a área marcada), 10/11"
   },
   "09": {
    "produto": "Ecobag",

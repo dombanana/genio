@@ -294,23 +294,23 @@
    "sha256_base": "0fd95a1275fe1c28d9e4945b440fe9c27ee5e04fa2a4ed21bec8725314426441",
    "plano": [
     [
-     528,
-     73
+     502,
+     72
     ],
     [
-     989,
-     73
+     1086,
+     72
     ],
     [
-     989,
-     881
+     1086,
+     886
     ],
     [
-     528,
-     881
+     502,
+     886
     ]
    ],
-   "modo": "caixa",
+   "modo": "manual",
    "area_rel": 0.2368,
    "px": [
     1536,
@@ -321,7 +321,7 @@
     0,
     0
    ],
-   "qualidade": "ok"
+   "qualidade": "revisada no caimento (demo com a área marcada), 10/11"
   },
   "09": {
    "produto": "Ecobag",

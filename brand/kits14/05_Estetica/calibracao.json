@@ -98,23 +98,23 @@
    "sha256_base": "581e8c7e962bc88e01233daffa49db529f95158a3607975ec7f575d00bc8cdb2",
    "plano": [
     [
-     252,
-     0
+     394,
+     119
     ],
     [
-     1460,
-     0
+     1137,
+     119
     ],
     [
-     1460,
-     799
+     1137,
+     820
     ],
     [
-     252,
-     799
+     394,
+     820
     ]
    ],
-   "modo": "caixa",
+   "modo": "manual",
    "area_rel": 0.6137,
    "px": [
     1536,
@@ -125,7 +125,7 @@
     0,
     0
    ],
-   "qualidade": "ok"
+   "qualidade": "revisada no caimento (demo com a área marcada), 10/11"
   },
   "04": {
    "produto": "Uniforme polo",

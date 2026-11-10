@@ -300,3 +300,21 @@ html.na-casca body.com-acoes{padding-bottom:110px}
 html{touch-action:pan-x pan-y}
 .trava-giro{position:absolute;right:8px;top:8px;z-index:5;min-height:40px;padding:0 12px;border-radius:999px;border:1px solid #D9D2F0;background:rgba(255,255,255,.94);color:var(--texto2,#5B5675);font:600 13px Rubik,system-ui,sans-serif;cursor:pointer;touch-action:manipulation}
 .trava-giro.livre{background:var(--roxo,#6933C5);border-color:var(--roxo,#6933C5);color:#fff}
+
+.pesq select{width:100%;font:inherit;font-size:16px;min-height:46px;padding:0 12px;border:1.5px solid var(--linha);border-radius:12px;background:var(--branco);color:inherit}
+.pq-l{display:block;font-size:14px;font-weight:600;margin:14px 0 6px}
+.pq-o{display:flex;flex-wrap:wrap;gap:8px}
+.pq-o button{font:inherit;font-size:15px;font-weight:600;min-height:44px;padding:0 16px;border-radius:999px;border:1.5px solid var(--linha);background:var(--branco);color:inherit;cursor:pointer}
+.pq-o button.on{background:var(--roxo,#6933C5);border-color:var(--roxo,#6933C5);color:#fff}
+
+.desliza{position:relative;overflow:hidden;border-radius:var(--raio,16px);margin-bottom:10px;transition:max-height .25s,opacity .25s,margin .25s;max-height:200px}
+.desliza .loja-l{position:relative;margin:0;touch-action:pan-y;transition:transform .2s;user-select:none;-webkit-user-select:none}
+.desliza .acao{position:absolute;top:0;bottom:0;display:none;align-items:center;padding:0 18px;font-weight:700;font-size:15px;color:#fff;width:100%}
+.desliza.dir .acao.reag{display:flex;background:#2F6FED;justify-content:flex-start}
+.desliza.esq .acao.arq{display:flex;background:#6B6578;justify-content:flex-end}
+.desliza.vai .acao{filter:brightness(.85)}
+.desliza.some{max-height:0;opacity:0;margin:0}
+.reag-tag{color:#1D4ED8;font-weight:600}
+.arq-l{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 0;border-top:1px solid var(--linha)}
+.aviso-acao{position:fixed;left:12px;right:12px;bottom:calc(84px + env(safe-area-inset-bottom));z-index:90;background:var(--navy,#141C3A);color:#fff;border-radius:14px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:15px;box-shadow:0 6px 20px rgba(0,0,0,.25)}
+.aviso-acao button{border:0;background:none;color:#B9A6F0;font:inherit;font-weight:700;min-height:36px;cursor:pointer}

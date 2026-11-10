@@ -8,13 +8,13 @@
 <link rel="icon" href="../genio-favicon.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
-<link rel="stylesheet" href="app.css?v=95b95dac54">
+<link rel="stylesheet" href="app.css?v=498d378496">
 <style>.leaflet-div-icon{background:transparent;border:0}.mapa svg.esq{width:100%;height:100%}</style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=95b95dac54"></script>
+<script src="app.js?v=498d378496"></script>
 <script>
 (async()=>{
   const {$,$$,esc,qs,sessao,eu,dados,estrelasHTML,estado,salvar,nav,topo,setorNome,nomeLoja}=App;
@@ -45,9 +45,29 @@
   <section class="card" style="padding:12px 16px"><div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">${cont.map(([n,q])=>`<a href="?dia=${atual.n}&min=${n}" class="chip ${filtro===n?"ok":""}" style="text-decoration:none">${"★".repeat(n)} <b>${q}</b></a>`).join("")}${filtro?`<a href="?dia=${atual.n}" class="chip">todas</a>`:""}</div><small class="muted">Só lojas de 3 a 5 estrelas; 5 e 4 primeiro. <span class="leg-auto">Azul</span> = logotipo automático aguardando aprovação · <span class="leg-falta">âmbar</span> = logotipo ainda não organizado.</small></section>
   <div class="mapa" id="mapa"></div>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 6px"><button class="btn sec" id="recortarTodas" type="button" style="min-height:48px;font-size:14px">✂ Recortar logotipos em lote</button><button class="btn sec" id="gerarTodas" type="button" style="min-height:48px;font-size:14px">✦ Gerar produtos de todas</button></div><div class="muted" id="gerarSt" style="font-size:13px;margin:0 0 10px"></div>
-  <div class="lista">${vis.map((l,i)=>`<a class="card loja-l ${e.feitas.includes(l.slug)?"feita":""} logo-${LOGO[l.slug]}" href="visita.html?l=${encodeURIComponent(l.slug)}" style="display:grid;color:inherit;text-decoration:none"><span class="n">${e.feitas.includes(l.slug)?"✓":l.parada}</span><span class="mini ${LOGO[l.slug]}" data-mini="${esc(l.slug)}">${MINI[l.slug]?`<img src="${esc(MINI[l.slug])}" alt="" loading="lazy">`:"<i>sem<br>logo</i>"}</span><div><b>${esc(nomeLoja(l.nome))}</b><small>${esc(setorNome(l.setor))} · ${esc((l.endereco||"").split(" · ")[0])}</small></div><div style="text-align:right">${estrelasHTML(l.estrelas)}<br><small class="${LOGO[l.slug]==="pronto"?"ok-logo":"falta-logo"}">${LOGO[l.slug]==="pronto"?"✓ logotipo pronto":LOGO[l.slug]==="falta"?"◷ falta tratar":"✦ falta logotipo"}</small></div></a>`).join("")}</div>
+  <div class="lista">${vis.map((l,i)=>`<div class="desliza" data-slug="${esc(l.slug)}"><span class="acao reag">📅 Reagendar</span><span class="acao arq">Arquivar 🗂</span><a class="card loja-l ${e.feitas.includes(l.slug)?"feita":""} logo-${LOGO[l.slug]}" href="visita.html?l=${encodeURIComponent(l.slug)}" style="display:grid;color:inherit;text-decoration:none"><span class="n">${e.feitas.includes(l.slug)?"✓":l.parada}</span><span class="mini ${LOGO[l.slug]}" data-mini="${esc(l.slug)}">${MINI[l.slug]?`<img src="${esc(MINI[l.slug])}" alt="" loading="lazy">`:"<i>sem<br>logo</i>"}</span><div><b>${esc(nomeLoja(l.nome))}</b><small>${esc(setorNome(l.setor))} · ${esc((l.endereco||"").split(" · ")[0])}</small></div><div style="text-align:right">${estrelasHTML(l.estrelas)}<br><small class="${LOGO[l.slug]==="pronto"?"ok-logo":"falta-logo"}">${LOGO[l.slug]==="pronto"?"✓ logotipo pronto":LOGO[l.slug]==="falta"?"◷ falta tratar":"✦ falta logotipo"}</small>${l.reagendada?`<br><small class="reag-tag">📅 reagendada</small>`:""}</div></a></div>`).join("")}</div>
+  <p class="muted" style="font-size:13px;text-align:center;margin:6px 0 10px">Arraste a loja para a direita para reagendar · para a esquerda para arquivar</p>
+  ${(e.arquivadas||[]).length?`<details class="card" style="padding:12px 16px"><summary><b>Arquivadas (${e.arquivadas.length})</b></summary>${e.arquivadas.map(s=>{const lj=D.lojas.find(x=>x.slug===s);return `<div class="arq-l"><span>${esc(lj?nomeLoja(lj.nome):s)}</span><button type="button" class="btn sec sm" data-volta="${esc(s)}" style="width:auto;min-height:36px;padding:0 12px;font-size:13px">Voltar para a rota</button></div>`;}).join("")}</details>`:""}
   ${nav("rota")}`;
   const rh=$("#reHoje");if(rh)rh.onclick=()=>{App.reagendar(atual.n,hoje);location.href=`?dia=${atual.n}`;};const rd=$("#reData");if(rd)rd.onchange=()=>{if(rd.value){App.reagendar(atual.n,rd.value);location.href=`?dia=${atual.n}`;}};
+  // ---- arrastar a loja para o lado: direita reagenda, esquerda arquiva (grava no servidor)
+  (()=>{const proxUtil=(n)=>{const d=new Date(hoje+"T12:00:00");let c=0;while(c<n){d.setDate(d.getDate()+1);if(d.getDay()!==0&&d.getDay()!==6)c++;}return d.toISOString().slice(0,10);};
+    const fmt=iso=>{const x=App.dataCurta(iso);return `${x.sem} ${x.dia}/${x.mes}`;};
+    const aviso=(txt,desfazer)=>{const t=document.createElement("div");t.className="aviso-acao";t.innerHTML=`<span>${esc(txt)}</span><button type="button">Desfazer</button>`;document.body.appendChild(t);let feito=false;const fim=()=>{if(feito)return;feito=true;t.remove();location.reload();};t.querySelector("button").onclick=()=>{feito=true;desfazer();t.remove();location.reload();};setTimeout(fim,3500);};
+    async function reagendar(l,el){const am=proxUtil(1),sem=proxUtil(5);const k=await App.menuLongo("Reagendar "+nomeLoja(l.nome),[{k:am,ic:"📅",t:"Amanhã · "+fmt(am)},{k:sem,ic:"📅",t:"Semana que vem · "+fmt(sem)},{k:"data",ic:"🗓",t:"Escolher a data"}]);
+      if(!k){el.style.transform="";return;}let iso=k;
+      if(k==="data"){iso=await new Promise(res=>{const f=document.createElement("div");f.className="fundo";const m=document.createElement("div");m.className="menu-lado";m.innerHTML=`<b>Nova data · ${esc(nomeLoja(l.nome))}</b><input type="date" min="${hoje}" value="${am}" style="width:100%;font:inherit;font-size:17px;min-height:48px;padding:0 12px;border:1.5px solid var(--linha);border-radius:12px;margin:8px 0"><button type="button" data-k="ok">Confirmar</button><button type="button" class="cancela" data-k="">Cancelar</button>`;document.body.append(f,m);const sai=v=>{f.remove();m.remove();res(v);};f.onclick=()=>sai(null);m.querySelector("[data-k=ok]").onclick=()=>sai(m.querySelector("input").value||null);m.querySelector(".cancela").onclick=()=>sai(null);});if(!iso){el.style.transform="";return;}}
+      const antes=(estado().reag||{})[l.slug]||null;App.reagendarLoja(l.slug,iso);el.closest(".desliza").classList.add("some");aviso(`${nomeLoja(l.nome)} → ${fmt(iso)}`,()=>App.reagendarLoja(l.slug,antes));}
+    function arquivar(l,el){App.arquivarLoja(l.slug,true);el.closest(".desliza").classList.add("some");aviso(`${nomeLoja(l.nome)} arquivada`,()=>App.arquivarLoja(l.slug,false));}
+    $$(".desliza").forEach(cx=>{const el=cx.querySelector(".loja-l");const l=vis.find(x=>x.slug===cx.dataset.slug);let x0=0,y0=0,dx=0,modo=null,id=null;
+      el.addEventListener("pointerdown",ev=>{if(ev.target.closest("[data-mini]"))return;x0=ev.clientX;y0=ev.clientY;dx=0;modo=null;id=ev.pointerId;});
+      el.addEventListener("pointermove",ev=>{if(ev.pointerId!==id)return;const mx=ev.clientX-x0,my=ev.clientY-y0;if(!modo){if(Math.abs(mx)>12&&Math.abs(mx)>Math.abs(my)*1.4){modo="lado";try{el.setPointerCapture(id);}catch(e){}el.style.transition="none";}else if(Math.abs(my)>12){id=null;return;}else return;}
+        dx=mx;el.style.transform=`translateX(${dx}px)`;cx.classList.toggle("dir",dx>0);cx.classList.toggle("esq",dx<0);cx.classList.toggle("vai",Math.abs(dx)>96);});
+      const solta=()=>{if(modo!=="lado"){id=null;return;}id=null;el.style.transition="";cx.classList.remove("vai");const d=dx;modo="solto";setTimeout(()=>{modo=null;},350);
+        if(d>96){el.style.transform="translateX(110%)";reagendar(l,el);}else if(d<-96){el.style.transform="translateX(-110%)";arquivar(l,el);}else el.style.transform="";};
+      el.addEventListener("pointerup",solta);el.addEventListener("pointercancel",()=>{if(modo==="lado"){el.style.transition="";el.style.transform="";}modo=null;id=null;});
+      el.addEventListener("click",ev=>{if(modo){ev.preventDefault();ev.stopPropagation();}},true);el.addEventListener("dragstart",ev=>ev.preventDefault());});
+    $$("[data-volta]").forEach(b=>b.onclick=()=>{App.arquivarLoja(b.dataset.volta,false);location.reload();});})();
   // recorte em lote: só as lojas desta rota com logotipo escolhido e ainda não tratado (o manual não é mexido)
   $("#recortarTodas").onclick=async()=>{const b=$("#recortarTodas"),st=$("#gerarSt");b.disabled=true;let fila=[];for(const l of D.lojas){const c=await App.cliente(l);if((c.logos||[]).length&&!(c.manual&&c.manual.editado))fila.push(l);}  // todas as lojas da zona, qualquer dia
     if(!fila.length){st.textContent="Nenhuma loja com logotipo esperando recorte.";b.disabled=false;return;}

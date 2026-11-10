@@ -19,23 +19,23 @@
    "sha256_base": "fdaf4717313019f50328ffd7ff8279467e816eef06dbcbd2ec4b3be58c12584a",
    "plano": [
     [
-     238,
-     552
+     250,
+     507
     ],
     [
      1270,
-     536
+     507
     ],
     [
-     1429,
-     889
+     1480,
+     905
     ],
     [
-     98,
-     832
+     60,
+     905
     ]
    ],
-   "modo": "quadrilatero+superficie",
+   "modo": "manual",
    "area_rel": 0.2376,
    "px": [
     1536,
@@ -46,7 +46,7 @@
     0,
     0
    ],
-   "qualidade": "ok"
+   "qualidade": "revisada no caimento (demo com a área marcada), 10/11"
   },
   "02": {
    "produto": "Placa",
@@ -529,20 +529,20 @@
    "sha256_base": "b7f0c627bcdbb17a8dca6125e1c7284c375b44cfa4ed93780fbc1ed417742cd4",
    "plano": [
     [
-     840,
-     250
+     829,
+     315
     ],
     [
-     990,
-     250
+     919,
+     315
     ],
     [
-     990,
-     360
+     919,
+     374
     ],
     [
-     840,
-     360
+     829,
+     374
     ]
    ],
    "modo": "manual",
@@ -556,7 +556,7 @@
     0,
     0
    ],
-   "qualidade": "marcada a olho na foto (grade), 10/11"
+   "qualidade": "revisada no caimento (demo com a área marcada), 10/11"
   },
   "15": {
    "produto": "Boné",

@@ -19,23 +19,23 @@
    "sha256_base": "fce7a318b483439574e55e132c6d8b0dda95fbd32c7a245a493ba31c0178838f",
    "plano": [
     [
-     61,
-     501
+     48,
+     512
     ],
     [
-     973,
-     357
+     985,
+     358
     ],
     [
-     1442,
-     568
+     1492,
+     553
     ],
     [
-     354,
-     939
+     322,
+     978
     ]
    ],
-   "modo": "quadrilatero+superficie",
+   "modo": "manual",
    "area_rel": 0.2687,
    "px": [
     1536,
@@ -46,7 +46,7 @@
     0,
     0
    ],
-   "qualidade": "ok"
+   "qualidade": "revisada no caimento (demo com a área marcada), 10/11"
   },
   "02": {
    "produto": "Placa",

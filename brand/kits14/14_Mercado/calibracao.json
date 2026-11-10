@@ -306,23 +306,23 @@
    "sha256_base": "087d6a4ed25c8a01241cd1a09730ceefac79c550cd05238d3528f5e30ecb3323",
    "plano": [
     [
-     732,
+     639,
      43
     ],
     [
-     1165,
+     1225,
      43
     ],
     [
-     1165,
-     885
+     1225,
+     886
     ],
     [
-     732,
-     885
+     639,
+     886
     ]
    ],
-   "modo": "caixa",
+   "modo": "manual",
    "area_rel": 0.2318,
    "px": [
     1536,
@@ -333,7 +333,7 @@
     0,
     0
    ],
-   "qualidade": "ok"
+   "qualidade": "revisada no caimento (demo com a área marcada), 10/11"
   },
   "09": {
    "produto": "Ecobag",
@@ -551,20 +551,20 @@
    "modo_reaproveitamento": "ambas_variantes_genericas",
    "plano": [
     [
-     820,
-     215
+     829,
+     299
     ],
     [
-     985,
-     215
+     914,
+     299
     ],
     [
-     985,
-     335
+     914,
+     358
     ],
     [
-     820,
-     335
+     829,
+     358
     ]
    ],
    "modo": "manual",
@@ -578,7 +578,7 @@
     0,
     0
    ],
-   "qualidade": "marcada a olho na foto (grade), 10/11"
+   "qualidade": "revisada no caimento (demo com a área marcada), 10/11"
   },
   "15": {
    "produto": "Boné",

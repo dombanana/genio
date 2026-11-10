@@ -98,23 +98,23 @@
    "sha256_base": "3a25028853aa8f0ee7ccf84591dcdf93127b1680d5e30141568f2c9e402f1c4f",
    "plano": [
     [
-     162,
-     0
+     312,
+     162
     ],
     [
-     1377,
-     0
+     1194,
+     162
     ],
     [
-     1377,
-     1024
+     1194,
+     766
     ],
     [
-     162,
-     1024
+     312,
+     766
     ]
    ],
-   "modo": "caixa",
+   "modo": "manual",
    "area_rel": 0.791,
    "px": [
     1536,
@@ -125,7 +125,7 @@
     0,
     0
    ],
-   "qualidade": "ok"
+   "qualidade": "revisada no caimento (demo com a área marcada), 10/11"
   },
   "04": {
    "produto": "Uniforme polo",
@@ -490,23 +490,23 @@
    "sha256_base": "d45a1d02075a5204d2d5076ab9d69b6f2c494e3a8544bf87071d127e2961f845",
    "plano": [
     [
-     658,
-     147
+     115,
+     265
     ],
     [
-     1206,
-     73
+     1205,
+     68
     ],
     [
-     1434,
-     708
+     1450,
+     700
     ],
     [
-     826,
-     835
+     245,
+     965
     ]
    ],
-   "modo": "quadrilatero+superficie",
+   "modo": "manual",
    "area_rel": 0.2557,
    "px": [
     1536,
@@ -517,7 +517,7 @@
     0,
     0
    ],
-   "qualidade": "ok"
+   "qualidade": "revisada no caimento (demo com a área marcada), 10/11"
   },
   "14": {
    "produto": "Camiseta",
@@ -529,20 +529,20 @@
    "sha256_base": "a2010fee1c1329d48f8ca67f699cbc244fcb9df4bff7dffabf6c3bf9e1c30040",
    "plano": [
     [
-     820,
-     215
+     829,
+     299
     ],
     [
-     985,
-     215
+     914,
+     299
     ],
     [
-     985,
-     335
+     914,
+     358
     ],
     [
-     820,
-     335
+     829,
+     358
     ]
    ],
    "modo": "manual",
@@ -556,7 +556,7 @@
     0,
     0
    ],
-   "qualidade": "marcada a olho na foto (grade), 10/11"
+   "qualidade": "revisada no caimento (demo com a área marcada), 10/11"
   },
   "15": {
    "produto": "Boné",

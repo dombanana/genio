@@ -98,20 +98,20 @@
    "sha256_base": "e916f230e4ef4fd3f1b2df240e92a1ee06aef7fbb93bbe4c2f0bdfa150c9c4bb",
    "plano": [
     [
-     300,
-     120
+     280,
+     126
     ],
     [
-     1250,
-     120
+     1283,
+     126
     ],
     [
-     1250,
-     620
+     1283,
+     860
     ],
     [
-     300,
-     620
+     280,
+     860
     ]
    ],
    "modo": "manual",
@@ -125,7 +125,7 @@
     0,
     0
    ],
-   "qualidade": "marcada a olho na foto (grade), 10/11"
+   "qualidade": "revisada no caimento (demo com a área marcada), 10/11"
   },
   "04": {
    "produto": "Uniforme polo",
@@ -300,23 +300,23 @@
    "sha256_base": "7f47248d8ba13a8f9f0147c9cbfc7dc641cd9bec1007d216c9cc22225f9d1247",
    "plano": [
     [
-     480,
+     448,
      47
     ],
     [
-     1015,
+     1126,
      47
     ],
     [
-     1015,
-     911
+     1126,
+     916
     ],
     [
-     480,
-     911
+     448,
+     916
     ]
    ],
-   "modo": "caixa",
+   "modo": "manual",
    "area_rel": 0.2939,
    "px": [
     1536,
@@ -327,7 +327,7 @@
     0,
     0
    ],
-   "qualidade": "ok"
+   "qualidade": "revisada no caimento (demo com a área marcada), 10/11"
   },
   "09": {
    "produto": "Ecobag",
@@ -541,20 +541,20 @@
    "modo_reaproveitamento": "adaptar_arte_por_edicao_e_compartilhar_base_sem_arte",
    "plano": [
     [
-     820,
-     215
+     829,
+     299
     ],
     [
-     985,
-     215
+     914,
+     299
     ],
     [
-     985,
-     335
+     914,
+     358
     ],
     [
-     820,
-     335
+     829,
+     358
     ]
    ],
    "modo": "manual",
@@ -568,7 +568,7 @@
     0,
     0
    ],
-   "qualidade": "marcada a olho na foto (grade), 10/11"
+   "qualidade": "revisada no caimento (demo com a área marcada), 10/11"
   },
   "15": {
    "produto": "Boné",
