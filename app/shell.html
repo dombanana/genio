@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#6933C5">
 <link rel="icon" href="../genio-favicon.png">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="stylesheet" href="app.css?v=a58c8fce5c">
+<link rel="stylesheet" href="app.css?v=dc7f93536f">
 <style>html,body{height:100%;overflow:hidden;padding:0}</style>
 </head>
 <body>
@@ -15,24 +15,29 @@
   <iframe id="tela" allow="camera; microphone; geolocation; display-capture; screen-wake-lock" title="GênIO"></iframe>
   <nav class="nav" id="barra"></nav>
 </div>
-<script src="app.js?v=a58c8fce5c"></script>
+<script src="app.js?v=dc7f93536f"></script>
 <script>
 (()=>{
   const {$,esc,ICONES,gravarNota}=App;
   const fr=$("#tela");const alvo=()=>decodeURIComponent((location.hash||"#index.html").slice(1))||"index.html";
   let atual=alvo();fr.src=atual;
-  window.addEventListener("message",ev=>{if(ev.origin!==location.origin||!ev.data)return;if(ev.data.genio==="urgencias"){for(const k of ["Entrada","Processamento","Saida"]){const b=$("#badge"+k);const n=(ev.data[k.toLowerCase()]||0);if(b){b.textContent=n;b.hidden=!n;}}return;}if(ev.data.genio!=="tela")return;atual=ev.data.href;history.replaceState(null,"","#"+atual);marcar();});
+  let CONT={entrada:{n:0,u:0},processamento:{n:0,u:0},saida:{n:0,u:0}};
+  const pintarMonitor=()=>{for(const k of Object.keys(CONT)){const a=document.querySelector(`.monitor [data-et="${k}"]`);if(!a)continue;const c=CONT[k];a.classList.toggle("alerta",c.n>0&&!c.u);a.classList.toggle("urgente",c.u>0);const b=a.querySelector(".badge");b.textContent=c.n;b.hidden=!c.n;}};
+  window.addEventListener("message",ev=>{if(ev.origin!==location.origin||!ev.data)return;if(ev.data.genio==="ocorrencias"){CONT=ev.data.cont||CONT;pintarMonitor();return;}if(ev.data.genio!=="tela")return;atual=ev.data.href;history.replaceState(null,"","#"+atual);marcar();});
   window.addEventListener("storage",marcar);
   window.addEventListener("hashchange",()=>{const a=alvo();if(a!==atual){atual=a;fr.src=a;}});
   const on=p=>atual.startsWith(p)?"on":"";
   const ir=h=>{atual=h;fr.src=h;history.replaceState(null,"","#"+h);marcar();};
   const dur=s=>`${Math.floor(s/60)}:${String(Math.floor(s%60)).padStart(2,"0")}`;
   function marcar(){const rotOn=on("index")||on("visita")||on("fontes")||on("logotipo")||on("manual")||on("produtos")||on("editor")||on("capacho");
-    $("#barra").innerHTML=`<a href="#index.html" class="${rotOn}" data-ir="index.html"><span class="ic">${ICONES.rota}</span>Rota</a><a href="#notas.html" class="${on("notas")}" data-ir="notas.html"><span class="ic">${ICONES.notasLista}</span>Notas</a><a href="#pedidos.html?etapa=entrada" class="${atual.includes("etapa=entrada")?"on":""}" data-ir="pedidos.html?etapa=entrada"><span class="ic">${ICONES.entrada}</span>Entrada<span class="badge" id="badgeEntrada" hidden></span></a><a href="#pedidos.html?etapa=processamento" class="${atual.includes("etapa=processamento")?"on":""}" data-ir="pedidos.html?etapa=processamento"><span class="ic">${ICONES.processamento}</span>Produção<span class="badge" id="badgeProcessamento" hidden></span></a><a href="#pedidos.html?etapa=saida" class="${atual.includes("etapa=saida")?"on":""}" data-ir="pedidos.html?etapa=saida"><span class="ic">${ICONES.saida}</span>Saída<span class="badge" id="badgeSaida" hidden></span></a><span class="vao"></span><button type="button" class="rec ${REC.ativo?(REC.pausado?"pausado":"on"):""}" id="rec" aria-label="REC" title="grava no modo escolhido em Configuração">${REC.ativo?`<span class="ic">${ICONES.recModo(REC.tipo)}</span><span id="recTempo">${dur(REC.segundos())}</span>`:`<span class="ic">${ICONES.recModo(localStorage.getItem("rec-tipo")||"audio")}</span>`}</button>`;
+    $("#barra").innerHTML=`<a href="#index.html" class="${rotOn}" data-ir="index.html"><span class="ic">${ICONES.rota}</span>Rota</a><a href="#notas.html" class="${on("notas")}" data-ir="notas.html"><span class="ic">${ICONES.notasLista}</span>Notas</a><span class="vao"></span><div class="monitor" role="group" aria-label="Monitor de ocorrências"><div class="trio">${[["entrada","Entrada"],["processamento","Produção"],["saida","Saída"]].map(([k,t])=>`<a href="#pedidos.html?etapa=${k}" data-et="${k}" class="${atual.includes("etapa="+k)?"on":""}" data-ir="pedidos.html?etapa=${k}" aria-label="${t}" title="${t}"><span class="ic">${ICONES[k]}</span><span class="badge" hidden></span></a>`).join("")}</div><small>Monitor de ocorrências</small></div><span class="vao2"></span><button type="button" class="rec ${REC.ativo?(REC.pausado?"pausado":"on"):""}" id="rec" aria-label="REC" title="grava no modo escolhido em Configuração">${REC.ativo?`<span class="ic">${ICONES.recModo(REC.tipo)}</span><span id="recTempo">${dur(REC.segundos())}</span>`:`<span class="ic">${ICONES.recModo(localStorage.getItem("rec-tipo")||"audio")}</span>`}</button>`;
     // REC é um botão à parte: um toque grava no modo parametrizado em Notas; outro toque para
     $("#rec").onclick=async()=>{if(REC.ativo){await parar();return;}const tipo=localStorage.getItem("rec-tipo")||"audio",tela=localStorage.getItem("rec-tela")!=="0";
       try{if(tipo==="foto"||tipo==="selfie"){await foto(tipo==="selfie");if(atual.startsWith("notas"))fr.contentWindow.location.reload();return;}await iniciar(tipo,{telaAcesa:tela});}catch(e){alert(e.message);}};
-    $("#barra").querySelectorAll("[data-ir]").forEach(a=>a.onclick=ev=>{ev.preventDefault();ir(a.dataset.ir);});}
+    $("#barra").querySelectorAll("[data-ir]").forEach(a=>a.onclick=ev=>{ev.preventDefault();ir(a.dataset.ir);});pintarMonitor();}
+  // conferência das ocorrências em segundo plano: a própria tela de pedidos conta (mesma regra) e avisa a casca
+  const conferir=()=>{const f=document.createElement("iframe");f.hidden=true;f.src="pedidos.html?contar=1&t="+Date.now();document.body.appendChild(f);setTimeout(()=>f.remove(),60000);};
+  setTimeout(conferir,2500);setInterval(conferir,10*60*1000);
   // ---- motor de gravação (vive na casca: continua entre telas). A tela de Notas é o painel de controle.
   const lojaAtual=()=>{try{return JSON.parse(localStorage.getItem("app-ultima-loja")||"null");}catch(e){return null;}};
   const REC={ativo:false,pausado:false,tipo:null,rec:null,stream:null,chunks:[],t0:0,acum:0,timer:null,texto:"",reconhec:null,wake:null,loja:null,ouvintes:new Set(),

@@ -344,3 +344,19 @@ svg.icone .w{fill:var(--ic-fundo)}
 .proc .pp b{font-size:11px;font-weight:600;color:var(--texto2)}.proc .pp.atual b{color:var(--marca)}.proc .pp.feito b{color:var(--texto)}
 .proc .pp small{font-size:11px;color:var(--texto2);min-height:13px}
 .proc .pp.arte b{letter-spacing:.01em}
+
+/* barra: Rota · Notas | monitor de ocorrências (Entrada → Produção → Saída numa linha só) | gravar */
+.casca .nav{grid-template-columns:1fr 1fr .5fr 3.1fr .3fr .95fr}
+.casca .nav .vao2{display:block}
+.casca .nav .monitor{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:8px 0 9px;color:#fff;min-width:0}
+.casca .nav .monitor .trio{position:relative;display:grid;grid-template-columns:repeat(3,1fr);width:100%}
+.casca .nav .monitor .trio::before{content:"";position:absolute;left:16.7%;right:16.7%;top:50%;height:2px;margin-top:-1px;background:rgba(255,255,255,.45);border-radius:2px}
+.casca .nav .monitor a{position:relative;z-index:1;display:grid;place-items:center;padding:4px 0;border-radius:12px;background:transparent}
+.casca .nav .monitor a .ic{width:40px;height:40px;border-radius:50%;background:var(--marca);display:grid;place-items:center}
+.casca .nav .monitor a .ic svg.icone{width:28px;height:28px}
+.casca .nav .monitor a.on .ic{background:#8154CE;box-shadow:0 0 0 2px rgba(255,255,255,.55)}
+.casca .nav .monitor a.alerta{color:#FFC94D}.casca .nav .monitor a.urgente{color:#FF7A6E}
+.casca .nav .monitor a.alerta .ic,.casca .nav .monitor a.urgente .ic{box-shadow:0 0 0 2px currentColor}
+.casca .nav .monitor a .badge{position:absolute;top:0;right:calc(50% - 26px);min-width:18px;height:18px;border-radius:999px;background:#FF5A4E;color:#fff;font-size:11px;font-weight:800;display:grid;place-items:center;padding:0 5px;border:2px solid var(--marca)}
+.casca .nav .monitor a.alerta .badge{background:#F2A33A;color:#1C1635}
+.casca .nav .monitor small{font-size:11px;font-weight:600;letter-spacing:.01em;white-space:nowrap}

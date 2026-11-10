@@ -6,12 +6,12 @@
 <title>GênIO · Pedidos</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="app.css?v=a58c8fce5c">
+<link rel="stylesheet" href="app.css?v=dc7f93536f">
 <style>.novo-ped{position:fixed;left:12px;right:12px;top:8vh;max-height:80vh;overflow:auto;background:#fff;border-radius:18px;padding:14px;z-index:75;box-shadow:0 10px 40px rgba(28,22,53,.3)}.novo-ped h3{margin:0 0 8px}.novo-ped input{width:100%;box-sizing:border-box;font:inherit;font-size:16px;border:1.5px solid var(--linha);border-radius:12px;padding:10px 12px;margin:0 0 8px}.lista-cli{display:grid;gap:4px}.lista-cli button{border:0;background:var(--lav);border-radius:12px;text-align:left;padding:10px 12px;font:inherit;display:grid}.lista-cli button small{color:var(--texto2);font-size:12px}.fato{display:grid;grid-template-columns:auto 1fr;gap:10px;padding:6px 0;border-top:1px solid var(--linha)}.fato:first-of-type{border-top:0}.fato span{color:var(--texto2)}</style>
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=a58c8fce5c"></script>
+<script src="app.js?v=dc7f93536f"></script>
 <script>
 (async()=>{
   const {$,esc,sessao,dados,nav,topo,nomeLoja,estado}=App;
@@ -29,7 +29,9 @@
     if(et==="processamento"){const dias=P.hist?Math.floor((Date.now()-new Date(P.hist[P.hist.length-1].em))/864e5):0;if(dias>=10){alertas.push(`${dias} dias em produção`);nivel="urgente";}else if(dias>=7){alertas.push(`${dias} dias em produção`);nivel="atencao";}if(!P.fornecedorPedido){alertas.push("sem número do pedido no fornecedor");nivel=nivel||"atencao";}}
     if(et==="saida"){const dias=P.hist?Math.floor((Date.now()-new Date(P.hist[P.hist.length-1].em))/864e5):0;if(dias>=3){alertas.push(`pronto há ${dias} dias sem entrega`);nivel="urgente";}else if(dias>=1){alertas.push(`pronto há ${dias} dia(s)`);nivel=nivel||"atencao";}if(!P.agendado){alertas.push("entrega não agendada");nivel=nivel||"atencao";}}
     lista.push({l,slug,its,et,P,alertas,nivel});}
-  const grupo=et=>(et==="arte"||et==="qualidade")?"processamento":et;const cont={entrada:0,processamento:0,saida:0};lista.forEach(x=>{if(x.nivel==="urgente"&&cont[grupo(x.et)]!==undefined)cont[grupo(x.et)]++;});try{window.top.postMessage({genio:"urgencias",...cont},location.origin);}catch(e){}
+  const grupo=et=>(et==="arte"||et==="qualidade")?"processamento":et;const cont={entrada:0,processamento:0,saida:0};lista.forEach(x=>{if(x.nivel==="urgente"&&cont[grupo(x.et)]!==undefined)cont[grupo(x.et)]++;});const ocorr={entrada:{n:0,u:0},processamento:{n:0,u:0},saida:{n:0,u:0}};lista.forEach(x=>{const g=ocorr[grupo(x.et)];if(!g||!x.nivel)return;g.n++;if(x.nivel==="urgente")g.u++;});
+  try{window.top.postMessage({genio:"ocorrencias",cont:ocorr},location.origin);}catch(e){}
+  if(qs.get("contar"))return;
   const vis=lista.filter(x=>grupo(x.et)===etapa).sort((a,b)=>(b.nivel==="urgente")-(a.nivel==="urgente")||(b.nivel==="atencao")-(a.nivel==="atencao"));
   const PROX={entrada:"arte",arte:"processamento",processamento:"qualidade",qualidade:"saida",saida:"entregue"},ROT={entrada:"✓ Confirmar → arte",arte:"✓ Arte aprovada → produção",processamento:"✓ Chegou → qualidade",qualidade:"✓ Qualidade OK → saída",saida:"✓ Entregue"},VOLTA={arte:"entrada",processamento:"arte",qualidade:"processamento",saida:"qualidade"};
   // linha do processo: um ponto por etapa; cheio = feito, anel = onde o pedido está, vazio = falta; data em cada etapa vencida
