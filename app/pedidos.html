@@ -6,12 +6,12 @@
 <title>GênIO · Pedidos</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="app.css?v=f443d2d852">
+<link rel="stylesheet" href="app.css?v=8ae06ec8aa">
 <style>.novo-ped{position:fixed;left:12px;right:12px;top:8vh;max-height:80vh;overflow:auto;background:#fff;border-radius:18px;padding:14px;z-index:75;box-shadow:0 10px 40px rgba(28,22,53,.3)}.novo-ped h3{margin:0 0 8px}.novo-ped input{width:100%;box-sizing:border-box;font:inherit;font-size:16px;border:1.5px solid var(--linha);border-radius:12px;padding:10px 12px;margin:0 0 8px}.lista-cli{display:grid;gap:4px}.lista-cli button{border:0;background:var(--lav);border-radius:12px;text-align:left;padding:10px 12px;font:inherit;display:grid}.lista-cli button small{color:var(--texto2);font-size:12px}.fato{display:grid;grid-template-columns:auto 1fr;gap:10px;padding:6px 0;border-top:1px solid var(--linha)}.fato:first-of-type{border-top:0}.fato span{color:var(--texto2)}</style>
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=f443d2d852"></script>
+<script src="app.js?v=8ae06ec8aa"></script>
 <script>
 (async()=>{
   const {$,esc,sessao,dados,nav,topo,nomeLoja,estado}=App;
@@ -44,7 +44,6 @@
       <div class="acs"><a href="visita.html?l=${encodeURIComponent(x.slug)}">Abrir loja</a>${etapa==="entrada"?`<a href="produtos.html?l=${encodeURIComponent(x.slug)}">Produtos</a>`:""}${x.et==="processamento"?`<button type="button" data-np="${esc(x.slug)}">Nº do pedido</button>`:""}${etapa==="saida"?`<button type="button" data-ag="${esc(x.slug)}">Agendar entrega</button>`:""}<button type="button" class="ok" data-mv="${esc(x.slug)}" data-para="${PROX[x.et]}">${ROT[x.et]}</button>${x.et==="qualidade"?`<button type="button" data-refazer="${esc(x.slug)}">↺ Refazer</button>`:""}${x.et!=="entrada"&&x.et!=="qualidade"?`<button type="button" data-volta="${esc(x.slug)}" data-de="${x.et}">← voltar</button>`:""}</div>${processo(x)}</div>`).join("");
   const avul=App.avulsos();
   $("#app").innerHTML=`${topo()}<h1>${TIT[etapa][0]}</h1><p class="sub">${TIT[etapa][1]}</p>
-  <div class="etapas">${["entrada","processamento","saida"].map(k=>`<a href="pedidos.html?etapa=${k}" class="${k===etapa?"on":""}">${TIT[k][0]} <small>${lista.filter(x=>grupo(x.et)===k).length}${cont[k]?` · <b style="color:#F0786B">${cont[k]}!</b>`:""}</small></a>`).join("")}</div>
   ${etapa==="entrada"?`<button type="button" class="btn" id="novo" style="margin:0 0 12px;min-height:52px">＋ Novo pedido</button>`:""}
   ${blocos||`<section class="card"><p>${etapa==="entrada"?"Nenhum pedido em aberto. As seleções nascem na visita, em “Produtos e serviços”, ou num pedido novo.":etapa==="processamento"?"Nada em arte nem em produção.":"Nada aguardando entrega."}</p></section>`}
   ${etapa==="entrada"&&avul.length?`<section class="card"><h2>Clientes avulsos</h2>${avul.map(a=>`<div class="fato"><span>${new Date(a.criado).toLocaleDateString("pt-BR")}</span><b><a href="visita.html?l=${encodeURIComponent(a.slug)}">${esc(a.nome)}</a></b></div>`).join("")}</section>`:""}
