@@ -6,7 +6,7 @@
 <title>GênIO · Provar na foto</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="app.css?v=f824c101ac">
+<link rel="stylesheet" href="app.css?v=ef8358f3c4">
 <style>
 .palco-p{position:relative;background:#111;border-radius:14px;overflow:hidden;touch-action:none;margin:0 0 10px}
 .palco-p canvas{display:block;width:100%;height:auto}
@@ -30,7 +30,7 @@
 <div class="w" id="app"></div>
 <input type="file" id="cam" accept="image/*" capture="environment" hidden>
 <input type="file" id="gal" accept="image/*" hidden>
-<script src="app.js?v=f824c101ac"></script>
+<script src="app.js?v=ef8358f3c4"></script>
 <script>
 (async()=>{
   const {$,$$,esc,qs,sessao,dados,cliente,gravarCliente,gravarNota,nomeLoja,topo,voltar,nav}=App;
@@ -66,7 +66,7 @@
   function desenhar(){const cv=$("#cv");if(!cv||!base)return;cv.width=base.naturalWidth;cv.height=base.naturalHeight;const g=cv.getContext("2d");g.drawImage(base,0,0);
     if(logo&&L){const h=L.w*logo.height/logo.width;g.save();g.translate(L.cx,L.cy);g.rotate(L.ang*Math.PI/180);g.globalAlpha=.97;g.drawImage(logo,-L.w/2,-h/2,L.w,h);g.restore();}}
   const carga=t=>{const e=$("#carga");if(e){e.hidden=!t;e.textContent=t||"";}};
-  async function chamar(corpo){const r=await fetch("/api/provar",{method:"PUT",credentials:"same-origin",headers:{"Content-Type":"application/json"},body:JSON.stringify({peca:pid,...corpo})});const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.erro||r.status);return d;}
+  async function chamar(corpo){const r=await fetch("/api/provar",{method:"POST",credentials:"same-origin",headers:{"Content-Type":"application/json"},body:JSON.stringify({peca:pid,...corpo})});const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.erro||r.status);return d;}
   async function aplicar(d,manterLogo){P=d;base=await carregar(d.jpg);auto=d.medidas&&d.medidas.logo?{...d.medidas.logo}:{cx:d.w/2,cy:d.h*.38,w:d.w*.22,ang:0};if(!manterLogo||!L)L={...auto};
     if(!$("#cv"))render();desenhar();}
   async function novaFoto(f){if(!f)return;salvo=null;P={};render();carga("Recortando a peça…");
