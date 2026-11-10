@@ -105,7 +105,7 @@ footer .off{width:16px;height:16px;border-radius:50%;background:#E6A700}
     const estoura=()=>palco.scrollHeight>palco.clientHeight+2;const ph=palco.clientHeight;
     const cabe=()=>{if(estoura())return false;const f=palco.querySelector(".foto");return !f||getComputedStyle(f).display==="none"||f.offsetHeight>=ph*.15;};
     const busca=(lo,hi)=>{set(hi);if(cabe())return hi;set(lo);if(!cabe())return null;for(let i=0;i<9;i++){const m=(lo+hi)/2;set(m);if(cabe())lo=m;else hi=m;}return Math.floor(lo*100)/100;};
-    let d=busca(.6,1);if(d===null&&palco.querySelector(".foto")){palco.classList.add("sem-espaco");d=busca(.55,1);}set(d===null?.55:d);}
+    const tet=palco.querySelector(".foto")?1:1.3;let d=busca(.6,tet);if(d===null&&palco.querySelector(".foto")){palco.classList.add("sem-espaco");d=busca(.55,1.3);}set(d===null?.55:d);}
   const preco=p=>{p=String(p||"").trim();return /^\d/.test(p)?"R$ "+p:p;};
   const hoje=()=>{const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");};
   const dataBR=s=>s.slice(8,10)+"/"+s.slice(5,7);
