@@ -180,6 +180,36 @@
    "modo_reaproveitamento": "adaptar_arte_por_edicao_e_compartilhar_base_sem_arte",
    "plano": [
     [
+     176.10000610351562,
+     149.60000610351562
+    ],
+    [
+     1367.800048828125,
+     19.600000381469727
+    ],
+    [
+     1562.0,
+     571.4000244140625
+    ],
+    [
+     286.8999938964844,
+     725.0
+    ]
+   ],
+   "modo": "quadrilatero+superficie",
+   "area_rel": 0.4452,
+   "px": [
+    1684,
+    934
+   ],
+   "limiar": 18,
+   "deslocamento": [
+    0,
+    0
+   ],
+   "qualidade": "borda real da superfície (ajuste fino, conferido em zoom nos 4 cantos), 10/11",
+   "plano_original": [
+    [
      188,
      149
     ],
@@ -195,19 +225,7 @@
      291,
      718
     ]
-   ],
-   "modo": "quadrilatero+superficie",
-   "area_rel": 0.4452,
-   "px": [
-    1684,
-    934
-   ],
-   "limiar": 18,
-   "deslocamento": [
-    0,
-    0
-   ],
-   "qualidade": "ok"
+   ]
   },
   "06": {
    "produto": "Flyer",
@@ -220,6 +238,36 @@
    "origem": "04_Clinica",
    "modo_reaproveitamento": "adaptar_arte_por_edicao_e_compartilhar_base_sem_arte",
    "plano": [
+    [
+     401.8999938964844,
+     222.60000610351562
+    ],
+    [
+     931.0,
+     137.6999969482422
+    ],
+    [
+     1254.699951171875,
+     818.7999877929688
+    ],
+    [
+     550.7000122070312,
+     949.2000122070312
+    ]
+   ],
+   "modo": "quadrilatero+superficie",
+   "area_rel": 0.2813,
+   "px": [
+    1536,
+    1024
+   ],
+   "limiar": 18,
+   "deslocamento": [
+    0,
+    0
+   ],
+   "qualidade": "borda real da superfície (ajuste fino, conferido em zoom nos 4 cantos), 10/11",
+   "plano_original": [
     [
      412,
      222
@@ -236,19 +284,7 @@
      551,
      939
     ]
-   ],
-   "modo": "quadrilatero+superficie",
-   "area_rel": 0.2813,
-   "px": [
-    1536,
-    1024
-   ],
-   "limiar": 18,
-   "deslocamento": [
-    0,
-    0
-   ],
-   "qualidade": "ok"
+   ]
   },
   "07": {
    "produto": "Banner retrátil",
@@ -260,6 +296,36 @@
    "demo": "COM_ARTE/07_banner_retratil.jpg",
    "sha256_base": "fb632ea1218e4a383ccb4890f51f85de7a8d7b454edaa256214ab083dceb5432",
    "plano": [
+    [
+     463.20001220703125,
+     40.0
+    ],
+    [
+     817.7000122070312,
+     39.70000076293945
+    ],
+    [
+     816.5999755859375,
+     886.9000244140625
+    ],
+    [
+     461.70001220703125,
+     925.7999877929688
+    ]
+   ],
+   "modo": "quadrilatero+superficie",
+   "area_rel": 0.1951,
+   "px": [
+    1536,
+    1024
+   ],
+   "limiar": 18,
+   "deslocamento": [
+    0,
+    0
+   ],
+   "qualidade": "borda real da superfície (ajuste fino, conferido em zoom nos 4 cantos), 10/11",
+   "plano_original": [
     [
      459,
      24
@@ -276,19 +342,7 @@
      465,
      920
     ]
-   ],
-   "modo": "quadrilatero+superficie",
-   "area_rel": 0.1951,
-   "px": [
-    1536,
-    1024
-   ],
-   "limiar": 18,
-   "deslocamento": [
-    0,
-    0
-   ],
-   "qualidade": "ok"
+   ]
   },
   "08": {
    "produto": "Adesivo de parede",
@@ -546,6 +600,36 @@
    "sha256_base": "287427d92e3550d37d66e28850b6060727ee04c1e7e10f234476a8f7ea9b3533",
    "plano": [
     [
+     164.0,
+     103.19999694824219
+    ],
+    [
+     2016.300048828125,
+     102.69999694824219
+    ],
+    [
+     2015.800048828125,
+     574.9000244140625
+    ],
+    [
+     164.0,
+     576.4000244140625
+    ]
+   ],
+   "modo": "manual",
+   "area_rel": 0.614,
+   "px": [
+    2172,
+    724
+   ],
+   "limiar": 18,
+   "deslocamento": [
+    0,
+    0
+   ],
+   "qualidade": "borda real da superfície (ajuste fino, conferido em zoom nos 4 cantos), 10/11",
+   "plano_original": [
+    [
      167,
      105
     ],
@@ -562,18 +646,7 @@
      574
     ]
    ],
-   "modo": "manual",
-   "area_rel": 0.614,
-   "px": [
-    2172,
-    724
-   ],
-   "limiar": 18,
-   "deslocamento": [
-    0,
-    0
-   ],
-   "qualidade": "marcada a olho na foto (grade), 10/11"
+   "oclusoes": "ilhoses"
   },
   "13": {
    "produto": "Folheto promocional",
@@ -584,6 +657,36 @@
    "demo": "COM_ARTE/13_folheto_promocional.jpg",
    "sha256_base": "78ea6fe72793fd64e43a57e5bb664996e18cf7bf5859954f93e45662c762a248",
    "plano": [
+    [
+     193.0,
+     256.0
+    ],
+    [
+     1135.0,
+     73.0
+    ],
+    [
+     1385.0,
+     672.0
+    ],
+    [
+     308.0,
+     938.0
+    ]
+   ],
+   "modo": "quadrilatero+superficie",
+   "area_rel": 0.424,
+   "px": [
+    1536,
+    1024
+   ],
+   "limiar": 18,
+   "deslocamento": [
+    0,
+    0
+   ],
+   "qualidade": "borda real da folha (segmentação + cantos, conferido em zoom), 10/11",
+   "plano_original": [
     [
      201,
      256
@@ -600,19 +703,7 @@
      308,
      926
     ]
-   ],
-   "modo": "quadrilatero+superficie",
-   "area_rel": 0.424,
-   "px": [
-    1536,
-    1024
-   ],
-   "limiar": 18,
-   "deslocamento": [
-    0,
-    0
-   ],
-   "qualidade": "ok"
+   ]
   },
   "14": {
    "produto": "Camiseta",

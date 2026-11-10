@@ -545,7 +545,7 @@ def kit_aplicar(d):
                         try: os.remove(t)
                         except Exception: pass
             return {"kit": kit, "produto": "10", "referencia": False, "jpg": "data:image/jpeg;base64," + base64.b64encode(open(saida, "rb").read()).decode()}
-    h = hashlib.sha256(raw + f"|{kit}|{pid}|{material}|k14v5".encode()).hexdigest()[:20]
+    h = hashlib.sha256(raw + f"|{kit}|{pid}|{material}|k14v6".encode()).hexdigest()[:20]
     pasta = os.path.join(ESTADO_DIR, "kits"); os.makedirs(pasta, exist_ok=True); saida = os.path.join(pasta, h + ".jpg")
     if not os.path.exists(saida):
         with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as f:

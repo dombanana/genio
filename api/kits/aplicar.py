@@ -24,6 +24,11 @@ def carregar(setor, pid):
     masc = arq.rsplit(".", 1)[0] + ".mascara.png"   # peça de tecido recortada (uniformes): permite trocar a cor do tecido
     if os.path.exists(masc):
         P = dict(P); P["_mascara"] = masc
+    if P.get("demo"):
+        P = dict(P); P["_demo"] = os.path.normpath(os.path.join(pasta, P["demo"]))
+    papel = arq.rsplit(".", 1)[0] + ".papel.png"   # silhueta exata da folha (folheto dobrado: a borda de baixo é em zigue-zague)
+    if os.path.exists(papel) and not P.get("paineis"):
+        P = dict(P); P["_papel"] = papel
     return pasta, P, img
 
 def mascara_material(img, P):
@@ -128,6 +133,26 @@ def oclusoes(img, P):
             x, y, bw, bh, area = st[i]
             if 80 < area < 4000 and 0.6 < bw / max(bh, 1) < 1.6 and max(bw, bh) < 70:
                 cv2.circle(m, (int(cen[i][0]), int(cen[i][1])), int(max(bw, bh) * 0.62) + 3, 255, -1)
+    if P.get("oclusoes") == "ilhoses" and P.get("_demo") and os.path.exists(P["_demo"]):
+        # faixa: ilhós e corda ficam na frente da impressão. Na foto de demonstração do kit, o que fica na frente da
+        # arte não mudou de cor: os pixels iguais entre a foto com arte e a sem arte, perto dos cantos, são os ilhoses
+        demo = cv2.imread(P["_demo"], cv2.IMREAD_COLOR)
+        if demo is not None and demo.shape == img.shape:
+            plano = np.zeros((h, w), np.uint8); cv2.fillPoly(plano, [np.array(P["plano"], np.int32)], 255)
+            q = np.array(P["plano"], np.float32); R = int(max(40, np.linalg.norm(q[1] - q[0]) * 0.06)); perto = np.zeros((h, w), np.uint8)
+            for (x, y) in q:
+                cv2.circle(perto, (int(x), int(y)), R, 255, -1)
+            lab_i = cv2.cvtColor(img, cv2.COLOR_BGR2LAB).astype(np.float32)
+            igual = ((cv2.absdiff(img, demo).max(2) < 14) & (plano > 0) & (perto > 0)).astype(np.uint8) * 255
+            igual = cv2.morphologyEx(igual, cv2.MORPH_CLOSE, np.ones((7, 7), np.uint8)); igual = cv2.morphologyEx(igual, cv2.MORPH_OPEN, np.ones((3, 3), np.uint8))
+            cnt, _ = cv2.findContours(igual, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+            for k in cnt:
+                if 60 < cv2.contourArea(k) < 0.25 * np.pi * R * R:   # bloco grande igual = arte clara da demonstração, não ilhós
+                    um = np.zeros((h, w), np.uint8); cv2.drawContours(um, [k], -1, 255, -1)
+                    croma = np.hypot(lab_i[..., 1][um > 0] - 128, lab_i[..., 2][um > 0] - 128).mean()
+                    if croma < 11:   # metal e corda são neutros; lona creme da demonstração não entra
+                        m[um > 0] = 255
+            m = cv2.GaussianBlur(m, (3, 3), 0)
     return m
 
 def aplicar(setor, pid, arte_path, saida, material=None, arte_cor=None, largura=0.7, cheio=False):
@@ -166,6 +191,19 @@ def aplicar(setor, pid, arte_path, saida, material=None, arte_cor=None, largura=
             M = cv2.getPerspectiveTransform(np.float32([[0, 0], [x1 - x0, 0], [x1 - x0, H0], [0, H0]]), np.float32(q))
             w = cv2.warpPerspective(faixa, M, (img.shape[1], img.shape[0]), flags=cv2.INTER_LINEAR, borderValue=(0, 0, 0, 0))
             proj = np.where(w[..., 3:4] > proj[..., 3:4], w, proj)
+    elif P.get("_papel"):
+        # folha dobrada: a arte cobre o plano com a borda de baixo estendida e é recortada pela silhueta real da folha;
+        # em cima e dos lados vale a borda reta medida (a silhueta só decide a borda de baixo, a das dobras)
+        q = np.float32(P["plano"]); c = q.mean(0); a3, b3 = q[3], q[2]; t = (b3 - a3) / np.linalg.norm(b3 - a3); nrm = np.float32([-t[1], t[0]])
+        if np.dot(nrm, (a3 + b3) / 2 - c) < 0:
+            nrm = -nrm
+        q2 = q.copy(); q2[2] += nrm * 16; q2[3] += nrm * 16
+        proj = projetar(tela, {**P, "plano": q2.tolist()}, img.shape)
+        sil = cv2.imread(P["_papel"], cv2.IMREAD_GRAYSCALE); h_, w_ = img.shape[:2]
+        if sil is not None and sil.shape == (h_, w_):
+            corte = np.zeros((h_, w_), np.uint8); cv2.fillPoly(corte, [np.round(q2).astype(np.int32)], 255)
+            lim = np.minimum(sil, corte)
+            proj[..., 3] = (proj[..., 3].astype(np.float32) * lim / 255).astype(np.uint8)
     else:
         proj = projetar(tela, P, img.shape)
     a = (proj[..., 3].astype(np.float32) / 255.0)

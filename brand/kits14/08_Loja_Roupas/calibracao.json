@@ -176,6 +176,36 @@
    "sha256_base": "3a436d5b6fb90e118a52a2c56c4119900b7bb9f9b82d6418617b6242b2094fa8",
    "plano": [
     [
+     176.10000610351562,
+     149.60000610351562
+    ],
+    [
+     1367.800048828125,
+     19.600000381469727
+    ],
+    [
+     1562.0,
+     571.4000244140625
+    ],
+    [
+     286.8999938964844,
+     725.0
+    ]
+   ],
+   "modo": "quadrilatero+superficie",
+   "area_rel": 0.4452,
+   "px": [
+    1684,
+    934
+   ],
+   "limiar": 18,
+   "deslocamento": [
+    0,
+    0
+   ],
+   "qualidade": "borda real da superfície (ajuste fino, conferido em zoom nos 4 cantos), 10/11",
+   "plano_original": [
+    [
      188,
      149
     ],
@@ -191,19 +221,7 @@
      291,
      718
     ]
-   ],
-   "modo": "quadrilatero+superficie",
-   "area_rel": 0.4452,
-   "px": [
-    1684,
-    934
-   ],
-   "limiar": 18,
-   "deslocamento": [
-    0,
-    0
-   ],
-   "qualidade": "ok"
+   ]
   },
   "06": {
    "produto": "Flyer",
@@ -214,6 +232,36 @@
    "demo": "COM_ARTE/06_flyer_cardapio.jpg",
    "sha256_base": "de3ad3c0849faf30c5c0fbf68a4167a3a76968924fe37913382584c34bc12a2e",
    "plano": [
+    [
+     326.20001220703125,
+     112.4000015258789
+    ],
+    [
+     984.7000122070312,
+     17.299999237060547
+    ],
+    [
+     1280.0,
+     854.2999877929688
+    ],
+    [
+     477.0,
+     984.2000122070312
+    ]
+   ],
+   "modo": "quadrilatero+superficie",
+   "area_rel": 0.4003,
+   "px": [
+    1536,
+    1024
+   ],
+   "limiar": 18,
+   "deslocamento": [
+    0,
+    0
+   ],
+   "qualidade": "borda real da superfície (ajuste fino, conferido em zoom nos 4 cantos), 10/11",
+   "plano_original": [
     [
      337,
      113
@@ -230,19 +278,7 @@
      480,
      976
     ]
-   ],
-   "modo": "quadrilatero+superficie",
-   "area_rel": 0.4003,
-   "px": [
-    1536,
-    1024
-   ],
-   "limiar": 18,
-   "deslocamento": [
-    0,
-    0
-   ],
-   "qualidade": "ok"
+   ]
   },
   "07": {
    "produto": "Banner retrátil",
@@ -254,6 +290,36 @@
    "demo": "COM_ARTE/07_banner_retratil.jpg",
    "sha256_base": "ff2aadf3fb69444908af00890590646071b62f1fabfe2f940122f86a77495948",
    "plano": [
+    [
+     364.0,
+     40.400001525878906
+    ],
+    [
+     718.0999755859375,
+     61.599998474121094
+    ],
+    [
+     722.0999755859375,
+     916.0
+    ],
+    [
+     364.70001220703125,
+     942.7000122070312
+    ]
+   ],
+   "modo": "quadrilatero+superficie",
+   "area_rel": 0.1963,
+   "px": [
+    1536,
+    1024
+   ],
+   "limiar": 18,
+   "deslocamento": [
+    0,
+    0
+   ],
+   "qualidade": "borda real da superfície (ajuste fino, conferido em zoom nos 4 cantos), 10/11",
+   "plano_original": [
     [
      365,
      54
@@ -270,19 +336,7 @@
      366,
      934
     ]
-   ],
-   "modo": "quadrilatero+superficie",
-   "area_rel": 0.1963,
-   "px": [
-    1536,
-    1024
-   ],
-   "limiar": 18,
-   "deslocamento": [
-    0,
-    0
-   ],
-   "qualidade": "ok"
+   ]
   },
   "08": {
    "produto": "Adesivo de parede",
@@ -563,7 +617,8 @@
     0,
     0
    ],
-   "qualidade": "ok"
+   "qualidade": "ok",
+   "oclusoes": "ilhoses"
   },
   "13": {
    "produto": "Folheto promocional",
@@ -574,6 +629,36 @@
    "demo": "COM_ARTE/13_folheto_promocional.jpg",
    "sha256_base": "d45a1d02075a5204d2d5076ab9d69b6f2c494e3a8544bf87071d127e2961f845",
    "plano": [
+    [
+     117.0,
+     263.0
+    ],
+    [
+     1206.0,
+     67.0
+    ],
+    [
+     1449.0,
+     706.0
+    ],
+    [
+     243.0,
+     966.0
+    ]
+   ],
+   "modo": "manual",
+   "area_rel": 0.2557,
+   "px": [
+    1536,
+    1024
+   ],
+   "limiar": 18,
+   "deslocamento": [
+    0,
+    0
+   ],
+   "qualidade": "borda real da folha (segmentação + cantos, conferido em zoom), 10/11",
+   "plano_original": [
     [
      115,
      265
@@ -590,19 +675,7 @@
      245,
      965
     ]
-   ],
-   "modo": "manual",
-   "area_rel": 0.2557,
-   "px": [
-    1536,
-    1024
-   ],
-   "limiar": 18,
-   "deslocamento": [
-    0,
-    0
-   ],
-   "qualidade": "revisada no caimento (demo com a área marcada), 10/11"
+   ]
   },
   "14": {
    "produto": "Camiseta",
