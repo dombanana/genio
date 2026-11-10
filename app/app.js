@@ -193,7 +193,7 @@ const App=(()=>{
   // ---- arte automática: logotipo tratado centralizado preenchendo a área segura do gabarito, cor padrão do material
   const COR_PADRAO={capacho:"#2B2B2D",rigido:"#F4F1EA",vinil:null,tecido:"#F4F1EA",papel:"#FFFFFF",lona:"#FFFFFF",carimbo:null};
   const PRODUTOS_IDS=["capacho","placas","adesivos","uniformes","impressos","panfleto","banners","parede","brindes","carimbo","windbanner","faixa","folheto","camiseta","bone","avental"];
-  let _G=null;const gabaritos=async()=>_G||(_G=await (await fetch("gabaritos.json?v=079d91e537")).json());
+  let _G=null;const gabaritos=async()=>_G||(_G=await (await fetch("gabaritos.json?v=7ea83155b3")).json());
   const carregarImg=src=>new Promise(res=>{const i=new Image();i.crossOrigin="anonymous";i.onload=()=>res(i);i.onerror=()=>res(null);i.src=src;});
   // ---- carimbo: só texto — nome, razão social, CNPJ (negrito), endereço, telefone; nunca logotipo
   async function dadosCarimbo(l){const cad=await ficha(l.slug).catch(()=>null);const L=(cad&&cad.lacunas)||{};const leit=(L.leitura||{}).valor||"";const razao=((leit.match(/Razão social: ([^·]+)/)||[])[1]||"").trim();const cnpj=((leit.match(/CNPJ:? ?([\d./-]{14,18})/)||[])[1]||"");
@@ -237,7 +237,7 @@ const App=(()=>{
     const aw=W-2*(B+S),ah=H-2*(B+S);const f=Math.min(aw/LW,(P.ancora==="topo"?ah*0.45:ah)/LH);const w=LW*f,h=LH*f;const x=(W-w)/2,y=P.ancora==="topo"?B+S+ah*0.05:(H-h)/2;
     const fundo=P.sem_fundo?null:(COR_PADRAO[P.superficie]===undefined?"#FFFFFF":COR_PADRAO[P.superficie]);
     // kit de 14 setores (10/11): a maquete frontal do ramo da loja é a arte de partida de todos os produtos
-    await carregarScript("qr.js?v=079d91e537");await carregarScript("impressos.js?v=079d91e537");await carregarScript("kits14.js?v=079d91e537");
+    await carregarScript("qr.js?v=7ea83155b3");await carregarScript("impressos.js?v=7ea83155b3");await carregarScript("kits14.js?v=7ea83155b3");
     if(window.Kits14&&window.Kits14.ARQ[pid]){const K=await window.Kits14.montar(App,pid,c,l,{W,H,B,S,im,rec});
       if(K){const doc={fundo:K.fundo,fundoImg:null,el:K.el,campos:null,auto:true,kit:KIT14,setorKit:K.setorKit,kitRef:K.kitRef,W,H};const imgs={[c.manual.tratado]:im};
         const k=Math.min(1,1400/Math.max(W,H));const cv=document.createElement("canvas");cv.width=Math.round(W*k);cv.height=Math.round(H*k);const g=cv.getContext("2d");g.scale(k,k);
@@ -343,7 +343,7 @@ const App=(()=>{
   // com o mesmo peso; nada de personagem (o único personagem aceito é o Gênio da marca). Cor = currentColor.
   const _eng=(()=>{let d="";for(let i=0;i<8;i++){const a=i*Math.PI/4,b=a+Math.PI/8;const p=(r,t)=>(12+r*Math.cos(t)).toFixed(2)+" "+(12+r*Math.sin(t)).toFixed(2);d+=(i?"L":"M")+p(9.2,a-.22)+"L"+p(9.2,a+.22)+"L"+p(7,b-.18)+"L"+p(7,b+.18);}return d+"Z";})();
   const SIMB={
-    rota:'<path d="M4.5 20.5c3.5-.2 4.5-3 6.8-4.6 2-1.4 3.8-.9 5.2-2.4" stroke-dasharray="2.2 2.2"/><circle cx="4.5" cy="20.5" r="1.6" class="f"/><path d="M17.5 2.8a4.2 4.2 0 0 0-4.2 4.2c0 3.1 4.2 7.3 4.2 7.3s4.2-4.2 4.2-7.3a4.2 4.2 0 0 0-4.2-4.2z" class="d"/><circle cx="17.5" cy="7" r="1.4" class="f"/>',
+    rota:'<path d="M3 6.5 8.5 4l7 2.5L21 4v13.5L15.5 20l-7-2.5L3 20z"/><path d="M8.5 4v13.5M15.5 6.5V20"/>',
     notas:'<rect x="5" y="2.8" width="14" height="18.4" rx="2" class="d"/><path d="M8.5 8h7M8.5 12h7M8.5 16h4.5"/>',
     entrada:'<path d="M3 13.5h5l1.8 2.7h4.4l1.8-2.7h5"/><path d="M3 13.5v5.2A2.3 2.3 0 0 0 5.3 21h13.4a2.3 2.3 0 0 0 2.3-2.3v-5.2L18.2 6.5M5.8 6.5 3 13.5" class="d"/><path d="M12 2.5v8.2M8.8 7.6 12 10.8l3.2-3.2"/>',
     processamento:'<path vector-effect="non-scaling-stroke" d="'+_eng+'" transform="translate(.2 .2) scale(.66)" class="d"/><circle cx="8.1" cy="8.1" r="2.1" class="w"/><path vector-effect="non-scaling-stroke" d="'+_eng+'" transform="translate(8.9 8.9) scale(.56)" class="d"/><circle cx="15.6" cy="15.6" r="1.8" class="w"/>',

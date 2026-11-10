@@ -8,13 +8,13 @@
 <link rel="icon" href="../genio-favicon.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
-<link rel="stylesheet" href="app.css?v=079d91e537">
+<link rel="stylesheet" href="app.css?v=7ea83155b3">
 <style>.leaflet-div-icon{background:transparent;border:0}.mapa svg.esq{width:100%;height:100%}</style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=079d91e537"></script>
+<script src="app.js?v=7ea83155b3"></script>
 <script>
 (async()=>{
   const {$,$$,esc,qs,sessao,eu,dados,estrelasHTML,estado,salvar,nav,topo,setorNome,nomeLoja}=App;
@@ -95,27 +95,30 @@
       m.addEventListener("pointerdown",ev=>{ev.preventDefault();ev.stopPropagation();longo=false;t=setTimeout(()=>{longo=true;if(navigator.vibrate)navigator.vibrate(12);menuLogo(l);},450);});
       m.addEventListener("pointerup",ev=>{ev.preventDefault();ev.stopPropagation();clearTimeout(t);if(!longo)abrir(l);});m.addEventListener("pointercancel",()=>clearTimeout(t));m.addEventListener("contextmenu",ev=>ev.preventDefault());});})();
   {const a=document.querySelector(".agenda a.on")||document.querySelector(".agenda a.hoje");if(a)a.scrollIntoView({inline:"center",block:"nearest"});}
-  // mapa com o traço ligando as paradas na ordem do percurso: Google Maps se houver chave no servidor; senão mapa aberto (Leaflet/CARTO); sem rede, esquema
-  const lojas=rota.filter(l=>l.lat&&l.lng);if(!lojas.length){$("#mapa").remove();return;}
-  const cor=l=>l===prox?"#141C3A":feitas.has(l.slug)?"#B9B1CC":"#6933C5";
+  // mapa travado (decisão do dono, 10/11): só onde aqui estou e a próxima loja; não arrasta nem amplia, para não atrapalhar a rolagem
+  const alvo=prox&&prox.lat&&prox.lng?prox:null;if(!alvo){$("#mapa").remove();return;}
+  const ondeEu=await new Promise(res=>{if(!navigator.geolocation)return res(null);navigator.geolocation.getCurrentPosition(p=>res({lat:p.coords.latitude,lng:p.coords.longitude,gps:true}),()=>res(null),{timeout:6000,maximumAge:60000});});
+  const ultimaFeita=rota.filter(l=>feitas.has(l.slug)&&l.lat&&l.lng).pop();
+  const aqui=ondeEu||(ultimaFeita?{lat:ultimaFeita.lat,lng:ultimaFeita.lng}:(Z.base?{lat:Z.base[0],lng:Z.base[1]}:null));
+  const km=aqui?dist(aqui,alvo):0;
+  $("#mapa").insertAdjacentHTML("afterend",`<a class="prox-mapa" href="visita.html?l=${encodeURIComponent(alvo.slug)}"><span><small>Próxima parada · ${alvo.parada}</small><b>${esc(nomeLoja(alvo.nome))}</b></span><span class="d">${aqui?(km<1?Math.round(km*1000)+" m":km.toFixed(1).replace(".",",")+" km"):""} ›</span></a>`);
+  const pts=[aqui,alvo].filter(Boolean);
   let gkey="";try{const r=await fetch("/api/mapa",{cache:"no-store"});if(r.ok)gkey=(await r.json()).google||"";}catch(e){}
-  if(gkey){await new Promise(res=>{const s=document.createElement("script");s.src=`https://maps.googleapis.com/maps/api/js?key=${encodeURIComponent(gkey)}&v=weekly&language=pt-BR&region=BR&loading=async&callback=__gm`;window.__gm=res;s.onerror=res;document.head.appendChild(s);});}
-  if(gkey&&window.google&&google.maps){const g=google.maps;const map=new g.Map($("#mapa"),{disableDefaultUI:true,gestureHandling:"greedy",clickableIcons:false,styles:[{featureType:"poi",stylers:[{visibility:"off"}]}]});
-    const bounds=new g.LatLngBounds();lojas.forEach(l=>bounds.extend({lat:l.lat,lng:l.lng}));map.fitBounds(bounds,40);
-    new g.Polyline({path:lojas.map(l=>({lat:l.lat,lng:l.lng})),strokeColor:"#6933C5",strokeWeight:5,strokeOpacity:.9,map});
+  if(gkey){await new Promise(res=>{const sc=document.createElement("script");sc.src=`https://maps.googleapis.com/maps/api/js?key=${encodeURIComponent(gkey)}&v=weekly&language=pt-BR&region=BR&loading=async&callback=__gm`;window.__gm=res;sc.onerror=res;document.head.appendChild(sc);});}
+  if(gkey&&window.google&&google.maps){const g=google.maps;const map=new g.Map($("#mapa"),{disableDefaultUI:true,gestureHandling:"none",draggable:false,zoomControl:false,keyboardShortcuts:false,clickableIcons:false,styles:[{featureType:"poi",stylers:[{visibility:"off"}]}]});
+    if(pts.length>1){const b=new g.LatLngBounds();pts.forEach(p=>b.extend(p));map.fitBounds(b,56);}else{map.setCenter(alvo);map.setZoom(17);}
+    if(aqui)new g.Polyline({path:[aqui,{lat:alvo.lat,lng:alvo.lng}],strokeOpacity:0,icons:[{icon:{path:"M 0,-1 0,1",strokeOpacity:1,strokeColor:"#6933C5",scale:3},offset:"0",repeat:"12px"}],map});
     const pin=(txt,c,size)=>({url:"data:image/svg+xml;charset=UTF-8,"+encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' width='${size}' height='${size}'><circle cx='${size/2}' cy='${size/2}' r='${size/2-3}' fill='${c}' stroke='#fff' stroke-width='3'/><text x='50%' y='50%' dy='.36em' text-anchor='middle' font-family='Rubik,Arial' font-weight='700' font-size='${size*0.42}' fill='#fff'>${txt}</text></svg>`),scaledSize:new g.Size(size,size),anchor:new g.Point(size/2,size/2)});
-    lojas.forEach(l=>{const f=feitas.has(l.slug);const mk=new g.Marker({position:{lat:l.lat,lng:l.lng},map,icon:pin(f?"✓":l.parada,cor(l),l===prox?40:34),title:l.nome,zIndex:l===prox?9:1});mk.addListener("click",()=>location.href=`visita.html?l=${encodeURIComponent(l.slug)}`);});
-    if(navigator.geolocation)navigator.geolocation.getCurrentPosition(p=>{new g.Marker({position:{lat:p.coords.latitude,lng:p.coords.longitude},map,icon:{path:g.SymbolPath.CIRCLE,scale:9,fillColor:"#14B8B0",fillOpacity:1,strokeColor:"#fff",strokeWeight:3}});},()=>{},{timeout:6000,maximumAge:60000});
+    const mk=new g.Marker({position:{lat:alvo.lat,lng:alvo.lng},map,icon:pin(alvo.parada,"#6933C5",40),title:alvo.nome,zIndex:9});mk.addListener("click",()=>location.href=`visita.html?l=${encodeURIComponent(alvo.slug)}`);
+    if(aqui)new g.Marker({position:aqui,map,icon:{path:g.SymbolPath.CIRCLE,scale:9,fillColor:"#14B8B0",fillOpacity:1,strokeColor:"#fff",strokeWeight:3}});
     return;}
-  if(typeof L==="undefined"){const xs=lojas.map(l=>l.lng),ys=lojas.map(l=>l.lat);const x0=Math.min(...xs),x1=Math.max(...xs),y0=Math.min(...ys),y1=Math.max(...ys);const X=v=>30+(v-x0)/((x1-x0)||1)*340,Y=v=>270-(v-y0)/((y1-y0)||1)*240;
-    $("#mapa").innerHTML=`<svg class="esq" viewBox="0 0 400 300"><polyline fill="none" stroke="#6933C5" stroke-width="5" stroke-linejoin="round" points="${lojas.map(l=>X(l.lng)+","+Y(l.lat)).join(" ")}"/>${lojas.map(l=>`<g><circle cx="${X(l.lng)}" cy="${Y(l.lat)}" r="${l===prox?17:14}" fill="${cor(l)}" stroke="#fff" stroke-width="3"/><text x="${X(l.lng)}" y="${Y(l.lat)+5}" text-anchor="middle" fill="#fff" font-size="13" font-weight="700">${feitas.has(l.slug)?"✓":l.parada}</text></g>`).join("")}</svg>`;return;}
-  const map=L.map("mapa",{zoomControl:false,attributionControl:true});
+  if(typeof L==="undefined"){$("#mapa").remove();return;}
+  const map=L.map("mapa",{zoomControl:false,attributionControl:true,dragging:false,touchZoom:false,doubleClickZoom:false,scrollWheelZoom:false,boxZoom:false,keyboard:false,tap:false});
   L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:"© OpenStreetMap"}).addTo(map);
-  const pts=lojas.map(l=>[l.lat,l.lng]);
-  L.polyline(pts,{color:"#6933C5",weight:5,opacity:.9,lineJoin:"round"}).addTo(map);
-  lojas.forEach(l=>{const f=feitas.has(l.slug);const ic=L.divIcon({className:"",html:`<div class="mk ${l===prox?"prox":""} ${f?"feita":""}">${f?"✓":l.parada}</div>`,iconSize:[34,34],iconAnchor:[17,17]});L.marker([l.lat,l.lng],{icon:ic}).addTo(map).on("click",()=>location.href=`visita.html?l=${encodeURIComponent(l.slug)}`);});
-  map.fitBounds(L.latLngBounds(pts).pad(.15));
-  if(navigator.geolocation)navigator.geolocation.getCurrentPosition(p=>{L.marker([p.coords.latitude,p.coords.longitude],{icon:L.divIcon({className:"",html:'<div class="mk eu"></div>',iconSize:[18,18],iconAnchor:[9,9]})}).addTo(map);},()=>{},{timeout:6000,maximumAge:60000});
+  if(aqui)L.polyline([[aqui.lat,aqui.lng],[alvo.lat,alvo.lng]],{color:"#6933C5",weight:4,dashArray:"6 8"}).addTo(map);
+  L.marker([alvo.lat,alvo.lng],{icon:L.divIcon({className:"",html:`<div class="mk prox">${alvo.parada}</div>`,iconSize:[34,34],iconAnchor:[17,17]})}).addTo(map).on("click",()=>location.href=`visita.html?l=${encodeURIComponent(alvo.slug)}`);
+  if(aqui)L.marker([aqui.lat,aqui.lng],{icon:L.divIcon({className:"",html:'<div class="mk eu"></div>',iconSize:[18,18],iconAnchor:[9,9]})}).addTo(map);
+  if(pts.length>1)map.fitBounds(L.latLngBounds(pts.map(p=>[p.lat,p.lng])).pad(.35));else map.setView([alvo.lat,alvo.lng],17);
 })();
 </script>
 </body>
