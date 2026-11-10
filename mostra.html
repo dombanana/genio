@@ -2,16 +2,18 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <title>Mostraí</title>
 <meta name="robots" content="noindex">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800;900&display=swap">
 <style>
 :root{--P:#1C1635;--sP:#fff;--A:#C98245;--sA:#1C1635;--F:#FFFDF8;--T:#1C1635;--T2:rgba(28,22,53,.62);--L:rgba(28,22,53,.14)}
 *{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%;background:#000;overflow:hidden}
+html,body{height:100%;width:100%;background:#000;overflow:hidden}
+/* a moldura fixa do tamanho da tela segura o palco: o palco de 1080 px nunca alarga a página no celular */
+#moldura{position:fixed;inset:0;overflow:hidden;contain:strict}
 /* palco fixo 1080×1920 (retrato 9:16), ajustado por escala à tela real; a fonte nunca encolhe por excesso de itens */
-#palco{position:absolute;left:50%;top:50%;width:1080px;height:1920px;transform-origin:center;background:var(--F);color:var(--T);font-family:Rubik,"Segoe UI",system-ui,sans-serif;display:flex;flex-direction:column;overflow:hidden}
+#palco{position:absolute;left:0;top:0;width:1080px;height:1920px;transform-origin:0 0;background:var(--F);color:var(--T);font-family:Rubik,"Segoe UI",system-ui,sans-serif;display:flex;flex-direction:column;overflow:hidden}
 header{background:var(--P);color:var(--sP);padding:44px 60px 40px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;min-height:220px;flex:none}
 header img{max-height:150px;max-width:640px;object-fit:contain;background:#fff;border-radius:22px;padding:14px 26px}
 header h1{font-size:92px;font-weight:900;line-height:1;letter-spacing:.01em;text-wrap:balance}
@@ -47,7 +49,7 @@ footer .off{width:16px;height:16px;border-radius:50%;background:#E6A700}
 </style>
 </head>
 <body>
-<div id="palco"></div>
+<div id="moldura"><div id="palco"></div></div>
 <script>
 (()=>{
   const c=new URLSearchParams(location.search).get("c")||"";const $=s=>document.querySelector(s);const palco=$("#palco");
@@ -67,7 +69,9 @@ footer .off{width:16px;height:16px;border-radius:50%;background:#E6A700}
     const r=palco.style;r.setProperty("--P",P);r.setProperty("--sP",sobre(P));r.setProperty("--A",A);if(contraste(A,P)<1.6)A=sobre(P);r.setProperty("--sA",contraste(A,"#FFFFFF")>=3?"#FFFFFF":(contraste(A,P)>=3?P:mix(P,"#000000",.5)));
     r.setProperty("--F",F);r.setProperty("--T",T);const [tr,tg,tb]=hex2(T);r.setProperty("--T2",`rgba(${tr},${tg},${tb},.62)`);r.setProperty("--L",`rgba(${tr},${tg},${tb},.14)`);}
   // palco 1080×1920 ajustado à tela; TV em pé ligada a um TV Box (que entrega imagem deitada) → gira o palco
-  function ajustar(){const W=innerWidth,H=innerHeight;const g=(E&&W>H)?(E.giro||0):0;const [w,h]=g?[1920,1080]:[1080,1920];const k=Math.min(W/w,H/h);palco.style.transform=`translate(-50%,-50%) rotate(${g}deg) scale(${k})`;}
+  function ajustar(){const m=document.getElementById("moldura").getBoundingClientRect();const W=m.width,H=m.height;if(!W||!H)return;const g=(E&&W>H)?(E.giro||0):0;const [w,h]=g?[1920,1080]:[1080,1920];const k=Math.min(W/w,H/h);
+    // centro do palco no centro da tela; giro em torno do próprio centro
+    palco.style.transform=`translate(${W/2}px,${H/2}px) rotate(${g}deg) scale(${k}) translate(-540px,-960px)`;}
   const preco=p=>{p=String(p||"").trim();return /^\d/.test(p)?"R$ "+p:p;};
   const hoje=()=>{const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");};
   const dataBR=s=>s.slice(8,10)+"/"+s.slice(5,7);
@@ -86,7 +90,7 @@ footer .off{width:16px;height:16px;border-radius:50%;background:#E6A700}
   async function puxar(){try{const r=await fetch(`/api/mostra/${encodeURIComponent(c)}${E&&!fora?"?v="+E.v:""}`,{cache:"no-store"});if(r.status===404){document.body.innerHTML='<div class="erro">Este Mostraí não existe ou foi desligado.</div>';return;}if(!r.ok)throw 0;const d=await r.json();const voltou=fora;fora=false;if(d.igual){if(voltou)desenhar();return;}E=d;guarda.por(E);tema(E);pag=0;desenhar();}
     catch(e){if(!E){E=guarda.ler();if(E)tema(E);}if(!fora){fora=true;desenhar();}}}
   let tempo=null;function girarPagina(){clearTimeout(tempo);const n=E?(E.itens||[]).filter(i=>i.ativo!==false&&i.nome).slice(pag*POR,pag*POR+POR).length:POR;tempo=setTimeout(()=>{pag++;desenhar();girarPagina();},6000+n*1500);}
-  puxar().then(girarPagina);setInterval(puxar,3000);addEventListener("resize",ajustar);
+  puxar().then(girarPagina);setInterval(puxar,3000);addEventListener("resize",ajustar);addEventListener("orientationchange",()=>setTimeout(ajustar,300));if(window.visualViewport)visualViewport.addEventListener("resize",ajustar);
   // oferta vence à meia-noite mesmo sem ninguém mexer
   setInterval(desenhar,10*60*1000);
   const acordada=async()=>{try{if(navigator.wakeLock)await navigator.wakeLock.request("screen");}catch(e){}};acordada();document.addEventListener("visibilitychange",()=>{if(!document.hidden)acordada();});
