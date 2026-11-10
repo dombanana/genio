@@ -20,9 +20,20 @@ def _hex2bgr(h):
 
 
 def recortar(img, ponto=None):
+    """recorte em resolução reduzida (rápido no servidor) e borda devolvida no tamanho da foto"""
+    H0, W0 = img.shape[:2]; k = min(1.0, 720 / max(H0, W0))
+    peq = cv2.resize(img, None, fx=k, fy=k, interpolation=cv2.INTER_AREA) if k < 1 else img
+    m = _recortar(peq, ponto)
+    if m is None or k == 1:
+        return m
+    m = cv2.resize(m, (W0, H0), interpolation=cv2.INTER_LINEAR)
+    return cv2.GaussianBlur(m, (5, 5), 0)
+
+
+def _recortar(img, ponto=None):
     h, w = img.shape[:2]
     px, py = (int(ponto[0] * w), int(ponto[1] * h)) if ponto else (w // 2, int(h * 0.58))
-    lab = cv2.cvtColor(cv2.GaussianBlur(img, (7, 7), 0), cv2.COLOR_BGR2LAB).astype(np.float32)
+    lab = cv2.cvtColor(cv2.GaussianBlur(img, (5, 5), 0), cv2.COLOR_BGR2LAB).astype(np.float32)
     r = max(6, int(min(h, w) * 0.02))
     amostra = lab[max(0, py - r):py + r, max(0, px - r):px + r].reshape(-1, 3)
     L0, a0, b0 = np.median(amostra, axis=0)
@@ -30,8 +41,8 @@ def recortar(img, ponto=None):
     neutra = np.hypot(a0 - 128, b0 - 128) < 10   # peça branca/preta/cinza: a luz pesa mais que o tom
     tol_ab, tol_L = (7, 45) if neutra else (14, 70)
     cand = ((dab < tol_ab) & (np.abs(lab[..., 0] - L0) < tol_L)).astype(np.uint8)
-    bordas = cv2.Canny(cv2.cvtColor(cv2.GaussianBlur(img, (5, 5), 0), cv2.COLOR_BGR2GRAY), 50, 130)
-    livre = cv2.morphologyEx(cand & (bordas == 0), cv2.MORPH_OPEN, np.ones((5, 5), np.uint8))
+    bordas = cv2.Canny(cv2.cvtColor(cv2.GaussianBlur(img, (3, 3), 0), cv2.COLOR_BGR2GRAY), 50, 130)
+    livre = cv2.morphologyEx(cand & (bordas == 0), cv2.MORPH_OPEN, np.ones((3, 3), np.uint8))
     n, lb, st, _ = cv2.connectedComponentsWithStats(livre, connectivity=4)
     alvo = lb[py, px]
     if alvo == 0:   # ponto caiu numa borda: pega o pedaço grande mais perto
@@ -44,21 +55,21 @@ def recortar(img, ponto=None):
     # costuras, gola e bolso cortam a cor em pedaços: os pedaços vizinhos da mesma cor que não encostam na borda da foto entram
     area0 = int(sem.sum())
     for _ in range(3):
-        perto = cv2.dilate(sem, np.ones((17, 17), np.uint8))
+        perto = cv2.dilate(sem, np.ones((9, 9), np.uint8))
         novos = set(np.unique(lb[(perto > 0) & (sem == 0)])) - {0}
         cresceu = False
         for i in novos:
             x, y, bw, bh, ar = st[i]
-            if x <= 1 or y <= 1 or x + bw >= w - 1 or y + bh >= h - 1 or ar < 120 or ar > 1.5 * area0:
+            if x <= 1 or y <= 1 or x + bw >= w - 1 or y + bh >= h - 1 or ar < 40 or ar > 1.5 * area0:
                 continue
             sem[lb == i] = 1; cresceu = True
         if not cresceu:
             break
     # GrabCut: o que cresceu é peça provável; a cor parecida em volta decide a borda
     gc = np.full((h, w), cv2.GC_BGD, np.uint8)
-    gc[cv2.dilate(sem, np.ones((41, 41), np.uint8)) > 0] = cv2.GC_PR_BGD
-    gc[(cv2.dilate(sem, np.ones((15, 15), np.uint8)) > 0) & (cand > 0)] = cv2.GC_PR_FGD
-    gc[cv2.erode(sem, np.ones((9, 9), np.uint8)) > 0] = cv2.GC_FGD
+    gc[cv2.dilate(sem, np.ones((25, 25), np.uint8)) > 0] = cv2.GC_PR_BGD
+    gc[(cv2.dilate(sem, np.ones((9, 9), np.uint8)) > 0) & (cand > 0)] = cv2.GC_PR_FGD
+    gc[cv2.erode(sem, np.ones((5, 5), np.uint8)) > 0] = cv2.GC_FGD
     try:
         cv2.grabCut(img, gc, None, np.zeros((1, 65)), np.zeros((1, 65)), 4, cv2.GC_INIT_WITH_MASK)
         m = ((gc == cv2.GC_FGD) | (gc == cv2.GC_PR_FGD)).astype(np.uint8) * 255
