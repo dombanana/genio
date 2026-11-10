@@ -3914,14 +3914,14 @@ async function sessRestore(){let o=null;try{o=await sessRead();}catch(e){}
 (function(){
   var qs=new URLSearchParams(location.search),slug=qs.get("l")||"",nome=(qs.get("n")||"").trim();if(!slug||!nome)return;
   function hex(h){h=(h||"").replace("#","");return [parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)];}
-  function maisPerto(cor){var c=hex(cor),best=null,bd=1e9;KAPAZI_CORES.forEach(function(k){var v=hex(k[2]),d=(v[0]-c[0])*(v[0]-c[0])*0.3+(v[1]-c[1])*(v[1]-c[1])*0.59+(v[2]-c[2])*(v[2]-c[2])*0.11;if(d<bd){bd=d;best=k[0];}});return best;}
+  function maisPerto(cor){var c=hex(cor),best=null,bd=1e9;KAPAZI_CORES.forEach(function(k){var id=Array.isArray(k)?k[0]:k.id,hx=Array.isArray(k)?k[2]:k.hex;if(!Array.isArray(k)&&k.ativo===false)return;var v=hex(hx),d=(v[0]-c[0])*(v[0]-c[0])*0.3+(v[1]-c[1])*(v[1]-c[1])*0.59+(v[2]-c[2])*(v[2]-c[2])*0.11;if(d<bd){bd=d;best=id;}});return best;}
   var n=0,t=setInterval(async function(){n++;var pronto=false;try{pronto=typeof Q!=="undefined"&&Q&&Q.cliente&&(Q.cliente.nome||"").trim().toLowerCase()===nome.toLowerCase();}catch(e){}
     if(!pronto){if(n>80)clearInterval(t);return;}clearInterval(t);
     try{var r=await fetch("/api/clientes/"+encodeURIComponent(slug),{credentials:"same-origin",cache:"no-store"});if(!r.ok)return;var f=await r.json();var A=f.artes&&f.artes.capacho;if(!A)return;
       var tArte=Date.parse(A.em||0)||0,tProj=Date.parse(Q.atualizado||Q.criado||0)||0;
       if(Q.id&&tProj>=tArte)return;   // o projeto do motor foi mexido depois da arte: vale o projeto
       if(Q.id){document.querySelector("#newQuote").click();Q.cliente.nome=nome;fillClient();}
-      if(A.material&&/^#[0-9a-f]{6}$/i.test(A.material)){Q.spec.fundo=maisPerto(A.material);fillSpec();renderThumb();}
+      if(A.material&&/^#[0-9a-f]{6}$/i.test(A.material)){var fc=maisPerto(A.material);if(fc){Q.spec.fundo=fc;try{var T=typeof curTap==="function"&&curTap();if(T&&T.spec)T.spec.fundo=fc;}catch(e){}fillSpec();renderThumb();}}
       var src=f.manual&&f.manual.tratado;
       if(src&&!LOGOQ.length&&LOGO_ORIGEM!=="identidade"){LOGO_ORIGEM="identidade";var b=await (await fetch(src,{credentials:"same-origin"})).blob();openPartK("logo");LOGOQ.push(new File([b],"marca-tratada.png",{type:b.type||"image/png"}));nextLogoFromQueue();}
     }catch(e){}
