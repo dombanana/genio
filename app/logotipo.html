@@ -6,7 +6,7 @@
 <title>GênIO · Logotipo</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="app.css?v=10986b215b">
+<link rel="stylesheet" href="app.css?v=b9fb14be94">
 <style>
 body.com-acoes{padding-bottom:calc(150px + env(safe-area-inset-bottom,0))}
 .palco{position:relative;height:min(50vh,480px);background:repeating-conic-gradient(#e9e5f3 0 25%,#fff 0 50%) 0 0/18px 18px;border-radius:16px;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
@@ -27,7 +27,7 @@ body.com-acoes{padding-bottom:calc(150px + env(safe-area-inset-bottom,0))}
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=10986b215b"></script>
+<script src="app.js?v=b9fb14be94"></script>
 <script>
 (async()=>{
   const {$,$$,esc,qs,sessao,dados,nav,topo,voltar,nomeLoja,cliente,gravarCliente,definirCliente}=App;
@@ -52,7 +52,8 @@ body.com-acoes{padding-bottom:calc(150px + env(safe-area-inset-bottom,0))}
   const encaixe=()=>{const pw=palco.clientWidth,ph=palco.clientHeight;const s=Math.min(pw/W,ph/H)*z;[cv,sel].forEach(c=>{c.style.width=W+"px";c.style.height=H+"px";c.style.transform=`translate(${px+(pw-W*s)/2}px,${py+(ph-H*s)/2}px) scale(${s}) translate(${W/2}px,${H/2}px) rotate(${rotV}deg) translate(${-W/2}px,${-H/2}px)`;});desenharCaixa();};
   function carregar(src){return new Promise(res=>{const im=new Image();im.crossOrigin="anonymous";im.onload=()=>{const s=Math.min(1,1400/Math.max(im.width,im.height));W=Math.round(im.width*s);H=Math.round(im.height*s);cv.width=sel.width=W;cv.height=sel.height=H;cx.drawImage(im,0,0,W,H);
       try{base=cx.getImageData(0,0,W,H);}catch(e){return res("bloqueada");}encaixe();res("ok");};im.onerror=()=>res("erro");im.src=src;});}
-  const prox=u.startsWith("data:")||u.startsWith(location.origin)?u:`/api/img?u=${encodeURIComponent(u)}`;
+  // imagem do próprio servidor (/api/arq/…, logotipos automáticos e salvos) abre direto; só imagem de fora passa pelo proxy
+  const prox=/^(data:|blob:|\/(?!\/))/.test(u)||u.startsWith(location.origin)?u:`/api/img?u=${encodeURIComponent(u)}`;
   let r=await carregar(prox);
   if(r!=="ok"&&thumb){r=await carregar(`/api/img?u=${encodeURIComponent(thumb)}`);if(r==="ok")$("#st").textContent="Imagem grande não abriu; usando a miniatura.";}
   if(r!=="ok"){$("#st").textContent="Não consegui abrir esta imagem. Tente outra.";return;}
