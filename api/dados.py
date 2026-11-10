@@ -167,6 +167,41 @@ def arquivo(colecao, ident, nome):
     with open(caminho, "rb") as f:
         return mime, f.read()
 
+# ---- mensagens do cliente (painel do cliente / Mostraí; e-mail quando ligado): uma conversa por cliente
+def _arq_msg(slug):
+    return os.path.join(_pasta("mensagens"), valida_slug(slug) + ".json")
+
+def mensagens_ler(slug):
+    return _ler_json(_arq_msg(slug)) or []
+
+def mensagem_gravar(slug, de, texto, canal="", por=None):
+    texto = str(texto or "").strip()[:2000]
+    if not texto:
+        raise ValueError("mensagem vazia")
+    lista = mensagens_ler(slug)
+    m = {"id": "m" + str(int(time.time() * 1000)), "de": "cliente" if de == "cliente" else "genio", "texto": texto,
+         "canal": str(canal or "")[:30], "por": por, "em": time.strftime("%Y-%m-%dT%H:%M:%S"), "lida": de != "cliente"}
+    lista.append(m); _escrever_json(_arq_msg(slug), lista[-500:])
+    return m
+
+def mensagens_lidas(slug):
+    lista = mensagens_ler(slug)
+    for m in lista:
+        m["lida"] = True
+    _escrever_json(_arq_msg(slug), lista)
+    return {"ok": True}
+
+def mensagens_resumo():
+    """não lidas por cliente (para o sino de Clientes) e a última mensagem de cada conversa"""
+    pasta = _pasta("mensagens"); out = {}
+    for n in os.listdir(pasta):
+        if not n.endswith(".json"):
+            continue
+        lista = _ler_json(os.path.join(pasta, n)) or []
+        if lista:
+            out[n[:-5]] = {"nao_lidas": sum(1 for m in lista if not m.get("lida")), "ultima": lista[-1]}
+    return out
+
 def resumo():
     cl = clientes_listar()
     return {"clientes": len(cl), "com_logotipo": sum(1 for c in cl if (c.get("manual") or {}).get("tratado")),

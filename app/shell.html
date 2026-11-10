@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#6933C5">
 <link rel="icon" href="../genio-favicon.png">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="stylesheet" href="app.css?v=dc7f93536f">
+<link rel="stylesheet" href="app.css?v=742ebe647b">
 <style>html,body{height:100%;overflow:hidden;padding:0}</style>
 </head>
 <body>
@@ -15,14 +15,21 @@
   <iframe id="tela" allow="camera; microphone; geolocation; display-capture; screen-wake-lock" title="GênIO"></iframe>
   <nav class="nav" id="barra"></nav>
 </div>
-<script src="app.js?v=dc7f93536f"></script>
+<script src="app.js?v=742ebe647b"></script>
 <script>
 (()=>{
   const {$,esc,ICONES,gravarNota}=App;
   const fr=$("#tela");const alvo=()=>decodeURIComponent((location.hash||"#index.html").slice(1))||"index.html";
   let atual=alvo();fr.src=atual;
   let CONT={entrada:{n:0,u:0},processamento:{n:0,u:0},saida:{n:0,u:0}};
-  const pintarMonitor=()=>{for(const k of Object.keys(CONT)){const a=document.querySelector(`.monitor [data-et="${k}"]`);if(!a)continue;const c=CONT[k];a.classList.toggle("alerta",c.n>0&&!c.u);a.classList.toggle("urgente",c.u>0);const b=a.querySelector(".badge");b.textContent=c.n;b.hidden=!c.n;}};
+  let MSG=0,SOLTAS=0;
+  const marca=(el,n,classe)=>{if(!el)return;el.classList.remove("alerta","urgente");if(n&&classe)el.classList.add(classe);const b=el.querySelector(".badge");if(b){b.textContent=n;b.hidden=!n;}};
+  const pintarMonitor=()=>{for(const k of Object.keys(CONT)){const c=CONT[k];marca(document.querySelector(`.grupo [data-k="${k}"]`),c.n,c.u?"urgente":"alerta");}
+    marca(document.querySelector('.grupo [data-k="clientes"]'),MSG,"urgente");marca(document.querySelector('.grupo [data-k="notasLista"]'),SOLTAS,"alerta");};
+  // mensagens de clientes e notas soltas: conferidas no servidor a cada minuto
+  async function conferirAvisos(){try{const [m,n]=await Promise.all([fetch("/api/mensagens",{credentials:"same-origin",cache:"no-store"}).then(r=>r.ok?r.json():null),fetch("/api/notas",{credentials:"same-origin",cache:"no-store"}).then(r=>r.ok?r.json():null)]);
+    if(m)MSG=Object.values(m.conversas||{}).reduce((a,c)=>a+(c.nao_lidas||0),0);if(n)SOLTAS=(n.notas||[]).filter(x=>!x.loja&&!x.pedido).length;pintarMonitor();}catch(e){}}
+  setTimeout(conferirAvisos,1500);setInterval(conferirAvisos,60*1000);window.addEventListener("message",ev=>{if(ev.origin===location.origin&&ev.data&&ev.data.genio==="avisos")conferirAvisos();});
   window.addEventListener("message",ev=>{if(ev.origin!==location.origin||!ev.data)return;if(ev.data.genio==="ocorrencias"){CONT=ev.data.cont||CONT;pintarMonitor();return;}if(ev.data.genio!=="tela")return;atual=ev.data.href;history.replaceState(null,"","#"+atual);marcar();});
   window.addEventListener("storage",marcar);
   window.addEventListener("hashchange",()=>{const a=alvo();if(a!==atual){atual=a;fr.src=a;}});
@@ -30,7 +37,12 @@
   const ir=h=>{atual=h;fr.src=h;history.replaceState(null,"","#"+h);marcar();};
   const dur=s=>`${Math.floor(s/60)}:${String(Math.floor(s%60)).padStart(2,"0")}`;
   function marcar(){const rotOn=on("index")||on("visita")||on("fontes")||on("logotipo")||on("manual")||on("produtos")||on("editor")||on("capacho");
-    $("#barra").innerHTML=`<a href="#index.html" class="${rotOn}" data-ir="index.html"><span class="ic">${ICONES.rota}</span>Rota</a><a href="#notas.html" class="${on("notas")}" data-ir="notas.html"><span class="ic">${ICONES.notasLista}</span>Notas</a><span class="vao"></span><div class="monitor" role="group" aria-label="Monitor de ocorrências"><div class="trio">${[["entrada","Entrada"],["processamento","Produção"],["saida","Saída"]].map(([k,t])=>`<a href="#pedidos.html?etapa=${k}" data-et="${k}" class="${atual.includes("etapa="+k)?"on":""}" data-ir="pedidos.html?etapa=${k}" aria-label="${t}" title="${t}"><span class="ic">${ICONES[k]}</span><span class="badge" hidden></span></a>`).join("")}</div><small>Monitor de ocorrências</small></div><span class="vao2"></span><button type="button" class="rec ${REC.ativo?(REC.pausado?"pausado":"on"):""}" id="rec" aria-label="REC" title="grava no modo escolhido em Configuração">${REC.ativo?`<span class="ic">${ICONES.recModo(REC.tipo)}</span><span id="recTempo">${dur(REC.segundos())}</span>`:`<span class="ic">${ICONES.recModo(localStorage.getItem("rec-tipo")||"audio")}</span>`}</button>`;
+    const grupo=(nome,itens)=>`<div class="grupo" role="group" aria-label="${nome}"><div class="trio n${itens.length}">${itens.join("")}</div><small>${nome}</small></div>`;
+    const item=(k,t,href,ativo)=>`<a href="#${href}" data-k="${k}" class="${ativo?"on":""}" data-ir="${href}" aria-label="${t}" title="${t}"><span class="ic">${ICONES[k]}</span><span class="badge" hidden></span></a>`;
+    const rec=`<button type="button" class="rec-b ${REC.ativo?(REC.pausado?"pausado":"on"):""}" id="rec" aria-label="Gravar" title="grava no modo escolhido em Notas"><span class="ic">${ICONES.recModo(REC.ativo?REC.tipo:(localStorage.getItem("rec-tipo")||"audio"))}</span>${REC.ativo?`<span class="tempo" id="recTempo">${dur(REC.segundos())}</span>`:""}<span class="badge" hidden></span></button>`;
+    $("#barra").innerHTML=grupo("Atendimento",[item("rota","Rota","index.html",on("index")||on("visita")||on("fontes")||on("logotipo")||on("manual")||on("produtos")||on("editor")||on("capacho")||on("local")),item("clientes","Clientes","clientes.html",on("clientes"))])
+      +`<span class="vao"></span>`+grupo("Monitor de ocorrências",[["entrada","Entrada"],["processamento","Produção"],["saida","Saída"]].map(([k,t])=>item(k,t,"pedidos.html?etapa="+k,atual.includes("etapa="+k))))
+      +`<span class="vao"></span>`+grupo("Gravação",[rec,item("notasLista","Notas","notas.html",on("notas"))]);
     // REC é um botão à parte: um toque grava no modo parametrizado em Notas; outro toque para
     $("#rec").onclick=async()=>{if(REC.ativo){await parar();return;}const tipo=localStorage.getItem("rec-tipo")||"audio",tela=localStorage.getItem("rec-tela")!=="0";
       try{if(tipo==="foto"||tipo==="selfie"){await foto(tipo==="selfie");if(atual.startsWith("notas"))fr.contentWindow.location.reload();return;}await iniciar(tipo,{telaAcesa:tela});}catch(e){alert(e.message);}};

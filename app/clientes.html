@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover,user-scalable=no">
+<title>GênIO · Clientes</title>
+<meta name="theme-color" content="#F1EEF8">
+<link rel="icon" href="../genio-favicon.png">
+<link rel="stylesheet" href="app.css?v=742ebe647b">
+<style>
+.busca-c{width:100%;box-sizing:border-box;font:inherit;font-size:16px;border:1.5px solid var(--linha);border-radius:12px;padding:12px 14px;margin:0 0 10px;background:#fff}
+.filtros{display:flex;gap:8px;overflow-x:auto;margin:0 0 12px;padding-bottom:2px}
+.filtros button{flex:none;font:inherit;font-size:14px;font-weight:600;min-height:40px;padding:0 14px;border-radius:999px;border:1.5px solid var(--linha);background:#fff;color:var(--texto);cursor:pointer}
+.filtros button.on{background:var(--marca);border-color:var(--marca);color:#fff}
+.cli{display:grid;grid-template-columns:50px 1fr auto;gap:10px;align-items:center;background:#fff;border-radius:14px;padding:10px 12px;margin:0 0 8px;color:inherit;text-decoration:none}
+.cli .mini{width:50px;height:40px;border-radius:10px;background:var(--lav);display:grid;place-items:center;overflow:hidden}
+.cli .mini img{width:100%;height:100%;object-fit:contain}
+.cli .mini i{font-style:normal;font-size:10px;color:var(--texto2);text-align:center;line-height:1.1}
+.cli b{display:block;font-size:16px}
+.cli small{display:block;color:var(--texto2);font-size:13px;margin-top:2px}
+.cli .msg{color:var(--texto);font-weight:600}
+.cli .lado{display:flex;flex-direction:column;align-items:flex-end;gap:4px;font-size:12px;color:var(--texto2);white-space:nowrap}
+.cli .nl{min-width:22px;height:22px;border-radius:999px;background:#C62828;color:#fff;font-weight:800;font-size:12px;display:grid;place-items:center;padding:0 6px}
+.cli .et{background:var(--lav);color:var(--marca);border-radius:8px;padding:2px 8px;font-weight:600}
+.cli.nova{box-shadow:inset 4px 0 0 #C62828}
+</style>
+</head>
+<body>
+<div class="w" id="app"></div>
+<script src="app.js?v=742ebe647b"></script>
+<script>
+(async()=>{
+  const {$,$$,esc,sessao,dados,estado,nav,topo,nomeLoja,setorNome,cliente,etapaDe}=App;
+  if(!await sessao())return;
+  const D=await dados();const e=estado();const sel=e.sel||{};const feitas=new Set(e.feitas||[]);const ped=e.pedidos||{};
+  let conv={};try{const r=await fetch("/api/mensagens",{credentials:"same-origin",cache:"no-store"});if(r.ok)conv=(await r.json()).conversas||{};}catch(err){}
+  const ETQ={entrada:"Entrada",arte:"Arte",processamento:"Produção",qualidade:"Qualidade",saida:"Saída",entregue:"Entregue"};
+  // cliente = loja que já teve contato: visitada, com seleção, com pedido, com mensagem ou avulsa
+  const temSel=s=>Object.values(sel[s]||{}).some(v=>v&&v.q>0);
+  const L=D.lojas.map(l=>{const c=conv[l.slug]||null;const et=ped[l.slug]?etapaDe(l.slug):(temSel(l.slug)?"entrada":null);
+    return {l,c,nl:c?c.nao_lidas:0,et,atendido:feitas.has(l.slug)||!!et||!!c||!!l.avulso,ult:c?c.ultima.em:(ped[l.slug]&&ped[l.slug].hist&&ped[l.slug].hist.length?ped[l.slug].hist[ped[l.slug].hist.length-1].em:"")};});
+  const MINI={};
+  let filtro=L.some(x=>x.nl)?"mensagens":"atendidos",termo="";
+  const FIL=[["mensagens","Mensagens"],["atendidos","Atendidos"],["pedidos","Com pedido"],["todos","Todos"]];
+  const norm=t=>(t||"").normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase();
+  async function render(){
+    let vis=L.filter(x=>filtro==="todos"?true:filtro==="mensagens"?!!x.c:filtro==="pedidos"?!!x.et:x.atendido);
+    if(termo)vis=L.filter(x=>norm(x.l.nome+" "+(x.l.endereco||"")+" "+setorNome(x.l.setor)).includes(norm(termo)));
+    vis.sort((a,b)=>b.nl-a.nl||(b.ult||"").localeCompare(a.ult||"")||nomeLoja(a.l.nome).localeCompare(nomeLoja(b.l.nome)));
+    vis=vis.slice(0,150);
+    for(const x of vis){if(MINI[x.l.slug]===undefined){const f=await cliente(x.l);MINI[x.l.slug]=(f.manual&&f.manual.tratado)||(f.logos&&f.logos[0]&&f.logos[0].src)||null;}}
+    const nMsg=L.reduce((a,x)=>a+x.nl,0);
+    $("#app").innerHTML=`${topo()}<h1>Clientes</h1><p class="sub">${L.filter(x=>x.atendido).length} atendidos${nMsg?` · <b style="color:#C62828">${nMsg} mensagem(ns) nova(s)</b>`:""}</p>
+      <input class="busca-c" id="busca" placeholder="Buscar por nome, rua ou ramo" value="${esc(termo)}" autocomplete="off">
+      <div class="filtros">${FIL.map(([k,t])=>`<button type="button" data-f="${k}" class="${!termo&&filtro===k?"on":""}">${t}${k==="mensagens"&&nMsg?` · ${nMsg}`:""}</button>`).join("")}</div>
+      ${vis.length?vis.map(x=>`<a class="cli ${x.nl?"nova":""}" href="visita.html?l=${encodeURIComponent(x.l.slug)}${x.c?"#mensagens":""}"><span class="mini">${MINI[x.l.slug]?`<img src="${esc(MINI[x.l.slug])}" alt="" loading="lazy">`:"<i>sem<br>logo</i>"}</span>
+        <div><b>${esc(nomeLoja(x.l.nome))}</b>${x.c?`<small class="${x.nl?"msg":""}">${x.c.ultima.de==="cliente"?"":"Você: "}${esc(x.c.ultima.texto.slice(0,70))}</small>`:`<small>${esc(setorNome(x.l.setor))} · ${esc((x.l.endereco||"").split(" · ")[0])}</small>`}</div>
+        <div class="lado">${x.nl?`<span class="nl">${x.nl}</span>`:""}${x.et?`<span class="et">${ETQ[x.et]||x.et}</span>`:feitas.has(x.l.slug)?"visitado":""}</div></a>`).join(""):`<section class="card"><p>${filtro==="mensagens"&&!termo?"Nenhuma mensagem de cliente ainda.":"Nenhum cliente encontrado."}</p></section>`}
+      ${nav("clientes")}`;
+    const b=$("#busca");b.oninput=()=>{termo=b.value.trim();clearTimeout(b._t);b._t=setTimeout(async()=>{await render();const nb=$("#busca");nb.focus();nb.setSelectionRange(nb.value.length,nb.value.length);},250);};
+    $$("[data-f]").forEach(x=>x.onclick=()=>{filtro=x.dataset.f;termo="";render();});}
+  render();
+})();
+</script>
+</body>
+</html>

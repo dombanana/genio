@@ -345,18 +345,38 @@ svg.icone .w{fill:var(--ic-fundo)}
 .proc .pp small{font-size:11px;color:var(--texto2);min-height:13px}
 .proc .pp.arte b{letter-spacing:.01em}
 
-/* barra: Rota · Notas | monitor de ocorrências (Entrada → Produção → Saída numa linha só) | gravar */
-.casca .nav{grid-template-columns:1fr 1fr .5fr 3.1fr .3fr .95fr}
-.casca .nav .vao2{display:block}
-.casca .nav .monitor{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:8px 0 9px;color:#fff;min-width:0}
-.casca .nav .monitor .trio{position:relative;display:grid;grid-template-columns:repeat(3,1fr);width:100%}
-.casca .nav .monitor .trio::before{content:"";position:absolute;left:16.7%;right:16.7%;top:50%;height:2px;margin-top:-1px;background:rgba(255,255,255,.45);border-radius:2px}
-.casca .nav .monitor a{position:relative;z-index:1;display:grid;place-items:center;padding:4px 0;border-radius:12px;background:transparent}
-.casca .nav .monitor a .ic{width:40px;height:40px;border-radius:50%;background:var(--marca);display:grid;place-items:center}
-.casca .nav .monitor a .ic svg.icone{width:28px;height:28px}
-.casca .nav .monitor a.on .ic{background:#8154CE;box-shadow:0 0 0 2px rgba(255,255,255,.55)}
-.casca .nav .monitor a.alerta{color:#FFC94D}.casca .nav .monitor a.urgente{color:#FF7A6E}
-.casca .nav .monitor a.alerta .ic,.casca .nav .monitor a.urgente .ic{box-shadow:0 0 0 2px currentColor}
-.casca .nav .monitor a .badge{position:absolute;top:0;right:calc(50% - 26px);min-width:18px;height:18px;border-radius:999px;background:#FF5A4E;color:#fff;font-size:11px;font-weight:800;display:grid;place-items:center;padding:0 5px;border:2px solid var(--marca)}
-.casca .nav .monitor a.alerta .badge{background:#F2A33A;color:#1C1635}
-.casca .nav .monitor small{font-size:11px;font-weight:600;letter-spacing:.01em;white-space:nowrap}
+/* barra: três grupos iguais · Atendimento (Rota, Clientes) | Monitor de ocorrências (Entrada → Produção → Saída) | Gravação (Gravar, Notas) */
+.casca .nav{display:flex;align-items:stretch;justify-content:space-between;gap:0;padding:0 6px env(safe-area-inset-bottom,0)}
+.casca .nav .vao{display:block;flex:0 0 10px}
+.casca .nav .grupo{flex:2 1 0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:8px 0 9px;color:#fff;min-width:0}
+.casca .nav .grupo:nth-of-type(2){flex:3 1 0}
+.casca .nav .grupo .trio{position:relative;display:grid;width:100%}
+.casca .nav .grupo .trio.n2{grid-template-columns:repeat(2,1fr)}.casca .nav .grupo .trio.n3{grid-template-columns:repeat(3,1fr)}
+.casca .nav .grupo .trio::before{content:"";position:absolute;top:50%;height:2px;margin-top:-1px;background:rgba(255,255,255,.45);border-radius:2px}
+.casca .nav .grupo .trio.n2::before{left:25%;right:25%}.casca .nav .grupo .trio.n3::before{left:16.7%;right:16.7%}
+.casca .nav .grupo a,.casca .nav .grupo .rec-b{position:relative;z-index:1;display:grid;place-items:center;padding:4px 0;border:0;border-radius:12px;background:transparent;color:#fff;font:inherit;cursor:pointer;min-width:0;overflow:visible}
+.casca .nav .grupo .ic{width:40px;height:40px;border-radius:50%;background:var(--marca);display:grid;place-items:center}
+.casca .nav .grupo .ic svg.icone{width:28px;height:28px;--ic-fundo:var(--marca)}
+.casca .nav .grupo a.on .ic{background:#8154CE;box-shadow:0 0 0 2px rgba(255,255,255,.55)}.casca .nav .grupo a.on .ic svg.icone{--ic-fundo:#8154CE}
+.casca .nav .grupo .alerta{color:#FFC94D}.casca .nav .grupo .urgente{color:#FF7A6E}
+.casca .nav .grupo .alerta .ic,.casca .nav .grupo .urgente .ic{box-shadow:0 0 0 2px currentColor}
+.casca .nav .grupo .badge{position:absolute;top:0;right:calc(50% - 26px);min-width:18px;height:18px;border-radius:999px;background:#FF5A4E;color:#fff;font-size:11px;font-weight:800;display:grid;place-items:center;padding:0 5px;border:2px solid var(--marca)}
+.casca .nav .grupo .alerta .badge{background:#F2A33A;color:#1C1635}
+.casca .nav .grupo small{font-size:11px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.casca .nav .grupo .rec-b.on .ic{background:#C62828;animation:piscaRec 1s infinite}.casca .nav .grupo .rec-b.pausado .ic{background:#B7791F}
+.casca .nav .grupo .rec-b .tempo{position:absolute;bottom:-6px;left:50%;transform:translateX(-50%);font-size:10px;font-weight:700;background:#1C1635;border-radius:6px;padding:0 4px;font-variant-numeric:tabular-nums}
+
+/* mensagens do cliente na ficha */
+.msgs .conv{display:flex;flex-direction:column;gap:8px;max-height:340px;overflow:auto;margin:0 0 10px}
+.msgs .m{max-width:84%;border-radius:14px;padding:8px 12px;background:var(--lav)}
+.msgs .m.cliente{align-self:flex-start;background:#fff;border:1.5px solid var(--linha)}
+.msgs .m.genio{align-self:flex-end;background:var(--marca);color:#fff}
+.msgs .m p{margin:0;font-size:15px;white-space:pre-wrap}.msgs .m small{display:block;font-size:11px;opacity:.75;margin-top:3px}
+.msgs .resp{display:flex;gap:8px;align-items:flex-end}
+.msgs .resp textarea{flex:1;font:inherit;font-size:16px;border:1.5px solid var(--linha);border-radius:12px;padding:10px 12px;resize:vertical;min-height:46px;box-sizing:border-box}
+
+/* notas: soltas no topo, grupos sem emoji, abas do vínculo */
+.g-notas{margin:16px 0 8px;font-size:17px}.g-notas a{font-size:13px;font-weight:500;margin-left:6px}
+.g-notas.solta{color:#8A5A00}.g-notas .qt{display:inline-grid;place-items:center;min-width:22px;height:22px;border-radius:999px;background:#F2A33A;color:#1C1635;font-size:12px;font-weight:800;padding:0 6px;vertical-align:2px}
+.nota.solta{box-shadow:inset 4px 0 0 #F2A33A}
+.abas-v{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:0 0 8px}.abas-v button{font:inherit;font-weight:600;min-height:40px;border-radius:10px;border:1.5px solid var(--linha);background:#fff;cursor:pointer}.abas-v button.on{background:var(--marca);border-color:var(--marca);color:#fff}

@@ -193,7 +193,7 @@ const App=(()=>{
   // ---- arte automática: logotipo tratado centralizado preenchendo a área segura do gabarito, cor padrão do material
   const COR_PADRAO={capacho:"#2B2B2D",rigido:"#F4F1EA",vinil:null,tecido:"#F4F1EA",papel:"#FFFFFF",lona:"#FFFFFF",carimbo:null};
   const PRODUTOS_IDS=["capacho","placas","adesivos","uniformes","impressos","panfleto","banners","parede","brindes","carimbo","windbanner","faixa","folheto","camiseta","bone","avental"];
-  let _G=null;const gabaritos=async()=>_G||(_G=await (await fetch("gabaritos.json?v=dc7f93536f")).json());
+  let _G=null;const gabaritos=async()=>_G||(_G=await (await fetch("gabaritos.json?v=742ebe647b")).json());
   const carregarImg=src=>new Promise(res=>{const i=new Image();i.crossOrigin="anonymous";i.onload=()=>res(i);i.onerror=()=>res(null);i.src=src;});
   // ---- carimbo: só texto — nome, razão social, CNPJ (negrito), endereço, telefone; nunca logotipo
   async function dadosCarimbo(l){const cad=await ficha(l.slug).catch(()=>null);const L=(cad&&cad.lacunas)||{};const leit=(L.leitura||{}).valor||"";const razao=((leit.match(/Razão social: ([^·]+)/)||[])[1]||"").trim();const cnpj=((leit.match(/CNPJ:? ?([\d./-]{14,18})/)||[])[1]||"");
@@ -237,7 +237,7 @@ const App=(()=>{
     const aw=W-2*(B+S),ah=H-2*(B+S);const f=Math.min(aw/LW,(P.ancora==="topo"?ah*0.45:ah)/LH);const w=LW*f,h=LH*f;const x=(W-w)/2,y=P.ancora==="topo"?B+S+ah*0.05:(H-h)/2;
     const fundo=P.sem_fundo?null:(COR_PADRAO[P.superficie]===undefined?"#FFFFFF":COR_PADRAO[P.superficie]);
     // kit de 14 setores (10/11): a maquete frontal do ramo da loja é a arte de partida de todos os produtos
-    await carregarScript("qr.js?v=dc7f93536f");await carregarScript("impressos.js?v=dc7f93536f");await carregarScript("kits14.js?v=dc7f93536f");
+    await carregarScript("qr.js?v=742ebe647b");await carregarScript("impressos.js?v=742ebe647b");await carregarScript("kits14.js?v=742ebe647b");
     if(window.Kits14&&window.Kits14.ARQ[pid]){const K=await window.Kits14.montar(App,pid,c,l,{W,H,B,S,im,rec});
       if(K){const doc={fundo:K.fundo,fundoImg:null,el:K.el,campos:null,auto:true,kit:KIT14,setorKit:K.setorKit,kitRef:K.kitRef,W,H};const imgs={[c.manual.tratado]:im};
         const k=Math.min(1,1400/Math.max(W,H));const cv=document.createElement("canvas");cv.width=Math.round(W*k);cv.height=Math.round(H*k);const g=cv.getContext("2d");g.scale(k,k);
@@ -358,9 +358,10 @@ const App=(()=>{
     video:'<rect x="2.5" y="6.5" width="13" height="11" rx="2" class="d"/><path d="M15.5 10.5 21.5 7v10l-6-3.5z" class="d"/>',
     selfie:'<rect x="6" y="2.5" width="12" height="19" rx="2.5" class="d"/><circle cx="12" cy="10" r="2.4" class="w"/><path d="M8.6 17a3.4 3.4 0 0 1 6.8 0"/>',
     foto:'<path d="M3 8.5a2 2 0 0 1 2-2h2.5L9 4.5h6l1.5 2H19a2 2 0 0 1 2 2V18a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" class="d"/><circle cx="12" cy="13" r="3.6" class="w"/>',
+    clientes:'<path d="M3.5 9.5V20a1 1 0 0 0 1 1h15a1 1 0 0 0 1-1V9.5" class="d"/><path d="M2.5 4h19l1 5.5H1.5z" class="d"/><path d="M9.5 21v-6h5v6" class="w"/><path d="M6 9.5V4M12 9.5V4M18 9.5V4"/>',
     tela:'<rect x="6" y="2.5" width="12" height="19" rx="2.5" class="d"/><circle cx="12" cy="12" r="2.6" class="f"/>'};
   const ico=n=>`<svg class="icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${SIMB[n]||""}</svg>`;
-  const ICONES={rota:ico("rota"),pedidos:ico("pedidos"),perfil:ico("perfil"),notas:ico("mic"),notasLista:ico("notas"),config:ico("config"),financeiro:ico("financeiro"),ocorrencias:ico("ocorrencias"),entrada:ico("entrada"),processamento:ico("processamento"),saida:ico("saida"),
+  const ICONES={rota:ico("rota"),clientes:ico("clientes"),mic:ico("mic"),pedidos:ico("pedidos"),perfil:ico("perfil"),notas:ico("mic"),notasLista:ico("notas"),config:ico("config"),financeiro:ico("financeiro"),ocorrencias:ico("ocorrencias"),entrada:ico("entrada"),processamento:ico("processamento"),saida:ico("saida"),
     recModo:t=>ico({audio:"mic",transcrever:"transcrever","video-tras":"video","video-frente":"selfie",foto:"foto",selfie:"selfie",tela:"tela"}[t]||"mic")};
   // ---- etapas do pedido: entrada (selecionando/orçando) → processamento (produção) → saída (entrega/instalação) → entregue
   const ETAPAS=["entrada","arte","processamento","qualidade","saida","entregue"];

@@ -6,12 +6,12 @@
 <title>GênIO · Notas</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="app.css?v=dc7f93536f">
+<link rel="stylesheet" href="app.css?v=742ebe647b">
 <style>.sel-cli{position:fixed;left:12px;right:12px;top:10vh;max-height:78vh;overflow:auto;background:#fff;border-radius:18px;padding:14px;z-index:75;box-shadow:0 10px 40px rgba(28,22,53,.3)}.sel-cli h3{margin:0 0 8px}.sel-cli input{width:100%;box-sizing:border-box;font:inherit;font-size:16px;border:1.5px solid var(--linha);border-radius:12px;padding:10px 12px}.lista-cli{display:grid;gap:4px;margin-top:8px}.lista-cli button{border:0;background:var(--lav);border-radius:12px;text-align:left;padding:10px 12px;font:inherit;display:grid}.lista-cli button small{color:var(--texto2);font-size:12px}</style>
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=dc7f93536f"></script>
+<script src="app.js?v=742ebe647b"></script>
 <script>
 (async()=>{
   const {$,$$,esc,sessao,nav,topo,listarNotas,gravarNota,apagarNota,nomeLoja}=App;
@@ -22,23 +22,33 @@
   const dur=s=>`${Math.floor(s/60)}:${String(Math.round(s%60)).padStart(2,"0")}`;
   const D=await App.dados();const lojas=D.lojas.slice().sort((a,b)=>b.estrelas-a.estrelas||a.nome.localeCompare(b.nome));
   const diaDe=iso=>new Date(iso).toLocaleDateString("pt-BR",{weekday:"short",day:"2-digit",month:"2-digit"});
-  function escolherCliente(n){const f=document.createElement("div");f.className="rec-fundo";f.style.zIndex=70;const m=document.createElement("div");m.className="sel-cli";
-    m.innerHTML=`<h3>Atrelar nota a…</h3><input id="busca" placeholder="buscar pelo nome" autocomplete="off"><div class="lista-cli" id="lc"></div><div style="display:flex;gap:8px;margin-top:8px"><button type="button" class="btn sec sm" id="soltar" style="width:auto;min-height:40px;padding:0 12px">Deixar no dia</button><button type="button" class="btn sec sm" id="fechar" style="width:auto;min-height:40px;padding:0 12px;margin-left:auto">Fechar</button></div>`;
+  // vincular: a nota pode ficar solta e ganhar vínculo depois (cliente ou pedido, com a etapa em que o pedido está)
+  const ETQ={entrada:"Entrada",arte:"Arte",processamento:"Produção",qualidade:"Qualidade",saida:"Saída",entregue:"Entregue"};
+  const avisar=()=>{try{window.top.postMessage({genio:"avisos"},location.origin);}catch(e){}};
+  function escolherCliente(n){const f=document.createElement("div");f.className="rec-fundo";f.style.zIndex=70;const m=document.createElement("div");m.className="sel-cli";let aba=n.pedido?"pedido":"cliente";
+    const e=App.estado();const comPedido=lojas.filter(l=>(e.pedidos||{})[l.slug]||Object.values((e.sel||{})[l.slug]||{}).some(v=>v&&v.q>0));
+    m.innerHTML=`<h3>Vincular nota a…</h3><div class="abas-v"><button type="button" data-aba="cliente">Cliente</button><button type="button" data-aba="pedido">Pedido</button></div><input id="busca" placeholder="buscar pelo nome" autocomplete="off"><div class="lista-cli" id="lc"></div><div style="display:flex;gap:8px;margin-top:8px"><button type="button" class="btn sec sm" id="soltar" style="width:auto;min-height:40px;padding:0 12px">Deixar solta</button><button type="button" class="btn sec sm" id="fechar" style="width:auto;min-height:40px;padding:0 12px;margin-left:auto">Fechar</button></div>`;
     document.body.appendChild(f);document.body.appendChild(m);const fecha=()=>{f.remove();m.remove();};f.onclick=fecha;m.querySelector("#fechar").onclick=fecha;
-    const lc=m.querySelector("#lc");const desenha=q=>{const t=(q||"").toLowerCase();lc.innerHTML=lojas.filter(l=>!t||l.nome.toLowerCase().includes(t)).slice(0,40).map(l=>`<button type="button" data-s="${esc(l.slug)}"><b>${esc(nomeLoja(l.nome))}</b><small>${esc(l.endereco||"")}</small></button>`).join("")||'<small class="muted">nada encontrado</small>';
-      lc.querySelectorAll("button").forEach(b=>b.onclick=async()=>{const l=lojas.find(x=>x.slug===b.dataset.s);n.loja={slug:l.slug,nome:nomeLoja(l.nome)};await gravarNota(n);fecha();render();});};
-    desenha("");m.querySelector("#busca").oninput=ev=>desenha(ev.target.value);m.querySelector("#soltar").onclick=async()=>{n.loja=null;await gravarNota(n);fecha();render();};setTimeout(()=>m.querySelector("#busca").focus(),50);}
-  async function render(){const notas=await listarNotas();const grupos={};notas.forEach(n=>{const k=n.loja?"c:"+n.loja.slug:"d:"+n.em.slice(0,10);(grupos[k]=grupos[k]||{k,nome:n.loja?n.loja.nome:"Sem cliente · "+diaDe(n.em),itens:[],loja:n.loja}).itens.push(n);});
-    const ordem=Object.values(grupos).sort((a,b)=>b.itens[0].em.localeCompare(a.itens[0].em));
-    $("#app").innerHTML=`${topo()}<h1>Notas</h1><p class="sub">Tudo que saiu do REC (modo em Configuração). Toque numa nota para atrelar a um cliente; sem cliente, fica no dia.</p>
+    const lc=m.querySelector("#lc");const desenha=q=>{const t=(q||"").toLowerCase();m.querySelectorAll("[data-aba]").forEach(b=>b.classList.toggle("on",b.dataset.aba===aba));
+      const base=aba==="pedido"?comPedido:lojas;
+      lc.innerHTML=base.filter(l=>!t||l.nome.toLowerCase().includes(t)).slice(0,40).map(l=>`<button type="button" data-s="${esc(l.slug)}"><b>${esc(nomeLoja(l.nome))}</b><small>${aba==="pedido"?"Pedido · "+(ETQ[App.etapaDe(l.slug)]||"Entrada"):esc(l.endereco||"")}</small></button>`).join("")||`<small class="muted">${aba==="pedido"?"nenhum pedido aberto":"nada encontrado"}</small>`;
+      lc.querySelectorAll("button").forEach(b=>b.onclick=async()=>{const l=lojas.find(x=>x.slug===b.dataset.s);n.loja={slug:l.slug,nome:nomeLoja(l.nome)};n.pedido=aba==="pedido"?{slug:l.slug,etapa:App.etapaDe(l.slug)}:null;await gravarNota(n);avisar();fecha();render();});};
+    m.querySelectorAll("[data-aba]").forEach(b=>b.onclick=()=>{aba=b.dataset.aba;desenha(m.querySelector("#busca").value);});
+    desenha("");m.querySelector("#busca").oninput=ev=>desenha(ev.target.value);m.querySelector("#soltar").onclick=async()=>{n.loja=null;n.pedido=null;await gravarNota(n);avisar();fecha();render();};setTimeout(()=>m.querySelector("#busca").focus(),50);}
+  const TIPO={audio:"Áudio",foto:"Foto",selfie:"Selfie","video-tras":"Vídeo","video-frente":"Vídeo",tela:"Tela",transcrever:"Texto"};
+  async function render(){const notas=await listarNotas();const grupos={};
+    notas.forEach(n=>{const k=n.pedido?"p:"+n.pedido.slug:n.loja?"c:"+n.loja.slug:"s";const nome=n.pedido?"Pedido · "+(n.loja?n.loja.nome:n.pedido.slug):n.loja?n.loja.nome:"Soltas · sem vínculo";
+      (grupos[k]=grupos[k]||{k,nome,itens:[],loja:n.loja,solta:k==="s"}).itens.push(n);});
+    const ordem=Object.values(grupos).sort((a,b)=>(b.solta-a.solta)||b.itens[0].em.localeCompare(a.itens[0].em));
+    $("#app").innerHTML=`${topo()}<h1>Notas</h1><p class="sub">Tudo que saiu da gravação. As soltas ficam no topo: toque em “vincular” para ligar a um cliente ou a um pedido.</p>
     <section class="card rec-painel-notas" id="recCard" style="display:none"></section>
     <section class="card"><div style="display:flex;gap:8px"><input id="texto" placeholder="nota rápida por escrito…" style="flex:1;font:inherit;font-size:15px;border:1.5px solid var(--linha);border-radius:12px;padding:10px 12px"><button type="button" class="btn sm" id="addTexto" style="width:auto;min-height:44px;padding:0 14px">Salvar</button></div></section>
-    ${ordem.length?ordem.map(g=>`<h2 style="margin:16px 0 8px;font-size:17px">${g.loja?"🏬 ":"📅 "}${esc(g.nome)}${g.loja?` <a href="visita.html?l=${encodeURIComponent(g.loja.slug)}" style="font-size:13px;font-weight:500;margin-left:6px">abrir</a>`:""}</h2>${g.itens.map(n=>`<div class="nota" data-id="${n.id}"><div class="corpo" data-at="${n.id}"><small>${({audio:"🎙",foto:"📷",selfie:"🤳","video-tras":"🎥","video-frente":"🎦",tela:"📱"})[n.tipo]||(n.audio?"🎙":"✎")} ${fmt(n.em)}${n.dur?` · ${dur(n.dur)}`:""} · <u>${n.loja?"trocar cliente":"atrelar a um cliente"}</u></small>${n.texto?`<div style="margin-top:4px">${esc(n.texto)}</div>`:""}${n.audio?`<audio controls preload="none" data-a="${n.id}"></audio>`:""}${n.video?`<video controls playsinline preload="metadata" data-v="${n.id}" style="width:100%;border-radius:12px;margin-top:6px;max-height:260px;background:#000"></video>`:""}${n.foto?`<img data-f="${n.id}" alt="" style="width:100%;border-radius:12px;margin-top:6px;max-height:320px;object-fit:contain;background:#fff">`:""}</div><button type="button" class="x" data-x="${n.id}" aria-label="apagar">✕</button></div>`).join("")}`).join(""):`<p class="ilus">Nenhuma nota ainda. Use o REC na barra.</p>`}
+    ${ordem.length?ordem.map(g=>`<h2 class="g-notas ${g.solta?"solta":""}">${esc(g.nome)}${g.solta?` <span class="qt">${g.itens.length}</span>`:""}${g.loja?` <a href="visita.html?l=${encodeURIComponent(g.loja.slug)}">abrir</a>`:""}</h2>${g.itens.map(n=>`<div class="nota ${g.solta?"solta":""}" data-id="${n.id}"><div class="corpo" data-at="${n.id}"><small>${TIPO[n.tipo]||(n.audio?"Áudio":"Texto")} · ${fmt(n.em)}${n.dur?` · ${dur(n.dur)}`:""}${n.pedido?` · etapa ${ETQ[n.pedido.etapa]||n.pedido.etapa}`:""} · <u>${n.loja||n.pedido?"trocar vínculo":"vincular"}</u></small>${n.texto?`<div style="margin-top:4px">${esc(n.texto)}</div>`:""}${n.audio?`<audio controls preload="none" data-a="${n.id}"></audio>`:""}${n.video?`<video controls playsinline preload="metadata" data-v="${n.id}" style="width:100%;border-radius:12px;margin-top:6px;max-height:260px;background:#000"></video>`:""}${n.foto?`<img data-f="${n.id}" alt="" style="width:100%;border-radius:12px;margin-top:6px;max-height:320px;object-fit:contain;background:#fff">`:""}</div><button type="button" class="x" data-x="${n.id}" aria-label="apagar">✕</button></div>`).join("")}`).join(""):`<p class="ilus">Nenhuma nota ainda. Use a gravação na barra.</p>`}
     ${nav("notas")}`;
     notas.forEach(n=>{if(n.audio){const a=document.querySelector(`audio[data-a="${n.id}"]`);if(a)a.src=typeof n.audio==="string"?n.audio:URL.createObjectURL(n.audio);}if(n.video){const v=document.querySelector(`video[data-v="${n.id}"]`);if(v)v.src=typeof n.video==="string"?n.video:URL.createObjectURL(n.video);}if(n.foto){const f=document.querySelector(`img[data-f="${n.id}"]`);if(f)f.src=typeof n.foto==="string"?n.foto:URL.createObjectURL(n.foto);}});
-    $$("[data-x]").forEach(b=>b.onclick=async()=>{await apagarNota(b.dataset.x);render();});
+    $$("[data-x]").forEach(b=>b.onclick=async()=>{await apagarNota(b.dataset.x);avisar();render();});
     $$("[data-at] small").forEach(sm=>sm.onclick=()=>{const n=notas.find(x=>x.id===sm.closest("[data-at]").dataset.at);escolherCliente(n);});
-    $("#addTexto").onclick=async()=>{const t=$("#texto").value.trim();if(!t)return;await gravarNota({id:"n"+Date.now().toString(36),em:new Date().toISOString(),texto:t,loja:ultima||null});render();};
+    $("#addTexto").onclick=async()=>{const t=$("#texto").value.trim();if(!t)return;await gravarNota({id:"n"+Date.now().toString(36),em:new Date().toISOString(),texto:t,loja:null});avisar();render();};
     painelRec();}
   // ---- painel do REC (o motor fica na casca; aqui só o controle)
   const API=(()=>{try{return window.top.REC_API||null;}catch(e){return null;}})();

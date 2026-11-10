@@ -726,6 +726,11 @@ class H(BaseHTTPRequestHandler):
                     if len(partes) == 5 and partes[4].startswith(("logo.", "foto.")):
                         ct, raw = MOSTRA.logo(partes[3], partes[4])
                         return self._send(200, body=raw, ctype=ct, cache="public, max-age=600")
+                    if len(partes) == 5 and partes[4] == "mensagens":
+                        est = MOSTRA.ler(partes[3])
+                        if not est:
+                            return self._erro(404, "este Mostraí não existe")
+                        return self._send(200, {"mensagens": [{"de": m["de"], "texto": m["texto"], "em": m["em"]} for m in DADOS.mensagens_ler(est["slug"])][-50:]})
                     est = MOSTRA.ler(partes[3]) if len(partes) == 4 else None
                     if not est:
                         return self._erro(404, "este Mostraí não existe")
@@ -746,7 +751,7 @@ class H(BaseHTTPRequestHandler):
                 except (FileNotFoundError, ValueError):
                     return self._erro(404, "arquivo não existe")
                 return self._send(200, body=raw, ctype=ct, cache="private, max-age=31536000, immutable")
-            if p == "/api/clientes" or p.startswith("/api/clientes/") or p == "/api/notas" or p.startswith("/api/estado/") or p == "/api/dados/resumo":
+            if p == "/api/clientes" or p.startswith("/api/clientes/") or p == "/api/notas" or p.startswith("/api/estado/") or p == "/api/dados/resumo" or p.startswith("/api/mensagens"):
                 if not self._eu():
                     return self._erro(401, "entre com a sua conta")
                 try:
@@ -759,6 +764,10 @@ class H(BaseHTTPRequestHandler):
                         return self._send(200, f) if f else self._erro(404, "sem ficha")
                     if p == "/api/notas":
                         return self._send(200, {"notas": DADOS.notas_listar()})
+                    if p == "/api/mensagens":
+                        return self._send(200, {"conversas": DADOS.mensagens_resumo()})
+                    if p.startswith("/api/mensagens/"):
+                        return self._send(200, {"mensagens": DADOS.mensagens_ler(p.split("/")[3])})
                     if p == "/api/dados/resumo":
                         return self._send(200, DADOS.resumo())
                     e = DADOS.estado_ler(p.split("/")[3])
@@ -884,6 +893,16 @@ class H(BaseHTTPRequestHandler):
                     return self._erro(404, "este Mostraí não existe")
                 except ValueError as e:
                     return self._erro(400, str(e))
+            if p.startswith("/api/mostra/") and p.endswith("/mensagem") and len(p.split("/")) == 5:   # cliente → atendimento
+                try:
+                    est = MOSTRA.ler(p.split("/")[3])
+                    if not est:
+                        raise FileNotFoundError
+                    return self._send(200, DADOS.mensagem_gravar(est["slug"], "cliente", self._json().get("texto"), "Mostraí"))
+                except FileNotFoundError:
+                    return self._erro(404, "este Mostraí não existe")
+                except ValueError as e:
+                    return self._erro(400, str(e))
             if p.startswith("/api/mostra/") and len(p.split("/")) == 4:   # programação do cliente: o código é a chave
                 try:
                     return self._send(200, MOSTRA.gravar(p.split("/")[3], self._json()))
@@ -901,6 +920,10 @@ class H(BaseHTTPRequestHandler):
                 return self._send(200, DADOS.nota_gravar(partes[3], self._json_grande(), eu["nome"]))
             if p.startswith("/api/estado/") and len(partes) == 4:
                 return self._send(200, {"valor": DADOS.estado_gravar(partes[3], self._json_grande().get("valor"), eu["nome"])})
+            if p.startswith("/api/mensagens/") and len(partes) == 5 and partes[4] == "lidas":
+                return self._send(200, DADOS.mensagens_lidas(partes[3]))
+            if p.startswith("/api/mensagens/") and len(partes) == 4:   # resposta do atendimento (aparece para o cliente no painel dele)
+                return self._send(200, DADOS.mensagem_gravar(partes[3], "genio", self._json().get("texto"), "app", eu["nome"]))
             return self._erro(404, "não existe")
         except ValueError as e:
             return self._erro(400, str(e))

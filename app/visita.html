@@ -6,7 +6,7 @@
 <title>GênIO · Visita</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="app.css?v=dc7f93536f">
+<link rel="stylesheet" href="app.css?v=742ebe647b">
 <style>
 .cab{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
 .fach{width:100%;aspect-ratio:16/9;border-radius:16px;overflow:hidden;background:var(--lav2);display:grid;place-items:center;position:relative}
@@ -21,7 +21,7 @@
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=dc7f93536f"></script>
+<script src="app.js?v=742ebe647b"></script>
 <script>
 (async()=>{
   const {$,$$,esc,qs,sessao,dados,ficha,estrelasHTML,estado,salvar,nav,topo,voltar,setorNome,nomeLoja,telFmt,cliente,gravarCliente,classificar,definirCliente,menuLongo,ligarLongo,ZONA,entradas,ligarEntradas,abrirLogotipo,logoPrincipal,removerLogo}=App;
@@ -45,6 +45,16 @@
   const prodNomes=p=>String(p||"").split("+").map(x=>PROD_NOME[x]||x).join(" + ");
   // quebra-gelo: curiosidade + o que as avaliações sustentam; sem avaliação negativa, entra o padrão do setor
   const falaGelo=()=>[`${nome}.`,...curios,...GAT.map(g=>`Nas avaliações falam de ${g.tema}: "${(g.trecho||"").replace(/…/g,"")}". ${g.argumento}`)].join(" ");
+  // ---- mensagens do cliente (painel dele / Mostraí): conversa no servidor; abrir a loja marca como lidas
+  let MSGS=[];try{const r=await fetch(`/api/mensagens/${encodeURIComponent(slug)}`,{credentials:"same-origin",cache:"no-store"});if(r.ok)MSGS=(await r.json()).mensagens||[];}catch(err){}
+  if(MSGS.some(m=>!m.lida)){fetch(`/api/mensagens/${encodeURIComponent(slug)}/lidas`,{method:"PUT",credentials:"same-origin",headers:{"Content-Type":"application/json"},body:"{}"}).then(()=>{try{window.top.postMessage({genio:"avisos"},location.origin);}catch(err){}}).catch(()=>{});}
+  const hora=iso=>{const d=new Date(iso);return d.toLocaleDateString("pt-BR",{day:"2-digit",month:"2-digit"})+" "+d.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});};
+  function mensagensHTML(){const novas=MSGS.filter(m=>!m.lida).length;
+    return `<section class="card msgs" id="mensagens"><h2>Mensagens${novas?` <small style="color:#C62828;font-weight:700;font-size:14px">· ${novas} nova(s)</small>`:""}</h2>
+      ${MSGS.length?`<div class="conv">${MSGS.slice(-30).map(m=>`<div class="m ${m.de}"><p>${esc(m.texto)}</p><small>${m.de==="cliente"?"Cliente":esc(m.por||"Você")}${m.canal?" · "+esc(m.canal):""} · ${hora(m.em)}</small></div>`).join("")}</div>`:`<p class="muted" style="margin:0 0 8px">Nenhuma mensagem. O cliente fala com você pelo painel dele (link do Mostraí).</p>`}
+      <div class="resp"><textarea id="respTxt" rows="2" placeholder="Responder ao cliente"></textarea><button type="button" class="btn sm" id="respEnviar" style="width:auto;padding:0 16px">Enviar</button></div></section>`;}
+  document.addEventListener("click",async ev=>{if(!ev.target.closest||!ev.target.closest("#respEnviar"))return;const t=$("#respTxt");const v=t.value.trim();if(!v)return;const b=$("#respEnviar");b.disabled=true;
+    try{const r=await fetch(`/api/mensagens/${encodeURIComponent(slug)}`,{method:"PUT",credentials:"same-origin",headers:{"Content-Type":"application/json"},body:JSON.stringify({texto:v})});if(!r.ok)throw 0;MSGS.push(await r.json());const y=scrollY;render();scrollTo(0,y);}catch(err){b.disabled=false;alert("Não foi: confira a internet.");}});
   // ---- pesquisa rápida da loja: um toque por resposta, grava no servidor na hora
   const SEGS=["cafeteria","restaurante","bar","padaria","mercado/hortifruti","cereais/empório","salão/barbearia","estética","clínica/consultório","farmácia","ótica","pet","loja de roupas/calçados","floricultura/presentes","academia/estúdio","autopeças/oficina","celular/assistência","escritório/imobiliária","escola/curso","embalagens/utilidades","comércio"];
   const PQ=[["degrau","Degrau na entrada",["Não","1 degrau","2 ou mais"]],["alaga","Alaga ou pega chuva na porta",["Não","Sim"]],["porta","Porta abre para",["Dentro","Fora","De correr","Sem porta"]],["vitrine","Vitrine de vidro",["Não","Sim"]],["mesas","Mesinhas na calçada",["Não","Sim"]],["movimento","Movimento agora",["Fraco","Médio","Forte"]],["dono","Quem decide está na loja",["Sim","Não","Volta depois"]]];
@@ -67,6 +77,7 @@
     <div class="cab"><div><h1 style="margin-bottom:2px">${esc(nome)}${l.avulso?` <button type="button" id="edAvulso" class="btn sec sm" style="width:auto;min-height:32px;padding:0 10px;font-size:13px;vertical-align:middle">✎</button>`:""}</h1><p class="sub">${esc(setorNome(l.setor))} · <a href="${l.maps||(l.place_id?`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((l.endereco||l.nome)+", São Paulo")}&query_place_id=${encodeURIComponent(l.place_id)}`:(l.lat&&l.lng?`https://www.google.com/maps/search/?api=1&query=${l.lat},${l.lng}`:`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((l.endereco||l.nome)+", São Paulo")}`))}" target="_blank" rel="noopener" style="color:var(--marca);text-decoration:underline;text-underline-offset:3px">📍 ${esc(l.endereco||"ver no mapa")}</a></p></div><div style="padding-top:8px">${estrelasHTML(l.estrelas)}</div></div>
     ${(()=>{const prod=(c.produtos||[])[0];const capa=fach?[fach,"Fachada"]:prod?[abs(prod.src),"Produto · sem fachada"]:logo?[logo,"Logotipo · sem fachada"]:null;
       return `<div class="fach" data-longo data-src="${esc(capa?capa[0]:"")}">${capa?`<img src="${esc(capa[0])}" alt="" ${capa[1]!=="Fachada"?'style="object-fit:contain;background:#fff"':""}><span class="sel">${capa[1]}</span>`:`<div class="nome-logo"><b>${esc(nome)}</b><small>${esc(setorNome(l.setor))}</small></div><span class="sel">Nome · sem imagem</span>`}</div>`;})()}
+    ${mensagensHTML()}
     ${entradas(slug,"entG")}${L.site&&L.site.estado==="encontrado"?`<a class="btn sec" style="margin:-4px 0 10px;min-height:44px" href="fontes.html?l=${encodeURIComponent(slug)}&tipo=site">🌐 Imagens do site</a>`:""}
     ${pesquisaHTML()}
     <section class="card"><h2>Imagens encontradas <small class="muted" style="font-weight:400;font-size:14px">· segure para classificar</small></h2>
@@ -102,6 +113,7 @@
     const nl=$("#nomeLogo");if(nl)nl.onclick=async()=>{const cv=document.createElement("canvas");const g=cv.getContext("2d");const linhas=nome.length>18?nome.split(/\s+(?=\S+$)|\s-\s| · /).filter(Boolean):[nome];const tam=120;g.font=`700 ${tam}px Rubik, system-ui, sans-serif`;const w=Math.ceil(Math.max(...linhas.map(t=>g.measureText(t).width))+tam*0.6);cv.width=w;cv.height=Math.ceil(linhas.length*tam*1.2+tam*0.5);const g2=cv.getContext("2d");g2.font=`700 ${tam}px Rubik, system-ui, sans-serif`;g2.fillStyle="#1C1635";g2.textAlign="center";g2.textBaseline="top";linhas.forEach((t,i)=>g2.fillText(t,w/2,tam*0.25+i*tam*1.2));
       const png=cv.toDataURL("image/png");c=await cliente(l);c.logos=[{id:"nome"+Date.now().toString(36),src:png,nome:"Logotipo · nome em texto",origem:"nome",largura:cv.width,altura:cv.height,tratado:true,em:new Date().toISOString()},...(c.logos||[])];c.manual={editado:true,tratado:png,largura:cv.width,altura:cv.height,cores:[],camadas:[{nome:"Nome",png}],em:new Date().toISOString()};await gravarCliente(c);render();};const eb=$("#editarLogo");if(eb)eb.onclick=editar;const tb=$("#tratarLogo");if(tb)tb.onclick=editar;
     ligarEntradas(document,l,null,async()=>{c=await cliente(l);render();});
+    if(location.hash==="#mensagens"&&!render._rolou){render._rolou=true;setTimeout(()=>{const m=document.getElementById("mensagens");if(m)m.scrollIntoView({block:"start"});},60);}
     $$(".logos figure").forEach(fg=>{let longo=false;fg.addEventListener("pointerdown",()=>{longo=false;});fg.addEventListener("longo",()=>{longo=true;});fg.onclick=async()=>{if(longo)return;await logoPrincipal(l,fg.dataset.id);c=await cliente(l);render();};});
     ligarLongo(document,async el=>{
       if(el.dataset.id&&el.closest(".logos")){el.dispatchEvent(new Event("longo"));const k=await menuLongo("Este logotipo…",[{k:"usar",ic:"✦",t:"Usar como principal"},{k:"editar",ic:"✂",t:"Editar"},{k:"remover",ic:"🗑",t:"Remover"}]);if(!k)return;

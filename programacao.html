@@ -33,6 +33,11 @@ input[type=text],input[type=date],select{width:100%;font:inherit;font-size:16px;
 .estado .pt{width:10px;height:10px;border-radius:50%;background:#ccc}.estado .pt.ok{background:var(--ok)}.estado .pt.env{background:#E6A700}.estado .pt.erro{background:#B42318}
 .estado a{margin-left:auto;color:var(--roxo);font-weight:700;text-decoration:none}
 .erro{padding:40px 20px;text-align:center}
+.conv{display:flex;flex-direction:column;gap:8px;max-height:300px;overflow:auto;margin:0 0 10px}
+.m{max-width:84%;border-radius:14px;padding:8px 12px;font-size:15px}.m.cliente{align-self:flex-end;background:var(--roxo);color:#fff}.m.genio{align-self:flex-start;background:var(--lav)}
+.m small{display:block;font-size:11px;opacity:.75;margin-top:3px}
+textarea{width:100%;box-sizing:border-box;font:inherit;font-size:16px;padding:10px 12px;border:1px solid #D9D2F0;border-radius:10px;resize:vertical}
+.enviar{margin-top:8px;width:100%;min-height:46px;border:0;border-radius:12px;background:var(--roxo);color:#fff;font:700 15px Rubik,system-ui;cursor:pointer}
 </style>
 </head>
 <body>
@@ -59,7 +64,9 @@ input[type=text],input[type=date],select{width:100%;font:inherit;font-size:16px;
       <label>O que é</label><input type="text" id="dTxt" value="${esc(D.texto)}" maxlength="60" placeholder="Ex.: café + pão na chapa">
       <label>Válido até (some sozinho depois)</label><input type="date" id="dAte" value="${esc(D.ate)}"></div>
     <div class="card"><label>Aviso no rodapé (opcional)</label><input type="text" id="aviso" value="${esc(E.aviso||"")}" maxlength="140" placeholder="Ex.: hoje até as 20h · aceitamos Pix">
-      <label>TV em pé: a imagem está de lado?</label><select id="giro"><option value="0">Não, está certa</option><option value="90">Girar para a direita</option><option value="270">Girar para a esquerda</option></select></div>`;
+      <label>TV em pé: a imagem está de lado?</label><select id="giro"><option value="0">Não, está certa</option><option value="90">Girar para a direita</option><option value="270">Girar para a esquerda</option></select></div>
+    <div class="card"><h2 style="font-size:16px;margin:0 0 8px">Fale com o seu atendente</h2><div class="conv" id="conv"></div><textarea id="msgTxt" rows="2" placeholder="Escreva sua mensagem"></textarea><button type="button" class="enviar" id="msgEnviar">Enviar</button></div>`;
+    $("#msgEnviar").onclick=enviarMsg;desenharConv();
     $("#giro").value=String(E.giro||0);
     const liga=(id,f)=>{$(id).oninput=()=>{f($(id).value);agendar();};};
     liga("#titulo",v=>E.titulo=v);liga("#aviso",v=>E.aviso=v);liga("#dRot",v=>D.rotulo=v);liga("#dVal",v=>D.valor=v);liga("#dTxt",v=>D.texto=v);liga("#dAte",v=>D.ate=v);
@@ -71,6 +78,13 @@ input[type=text],input[type=date],select{width:100%;font:inherit;font-size:16px;
       render();agendar();});
     $("#add").onclick=()=>{E.itens.push({id:"i"+Date.now().toString(36),nome:"",preco:"",desc:"",ativo:true});render();agendar();setTimeout(()=>{const ins=$$("#lista .it input[data-k=nome]");ins[ins.length-1]&&ins[ins.length-1].focus();},50);};}
   let semFoto=false;
+  let CONV=[];const hm=iso=>{const d=new Date(iso);return d.toLocaleDateString("pt-BR",{day:"2-digit",month:"2-digit"})+" "+d.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});};
+  function desenharConv(){const el=$("#conv");if(!el)return;el.innerHTML=CONV.length?CONV.map(m=>`<div class="m ${m.de}">${esc(m.texto)}<small>${m.de==="cliente"?"Você":"Atendimento"} · ${hm(m.em)}</small></div>`).join(""):'<p class="sub" style="margin:0">Dúvidas, ajustes ou pedidos: escreva aqui que o seu atendente responde.</p>';el.scrollTop=el.scrollHeight;}
+  async function puxarConv(){try{const r=await fetch(`/api/mostra/${encodeURIComponent(c)}/mensagens`,{cache:"no-store"});if(!r.ok)return;const d=await r.json();if(JSON.stringify(d.mensagens)!==JSON.stringify(CONV)){CONV=d.mensagens||[];desenharConv();}}catch(e){}}
+  async function enviarMsg(){const t=$("#msgTxt");const v=t.value.trim();if(!v)return;const b=$("#msgEnviar");b.disabled=true;b.textContent="Enviando…";
+    try{const r=await fetch(`/api/mostra/${encodeURIComponent(c)}/mensagem`,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify({texto:v})});if(!r.ok)throw 0;t.value="";await puxarConv();b.textContent="Enviado ✓";setTimeout(()=>{b.textContent="Enviar";b.disabled=false;},1500);}
+    catch(e){b.textContent="Não foi: tente de novo";b.disabled=false;}}
+  setInterval(puxarConv,20000);
   function agendar(){pendente=true;estado("env","Enviando…");clearTimeout(timer);timer=setTimeout(enviar,600);}
   async function enviar(){if(enviando){pendente=true;return;}enviando=true;pendente=false;
     try{const corpo={itens:E.itens,titulo:E.titulo,aviso:E.aviso,destaque:E.destaque,giro:E.giro||0};if(semFoto){corpo.foto=null;semFoto=false;}
@@ -82,7 +96,7 @@ input[type=text],input[type=date],select{width:100%;font:inherit;font-size:16px;
     try{const im=await createImageBitmap(f);const k=Math.min(1,1080/im.width);const cv=document.createElement("canvas");cv.width=Math.round(im.width*k);cv.height=Math.round(im.height*k);cv.getContext("2d").drawImage(im,0,0,cv.width,cv.height);
       const r=await fetch(URL_API+"/foto",{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify({foto:cv.toDataURL("image/jpeg",.84)})});if(!r.ok)throw new Error(r.status);const d=await r.json();E.foto=d.foto;E.v=d.v;render();estado("ok","Na tela · "+agora());}
     catch(e){estado("erro","A foto não subiu: tente de novo.");}};
-  (async()=>{try{const r=await fetch(URL_API,{cache:"no-store"});if(!r.ok)throw 0;E=await r.json();(E.itens||[]).forEach(i=>delete i.destaque);render();estado("ok","Na tela");}catch(e){$("#app").innerHTML='<div class="erro">Este Mostraí não existe ou foi desligado.</div>';estado("erro","Sem programação");}})();
+  (async()=>{try{const r=await fetch(URL_API,{cache:"no-store"});if(!r.ok)throw 0;E=await r.json();(E.itens||[]).forEach(i=>delete i.destaque);render();puxarConv();estado("ok","Na tela");}catch(e){$("#app").innerHTML='<div class="erro">Este Mostraí não existe ou foi desligado.</div>';estado("erro","Sem programação");}})();
 })();
 </script>
 </body>
