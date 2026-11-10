@@ -380,3 +380,4 @@ svg.icone .w{fill:var(--ic-fundo)}
 .g-notas.solta{color:#8A5A00}.g-notas .qt{display:inline-grid;place-items:center;min-width:22px;height:22px;border-radius:999px;background:#F2A33A;color:#1C1635;font-size:12px;font-weight:800;padding:0 6px;vertical-align:2px}
 .nota.solta{box-shadow:inset 4px 0 0 #F2A33A}
 .abas-v{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:0 0 8px}.abas-v button{font:inherit;font-weight:600;min-height:40px;border-radius:10px;border:1.5px solid var(--linha);background:#fff;cursor:pointer}.abas-v button.on{background:var(--marca);border-color:var(--marca);color:#fff}
+.rec-tipos button .ic-modo{display:block;width:26px;height:26px;margin:0 auto 4px;color:var(--marca2)}.rec-tipos button.on .ic-modo{color:inherit}

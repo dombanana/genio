@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#6933C5">
 <link rel="icon" href="../genio-favicon.png">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="stylesheet" href="app.css?v=742ebe647b">
+<link rel="stylesheet" href="app.css?v=a7b7cac413">
 <style>html,body{height:100%;overflow:hidden;padding:0}</style>
 </head>
 <body>
@@ -15,7 +15,7 @@
   <iframe id="tela" allow="camera; microphone; geolocation; display-capture; screen-wake-lock" title="GênIO"></iframe>
   <nav class="nav" id="barra"></nav>
 </div>
-<script src="app.js?v=742ebe647b"></script>
+<script src="app.js?v=a7b7cac413"></script>
 <script>
 (()=>{
   const {$,esc,ICONES,gravarNota}=App;
@@ -45,7 +45,10 @@
       +`<span class="vao"></span>`+grupo("Gravação",[rec,item("notasLista","Notas","notas.html",on("notas"))]);
     // REC é um botão à parte: um toque grava no modo parametrizado em Notas; outro toque para
     $("#rec").onclick=async()=>{if(REC.ativo){await parar();return;}const tipo=localStorage.getItem("rec-tipo")||"audio",tela=localStorage.getItem("rec-tela")!=="0";
-      try{if(tipo==="foto"||tipo==="selfie"){await foto(tipo==="selfie");if(atual.startsWith("notas"))fr.contentWindow.location.reload();return;}await iniciar(tipo,{telaAcesa:tela});}catch(e){alert(e.message);}};
+      // foto e vídeo usam a câmera do próprio celular (o navegador não grava vídeo direito); áudio e transcrição gravam aqui
+      try{if(tipo==="foto"){await foto(false);if(atual.startsWith("notas"))fr.contentWindow.location.reload();return;}
+        if(tipo==="video-tras"||tipo==="video-frente"){await video(tipo==="video-frente");if(atual.startsWith("notas"))fr.contentWindow.location.reload();return;}
+        await iniciar(tipo==="transcrever"?"transcrever":"audio",{telaAcesa:tela});}catch(e){alert(e.message);}};
     $("#barra").querySelectorAll("[data-ir]").forEach(a=>a.onclick=ev=>{ev.preventDefault();ir(a.dataset.ir);});pintarMonitor();}
   // conferência das ocorrências em segundo plano: a própria tela de pedidos conta (mesma regra) e avisa a casca
   const conferir=()=>{const f=document.createElement("iframe");f.hidden=true;f.src="pedidos.html?contar=1&t="+Date.now();document.body.appendChild(f);setTimeout(()=>f.remove(),60000);};
@@ -90,8 +93,14 @@
   function foto(frente){return new Promise(res=>{const i=document.createElement("input");i.type="file";i.accept="image/*";i.capture=frente?"user":"environment";i.style.display="none";document.body.appendChild(i);let ok=false;
     i.onchange=async()=>{const f=i.files&&i.files[0];i.remove();if(!f)return res(false);ok=true;await gravarNota({id:"n"+Date.now().toString(36),em:new Date().toISOString(),tipo:frente?"selfie":"foto",foto:f,loja:lojaAtual()});res(true);};
     i.addEventListener("cancel",()=>{i.remove();res(false);});i.click();});}
+  // vídeo: câmera do aparelho (traseira ou frontal) → nota com vídeo, guardada no servidor
+  function video(frente){return new Promise(res=>{const i=document.createElement("input");i.type="file";i.accept="video/*";i.capture=frente?"user":"environment";i.style.display="none";document.body.appendChild(i);
+    i.onchange=async()=>{const f=i.files&&i.files[0];i.remove();if(!f)return res(false);if(f.size>40*1024*1024){alert(`Este vídeo tem ${Math.round(f.size/1048576)} MB e passa do limite de 40 MB. Grave um trecho mais curto.`);return res(false);}
+      const d=await new Promise(ok=>{const v=document.createElement("video");v.preload="metadata";v.onloadedmetadata=()=>{ok(v.duration||0);URL.revokeObjectURL(v.src);};v.onerror=()=>ok(0);v.src=URL.createObjectURL(f);});
+      await gravarNota({id:"n"+Date.now().toString(36),em:new Date().toISOString(),tipo:frente?"video-frente":"video-tras",video:f,dur:d,loja:lojaAtual()});res(true);};
+    i.addEventListener("cancel",()=>{i.remove();res(false);});i.click();});}
   // API para a tela de Notas (mesma origem)
-  window.REC_API={estado,iniciar,pausar,retomar,parar,foto,telaAcesa,ouvir(f){REC.ouvintes.add(f);return()=>REC.ouvintes.delete(f);}};
+  window.REC_API={estado,iniciar,pausar,retomar,parar,foto,video,telaAcesa,ouvir(f){REC.ouvintes.add(f);return()=>REC.ouvintes.delete(f);}};
   marcar();
 })();
 </script>
