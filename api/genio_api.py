@@ -497,6 +497,23 @@ def kit_aplicar(d):
             except Exception: pass
     return {"kit": kit, "produto": pid, "referencia": ref, "jpg": "data:image/jpeg;base64," + base64.b64encode(open(saida, "rb").read()).decode()}
 
+def fundo_da_marca(img):
+    """Cor do fundo da arte original: a cor que domina a moldura da imagem (3% de cada lado). Fundo transparente
+    ou moldura sem cor dominante (foto) → None. Devolve (hex, parte da moldura com essa cor)."""
+    import numpy as np
+    h, w = img.shape[:2]; b = max(2, int(min(h, w) * 0.03))
+    mold = np.concatenate([img[:b].reshape(-1, 4), img[-b:].reshape(-1, 4), img[:, :b].reshape(-1, 4), img[:, -b:].reshape(-1, 4)])
+    opaco = mold[mold[:, 3] > 200][:, :3].astype(np.int32)
+    if len(opaco) < 0.6 * len(mold):
+        return None, 0.0
+    q = (opaco // 16); chave = q[:, 0] * 256 + q[:, 1] * 16 + q[:, 2]
+    vals, cont = np.unique(chave, return_counts=True); top = vals[np.argmax(cont)]
+    sel = opaco[chave == top]; conf = float(len(sel) / len(mold))
+    if conf < 0.45:
+        return None, round(conf, 2)
+    bgr = np.median(sel, axis=0)
+    return "#%02x%02x%02x" % (int(bgr[2]), int(bgr[1]), int(bgr[0])), round(conf, 2)
+
 def marca_preparar(d):
     """Passada 1 (grátis): fundo removido (rembg, se instalado) + camadas por cor (k-means OpenCV) para o representante corrigir no editor."""
     import numpy as np, cv2
@@ -511,6 +528,7 @@ def marca_preparar(d):
     h, w = img.shape[:2]; esc = min(1.0, 1400 / max(h, w))
     if esc < 1:
         img = cv2.resize(img, (int(w * esc), int(h * esc)), interpolation=cv2.INTER_AREA); h, w = img.shape[:2]
+    fundo_hex, fundo_conf = fundo_da_marca(img)   # cor do fundo da arte antes do recorte (vira a cor base dos produtos)
     sem_fundo = None
     try:
         from rembg import remove
@@ -548,7 +566,7 @@ def marca_preparar(d):
             camadas.append({"nome": "Cor", "hex": hexc, "area": cores[-1]["area"], "png": "data:image/png;base64," + base64.b64encode(buf.tobytes()).decode()})
         camadas.sort(key=lambda x: -x["area"]); cores.sort(key=lambda x: -x["area"])
     ok, buf = cv2.imencode(".png", img)
-    return {"sem_fundo": "data:image/png;base64," + base64.b64encode(buf.tobytes()).decode(), "fundo_removido_por": sem_fundo or None, "cores": cores, "camadas": camadas, "largura": w, "altura": h}
+    return {"sem_fundo": "data:image/png;base64," + base64.b64encode(buf.tobytes()).decode(), "fundo_removido_por": sem_fundo or None, "fundo_hex": fundo_hex, "fundo_conf": fundo_conf, "cores": cores, "camadas": camadas, "largura": w, "altura": h}
 
 def ia_fundo(d):
     """Fundo/composição por IA para cartão, flyer e banner — só a composição (a marca e os textos ficam como camadas por cima).

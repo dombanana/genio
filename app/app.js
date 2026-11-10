@@ -188,12 +188,12 @@ const App=(()=>{
     const r=await fetch("/api/marca/preparar",{method:"POST",credentials:"same-origin",headers:{"Content-Type":"application/json"},body:JSON.stringify({png})});const d=await r.json().catch(()=>({}));
     if(!r.ok||!d.sem_fundo)return {ok:false,motivo:d.mensagem||d.erro||("servidor "+r.status)};
     const camadas=(d.camadas||[]).map((x,i)=>({nome:i===0?"Cor principal":(x.nome||"Cor")+" "+(x.hex||""),cor:x.hex||null,png:x.png,area:x.area}));
-    c.manual={editado:true,tratado:d.sem_fundo,largura:d.largura,altura:d.altura,cores:(d.cores||[]).map(x=>({nome:x.nome||"Cor",hex:x.hex,area:x.area})),camadas:camadas.length>1?camadas:[{nome:"Logotipo",png:d.sem_fundo}],separado:true,auto:true,por:d.fundo_removido_por||"servidor",em:new Date().toISOString()};
+    c.manual={editado:true,tratado:d.sem_fundo,fundoMarca:d.fundo_hex||null,largura:d.largura,altura:d.altura,cores:(d.cores||[]).map(x=>({nome:x.nome||"Cor",hex:x.hex,area:x.area})),camadas:camadas.length>1?camadas:[{nome:"Logotipo",png:d.sem_fundo}],separado:true,auto:true,por:d.fundo_removido_por||"servidor",em:new Date().toISOString()};
     p.tratado=true;p.src=d.sem_fundo;await gravarCliente(c);return {ok:true,por:d.fundo_removido_por};}
   // ---- arte automática: logotipo tratado centralizado preenchendo a área segura do gabarito, cor padrão do material
   const COR_PADRAO={capacho:"#2B2B2D",rigido:"#F4F1EA",vinil:null,tecido:"#F4F1EA",papel:"#FFFFFF",lona:"#FFFFFF",carimbo:null};
   const PRODUTOS_IDS=["capacho","placas","adesivos","uniformes","impressos","panfleto","banners","parede","brindes","carimbo","windbanner","faixa","folheto","camiseta","bone","avental"];
-  let _G=null;const gabaritos=async()=>_G||(_G=await (await fetch("gabaritos.json?v=b9fb14be94")).json());
+  let _G=null;const gabaritos=async()=>_G||(_G=await (await fetch("gabaritos.json?v=5f950285cb")).json());
   const carregarImg=src=>new Promise(res=>{const i=new Image();i.crossOrigin="anonymous";i.onload=()=>res(i);i.onerror=()=>res(null);i.src=src;});
   // ---- carimbo: só texto — nome, razão social, CNPJ (negrito), endereço, telefone; nunca logotipo
   async function dadosCarimbo(l){const cad=await ficha(l.slug).catch(()=>null);const L=(cad&&cad.lacunas)||{};const leit=(L.leitura||{}).valor||"";const razao=((leit.match(/Razão social: ([^·]+)/)||[])[1]||"").trim();const cnpj=((leit.match(/CNPJ:? ?([\d./-]{14,18})/)||[])[1]||"");
@@ -237,13 +237,13 @@ const App=(()=>{
     const aw=W-2*(B+S),ah=H-2*(B+S);const f=Math.min(aw/LW,(P.ancora==="topo"?ah*0.45:ah)/LH);const w=LW*f,h=LH*f;const x=(W-w)/2,y=P.ancora==="topo"?B+S+ah*0.05:(H-h)/2;
     const fundo=P.sem_fundo?null:(COR_PADRAO[P.superficie]===undefined?"#FFFFFF":COR_PADRAO[P.superficie]);
     // kit de 14 setores (10/11): a maquete frontal do ramo da loja é a arte de partida de todos os produtos
-    await carregarScript("qr.js?v=b9fb14be94");await carregarScript("impressos.js?v=b9fb14be94");await carregarScript("kits14.js?v=b9fb14be94");
+    await carregarScript("qr.js?v=5f950285cb");await carregarScript("impressos.js?v=5f950285cb");await carregarScript("kits14.js?v=5f950285cb");
     if(window.Kits14&&window.Kits14.ARQ[pid]){const K=await window.Kits14.montar(App,pid,c,l,{W,H,B,S,im,rec});
       if(K){const doc={fundo:K.fundo,fundoImg:null,el:K.el,campos:null,auto:true,kit:KIT14,setorKit:K.setorKit,kitRef:K.kitRef,W,H};const imgs={[c.manual.tratado]:im};
         const k=Math.min(1,1400/Math.max(W,H));const cv=document.createElement("canvas");cv.width=Math.round(W*k);cv.height=Math.round(H*k);const g=cv.getContext("2d");g.scale(k,k);
         desenharElementos(g,doc.el.filter(e=>!e.sem),imgs,doc);const pngArte=cv.toDataURL("image/png");
         g.setTransform(1,0,0,1,0,0);g.clearRect(0,0,cv.width,cv.height);g.scale(k,k);if(doc.fundo){g.fillStyle=doc.fundo;g.fillRect(0,0,W,H);}desenharElementos(g,doc.el,imgs,doc);const png=cv.toDataURL(doc.fundo?"image/jpeg":"image/png",0.9);
-        const out={doc,png,pngArte,material:doc.fundo,w_cm:P.w_cm,h_cm:P.h_cm,sangria_mm:sang,em:new Date().toISOString(),contexto:null,kitBase:KIT14,paleta:K.paleta};
+        const out={doc,png,pngArte,material:K.material!==undefined?K.material:doc.fundo,w_cm:P.w_cm,h_cm:P.h_cm,sangria_mm:sang,em:new Date().toISOString(),contexto:null,kitBase:KIT14,paleta:K.paleta};
         if(pid==="impressos"||pid==="panfleto"){try{const ra=await window.Impressos.arteImpressa(App,pid,c,l,{P,G,W,H,B,S,PX,im,sang,rec});out.verso=ra.verso;}catch(e){}}  // verso: carimbo/orientações do kit RA
         return out;}}
     if(pid==="panfleto"){const M=cardapioDe();const f1=B+S,ah3=(H-2*(B+S))/3;const lf=Math.min(aw/im.naturalWidth,(ah3*0.8)/im.naturalHeight);const lw=im.naturalWidth*lf,lh=im.naturalHeight*lf;

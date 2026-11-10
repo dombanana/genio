@@ -122,10 +122,13 @@
         else{let d;if(e.tagName==="line")d=`M${e.getAttribute("x1")} ${e.getAttribute("y1")} L${e.getAttribute("x2")} ${e.getAttribute("y2")}`;else if(e.tagName==="rect"){const x=+e.getAttribute("x"),y=+e.getAttribute("y"),w=+e.getAttribute("width"),h=+e.getAttribute("height");d=`M${x} ${y} h${w} v${h} h${-w} Z`;}else d=e.getAttribute("d");
           el.push({tipo:"vetor",id:id(),nome:e.tagName==="line"?"Linha":"Forma",d,m:[m.a,m.b,m.c,m.d,m.e,m.f],fill:e.tagName==="line"?null:fill,stroke:stroke||(e.tagName==="line"?"#000":null),sw,dash:e.getAttribute("stroke-dasharray")||null,ox:b.x,oy:b.y,ow:Math.max(b.w,1),oh:Math.max(b.h,1),x:b.x,y:b.y,w:Math.max(b.w,1),h:Math.max(b.h,1),kit:true,superficie:!art||undefined,sem:!art||undefined});}}
       for(const q of qrs)el.push({tipo:"qr",id:id(),nome:"QR · "+ct.urlTipo,texto:ct.url,x:q.x,y:q.y,w:Math.min(q.w,q.h),h:Math.min(q.w,q.h),cor:"#101820",kit:true});
-      // 6. logotipo da loja na caixa do "GIO" (contain); sem contraste com o fundo → apoio claro/escuro
+      // 6. cor base (decisão do dono, 10/11): a cor do fundo da arte antes do recorte vira a cor do produto;
+      //    sem essa cor e com logotipo claro, a base é a cor escura da marca (arte branca nunca vai em fundo branco)
       const im=geo.im,rec=geo.rec;const LW=rec?rec.sw:im.naturalWidth,LH=rec?rec.sh:im.naturalHeight;const luz=luzLogo(im,rec);
+      const fm=norm(c.manual&&c.manual.fundoMarca);let base=fm||(luz>170?pal.T:null);
+      if(base&&nId==="01")base=maisProxima(base,CORES_CAPACHO);   // capacho: a cor de vinil disponível mais próxima
+      const TEXTEIS=new Set(["04","09","14","15","16"]);
       for(const L of logos){const b=L.caixa;const f=Math.min(b.w*1.12/LW,b.h/LH);const w=LW*f,h=LH*f;const x=b.x+(b.w-w)/2,y=b.y+(b.h-h)/2;
-        const atras=corAtras(el,x+w/2,y+h/2)||"#fffdf7";if(!SEM_SUPERFICIE.has(nId)&&Math.abs(lum(atras)-luz)<70){const p=Math.min(w,h)*0.14;el.push({tipo:"forma",forma:"ret",id:id(),nome:"Apoio da marca",x:x-p,y:y-p,w:w+2*p,h:h+2*p,cor:lum(atras)<128?"#ffffff":pal.T,borda:0,bordaCor:"#fff",raio:p,kit:true});}
         el.push({tipo:"camada",id:id(),nome:"Logotipo",src:c.manual.tratado,recorte:rec||undefined,cor:null,usarCor:false,x,y,w,h,borda:0,bordaCor:"#FFFFFF",grupo:"logo",rot:L.ang||0});arteCx.push({x,y,w,h});}
       // 7. enquadramento no gabarito: superfície estica até a sangria; o resto entra proporcional (contain) na área útil
       const uni=bs=>bs.length?{x:Math.min(...bs.map(b=>b.x)),y:Math.min(...bs.map(b=>b.y)),w:Math.max(...bs.map(b=>b.x+b.w))-Math.min(...bs.map(b=>b.x)),h:Math.max(...bs.map(b=>b.y+b.h))-Math.min(...bs.map(b=>b.y))}:{x:0,y:0,w:VW,h:VH};
@@ -136,16 +139,47 @@
       const {W,H,B}=geo;const tw=W-2*B,th=H-2*B;const k=Math.min(tw/corte.w,th/corte.h);const ox=B+(tw-corte.w*k)/2-corte.x*k,oy=B+(th-corte.h*k)/2-corte.y*k;
       for(const e of el){if(e.estica){e.x=0;e.y=0;e.w=W;e.h=H;e.raio=0;e.borda=0;delete e.estica;e.superficie=true;continue;}
         e.x=ox+e.x*k;e.y=oy+e.y*k;e.w*=k;e.h*=k;if(e.tam)e.tam=Math.round(e.tam*k*10)/10;if(e.borda)e.borda*=k;if(e.raio)e.raio*=k;}
+      // 8. cor base na superfície (a esticada até a sangria, as do kit e o painel principal da peça)
+      if(base&&!SEM_SUPERFICIE.has(nId)){for(const e of el){const grande=(e.tipo==="forma"||e.tipo==="vetor")&&e.w*e.h>=W*H*0.5&&e.grupo!=="logo";if(!(e.superficie||grande))continue;
+          if(e.tipo==="forma"&&e.cor&&e.cor!=="transparent")e.cor=base;else if(e.tipo==="vetor"&&e.fill&&e.fill!=="transparent")e.fill=base;}
+        // contraste: textos, traços e QR do kit que ficaram sobre a base continuam legíveis
+        const melhor=bg=>["#ffffff",pal.T,"#1c1635",pal.A].sort((a,b)=>contraste(b,bg)-contraste(a,bg))[0];
+        for(const e of el){if(e.superficie||e.grupo==="logo")continue;const at=corAtras(el.slice(0,el.indexOf(e)),e.x+e.w/2,e.y+e.h/2);if(!at)continue;
+          if(e.tipo==="texto"&&contraste(e.cor,at)<3)e.cor=melhor(at);
+          else if(e.tipo==="vetor"){if(e.stroke&&contraste(e.stroke,at)<1.6)e.stroke=melhor(at);if(e.fill&&e.fill!=="transparent"&&e.w*e.h<W*H*0.5&&contraste(e.fill,at)<1.4)e.fill=melhor(at);}
+          else if(e.tipo==="forma"&&e.cor&&e.cor!=="transparent"&&e.w*e.h<W*H*0.5&&contraste(e.cor,at)<1.3)e.cor=mix(e.cor,lum(at)<128?"#ffffff":"#000000",0.35);
+          else if(e.tipo==="qr")e.cor=lum(at)<128?"#ffffff":"#101820";}}
+      if(base&&TEXTEIS.has(nId)){const melhor=bg=>["#ffffff",pal.T,"#1c1635"].sort((a,b)=>contraste(b,bg)-contraste(a,bg))[0];
+        for(const e of el){if(e.grupo==="logo")continue;if(e.tipo==="texto"&&contraste(e.cor,base)<3)e.cor=melhor(base);else if(e.tipo==="vetor"&&e.stroke&&contraste(e.stroke,base)<1.6)e.stroke=melhor(base);}}
+      // 9. logotipo sem contraste com o que está atrás → apoio claro/escuro (também no adesivo de parede quando a arte é clara)
+      for(const L of el.filter(e=>e.grupo==="logo")){const at=corAtras(el.slice(0,el.indexOf(L)),L.x+L.w/2,L.y+L.h/2)||(SEM_SUPERFICIE.has(nId)?(nId==="08"?"#f2efe8":null):"#fffdf7");if(!at)continue;
+        const cinza=rgb2([luz,luz,luz]);
+        // painel atrás da marca sem contraste: primeiro tenta pintar o painel com a cor base; não dando, entra o apoio
+        if(base&&contraste(cinza,at)<3&&contraste(cinza,base)>=3){const atrasEl=[...el.slice(0,el.indexOf(L))].reverse().find(e=>((e.tipo==="forma"&&e.cor&&e.cor!=="transparent")||(e.tipo==="vetor"&&e.fill&&e.fill!=="transparent"))&&L.x+L.w/2>=e.x&&L.x+L.w/2<=e.x+e.w&&L.y+L.h/2>=e.y&&L.y+L.h/2<=e.y+e.h);
+          if(atrasEl&&!atrasEl.superficie){if(atrasEl.tipo==="forma")atrasEl.cor=base;else atrasEl.fill=base;continue;}}
+        if((!SEM_SUPERFICIE.has(nId)||(nId==="08"&&luz>170))&&(Math.abs(lum(at)-luz)<70||contraste(cinza,at)<2.5)){const p=Math.min(L.w,L.h)*0.14;
+          el.splice(el.indexOf(L),0,{tipo:"forma",forma:"ret",id:id(),nome:"Apoio da marca",x:L.x-p,y:L.y-p,w:L.w+2*p,h:L.h+2*p,cor:lum(at)<128?"#ffffff":(base&&contraste(base,"#ffffff")>2?base:pal.T),borda:0,bordaCor:"#fff",raio:p,kit:true});}}
       const fundoEl=el.find(e=>e.superficie&&e.tipo==="forma"&&e.w===W&&e.h===H);
       const fundo=SEM_SUPERFICIE.has(nId)?null:(fundoEl?fundoEl.cor:"#fffdf7");
       // região que a foto do kit recebe: a superfície inteira quando há superfície (placa, cartão, faixa…); senão a caixa da arte
       const esticou=el.some(e=>e.superficie&&e.w===W&&e.h===H);
       const kitRef=sup?(esticou?{x:B,y:B,w:tw,h:th}:{x:ox+corte.x*k,y:oy+corte.y*k,w:corte.w*k,h:corte.h*k}):{x:ox+ref.x*k,y:oy+ref.y*k,w:ref.w*k,h:ref.h*k};
-      return {el,fundo,kitRef,paleta:pal,setorKit:setor,arquivo:arq};
+      // tecidos: a cor base tinge a peça na foto (camiseta, polo, boné, avental, ecobag)
+      const material=TEXTEIS.has(nId)?(base||null):(fundo||null);
+      return {el,fundo,material,base,fundoMarca:fm,kitRef,paleta:pal,setorKit:setor,arquivo:arq};
     }finally{K.host.remove();}}
+  // cores de vinil do capacho (as mesmas do editor)
+  const CORES_CAPACHO=["#2B2B2D","#9A9B9D","#1F3A5F","#7A1E1E","#2E5E3A","#EE6A1D","#C8A95B","#5B3A29"];
+  const lab=h=>{const [r,g,b]=hex2(h).map(v=>{v/=255;return v<=0.04045?v/12.92:Math.pow((v+0.055)/1.055,2.4);});const X=(r*0.4124+g*0.3576+b*0.1805)/0.95047,Y=r*0.2126+g*0.7152+b*0.0722,Z=(r*0.0193+g*0.1192+b*0.9505)/1.08883;const f=t=>t>0.008856?Math.cbrt(t):7.787*t+16/116;return [116*f(Y)-16,500*(f(X)-f(Y)),200*(f(Y)-f(Z))];};
+  const maisProxima=(h,lista)=>{const a=lab(h);return lista.slice().sort((x,y)=>{const p=lab(x),q=lab(y);return Math.hypot(p[0]-a[0],p[1]-a[1],p[2]-a[2])-Math.hypot(q[0]-a[0],q[1]-a[1],q[2]-a[2]);})[0];};
+  // cor do fundo da arte original (moldura de 3%): a mesma regra do servidor; transparente ou sem cor dominante → null
+  function fundoDaImagem(im){try{const s=Math.min(1,400/Math.max(im.naturalWidth||im.width,im.naturalHeight||im.height));const W=Math.max(8,Math.round((im.naturalWidth||im.width)*s)),H=Math.max(8,Math.round((im.naturalHeight||im.height)*s));
+    const cv=document.createElement("canvas");cv.width=W;cv.height=H;const g=cv.getContext("2d");g.drawImage(im,0,0,W,H);const d=g.getImageData(0,0,W,H).data;const b=Math.max(2,Math.round(Math.min(W,H)*0.03));
+    const cont={},soma={};let tot=0,op=0;for(let y=0;y<H;y++)for(let x=0;x<W;x++){if(!(x<b||y<b||x>=W-b||y>=H-b))continue;tot++;const i=(y*W+x)*4;if(d[i+3]<=200)continue;op++;const k=(d[i]>>4)*256+(d[i+1]>>4)*16+(d[i+2]>>4);cont[k]=(cont[k]||0)+1;(soma[k]=soma[k]||[0,0,0]);soma[k][0]+=d[i];soma[k][1]+=d[i+1];soma[k][2]+=d[i+2];}
+    if(op<0.6*tot)return null;let top=null;for(const k in cont)if(top===null||cont[k]>cont[top])top=k;if(!top||cont[top]<0.45*tot)return null;return rgb2(soma[top].map(v=>v/cont[top]));}catch(e){return null;}}
   function corAtras(el,x,y){for(let i=el.length-1;i>=0;i--){const e=el[i];if((e.tipo==="forma"&&e.forma==="ret"&&e.cor&&e.cor!=="transparent")||(e.tipo==="vetor"&&e.fill&&e.fill!=="transparent")){if(x>=e.x&&x<=e.x+e.w&&y>=e.y&&y<=e.y+e.h)return e.cor||e.fill;}}return null;}
   function luzLogo(im,rec){try{const cv=document.createElement("canvas");cv.width=48;cv.height=48;const g=cv.getContext("2d");if(rec)g.drawImage(im,rec.sx,rec.sy,rec.sw,rec.sh,0,0,48,48);else g.drawImage(im,0,0,48,48);const d=g.getImageData(0,0,48,48).data;let s=0,n=0;for(let i=0;i<d.length;i+=4){if(d[i+3]>100){s+=0.2126*d[i]+0.7152*d[i+1]+0.0722*d[i+2];n++;}}return n?s/n:128;}catch(e){return 128;}}
   // ---- foto do produto no ramo da loja (para a vitrine de produtos)
   async function foto(setor,pid,comArte){const s=kitDe(setor),arq=ARQ[pid];if(!arq)return null;try{const cal=await json(`${BASE}${s}/calibracao.json`);const p=cal.produtos[arq.slice(0,2)];if(!p)return null;return `${BASE}${s}/${comArte?p.demo:p.arquivo}`.replace(/\/[^/]+\/\.\.\//,"/");}catch(e){return null;}}
-  window.Kits14={montar,kitDe,ARQ,foto,papeis,carregarFontes};
+  window.Kits14={montar,kitDe,ARQ,foto,papeis,carregarFontes,fundoDaImagem,maisProxima,CORES_CAPACHO};
 })();

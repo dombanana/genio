@@ -6,7 +6,7 @@
 <title>GênIO · Logotipo</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="app.css?v=b9fb14be94">
+<link rel="stylesheet" href="app.css?v=5f950285cb">
 <style>
 body.com-acoes{padding-bottom:calc(150px + env(safe-area-inset-bottom,0))}
 .palco{position:relative;height:min(50vh,480px);background:repeating-conic-gradient(#e9e5f3 0 25%,#fff 0 50%) 0 0/18px 18px;border-radius:16px;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
@@ -27,7 +27,7 @@ body.com-acoes{padding-bottom:calc(150px + env(safe-area-inset-bottom,0))}
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=b9fb14be94"></script>
+<script src="app.js?v=5f950285cb"></script>
 <script>
 (async()=>{
   const {$,$$,esc,qs,sessao,dados,nav,topo,voltar,nomeLoja,cliente,gravarCliente,definirCliente}=App;
@@ -57,6 +57,8 @@ body.com-acoes{padding-bottom:calc(150px + env(safe-area-inset-bottom,0))}
   let r=await carregar(prox);
   if(r!=="ok"&&thumb){r=await carregar(`/api/img?u=${encodeURIComponent(thumb)}`);if(r==="ok")$("#st").textContent="Imagem grande não abriu; usando a miniatura.";}
   if(r!=="ok"){$("#st").textContent="Não consegui abrir esta imagem. Tente outra.";return;}
+  // cor do fundo da arte antes de qualquer recorte: vira a cor base dos produtos (capacho, impressos, uniformes…)
+  let FUNDO=null;try{await App.carregarScript("kits14.js?v=5f950285cb");FUNDO=window.Kits14.fundoDaImagem(cv);}catch(e){}
   $("#st").textContent=`${W}×${H} px · pinça para ampliar · salve inteiro ou marque a área`;$("#salvar").disabled=false;
   const pos=ev=>{const b=cv.getBoundingClientRect();return {x:Math.floor((ev.clientX-b.left)/b.width*W),y:Math.floor((ev.clientY-b.top)/b.height*H)};};
   const posPalco=ev=>{const b=palco.getBoundingClientRect();return {x:ev.clientX-b.left,y:ev.clientY-b.top};};
@@ -115,7 +117,7 @@ body.com-acoes{padding-bottom:calc(150px + env(safe-area-inset-bottom,0))}
     // vários logotipos por loja: o novo entra como principal; os anteriores ficam guardados
     c.aprovacao="ok";c.logos=[{id:"logo"+Date.now().toString(36),src:png,nome:"Logotipo"+(fonte?" · "+fonte:""),origem:"escolha",de:u.startsWith("data:")?"":u,largura:W,altura:H,tratado:hist.length>0,em:new Date().toISOString()},...(c.logos||[])].slice(0,12);
     // só conta como tratado se houve edição aqui (fundo tirado, recorte, giro); salvo inteiro sem mexer fica "falta tratar" → recorte em lote ou manual depois
-    if(hist.length>0)c.manual={editado:true,tratado:png,largura:W,altura:H,cores:(c.manual&&c.manual.cores)||[],camadas:[{nome:"Logotipo",png}],em:new Date().toISOString()};else if(c.manual&&c.manual.tratado!==png)delete c.manual;
+    if(hist.length>0)c.manual={editado:true,tratado:png,fundoMarca:FUNDO||(c.manual&&c.manual.fundoMarca)||null,largura:W,altura:H,cores:(c.manual&&c.manual.cores)||[],camadas:[{nome:"Logotipo",png}],em:new Date().toISOString()};else if(c.manual&&c.manual.tratado!==png)delete c.manual;
     await gravarCliente(c);location.href=`visita.html?l=${encodeURIComponent(slug)}`;};
 })();
 </script>

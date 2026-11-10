@@ -422,3 +422,10 @@ svg.icone .w{fill:none}
 @media (max-width:420px){.topo .papel{display:none}.meta-chip{gap:6px;padding:5px 8px}}
 .metas-f{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.metas-f label{font-size:13px;color:var(--texto2);font-weight:600}.metas-f input{display:block;width:100%;box-sizing:border-box;font:inherit;font-size:17px;margin-top:4px;border:1.5px solid var(--linha);border-radius:10px;padding:9px 10px}
 .meta-pop .mp-g.dois{grid-template-columns:repeat(2,1fr)}.meta-pop .mp-g.dois b{font-size:19px}
+
+/* cor da peça direto no cartão do uniforme */
+.cores-peca{display:flex;flex-wrap:wrap;gap:6px;margin:0 12px 8px}
+.cores-peca button{width:28px;height:28px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1.5px var(--linha);cursor:pointer;padding:0}
+.cores-peca button.on{box-shadow:0 0 0 2.5px var(--marca)}
+.cores-peca button.marca{outline:2px dashed var(--marca2);outline-offset:1px}
+.prod.trocando .cena{opacity:.45;transition:opacity .2s}

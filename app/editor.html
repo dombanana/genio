@@ -6,7 +6,7 @@
 <title>GênIO · Edição do produto</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="app.css?v=b9fb14be94">
+<link rel="stylesheet" href="app.css?v=5f950285cb">
 <style>
 body.com-acoes{padding-bottom:calc(250px + env(safe-area-inset-bottom,0))}
 .prancheta{position:relative;background:repeating-conic-gradient(#e9e5f3 0 25%,#fff 0 50%) 0 0/18px 18px;border-radius:16px;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;height:min(72vw,460px);margin:0 0 8px}
@@ -39,8 +39,8 @@ body.com-acoes{padding-bottom:calc(250px + env(safe-area-inset-bottom,0))}
 <script>window.giroLivre=false;</script></head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=b9fb14be94"></script>
-<script src="qr.js?v=b9fb14be94"></script>
+<script src="app.js?v=5f950285cb"></script>
+<script src="qr.js?v=5f950285cb"></script>
 <script>
 (async()=>{
   const {$,$$,esc,qs,sessao,dados,ficha,nav,topo,voltar,nomeLoja,telFmt,cliente,gravarCliente,definirCliente,setorNome}=App;
@@ -49,7 +49,7 @@ body.com-acoes{padding-bottom:calc(250px + env(safe-area-inset-bottom,0))}
   if(!l){$("#app").innerHTML=`${topo()}<p>Loja não encontrada.</p>${nav("rota")}`;return;}
   const nome=nomeLoja(l.nome);definirCliente(l);let c=await App.garantirCamadas(l);const man=c.manual||null;
   // gabarito da gráfica: área total = produto + sangria; a guia mostra corte (vermelho) e segurança (verde-água)
-  const G=await (await fetch("gabaritos.json?v=b9fb14be94")).json();const P=G.produtos[pid]||G.produtos.capacho;
+  const G=await (await fetch("gabaritos.json?v=5f950285cb")).json();const P=G.produtos[pid]||G.produtos.capacho;
   const sang=P.sangria_mm!=null?P.sangria_mm:G.sangria_mm,seg=P.seguranca_mm!=null?P.seguranca_mm:G.seguranca_mm;
   const PX=Math.min(100,Math.floor(3000/Math.max(P.w_cm+sang/5,P.h_cm+sang/5)));  // px por cm (teto 3000 px)
   const W=Math.round((P.w_cm+2*sang/10)*PX),H=Math.round((P.h_cm+2*sang/10)*PX),B=Math.round(sang/10*PX),S=Math.round(seg/10*PX);
@@ -80,6 +80,8 @@ body.com-acoes{padding-bottom:calc(250px + env(safe-area-inset-bottom,0))}
   const DUAS=!!P.faces&&P.faces>1;
   const CARIMBO=pid==="carimbo";
   let doc=(arteAnt&&arteAnt.doc&&!(CARIMBO&&!arteAnt.soTexto))?JSON.parse(JSON.stringify(arteAnt.doc)):(CARIMBO?(await App.artePadrao("carimbo",c,l)).doc:(DUAS&&man&&man.tratado?await (async()=>{const a=await App.artePadrao(pid,c,l);return a?(FACE==="verso"?a.verso.doc:a.doc):novoDoc();})():novoDoc()));await App.assarRecortes(doc);
+  // cor da peça escolhida no cartão (uniformes) ou vinda da marca: o editor abre com ela
+  if(arteAnt&&arteAnt.material&&!doc.fundo&&P.superficie==="tecido")doc.fundo=arteAnt.material;
   let sel=null,cv,cx,guia=true,z=1,px=0,py=0,borracha=false,pincel=0,desfazer=[],guiaCentro=null;
   const luz=h=>{if(!h)return 255;const r=parseInt(h.slice(1,3),16),g=parseInt(h.slice(3,5),16),b=parseInt(h.slice(5,7),16);return 0.299*r+0.587*g+0.114*b;};
   const corTexto=()=>luz(doc.fundo)<128?"#FFFFFF":"#1C1635";
