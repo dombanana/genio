@@ -693,7 +693,7 @@
     0,
     0
    ],
-   "qualidade": "borda real da folha (segmentação + cantos, conferido em zoom), 10/11",
+   "qualidade": "folheto em Z: um plano por painel, dobras e bordas medidas na foto (conferido em zoom), 10/11",
    "plano_original": [
     [
      210,
@@ -710,6 +710,62 @@
     [
      313,
      905
+    ]
+   ],
+   "paineis": [
+    [
+     [
+      203.0,
+      260.0
+     ],
+     [
+      545.8,
+      243.9
+     ],
+     [
+      698.1,
+      862.2
+     ],
+     [
+      313.0,
+      917.0
+     ]
+    ],
+    [
+     [
+      545.8,
+      243.9
+     ],
+     [
+      883.2,
+      197.7
+     ],
+     [
+      1068.4,
+      799.2
+     ],
+     [
+      698.1,
+      862.2
+     ]
+    ],
+    [
+     [
+      883.2,
+      197.7
+     ],
+     [
+      1198.0,
+      123.0
+     ],
+     [
+      1419.0,
+      732.0
+     ],
+     [
+      1068.4,
+      799.2
+     ]
     ]
    ]
   },

@@ -185,12 +185,15 @@ def aplicar(setor, pid, arte_path, saida, material=None, arte_cor=None, largura=
         largura = min(largura, 0.32)
     tela = layout_frontal(arte, P, largura, fundo, cheio)
     if P.get("paineis"):   # folheto dobrado com painéis em planos diferentes: cada faixa da arte vai para o seu painel
-        n = len(P["paineis"]); H0, W0 = tela.shape[:2]; proj = np.zeros((img.shape[0], img.shape[1], 4), np.uint8)
+        # cor e alfa somados (pré-multiplicados): na emenda das dobras as duas faixas se completam, sem fresta
+        n = len(P["paineis"]); H0, W0 = tela.shape[:2]; cor = np.zeros((img.shape[0], img.shape[1], 3), np.float32); al = np.zeros(img.shape[:2], np.float32)
         for i, q in enumerate(P["paineis"]):
             x0, x1 = int(W0 * i / n), int(W0 * (i + 1) / n); faixa = np.ascontiguousarray(tela[:, x0:x1])
             M = cv2.getPerspectiveTransform(np.float32([[0, 0], [x1 - x0, 0], [x1 - x0, H0], [0, H0]]), np.float32(q))
-            w = cv2.warpPerspective(faixa, M, (img.shape[1], img.shape[0]), flags=cv2.INTER_LINEAR, borderValue=(0, 0, 0, 0))
-            proj = np.where(w[..., 3:4] > proj[..., 3:4], w, proj)
+            w = cv2.warpPerspective(faixa, M, (img.shape[1], img.shape[0]), flags=cv2.INTER_LINEAR, borderValue=(0, 0, 0, 0)).astype(np.float32)
+            a = w[..., 3] / 255.0; cor += w[..., :3] * a[..., None]; al += a
+        alc = np.clip(al, 0, 1); proj = np.zeros((img.shape[0], img.shape[1], 4), np.uint8)
+        proj[..., :3] = np.clip(cor / np.maximum(al, 1e-6)[..., None], 0, 255).astype(np.uint8); proj[..., 3] = (alc * 255).astype(np.uint8)
     elif P.get("_papel"):
         # folha dobrada: a arte cobre o plano com a borda de baixo estendida e é recortada pela silhueta real da folha;
         # em cima e dos lados vale a borda reta medida (a silhueta só decide a borda de baixo, a das dobras)
