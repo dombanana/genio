@@ -162,7 +162,16 @@
         const ar=th/tw;
         if(ar>=2.2){   // faixa em pé: a arte deitada e girada 90° (lê de baixo para cima), como se faz em vidro estreito
           const gira=(l,s,X,Y)=>{esc(l,s,X,Y);l.els.forEach(e=>{const vx=e.x+e.w/2,vy=e.y+e.h/2;e.x=B+vy-e.w/2;e.y=B+th-vx-e.h/2;e.rot=(e.rot||0)-90;});};
-          (n>1&&th/tw>=1.6?lado:pilha)(th,tw,gira);}
+          // emblema (logo com desenho, quase quadrado) não deita: fica em pé no topo; só os textos giram
+          const em=linhas.map(l=>l.els.some(e=>e.tipo==="camada"&&e.w/e.h<1.8));
+          if(!em.some(x=>x))(n>1&&th/tw>=1.6?lado:pilha)(th,tw,gira);
+          else{const p=tw*0.08;let y=p;
+            linhas.forEach((l,i)=>{if(!em[i])return;const s=Math.min((tw-2*p)/larg[i],th*0.4/alt[i]);esc(l,s,B+(tw-larg[i]*s)/2,B+y);y+=alt[i]*s+p;});
+            const ri=linhas.map((l,i)=>i).filter(i=>!em[i]);
+            if(ri.length){const Wv=th-y-p,Hv=tw;const s=Math.min((Wv-p)/Math.max(...ri.map(i=>larg[i])),(Hv-2*p)/(soma(ri.map(i=>alt[i]))*1.3));
+              const gap=(Hv-2*p-soma(ri.map(i=>alt[i]))*s)/(ri.length+1);let vy=p+gap;const Y0=y;
+              ri.forEach(i=>{const l=linhas[i];esc(l,s,(Wv-larg[i]*s)/2,vy);vy+=alt[i]*s+gap;
+                l.els.forEach(e=>{const vx=e.x+e.w/2,cy=e.y+e.h/2;e.x=B+cy-e.w/2;e.y=B+Y0+Wv-vx-e.h/2;e.rot=(e.rot||0)-90;});});}}}
         else if(ar>1.02)pilha(tw,th,aqui);   // retrato: blocos um embaixo do outro, ocupando a largura
         else if(tw/th>=1.6&&n>1)lado(tw,th,aqui);}}   // faixa deitada: blocos lado a lado
       // 8. cor base na superfície (a esticada até a sangria, as do kit e o painel principal da peça)
