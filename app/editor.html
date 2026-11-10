@@ -6,7 +6,7 @@
 <title>GênIO · Edição do produto</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="app.css?v=219865199c">
+<link rel="stylesheet" href="app.css?v=b547bee79f">
 <style>
 body.com-acoes{padding-bottom:calc(250px + env(safe-area-inset-bottom,0))}
 .prancheta{position:relative;background:repeating-conic-gradient(#e9e5f3 0 25%,#fff 0 50%) 0 0/18px 18px;border-radius:16px;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;height:min(72vw,460px);margin:0 0 8px}
@@ -39,8 +39,8 @@ body.com-acoes{padding-bottom:calc(250px + env(safe-area-inset-bottom,0))}
 <script>window.giroLivre=false;</script></head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=219865199c"></script>
-<script src="qr.js?v=219865199c"></script>
+<script src="app.js?v=b547bee79f"></script>
+<script src="qr.js?v=b547bee79f"></script>
 <script>
 (async()=>{
   const {$,$$,esc,qs,sessao,dados,ficha,nav,topo,voltar,nomeLoja,telFmt,cliente,gravarCliente,definirCliente,setorNome}=App;
@@ -49,7 +49,7 @@ body.com-acoes{padding-bottom:calc(250px + env(safe-area-inset-bottom,0))}
   if(!l){$("#app").innerHTML=`${topo()}<p>Loja não encontrada.</p>${nav("rota")}`;return;}
   const nome=nomeLoja(l.nome);definirCliente(l);let c=await App.garantirCamadas(l);const man=c.manual||null;
   // gabarito da gráfica: área total = produto + sangria; a guia mostra corte (vermelho) e segurança (verde-água)
-  const G=await (await fetch("gabaritos.json?v=219865199c")).json();const P=G.produtos[pid]||G.produtos.capacho;
+  const G=await (await fetch("gabaritos.json?v=b547bee79f")).json();const P=G.produtos[pid]||G.produtos.capacho;
   const sang=P.sangria_mm!=null?P.sangria_mm:G.sangria_mm,seg=P.seguranca_mm!=null?P.seguranca_mm:G.seguranca_mm;
   const PX=Math.min(100,Math.floor(3000/Math.max(P.w_cm+sang/5,P.h_cm+sang/5)));  // px por cm (teto 3000 px)
   const W=Math.round((P.w_cm+2*sang/10)*PX),H=Math.round((P.h_cm+2*sang/10)*PX),B=Math.round(sang/10*PX),S=Math.round(seg/10*PX);
@@ -61,6 +61,10 @@ body.com-acoes{padding-bottom:calc(250px + env(safe-area-inset-bottom,0))}
     lona:[["#FFFFFF","Branco"],["#141C3A","Navy"],["#2B2B2D","Preto"],["#F4F1EA","Creme"]],
     carimbo:[["#2B2B2D","Preto"],["#1565C0","Azul"],["#C62828","Vermelho"]]};
   const PAL=PALETAS[P.superficie]||PALETAS.vinil;const semFundo=!!P.sem_fundo||P.superficie==="carimbo";
+  // onde a cor do produto incide de verdade (decisão do dono, 10/11): tinge a peça (máscara/material), imprime a folha inteira, ou não existe
+  const COR_TINGE=new Set(["capacho","placas","windbanner","uniformes","camiseta","bone","avental"]);
+  const COR_IMPRESSA=new Set(["impressos","panfleto","banners","faixa","folheto"]);
+  const corProduto=COR_TINGE.has(pid)?"tinge":COR_IMPRESSA.has(pid)?"imprime":"nenhuma";
   const coresMarca=(man&&man.cores)||[];
   const cad=await ficha(slug);const L=(cad&&cad.lacunas)||{};
   const IMGS={};const img=src=>new Promise(res=>{if(IMGS[src])return res(IMGS[src]);const i=new Image();i.crossOrigin="anonymous";i.onload=()=>{IMGS[src]=i;res(i);};i.onerror=()=>res(null);i.src=src;});
@@ -93,8 +97,8 @@ body.com-acoes{padding-bottom:calc(250px + env(safe-area-inset-bottom,0))}
     <div class="medida-ed"><span>${P.w_cm} × ${P.h_cm} cm${sang?` · sangria ${sang} mm`:""} · segurança ${seg} mm${P.a_confirmar?" · <b style='color:#B7791F'>medida a confirmar</b>":""}</span><span id="selnome">${sel?esc(sel.nome||sel.tipo):"toque num elemento · pinça amplia"}</span></div>${P.fonte?`<details class="forn" style="margin:2px 0 8px;font-size:13px;color:var(--texto2)"><summary>${esc(P.fonte)}</summary>${Object.entries(P.opcoes||{}).map(([k,v])=>`<div><b>${esc(k)}:</b> ${esc(v)}</div>`).join("")}</details>`:""}
     <div class="ferr" style="grid-template-columns:repeat(8,1fr)">${[["ret","▭","Retângulo"],["qua","◻","Quadrado"],["tri","△","Triângulo"],["cir","○","Círculo"],["seta","➜","Seta"],["txt","T","Texto"]].concat(CARIMBO?[]:[["logo","✦","Marca"]]).map(([id,ic,n])=>`<button type="button" data-add="${id}"><span class="ic">${ic}</span>${n}</button>`).join("")}<button type="button" id="ferrBorracha" class="${borracha?"on":""}"><span class="ic">🧽</span>Borracha</button></div>
     ${borracha?`<div class="painel"><div class="linha"><label>Borracha${sel&&(sel.tipo==="camada"||sel.tipo==="imagem")?` em <b>${esc(sel.nome)}</b>`:" · toque numa camada do logotipo"}</label><input type="range" id="pincel" min="1" max="12" value="${pincel||4}"><button type="button" class="btn sec mini" id="desfazerB" ${desfazer.length?"":"disabled"}>↶ Desfazer</button></div><small class="muted">Arraste sobre a prancheta para apagar partes da camada selecionada.</small></div>`:""}
-    <div class="painel"><h3>Cor do ${semFundo?"material":"produto"} <small class="muted" style="font-weight:400">${semFundo?"· recorte: só a arte tem cor":""}</small><button type="button" class="btn sec mini" id="guia">${guia?"Ocultar guia":"Mostrar guia"}</button></h3>
-      <div class="paleta" id="palFundo">${semFundo?'<button type="button" data-c="" class="'+(!doc.fundo?"on":"")+'" style="background:repeating-conic-gradient(#ccc 0 25%,#fff 0 50%) 0 0/10px 10px" title="sem fundo"></button>':""}${PAL.map(([h,n])=>`<button type="button" data-c="${h}" class="${doc.fundo===h?"on":""}" style="background:${h}" title="${n}"></button>`).join("")}${coresMarca.map(x=>`<button type="button" data-c="${x.hex}" class="${doc.fundo===x.hex?"on":""}" style="background:${x.hex}" title="${esc(x.nome||"")} (marca)"></button>`).join("")}<button type="button" class="mais" id="fundoMais">+</button></div></div>
+    <div class="painel"><h3>${corProduto==="tinge"?"Cor da peça":corProduto==="imprime"?"Cor do fundo impresso":"Material"} <small class="muted" style="font-weight:400">${corProduto==="tinge"?"· pinta só a peça na foto":corProduto==="imprime"?"· imprime a folha inteira":"· a cor é do próprio material; só a arte tem cor"}</small><button type="button" class="btn sec mini" id="guia">${guia?"Ocultar guia":"Mostrar guia"}</button></h3>
+      <div class="paleta" id="palFundo" ${corProduto==="nenhuma"?'hidden':""}>${semFundo?'<button type="button" data-c="" class="'+(!doc.fundo?"on":"")+'" style="background:repeating-conic-gradient(#ccc 0 25%,#fff 0 50%) 0 0/10px 10px" title="sem fundo"></button>':""}${PAL.map(([h,n])=>`<button type="button" data-c="${h}" class="${doc.fundo===h?"on":""}" style="background:${h}" title="${n}"></button>`).join("")}${coresMarca.map(x=>`<button type="button" data-c="${x.hex}" class="${doc.fundo===x.hex?"on":""}" style="background:${x.hex}" title="${esc(x.nome||"")} (marca)"></button>`).join("")}<button type="button" class="mais" id="fundoMais">+</button></div></div>
     ${P.ia?`<div class="painel ia"><h3>Fundo com IA <small class="muted" style="font-weight:400">· só a composição; marca e textos ficam por cima</small></h3><textarea id="prompt">${esc(doc.prompt||`Fundo para ${P.nome.toLowerCase()} de ${nome} (${setorNome(l.setor).toLowerCase()}), elegante, cores ${coresMarca.slice(0,3).map(x=>x.hex).join(", ")||"neutras"}, sem texto, sem logotipo, espaço limpo para a marca.`)}</textarea><div class="acs" style="margin-top:8px"><button type="button" id="gerar">✨ Gerar fundo</button>${doc.fundoImg?'<button type="button" id="tirarIA">Tirar fundo IA</button>':""}<span class="muted" id="iaSt" style="font-size:13px;align-self:center"></span></div></div>`:""}
     <div class="painel" id="props"></div>
     <div class="painel"><h3>Elementos <small class="muted" style="font-weight:400">· o último fica por cima</small></h3><div class="lista" id="lista"></div></div>
@@ -226,10 +230,10 @@ body.com-acoes{padding-bottom:calc(250px + env(safe-area-inset-bottom,0))}
     const fim=ev=>{ptrs.delete(ev.pointerId);if(tocouVazio&&!pinch&&ptrs.size===0&&Math.hypot(ev.clientX-tocouVazio.x,ev.clientY-tocouVazio.y)<8){sel=null;renderLista();renderProps();$("#selnome").textContent="toque num elemento · pinça amplia";desenhar();}if(ptrs.size===0)tocouVazio=null;if(ptrs.size<2)pinch=null;if(guiaCentro){guiaCentro=null;desenhar();}if(drag&&drag.modo==="apaga"){const u=drag.oc.toDataURL("image/png");const im=new Image();im.onload=()=>{IMGS[u]=im;sel.src=u;const b=$("#desfazerB");if(b)b.disabled=false;desenhar();};im.src=u;}drag=null;pan=null;};pr.addEventListener("pointerup",fim);pr.addEventListener("pointercancel",fim);
     $("#salvar").onclick=async()=>{sel=null;delete doc.auto;$("#salvar").disabled=true;$("#salvar").textContent="Salvando…";
       await desenhar(false,true,false);const png=cv.toDataURL("image/png");
-      await desenhar(false,false,false);const pngArte=cv.toDataURL("image/png");  // arte sem o fundo: o material do kit recebe a cor separadamente
+      await desenhar(false,corProduto==="imprime",false);const pngArte=cv.toDataURL("image/png");  // tinge: arte sem fundo (a peça recebe a cor); imprime: o fundo vai junto na arte
       c=await cliente(l);c.artes=c.artes||{};const ant=c.artes[pid]||{};
       if(FACE==="verso"){c.artes[pid]={...ant,verso:{doc,png,pngArte,material:doc.fundo,em:new Date().toISOString()}};}
-      else{const novo={doc,png,pngArte,material:doc.fundo,w_cm:P.w_cm,h_cm:P.h_cm,sangria_mm:sang,em:new Date().toISOString(),contexto:ant.png===png?ant.contexto:null,soTexto:CARIMBO};if(ant.verso)novo.verso=ant.verso;if(ant.paleta)novo.paleta=ant.paleta;c.artes[pid]=novo;}
+      else{const novo={doc,png,pngArte,material:corProduto==="tinge"?doc.fundo:null,w_cm:P.w_cm,h_cm:P.h_cm,sangria_mm:sang,em:new Date().toISOString(),contexto:ant.png===png?ant.contexto:null,soTexto:CARIMBO};if(ant.verso)novo.verso=ant.verso;if(ant.paleta)novo.paleta=ant.paleta;c.artes[pid]=novo;}
       await gravarCliente(c);location.href=`produtos.html?l=${encodeURIComponent(slug)}`;};
   }
   window.__editor=()=>({doc,sel,W,H,B,S});
