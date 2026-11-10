@@ -319,11 +319,11 @@ html{touch-action:pan-x pan-y}
 .aviso-acao{position:fixed;left:12px;right:12px;bottom:calc(84px + env(safe-area-inset-bottom));z-index:90;background:var(--navy,#141C3A);color:#fff;border-radius:14px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:15px;box-shadow:0 6px 20px rgba(0,0,0,.25)}
 .aviso-acao button{border:0;background:none;color:#B9A6F0;font:inherit;font-weight:700;min-height:36px;cursor:pointer}
 
-/* ícones: linha com volume suave; o corpo leva a cor em tom claro, os furos levam a cor do fundo onde o ícone está */
+/* ícones: linha fina, sem preenchimento (decisão do dono, 10/11) */
 svg.icone{width:100%;height:100%;display:block;overflow:visible;--ic-fundo:#fff}
 svg.icone .f{fill:currentColor;stroke:none}
-svg.icone .d{fill:currentColor;fill-opacity:.38}
-svg.icone .w{fill:var(--ic-fundo)}
+svg.icone .d{fill:none}
+svg.icone .w{fill:none}
 .nav a .ic svg.icone{--ic-fundo:#fff}.nav a.on .ic svg.icone{--ic-fundo:var(--lav2)}
 .casca .nav a .ic svg.icone,.casca .nav button.rec .ic svg.icone{--ic-fundo:var(--marca);filter:none}
 .casca .nav a.on .ic svg.icone{--ic-fundo:#8154CE}
