@@ -175,7 +175,7 @@
       return {el,fundo,material,base,fundoMarca:fm,kitRef,paleta:pal,setorKit:setor,arquivo:arq};
     }finally{K.host.remove();}}
   // cores de vinil do capacho (as mesmas do editor)
-  const CORES_CAPACHO=["#2B2B2D","#9A9B9D","#1F3A5F","#7A1E1E","#2E5E3A","#EE6A1D","#C8A95B","#5B3A29"];
+  const CORES_CAPACHO=["#9A9B9D","#55575C","#2B2B2D","#4A2F22","#C4A979","#C98D2B","#EEEDE8","#F2C21B","#EE6A1D","#C8232C","#6E1F27","#1F2A52","#1F4FAE","#5C6332","#1C7A3A","#B9BCC0","#0A78C2","#1F4A3A","#E2408A","#1FA58F","#5E3A8C","#A6C93A","#D8261F"];
   const lab=h=>{const [r,g,b]=hex2(h).map(v=>{v/=255;return v<=0.04045?v/12.92:Math.pow((v+0.055)/1.055,2.4);});const X=(r*0.4124+g*0.3576+b*0.1805)/0.95047,Y=r*0.2126+g*0.7152+b*0.0722,Z=(r*0.0193+g*0.1192+b*0.9505)/1.08883;const f=t=>t>0.008856?Math.cbrt(t):7.787*t+16/116;return [116*f(Y)-16,500*(f(X)-f(Y)),200*(f(Y)-f(Z))];};
   const maisProxima=(h,lista)=>{const a=lab(h);return lista.slice().sort((x,y)=>{const p=lab(x),q=lab(y);return Math.hypot(p[0]-a[0],p[1]-a[1],p[2]-a[2])-Math.hypot(q[0]-a[0],q[1]-a[1],q[2]-a[2]);})[0];};
   // cor do fundo da arte original (moldura de 3%): a mesma regra do servidor; transparente ou sem cor dominante → null
