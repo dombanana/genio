@@ -465,6 +465,29 @@ SETOR_KIT14 = {"cafeteria": "01_Cafeteria", "restaurante": "02_Restaurante", "ba
     "floricultura/presentes": "08_Loja_Roupas", "pet": "09_Pet_Shop", "farmácia": "10_Farmacia", "ótica": "10_Farmacia", "academia/estúdio": "11_Academia",
     "autopeças/oficina": "12_Autopecas", "celular/assistência": "13_Escritorio", "escola/curso": "13_Escritorio", "cereais/empório": "14_Mercado",
     "mercado/hortifruti": "14_Mercado", "embalagens/utilidades": "14_Mercado", "comércio": "14_Mercado"}
+def disco_uso():
+    """quanto o GênIO ocupa no disco da VPS (só leitura): disco inteiro e cada pasta de dados, em MB"""
+    import shutil
+    def tam(raiz):
+        t, n = 0, 0
+        for dp, _, fs in os.walk(raiz):
+            for f in fs:
+                try:
+                    t += os.path.getsize(os.path.join(dp, f)); n += 1
+                except OSError:
+                    pass
+        return round(t / 1048576, 1), n
+    u = shutil.disk_usage("/"); pastas = {}
+    for nome, cam in (("dados", DADOS.RAIZ_DADOS), ("renderizacoes_kits", os.path.join(ESTADO_DIR, "kits")), ("estado", ESTADO_DIR), ("codigo", RAIZ)):
+        if os.path.isdir(cam):
+            mb, n = tam(cam); pastas[nome] = {"caminho": cam, "mb": mb, "arquivos": n}
+    if os.path.isdir(DADOS.RAIZ_DADOS):
+        for sub in sorted(os.listdir(DADOS.RAIZ_DADOS)):
+            c = os.path.join(DADOS.RAIZ_DADOS, sub)
+            if os.path.isdir(c):
+                mb, n = tam(c); pastas["dados/" + sub] = {"mb": mb, "arquivos": n}
+    return {"disco_total_gb": round(u.total / 1e9, 1), "disco_usado_gb": round(u.used / 1e9, 1), "disco_livre_gb": round(u.free / 1e9, 1), "pastas": pastas}
+
 def kit_aplicar(d):
     """Contextualização: a arte feita no editor (PNG transparente, base64) aplicada na capa calibrada do kit do setor."""
     import hashlib, tempfile
@@ -838,6 +861,8 @@ class H(BaseHTTPRequestHandler):
                     return self._erro(403, "só o administrador")
                 if p == "/api/admin/contas":
                     return self._send(200, {"contas": admin_contas(), "planos": PLANOS})
+                if p == "/api/admin/disco":
+                    return self._send(200, disco_uso())
                 if p == "/api/admin/interesse":
                     return self._send(200, {"interesse": admin_interesse()})
                 if p == "/api/admin/chaves":
