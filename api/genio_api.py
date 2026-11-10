@@ -525,7 +525,10 @@ def kit_aplicar(d):
                 except Exception:
                     logo_raw = None
             hoje = time.strftime("%Y-%m-%d")
-            h = hashlib.sha256(raw + (logo_raw or b"") + f"|{kit}|10|{nome}|{hoje}|carimbo2".encode()).hexdigest()[:20]
+            campos = d.get("campos") if isinstance(d.get("campos"), dict) else None
+            if campos:
+                campos = {k: str(campos.get(k) or "")[:80] for k in ("nome", "razao", "cnpj", "endereco", "tel")}
+            h = hashlib.sha256(raw + (logo_raw or b"") + f"|{kit}|10|{nome}|{hoje}|{json.dumps(campos, sort_keys=True)}|carimbo3".encode()).hexdigest()[:20]
             pasta = os.path.join(ESTADO_DIR, "kits"); os.makedirs(pasta, exist_ok=True); saida = os.path.join(pasta, h + ".jpg")
             if not os.path.exists(saida):
                 tmps = []
@@ -536,7 +539,7 @@ def kit_aplicar(d):
                     if logo_raw:
                         with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as f:
                             f.write(logo_raw); lp = f.name; tmps.append(lp)
-                    aplicar.carimbar(kit, tmps[0], saida, nome, lp)
+                    aplicar.carimbar(kit, tmps[0], saida, nome, lp, campos=campos)
                 finally:
                     for t in tmps:
                         try: os.remove(t)

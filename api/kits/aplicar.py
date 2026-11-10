@@ -248,6 +248,27 @@ def _redondo(nome, logo_alpha, lado=900):
     f = _fonte(lado * 0.2); bb = g.textbbox((0, 0), sig, font=f); g.text((c - (bb[2] - bb[0]) / 2 - bb[0], c - (bb[3] - bb[1]) / 2 - bb[1]), sig, font=f, fill=255)
     return np.array(im)
 
+def _empresa(campos, w, h):
+    """carimbo da empresa (CNPJ): moldura dupla e as linhas com os dados da loja; o que não se sabe fica "a confirmar" """
+    from PIL import Image, ImageDraw
+    W, H = int(w * 3), int(h * 3); im = Image.new("L", (W, H), 0); g = ImageDraw.Draw(im)
+    lw = max(5, int(H * 0.018)); g.rectangle([lw, lw, W - lw, H - lw], outline=255, width=lw); i2 = lw * 3; g.rectangle([i2, i2, W - i2, H - i2], outline=255, width=max(2, lw // 2))
+    cp = campos or {}
+    linhas = [((cp.get("nome") or "").upper(), 1.0, True), ((cp.get("razao") or "").strip(), 0.62, True),
+              ("CNPJ " + (cp.get("cnpj") or "a confirmar"), 0.56, False), ((cp.get("endereco") or "").strip(), 0.5, False),
+              (("Tel. " + cp["tel"]) if cp.get("tel") else "", 0.5, False)]
+    linhas = [x for x in linhas if x[0]]
+    base = H * 0.15; larg_util = W - 9 * lw
+    for _ in range(30):   # o maior tamanho em que todas as linhas cabem
+        alt = sum(base * k * 1.32 for _, k, _ in linhas)
+        if alt <= H - 10 * lw and all(g.textbbox((0, 0), t, font=_fonte(base * k, n))[2] <= larg_util for t, k, n in linhas):
+            break
+        base *= 0.93
+    y = (H - sum(base * k * 1.32 for _, k, _ in linhas)) / 2
+    for t, k, n in linhas:
+        f = _fonte(base * k, n); bb = g.textbbox((0, 0), t, font=f); g.text(((W - (bb[2] - bb[0])) / 2 - bb[0], y + (base * k * 1.32 - (bb[3] - bb[1])) / 2 - bb[1]), t, font=f, fill=255); y += base * k * 1.32
+    return np.array(im)
+
 def _tinta(alpha, semente):
     """falha de tinta de carimbo: grão, falhas maiores e borda levemente borrada"""
     rs = np.random.RandomState(semente); h, w = alpha.shape
@@ -262,7 +283,7 @@ def _no_papel(out, alpha, quad, cor, opac=0.9):
     tinta = out.astype(np.float32) * (cor[None, None, :] / 255.0)
     return out.astype(np.float32) * (1 - a[..., None]) + tinta * a[..., None]
 
-def carimbar(setor, grande_png, saida, nome=None, logo_png=None, data=None, tinta="#22252E"):
+def carimbar(setor, grande_png, saida, nome=None, logo_png=None, data=None, tinta="#22252E", campos=None):
     pasta, P, img = carregar(setor, "10"); C = P["carimbos"]; cor = hex2bgr(tinta); out = img.copy().astype(np.float32)
     import datetime
     d = data or datetime.date.today(); dtxt = f"{d.day:02d} {MESES[d.month - 1]} {d.year}"
@@ -274,11 +295,16 @@ def carimbar(setor, grande_png, saida, nome=None, logo_png=None, data=None, tint
         if logo_png:
             lg = cv2.imread(logo_png, cv2.IMREAD_UNCHANGED)
             if lg is not None:
-                la = lg[..., 3] if lg.ndim == 3 and lg.shape[2] == 4 else 255 - cv2.cvtColor(lg, cv2.COLOR_BGR2GRAY)
+                cinza = cv2.cvtColor(lg[..., :3], cv2.COLOR_BGR2GRAY).astype(np.float32); al = lg[..., 3].astype(np.float32) if lg.ndim == 3 and lg.shape[2] == 4 else np.full(cinza.shape, 255, np.float32)
+                escuro = np.clip((215 - cinza) / 110, 0, 1); claro_total = ((al > 128) & (cinza > 170)).mean() / max((al > 128).mean(), 1e-3)
+                # logotipo claro (branco) sobre transparente: a forma inteira é tinta; com fundo claro próprio: só o que é escuro
+                la = (al if claro_total > 0.85 else al * escuro).clip(0, 255).astype(np.uint8)
         q = np.float32(cv2.boxPoints((tuple(R["centro"]), tuple(R["eixos"]), R["ang"])))
         q = q[np.argsort(q[:, 1])]; q = np.vstack([q[:2][np.argsort(q[:2, 0])], q[2:][np.argsort(q[2:, 0])[::-1]]])
         out = _no_papel(out, _tinta(_redondo(nome, la), 23), q, cor)
-    if grande_png and "grande" in C:
+    if campos and "grande" in C:
+        w, h = _lados(C["grande"]); out = _no_papel(out, _tinta(_empresa(campos, w, h), 31), C["grande"], cor)
+    elif grande_png and "grande" in C:
         g = cv2.imread(grande_png, cv2.IMREAD_UNCHANGED)
         if g is not None:
             if g.ndim == 3 and g.shape[2] == 4:

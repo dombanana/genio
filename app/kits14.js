@@ -152,7 +152,7 @@
           if(e.tipo==="texto"&&contraste(e.cor,at)<3)e.cor=melhor(at);
           else if(e.tipo==="vetor"){if(e.stroke&&contraste(e.stroke,at)<1.6)e.stroke=melhor(at);if(e.fill&&e.fill!=="transparent"&&e.w*e.h<W*H*0.5&&contraste(e.fill,at)<1.4)e.fill=melhor(at);}
           else if(e.tipo==="forma"&&e.cor&&e.cor!=="transparent"&&e.w*e.h<W*H*0.5&&contraste(e.cor,at)<1.3)e.cor=mix(e.cor,lum(at)<128?"#ffffff":"#000000",0.35);
-          else if(e.tipo==="qr")e.cor=lum(at)<128?"#ffffff":"#101820";}}
+          else if(e.tipo==="qr")e.cor="#101820";}}   // o QR sempre sai escuro na sua própria caixa branca
       const COR_PECA={"09":"#ece4d4","03":"#30343a"};   // ecobag crua (não muda de cor) e vidro da vitrine
       const fundoPeca=COR_PECA[nId]||(TEXTEIS.has(nId)?base:null);
       if(fundoPeca){const melhor=bg=>["#ffffff",pal.T,"#1c1635"].sort((a,b)=>contraste(b,bg)-contraste(a,bg))[0];
