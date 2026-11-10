@@ -165,19 +165,25 @@
           const gap=(Hv-2*p-soma(alt)*s)/(n+1);let y=p+gap;linhas.forEach((l,i)=>{put(l,s,(Wv-larg[i]*s)/2,y);y+=alt[i]*s+gap;});};
         const aqui=(l,s,X,Y)=>esc(l,s,B+X,B+Y);
         const ar=th/tw;
-        if(ar>=2.2){   // faixa em pé: a arte deitada e girada 90° (lê de baixo para cima), como se faz em vidro estreito
-          const gira=(l,s,X,Y)=>{esc(l,s,X,Y);l.els.forEach(e=>{const vx=e.x+e.w/2,vy=e.y+e.h/2;e.x=B+vy-e.w/2;e.y=B+th-vx-e.h/2;e.rot=(e.rot||0)-90;});};
-          // emblema (logo com desenho, quase quadrado) não deita: fica em pé no topo; só os textos giram
-          const em=linhas.map(l=>l.els.some(e=>e.tipo==="camada"&&e.w/e.h<1.8));
-          if(!em.some(x=>x))(n>1&&th/tw>=1.6?lado:pilha)(th,tw,gira);
-          else{const p=tw*0.08;let y=p;
-            linhas.forEach((l,i)=>{if(!em[i])return;const s=Math.min((tw-2*p)/larg[i],th*0.4/alt[i]);esc(l,s,B+(tw-larg[i]*s)/2,B+y);y+=alt[i]*s+p;});
-            const ri=linhas.map((l,i)=>i).filter(i=>!em[i]);
-            if(ri.length){const Wv=th-y-p,Hv=tw;const s=Math.min((Wv-p)/Math.max(...ri.map(i=>larg[i])),(Hv-2*p)/(soma(ri.map(i=>alt[i]))*1.3));
-              const gap=(Hv-2*p-soma(ri.map(i=>alt[i]))*s)/(ri.length+1);let vy=p+gap;const Y0=y;
-              ri.forEach(i=>{const l=linhas[i];esc(l,s,(Wv-larg[i]*s)/2,vy);vy+=alt[i]*s+gap;
-                l.els.forEach(e=>{const vx=e.x+e.w/2,cy=e.y+e.h/2;e.x=B+cy-e.w/2;e.y=B+Y0+Wv-vx-e.h/2;e.rot=(e.rot||0)-90;});});}}}
-        else if(ar>1.02)pilha(tw,th,aqui);   // retrato: blocos um embaixo do outro, ocupando a largura
+        if(ar>1.02){   // retrato e faixa em pé: troca as medidas (largura ↔ altura), a arte segue de pé, na mesma direção
+          // a marca ocupa a largura; frase mais larga que isso quebra em linhas para manter o tamanho da letra
+          const p=tw*0.08,lim=tw-2*p,naoTx=linhas.filter(l=>!l.els.every(e=>e.tipo==="texto"));
+          const sM=naoTx.length?Math.min(...naoTx.map(l=>lim/(l.x1-l.x0))):lim/Math.max(...linhas.map(l=>l.x1-l.x0));
+          const cv=document.createElement("canvas").getContext("2d");
+          // quanto mais estreito, mais a frase cresce (até 2,5×) e quebra em linhas equilibradas para caber na largura
+          const k=Math.min(2.5,Math.max(1,ar/1.6));
+          const quebra=(t,mx)=>{const pal=String(t).split(/\s+/),ls=[];let cur="";pal.forEach(w=>{const x=cur?cur+" "+w:w;if(cv.measureText(x).width>mx&&cur){ls.push(cur);cur=w;}else cur=x;});if(cur)ls.push(cur);return ls;};
+          linhas.forEach(l=>{if(!l.els.every(e=>e.tipo==="texto"))return;
+            l.els.forEach(e=>{if(!e.texto)return;const cx0=e.x+e.w/2;
+              if(k>1){e.tam*=k;e.w*=k;e.h*=k;e.x=cx0-e.w/2;}
+              if(e.w*sM<=lim*1.15)return;   // passou pouco: a arte toda encolhe um tico, sem quebrar
+              cv.font=`${e.peso||700} ${e.tam}px ${e.fonte}`;const mx=lim/sM,W=cv.measureText(String(e.texto)).width,nl=Math.ceil(W/mx);
+              let ls=quebra(e.texto,mx);for(let t=W/nl;t<=mx;t*=1.03){const x=quebra(e.texto,t);if(x.length<=nl){ls=x;break;}}
+              if(ls.length<2)return;const h1=e.h;e.texto=ls.join("\n");e.w=Math.max(...ls.map(t=>cv.measureText(t).width))*1.02;e.h=h1+e.tam*(e.alt||1.2)*(ls.length-1);e.x=cx0-e.w/2;e.alinh="center";});
+            l.x0=Math.min(...l.els.map(e=>e.x));l.x1=Math.max(...l.els.map(e=>e.x+e.w));l.y1=Math.max(...l.els.map(e=>e.y+e.h));});
+          linhas.forEach((l,i)=>{larg[i]=l.x1-l.x0;alt[i]=l.y1-l.y0;});
+          pilha(tw,th,aqui);}
+   // retrato: blocos um embaixo do outro, ocupando a largura
         else if(tw/th>=1.6&&n>1)lado(tw,th,aqui);}}   // faixa deitada: blocos lado a lado
       // 8. cor base na superfície (a esticada até a sangria, as do kit e o painel principal da peça)
       if(base&&!SEM_SUPERFICIE.has(nId)){for(const e of el){const grande=(e.tipo==="forma"||e.tipo==="vetor")&&e.w*e.h>=W*H*0.5&&e.grupo!=="logo";if(!(e.superficie||grande))continue;
