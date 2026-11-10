@@ -193,7 +193,7 @@ const App=(()=>{
   // ---- arte automática: logotipo tratado centralizado preenchendo a área segura do gabarito, cor padrão do material
   const COR_PADRAO={capacho:"#2B2B2D",rigido:"#F4F1EA",vinil:null,tecido:"#F4F1EA",papel:"#FFFFFF",lona:"#FFFFFF",carimbo:null};
   const PRODUTOS_IDS=["capacho","placas","adesivos","uniformes","impressos","panfleto","banners","parede","brindes","carimbo","windbanner","faixa","folheto","camiseta","bone","avental"];
-  let _G=null;const gabaritos=async()=>_G||(_G=await (await fetch("gabaritos.json?v=8ea0d4bab3")).json());
+  let _G=null;const gabaritos=async()=>_G||(_G=await (await fetch("gabaritos.json?v=a58c8fce5c")).json());
   const carregarImg=src=>new Promise(res=>{const i=new Image();i.crossOrigin="anonymous";i.onload=()=>res(i);i.onerror=()=>res(null);i.src=src;});
   // ---- carimbo: só texto — nome, razão social, CNPJ (negrito), endereço, telefone; nunca logotipo
   async function dadosCarimbo(l){const cad=await ficha(l.slug).catch(()=>null);const L=(cad&&cad.lacunas)||{};const leit=(L.leitura||{}).valor||"";const razao=((leit.match(/Razão social: ([^·]+)/)||[])[1]||"").trim();const cnpj=((leit.match(/CNPJ:? ?([\d./-]{14,18})/)||[])[1]||"");
@@ -237,7 +237,7 @@ const App=(()=>{
     const aw=W-2*(B+S),ah=H-2*(B+S);const f=Math.min(aw/LW,(P.ancora==="topo"?ah*0.45:ah)/LH);const w=LW*f,h=LH*f;const x=(W-w)/2,y=P.ancora==="topo"?B+S+ah*0.05:(H-h)/2;
     const fundo=P.sem_fundo?null:(COR_PADRAO[P.superficie]===undefined?"#FFFFFF":COR_PADRAO[P.superficie]);
     // kit de 14 setores (10/11): a maquete frontal do ramo da loja é a arte de partida de todos os produtos
-    await carregarScript("qr.js?v=8ea0d4bab3");await carregarScript("impressos.js?v=8ea0d4bab3");await carregarScript("kits14.js?v=8ea0d4bab3");
+    await carregarScript("qr.js?v=a58c8fce5c");await carregarScript("impressos.js?v=a58c8fce5c");await carregarScript("kits14.js?v=a58c8fce5c");
     if(window.Kits14&&window.Kits14.ARQ[pid]){const K=await window.Kits14.montar(App,pid,c,l,{W,H,B,S,im,rec});
       if(K){const doc={fundo:K.fundo,fundoImg:null,el:K.el,campos:null,auto:true,kit:KIT14,setorKit:K.setorKit,kitRef:K.kitRef,W,H};const imgs={[c.manual.tratado]:im};
         const k=Math.min(1,1400/Math.max(W,H));const cv=document.createElement("canvas");cv.width=Math.round(W*k);cv.height=Math.round(H*k);const g=cv.getContext("2d");g.scale(k,k);
@@ -339,13 +339,31 @@ const App=(()=>{
   // garante que o manual da loja tem camadas por cor (separa uma vez e guarda)
   async function garantirCamadas(l){const c=await cliente(l);const m=c.manual;if(!m||!m.editado||!m.tratado)return c;if((m.camadas||[]).length>1&&m.separado)return c;
     const r=await separarCores(m.tratado,5);if(r){m.camadas=r.camadas;m.cores=r.cores;m.separado=true;}else{m.camadas=[{nome:"Logotipo",png:m.tratado}];m.separado=true;}await gravarCliente(c);return c;}
-  // ---- ícones da barra: ilustrações 3D (Fluent Emoji 3D, MIT) + rosto do vendedor; o servidor baixa para vendor/icones, senão vem do CDN
-  const ICO_CDN={entrada:"https://cdn.jsdelivr.net/gh/microsoft/fluentui-emoji@main/assets/Inbox%20tray/3D/inbox_tray_3d.png",processamento:"https://cdn.jsdelivr.net/gh/microsoft/fluentui-emoji@main/assets/Hammer%20and%20wrench/3D/hammer_and_wrench_3d.png",saida:"https://cdn.jsdelivr.net/gh/microsoft/fluentui-emoji@main/assets/Delivery%20truck/3D/delivery_truck_3d.png",ocorrencias:"https://cdn.jsdelivr.net/gh/microsoft/fluentui-emoji@main/assets/Warning/3D/warning_3d.png",financeiro:"https://cdn.jsdelivr.net/gh/microsoft/fluentui-emoji@main/assets/Money%20bag/3D/money_bag_3d.png","rec-audio":"https://cdn.jsdelivr.net/gh/microsoft/fluentui-emoji@main/assets/Studio%20microphone/3D/studio_microphone_3d.png","rec-transcrever":"https://cdn.jsdelivr.net/gh/microsoft/fluentui-emoji@main/assets/Memo/3D/memo_3d.png","rec-video":"https://cdn.jsdelivr.net/gh/microsoft/fluentui-emoji@main/assets/Video%20camera/3D/video_camera_3d.png","rec-selfie":"https://cdn.jsdelivr.net/gh/microsoft/fluentui-emoji@main/assets/Selfie/3D/selfie_3d_default.png","rec-foto":"https://cdn.jsdelivr.net/gh/microsoft/fluentui-emoji@main/assets/Camera%20with%20flash/3D/camera_with_flash_3d.png","rec-tela":"https://cdn.jsdelivr.net/gh/microsoft/fluentui-emoji@main/assets/Mobile%20phone/3D/mobile_phone_3d.png",config:"https://cdn.jsdelivr.net/gh/microsoft/fluentui-emoji@main/assets/Gear/3D/gear_3d.png",notas:"https://cdn.jsdelivr.net/gh/microsoft/fluentui-emoji@main/assets/Spiral%20notepad/3D/spiral_notepad_3d.png",mapa:"https://cdn.jsdelivr.net/gh/microsoft/fluentui-emoji@main/assets/World%20map/3D/world_map_3d.png",pedidos:"https://cdn.jsdelivr.net/gh/microsoft/fluentui-emoji@main/assets/Clipboard/3D/clipboard_3d.png",rec:"https://cdn.jsdelivr.net/gh/microsoft/fluentui-emoji@main/assets/Red%20circle/3D/red_circle_3d.png"};
-  const ico=(n,alt)=>`<img src="vendor/icones/${n}.png" alt="${alt||""}" onerror="this.onerror=null;this.src='${ICO_CDN[n]||""}'">`;
-  const ICONES={rota:`<span class="ic-mapa">${ico("mapa","")}<svg viewBox="0 0 48 48"><path d="M8 36 C14 30, 16 22, 22 20 S30 26, 34 18 S40 12, 42 10" fill="none" stroke="#6933C5" stroke-width="4.5" stroke-linecap="round" stroke-dasharray="7 4"/><circle cx="8" cy="36" r="4.5" fill="#14B8B0" stroke="#fff" stroke-width="2"/><path d="M42 3c-3.3 0-6 2.6-6 5.9C36 13 42 19 42 19s6-6 6-10.1C48 5.6 45.3 3 42 3z" fill="#C62828" stroke="#fff" stroke-width="1.5"/><circle cx="42" cy="8.8" r="2.2" fill="#fff"/></svg></span>`,
-    pedidos:ico("pedidos"),perfil:`<img src="vendor/icones/vendedor.png" alt="">`,notas:ico("rec"),notasLista:ico("notas"),config:ico("config"),financeiro:ico("financeiro"),ocorrencias:ico("ocorrencias"),entrada:ico("entrada"),processamento:ico("processamento"),saida:ico("saida"),recModo:t=>ico({audio:"rec-audio",transcrever:"rec-transcrever","video-tras":"rec-video","video-frente":"rec-selfie",foto:"rec-foto",selfie:"rec-selfie",tela:"rec-tela"}[t]||"rec-audio")};
+  // ---- ícones (decisão do dono, 10/11): linha com volume suave, um símbolo por função, todos na mesma caixa de 24 e
+  // com o mesmo peso; nada de personagem (o único personagem aceito é o Gênio da marca). Cor = currentColor.
+  const _eng=(()=>{let d="";for(let i=0;i<8;i++){const a=i*Math.PI/4,b=a+Math.PI/8;const p=(r,t)=>(12+r*Math.cos(t)).toFixed(2)+" "+(12+r*Math.sin(t)).toFixed(2);d+=(i?"L":"M")+p(9.2,a-.22)+"L"+p(9.2,a+.22)+"L"+p(7,b-.18)+"L"+p(7,b+.18);}return d+"Z";})();
+  const SIMB={
+    rota:'<path d="M4.5 20.5c3.5-.2 4.5-3 6.8-4.6 2-1.4 3.8-.9 5.2-2.4" stroke-dasharray="2.2 2.2"/><circle cx="4.5" cy="20.5" r="1.6" class="f"/><path d="M17.5 2.8a4.2 4.2 0 0 0-4.2 4.2c0 3.1 4.2 7.3 4.2 7.3s4.2-4.2 4.2-7.3a4.2 4.2 0 0 0-4.2-4.2z" class="d"/><circle cx="17.5" cy="7" r="1.4" class="f"/>',
+    notas:'<rect x="5" y="2.8" width="14" height="18.4" rx="2" class="d"/><path d="M8.5 8h7M8.5 12h7M8.5 16h4.5"/>',
+    entrada:'<path d="M3 13.5h5l1.8 2.7h4.4l1.8-2.7h5"/><path d="M3 13.5v5.2A2.3 2.3 0 0 0 5.3 21h13.4a2.3 2.3 0 0 0 2.3-2.3v-5.2L18.2 6.5M5.8 6.5 3 13.5" class="d"/><path d="M12 2.5v8.2M8.8 7.6 12 10.8l3.2-3.2"/>',
+    processamento:'<path vector-effect="non-scaling-stroke" d="'+_eng+'" transform="translate(.2 .2) scale(.66)" class="d"/><circle cx="8.1" cy="8.1" r="2.1" class="w"/><path vector-effect="non-scaling-stroke" d="'+_eng+'" transform="translate(8.9 8.9) scale(.56)" class="d"/><circle cx="15.6" cy="15.6" r="1.8" class="w"/>',
+    saida:'<path d="M2.5 5.5h11v11h-11z" class="d"/><path d="M13.5 9.2h4.3l3.7 3.9v3.4h-8z" class="d"/><circle cx="6.5" cy="17.8" r="2.1" class="w"/><circle cx="17" cy="17.8" r="2.1" class="w"/>',
+    mic:'<rect x="8.8" y="2.6" width="6.4" height="11.4" rx="3.2" class="d"/><path d="M5.2 11a6.8 6.8 0 0 0 13.6 0M12 17.8v3.4M8.6 21.2h6.8"/>',
+    pedidos:'<rect x="4.5" y="4" width="15" height="17.2" rx="2" class="d"/><rect x="8.7" y="2.4" width="6.6" height="3.6" rx="1" class="w"/><path d="m8.6 13.2 2.3 2.3 4.6-4.6"/>',
+    perfil:'<circle cx="12" cy="8" r="4.2" class="d"/><path d="M3.8 21.2a8.2 8.2 0 0 1 16.4 0" class="d"/>',
+    financeiro:'<circle cx="12" cy="12" r="9.2" class="d"/><path d="M15 8.6c-.6-1-1.8-1.6-3-1.6-1.7 0-3 .9-3 2.3 0 3.2 6 1.8 6 5 0 1.4-1.3 2.4-3 2.4-1.3 0-2.5-.6-3.1-1.6M12 5.3v1.7M12 17v1.7"/>',
+    config:'<path d="'+_eng+'" class="d"/><circle cx="12" cy="12" r="2.9" class="w"/>',
+    ocorrencias:'<path d="M12 3.2 2.6 20.2h18.8z" class="d"/><path d="M12 9.6v5.2"/><circle cx="12" cy="17.6" r=".95" class="f"/>',
+    transcrever:'<path d="M4 5.5A2.5 2.5 0 0 1 6.5 3h11A2.5 2.5 0 0 1 20 5.5v8a2.5 2.5 0 0 1-2.5 2.5H10l-4.5 4v-4A2.5 2.5 0 0 1 4 13.5z" class="d"/><path d="M8 8h8M8 11.5h5"/>',
+    video:'<rect x="2.5" y="6.5" width="13" height="11" rx="2" class="d"/><path d="M15.5 10.5 21.5 7v10l-6-3.5z" class="d"/>',
+    selfie:'<rect x="6" y="2.5" width="12" height="19" rx="2.5" class="d"/><circle cx="12" cy="10" r="2.4" class="w"/><path d="M8.6 17a3.4 3.4 0 0 1 6.8 0"/>',
+    foto:'<path d="M3 8.5a2 2 0 0 1 2-2h2.5L9 4.5h6l1.5 2H19a2 2 0 0 1 2 2V18a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" class="d"/><circle cx="12" cy="13" r="3.6" class="w"/>',
+    tela:'<rect x="6" y="2.5" width="12" height="19" rx="2.5" class="d"/><circle cx="12" cy="12" r="2.6" class="f"/>'};
+  const ico=n=>`<svg class="icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${SIMB[n]||""}</svg>`;
+  const ICONES={rota:ico("rota"),pedidos:ico("pedidos"),perfil:ico("perfil"),notas:ico("mic"),notasLista:ico("notas"),config:ico("config"),financeiro:ico("financeiro"),ocorrencias:ico("ocorrencias"),entrada:ico("entrada"),processamento:ico("processamento"),saida:ico("saida"),
+    recModo:t=>ico({audio:"mic",transcrever:"transcrever","video-tras":"video","video-frente":"selfie",foto:"foto",selfie:"selfie",tela:"tela"}[t]||"mic")};
   // ---- etapas do pedido: entrada (selecionando/orçando) → processamento (produção) → saída (entrega/instalação) → entregue
-  const ETAPAS=["entrada","processamento","saida","entregue"];
+  const ETAPAS=["entrada","arte","processamento","qualidade","saida","entregue"];
   const etapaDe=slug=>{const e=estado();return ((e.pedidos||{})[slug]||{}).etapa||"entrada";};
   function moverEtapa(slug,etapa,dados){const e=estado();e.pedidos=e.pedidos||{};const p=e.pedidos[slug]||{};p.etapa=etapa;p.hist=(p.hist||[]).concat([{etapa,em:new Date().toISOString()}]);Object.assign(p,dados||{});e.pedidos[slug]=p;salvar(e);return p;}
   // ---- ocorrências: o que está atravancando algum processo (automáticas) + as que o vendedor registra

@@ -6,43 +6,51 @@
 <title>GênIO · Pedidos</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="app.css?v=8ea0d4bab3">
+<link rel="stylesheet" href="app.css?v=a58c8fce5c">
 <style>.novo-ped{position:fixed;left:12px;right:12px;top:8vh;max-height:80vh;overflow:auto;background:#fff;border-radius:18px;padding:14px;z-index:75;box-shadow:0 10px 40px rgba(28,22,53,.3)}.novo-ped h3{margin:0 0 8px}.novo-ped input{width:100%;box-sizing:border-box;font:inherit;font-size:16px;border:1.5px solid var(--linha);border-radius:12px;padding:10px 12px;margin:0 0 8px}.lista-cli{display:grid;gap:4px}.lista-cli button{border:0;background:var(--lav);border-radius:12px;text-align:left;padding:10px 12px;font:inherit;display:grid}.lista-cli button small{color:var(--texto2);font-size:12px}.fato{display:grid;grid-template-columns:auto 1fr;gap:10px;padding:6px 0;border-top:1px solid var(--linha)}.fato:first-of-type{border-top:0}.fato span{color:var(--texto2)}</style>
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=8ea0d4bab3"></script>
+<script src="app.js?v=a58c8fce5c"></script>
 <script>
 (async()=>{
   const {$,esc,sessao,dados,nav,topo,nomeLoja,estado}=App;
   if(!await sessao())return;
   const D=await dados();const e=estado();const sel=e.sel||{};const {qs,cliente,etapaDe,moverEtapa}=App;
   const etapa=["entrada","processamento","saida"].includes(qs.get("etapa"))?qs.get("etapa"):"entrada";
-  const TIT={entrada:["Entrada","Pedidos em aberto: seleção, arte e orçamento."],processamento:["Produção","Pedidos confirmados, em produção no fornecedor."],saida:["Saída","Prontos para entrega / instalação."]};
+  const TIT={entrada:["Entrada","Pedidos em aberto: seleção, arte e orçamento."],processamento:["Produção","Arte em revisão final, pedidos em produção e conferência de qualidade."],saida:["Saída","Prontos para entrega / instalação."]};
   // pedidos = lojas com itens selecionados (ou movidas de etapa); urgência = o que trava a etapa
   const slugs=new Set([...Object.keys(sel).filter(k=>Object.values(sel[k]).some(v=>v&&v.q>0)),...Object.keys(e.pedidos||{})]);
   const lista=[];for(const slug of slugs){const l=D.lojas.find(x=>x.slug===slug);if(!l)continue;const S=sel[slug]||{};const its=Object.entries(S).filter(([k,v])=>v&&v.q>0);const c=await cliente(l);const et=etapaDe(slug);const P=(e.pedidos||{})[slug]||{};
     const alertas=[];let nivel="";
     if(et==="entrada"){if(!(c.manual&&c.manual.editado)){alertas.push("logotipo não tratado");nivel="urgente";}const semArte=its.filter(([k,v])=>!v.servico&&!(c.artes||{})[k]);if(semArte.length){alertas.push(`sem arte: ${semArte.map(([k,v])=>v.nome||k).join(", ")}`);nivel=nivel||"atencao";}if(!its.length){alertas.push("nenhum item escolhido");nivel=nivel||"atencao";}}
+    if(et==="arte"){const dias=P.hist&&P.hist.length?Math.floor((Date.now()-new Date(P.hist[P.hist.length-1].em))/864e5):0;alertas.push("arte em revisão final antes de produzir");if(dias>=3){alertas.push(`${dias} dias aguardando aprovação da arte`);nivel=dias>=5?"urgente":(nivel||"atencao");}}
+    if(et==="qualidade"){alertas.push("conferir a peça: aprovar ou mandar refazer");nivel=nivel||"atencao";}
     if(et==="processamento"){const dias=P.hist?Math.floor((Date.now()-new Date(P.hist[P.hist.length-1].em))/864e5):0;if(dias>=10){alertas.push(`${dias} dias em produção`);nivel="urgente";}else if(dias>=7){alertas.push(`${dias} dias em produção`);nivel="atencao";}if(!P.fornecedorPedido){alertas.push("sem número do pedido no fornecedor");nivel=nivel||"atencao";}}
     if(et==="saida"){const dias=P.hist?Math.floor((Date.now()-new Date(P.hist[P.hist.length-1].em))/864e5):0;if(dias>=3){alertas.push(`pronto há ${dias} dias sem entrega`);nivel="urgente";}else if(dias>=1){alertas.push(`pronto há ${dias} dia(s)`);nivel=nivel||"atencao";}if(!P.agendado){alertas.push("entrega não agendada");nivel=nivel||"atencao";}}
     lista.push({l,slug,its,et,P,alertas,nivel});}
-  const cont={entrada:0,processamento:0,saida:0};lista.forEach(x=>{if(x.nivel==="urgente"&&cont[x.et]!==undefined)cont[x.et]++;});try{window.top.postMessage({genio:"urgencias",...cont},location.origin);}catch(e){}
-  const vis=lista.filter(x=>x.et===etapa).sort((a,b)=>(b.nivel==="urgente")-(a.nivel==="urgente")||(b.nivel==="atencao")-(a.nivel==="atencao"));
-  const prox={entrada:"processamento",processamento:"saida",saida:"entregue"}[etapa];const rotProx={entrada:"✓ Confirmar → produção",processamento:"✓ Pronto → saída",saida:"✓ Entregue"}[etapa];
-  const blocos=vis.map(x=>`<div class="ped ${x.nivel}"><div class="cab"><b>${esc(nomeLoja(x.l.nome))}</b><span class="muted" style="font-size:12px">${x.nivel==="urgente"?"🔴 urgente":x.nivel==="atencao"?"🟠 atenção":"🟢 em dia"}</span></div>
+  const grupo=et=>(et==="arte"||et==="qualidade")?"processamento":et;const cont={entrada:0,processamento:0,saida:0};lista.forEach(x=>{if(x.nivel==="urgente"&&cont[grupo(x.et)]!==undefined)cont[grupo(x.et)]++;});try{window.top.postMessage({genio:"urgencias",...cont},location.origin);}catch(e){}
+  const vis=lista.filter(x=>grupo(x.et)===etapa).sort((a,b)=>(b.nivel==="urgente")-(a.nivel==="urgente")||(b.nivel==="atencao")-(a.nivel==="atencao"));
+  const PROX={entrada:"arte",arte:"processamento",processamento:"qualidade",qualidade:"saida",saida:"entregue"},ROT={entrada:"✓ Confirmar → arte",arte:"✓ Arte aprovada → produção",processamento:"✓ Chegou → qualidade",qualidade:"✓ Qualidade OK → saída",saida:"✓ Entregue"},VOLTA={arte:"entrada",processamento:"arte",qualidade:"processamento",saida:"qualidade"};
+  // linha do processo: um ponto por etapa; cheio = feito, anel = onde o pedido está, vazio = falta; data em cada etapa vencida
+  const PASSOS=[["entrada","Entrada"],["arte","Arte"],["processamento","Produção"],["qualidade","Qualidade"],["saida","Saída"],["entregue","Entregue"]];
+  const processo=x=>{const at=PASSOS.findIndex(p=>p[0]===x.et);const quando=k=>{const h=(x.P.hist||[]).filter(y=>y.etapa===k).pop();return h?new Date(h.em).toLocaleDateString("pt-BR",{day:"2-digit",month:"2-digit"}):"";};
+    return `<div class="proc" style="--feito:${Math.max(0,at)/(PASSOS.length-1)}">${PASSOS.map(([k,t],i)=>`<div class="pp ${i<at?"feito":i===at?"atual":""}"><i></i><b>${t}</b><small>${i<=at?quando(k):""}</small></div>`).join("")}</div>`;};
+  const blocos=vis.map(x=>`<div class="ped ${x.nivel}"><div class="cab"><b>${esc(nomeLoja(x.l.nome))}</b><span class="nivel ${x.nivel||"ok"}"><i></i>${x.nivel==="urgente"?"urgente":x.nivel==="atencao"?"atenção":"em dia"}</span></div>
       <div class="itens">${x.its.length?x.its.map(([k,v])=>esc(v.nome||k)+(v.q>1?" ×"+v.q:"")).join(" · "):"sem itens"}${x.P.fornecedorPedido?` · pedido ${esc(x.P.fornecedorPedido)}`:""}${x.P.agendado?` · entrega ${esc(x.P.agendado)}`:""}</div>
       ${x.alertas.map(a=>`<div class="alerta">• ${esc(a)}</div>`).join("")}
-      <div class="acs"><a href="visita.html?l=${encodeURIComponent(x.slug)}">Abrir loja</a>${etapa==="entrada"?`<a href="produtos.html?l=${encodeURIComponent(x.slug)}">Produtos</a>`:""}${etapa==="processamento"?`<button type="button" data-np="${esc(x.slug)}">Nº do pedido</button>`:""}${etapa==="saida"?`<button type="button" data-ag="${esc(x.slug)}">Agendar entrega</button>`:""}<button type="button" class="ok" data-mv="${esc(x.slug)}" data-para="${prox}">${rotProx}</button>${etapa!=="entrada"?`<button type="button" data-volta="${esc(x.slug)}">← voltar</button>`:""}</div></div>`).join("");
+      <div class="acs"><a href="visita.html?l=${encodeURIComponent(x.slug)}">Abrir loja</a>${etapa==="entrada"?`<a href="produtos.html?l=${encodeURIComponent(x.slug)}">Produtos</a>`:""}${x.et==="processamento"?`<button type="button" data-np="${esc(x.slug)}">Nº do pedido</button>`:""}${etapa==="saida"?`<button type="button" data-ag="${esc(x.slug)}">Agendar entrega</button>`:""}<button type="button" class="ok" data-mv="${esc(x.slug)}" data-para="${PROX[x.et]}">${ROT[x.et]}</button>${x.et==="qualidade"?`<button type="button" data-refazer="${esc(x.slug)}">↺ Refazer</button>`:""}${x.et!=="entrada"&&x.et!=="qualidade"?`<button type="button" data-volta="${esc(x.slug)}" data-de="${x.et}">← voltar</button>`:""}</div>${processo(x)}</div>`).join("");
   const avul=App.avulsos();
   $("#app").innerHTML=`${topo()}<h1>${TIT[etapa][0]}</h1><p class="sub">${TIT[etapa][1]}</p>
-  <div class="etapas">${["entrada","processamento","saida"].map(k=>`<a href="pedidos.html?etapa=${k}" class="${k===etapa?"on":""}">${TIT[k][0]} <small>${lista.filter(x=>x.et===k).length}${cont[k]?` · <b style="color:#F0786B">${cont[k]}!</b>`:""}</small></a>`).join("")}</div>
+  <div class="etapas">${["entrada","processamento","saida"].map(k=>`<a href="pedidos.html?etapa=${k}" class="${k===etapa?"on":""}">${TIT[k][0]} <small>${lista.filter(x=>grupo(x.et)===k).length}${cont[k]?` · <b style="color:#F0786B">${cont[k]}!</b>`:""}</small></a>`).join("")}</div>
   ${etapa==="entrada"?`<button type="button" class="btn" id="novo" style="margin:0 0 12px;min-height:52px">＋ Novo pedido</button>`:""}
-  ${blocos||`<section class="card"><p>${etapa==="entrada"?"Nenhum pedido em aberto. As seleções nascem na visita, em “Produtos e serviços”, ou num pedido novo.":etapa==="processamento"?"Nada em produção.":"Nada aguardando entrega."}</p></section>`}
+  ${blocos||`<section class="card"><p>${etapa==="entrada"?"Nenhum pedido em aberto. As seleções nascem na visita, em “Produtos e serviços”, ou num pedido novo.":etapa==="processamento"?"Nada em arte nem em produção.":"Nada aguardando entrega."}</p></section>`}
   ${etapa==="entrada"&&avul.length?`<section class="card"><h2>Clientes avulsos</h2>${avul.map(a=>`<div class="fato"><span>${new Date(a.criado).toLocaleDateString("pt-BR")}</span><b><a href="visita.html?l=${encodeURIComponent(a.slug)}">${esc(a.nome)}</a></b></div>`).join("")}</section>`:""}
   ${nav("pedidos")}`;
   document.querySelectorAll("[data-mv]").forEach(b=>b.onclick=()=>{moverEtapa(b.dataset.mv,b.dataset.para);location.reload();});
-  document.querySelectorAll("[data-volta]").forEach(b=>b.onclick=()=>{moverEtapa(b.dataset.volta,{processamento:"entrada",saida:"processamento"}[etapa]);location.reload();});
+  // qualidade reprovada: a peça volta para a etapa que precisa ser refeita
+  document.querySelectorAll("[data-refazer]").forEach(b=>b.onclick=async()=>{const k=await App.menuLongo("Refazer: voltar para…",[{k:"arte",t:"Arte · o layout precisa mudar"},{k:"processamento",t:"Produção · refazer a peça"}]);if(!k)return;const m=prompt("O que está errado? (fica no histórico do pedido)");moverEtapa(b.dataset.refazer,k,m?{reprovacao:m.trim()}:{});location.reload();});
+  document.querySelectorAll("[data-volta]").forEach(b=>b.onclick=()=>{moverEtapa(b.dataset.volta,VOLTA[b.dataset.de]);location.reload();});
   document.querySelectorAll("[data-np]").forEach(b=>b.onclick=()=>{const v=prompt("Número do pedido no fornecedor");if(v!==null){moverEtapa(b.dataset.np,"processamento",{fornecedorPedido:v.trim()});location.reload();}});
   document.querySelectorAll("[data-ag]").forEach(b=>b.onclick=()=>{const v=prompt("Entrega/instalação (data e hora)");if(v!==null){moverEtapa(b.dataset.ag,"saida",{agendado:v.trim()});location.reload();}});
   if(!$("#novo"))return;
