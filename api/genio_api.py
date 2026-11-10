@@ -789,10 +789,21 @@ class H(BaseHTTPRequestHandler):
                         return self._erro(400, "zona?")
                     import logos_auto, importlib; importlib.reload(logos_auto)
                     me = sys.modules[__name__]; res = {}
+                    # zona=todas: todas as listas já captadas (cada pasta de dados/captacao com lojas.json), uma depois da outra
+                    pasta_cap = os.path.join(RAIZ, "dados", "captacao")
+                    zonas = sorted(z for z in os.listdir(pasta_cap) if os.path.exists(os.path.join(pasta_cap, z, "lojas.json"))) if zona == "todas" else [zona]
+                    arq_est = os.path.join(ESTADO_DIR, f"logos_auto-{zona}.json")
+                    json.dump({"andamento": True, "zonas": zonas, "inicio": time.strftime("%Y-%m-%dT%H:%M:%S")}, open(arq_est, "w"))
                     def _job():
-                        try: res.update(logos_auto.rodar(zona, me, log=lambda t: sys.stderr.write(t + "\n")))
-                        except Exception as e: res["erro"] = str(e)
-                        json.dump(res, open(os.path.join(ESTADO_DIR, f"logos_auto-{zona}.json"), "w"))
+                        for z in zonas:
+                            try: r = logos_auto.rodar(z, me, log=lambda t: sys.stderr.write(t + "\n"))
+                            except Exception as e: r = {"zona": z, "erro": str(e)}
+                            if zona == "todas":
+                                res.setdefault("zonas_feitas", []).append(r); json.dump({"andamento": True, **res}, open(arq_est, "w"))
+                            else:
+                                res.update(r)
+                        res["fim"] = time.strftime("%Y-%m-%dT%H:%M:%S")
+                        json.dump(res, open(arq_est, "w"))
                     threading.Thread(target=_job, daemon=True).start()
                     return self._send(200, {"ok": True, "zona": zona, "resultado_em": f"/api/admin/logos-auto/estado?zona={zona}"})
                 if p == "/api/admin/logos-auto/estado":
