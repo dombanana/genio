@@ -451,3 +451,5 @@ svg.icone .w{fill:none}
 .resultado .ops button{font:inherit;font-size:14px;font-weight:700;min-height:52px;border-radius:12px;border:1.5px solid var(--linha);background:#fff;cursor:pointer;color:var(--texto)}
 .resultado .ops button.on{border-color:var(--marca);background:var(--lav2);color:var(--marca)}
 .resultado .mot{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}.resultado .mot button{font:inherit;font-size:13px;padding:7px 12px;border-radius:999px;border:1px solid var(--linha);background:#fff;cursor:pointer}.resultado .mot button.on{background:var(--marca);color:#fff;border-color:var(--marca)}
+
+.prod .preco-p{margin:2px 12px 4px;line-height:1.2}.prod .preco-p b{display:block;font-size:17px;color:var(--texto)}.prod .preco-p small{font-size:12px;color:var(--texto2)}

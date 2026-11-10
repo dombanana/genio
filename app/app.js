@@ -193,7 +193,7 @@ const App=(()=>{
   // ---- arte automática: logotipo tratado centralizado preenchendo a área segura do gabarito, cor padrão do material
   const COR_PADRAO={capacho:"#2B2B2D",rigido:"#F4F1EA",vinil:null,tecido:"#F4F1EA",papel:"#FFFFFF",lona:"#FFFFFF",carimbo:null};
   const PRODUTOS_IDS=["capacho","placas","adesivos","uniformes","impressos","panfleto","banners","parede","brindes","carimbo","windbanner","faixa","folheto","camiseta","bone","avental"];
-  let _G=null;const gabaritos=async()=>_G||(_G=await (await fetch("gabaritos.json?v=f283ff4b01")).json());
+  let _G=null;const gabaritos=async()=>_G||(_G=await (await fetch("gabaritos.json?v=33647e2bb2")).json());
   const carregarImg=src=>new Promise(res=>{const i=new Image();i.crossOrigin="anonymous";i.onload=()=>res(i);i.onerror=()=>res(null);i.src=src;});
   // ---- carimbo: só texto — nome, razão social, CNPJ (negrito), endereço, telefone; nunca logotipo
   async function dadosCarimbo(l){const cad=await ficha(l.slug).catch(()=>null);const L=(cad&&cad.lacunas)||{};const leit=(L.leitura||{}).valor||"";const razao=((leit.match(/Razão social: ([^·]+)/)||[])[1]||"").trim();const cnpj=((leit.match(/CNPJ:? ?([\d./-]{14,18})/)||[])[1]||"");
@@ -237,7 +237,7 @@ const App=(()=>{
     const aw=W-2*(B+S),ah=H-2*(B+S);const f=Math.min(aw/LW,(P.ancora==="topo"?ah*0.45:ah)/LH);const w=LW*f,h=LH*f;const x=(W-w)/2,y=P.ancora==="topo"?B+S+ah*0.05:(H-h)/2;
     const fundo=P.sem_fundo?null:(COR_PADRAO[P.superficie]===undefined?"#FFFFFF":COR_PADRAO[P.superficie]);
     // kit de 14 setores (10/11): a maquete frontal do ramo da loja é a arte de partida de todos os produtos
-    await carregarScript("qr.js?v=f283ff4b01");await carregarScript("impressos.js?v=f283ff4b01");await carregarScript("kits14.js?v=f283ff4b01");
+    await carregarScript("qr.js?v=33647e2bb2");await carregarScript("impressos.js?v=33647e2bb2");await carregarScript("kits14.js?v=33647e2bb2");
     if(window.Kits14&&window.Kits14.ARQ[pid]){const K=await window.Kits14.montar(App,pid,c,l,{W,H,B,S,im,rec});
       if(K){const doc={fundo:K.fundo,fundoImg:null,el:K.el,campos:null,auto:true,kit:KIT14,setorKit:K.setorKit,kitRef:K.kitRef,W,H};const imgs={[c.manual.tratado]:im};
         const k=Math.min(1,1400/Math.max(W,H));const cv=document.createElement("canvas");cv.width=Math.round(W*k);cv.height=Math.round(H*k);const g=cv.getContext("2d");g.scale(k,k);
@@ -417,7 +417,14 @@ const App=(()=>{
   // toque longo em elementos [data-longo]: chama fn(el) após 450 ms sem mover
   function ligarLongo(root,fn){$$("[data-longo]",root).forEach(el=>{let t=null,p=null;el.addEventListener("pointerdown",ev=>{p={x:ev.clientX,y:ev.clientY};t=setTimeout(()=>{t=null;if(navigator.vibrate)navigator.vibrate(12);fn(el);},450);});
     const c=ev=>{if(t&&p&&ev.type==="pointermove"&&Math.hypot(ev.clientX-p.x,ev.clientY-p.y)<8)return;clearTimeout(t);t=null;};el.addEventListener("pointermove",c);el.addEventListener("pointerup",c);el.addEventListener("pointercancel",c);el.addEventListener("contextmenu",ev=>ev.preventDefault());});}
-  return {$,$$,esc,qs,ZONA,zonaDe,desempenho,get METAS(){return METAS;},arquivarLoja,reagendarLoja,get PLANO(){return PLANO;},setorNome,nomeLoja,telFmt,ini,sessao,eu,dados,ficha,estrelas,estrelasHTML,estado,salvar,abrirVendas,lerCliente,gravarCliente,cliente,lerChave,gravarChave,API,definirCliente,classificar,logoPrincipal,removerLogo,estadoLogo,ROTULO_LOGO,aprovarLogo,escolherImagem,abrirLogotipo,entradas,ligarEntradas,artePadrao,gerarProdutos,contextualizar,aparar,assarRecortes,desenharElementos,desenharTexto,desenharQR,desenharVetor,carregarScript,recortarLogo,PRODUTOS_IDS,separarCores,garantirCamadas,dadosCarimbo,desenharCarimbo,cenaCarimbo,desenharLista,desenharSeta,listarNotas,gravarNota,apagarNota,diasDeRota,reagendar,hojeISO,dataCurta,META,ICONES,NA_CASCA,avulsos,novoAvulso,atualizarAvulso,ocorrenciasManuais,gravarOcorrencias,ocorrenciasAuto,ETAPAS,etapaDe,moverEtapa,nav,topo,voltar,acoes,menuLongo,ligarLongo};
+  // preço de venda (decisão do dono, 10/11): custo do fornecedor (Printi/GIV, 1ª faixa, consulta de 10/11) × 2, frete médio incluso.
+  // O frete médio por produto é o número que o dono grava em Configurações (metas.frete); sem ele, o card avisa "+ frete".
+  const CUSTO={capacho:[81.99,"60×40 cm",true],placas:[126.99,"35×25 cm",true],uniformes:[91.99,"1 un."],impressos:[44.59,"100 un."],panfleto:[112.32,"250 un."],
+    banners:[333.99,"com estrutura"],parede:[26.16,"A2",true],brindes:[32.06,"un. · mín. 10"],carimbo:[38.99,"CNPJ 59×39 mm"],windbanner:[153.99,"kit P"],faixa:[49.99,"200×40 cm"],
+    folheto:[291.48,"250 un."],camiseta:[68.99,"1 un."],bone:[79.99,"1 un."],avental:[26.99,"1 un."]};
+  function precoProduto(pid){const c=CUSTO[pid];if(!c)return null;const fr=+(METAS.frete||0);const v=Math.round(2*(c[0]+fr)*100)/100;
+    return {valor:v,unid:c[1],apartir:!!c[2],frete:fr>0,txt:`${c[2]?"a partir de ":""}${v.toLocaleString("pt-BR",{style:"currency",currency:"BRL"})}`};}
+  return {precoProduto,$,$$,esc,qs,ZONA,zonaDe,desempenho,get METAS(){return METAS;},arquivarLoja,reagendarLoja,get PLANO(){return PLANO;},setorNome,nomeLoja,telFmt,ini,sessao,eu,dados,ficha,estrelas,estrelasHTML,estado,salvar,abrirVendas,lerCliente,gravarCliente,cliente,lerChave,gravarChave,API,definirCliente,classificar,logoPrincipal,removerLogo,estadoLogo,ROTULO_LOGO,aprovarLogo,escolherImagem,abrirLogotipo,entradas,ligarEntradas,artePadrao,gerarProdutos,contextualizar,aparar,assarRecortes,desenharElementos,desenharTexto,desenharQR,desenharVetor,carregarScript,recortarLogo,PRODUTOS_IDS,separarCores,garantirCamadas,dadosCarimbo,desenharCarimbo,cenaCarimbo,desenharLista,desenharSeta,listarNotas,gravarNota,apagarNota,diasDeRota,reagendar,hojeISO,dataCurta,META,ICONES,NA_CASCA,avulsos,novoAvulso,atualizarAvulso,ocorrenciasManuais,gravarOcorrencias,ocorrenciasAuto,ETAPAS,etapaDe,moverEtapa,nav,topo,voltar,acoes,menuLongo,ligarLongo};
 })();
 
 // ---- tela travada: a pinça não amplia o app; só as artes abrem (prancheta, logotipo e imagens de arte, que têm a própria pinça)
