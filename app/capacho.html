@@ -3915,6 +3915,16 @@ async function sessRestore(){let o=null;try{o=await sessRead();}catch(e){}
   var qs=new URLSearchParams(location.search),slug=qs.get("l")||"",nome=(qs.get("n")||"").trim();if(!slug||!nome)return;
   function hex(h){h=(h||"").replace("#","");return [parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)];}
   function maisPerto(cor){var c=hex(cor),best=null,bd=1e9;KAPAZI_CORES.forEach(function(k){var id=Array.isArray(k)?k[0]:k.id,hx=Array.isArray(k)?k[2]:k.hex;if(!Array.isArray(k)&&k.ativo===false)return;var v=hex(hx),d=(v[0]-c[0])*(v[0]-c[0])*0.3+(v[1]-c[1])*(v[1]-c[1])*0.59+(v[2]-c[2])*(v[2]-c[2])*0.11;if(d<bd){bd=d;best=id;}});return best;}
+  // logotipo já tratado (sem fundo) vai para o motor sobre um fundo liso que contrasta com ele: o "tirar o fundo" do motor
+  // reconhece esse fundo e não apaga partes claras da marca (transparente vira branco e some com logotipo branco)
+  async function chapado(src){var im=new Image();im.crossOrigin="anonymous";await new Promise(function(ok,err){im.onload=ok;im.onerror=err;im.src=src;});
+    var w=im.naturalWidth,h=im.naturalHeight,cv=document.createElement("canvas");cv.width=w;cv.height=h;var g=cv.getContext("2d");g.drawImage(im,0,0);
+    var d=g.getImageData(0,0,w,h).data,s=0,k=0;for(var i=0;i<d.length;i+=16){if(d[i+3]>128){s+=0.3*d[i]+0.59*d[i+1]+0.11*d[i+2];k++;}}
+    var claro=k&&s/k>140,m=Math.round(Math.max(w,h)*0.06);var c2=document.createElement("canvas");c2.width=w+2*m;c2.height=h+2*m;var g2=c2.getContext("2d");
+    g2.fillStyle=claro?"#1b1b1b":"#ffffff";g2.fillRect(0,0,c2.width,c2.height);g2.drawImage(im,m,m);
+    return await new Promise(function(ok){c2.toBlob(ok,"image/png");});}
+  // logotipo da identidade já vem recortado: todos os blocos vão para o tapete (o motor não deixa parte da marca de fora)
+  try{var _pb=window.proposeBlocks;if(typeof _pb==="function")window.proposeBlocks=function(b){return (typeof LOGO_ORIGEM!=="undefined"&&LOGO_ORIGEM==="identidade")?b.map(function(){return true;}):_pb(b);};}catch(e){}
   var n=0,t=setInterval(async function(){n++;var pronto=false;try{pronto=typeof Q!=="undefined"&&Q&&Q.cliente&&(Q.cliente.nome||"").trim().toLowerCase()===nome.toLowerCase();}catch(e){}
     if(!pronto){if(n>80)clearInterval(t);return;}clearInterval(t);
     try{var r=await fetch("/api/clientes/"+encodeURIComponent(slug),{credentials:"same-origin",cache:"no-store"});if(!r.ok)return;var f=await r.json();var A=f.artes&&f.artes.capacho,src=f.manual&&f.manual.tratado;
@@ -3925,7 +3935,7 @@ async function sessRestore(){let o=null;try{o=await sessRead();}catch(e){}
       else if(!src||temLogo)return;   // sem arte do kit: só entra o logotipo tratado, e só se o tapete ainda está sem logotipo
       var corT=(A&&A.material)||(f.manual&&f.manual.fundoMarca);   // cor do tapete: a da arte; sem arte, o fundo da marca
       if(corT&&/^#[0-9a-f]{6}$/i.test(corT)){var fc=maisPerto(corT);if(fc){Q.spec.fundo=fc;try{var T=typeof curTap==="function"&&curTap();if(T&&T.spec)T.spec.fundo=fc;}catch(e){}fillSpec();renderThumb();}}
-      if(src&&!temLogo&&!LOGOQ.length&&LOGO_ORIGEM!=="identidade"){LOGO_ORIGEM="identidade";var b=await (await fetch(src,{credentials:"same-origin"})).blob();openPartK("logo");LOGOQ.push(new File([b],"marca-tratada.png",{type:b.type||"image/png"}));nextLogoFromQueue();}
+      if(src&&!temLogo&&!LOGOQ.length&&LOGO_ORIGEM!=="identidade"){LOGO_ORIGEM="identidade";var b=await chapado(src);openPartK("logo");LOGOQ.push(new File([b],"marca-tratada.png",{type:b.type||"image/png"}));nextLogoFromQueue();}
     }catch(e){}
   },150);
 })();
