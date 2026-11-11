@@ -183,7 +183,13 @@ const App=(()=>{
   const CARDAPIOS={padaria:{titulo:"Nossos produtos",itens:[["Pão francês (kg)","R$ 18,90"],["Pão de queijo (un.)","R$ 4,50"],["Croissant de manteiga","R$ 9,00"],["Bolo de cenoura (fatia)","R$ 8,50"],["Sonho de creme","R$ 7,00"],["Café coado (copo)","R$ 4,00"],["Pão na chapa + café","R$ 9,90"],["Baguete artesanal","R$ 12,00"]],promo:["PROMOÇÃO DA SEMANA","Café + pão na chapa","por R$ 8,90","seg. a sex., das 6h às 10h","apresente este flyer"]}};
   const cardapioDe=()=>CARDAPIOS.padaria;
   // ---- recorte em lote: para cada loja com logotipo escolhido e ainda não tratado, o servidor tira o fundo (rembg) e separa as cores
+  // logotipo que já veio sem fundo (borda transparente) não precisa de recorte: vale como tratado
+  async function fundoTransparente(src){try{const im=await carregarImg(src);if(!im)return false;const w=Math.min(200,im.naturalWidth),h=Math.max(1,Math.round(im.naturalHeight*w/im.naturalWidth));
+    const cv=document.createElement("canvas");cv.width=w;cv.height=h;const g=cv.getContext("2d");g.drawImage(im,0,0,w,h);const d=g.getImageData(0,0,w,h).data;let t=0,n=0;
+    const ver=(x,y)=>{n++;if(d[(y*w+x)*4+3]<16)t++;};for(let x=0;x<w;x++){ver(x,0);ver(x,h-1);}for(let y=0;y<h;y++){ver(0,y);ver(w-1,y);}return t/n>0.6;}catch(e){return false;}}
+  function logoComoTratado(c,p){p.tratado=true;c.manual={editado:true,tratado:p.src,fundoMarca:(c.manual&&c.manual.fundoMarca)||null,largura:p.largura,altura:p.altura,cores:(c.manual&&c.manual.cores)||[],camadas:[{nome:"Logotipo",png:p.src}],em:new Date().toISOString()};}
   async function recortarLogo(l){const c=await cliente(l);const p=(c.logos||[])[0];if(!p||!p.src)return {ok:false,motivo:"sem logotipo"};if(c.manual&&c.manual.editado)return {ok:true,ja:true};
+    if(await fundoTransparente(p.src)){logoComoTratado(c,p);await gravarCliente(c);return {ok:true,por:"já sem fundo"};}
     let png=p.src;if(!png.startsWith("data:")){const im=await carregarImg(png.startsWith("/")||png.startsWith(location.origin)?png:`/api/img?u=${encodeURIComponent(png)}`);if(!im)return {ok:false,motivo:"imagem não abriu"};const cv=document.createElement("canvas");const k=Math.min(1,1400/Math.max(im.naturalWidth,im.naturalHeight));cv.width=Math.round(im.naturalWidth*k);cv.height=Math.round(im.naturalHeight*k);cv.getContext("2d").drawImage(im,0,0,cv.width,cv.height);png=cv.toDataURL("image/png");}
     const r=await fetch("/api/marca/preparar",{method:"POST",credentials:"same-origin",headers:{"Content-Type":"application/json"},body:JSON.stringify({png})});const d=await r.json().catch(()=>({}));
     if(!r.ok||!d.sem_fundo)return {ok:false,motivo:d.mensagem||d.erro||("servidor "+r.status)};
@@ -193,7 +199,7 @@ const App=(()=>{
   // ---- arte automática: logotipo tratado centralizado preenchendo a área segura do gabarito, cor padrão do material
   const COR_PADRAO={capacho:"#2B2B2D",rigido:"#F4F1EA",vinil:null,tecido:"#F4F1EA",papel:"#FFFFFF",lona:"#FFFFFF",carimbo:null};
   const PRODUTOS_IDS=["capacho","placas","adesivos","uniformes","impressos","panfleto","banners","parede","brindes","carimbo","windbanner","faixa","folheto","camiseta","bone","avental"];
-  let _G=null;const gabaritos=async()=>_G||(_G=await (await fetch("gabaritos.json?v=a2271a6f70")).json());
+  let _G=null;const gabaritos=async()=>_G||(_G=await (await fetch("gabaritos.json?v=b2f8f2d804")).json());
   const carregarImg=src=>new Promise(res=>{const i=new Image();i.crossOrigin="anonymous";i.onload=()=>res(i);i.onerror=()=>res(null);i.src=src;});
   // ---- carimbo: só texto — nome, razão social, CNPJ (negrito), endereço, telefone; nunca logotipo
   async function dadosCarimbo(l){const cad=await ficha(l.slug).catch(()=>null);const L=(cad&&cad.lacunas)||{};const leit=(L.leitura||{}).valor||"";const razao=((leit.match(/Razão social: ([^·]+)/)||[])[1]||"").trim();const cnpj=((leit.match(/CNPJ:? ?([\d./-]{14,18})/)||[])[1]||"");
@@ -237,7 +243,7 @@ const App=(()=>{
     const aw=W-2*(B+S),ah=H-2*(B+S);const f=Math.min(aw/LW,(P.ancora==="topo"?ah*0.45:ah)/LH);const w=LW*f,h=LH*f;const x=(W-w)/2,y=P.ancora==="topo"?B+S+ah*0.05:(H-h)/2;
     const fundo=P.sem_fundo?null:(COR_PADRAO[P.superficie]===undefined?"#FFFFFF":COR_PADRAO[P.superficie]);
     // kit de 14 setores (10/11): a maquete frontal do ramo da loja é a arte de partida de todos os produtos
-    await carregarScript("qr.js?v=a2271a6f70");await carregarScript("impressos.js?v=a2271a6f70");await carregarScript("kits14.js?v=a2271a6f70");
+    await carregarScript("qr.js?v=b2f8f2d804");await carregarScript("impressos.js?v=b2f8f2d804");await carregarScript("kits14.js?v=b2f8f2d804");
     if(window.Kits14&&window.Kits14.ARQ[pid]){const K=await window.Kits14.montar(App,pid,c,l,{W,H,B,S,im,rec});
       if(K){const doc={fundo:K.fundo,fundoImg:null,el:K.el,campos:null,auto:true,kit:KIT14,setorKit:K.setorKit,kitRef:K.kitRef,W,H};const imgs={[c.manual.tratado]:im};
         const k=Math.min(1,1400/Math.max(W,H));const cv=document.createElement("canvas");cv.width=Math.round(W*k);cv.height=Math.round(H*k);const g=cv.getContext("2d");g.scale(k,k);
@@ -427,7 +433,7 @@ const App=(()=>{
       const fr=+(METAS.frete||0);const val=Math.round(2*(v[2]+fr)*100)/100;return {valor:val,unid:`${String(f.w_cm).replace(".",",")}×${String(f.h_cm).replace(".",",")} cm · ${f.w_cm>f.h_cm?"paisagem":"retrato"}`,frete:fr>0,txt:val.toLocaleString("pt-BR",{style:"currency",currency:"BRL"})};}
     const c=CUSTO[pid];if(!c)return null;const fr=+(METAS.frete||0);const v=Math.round(2*(c[0]+fr)*100)/100;
     return {valor:v,unid:c[1],apartir:!!c[2],frete:fr>0,txt:`${c[2]?"a partir de ":""}${v.toLocaleString("pt-BR",{style:"currency",currency:"BRL"})}`};}
-  return {VITRINE,precoProduto,$,$$,esc,qs,ZONA,zonaDe,desempenho,get METAS(){return METAS;},arquivarLoja,reagendarLoja,get PLANO(){return PLANO;},setorNome,nomeLoja,telFmt,ini,sessao,eu,dados,ficha,estrelas,estrelasHTML,estado,salvar,abrirVendas,lerCliente,gravarCliente,cliente,lerChave,gravarChave,API,definirCliente,classificar,logoPrincipal,removerLogo,estadoLogo,ROTULO_LOGO,aprovarLogo,escolherImagem,abrirLogotipo,entradas,ligarEntradas,artePadrao,gerarProdutos,contextualizar,aparar,assarRecortes,desenharElementos,desenharTexto,desenharQR,desenharVetor,carregarScript,recortarLogo,PRODUTOS_IDS,separarCores,garantirCamadas,dadosCarimbo,desenharCarimbo,cenaCarimbo,desenharLista,desenharSeta,listarNotas,gravarNota,apagarNota,diasDeRota,reagendar,hojeISO,dataCurta,META,ICONES,NA_CASCA,avulsos,novoAvulso,atualizarAvulso,ocorrenciasManuais,gravarOcorrencias,ocorrenciasAuto,ETAPAS,etapaDe,moverEtapa,nav,topo,voltar,acoes,menuLongo,ligarLongo};
+  return {fundoTransparente,logoComoTratado,VITRINE,precoProduto,$,$$,esc,qs,ZONA,zonaDe,desempenho,get METAS(){return METAS;},arquivarLoja,reagendarLoja,get PLANO(){return PLANO;},setorNome,nomeLoja,telFmt,ini,sessao,eu,dados,ficha,estrelas,estrelasHTML,estado,salvar,abrirVendas,lerCliente,gravarCliente,cliente,lerChave,gravarChave,API,definirCliente,classificar,logoPrincipal,removerLogo,estadoLogo,ROTULO_LOGO,aprovarLogo,escolherImagem,abrirLogotipo,entradas,ligarEntradas,artePadrao,gerarProdutos,contextualizar,aparar,assarRecortes,desenharElementos,desenharTexto,desenharQR,desenharVetor,carregarScript,recortarLogo,PRODUTOS_IDS,separarCores,garantirCamadas,dadosCarimbo,desenharCarimbo,cenaCarimbo,desenharLista,desenharSeta,listarNotas,gravarNota,apagarNota,diasDeRota,reagendar,hojeISO,dataCurta,META,ICONES,NA_CASCA,avulsos,novoAvulso,atualizarAvulso,ocorrenciasManuais,gravarOcorrencias,ocorrenciasAuto,ETAPAS,etapaDe,moverEtapa,nav,topo,voltar,acoes,menuLongo,ligarLongo};
 })();
 
 // ---- tela travada: a pinça não amplia o app; só as artes abrem (prancheta, logotipo e imagens de arte, que têm a própria pinça)

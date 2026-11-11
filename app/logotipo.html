@@ -6,7 +6,7 @@
 <title>GênIO · Logotipo</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="app.css?v=a2271a6f70">
+<link rel="stylesheet" href="app.css?v=b2f8f2d804">
 <style>
 body.com-acoes{padding-bottom:calc(150px + env(safe-area-inset-bottom,0))}
 .palco{position:relative;height:min(50vh,480px);background:repeating-conic-gradient(#e9e5f3 0 25%,#fff 0 50%) 0 0/18px 18px;border-radius:16px;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
@@ -27,7 +27,7 @@ body.com-acoes{padding-bottom:calc(150px + env(safe-area-inset-bottom,0))}
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=a2271a6f70"></script>
+<script src="app.js?v=b2f8f2d804"></script>
 <script>
 (async()=>{
   const {$,$$,esc,qs,sessao,dados,nav,topo,voltar,nomeLoja,cliente,gravarCliente,definirCliente}=App;
@@ -58,7 +58,7 @@ body.com-acoes{padding-bottom:calc(150px + env(safe-area-inset-bottom,0))}
   if(r!=="ok"&&thumb){r=await carregar(`/api/img?u=${encodeURIComponent(thumb)}`);if(r==="ok")$("#st").textContent="Imagem grande não abriu; usando a miniatura.";}
   if(r!=="ok"){$("#st").textContent="Não consegui abrir esta imagem. Tente outra.";return;}
   // cor do fundo da arte antes de qualquer recorte: vira a cor base dos produtos (capacho, impressos, uniformes…)
-  let FUNDO=null;try{await App.carregarScript("kits14.js?v=a2271a6f70");FUNDO=window.Kits14.fundoDaImagem(cv);}catch(e){}
+  let FUNDO=null;try{await App.carregarScript("kits14.js?v=b2f8f2d804");FUNDO=window.Kits14.fundoDaImagem(cv);}catch(e){}
   $("#st").textContent=`${W}×${H} px · pinça para ampliar · salve inteiro ou marque a área`;$("#salvar").disabled=false;
   const pos=ev=>{const b=cv.getBoundingClientRect();return {x:Math.floor((ev.clientX-b.left)/b.width*W),y:Math.floor((ev.clientY-b.top)/b.height*H)};};
   const posPalco=ev=>{const b=palco.getBoundingClientRect();return {x:ev.clientX-b.left,y:ev.clientY-b.top};};
@@ -114,10 +114,14 @@ body.com-acoes{padding-bottom:calc(150px + env(safe-area-inset-bottom,0))}
   $("#salvar").onclick=async()=>{$("#salvar").disabled=true;$("#salvar").textContent="Salvando…";
     if(R&&modo==="area")recortar(Math.min(R.x0,R.x1),Math.min(R.y0,R.y1),Math.max(R.x0,R.x1),Math.max(R.y0,R.y1));
     const png=cv.toDataURL("image/png");const c=await cliente(l);
-    // vários logotipos por loja: o novo entra como principal; os anteriores ficam guardados
-    c.aprovacao="ok";c.logos=[{id:"logo"+Date.now().toString(36),src:png,nome:"Logotipo"+(fonte?" · "+fonte:""),origem:"escolha",de:u.startsWith("data:")?"":u,largura:W,altura:H,tratado:hist.length>0,em:new Date().toISOString()},...(c.logos||[])].slice(0,12);
-    // só conta como tratado se houve edição aqui (fundo tirado, recorte, giro); salvo inteiro sem mexer fica "falta tratar" → recorte em lote ou manual depois
-    if(hist.length>0)c.manual={editado:true,tratado:png,fundoMarca:FUNDO||(c.manual&&c.manual.fundoMarca)||null,largura:W,altura:H,cores:(c.manual&&c.manual.cores)||[],camadas:[{nome:"Logotipo",png}],em:new Date().toISOString()};else if(c.manual&&c.manual.tratado!==png)delete c.manual;
+    // salvo sem fundo (transparente na borda) = tratado, mesmo sem mexer aqui
+    const dd=cv.getContext("2d").getImageData(0,0,W,H).data;let tb=0,nb=0;const vb=(x,y)=>{nb++;if(dd[(y*W+x)*4+3]<16)tb++;};
+    for(let x=0;x<W;x+=Math.max(1,W>>8)){vb(x,0);vb(x,H-1);}for(let y=0;y<H;y+=Math.max(1,H>>8)){vb(0,y);vb(W-1,y);}
+    const tratado=hist.length>0||tb/nb>0.6;
+    // vários logotipos por loja: o editado entra como principal; se veio de um logotipo já salvo, substitui esse (não duplica)
+    c.aprovacao="ok";const novo={id:"logo"+Date.now().toString(36),src:png,nome:"Logotipo"+(fonte?" · "+fonte:""),origem:"escolha",de:u.startsWith("data:")?"":u,largura:W,altura:H,tratado,em:new Date().toISOString()};
+    const resto=(c.logos||[]).filter(x=>x.src!==png&&x.src!==u);c.logos=[novo,...resto].slice(0,12);
+    if(tratado)c.manual={editado:true,tratado:png,fundoMarca:FUNDO||(c.manual&&c.manual.fundoMarca)||null,largura:W,altura:H,cores:(c.manual&&c.manual.cores)||[],camadas:[{nome:"Logotipo",png}],em:new Date().toISOString()};else if(c.manual&&c.manual.tratado!==png)delete c.manual;
     await gravarCliente(c);location.href=`visita.html?l=${encodeURIComponent(slug)}`;};
 })();
 </script>
