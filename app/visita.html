@@ -6,7 +6,7 @@
 <title>GênIO · Visita</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="app.css?v=8159db0531">
+<link rel="stylesheet" href="app.css?v=fe621938ba">
 <style>
 .cab{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
 .fach{width:100%;aspect-ratio:16/9;border-radius:16px;overflow:hidden;background:var(--lav2);display:grid;place-items:center;position:relative}
@@ -21,7 +21,7 @@
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=8159db0531"></script>
+<script src="app.js?v=fe621938ba"></script>
 <script>
 (async()=>{
   const {$,$$,esc,qs,sessao,dados,ficha,estrelasHTML,estado,salvar,nav,topo,voltar,setorNome,nomeLoja,telFmt,cliente,gravarCliente,classificar,definirCliente,menuLongo,ligarLongo,ZONA,entradas,ligarEntradas,abrirLogotipo,logoPrincipal,removerLogo}=App;
@@ -156,7 +156,7 @@
     const editar=()=>{if(!principal)return location.href=`fontes.html?l=${encodeURIComponent(slug)}&tipo=busca`;abrirLogotipo(slug,principal.src,(principal.nome||"").replace(/^Logotipo ?·? ?/,""),"visita");};
     // painel do cliente: cada telefone com o seu código (6 números); o vendedor entrega pessoalmente ou pelo próprio WhatsApp
     (async()=>{const box=$("#pcLista");if(!box)return;const telF=t=>{const d=String(t||"");return d.length===11?`(${d.slice(0,2)}) ${d.slice(2,7)}-${d.slice(7)}`:d.length===10?`(${d.slice(0,2)}) ${d.slice(2,6)}-${d.slice(6)}`:d;};
-      const desenha=A=>{App.publicarPainel(l);box.innerHTML=A.length?A.map(a=>{const txt=encodeURIComponent(`Olá${a.nome?" "+a.nome:""}! Seu painel GênIO da ${nomeLoja(l.nome)}: https://genio.dombanana.tech/painel.html?t=${a.telefone}\nSeu código de acesso: ${a.codigo}`);
+      const desenha=A=>{if(A.length)App.publicarPainel(l);box.innerHTML=A.length?A.map(a=>{const txt=encodeURIComponent(`Olá${a.nome?" "+a.nome:""}! Seu painel GênIO da ${nomeLoja(l.nome)}: https://genio.dombanana.tech/painel.html?t=${a.telefone}\nSeu código de acesso: ${a.codigo}`);
         return `<div style="border-top:1px solid var(--linha);padding:10px 0;display:grid;gap:6px"><div style="display:flex;justify-content:space-between;gap:8px;align-items:baseline"><span><b>${esc(telF(a.telefone))}</b>${a.nome?` · ${esc(a.nome)}`:""}<br><small class="muted">${a.ultimo?"último acesso "+esc(a.ultimo.slice(8,10)+"/"+a.ultimo.slice(5,7)):"ainda não entrou"}</small></span><b style="font-size:24px;letter-spacing:.12em;font-variant-numeric:tabular-nums">${esc(a.codigo)}</b></div>
           <div style="display:flex;gap:6px;flex-wrap:wrap"><a class="btn sm" style="width:auto;min-height:36px;padding:0 12px;text-decoration:none" href="https://wa.me/55${a.telefone}?text=${txt}" target="_blank" rel="noopener">Mandar no WhatsApp</a><button type="button" class="btn sec sm" style="width:auto;min-height:36px;padding:0 12px" data-pcc="${a.id}">Código novo</button><button type="button" class="btn sec sm" style="width:auto;min-height:36px;padding:0 12px" data-pct="${a.id}">Tirar</button></div></div>`;}).join(""):`<small class="muted">Nenhum telefone ainda. Toque em "+ Telefone" para gerar o código do cliente.</small>`;
         box.querySelectorAll("[data-pcc]").forEach(b=>b.onclick=async()=>{if(!confirm("Gerar código novo? O código antigo para de funcionar."))return;desenha(await App.acessosCliente(slug,b.dataset.pcc+"/codigo",{}));});
