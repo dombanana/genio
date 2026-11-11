@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>GênIO · Painel do cliente</title>
+<meta name="theme-color" content="#6933C5">
+<meta name="robots" content="noindex,nofollow">
+<link rel="icon" href="genio-favicon.png" type="image/png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&display=swap">
+<style>
+:root{--roxo:#6933C5;--escuro:#1C1635;--fundo:#F1EEF8;--lav:#EBE3F5;--linha:#DDD6EC;--texto:#141024;--texto2:#6B6580;--teal:#0E8A84}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--fundo);color:var(--texto);font-family:Rubik,system-ui,sans-serif;-webkit-text-size-adjust:100%}
+.topo{background:var(--roxo);color:#fff;padding:calc(12px + env(safe-area-inset-top)) 16px 12px;display:flex;align-items:center;justify-content:space-between}
+.topo b{font-size:20px;font-weight:800;letter-spacing:-.01em}.topo b i{font-style:normal;color:#04C6C0}
+.topo button{background:rgba(255,255,255,.16);color:#fff;border:0;border-radius:10px;min-height:36px;padding:0 12px;font:600 14px Rubik,system-ui,sans-serif}
+main{max-width:640px;margin:0 auto;padding:16px 16px calc(32px + env(safe-area-inset-bottom))}
+h1{font-size:26px;line-height:1.15;margin:0 0 4px}h2{font-size:18px;margin:22px 0 10px}
+.sub{color:var(--texto2);font-size:14.5px;margin:0;line-height:1.45}.sub a{color:var(--roxo)}
+.est{color:#F2B705;letter-spacing:1px}.est span{color:#D8D2E6}
+.card{background:#fff;border-radius:18px;padding:14px;box-shadow:0 1px 0 rgba(28,22,53,.06)}
+.ola{background:var(--escuro);color:#fff;border-radius:16px;padding:12px 14px;margin:12px 0;font-size:14.5px;line-height:1.45}.ola b{color:#04C6C0}
+label{display:block;font-weight:600;font-size:14px;margin:12px 0 6px}
+input,textarea{width:100%;font:500 18px Rubik,system-ui,sans-serif;border:1.5px solid var(--linha);border-radius:12px;padding:12px 14px;background:#fff;color:var(--texto)}
+input:focus,textarea:focus{outline:2px solid var(--roxo);border-color:transparent}
+#cod{letter-spacing:.4em;text-align:center;font-size:26px;font-weight:700}
+.btn{display:grid;place-items:center;width:100%;min-height:52px;border:0;border-radius:14px;background:var(--roxo);color:#fff;font:700 17px Rubik,system-ui,sans-serif;margin-top:14px;text-decoration:none;cursor:pointer}
+.btn.sec{background:var(--lav);color:var(--roxo)}.btn:disabled{opacity:.55}
+.erro{color:#B4472E;font-weight:600;font-size:14px;min-height:20px;margin:10px 0 0}
+.ln{display:grid;grid-template-columns:60px minmax(0,1fr) auto;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid #F0EDF6;cursor:pointer}
+.ln:last-of-type{border-bottom:0}
+.ln .fig{width:60px;height:60px;border-radius:12px;background:var(--lav) center/cover no-repeat;display:grid;place-items:center;font-size:24px}
+.ln b{display:block;font-size:15px}.ln small{display:block;color:var(--texto2);font-size:12.5px;line-height:1.35;margin-top:2px}
+.ln .pr{text-align:right;font-weight:700;font-size:15px;white-space:nowrap}.ln .pr s{display:block;font-weight:400;color:#a19bb5;font-size:12px}.ln .pr small{font-weight:500}
+.tot{display:flex;justify-content:space-between;align-items:baseline;padding:12px 2px 2px;font-size:17px}.tot b{font-size:24px}
+.pag{display:grid;gap:8px}.pag .op{background:#fff;border-radius:14px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.pag .op small{display:block;color:var(--texto2);font-size:12.5px}.pag .op b{font-size:17px;white-space:nowrap}
+.conv{display:grid;gap:8px;max-height:360px;overflow:auto;padding:2px}
+.msg{max-width:84%;padding:9px 12px;border-radius:14px;font-size:14.5px;line-height:1.4;white-space:pre-wrap}
+.msg.cli{justify-self:end;background:var(--roxo);color:#fff;border-bottom-right-radius:4px}.msg.gen{justify-self:start;background:var(--lav);border-bottom-left-radius:4px}
+.msg small{display:block;opacity:.7;font-size:11px;margin-top:3px}
+.rap{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.rap .btn{margin:0;min-height:46px;font-size:15px}
+.ver{position:fixed;inset:0;z-index:50;background:rgba(10,8,20,.94);display:flex;flex-direction:column;padding:calc(12px + env(safe-area-inset-top)) 12px calc(14px + env(safe-area-inset-bottom))}
+.ver .t{color:#fff;display:flex;justify-content:space-between;align-items:center;gap:10px;margin:0 0 10px}.ver .t b{font-size:17px}
+.ver .t button{background:rgba(255,255,255,.16);color:#fff;border:0;border-radius:10px;min-height:38px;padding:0 14px;font:600 14px Rubik,system-ui,sans-serif}
+.ver .g{flex:1;overflow:auto;display:grid;gap:10px;align-content:start}.ver img{width:100%;border-radius:12px;background:#fff}
+.muted{color:var(--texto2);font-size:13.5px}
+</style>
+</head>
+<body>
+<div class="topo"><b>Gên<i>IO</i></b><button type="button" id="sair" hidden>Sair</button></div>
+<main id="app"><p class="muted">Abrindo…</p></main>
+<script>
+(()=>{
+  const $=s=>document.querySelector(s),esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  const R=v=>(Math.round((+v||0)*100)/100).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
+  const img=s=>!s?"":String(s).startsWith("/api/arq/")?"/api/painel/arq?s="+encodeURIComponent(s):s;
+  const telF=t=>{const d=String(t||"").replace(/\D/g,"").slice(0,11);if(d.length<=2)return d;if(d.length<=6)return `(${d.slice(0,2)}) ${d.slice(2)}`;if(d.length<=10)return `(${d.slice(0,2)}) ${d.slice(2,6)}-${d.slice(6)}`;return `(${d.slice(0,2)}) ${d.slice(2,7)}-${d.slice(7)}`;};
+  const qs=new URLSearchParams(location.search);let D=null;
+  async function api(u,corpo){const r=await fetch(u,{method:corpo?"POST":"GET",credentials:"same-origin",headers:corpo?{"Content-Type":"application/json"}:{},body:corpo?JSON.stringify(corpo):undefined,cache:"no-store"});const d=await r.json().catch(()=>({}));if(!r.ok){const e=new Error(d.erro||("erro "+r.status));e.status=r.status;throw e;}return d;}
+  // 1) entrar: telefone + código (o vendedor entrega o código; o aparelho fica lembrado por 90 dias)
+  function entrar(msg){$("#sair").hidden=true;
+    $("#app").innerHTML=`<h1>Seu painel</h1><p class="sub">Entre com o seu telefone e o código que o seu consultor GênIO passou.</p>
+      <form class="card" id="f" style="margin-top:14px"><label for="tel">Telefone (com DDD)</label><input id="tel" inputmode="tel" autocomplete="tel" placeholder="(11) 90000-0000" value="${esc(telF(qs.get("t")||""))}">
+      <label for="cod">Código de acesso</label><input id="cod" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="••••••">
+      <p class="erro" id="err">${esc(msg||"")}</p><button class="btn" id="ok">Entrar</button>
+      <p class="muted" style="margin:12px 0 0">Não tem o código? Peça ao seu consultor. Neste aparelho você não vai precisar digitar de novo por 90 dias.</p></form>`;
+    const tel=$("#tel"),cod=$("#cod");tel.oninput=()=>{tel.value=telF(tel.value);};cod.oninput=()=>{cod.value=cod.value.replace(/\D/g,"").slice(0,6);};
+    (tel.value?cod:tel).focus();
+    $("#f").onsubmit=async ev=>{ev.preventDefault();const b=$("#ok");b.disabled=true;b.textContent="Entrando…";$("#err").textContent="";
+      try{await api("/api/painel/entrar",{telefone:tel.value,codigo:cod.value});await abrir();}
+      catch(e){b.disabled=false;b.textContent="Entrar";$("#err").textContent=e.status===403?"Telefone ou código não conferem.":e.message;}};}
+  // 2) painel: cabeçalho da loja, orçamento, formas de pagamento, conversa
+  function painel(){const L=D.loja||{},O=D.orcamento,eu=D.eu||{};$("#sair").hidden=false;
+    const est=n=>n?` · <span class="est">${"★".repeat(n)}<span>${"★".repeat(5-n)}</span></span>`:"";
+    $("#app").innerHTML=`<h1>${esc(L.nome||"Sua loja")}</h1><p class="sub">${esc(L.setor||"")}${L.endereco?` · <a href="${esc(L.maps||"#")}" target="_blank" rel="noopener">📍 ${esc(L.endereco)}</a>`:""}${est(L.estrelas)}</p>
+      <div class="ola">Olá${eu.nome?`, <b>${esc(eu.nome)}</b>`:""}! Aqui está o seu orçamento${D.vendedor&&D.vendedor.nome?` feito por <b>${esc(D.vendedor.nome)}</b>`:""}${D.em?` · atualizado em ${esc(new Date(D.em).toLocaleDateString("pt-BR"))}`:""}. Toque num produto para ver as fotos.</div>
+      ${O&&O.linhas&&O.linhas.length?`<h2>Seu orçamento</h2><div class="card">${O.linhas.map((x,i)=>`<div class="ln" data-i="${i}"><div class="fig" style="${x.img?`background-image:url('${esc(img(x.img))}')`:""}">${x.img?"":x.servico?"📺":"▫"}</div>
+          <div><b>${esc(x.nome)}</b><small>${x.servico?"":`${(+x.q||0).toLocaleString("pt-BR")} un. · `}${esc(x.unid||"")}</small></div>
+          <div class="pr">${x.total==null?`<small>a confirmar</small>`:`${x.pct?`<s>${R(x.lista)}</s>`:""}${R(x.total)}${x.mensal?`<small>+ ${R(x.mensal)}/mês</small>`:""}`}</div></div>`).join("")}
+        <div class="ln" style="cursor:default"><div class="fig">🚚</div><div><b>Frete</b><small>um valor para o pedido inteiro</small></div><div class="pr">${O.frete!=null?R(O.frete):"<small>a combinar</small>"}</div></div>
+        <div class="tot"><span>Total</span><b>${R(O.total)}</b></div>${O.mensal?`<p class="muted" style="margin:2px 2px 0">Mais ${R(O.mensal)}/mês dos serviços.</p>`:""}</div>
+        ${(O.pagamentos||[]).length?`<h2>Formas de pagamento</h2><div class="pag">${O.pagamentos.map(p=>`<div class="op"><div><b style="font-size:15px">${esc(p.t)}</b><small>${esc(p.d)}</small></div><b>${esc(p.v)}</b></div>`).join("")}</div>`:""}`
+      :`<div class="card" style="margin-top:14px"><p style="margin:0">O seu orçamento ainda está sendo preparado. Assim que o consultor terminar, ele aparece aqui.</p></div>`}
+      <h2>Conversa com a GênIO</h2><div class="card"><div class="conv" id="conv">${(D.mensagens||[]).length?D.mensagens.map(m=>`<div class="msg ${m.de==="cliente"?"cli":"gen"}">${esc(m.texto)}<small>${esc((m.em||"").slice(8,10)+"/"+(m.em||"").slice(5,7)+" "+(m.em||"").slice(11,16))}</small></div>`).join(""):`<p class="muted" style="margin:0">Escreva aqui o que quiser ajustar.</p>`}</div>
+        <textarea id="txt" rows="3" placeholder="Escreva para o seu consultor" style="margin-top:10px;font-size:16px"></textarea><button type="button" class="btn" id="env">Enviar</button>
+        ${O&&O.linhas&&O.linhas.length?`<div class="rap"><button type="button" class="btn sec" data-r="ajuste">Pedir ajuste</button><button type="button" class="btn" data-r="quero">Quero estes</button></div>`:""}</div>`;
+    const cv=$("#conv");cv.scrollTop=cv.scrollHeight;
+    document.querySelectorAll(".ln[data-i]").forEach(el=>el.onclick=()=>verProduto(O.linhas[+el.dataset.i]));
+    const mandar=async t=>{t=String(t||"").trim();if(!t)return;const b=$("#env");b.disabled=true;try{D=await api("/api/painel/mensagem",{texto:t});painel();}catch(e){b.disabled=false;alert("Não enviou: "+e.message);}};
+    $("#env").onclick=()=>mandar($("#txt").value);
+    document.querySelectorAll("[data-r]").forEach(b=>b.onclick=()=>{if(b.dataset.r==="quero")mandar(`Quero fechar o orçamento: ${O.linhas.map(x=>`${x.nome}${x.servico?"":" ("+(+x.q||0).toLocaleString("pt-BR")+" un.)"}`).join(", ")} · total ${R(O.total)}.`);else{const t=$("#txt");t.value="Quero ajustar: ";t.focus();t.setSelectionRange(t.value.length,t.value.length);}});}
+  function verProduto(x){const f=(D.fotos||{})[x.k]||(x.img?[x.img]:[]);const v=document.createElement("div");v.className="ver";
+    v.innerHTML=`<div class="t"><b>${esc(x.nome)}${x.total!=null?" · "+R(x.total):""}</b><button type="button">Fechar</button></div><div class="g">${f.length?f.map(s=>`<img src="${esc(img(s))}" alt="" loading="lazy">`).join(""):`<p style="color:#fff">Fotos deste produto em preparo.</p>`}</div>`;
+    document.body.appendChild(v);v.querySelector("button").onclick=()=>v.remove();}
+  async function abrir(){try{D=await api("/api/painel/eu");painel();}catch(e){if(e.status===401)entrar();else $("#app").innerHTML=`<p class="erro">Não consegui abrir agora: ${esc(e.message)}</p>`;}}
+  $("#sair").onclick=async()=>{try{await api("/api/painel/sair",{});}catch(e){}D=null;entrar();};
+  abrir();
+})();
+</script>
+</body>
+</html>

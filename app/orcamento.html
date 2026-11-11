@@ -6,7 +6,7 @@
 <title>GênIO · Orçamento</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="app.css?v=54c5e8020d">
+<link rel="stylesheet" href="app.css?v=8159db0531">
 <style>
 .orc{background:#fff;border-radius:18px;padding:6px 10px;margin:0 0 12px;box-shadow:0 1px 0 rgba(28,22,53,.06)}
 .ln{display:grid;grid-template-columns:52px minmax(0,1fr) auto;gap:8px;align-items:center;padding:7px 0;border-bottom:1px solid #F0EDF6}
@@ -48,7 +48,7 @@
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=54c5e8020d"></script>
+<script src="app.js?v=8159db0531"></script>
 <script>
 (async()=>{
   const {$,$$,esc,qs,sessao,dados,nav,topo,voltar,nomeLoja,estado,salvar,cliente,definirCliente}=App;
@@ -65,7 +65,8 @@
   function grade(x,s){const g=(s&&s.grade)||{},soma=somaG(s),mn=App.qtdMin(x.k);
     return `<div class="grd"><span></span>${TAM.map(z=>`<span class="h">${z}</span>`).join("")}${SEXO.map(([sx,rot])=>`<span class="sx">${rot}</span>${TAM.map(z=>{const n=+((g[sx]||{})[z])||0;return `<span class="c"><button type="button" data-g="${sx}|${z}|-" aria-label="menos ${rot} ${z}">−</button><span class="${n?"":"z"}">${n}</span><button type="button" data-g="${sx}|${z}|+" aria-label="mais ${rot} ${z}">+</button></span>`;}).join("")}`).join("")}
       <span class="info ${soma&&soma<mn?"falta":""}">${!soma?`Distribua ${s.q.toLocaleString("pt-BR")} un. por modelo e tamanho`:soma<mn?`Grade: ${soma} un. · mínimo da gráfica ${mn} (faltam ${mn-soma}; o preço já conta ${mn})`:`Grade: ${soma} un.`}</span></div>`;}
-  function render(){
+  let pubT=null;const publicar=()=>{clearTimeout(pubT);pubT=setTimeout(()=>App.publicarPainel(l),1500);};
+  function render(){publicar();
     const e=estado();const S=(e.sel||{})[slug]||{};const P=((e.pedidos||{})[slug])||{};
     const O=App.orcamento(c,S,P);
     $("#app").innerHTML=`${topo()}${voltar(`produtos.html?l=${encodeURIComponent(slug)}`,"Produtos")}

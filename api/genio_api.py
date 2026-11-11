@@ -118,6 +118,12 @@ def migrar():
     q("""CREATE TABLE IF NOT EXISTS convites (
         token VARCHAR(64) PRIMARY KEY, conta_id BIGINT NOT NULL, criado VARCHAR(30) NOT NULL,
         expira VARCHAR(30) NOT NULL, usado VARCHAR(30))""", commit=True)
+    # painel do cliente (11/11): cada telefone da loja tem o seu código numérico, entregue pelo vendedor; o aparelho fica lembrado 90 dias
+    q(f"""CREATE TABLE IF NOT EXISTS cliente_acessos (
+        id {AUTO}, slug VARCHAR(160) NOT NULL, telefone VARCHAR(20) NOT NULL, nome VARCHAR(120), codigo VARCHAR(12) NOT NULL,
+        ativo INT NOT NULL DEFAULT 1, criado VARCHAR(30) NOT NULL, por VARCHAR(120), ultimo VARCHAR(30))""", commit=True)
+    q("""CREATE TABLE IF NOT EXISTS cliente_sessoes (
+        token VARCHAR(64) PRIMARY KEY, acesso_id BIGINT NOT NULL, criado VARCHAR(30) NOT NULL, expira VARCHAR(30) NOT NULL)""", commit=True)
     q(f"""CREATE TABLE IF NOT EXISTS interesse (
         id {AUTO}, nome VARCHAR(120) NOT NULL, telefone VARCHAR(40) NOT NULL, cidade VARCHAR(120),
         mensagem VARCHAR(600), criado VARCHAR(30) NOT NULL, visto INT NOT NULL DEFAULT 0)""", commit=True)
@@ -291,6 +297,85 @@ def entrar(d):
         raise PermissionError("esta conta está desativada. Fale com o administrador.")
     ap = aparelho_registrar(row[0], row[3] if row[2] != "admin" else "admin", d.get("aparelho"), d.get("nome_aparelho"))
     return sessao_nova(row[0], ap)
+
+# ---- painel do cliente: telefone + código numérico próprio (o vendedor gera e entrega); sessão de 90 dias no aparelho
+PAINEL_DIAS = 90
+def tel_norm(t):
+    d = re.sub(r"\D", "", str(t or ""))
+    if d.startswith("55") and len(d) in (12, 13):
+        d = d[2:]
+    return d[-11:]
+
+def _cod_novo():
+    return "".join(secrets.choice("0123456789") for _ in range(6))
+
+def acessos_lista(slug):
+    DADOS.valida_slug(slug)
+    rows = q("SELECT id, telefone, nome, codigo, criado, por, ultimo FROM cliente_acessos WHERE slug=? AND ativo=1 ORDER BY id", (slug,))
+    return [{"id": r[0], "telefone": r[1], "nome": r[2] or "", "codigo": r[3], "criado": r[4], "por": r[5], "ultimo": r[6]} for r in rows]
+
+def acesso_novo(slug, d, por):
+    DADOS.valida_slug(slug)
+    tel = tel_norm(d.get("telefone"))
+    if len(tel) < 10:
+        raise ValueError("telefone com DDD, por favor")
+    nome = str(d.get("nome") or "").strip()[:120]
+    row = q("SELECT id FROM cliente_acessos WHERE slug=? AND telefone=? AND ativo=1", (slug, tel), one=True)
+    if row:   # mesmo telefone: gera código novo (o antigo deixa de valer)
+        q("UPDATE cliente_acessos SET codigo=?, nome=COALESCE(NULLIF(?, ''), nome) WHERE id=?", (_cod_novo(), nome, row[0]), commit=True)
+        q("DELETE FROM cliente_sessoes WHERE acesso_id=?", (row[0],), commit=True)
+    else:
+        q_insert("INSERT INTO cliente_acessos (slug, telefone, nome, codigo, ativo, criado, por) VALUES (?,?,?,?,1,?,?)", (slug, tel, nome, _cod_novo(), agora(), por))
+    return {"acessos": acessos_lista(slug)}
+
+def acesso_codigo(slug, aid):
+    q("UPDATE cliente_acessos SET codigo=? WHERE id=? AND slug=?", (_cod_novo(), int(aid), slug), commit=True)
+    q("DELETE FROM cliente_sessoes WHERE acesso_id=?", (int(aid),), commit=True)
+    return {"acessos": acessos_lista(slug)}
+
+def acesso_tirar(slug, aid):
+    q("UPDATE cliente_acessos SET ativo=0 WHERE id=? AND slug=?", (int(aid), slug), commit=True)
+    q("DELETE FROM cliente_sessoes WHERE acesso_id=?", (int(aid),), commit=True)
+    return {"acessos": acessos_lista(slug)}
+
+def painel_entrar(d):
+    tel, cod = tel_norm(d.get("telefone")), re.sub(r"\D", "", str(d.get("codigo") or ""))
+    row = q("SELECT id FROM cliente_acessos WHERE telefone=? AND codigo=? AND ativo=1", (tel, cod), one=True) if len(tel) >= 10 and len(cod) == 6 else None
+    if not row:
+        raise PermissionError("telefone ou código não conferem")
+    tok = secrets.token_urlsafe(32)
+    q("INSERT INTO cliente_sessoes (token, acesso_id, criado, expira) VALUES (?,?,?,?)", (h64(tok), row[0], agora(), quando(PAINEL_DIAS)), commit=True)
+    q("UPDATE cliente_acessos SET ultimo=? WHERE id=?", (agora(), row[0]), commit=True)
+    return tok
+
+def painel_acesso(tok):
+    if not tok:
+        return None
+    row = q("""SELECT a.id, a.slug, a.telefone, a.nome, s.expira FROM cliente_sessoes s JOIN cliente_acessos a ON a.id=s.acesso_id
+               WHERE s.token=? AND a.ativo=1""", (h64(tok),), one=True)
+    if not row or row[4] < agora():
+        return None
+    return {"id": row[0], "slug": row[1], "telefone": row[2], "nome": row[3] or ""}
+
+def painel_dados(ac):
+    """o que o cliente vê: cabeçalho da loja e orçamento publicados pelo vendedor, fotos das peças e a conversa"""
+    f = DADOS.cliente_ler(ac["slug"]) or {}
+    pn = f.get("painel") or {}
+    fotos = {}
+    for k, a in (f.get("artes") or {}).items():
+        if isinstance(a, dict):
+            fotos[k] = [x for x in [a.get("contexto")] + [(p or {}).get("src") for p in (a.get("provas") or [])] if x][:12]
+    msgs = [m for m in DADOS.mensagens_ler(ac["slug"]) if m.get("canal") in ("painel", "") or m.get("de") == "cliente"][-60:]
+    return {"eu": {"nome": ac["nome"], "telefone": ac["telefone"]}, "loja": pn.get("loja") or {"nome": f.get("nome") or ac["slug"]},
+            "orcamento": pn.get("orcamento"), "vendedor": pn.get("vendedor"), "em": pn.get("em"), "fotos": fotos,
+            "mensagens": [{"de": m.get("de"), "texto": m.get("texto"), "em": m.get("em")} for m in msgs]}
+
+def painel_arq(ac, src):
+    """foto da ficha da loja para o painel (só arquivos da própria loja)"""
+    pt = str(src or "").split("?")[0].split("/")
+    if len(pt) != 6 or pt[1] != "api" or pt[2] != "arq" or pt[3] != "clientes" or pt[4] != ac["slug"]:
+        raise ValueError("arquivo inválido")
+    return DADOS.arquivo(pt[3], pt[4], pt[5])
 
 def convite_novo(conta_id):
     tok = secrets.token_urlsafe(24)
@@ -837,14 +922,14 @@ class H(BaseHTTPRequestHandler):
     def log_message(self, fmt, *a):
         sys.stderr.write("%s %s\n" % (self.command, self.path.split("?")[0]))
 
-    def _send(self, code, obj=None, body=None, ctype="application/json; charset=utf-8", cache="no-store", cookie=None):
+    def _send(self, code, obj=None, body=None, ctype="application/json; charset=utf-8", cache="no-store", cookie=None, cookie_nome="genio_s", cookie_dias=None):
         if body is None:
             body = json.dumps(obj, ensure_ascii=False).encode()
         self.send_response(code)
         if cookie is not None:
             seg = "; Secure" if self.headers.get("X-Forwarded-Proto") == "https" else ""
-            idade = SESSAO_DIAS * 86400 if cookie else 0
-            self.send_header("Set-Cookie", f"genio_s={cookie}; Path=/; Max-Age={idade}; HttpOnly; SameSite=Lax{seg}")
+            idade = (cookie_dias or SESSAO_DIAS) * 86400 if cookie else 0
+            self.send_header("Set-Cookie", f"{cookie_nome}={cookie}; Path=/; Max-Age={idade}; HttpOnly; SameSite=Lax{seg}")
         self.send_header("Content-Type", ctype)
         self.send_header("Content-Length", str(len(body)))
         self.send_header("Cache-Control", cache)
@@ -860,10 +945,10 @@ class H(BaseHTTPRequestHandler):
         k = self.headers.get("X-Genio-Chave", "")
         return bool(CHAVE) and hmac.compare_digest(k.encode(), CHAVE.encode())
 
-    def _tok(self):
+    def _tok(self, nome="genio_s"):
         for parte in (self.headers.get("Cookie") or "").split(";"):
             k, _, v = parte.strip().partition("=")
-            if k == "genio_s":
+            if k == nome:
                 return v
         return None
 
@@ -953,6 +1038,22 @@ class H(BaseHTTPRequestHandler):
                 except (FileNotFoundError, ValueError):
                     return self._erro(404, "arquivo não existe")
                 return self._send(200, body=raw, ctype=ct, cache="private, max-age=31536000, immutable")
+            if p == "/api/painel/eu" or p == "/api/painel/arq":
+                ac = painel_acesso(self._tok("genio_c"))
+                if not ac:
+                    return self._erro(401, "entre com o seu telefone e o seu código")
+                if p == "/api/painel/arq":
+                    qb = {k: v[0] for k, v in _parse_qs(urlparse(self.path).query or "").items()}
+                    try:
+                        ct, raw = painel_arq(ac, qb.get("s"))
+                    except (FileNotFoundError, ValueError):
+                        return self._erro(404, "arquivo não existe")
+                    return self._send(200, body=raw, ctype=ct, cache="private, max-age=86400")
+                return self._send(200, painel_dados(ac))
+            if p.startswith("/api/clientes/") and p.endswith("/acessos") and len(p.split("/")) == 5:
+                if not self._eu():
+                    return self._erro(401, "entre com a sua conta")
+                return self._send(200, {"acessos": acessos_lista(p.split("/")[3])})
             if p == "/api/clientes" or p.startswith("/api/clientes/") or p == "/api/notas" or p.startswith("/api/estado/") or p == "/api/dados/resumo" or p.startswith("/api/mensagens"):
                 if not self._eu():
                     return self._erro(401, "entre com a sua conta")
@@ -1171,6 +1272,48 @@ class H(BaseHTTPRequestHandler):
                     return self._send(200, marca_preparar(self._json()))
                 except Exception as e:
                     return self._erro(500, "preparo falhou: " + str(e)[:160])
+            if p in ("/api/painel/entrar", "/api/painel/sair", "/api/painel/mensagem"):
+                if not self._origem_ok():
+                    return self._erro(403, "origem não permitida")
+                if p == "/api/painel/sair":
+                    t = self._tok("genio_c")
+                    if t:
+                        q("DELETE FROM cliente_sessoes WHERE token=?", (h64(t),), commit=True)
+                    return self._send(200, {"ok": True}, cookie="", cookie_nome="genio_c")
+                d = self._json()
+                if p == "/api/painel/entrar":
+                    tel = tel_norm(d.get("telefone"))
+                    if not limite("pt:" + tel, 6) or not limite("pi:" + self._ip(), 20):
+                        return self._erro(429, "muitas tentativas. Espere 15 minutos e tente de novo.")
+                    try:
+                        return self._send(200, {"ok": True}, cookie=painel_entrar(d), cookie_nome="genio_c", cookie_dias=PAINEL_DIAS)
+                    except PermissionError as e:
+                        return self._erro(403, str(e))
+                ac = painel_acesso(self._tok("genio_c"))
+                if not ac:
+                    return self._erro(401, "entre com o seu telefone e o seu código")
+                if not limite("pm:" + str(ac["id"]), 30, 3600):
+                    return self._erro(429, "muitas mensagens seguidas. Tente daqui a pouco.")
+                quem = (ac["nome"] or "cliente") + " · " + ac["telefone"]
+                DADOS.mensagem_gravar(ac["slug"], "cliente", str(d.get("texto") or "")[:2000], "painel", quem)
+                return self._send(200, painel_dados(ac))
+            partes0 = p.split("/")
+            if p.startswith("/api/clientes/") and len(partes0) in (5, 7) and partes0[4] == "acessos":
+                eu = self._eu()
+                if not eu:
+                    return self._erro(401, "entre com a sua conta")
+                if not self._origem_ok():
+                    return self._erro(403, "origem")
+                try:
+                    if len(partes0) == 5:
+                        return self._send(200, acesso_novo(partes0[3], self._json(), eu["nome"]))
+                    if partes0[6] == "codigo":
+                        return self._send(200, acesso_codigo(partes0[3], partes0[5]))
+                    if partes0[6] == "tirar":
+                        return self._send(200, acesso_tirar(partes0[3], partes0[5]))
+                except ValueError as e:
+                    return self._erro(400, str(e))
+                return self._erro(404, "rota")
             if p == "/api/mostra":   # acionar o Mostraí de uma loja (vendedor logado) → links
                 eu = self._eu()
                 if not eu:
