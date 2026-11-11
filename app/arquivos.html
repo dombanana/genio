@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover,user-scalable=no">
+<title>GênIO · Arquivos da loja</title>
+<meta name="theme-color" content="#F1EEF8">
+<link rel="icon" href="../genio-favicon.png">
+<link rel="stylesheet" href="app.css?v=4a5883b26a">
+<style>
+.arq-g{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.arq-g figure{margin:0;position:relative;aspect-ratio:1/1;border-radius:12px;overflow:hidden;background:#fff;display:grid;place-items:center;box-shadow:0 1px 0 rgba(28,22,53,.06)}
+.arq-g img{width:100%;height:100%;object-fit:contain;display:block;background:#fff}
+.arq-g .tag{position:absolute;left:5px;bottom:5px;right:5px;background:rgba(20,16,36,.72);color:#fff;font-size:10.5px;font-weight:600;padding:2px 6px;border-radius:7px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.arq-g .x{position:absolute;top:5px;right:5px;width:28px;height:28px;border-radius:50%;border:2px solid #fff;background:#B4472E;color:#fff;font:700 15px/1 Rubik,system-ui,sans-serif;padding:0;display:grid;place-items:center;box-shadow:0 1px 4px rgba(0,0,0,.3)}
+.arq-g .ic{font-size:30px}
+.vazio{color:var(--texto2);font-size:14px;margin:0}
+.ver{position:fixed;inset:0;z-index:300;background:rgba(10,8,20,.92);display:flex;flex-direction:column;padding:14px 14px calc(14px + env(safe-area-inset-bottom))}
+.ver .im{flex:1;display:grid;place-items:center;min-height:0}.ver img,.ver video{max-width:100%;max-height:100%;object-fit:contain;border-radius:10px;background:#fff}
+.ver p{color:#fff;font-size:14px;margin:10px 2px}.ver .bt{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+</style>
+</head>
+<body>
+<div class="w" id="app"></div>
+<script src="app.js?v=4a5883b26a"></script>
+<script>
+(async()=>{
+  const {$,$$,esc,qs,sessao,dados,ficha,cliente,gravarCliente,definirCliente,nomeLoja,topo,voltar,nav,removerLogo,listarNotas,apagarNota}=App;
+  if(!await sessao())return;
+  const D=await dados();const slug=qs.get("l");const l=D.lojas.find(x=>x.slug===slug);
+  if(!l){$("#app").innerHTML=`${topo()}<p>Loja não encontrada.</p>${nav("rota")}`;return;}
+  const nome=nomeLoja(l.nome);definirCliente(l);
+  const cad=await ficha(slug);const L=(cad&&cad.lacunas)||{};const base=`/dados/captacao/${App.zonaDe(slug)}/`;
+  const abs=s=>/^(data:|https?:)/.test(s)?s:(s.startsWith("/")?location.origin+s:location.origin+base+s);
+  const NOME={capacho:"Capacho",placas:"Placa",adesivos:"Adesivo de vitrine",uniformes:"Camisa polo",impressos:"Cartão de visita",panfleto:"Flyer",banners:"Banner retrátil",parede:"Adesivo de parede",brindes:"Ecobag",carimbo:"Carimbo",windbanner:"Wind banner",faixa:"Faixa",folheto:"Folheto",camiseta:"Camiseta",bone:"Boné",avental:"Avental"};
+  const nomeP=k=>(NOME[App.baseId(k)]||k)+(String(k).includes("~")?" · "+String(k).split("~")[1]:"");
+  const volta=qs.get("de")==="produtos"?[`produtos.html?l=${encodeURIComponent(slug)}`,"Produtos"]:[`visita.html?l=${encodeURIComponent(slug)}`,nome];
+  let c=await cliente(l),notas=[];
+  async function carregar(){c=await cliente(l);notas=(await listarNotas()).filter(n=>n.loja&&n.loja.slug===slug).sort((a,b)=>(b.em||"")<(a.em||"")?-1:1);}
+  // tudo o que está ligado à loja: imagens (logotipos, fachada, produtos, arquivo, achadas na varredura), artes e provas, notas
+  function itens(){const fotos=[],trab=[],nts=[];const vistos=new Set();const desc=new Set(c.descartadas||[]);
+    const add=(src,tag,tipo,ref)=>{if(!src)return;const a=abs(src);if(vistos.has(a)||desc.has(a))return;vistos.add(a);fotos.push({src:a,orig:src,tag,tipo,ref});};
+    (c.logos||[]).forEach(x=>add(x.src,"Logotipo","logo",x.id));if(c.fachada)add(c.fachada.src,"Fachada","fachada");
+    (c.produtos||[]).forEach(x=>add(x.src,"Produto","produto"));(c.arquivo||[]).forEach(x=>add(x.src,"Arquivo","arquivo"));
+    ((L.logoOriginal||{}).opcoes||[]).forEach(o=>add(o.img,"Achada na pesquisa","varredura"));((L.fachada||{}).referencias||[]).forEach(r=>add(r,"Referência pública","varredura"));
+    Object.entries(c.artes||{}).forEach(([k,A])=>{if(!A)return;const im=A.contexto||A.png||A.pngArte;if(im)trab.push({src:im,tag:"Arte · "+nomeP(k),tipo:"arte",ref:k});
+      (A.provas||[]).forEach((p,i)=>{if(p&&p.src)trab.push({src:p.src,tag:"Prova · "+nomeP(k),tipo:"prova",ref:k,i});});});
+    notas.forEach(n=>{nts.push({src:n.foto?abs(n.foto):null,video:n.video||null,audio:n.audio||null,tag:(n.texto||"Nota").slice(0,40),tipo:"nota",ref:n.id,em:n.em});});
+    return {fotos,trab,nts};}
+  const fig=(x,i,grupo)=>`<figure data-g="${grupo}" data-i="${i}">${x.src?`<img src="${esc(x.src)}" alt="" loading="lazy">`:`<span class="ic">${x.video?"🎬":x.audio?"🎙":"📝"}</span>`}<span class="tag">${esc(x.tag)}</span><button type="button" class="x" data-x aria-label="apagar">×</button></figure>`;
+  let G=null;
+  function render(){G=itens();const n=G.fotos.length+G.trab.length+G.nts.length;
+    $("#app").innerHTML=`${topo()}${voltar(volta[0],volta[1])}<h1>Arquivos</h1><p class="sub">${esc(nome)} · ${n} arquivo(s) · toque para ver, × para apagar</p>
+    <section class="card"><h2>Fotos e imagens</h2>${G.fotos.length?`<div class="arq-g">${G.fotos.map((x,i)=>fig(x,i,"fotos")).join("")}</div>`:`<p class="vazio">Nenhuma imagem.</p>`}</section>
+    <section class="card"><h2>Artes e provas</h2>${G.trab.length?`<div class="arq-g">${G.trab.map((x,i)=>fig(x,i,"trab")).join("")}</div>`:`<p class="vazio">Nenhuma arte ainda.</p>`}</section>
+    <section class="card"><h2>Notas da loja</h2>${G.nts.length?`<div class="arq-g">${G.nts.map((x,i)=>fig(x,i,"nts")).join("")}</div>`:`<p class="vazio">Nenhuma nota ligada a esta loja.</p>`}</section>
+    <a class="btn sec" href="${volta[0]}" style="display:grid;text-decoration:none">← ${esc(volta[1])}</a>${nav("rota")}`;
+    $$(".arq-g figure").forEach(f=>{const x=G[f.dataset.g][+f.dataset.i];f.onclick=ev=>{if(ev.target.closest("[data-x]"))return;ver(x);};f.querySelector("[data-x]").onclick=()=>apagar(x);});}
+  function ver(x){const v=document.createElement("div");v.className="ver";
+    v.innerHTML=`<div class="im">${x.video?`<video src="${esc(x.video)}" controls playsinline></video>`:x.src?`<img src="${esc(x.src)}" alt="">`:x.audio?`<audio src="${esc(x.audio)}" controls></audio>`:""}</div><p>${esc(x.tag)}</p><div class="bt"><button type="button" class="btn sec" data-f>Fechar</button><button type="button" class="btn" data-a style="background:#B4472E">Apagar</button></div>`;
+    document.body.appendChild(v);v.querySelector("[data-f]").onclick=()=>v.remove();v.querySelector("[data-a]").onclick=async()=>{if(await apagar(x))v.remove();};}
+  async function apagar(x){
+    const aviso={logo:"Apagar este logotipo?",fachada:"Apagar a foto da fachada?",produto:"Apagar esta foto de produto?",arquivo:"Apagar esta imagem de arquivo?",varredura:"Tirar esta imagem achada na pesquisa?",arte:`Apagar a arte de ${nomeP(x.ref)}? O card do produto volta a ficar sem arte.`,prova:"Apagar esta prova na foto?",nota:"Apagar esta nota?"}[x.tipo];
+    if(!confirm(aviso))return false;
+    try{
+      if(x.tipo==="logo")await removerLogo(l,x.ref);
+      else if(x.tipo==="nota"){if(!await apagarNota(x.ref))throw new Error("servidor");}
+      else{c=await cliente(l);
+        if(x.tipo==="fachada")delete c.fachada;
+        if(x.tipo==="produto")c.produtos=(c.produtos||[]).filter(y=>abs(y.src)!==x.src);
+        if(x.tipo==="arquivo")c.arquivo=(c.arquivo||[]).filter(y=>abs(y.src)!==x.src);
+        if(x.tipo==="arte")delete c.artes[x.ref];
+        if(x.tipo==="prova"){const A=c.artes[x.ref];if(A&&A.provas)A.provas=A.provas.filter(p=>p.src!==x.src);}
+        // o que veio da varredura (ou já foi achado lá) não volta na próxima busca
+        if(["fachada","produto","arquivo","varredura"].includes(x.tipo))c.descartadas=[...new Set([...(c.descartadas||[]),x.orig,x.src])];
+        await gravarCliente(c);}
+      await carregar();render();return true;}
+    catch(e){alert("Não apagou: "+e.message);return false;}}
+  await carregar();render();
+})();
+</script>
+</body>
+</html>

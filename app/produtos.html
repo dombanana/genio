@@ -6,7 +6,7 @@
 <title>GênIO · Produtos e serviços</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="app.css?v=2c011855f7">
+<link rel="stylesheet" href="app.css?v=4a5883b26a">
 <style>
 .grade{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .prod{background:#fff;border-radius:18px;box-shadow:0 2px 10px rgba(28,22,53,.06);overflow:hidden;display:flex;flex-direction:column;position:relative}
@@ -57,8 +57,8 @@
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=2c011855f7"></script>
-<script src="qr.js?v=2c011855f7"></script>
+<script src="app.js?v=4a5883b26a"></script>
+<script src="qr.js?v=4a5883b26a"></script>
 <script>
 (async()=>{
   const {$,$$,esc,qs,sessao,dados,nav,topo,voltar,setorNome,nomeLoja,estado,salvar,cliente,gravarCliente,definirCliente}=App;
@@ -67,8 +67,8 @@
   if(!l){$("#app").innerHTML=`${topo()}<p>Loja não encontrada.</p>${nav("rota")}`;return;}
   const nome=nomeLoja(l.nome);definirCliente(l);let c=await cliente(l);
   if(!(c.manual&&c.manual.editado)){location.href=`visita.html?l=${encodeURIComponent(slug)}`;return;}  // catálogo só depois do logotipo limpo
-  const G=await (await fetch("gabaritos.json?v=2c011855f7")).json();
-  await App.carregarScript("kits14.js?v=2c011855f7");
+  const G=await (await fetch("gabaritos.json?v=4a5883b26a")).json();
+  await App.carregarScript("kits14.js?v=4a5883b26a");
   // os 16 produtos do kit de 14 setores (10/11); a foto de cada um é a do ramo da loja
   const CAT=await Promise.all([["capacho","Capacho"],["placas","Placa"],["adesivos","Adesivo de vitrine"],["uniformes","Camisa polo"],["impressos","Cartão de visita"],["panfleto",/padaria|restaurante|bar|cafeteria/.test(l.setor||"")?"Flyer · cardápio":"Flyer · produtos e serviços"],["banners","Banner retrátil"],["parede","Adesivo de parede · rotas"],["brindes","Ecobag"],["carimbo","Carimbo"],["windbanner","Wind banner"],["faixa","Faixa"],["folheto","Folheto promocional"],["camiseta","Camiseta"],["bone","Boné"],["avental","Avental"]].map(async([id,n])=>({id,nome:n,img:await Kits14.foto(l.setor,id,true)})));
   const SERV=[{id:"mostraai",nome:"Mostraí · TV de ofertas",desc:"Sua TV em pé com itens, preços e destaque · muda pelo celular",ic:"📺"},{id:"falaai",nome:"Fala Aí · atendente no telefone",desc:"URA com o nome da loja · frases gravadas do sistema",ic:"📞"},{id:"inpi",nome:"Registro de marca (INPI)",desc:"Proteção do nome e do logo",ic:"®"}];
@@ -147,7 +147,7 @@
       <b>${esc(p.nome)}</b>${(()=>{const cp=p.id==="capacho"&&c.capacho_preco;if(cp&&cp.total){const R=v=>Number(v).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});const md=(cp.medidas||[]).map(m=>`${String((m.w/100).toFixed(2)).replace(".",",")} × ${String((m.h/100).toFixed(2)).replace(".",",")} m`).join(" + ");
         return `<div class="preco-p"><b>${R(cp.total)}</b><small>${esc(md)}${cp.qtd>1?` · ${cp.qtd} un.`:""} · Pix ${R(cp.pix)} · ${cp.parc}× ${R(cp.cartao/cp.parc)} no cartão</small></div>`;}
       const pr=App.precoProduto(p.id,(c.formatos||{})[p.id]);return pr?`<div class="preco-p"><b>${pr.txt}</b><small>${esc(pr.unid)} · frete no fechamento</small></div>`:`<div class="preco-p"><small>preço a confirmar</small></div>`;})()}<div class="st ${s.q>0?"ok":""}">${s.q>0?"✓ no orçamento":A?(A.doc&&A.doc.auto?"arte automática":"arte feita"):"sem arte"}${prova?" · foto real":A&&A.contexto?" · no ambiente":""}</div>
-      ${p.id==="capacho"?`<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:0 12px 8px"><a class="ir" style="margin:0" href="capacho.html?l=${encodeURIComponent(slug)}&n=${encodeURIComponent(nomeLoja(l.nome))}">${A?"Editar →":"Montar →"}</a><a class="ir" style="margin:0;background:var(--navy);color:#fff" href="capacho.html?l=${encodeURIComponent(slug)}&n=${encodeURIComponent(nomeLoja(l.nome))}&ver=1" title="foto do local · ao vivo">👁 Visualizar</a></div>`:(A?`<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:0 12px 8px"><a class="ir" style="margin:0" href="editor.html?l=${encodeURIComponent(slug)}&p=${p.id}">Editar →</a>${UNI_CORES.has(App.baseId(p.id))?`<a class="ir" style="margin:0;background:var(--navy);color:#fff" href="provar.html?l=${encodeURIComponent(slug)}&p=${p.id}" title="foto de quem vai vestir: recorte, cor e estampa no lugar">📷 Provar na foto</a>`:`<a class="ir" style="margin:0;background:var(--navy);color:#fff" href="local.html?l=${encodeURIComponent(slug)}&p=${p.id}" title="câmera ao vivo · a peça no lugar">👁 No local</a>`}</div>`:(UNI_CORES.has(App.baseId(p.id))?`<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:0 12px 8px"><a class="ir" style="margin:0" href="editor.html?l=${encodeURIComponent(slug)}&p=${p.id}">Criar arte</a><a class="ir" style="margin:0;background:var(--navy);color:#fff" href="provar.html?l=${encodeURIComponent(slug)}&p=${p.id}">📷 Provar na foto</a></div>`:`<a class="ir" href="editor.html?l=${encodeURIComponent(slug)}&p=${p.id}">Criar arte</a>`))}
+      ${p.id==="capacho"?`<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:0 12px 8px"><a class="ir" style="margin:0" href="capacho.html?l=${encodeURIComponent(slug)}&n=${encodeURIComponent(nomeLoja(l.nome))}">${A?"Editar →":"Montar →"}</a><a class="ir" style="margin:0;background:var(--navy);color:#fff" href="capacho.html?l=${encodeURIComponent(slug)}&n=${encodeURIComponent(nomeLoja(l.nome))}&ver=1" title="foto do local · ao vivo">👁 Visualizar</a></div>`:(A?`<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:0 12px 8px"><a class="ir" style="margin:0" href="editor.html?l=${encodeURIComponent(slug)}&p=${p.id}">Editar →</a>${UNI_CORES.has(App.baseId(p.id))?`<a class="ir" style="margin:0;background:var(--navy);color:#fff" href="provar.html?l=${encodeURIComponent(slug)}&p=${p.id}" title="foto de quem vai vestir: recorte, cor e estampa no lugar">Provar</a>`:`<a class="ir" style="margin:0;background:var(--navy);color:#fff" href="local.html?l=${encodeURIComponent(slug)}&p=${p.id}" title="câmera ao vivo · a peça no lugar">👁 No local</a>`}</div>`:(UNI_CORES.has(App.baseId(p.id))?`<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:0 12px 8px"><a class="ir" style="margin:0" href="editor.html?l=${encodeURIComponent(slug)}&p=${p.id}">Criar arte</a><a class="ir" style="margin:0;background:var(--navy);color:#fff" href="provar.html?l=${encodeURIComponent(slug)}&p=${p.id}">Provar</a></div>`:`<a class="ir" href="editor.html?l=${encodeURIComponent(slug)}&p=${p.id}">Criar arte</a>`))}
       ${UNI_CORES.has(App.baseId(p.id))&&(A||(c.manual&&c.manual.editado))?coresPeca(p.id,A||{}):""}${p.id==="adesivos"?formatoVitrine():""}<div class="qtd"><button data-m="-">−</button><span class="${s.q>0?"":"zero"}">${s.q>0?(p.id==="capacho"?s.q+" un.":App.qtdNormal(p.id,s.q).toLocaleString("pt-BR")+" un."+(s.grade?" · grade":"")):"não quero"}</span><button data-m="+">+</button></div></div>`;};
       const comVar=p=>[p,...variantes(p.id)];return `<div class="grade">${CAT.filter(p=>!UNI.includes(p.id)).flatMap(comVar).map(cartao).join("")}</div><h2 style="margin:22px 0 10px">Uniforme</h2><div class="grade">${UNI.map(id=>CAT.find(p=>p.id===id)).filter(Boolean).flatMap(comVar).map(cartao).join("")}</div>`;})()}
     <h2 style="margin:22px 0 10px">Locação</h2>
