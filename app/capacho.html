@@ -3917,13 +3917,15 @@ async function sessRestore(){let o=null;try{o=await sessRead();}catch(e){}
   function maisPerto(cor){var c=hex(cor),best=null,bd=1e9;KAPAZI_CORES.forEach(function(k){var id=Array.isArray(k)?k[0]:k.id,hx=Array.isArray(k)?k[2]:k.hex;if(!Array.isArray(k)&&k.ativo===false)return;var v=hex(hx),d=(v[0]-c[0])*(v[0]-c[0])*0.3+(v[1]-c[1])*(v[1]-c[1])*0.59+(v[2]-c[2])*(v[2]-c[2])*0.11;if(d<bd){bd=d;best=id;}});return best;}
   var n=0,t=setInterval(async function(){n++;var pronto=false;try{pronto=typeof Q!=="undefined"&&Q&&Q.cliente&&(Q.cliente.nome||"").trim().toLowerCase()===nome.toLowerCase();}catch(e){}
     if(!pronto){if(n>80)clearInterval(t);return;}clearInterval(t);
-    try{var r=await fetch("/api/clientes/"+encodeURIComponent(slug),{credentials:"same-origin",cache:"no-store"});if(!r.ok)return;var f=await r.json();var A=f.artes&&f.artes.capacho;if(!A)return;
-      var tArte=Date.parse(A.em||0)||0,tProj=Date.parse(Q.atualizado||Q.criado||0)||0;
-      if(Q.id&&tProj>=tArte)return;   // o projeto do motor foi mexido depois da arte: vale o projeto
-      if(Q.id){document.querySelector("#newQuote").click();Q.cliente.nome=nome;fillClient();}
-      if(A.material&&/^#[0-9a-f]{6}$/i.test(A.material)){var fc=maisPerto(A.material);if(fc){Q.spec.fundo=fc;try{var T=typeof curTap==="function"&&curTap();if(T&&T.spec)T.spec.fundo=fc;}catch(e){}fillSpec();renderThumb();}}
-      var src=f.manual&&f.manual.tratado;
-      if(src&&!LOGOQ.length&&LOGO_ORIGEM!=="identidade"){LOGO_ORIGEM="identidade";var b=await (await fetch(src,{credentials:"same-origin"})).blob();openPartK("logo");LOGOQ.push(new File([b],"marca-tratada.png",{type:b.type||"image/png"}));nextLogoFromQueue();}
+    try{var r=await fetch("/api/clientes/"+encodeURIComponent(slug),{credentials:"same-origin",cache:"no-store"});if(!r.ok)return;var f=await r.json();var A=f.artes&&f.artes.capacho,src=f.manual&&f.manual.tratado;
+      var temLogo=((Q.spec&&Q.spec.layers)||[]).some(function(x){return x.type==="logo";});
+      if(A){var tArte=Date.parse(A.em||0)||0,tProj=Date.parse(Q.atualizado||Q.criado||0)||0;
+        if(Q.id&&tProj>=tArte&&temLogo)return;   // o projeto do motor foi mexido depois da arte e já tem logotipo: vale o projeto
+        if(Q.id&&tProj<tArte){document.querySelector("#newQuote").click();Q.cliente.nome=nome;fillClient();temLogo=false;}}
+      else if(!src||temLogo)return;   // sem arte do kit: só entra o logotipo tratado, e só se o tapete ainda está sem logotipo
+      var corT=(A&&A.material)||(f.manual&&f.manual.fundoMarca);   // cor do tapete: a da arte; sem arte, o fundo da marca
+      if(corT&&/^#[0-9a-f]{6}$/i.test(corT)){var fc=maisPerto(corT);if(fc){Q.spec.fundo=fc;try{var T=typeof curTap==="function"&&curTap();if(T&&T.spec)T.spec.fundo=fc;}catch(e){}fillSpec();renderThumb();}}
+      if(src&&!temLogo&&!LOGOQ.length&&LOGO_ORIGEM!=="identidade"){LOGO_ORIGEM="identidade";var b=await (await fetch(src,{credentials:"same-origin"})).blob();openPartK("logo");LOGOQ.push(new File([b],"marca-tratada.png",{type:b.type||"image/png"}));nextLogoFromQueue();}
     }catch(e){}
   },150);
 })();
