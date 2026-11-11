@@ -6,7 +6,7 @@
 <title>GênIO · Visita</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="app.css?v=fe621938ba">
+<link rel="stylesheet" href="app.css?v=98ae6a01e4">
 <style>
 .cab{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
 .fach{width:100%;aspect-ratio:16/9;border-radius:16px;overflow:hidden;background:var(--lav2);display:grid;place-items:center;position:relative}
@@ -21,7 +21,7 @@
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=fe621938ba"></script>
+<script src="app.js?v=98ae6a01e4"></script>
 <script>
 (async()=>{
   const {$,$$,esc,qs,sessao,dados,ficha,estrelasHTML,estado,salvar,nav,topo,voltar,setorNome,nomeLoja,telFmt,cliente,gravarCliente,classificar,definirCliente,menuLongo,ligarLongo,ZONA,entradas,ligarEntradas,abrirLogotipo,logoPrincipal,removerLogo}=App;
@@ -64,7 +64,7 @@
   const hora=iso=>{const d=new Date(iso);return d.toLocaleDateString("pt-BR",{day:"2-digit",month:"2-digit"})+" "+d.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});};
   function mensagensHTML(){const novas=MSGS.filter(m=>!m.lida).length;
     return `<section class="card msgs" id="mensagens"><h2>Mensagens${novas?` <small style="color:#C62828;font-weight:700;font-size:14px">· ${novas} nova(s)</small>`:""}</h2>
-      ${MSGS.length?`<div class="conv">${MSGS.slice(-30).map(m=>`<div class="m ${m.de}"><p>${esc(m.texto)}</p><small>${m.de==="cliente"?"Cliente":esc(m.por||"Você")}${m.canal?" · "+esc(m.canal):""} · ${hora(m.em)}</small></div>`).join("")}</div>`:`<p class="muted" style="margin:0 0 8px">Nenhuma mensagem. O cliente fala com você pelo painel dele (link do Mostraí).</p>`}
+      ${MSGS.length?`<div class="conv">${MSGS.slice(-30).map(m=>`<div class="m ${m.de}"><p>${esc(m.texto)}</p><small>${m.de==="cliente"?"Cliente":esc(m.por||"Você")}${m.canal?" · "+esc(m.canal):""} · ${hora(m.em)}</small></div>`).join("")}</div>`:`<p class="muted" style="margin:0 0 8px">Nenhuma mensagem. O cliente fala com você pelo painel dele (telefone + código, logo abaixo).</p>`}
       <div class="resp"><textarea id="respTxt" rows="2" placeholder="Responder ao cliente"></textarea><button type="button" class="btn sm" id="respEnviar" style="width:auto;padding:0 16px">Enviar</button></div></section>`;}
   document.addEventListener("click",async ev=>{if(!ev.target.closest||!ev.target.closest("#respEnviar"))return;const t=$("#respTxt");const v=t.value.trim();if(!v)return;const b=$("#respEnviar");b.disabled=true;
     try{const r=await fetch(`/api/mensagens/${encodeURIComponent(slug)}`,{method:"PUT",credentials:"same-origin",headers:{"Content-Type":"application/json"},body:JSON.stringify({texto:v})});if(!r.ok)throw 0;MSGS.push(await r.json());const y=scrollY;render();scrollTo(0,y);}catch(err){b.disabled=false;alert("Não foi: confira a internet.");}});
