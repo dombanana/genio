@@ -3925,6 +3925,17 @@ async function sessRestore(){let o=null;try{o=await sessRead();}catch(e){}
     return await new Promise(function(ok){c2.toBlob(ok,"image/png");});}
   // logotipo da identidade já vem recortado: todos os blocos vão para o tapete (o motor não deixa parte da marca de fora)
   try{var _pb=window.proposeBlocks;if(typeof _pb==="function")window.proposeBlocks=function(b){return (typeof LOGO_ORIGEM!=="undefined"&&LOGO_ORIGEM==="identidade")?b.map(function(){return true;}):_pb(b);};}catch(e){}
+  // voltar = para os produtos da loja (de onde o vendedor veio)
+  try{var rv=document.getElementById("repVolta");if(rv){rv.href="/app/produtos.html?l="+encodeURIComponent(slug)+"#p-capacho";rv.textContent="← Produtos";rv.setAttribute("aria-label","Voltar aos produtos");}}catch(e){}
+  // preço do tapete montado (o mesmo do orçamento do motor) vai para a ficha da loja no servidor: o card do produto mostra esse valor
+  var ultPreco="";async function enviarPreco(){try{if(typeof Q==="undefined"||!Q||!Q.cliente||(Q.cliente.nome||"").trim().toLowerCase()!==nome.toLowerCase())return;
+      var G=grandPrice();if(!G||!G.ready)return;var Ts=(Q.tapetes&&Q.tapetes.length?Q.tapetes:[{spec:Q.spec}]);
+      var pr={total:Math.round(G.total*100)/100,pix:Math.round(G.pix*100)/100,cartao:Math.round(G.cartao*100)/100,parc:G.parc,sinal:Math.round((G.sinal||0)*100)/100,
+        medidas:Ts.map(function(T){return {w:T.spec.w,h:T.spec.h,tipo:T.spec.tipo||""};}),qtd:(Q.cliente&&Q.cliente.qtd)||1,orc:Q.numero||null};
+      var k=JSON.stringify(pr);if(k===ultPreco)return;ultPreco=k;pr.em=new Date().toISOString();
+      var r=await fetch("/api/clientes/"+encodeURIComponent(slug),{credentials:"same-origin",cache:"no-store"});if(!r.ok){ultPreco="";return;}var f=await r.json();if(!f||!f.slug){ultPreco="";return;}
+      f.capacho_preco=pr;var w=await fetch("/api/clientes/"+encodeURIComponent(slug),{method:"PUT",credentials:"same-origin",headers:{"Content-Type":"application/json"},body:JSON.stringify(f)});if(!w.ok)ultPreco="";}catch(e){ultPreco="";}}
+  setInterval(enviarPreco,3000);document.addEventListener("visibilitychange",function(){if(document.visibilityState==="hidden")enviarPreco();});
   var n=0,t=setInterval(async function(){n++;var pronto=false;try{pronto=typeof Q!=="undefined"&&Q&&Q.cliente&&(Q.cliente.nome||"").trim().toLowerCase()===nome.toLowerCase();}catch(e){}
     if(!pronto){if(n>80)clearInterval(t);return;}clearInterval(t);
     try{var r=await fetch("/api/clientes/"+encodeURIComponent(slug),{credentials:"same-origin",cache:"no-store"});if(!r.ok)return;var f=await r.json();var A=f.artes&&f.artes.capacho,src=f.manual&&f.manual.tratado;
