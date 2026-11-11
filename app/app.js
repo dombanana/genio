@@ -199,7 +199,7 @@ const App=(()=>{
   // ---- arte automática: logotipo tratado centralizado preenchendo a área segura do gabarito, cor padrão do material
   const COR_PADRAO={capacho:"#2B2B2D",rigido:"#F4F1EA",vinil:null,tecido:"#F4F1EA",papel:"#FFFFFF",lona:"#FFFFFF",carimbo:null};
   const PRODUTOS_IDS=["capacho","placas","adesivos","uniformes","impressos","panfleto","banners","parede","brindes","carimbo","windbanner","faixa","folheto","camiseta","bone","avental"];
-  let _G=null;const gabaritos=async()=>_G||(_G=await (await fetch("gabaritos.json?v=30ac711697")).json());
+  let _G=null;const gabaritos=async()=>_G||(_G=await (await fetch("gabaritos.json?v=275e0749c5")).json());
   const carregarImg=src=>new Promise(res=>{const i=new Image();i.crossOrigin="anonymous";i.onload=()=>res(i);i.onerror=()=>res(null);i.src=src;});
   // ---- carimbo: só texto — nome, razão social, CNPJ (negrito), endereço, telefone; nunca logotipo
   async function dadosCarimbo(l){const cad=await ficha(l.slug).catch(()=>null);const L=(cad&&cad.lacunas)||{};const leit=(L.leitura||{}).valor||"";const razao=((leit.match(/Razão social: ([^·]+)/)||[])[1]||"").trim();const cnpj=((leit.match(/CNPJ:? ?([\d./-]{14,18})/)||[])[1]||"");
@@ -246,7 +246,7 @@ const App=(()=>{
     const aw=W-2*(B+S),ah=H-2*(B+S);const f=Math.min(aw/LW,(P.ancora==="topo"?ah*0.45:ah)/LH);const w=LW*f,h=LH*f;const x=(W-w)/2,y=P.ancora==="topo"?B+S+ah*0.05:(H-h)/2;
     const fundo=P.sem_fundo?null:(COR_PADRAO[P.superficie]===undefined?"#FFFFFF":COR_PADRAO[P.superficie]);
     // kit de 14 setores (10/11): a maquete frontal do ramo da loja é a arte de partida de todos os produtos
-    await carregarScript("qr.js?v=30ac711697");await carregarScript("impressos.js?v=30ac711697");await carregarScript("kits14.js?v=30ac711697");
+    await carregarScript("qr.js?v=275e0749c5");await carregarScript("impressos.js?v=275e0749c5");await carregarScript("kits14.js?v=275e0749c5");
     if(window.Kits14&&window.Kits14.ARQ[pid]){const K=await window.Kits14.montar(App,pid,c,l,{W,H,B,S,im,rec});
       if(K){const doc={fundo:K.fundo,fundoImg:null,el:K.el,campos:null,auto:true,kit:KIT14,setorKit:K.setorKit,kitRef:K.kitRef,W,H};const imgs={[c.manual.tratado]:im};
         const k=Math.min(1,1400/Math.max(W,H));const cv=document.createElement("canvas");cv.width=Math.round(W*k);cv.height=Math.round(H*k);const g=cv.getContext("2d");g.scale(k,k);
@@ -474,9 +474,9 @@ const App=(()=>{
   const ORDEM_ORC=["capacho","placas","adesivos","parede","faixa","banners","windbanner","impressos","panfleto","folheto","carimbo","uniformes","camiseta","bone","avental","brindes","mostraai","falaai","inpi"];
   const NOME_ORC={capacho:"Capacho",placas:"Placa",adesivos:"Adesivo de vitrine",uniformes:"Camisa polo",impressos:"Cartão de visita",panfleto:"Flyer",banners:"Banner retrátil",parede:"Adesivo de parede",brindes:"Ecobag",carimbo:"Carimbo",windbanner:"Wind banner",faixa:"Faixa",folheto:"Folheto 2 dobras",camiseta:"Camiseta",bone:"Boné",avental:"Avental",mostraai:"Mostraí",falaai:"Fala Aí",inpi:"Registro de marca (INPI)"};
   function orcamento(c,S,P){P=P||{};const dc=P.desc||{};const artes=(c&&c.artes)||{};const linhas=[];
-    Object.entries(S||{}).filter(([k,v])=>v&&v.q>0).sort((a,b)=>{const i=k=>{const n=ORDEM_ORC.indexOf(k);return n<0?999:n;};return i(a[0])-i(b[0]);}).forEach(([k,v])=>{
+    Object.entries(S||{}).filter(([k,v])=>v&&v.q>0).sort((a,b)=>{const i=k=>{const n=ORDEM_ORC.indexOf(baseId(k));return n<0?999:n;};return i(a[0])-i(b[0])||(a[0]<b[0]?-1:1);}).forEach(([k,v])=>{
       const A=artes[k]||(k.includes("~")?null:null);const img=A?((A.provas&&A.provas[0]&&A.provas[0].src)||A.contexto||A.png||null):null;let lista=null,unid="",mensal=0,q=v.q||1,fixa=false;
-      if(v.servico){q=1;fixa=true;if(k==="mostraai"&&v.entrada!=null){lista=+v.entrada;mensal=+v.mensal||0;unid=(v.nome||"").replace(/^Mostraí · /,"");}}
+      if(v.servico){q=1;fixa=true;if(baseId(k)==="mostraai"&&v.entrada!=null){lista=+v.entrada;mensal=+v.mensal||0;unid=(v.nome||"").replace(/^Mostraí · /,"");}}
       else if(baseId(k)==="capacho"&&c&&c.capacho_preco&&c.capacho_preco.total){const cp=c.capacho_preco;lista=+cp.total;q=cp.qtd||1;fixa=true;unid=(cp.medidas||[]).map(m=>`${(m.w/100).toFixed(2).replace(".",",")} × ${(m.h/100).toFixed(2).replace(".",",")} m`).join(" + ");}
       else{q=qtdNormal(k,q);const fmt=(c&&c.formatos||{})[k];lista=precoEm(k,q,fmt);const pr=precoProduto(k,fmt);unid=pr?pr.unid.replace(/^\d[\d.]* un\. · /,"").replace(/^un\. · /,""):"";}
       const pct=dc[k]!=null?+dc[k]:0;const total=lista==null?null:Math.round(lista*(1+pct/100)*100)/100;

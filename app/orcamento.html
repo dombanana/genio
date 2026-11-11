@@ -6,7 +6,7 @@
 <title>GênIO · Orçamento</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="app.css?v=30ac711697">
+<link rel="stylesheet" href="app.css?v=275e0749c5">
 <style>
 .orc{background:#fff;border-radius:18px;padding:6px 10px;margin:0 0 12px;box-shadow:0 1px 0 rgba(28,22,53,.06)}
 .ln{display:grid;grid-template-columns:52px minmax(0,1fr) auto;gap:8px;align-items:center;padding:7px 0;border-bottom:1px solid #F0EDF6}
@@ -39,7 +39,7 @@
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=30ac711697"></script>
+<script src="app.js?v=275e0749c5"></script>
 <script>
 (async()=>{
   const {$,$$,esc,qs,sessao,dados,nav,topo,voltar,nomeLoja,estado,salvar,cliente,definirCliente}=App;
@@ -56,7 +56,7 @@
     $("#app").innerHTML=`${topo()}${voltar(`produtos.html?l=${encodeURIComponent(slug)}`,"Produtos")}
     <h1>Orçamento</h1><p class="sub">${esc(nome)}</p>
     ${O.linhas.length?`<div class="orc">${O.linhas.map(x=>`<div class="ln" data-k="${x.k}">
-        <div class="fig">${x.img?`<img src="${esc(x.img)}" alt="" loading="lazy">`:(ICON[x.k]||"▫")}</div>
+        <div class="fig">${x.img?`<img src="${esc(x.img)}" alt="" loading="lazy">`:(ICON[x.base]||"▫")}</div>
         <div class="nm"><b>${esc(x.nome)}</b><div class="sub2">${x.fixa?(x.k==="capacho"&&x.q>1?`<small>${x.q} un. · </small>`:""):`<span class="qt"><button type="button" data-q="-">−</button><span>${x.q.toLocaleString("pt-BR")}</span><button type="button" data-q="+">+</button></span>`}<small>${x.lote||!x.fixa?"un. · ":""}${esc(x.unid||"")}</small></div></div>
         <div class="pr">${x.total==null?`<span class="un">preço a confirmar</span>`:`<div class="aj"><button type="button" data-p="-" aria-label="baixar o preço">▼</button><button type="button" class="val" data-ed="1">${R(x.total)}</button><button type="button" data-p="+" aria-label="subir o preço">▲</button></div>
           ${x.pct?`<span><s>${R(x.lista)}</s> <span class="desc">${x.pct<0?"−":"+"}${Math.abs(x.pct).toLocaleString("pt-BR")}%</span></span>`:""}
