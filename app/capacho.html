@@ -3935,7 +3935,12 @@ async function sessRestore(){let o=null;try{o=await sessRead();}catch(e){}
       var k=JSON.stringify(pr);if(k===ultPreco)return;ultPreco=k;pr.em=new Date().toISOString();
       var r=await fetch("/api/clientes/"+encodeURIComponent(slug),{credentials:"same-origin",cache:"no-store"});if(!r.ok){ultPreco="";return;}var f=await r.json();if(!f||!f.slug){ultPreco="";return;}
       f.capacho_preco=pr;var w=await fetch("/api/clientes/"+encodeURIComponent(slug),{method:"PUT",credentials:"same-origin",headers:{"Content-Type":"application/json"},body:JSON.stringify(f)});if(!w.ok)ultPreco="";}catch(e){ultPreco="";}}
-  setInterval(enviarPreco,3000);document.addEventListener("visibilitychange",function(){if(document.visibilityState==="hidden")enviarPreco();});
+  setInterval(enviarPreco,3000);
+  // no fim do capacho não há "Gerar orçamento": o preço já vai sozinho para o card; o botão leva para a tela de todos os produtos
+  try{var _bs=window.barSpec;if(typeof _bs==="function")window.barSpec=function(){var b=_bs.apply(this,arguments);
+    if(b&&/^Gerar orçamento/.test(b.next||"")){b.next="Produtos →";b.ns="Produtos →";b.go=async function(){try{Q.feito=Object.assign({},Q.feito,{local:true});await saveQuote();}catch(e){}
+      ultPreco="";await enviarPreco();location.href="/app/produtos.html?l="+encodeURIComponent(slug)+"#p-capacho";};}
+    return b;};if(typeof renderBar==="function")renderBar();}catch(e){}document.addEventListener("visibilitychange",function(){if(document.visibilityState==="hidden")enviarPreco();});
   var n=0,t=setInterval(async function(){n++;var pronto=false;try{pronto=typeof Q!=="undefined"&&Q&&Q.cliente&&(Q.cliente.nome||"").trim().toLowerCase()===nome.toLowerCase();}catch(e){}
     if(!pronto){if(n>80)clearInterval(t);return;}clearInterval(t);
     try{var r=await fetch("/api/clientes/"+encodeURIComponent(slug),{credentials:"same-origin",cache:"no-store"});if(!r.ok)return;var f=await r.json();var A=f.artes&&f.artes.capacho,src=f.manual&&f.manual.tratado;
