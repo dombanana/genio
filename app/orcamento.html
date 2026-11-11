@@ -6,7 +6,7 @@
 <title>GênIO · Orçamento</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="app.css?v=4a5883b26a">
+<link rel="stylesheet" href="app.css?v=fbffebb380">
 <style>
 .orc{background:#fff;border-radius:18px;padding:6px 10px;margin:0 0 12px;box-shadow:0 1px 0 rgba(28,22,53,.06)}
 .ln{display:grid;grid-template-columns:52px minmax(0,1fr) auto;gap:8px;align-items:center;padding:7px 0;border-bottom:1px solid #F0EDF6}
@@ -22,6 +22,8 @@
 .ln .qt button{width:24px;height:24px;border-radius:7px;border:1px solid #DDD6EC;background:#fff;font:600 14px/1 Rubik,system-ui,sans-serif;color:#5b3fc4;padding:0}
 .ln .qt span{min-width:22px;text-align:center;font-weight:600;font-size:13px}
 .pr{display:grid;justify-items:end;gap:1px}
+.fo{display:inline-flex;align-items:center;gap:4px;margin-top:4px;border:0;background:#F1EDFA;color:#5b3fc4;border-radius:8px;padding:3px 8px;font:600 11.5px/1.2 Rubik,system-ui,sans-serif;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fo.proprio{background:#FFF1D6;color:#8A5A00}
 .grd{grid-column:1/-1;display:grid;grid-template-columns:44px repeat(4,minmax(0,1fr));gap:4px 4px;align-items:center;background:#F7F5FB;border-radius:12px;padding:6px 6px 8px;margin-top:2px}
 .grd .h{font-size:11px;font-weight:700;color:#7b7590;text-align:center}
 .grd .sx{font-size:12px;font-weight:600;color:#5b5570}
@@ -46,7 +48,7 @@
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=4a5883b26a"></script>
+<script src="app.js?v=fbffebb380"></script>
 <script>
 (async()=>{
   const {$,$$,esc,qs,sessao,dados,nav,topo,voltar,nomeLoja,estado,salvar,cliente,definirCliente}=App;
@@ -70,7 +72,7 @@
     <h1>Orçamento</h1><p class="sub">${esc(nome)}</p>
     ${O.linhas.length?`<div class="orc">${O.linhas.map(x=>`<div class="ln" data-k="${x.k}">
         <div class="fig">${x.img?`<img src="${esc(x.img)}" alt="" loading="lazy">`:(ICON[x.base]||"▫")}</div>
-        <div class="nm"><b>${esc(x.nome)}</b><div class="sub2">${GRADE.has(x.base)&&somaG(S[x.k])?`<small>${x.q.toLocaleString("pt-BR")} un. pela grade</small>`:x.fixa?(x.k==="capacho"&&x.q>1?`<small>${x.q} un. · </small>`:""):`<span class="qt"><button type="button" data-q="-">−</button><span>${x.q.toLocaleString("pt-BR")}</span><button type="button" data-q="+">+</button></span>`}${GRADE.has(x.base)&&somaG(S[x.k])?"":`<small>${x.lote||!x.fixa?"un. · ":""}${esc(x.unid||"")}</small>`}</div></div>
+        <div class="nm"><b>${esc(x.nome)}</b>${x.servico||x.base==="locacao"||x.base==="capacho"?"":`<button type="button" class="fo ${x.fornProprio?"proprio":""}" data-fo="1">🏭 ${esc(x.forn?x.forn.nome+(x.forn.prazo?` · ${x.forn.prazo} dias`:"")+(x.forn.preco?"":" · preço da tabela"):"Printi / GIV")}${x.fornProprio?" · só neste":""} ▾</button>`}<div class="sub2">${GRADE.has(x.base)&&somaG(S[x.k])?`<small>${x.q.toLocaleString("pt-BR")} un. pela grade</small>`:x.fixa?(x.k==="capacho"&&x.q>1?`<small>${x.q} un. · </small>`:""):`<span class="qt"><button type="button" data-q="-">−</button><span>${x.q.toLocaleString("pt-BR")}</span><button type="button" data-q="+">+</button></span>`}${GRADE.has(x.base)&&somaG(S[x.k])?"":`<small>${x.lote||!x.fixa?"un. · ":""}${esc(x.unid||"")}</small>`}</div></div>
         <div class="pr">${x.total==null?`<span class="un">preço a confirmar</span>`:`<div class="aj"><button type="button" data-p="-" aria-label="baixar o preço">▼</button><button type="button" class="val" data-ed="1">${R(x.total)}</button><button type="button" data-p="+" aria-label="subir o preço">▲</button></div>
           ${x.pct?`<span><s>${R(x.lista)}</s> <span class="desc">${x.pct<0?"−":"+"}${Math.abs(x.pct).toLocaleString("pt-BR")}%</span></span>`:""}
           ${x.q>1&&!x.fixa?`<span class="un">${R(x.total/x.q)} cada</span>`:""}${x.mensal?`<span class="un">+ ${R(x.mensal)}/mês</span>`:""}`}</div>${GRADE.has(x.base)?grade(x,S[x.k]):""}</div>`).join("")}
@@ -89,7 +91,14 @@
       const t=somaG(s);if(t)s.q=Math.max(App.qtdMin(k),t);else{s.q=Math.max(1,App.qtdMin(k));delete s.grade;}salvar(e);render();});
     // quantidade: segue a tabela da gráfica (lote: só as quantidades da tabela; unidade: de 1 em 1 a partir do mínimo)
     $$("[data-q]").forEach(b=>b.onclick=()=>{const k=b.closest(".ln").dataset.k;const e=estado();const s=((e.sel||{})[slug]||{})[k];if(!s)return;
-      s.q=App.passoQtd(k,App.qtdNormal(k,s.q),b.dataset.q==="+"?1:-1);salvar(e);render();});
+      const fid=(((e.pedidos||{})[slug]||{}).forn||{})[k]||null;s.q=App.passoQtd(k,App.qtdNormal(k,s.q,fid),b.dataset.q==="+"?1:-1,fid);salvar(e);render();});
+    // fornecedor do item só para este cliente (o ativo de Config vale para os outros)
+    $$("[data-fo]").forEach(b=>b.onclick=async()=>{const k=b.closest(".ln").dataset.k;const it=App.fornItem(k);const ativo=it.ativo||"tabela";
+      const ops=[{k:"tabela",ic:ativo==="tabela"?"✓":"",t:"Printi / GIV · tabela"+(ativo==="tabela"?" (ativo)":"")},...(it.lista||[]).map(f=>({k:f.id,ic:ativo===f.id?"✓":"",t:`${f.nome}${f.prazo?` · ${f.prazo} dias`:""}${App.fornTab(f).length?"":" · sem preço"}${ativo===f.id?" (ativo)":""}`}))];
+      if(ops.length<2){alert("Este item só tem a tabela Printi/GIV. Cadastre fornecedores em Config → Fornecedores por item.");return;}
+      const id=await App.menuLongo("Fornecedor deste item para "+nome,ops);if(!id)return;
+      const e=estado();e.pedidos=e.pedidos||{};const p=e.pedidos[slug]=e.pedidos[slug]||{etapa:"entrada",hist:[]};p.forn=p.forn||{};if(id===ativo)delete p.forn[k];else p.forn[k]=id;
+      const s=((e.sel||{})[slug]||{})[k];if(s&&s.q>0&&!s.grade)s.q=App.qtdNormal(k,s.q,p.forn[k]||null);salvar(e);render();});
     // preço: desconto ou acréscimo em % sobre a tabela (as setas andam 1%); tocar no valor deixa digitar o preço da linha
     const gravar=(k,v)=>{const e=estado();e.pedidos=e.pedidos||{};const p=e.pedidos[slug]=e.pedidos[slug]||{etapa:"entrada",hist:[]};
       if(k==="_frete")p.frete=v;else{p.desc=p.desc||{};if(!v)delete p.desc[k];else p.desc[k]=v;}salvar(e);render();};

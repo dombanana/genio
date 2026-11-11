@@ -6,20 +6,30 @@
 <title>GênIO · Configuração</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="app.css?v=4a5883b26a">
+<link rel="stylesheet" href="app.css?v=fbffebb380">
 <style>
 .forn{display:grid;grid-template-columns:1fr;gap:6px;margin:8px 0 0}
 .forn .it{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;background:var(--lav);border-radius:12px;padding:10px 12px}
 .forn .it small{display:block;color:var(--texto2);font-size:12px}
 .forn .it button{border:0;background:#fff;border-radius:10px;min-height:36px;padding:0 12px;font:inherit;font-size:13px;color:var(--marca);font-weight:700}
-.ed-forn{position:fixed;left:12px;right:12px;top:10vh;background:#fff;border-radius:18px;padding:14px;z-index:75;box-shadow:0 10px 40px rgba(28,22,53,.3)}
+.fo-lista{display:grid;gap:8px;margin:8px 0}
+.fo-c{border:1.5px solid var(--linha);border-radius:14px;padding:10px 12px;background:#fff}
+.fo-c.on{border-color:var(--marca);background:#F7F4FE}
+.fo-c b{font-size:15px}.fo-c small{display:block;color:var(--texto2);font-size:12.5px;line-height:1.35;margin-top:2px}
+.fo-c .bts{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}.fo-c .bts button,.fo-c .bts a{border:0;background:var(--lav);border-radius:9px;min-height:34px;padding:0 12px;font:600 13px Rubik,system-ui,sans-serif;color:var(--marca);text-decoration:none;display:inline-grid;place-items:center}
+.fo-c .bts .usar{background:var(--marca);color:#fff}
+.fo-tab{display:grid;grid-template-columns:1fr 1fr auto;gap:6px;align-items:center}.fo-tab input{min-width:0}
+.fo-hist{font-size:12px;color:var(--texto2);margin:8px 0 0;line-height:1.5}
+.ed-forn{max-height:84vh;overflow:auto}
+.ed-forn select{width:100%;box-sizing:border-box;font:inherit;font-size:15px;border:1.5px solid var(--linha);border-radius:10px;padding:9px 10px;background:#fff}
+.ed-forn{position:fixed;left:12px;right:12px;top:6vh;background:#fff;border-radius:18px;padding:14px;z-index:75;box-shadow:0 10px 40px rgba(28,22,53,.3)}
 .ed-forn label{display:block;font-size:12px;color:var(--texto2);margin:8px 0 2px}
 .ed-forn input,.ed-forn textarea{width:100%;box-sizing:border-box;font:inherit;font-size:15px;border:1.5px solid var(--linha);border-radius:10px;padding:9px 10px}
 </style>
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=4a5883b26a"></script>
+<script src="app.js?v=fbffebb380"></script>
 <script>
 (async()=>{
   const {$,$$,esc,sessao,nav,topo}=App;
@@ -50,8 +60,8 @@
       <div class="metas-f">${App.LOC_TEMAS.map(t=>`<label>Kits ${esc(t.nome)}<input type="number" min="0" step="1" inputmode="numeric" data-lk="${t.id}" value="${(((App.METAS.locacao||{}).kits||{})[t.id])??""}" placeholder="sem limite"></label>`).join("")}<label>Valor padrão · 15 dias (R$)<input type="number" min="0" step="0.01" inputmode="decimal" id="lPad" value="${(App.METAS.locacao||{}).padrao??""}" placeholder="a confirmar"></label></div>
       <h3 style="margin:14px 0 6px">Períodos com preço próprio</h3><div id="lPer"></div><button type="button" class="btn sec sm" id="lAdd" style="margin-top:6px">+ período</button>
       <h3 style="margin:14px 0 6px">Reservas</h3><div id="lRes"><small class="muted">carregando…</small></div></section>
-    <section class="card"><h2>Fornecedores por item</h2><small class="muted">Quem produz cada item e observações. Preços entram na fase do orçamento.</small>
-      <div class="forn">${Object.entries(F).map(([k,v])=>`<div class="it"><div><b>${esc(v.item)}</b><small>${esc(v.fornecedor||"a definir")}${v.obs?" · "+esc(v.obs):""}${v.link?` · <a href="${esc(v.link)}" target="_blank" rel="noopener">site</a>`:""}</small></div><button type="button" data-f="${k}">Editar</button></div>`).join("")}</div></section>
+    <section class="card" id="fornec"><h2>Fornecedores por item</h2><small class="muted">Cada item com os seus fornecedores e o histórico. O ativo vale para os orçamentos; no orçamento dá para trocar o fornecedor de um item só para aquele cliente. Sem tabela de preço, o orçamento usa a tabela Printi/GIV.</small>
+      <div class="forn">${ITENS.map(k=>{const it=App.fornItem(k),fa=App.fornDe(k),n=(it.lista||[]).length;return `<div class="it"><div><b>${esc(App.NOME_ORC[k]||k)}</b><small>${fa?`✓ ${esc(fa.nome)}${fa.prazo?` · ${fa.prazo} dias`:""}${App.fornTab(fa).length?"":" · sem preço"}`:esc(TAB_NOME[k]||"tabela Printi/GIV")}${n?` · ${n} fornecedor(es)`:""}</small></div><button type="button" data-fi="${k}">Abrir</button></div>`;}).join("")}</div></section>
     ${nav("config")}`;
     const NOMES={capacho:"Capacho",placas:"Placa",uniformes:"Polo",impressos:"Cartão de visita",panfleto:"Flyer",banners:"Banner retrátil",parede:"Adesivo de parede",brindes:"Ecobag",carimbo:"Carimbo",windbanner:"Wind banner",faixa:"Faixa",folheto:"Folheto",camiseta:"Camiseta",bone:"Boné",avental:"Avental"};
     const R=v=>v.toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
@@ -73,10 +83,65 @@
     if(location.hash==="#metas"&&!render._r){render._r=1;setTimeout(()=>{const s=$("#metas");if(s)s.scrollIntoView({block:"start"});},50);}
     $$("#app [data-t]").forEach(b=>b.onclick=()=>{tipoSel=b.dataset.t;localStorage.setItem("rec-tipo",tipoSel);render();});
     $("#rTela").onchange=ev=>{telaAcesa=ev.target.checked;localStorage.setItem("rec-tela",telaAcesa?"1":"0");};
-    $$("[data-f]").forEach(b=>b.onclick=()=>{const k=b.dataset.f,v=F[k];const f=document.createElement("div");f.className="rec-fundo";f.style.zIndex=70;const m=document.createElement("div");m.className="ed-forn";
-      m.innerHTML=`<h3 style="margin:0">${esc(v.item)}</h3><label>Fornecedor</label><input id="ef-forn" value="${esc(v.fornecedor||"")}"><label>Site / link</label><input id="ef-link" value="${esc(v.link||"")}" inputmode="url"><label>Contato</label><input id="ef-cont" value="${esc(v.contato||"")}"><label>Observações</label><textarea id="ef-obs" rows="3">${esc(v.obs||"")}</textarea><div style="display:flex;gap:8px;margin-top:12px"><button type="button" class="btn" id="ef-ok" style="min-height:46px">Salvar</button><button type="button" class="btn sec" id="ef-x" style="width:auto;min-height:46px;padding:0 14px">Fechar</button></div>`;
-      document.body.appendChild(f);document.body.appendChild(m);const fecha=()=>{f.remove();m.remove();};f.onclick=fecha;m.querySelector("#ef-x").onclick=fecha;
-      m.querySelector("#ef-ok").onclick=()=>{const all=ler();all[k]={...v,fornecedor:m.querySelector("#ef-forn").value.trim(),link:m.querySelector("#ef-link").value.trim(),contato:m.querySelector("#ef-cont").value.trim(),obs:m.querySelector("#ef-obs").value.trim()};gravar(all);fecha();render();};});}
+    $$("[data-fi]").forEach(b=>b.onclick=()=>abrirItem(b.dataset.fi));
+    if(abrirDepois){const k=abrirDepois;abrirDepois=null;abrirItem(k);}}
+  // ---- fornecedores por item: lista, histórico, ativo, edição
+  let abrirDepois=null;
+  const ITENS=App.ORDEM_ORC.filter(k=>k!=="locacao");
+  const TAB_NOME={capacho:"Kapazi · motor do capacho",mostraai:"AI Negócios",falaai:"AI Negócios",inpi:"a definir",carimbo:"tabela GIV",placas:"tabela GIV",bone:"tabela GIV",faixa:"tabela GIV",parede:"tabela GIV"};
+  const novoId=()=>"f"+Date.now().toString(36)+Math.random().toString(36).slice(2,5);
+  async function gravarFornec(F){App.FORNEC=F;await App.gravarChave("fornec",F);}
+  const copia=()=>JSON.parse(JSON.stringify(App.FORNEC||{itens:{}}));
+  const R$=v=>Number(v).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
+  const resumo=f=>{const t=App.fornTab(f);return [f.whats?"WhatsApp "+f.whats:"",f.email||"",f.prazo?`prazo ${f.prazo} dias`:"",f.frete!==""&&f.frete!=null?`frete ${R$(f.frete)}`:"",
+    t.length?(f.modo==="lote"?t.map(x=>`${x[0].toLocaleString("pt-BR")} un. ${R$(x[1])}`).join(" · "):t.map(x=>`${x[0]}+ un. ${R$(x[1])} cada`).join(" · ")):"sem preço",
+    f.cores?"cores: "+f.cores:"",f.tecnica?"técnica: "+f.tecnica:"",f.vida?"vida útil: "+f.vida:"",f.obs||""].filter(Boolean).map(esc).join("<br>");};
+  function abrirItem(k){const it=App.fornItem(k),nomeI=App.NOME_ORC[k]||k;const fa=it.ativo||"tabela";
+    const f=document.createElement("div");f.className="rec-fundo";f.style.zIndex=70;const m=document.createElement("div");m.className="ed-forn";const fecha=()=>{f.remove();m.remove();};
+    m.innerHTML=`<h3 style="margin:0 0 4px">${esc(nomeI)}</h3><small class="muted">Toque em "Usar este" para trocar o fornecedor ativo na hora.</small>
+      <div class="fo-lista"><div class="fo-c ${fa==="tabela"?"on":""}"><b>${esc(TAB_NOME[k]||"Printi / GIV")}</b><small>tabela do sistema (consulta de 10–11/11)</small>${fa==="tabela"?`<small style="color:var(--marca);font-weight:700">✓ ativo</small>`:`<div class="bts"><button type="button" class="usar" data-usar="tabela">Usar este</button></div>`}</div>
+      ${(it.lista||[]).map(x=>`<div class="fo-c ${fa===x.id?"on":""}"><b>${esc(x.nome)}</b><small>${resumo(x)}</small><div class="bts">${fa===x.id?`<span style="color:var(--marca);font-weight:700;font-size:13px;align-self:center">✓ ativo</span>`:`<button type="button" class="usar" data-usar="${x.id}">Usar este</button>`}<button type="button" data-ed="${x.id}">Editar</button>${x.whats?`<a href="https://wa.me/${esc(String(x.whats).replace(/\D/g,"").replace(/^(?!55)/,"55"))}" target="_blank" rel="noopener">WhatsApp</a>`:""}${x.email?`<a href="mailto:${esc(x.email)}">E-mail</a>`:""}</div></div>`).join("")}</div>
+      <button type="button" class="btn" data-novo style="min-height:46px">+ Novo fornecedor</button>
+      ${(it.hist||[]).length?`<div class="fo-hist"><b>Histórico</b><br>${it.hist.slice(-8).reverse().map(h=>`${esc(h.em.slice(8,10)+"/"+h.em.slice(5,7))} · ${esc(h.t)}`).join("<br>")}</div>`:""}
+      <button type="button" class="btn sec" data-x style="min-height:44px;margin-top:10px">Fechar</button>`;
+    document.body.append(f,m);f.onclick=fecha;m.querySelector("[data-x]").onclick=fecha;
+    const nomeDe=id=>id==="tabela"?(TAB_NOME[k]||"Printi / GIV"):((it.lista||[]).find(x=>x.id===id)||{}).nome||id;
+    m.querySelectorAll("[data-usar]").forEach(b=>b.onclick=async()=>{const F=copia();F.itens=F.itens||{};const I=F.itens[k]=F.itens[k]||{lista:[]};const de=I.ativo||"tabela";I.ativo=b.dataset.usar;
+      I.hist=[...(I.hist||[]),{em:new Date().toISOString(),t:`ativo: ${nomeDe(de)} → ${nomeDe(b.dataset.usar)}`}];await gravarFornec(F);fecha();abrirDepois=k;render();});
+    m.querySelector("[data-novo]").onclick=()=>{fecha();editarForn(k,null);};
+    m.querySelectorAll("[data-ed]").forEach(b=>b.onclick=()=>{fecha();editarForn(k,b.dataset.ed);});}
+  function editarForn(k,id){const it=App.fornItem(k);const x=id?JSON.parse(JSON.stringify((it.lista||[]).find(y=>y.id===id)||{})):{modo:"unidade",faixas:[[1,""]]};
+    // contatos já cadastrados em outros itens (a mesma loja da galeria pode fazer vários itens)
+    const todos={};Object.values((App.FORNEC||{}).itens||{}).forEach(I=>(I.lista||[]).forEach(y=>{if(y.nome)todos[y.nome.toLowerCase()]=y;}));
+    const f=document.createElement("div");f.className="rec-fundo";f.style.zIndex=70;const m=document.createElement("div");m.className="ed-forn";const fecha=()=>{f.remove();m.remove();};
+    const tab=()=>(x.faixas||[]).map((t,i)=>`<div class="fo-tab"><input type="number" min="1" step="1" inputmode="numeric" data-tq="${i}" value="${t[0]??""}" placeholder="a partir de (un.)"><input type="number" min="0" step="0.01" inputmode="decimal" data-tv="${i}" value="${t[1]??""}" placeholder="${x.modo==="lote"?"R$ do pacote":"R$ por unidade"}"><button type="button" class="btn sec sm" data-tx="${i}" style="width:auto;min-height:38px;padding:0 10px">×</button></div>`).join("");
+    m.innerHTML=`<h3 style="margin:0">${esc(App.NOME_ORC[k]||k)} · ${id?"editar fornecedor":"novo fornecedor"}</h3>
+      <label>Nome</label><input id="fNome" value="${esc(x.nome||"")}" list="fNomes" autocomplete="off"><datalist id="fNomes">${Object.values(todos).map(y=>`<option value="${esc(y.nome)}">`).join("")}</datalist>
+      <label>WhatsApp</label><input id="fWhats" value="${esc(x.whats||"")}" inputmode="tel" placeholder="(11) 9…">
+      <label>E-mail para pedido</label><input id="fEmail" value="${esc(x.email||"")}" inputmode="email">
+      <label>Site / Instagram</label><input id="fSite" value="${esc(x.site||"")}" inputmode="url">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div><label>Prazo de entrega (dias)</label><input id="fPrazo" type="number" min="0" inputmode="numeric" value="${x.prazo??""}"></div><div><label>Frete (R$)</label><input id="fFrete" type="number" min="0" step="0.01" inputmode="decimal" value="${x.frete??""}"></div></div>
+      <label>Como cobra</label><select id="fModo"><option value="unidade" ${x.modo!=="lote"?"selected":""}>Por unidade (preço cai com a quantidade)</option><option value="lote" ${x.modo==="lote"?"selected":""}>Pacote fechado (ex.: 500 cartões)</option></select>
+      <label id="fTabRot">${x.modo==="lote"?"Pacotes: quantidade e preço do pacote":"Preço por unidade a partir de cada quantidade"}</label><div id="fTab" style="display:grid;gap:6px">${tab()}</div><button type="button" class="btn sec sm" id="fTabMais" style="margin-top:6px;min-height:38px">+ faixa de quantidade</button>
+      <label>Cores que produz</label><input id="fCores" value="${esc(x.cores||"")}">
+      <label>Técnica de produção</label><input id="fTec" value="${esc(x.tecnica||"")}" placeholder="ex.: silk, DTF, sublimação, bordado">
+      <label>Vida útil do produto</label><input id="fVida" value="${esc(x.vida||"")}" placeholder="ex.: 2 anos ao sol">
+      <label>Observações</label><textarea id="fObs" rows="3">${esc(x.obs||"")}</textarea>
+      <div style="display:grid;grid-template-columns:${id?"1fr 1fr 1fr":"1fr 2fr"};gap:8px;margin-top:12px">${id?`<button type="button" class="btn sec" id="fDel" style="min-height:46px">Tirar</button>`:""}<button type="button" class="btn sec" id="fX" style="min-height:46px">Cancelar</button><button type="button" class="btn" id="fOk" style="min-height:46px">Salvar</button></div>`;
+    document.body.append(f,m);f.onclick=fecha;
+    const ler=()=>{x.faixas=[...m.querySelectorAll("[data-tq]")].map((q,i)=>[q.value===""?"":+q.value,m.querySelector(`[data-tv="${i}"]`).value===""?"":+m.querySelector(`[data-tv="${i}"]`).value]);};
+    const ligarTab=()=>{m.querySelectorAll("[data-tx]").forEach(b=>b.onclick=()=>{ler();x.faixas.splice(+b.dataset.tx,1);m.querySelector("#fTab").innerHTML=tab();ligarTab();});};ligarTab();
+    m.querySelector("#fTabMais").onclick=()=>{ler();x.faixas.push(["",""]);m.querySelector("#fTab").innerHTML=tab();ligarTab();};
+    m.querySelector("#fModo").onchange=ev=>{ler();x.modo=ev.target.value;m.querySelector("#fTabRot").textContent=x.modo==="lote"?"Pacotes: quantidade e preço do pacote":"Preço por unidade a partir de cada quantidade";m.querySelector("#fTab").innerHTML=tab();ligarTab();};
+    m.querySelector("#fNome").onchange=ev=>{const y=todos[ev.target.value.trim().toLowerCase()];if(!y)return;[["fWhats","whats"],["fEmail","email"],["fSite","site"]].forEach(([i,c])=>{const el=m.querySelector("#"+i);if(!el.value&&y[c])el.value=y[c];});};
+    m.querySelector("#fX").onclick=()=>{fecha();abrirItem(k);};
+    if(id)m.querySelector("#fDel").onclick=async()=>{if(!confirm(`Tirar ${x.nome} de ${App.NOME_ORC[k]||k}? Fica registrado no histórico.`))return;const F=copia();const I=F.itens[k];I.lista=I.lista.filter(y=>y.id!==id);if(I.ativo===id)I.ativo="tabela";I.hist=[...(I.hist||[]),{em:new Date().toISOString(),t:`tirou ${x.nome}`}];await gravarFornec(F);fecha();abrirDepois=k;render();};
+    m.querySelector("#fOk").onclick=async()=>{ler();const nome=m.querySelector("#fNome").value.trim();if(!nome){alert("Falta o nome do fornecedor.");return;}
+      const v=sel=>m.querySelector(sel).value.trim();const num=sel=>v(sel)===""?"":+v(sel);
+      const novo={...x,id:id||novoId(),nome,whats:v("#fWhats"),email:v("#fEmail"),site:v("#fSite"),prazo:num("#fPrazo"),frete:num("#fFrete"),modo:v("#fModo"),faixas:x.faixas.filter(t=>t[0]!==""||t[1]!==""),cores:v("#fCores"),tecnica:v("#fTec"),vida:v("#fVida"),obs:v("#fObs"),criado:x.criado||new Date().toISOString(),atualizado:new Date().toISOString()};
+      const F=copia();F.itens=F.itens||{};const I=F.itens[k]=F.itens[k]||{lista:[]};I.lista=I.lista||[];const i=I.lista.findIndex(y=>y.id===novo.id);
+      if(i>=0){I.lista[i]=novo;I.hist=[...(I.hist||[]),{em:new Date().toISOString(),t:`atualizou ${nome}`}];}else{I.lista.push(novo);I.hist=[...(I.hist||[]),{em:new Date().toISOString(),t:`cadastrou ${nome}`}];}
+      await gravarFornec(F);fecha();abrirDepois=k;render();};}
   render();
 })();
 </script>
