@@ -28,15 +28,13 @@
   },
   "adesivos": {
    "nome": "Adesivo de vitrine",
-   "w_cm": 80,
-   "h_cm": 72,
+   "w_cm": 84.1,
+   "h_cm": 59.4,
    "superficie": "vinil",
-   "fonte": "GIV · adesivo para vitrine, vinil transparente 150 g, 4×0, meio-corte; tamanhos 21×200 · 21×300 · 24×120 · 29,7×42 · 29,7×120 · 42×120 · 48×50 · 50×200 · 50×300 · 72×80 cm (retrato ou paisagem) e livre até 140 cm de largura; 3 dias úteis (consulta 10/11)",
+   "fonte": "Adesivo de vitrine branco, 4×0: medidas comuns GIV (branco brilho, tamanho livre) e Printi (adesivo para vidro, vinil eletrostático branco): A4 · A3 · A2 · A1 · A0 · 90×90 · 20×200 · 40×300 cm, retrato ou paisagem; preço = o mais caro dos dois (consulta 11/11)",
    "sem_fundo": true,
    "opcoes": {
-    "GIV": "21×29,7 até 72×300 cm e tamanho livre; transparente/branco/perfurado; 3 dias úteis",
-    "GIV recorte": "vinil recortado sem impressão (preto, branco, ouro, cores, jateado), largura 96 cm",
-    "Printi": "adesivos grandes 200×200 · 400×200 cm, vinil fosco/brilho/removível"
+    "comum": "A4 · A3 · A2 · A1 · A0 · 90×90 · 20×200 · 40×300 cm (branco); transparente só A3 nos dois"
    }
   },
   "uniformes": {

@@ -6,7 +6,7 @@
 <title>GênIO · Produtos e serviços</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="app.css?v=407d61f5d2">
+<link rel="stylesheet" href="app.css?v=5ad77e32ad">
 <style>
 .grade{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .prod{background:#fff;border-radius:18px;box-shadow:0 2px 10px rgba(28,22,53,.06);overflow:hidden;display:flex;flex-direction:column;position:relative}
@@ -34,8 +34,8 @@
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=407d61f5d2"></script>
-<script src="qr.js?v=407d61f5d2"></script>
+<script src="app.js?v=5ad77e32ad"></script>
+<script src="qr.js?v=5ad77e32ad"></script>
 <script>
 (async()=>{
   const {$,$$,esc,qs,sessao,dados,nav,topo,voltar,setorNome,nomeLoja,estado,salvar,cliente,gravarCliente,definirCliente}=App;
@@ -44,8 +44,8 @@
   if(!l){$("#app").innerHTML=`${topo()}<p>Loja não encontrada.</p>${nav("rota")}`;return;}
   const nome=nomeLoja(l.nome);definirCliente(l);let c=await cliente(l);
   if(!(c.manual&&c.manual.editado)){location.href=`visita.html?l=${encodeURIComponent(slug)}`;return;}  // catálogo só depois do logotipo limpo
-  const G=await (await fetch("gabaritos.json?v=407d61f5d2")).json();
-  await App.carregarScript("kits14.js?v=407d61f5d2");
+  const G=await (await fetch("gabaritos.json?v=5ad77e32ad")).json();
+  await App.carregarScript("kits14.js?v=5ad77e32ad");
   // os 16 produtos do kit de 14 setores (10/11); a foto de cada um é a do ramo da loja
   const CAT=await Promise.all([["capacho","Capacho"],["placas","Placa"],["adesivos","Adesivo de vitrine"],["uniformes","Camisa polo"],["impressos","Cartão de visita"],["panfleto",/padaria|restaurante|bar|cafeteria/.test(l.setor||"")?"Flyer · cardápio":"Flyer · produtos e serviços"],["banners","Banner retrátil"],["parede","Adesivo de parede · rotas"],["brindes","Ecobag"],["carimbo","Carimbo"],["windbanner","Wind banner"],["faixa","Faixa"],["folheto","Folheto promocional"],["camiseta","Camiseta"],["bone","Boné"],["avental","Avental"]].map(async([id,n])=>({id,nome:n,img:await Kits14.foto(l.setor,id,true)})));
   const SERV=[{id:"mostraai",nome:"Mostraí · TV de ofertas",desc:"Sua TV em pé com itens, preços e destaque · muda pelo celular",ic:"📺"},{id:"falaai",nome:"Fala Aí · atendente no telefone",desc:"URA com o nome da loja · frases gravadas do sistema",ic:"📞"},{id:"inpi",nome:"Registro de marca (INPI)",desc:"Proteção do nome e do logo",ic:"®"}];
@@ -64,7 +64,7 @@
       novo.contexto=d.jpg;novo.kit=d.kit;c=await cliente(l);c.artes=c.artes||{};c.artes[pid]=novo;await gravarCliente(c);render();}
     catch(err){el.classList.remove("trocando");alert("Não consegui trocar a cor: "+err.message);}}
   // adesivo de vitrine: tamanhos da GIV (vinil transparente) em retrato ou paisagem; a arte se reorganiza e a foto mostra na escala
-  function formatoVitrine(){const f=(c.formatos||{}).adesivos||{w_cm:80,h_cm:72};const a=Math.min(f.w_cm,f.h_cm),b=Math.max(f.w_cm,f.h_cm);const ret=f.h_cm>f.w_cm;
+  function formatoVitrine(){const f=(c.formatos||{}).adesivos||App.VITRINE_PADRAO;const mp=App.vitrineMaisPerto(f);const a=mp[0],b=mp[1];const ret=f.h_cm>f.w_cm;
     const nb=x=>String(x).replace(".",",");
     return `<div class="fmt-v"><select data-fmtv>${App.VITRINE.map(([x,y])=>`<option value="${x}x${y}" ${Math.abs(x-a)<0.6&&Math.abs(y-b)<0.6?"selected":""}>${nb(x)} × ${nb(y)} cm</option>`).join("")}</select>
       <div class="ori"><button type="button" data-ori="paisagem" class="${ret?"":"on"}">▭ Paisagem</button><button type="button" data-ori="retrato" class="${ret?"on":""}">▯ Retrato</button></div></div>`;}
@@ -73,9 +73,9 @@
       const A=await App.artePadrao("adesivos",c,l);if(!A)throw new Error("sem gabarito");const rr=await App.contextualizar(l,"adesivos",A);const d=await rr.json();if(!rr.ok||!d.jpg)throw new Error(d.erro||rr.status);
       A.contexto=d.jpg;A.kit=d.kit;const c2=await cliente(l);c2.formatos=c.formatos;c2.artes=c2.artes||{};c2.artes.adesivos=A;await gravarCliente(c2);c=c2;render();}
     catch(err){el&&el.classList.remove("trocando");alert("Não consegui trocar o tamanho: "+err.message);}}
-  document.addEventListener("change",ev=>{const sl=ev.target.closest&&ev.target.closest("[data-fmtv]");if(!sl)return;const [x,y]=sl.value.split("x").map(Number);const f=(c.formatos||{}).adesivos||{w_cm:80,h_cm:72};const ret=f.h_cm>f.w_cm;
+  document.addEventListener("change",ev=>{const sl=ev.target.closest&&ev.target.closest("[data-fmtv]");if(!sl)return;const [x,y]=sl.value.split("x").map(Number);const f=(c.formatos||{}).adesivos||App.VITRINE_PADRAO;const ret=f.h_cm>f.w_cm;
     trocarFormato(ret?Math.min(x,y):Math.max(x,y),ret?Math.max(x,y):Math.min(x,y),sl.closest(".prod"));},true);
-  document.addEventListener("click",ev=>{const b=ev.target.closest&&ev.target.closest("[data-ori]");if(!b)return;ev.preventDefault();ev.stopPropagation();const f=(c.formatos||{}).adesivos||{w_cm:80,h_cm:72};const a=Math.min(f.w_cm,f.h_cm),bb=Math.max(f.w_cm,f.h_cm);
+  document.addEventListener("click",ev=>{const b=ev.target.closest&&ev.target.closest("[data-ori]");if(!b)return;ev.preventDefault();ev.stopPropagation();const f=(c.formatos||{}).adesivos||App.VITRINE_PADRAO;const a=Math.min(f.w_cm,f.h_cm),bb=Math.max(f.w_cm,f.h_cm);
     if(b.classList.contains("on"))return;b.parentNode.querySelectorAll("button").forEach(x=>x.classList.toggle("on",x===b));trocarFormato(b.dataset.ori==="retrato"?a:bb,b.dataset.ori==="retrato"?bb:a,b.closest(".prod"));},true);
   document.addEventListener("click",ev=>{const b=ev.target.closest&&ev.target.closest(".cores-peca [data-cor]");if(!b)return;ev.preventDefault();ev.stopPropagation();const box=b.closest(".cores-peca");
     box.querySelectorAll("button").forEach(x=>x.classList.toggle("on",x===b));trocarCorPeca(box.dataset.p,b.dataset.cor,b.closest(".prod"));},true);
