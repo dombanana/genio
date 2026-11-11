@@ -507,9 +507,13 @@ def peca_provar(d):
     if img is None:
         raise ValueError("foto não encontrada: mande de novo")
     ponto = d.get("ponto") if isinstance(d.get("ponto"), list) and len(d["ponto"]) == 2 else None
+    try:
+        tol = max(0.4, min(2.5, float(d.get("tol") or 1.0)))
+    except (TypeError, ValueError):
+        tol = 1.0
     mp = os.path.join(pasta, f"{pid}.{peca}.png")
-    if ponto or not os.path.exists(mp):
-        m = provar.recortar(img, ponto)
+    if ponto or d.get("tol") is not None or not os.path.exists(mp):
+        m = provar.recortar(img, ponto, tol)
         if m is None:
             raise ValueError("não achei a peça: toque em cima dela")
         cv2.imwrite(mp, m)
@@ -517,7 +521,11 @@ def peca_provar(d):
     cor = d.get("cor") if re.match(r"^#[0-9a-fA-F]{6}$", d.get("cor") or "") else None
     out = provar.tingir(img, m, cor) if cor else img
     ok, jpg = cv2.imencode(".jpg", out, [cv2.IMWRITE_JPEG_QUALITY, 86])
-    return {"id": pid, "peca": peca, "w": int(img.shape[1]), "h": int(img.shape[0]), "medidas": med, "jpg": "data:image/jpeg;base64," + base64.b64encode(jpg.tobytes()).decode()}
+    r = {"id": pid, "peca": peca, "w": int(img.shape[1]), "h": int(img.shape[0]), "medidas": med, "jpg": "data:image/jpeg;base64," + base64.b64encode(jpg.tobytes()).decode()}
+    if d.get("camada"):   # provador com ferramentas: foto original + recorte (máscara) para a cor ser aplicada e corrigida no aparelho
+        ok2, png = cv2.imencode(".png", m)
+        r["mascara"] = "data:image/png;base64," + base64.b64encode(png.tobytes()).decode()
+    return r
 
 # ---- Mostraí: arquivos da loja e pesquisa de imagem dentro da programação (o código do Mostraí é a chave; só leitura da ficha)
 def mostra_arquivos(token):

@@ -19,18 +19,18 @@ def _hex2bgr(h):
     return np.array([int(h[4:6], 16), int(h[2:4], 16), int(h[0:2], 16)], np.float32)
 
 
-def recortar(img, ponto=None):
+def recortar(img, ponto=None, tol=1.0):
     """recorte em resolução reduzida (rápido no servidor) e borda devolvida no tamanho da foto"""
     H0, W0 = img.shape[:2]; k = min(1.0, 720 / max(H0, W0))
     peq = cv2.resize(img, None, fx=k, fy=k, interpolation=cv2.INTER_AREA) if k < 1 else img
-    m = _recortar(peq, ponto)
+    m = _recortar(peq, ponto, tol)
     if m is None or k == 1:
         return m
     m = cv2.resize(m, (W0, H0), interpolation=cv2.INTER_LINEAR)
     return cv2.GaussianBlur(m, (5, 5), 0)
 
 
-def _recortar(img, ponto=None):
+def _recortar(img, ponto=None, tol=1.0):
     h, w = img.shape[:2]
     px, py = (int(ponto[0] * w), int(ponto[1] * h)) if ponto else (w // 2, int(h * 0.58))
     lab = cv2.cvtColor(cv2.GaussianBlur(img, (5, 5), 0), cv2.COLOR_BGR2LAB).astype(np.float32)
@@ -40,6 +40,7 @@ def _recortar(img, ponto=None):
     dab = np.hypot(lab[..., 1] - a0, lab[..., 2] - b0)
     neutra = np.hypot(a0 - 128, b0 - 128) < 10   # peça branca/preta/cinza: a luz pesa mais que o tom
     tol_ab, tol_L = (7, 45) if neutra else (14, 70)
+    tol_ab, tol_L = tol_ab * tol, tol_L * min(tol, 1.6)   # tolerância de cor escolhida no provador (1 = padrão)
     cand = ((dab < tol_ab) & (np.abs(lab[..., 0] - L0) < tol_L)).astype(np.uint8)
     bordas = cv2.Canny(cv2.cvtColor(cv2.GaussianBlur(img, (3, 3), 0), cv2.COLOR_BGR2GRAY), 50, 130)
     livre = cv2.morphologyEx(cand & (bordas == 0), cv2.MORPH_OPEN, np.ones((3, 3), np.uint8))
