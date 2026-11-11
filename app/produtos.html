@@ -6,7 +6,7 @@
 <title>GênIO · Produtos e serviços</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="app.css?v=9939870b4d">
+<link rel="stylesheet" href="app.css?v=2c011855f7">
 <style>
 .grade{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .prod{background:#fff;border-radius:18px;box-shadow:0 2px 10px rgba(28,22,53,.06);overflow:hidden;display:flex;flex-direction:column;position:relative}
@@ -30,9 +30,9 @@
 .temas{display:flex;flex-wrap:wrap;gap:6px;margin:0 12px 8px}
 .temas button{flex:1 1 auto;min-height:34px;border-radius:10px;border:1.5px solid var(--linha);background:#fff;font:600 12.5px/1.1 Rubik,system-ui,sans-serif;color:var(--texto);padding:4px 8px}
 .temas button.on{border-color:var(--marca);background:var(--lav);color:var(--marca)}
-.cal-fundo{position:fixed;inset:0;background:rgba(20,16,36,.45);z-index:80;display:flex;align-items:flex-end;justify-content:center}
+.cal-fundo{position:fixed;inset:0;background:rgba(20,16,36,.45);z-index:300;display:flex;align-items:flex-end;justify-content:center}
 .cal{background:#fff;border-radius:20px 20px 0 0;width:100%;max-width:520px;padding:14px 14px calc(14px + env(safe-area-inset-bottom));max-height:92vh;overflow:auto}
-.cal .mes{display:flex;align-items:center;justify-content:space-between;margin:2px 0 8px}.cal .mes b{font-size:17px;text-transform:capitalize}
+.cal .mes{display:flex;align-items:center;justify-content:space-between;margin:2px 0 8px}.cal .mes b{font-size:17px}
 .cal .mes button{width:38px;height:38px;border-radius:10px;border:0;background:var(--lav);color:var(--marca);font-size:18px}
 .cal .sem,.cal .dias{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}.cal .sem span{text-align:center;font-size:11px;color:var(--texto2);font-weight:700}
 .cal .dias button{height:46px;border-radius:9px;border:0;background:#F5F3FA;font:600 14px/1 Rubik,system-ui,sans-serif;color:var(--texto);display:grid;place-items:center;padding:2px 0}
@@ -57,8 +57,8 @@
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=9939870b4d"></script>
-<script src="qr.js?v=9939870b4d"></script>
+<script src="app.js?v=2c011855f7"></script>
+<script src="qr.js?v=2c011855f7"></script>
 <script>
 (async()=>{
   const {$,$$,esc,qs,sessao,dados,nav,topo,voltar,setorNome,nomeLoja,estado,salvar,cliente,gravarCliente,definirCliente}=App;
@@ -67,8 +67,8 @@
   if(!l){$("#app").innerHTML=`${topo()}<p>Loja não encontrada.</p>${nav("rota")}`;return;}
   const nome=nomeLoja(l.nome);definirCliente(l);let c=await cliente(l);
   if(!(c.manual&&c.manual.editado)){location.href=`visita.html?l=${encodeURIComponent(slug)}`;return;}  // catálogo só depois do logotipo limpo
-  const G=await (await fetch("gabaritos.json?v=9939870b4d")).json();
-  await App.carregarScript("kits14.js?v=9939870b4d");
+  const G=await (await fetch("gabaritos.json?v=2c011855f7")).json();
+  await App.carregarScript("kits14.js?v=2c011855f7");
   // os 16 produtos do kit de 14 setores (10/11); a foto de cada um é a do ramo da loja
   const CAT=await Promise.all([["capacho","Capacho"],["placas","Placa"],["adesivos","Adesivo de vitrine"],["uniformes","Camisa polo"],["impressos","Cartão de visita"],["panfleto",/padaria|restaurante|bar|cafeteria/.test(l.setor||"")?"Flyer · cardápio":"Flyer · produtos e serviços"],["banners","Banner retrátil"],["parede","Adesivo de parede · rotas"],["brindes","Ecobag"],["carimbo","Carimbo"],["windbanner","Wind banner"],["faixa","Faixa"],["folheto","Folheto promocional"],["camiseta","Camiseta"],["bone","Boné"],["avental","Avental"]].map(async([id,n])=>({id,nome:n,img:await Kits14.foto(l.setor,id,true)})));
   const SERV=[{id:"mostraai",nome:"Mostraí · TV de ofertas",desc:"Sua TV em pé com itens, preços e destaque · muda pelo celular",ic:"📺"},{id:"falaai",nome:"Fala Aí · atendente no telefone",desc:"URA com o nome da loja · frases gravadas do sistema",ic:"📞"},{id:"inpi",nome:"Registro de marca (INPI)",desc:"Proteção do nome e do logo",ic:"®"}];
@@ -124,7 +124,7 @@
       for(let d=1;d<=nd;d++){const iso=App.isoDia(new Date(y,m,d,12));const ok=iso>=hoje&&App.locLivre(Rv,tema,iso,resId(k));const p=App.precoLocacao(iso);
         cel+=`<button type="button" data-d="${iso}" ${ok?"":"disabled"} class="${ini===iso?"ini":ini&&iso>ini&&iso<=fim?"faixa-dia":""}">${d}<small>${p!=null?Math.round(p):""}</small></button>`;}
       const pr=ini?App.precoLocacao(ini):null;
-      f.innerHTML=`<div class="cal"><div class="mes"><button type="button" data-m="-1" aria-label="mês anterior">‹</button><b>${base.toLocaleDateString("pt-BR",{month:"long",year:"numeric"})}</b><button type="button" data-m="1" aria-label="próximo mês">›</button></div>
+      f.innerHTML=`<div class="cal"><div class="mes"><button type="button" data-m="-1" aria-label="mês anterior">‹</button><b>${(t=>t[0].toUpperCase()+t.slice(1))(base.toLocaleDateString("pt-BR",{month:"long",year:"numeric"}))}</b><button type="button" data-m="1" aria-label="próximo mês">›</button></div>
         <p class="muted" style="margin:0 0 8px;font-size:13px">Kit ${esc(App.LOC_TEMAS.find(x=>x.id===tema).nome)} · toque no dia em que a loja retira; são sempre 15 dias. Dias riscados: sem kit livre.</p>
         <div class="sem">${["D","S","T","Q","Q","S","S"].map(x=>`<span>${x}</span>`).join("")}</div><div class="dias">${cel}</div>
         <div class="res">${ini?`Retira <b>${App.diaBR(ini)}</b> · devolve <b>${App.diaBR(fim)}</b> · ${pr!=null?`<b>${Rb(pr)}</b>`:"preço a confirmar para essa data"}`:"Nenhum dia escolhido."}</div>
