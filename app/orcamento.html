@@ -6,7 +6,7 @@
 <title>GênIO · Orçamento</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="app.css?v=275e0749c5">
+<link rel="stylesheet" href="app.css?v=776b3444c2">
 <style>
 .orc{background:#fff;border-radius:18px;padding:6px 10px;margin:0 0 12px;box-shadow:0 1px 0 rgba(28,22,53,.06)}
 .ln{display:grid;grid-template-columns:52px minmax(0,1fr) auto;gap:8px;align-items:center;padding:7px 0;border-bottom:1px solid #F0EDF6}
@@ -22,6 +22,13 @@
 .ln .qt button{width:24px;height:24px;border-radius:7px;border:1px solid #DDD6EC;background:#fff;font:600 14px/1 Rubik,system-ui,sans-serif;color:#5b3fc4;padding:0}
 .ln .qt span{min-width:22px;text-align:center;font-weight:600;font-size:13px}
 .pr{display:grid;justify-items:end;gap:1px}
+.grd{grid-column:1/-1;display:grid;grid-template-columns:44px repeat(4,minmax(0,1fr));gap:4px 4px;align-items:center;background:#F7F5FB;border-radius:12px;padding:6px 6px 8px;margin-top:2px}
+.grd .h{font-size:11px;font-weight:700;color:#7b7590;text-align:center}
+.grd .sx{font-size:12px;font-weight:600;color:#5b5570}
+.grd .c{display:flex;align-items:center;justify-content:center;gap:1px;background:#fff;border:1px solid #E6E0F1;border-radius:9px;height:30px}
+.grd .c button{width:22px;height:28px;border:0;background:none;color:#5b3fc4;font:700 15px/1 Rubik,system-ui,sans-serif;padding:0}
+.grd .c span{min-width:16px;text-align:center;font-weight:700;font-size:13px}.grd .c span.z{color:#b7b1c8;font-weight:500}
+.grd .info{grid-column:1/-1;font-size:12px;color:#5b5570;padding:2px 2px 0}.grd .info.falta{color:#B4472E;font-weight:600}
 .pr .aj{display:flex;align-items:center;gap:3px}
 .pr .aj button{width:26px;height:28px;border-radius:8px;border:0;background:#EEE9F7;color:#5b3fc4;font-size:11px;padding:0}
 .pr .aj .val{width:auto;min-width:78px;background:none;font-weight:700;font-size:14px;text-align:right;color:#141024;padding:0 2px}
@@ -39,7 +46,7 @@
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=275e0749c5"></script>
+<script src="app.js?v=776b3444c2"></script>
 <script>
 (async()=>{
   const {$,$$,esc,qs,sessao,dados,nav,topo,voltar,nomeLoja,estado,salvar,cliente,definirCliente}=App;
@@ -50,6 +57,12 @@
   const R=v=>(Math.round(v*100)/100).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
   const NOMES={capacho:"Capacho",placas:"Placa",adesivos:"Adesivo de vitrine",uniformes:"Camisa polo",impressos:"Cartão de visita",panfleto:"Flyer",banners:"Banner retrátil",parede:"Adesivo de parede",brindes:"Ecobag",carimbo:"Carimbo",windbanner:"Wind banner",faixa:"Faixa",folheto:"Folheto",camiseta:"Camiseta",bone:"Boné",avental:"Avental",mostraai:"Mostraí",falaai:"Fala Aí",inpi:"Registro de marca (INPI)"};
   const ICON={mostraai:"📺",falaai:"📞",inpi:"®"};
+  // camiseta e camisa polo: grade masculino/feminino × P, M, G, GG; a soma da grade é a quantidade do item (respeitando o mínimo da gráfica)
+  const GRADE=new Set(["camiseta","uniformes"]),TAM=["P","M","G","GG"],SEXO=[["M","Masc."],["F","Fem."]];
+  const somaG=s=>{const g=s&&s.grade;if(!g)return 0;let t=0;for(const x of ["M","F"])for(const z of TAM)t+=+((g[x]||{})[z])||0;return t;};
+  function grade(x,s){const g=(s&&s.grade)||{},soma=somaG(s),mn=App.qtdMin(x.k);
+    return `<div class="grd"><span></span>${TAM.map(z=>`<span class="h">${z}</span>`).join("")}${SEXO.map(([sx,rot])=>`<span class="sx">${rot}</span>${TAM.map(z=>{const n=+((g[sx]||{})[z])||0;return `<span class="c"><button type="button" data-g="${sx}|${z}|-" aria-label="menos ${rot} ${z}">−</button><span class="${n?"":"z"}">${n}</span><button type="button" data-g="${sx}|${z}|+" aria-label="mais ${rot} ${z}">+</button></span>`;}).join("")}`).join("")}
+      <span class="info ${soma&&soma<mn?"falta":""}">${!soma?`Distribua ${s.q.toLocaleString("pt-BR")} un. por modelo e tamanho`:soma<mn?`Grade: ${soma} un. · mínimo da gráfica ${mn} (faltam ${mn-soma}; o preço já conta ${mn})`:`Grade: ${soma} un.`}</span></div>`;}
   function render(){
     const e=estado();const S=(e.sel||{})[slug]||{};const P=((e.pedidos||{})[slug])||{};
     const O=App.orcamento(c,S,P);
@@ -57,10 +70,10 @@
     <h1>Orçamento</h1><p class="sub">${esc(nome)}</p>
     ${O.linhas.length?`<div class="orc">${O.linhas.map(x=>`<div class="ln" data-k="${x.k}">
         <div class="fig">${x.img?`<img src="${esc(x.img)}" alt="" loading="lazy">`:(ICON[x.base]||"▫")}</div>
-        <div class="nm"><b>${esc(x.nome)}</b><div class="sub2">${x.fixa?(x.k==="capacho"&&x.q>1?`<small>${x.q} un. · </small>`:""):`<span class="qt"><button type="button" data-q="-">−</button><span>${x.q.toLocaleString("pt-BR")}</span><button type="button" data-q="+">+</button></span>`}<small>${x.lote||!x.fixa?"un. · ":""}${esc(x.unid||"")}</small></div></div>
+        <div class="nm"><b>${esc(x.nome)}</b><div class="sub2">${GRADE.has(x.base)&&somaG(S[x.k])?`<small><b>${x.q.toLocaleString("pt-BR")} un.</b> · na grade</small>`:x.fixa?(x.k==="capacho"&&x.q>1?`<small>${x.q} un. · </small>`:""):`<span class="qt"><button type="button" data-q="-">−</button><span>${x.q.toLocaleString("pt-BR")}</span><button type="button" data-q="+">+</button></span>`}<small>${x.lote||!x.fixa?"un. · ":""}${esc(x.unid||"")}</small></div></div>
         <div class="pr">${x.total==null?`<span class="un">preço a confirmar</span>`:`<div class="aj"><button type="button" data-p="-" aria-label="baixar o preço">▼</button><button type="button" class="val" data-ed="1">${R(x.total)}</button><button type="button" data-p="+" aria-label="subir o preço">▲</button></div>
           ${x.pct?`<span><s>${R(x.lista)}</s> <span class="desc">${x.pct<0?"−":"+"}${Math.abs(x.pct).toLocaleString("pt-BR")}%</span></span>`:""}
-          ${x.q>1&&!x.fixa?`<span class="un">${R(x.total/x.q)} cada</span>`:""}${x.mensal?`<span class="un">+ ${R(x.mensal)}/mês</span>`:""}`}</div></div>`).join("")}
+          ${x.q>1&&!x.fixa?`<span class="un">${R(x.total/x.q)} cada</span>`:""}${x.mensal?`<span class="un">+ ${R(x.mensal)}/mês</span>`:""}`}</div>${GRADE.has(x.base)?grade(x,S[x.k]):""}</div>`).join("")}
       <div class="ln" data-k="_frete"><div class="fig">🚚</div><div class="nm"><b>Frete</b><div class="sub2"><small>um valor para o pedido inteiro</small></div></div>
         <div class="pr"><div class="aj"><button type="button" data-p="-">▼</button><button type="button" class="val" data-ed="1">${O.frete!=null?R(O.frete):"definir"}</button><button type="button" data-p="+">▲</button></div></div></div>
       <div class="tot"><span>Total</span><b>${R(O.total)}</b></div></div>
@@ -71,6 +84,9 @@
     :`<section class="card"><p>Nada escolhido ainda.</p></section>`}
     <div class="acoes"><div class="w"><a class="btn sec" href="produtos.html?l=${encodeURIComponent(slug)}">← Produtos</a><a class="btn" href="pedidos.html">Pedidos →</a></div></div>
     ${nav("pedidos")}`;document.body.classList.add("com-acoes");
+    $$("[data-g]").forEach(b=>b.onclick=()=>{const k=b.closest(".ln").dataset.k;const [sx,z,m]=b.dataset.g.split("|");const e=estado();const s=((e.sel||{})[slug]||{})[k];if(!s)return;
+      s.grade=s.grade||{M:{},F:{}};s.grade[sx]=s.grade[sx]||{};const n=Math.max(0,(+s.grade[sx][z]||0)+(m==="+"?1:-1));if(n)s.grade[sx][z]=n;else delete s.grade[sx][z];
+      const t=somaG(s);if(t)s.q=Math.max(App.qtdMin(k),t);else{s.q=Math.max(1,App.qtdMin(k));delete s.grade;}salvar(e);render();});
     // quantidade: segue a tabela da gráfica (lote: só as quantidades da tabela; unidade: de 1 em 1 a partir do mínimo)
     $$("[data-q]").forEach(b=>b.onclick=()=>{const k=b.closest(".ln").dataset.k;const e=estado();const s=((e.sel||{})[slug]||{})[k];if(!s)return;
       s.q=App.passoQtd(k,App.qtdNormal(k,s.q),b.dataset.q==="+"?1:-1);salvar(e);render();});
