@@ -924,7 +924,10 @@ class H(BaseHTTPRequestHandler):
                         if not MOSTRA.ler(partes[3]):
                             return self._erro(404, "este Mostraí não existe")
                         qb = {k: v[0] for k, v in _parse_qs(urlparse(self.path).query or "").items()}
-                        return self._send(200, busca_imagens(qb.get("q", "")[:120]))
+                        try:
+                            return self._send(200, busca_imagens(qb.get("q", "")[:120]))
+                        except Exception as e:
+                            return self._send(200, {"imagens": [], "erro": "a pesquisa de imagem não respondeu agora (" + str(e)[:60] + ")"})
                     if len(partes) == 5 and partes[4] == "mensagens":
                         est = MOSTRA.ler(partes[3])
                         if not est:
