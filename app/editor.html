@@ -6,7 +6,7 @@
 <title>GênIO · Edição do produto</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="app.css?v=1c8d3cde3c">
+<link rel="stylesheet" href="app.css?v=47594caa60">
 <style>
 body.com-acoes{padding-bottom:calc(250px + env(safe-area-inset-bottom,0))}
 .prancheta{position:relative;background:repeating-conic-gradient(#e9e5f3 0 25%,#fff 0 50%) 0 0/18px 18px;border-radius:16px;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;height:min(72vw,460px);margin:0 0 8px}
@@ -39,17 +39,17 @@ body.com-acoes{padding-bottom:calc(250px + env(safe-area-inset-bottom,0))}
 <script>window.giroLivre=false;</script></head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=1c8d3cde3c"></script>
-<script src="qr.js?v=1c8d3cde3c"></script>
+<script src="app.js?v=47594caa60"></script>
+<script src="qr.js?v=47594caa60"></script>
 <script>
 (async()=>{
   const {$,$$,esc,qs,sessao,dados,ficha,nav,topo,voltar,nomeLoja,telFmt,cliente,gravarCliente,definirCliente,setorNome}=App;
   if(!await sessao())return;
-  const D=await dados();const slug=qs.get("l");const pid=qs.get("p")||"capacho";const FACE=qs.get("face")==="verso"?"verso":"frente";const l=D.lojas.find(x=>x.slug===slug);
+  const D=await dados();const slug=qs.get("l");const pid=qs.get("p")||"capacho";const pb=App.baseId(pid);const FACE=qs.get("face")==="verso"?"verso":"frente";const l=D.lojas.find(x=>x.slug===slug);
   if(!l){$("#app").innerHTML=`${topo()}<p>Loja não encontrada.</p>${nav("rota")}`;return;}
   const nome=nomeLoja(l.nome);definirCliente(l);let c=await App.garantirCamadas(l);const man=c.manual||null;
   // gabarito da gráfica: área total = produto + sangria; a guia mostra corte (vermelho) e segurança (verde-água)
-  const G=await (await fetch("gabaritos.json?v=1c8d3cde3c")).json();const P={...(G.produtos[pid]||G.produtos.capacho),...(((c&&c.formatos)||{})[pid]||{})};
+  const G=await (await fetch("gabaritos.json?v=47594caa60")).json();const P={...(G.produtos[pb]||G.produtos.capacho),...(((c&&c.formatos)||{})[pid]||((c&&c.formatos)||{})[pb]||{})};
   const sang=P.sangria_mm!=null?P.sangria_mm:G.sangria_mm,seg=P.seguranca_mm!=null?P.seguranca_mm:G.seguranca_mm;
   const PX=Math.min(100,Math.floor(3000/Math.max(P.w_cm+sang/5,P.h_cm+sang/5)));  // px por cm (teto 3000 px)
   const W=Math.round((P.w_cm+2*sang/10)*PX),H=Math.round((P.h_cm+2*sang/10)*PX),B=Math.round(sang/10*PX),S=Math.round(seg/10*PX);
@@ -64,7 +64,7 @@ body.com-acoes{padding-bottom:calc(250px + env(safe-area-inset-bottom,0))}
   // onde a cor do produto incide de verdade (decisão do dono, 10/11): tinge a peça (máscara/material), imprime a folha inteira, ou não existe
   const COR_TINGE=new Set(["capacho","placas","windbanner","uniformes","camiseta","bone","avental"]);
   const COR_IMPRESSA=new Set(["impressos","panfleto","banners","faixa","folheto"]);
-  const corProduto=COR_TINGE.has(pid)?"tinge":COR_IMPRESSA.has(pid)?"imprime":"nenhuma";
+  const corProduto=COR_TINGE.has(pb)?"tinge":COR_IMPRESSA.has(pb)?"imprime":"nenhuma";
   const coresMarca=(man&&man.cores)||[];
   const cad=await ficha(slug);const L=(cad&&cad.lacunas)||{};
   const IMGS={};const img=src=>new Promise(res=>{if(IMGS[src])return res(IMGS[src]);const i=new Image();i.crossOrigin="anonymous";i.onload=()=>{IMGS[src]=i;res(i);};i.onerror=()=>res(null);i.src=src;});
@@ -82,7 +82,7 @@ body.com-acoes{padding-bottom:calc(250px + env(safe-area-inset-bottom,0))}
     return d;}
   const arteTopo=(c.artes||{})[pid]||null;const arteAnt=FACE==="verso"?(arteTopo&&arteTopo.verso)||null:arteTopo;
   const DUAS=!!P.faces&&P.faces>1;
-  const CARIMBO=pid==="carimbo";
+  const CARIMBO=pb==="carimbo";
   let doc=(arteAnt&&arteAnt.doc&&!(CARIMBO&&!arteAnt.soTexto))?JSON.parse(JSON.stringify(arteAnt.doc)):(CARIMBO?(await App.artePadrao("carimbo",c,l)).doc:(DUAS&&man&&man.tratado?await (async()=>{const a=await App.artePadrao(pid,c,l);return a?(FACE==="verso"?a.verso.doc:a.doc):novoDoc();})():novoDoc()));await App.assarRecortes(doc);
   // cor da peça escolhida no cartão (uniformes) ou vinda da marca: o editor abre com ela
   if(arteAnt&&arteAnt.material&&!doc.fundo&&P.superficie==="tecido")doc.fundo=arteAnt.material;
@@ -186,7 +186,7 @@ body.com-acoes{padding-bottom:calc(250px + env(safe-area-inset-bottom,0))}
     $("#palFundo").onclick=ev=>{const b=ev.target.closest("button");if(!b)return;if(b.id==="fundoMais"){const v=prompt("Cor em hexadecimal (ex.: #1C1635)");if(v&&/^#[0-9a-fA-F]{6}$/.test(v.trim()))doc.fundo=v.trim();}else doc.fundo=b.dataset.c||null;$$("#palFundo button").forEach(x=>x.classList.toggle("on",x.dataset.c===(doc.fundo||"")));desenhar();};
     $("#guia").onclick=()=>{guia=!guia;$("#guia").textContent=guia?"Ocultar guia":"Mostrar guia";desenhar();};
     if(P.ia){$("#gerar").onclick=async()=>{const st=$("#iaSt");st.textContent="Gerando…";$("#gerar").disabled=true;doc.prompt=$("#prompt").value;
-        try{const r=await fetch("/api/ia/fundo",{method:"POST",credentials:"same-origin",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt:doc.prompt,w:W,h:H,produto:pid})});const d=await r.json();
+        try{const r=await fetch("/api/ia/fundo",{method:"POST",credentials:"same-origin",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt:doc.prompt,w:W,h:H,produto:pb})});const d=await r.json();
           if(!r.ok||!d.png){st.textContent=d.mensagem||d.erro||("falhou ("+r.status+")");}else{doc.fundoImg=d.png;st.textContent=`pronto (${d.provedor||"IA"})`;render();}}
         catch(e){st.textContent="falha: "+e.message;}$("#gerar").disabled=false;};
       const ti=$("#tirarIA");if(ti)ti.onclick=()=>{doc.fundoImg=null;render();};}
