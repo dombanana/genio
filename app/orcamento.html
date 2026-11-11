@@ -6,16 +6,13 @@
 <title>GênIO · Orçamento</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="app.css?v=47594caa60">
+<link rel="stylesheet" href="app.css?v=30ac711697">
 <style>
 .orc{background:#fff;border-radius:18px;padding:6px 10px;margin:0 0 12px;box-shadow:0 1px 0 rgba(28,22,53,.06)}
 .ln{display:grid;grid-template-columns:52px minmax(0,1fr) auto;gap:8px;align-items:center;padding:7px 0;border-bottom:1px solid #F0EDF6}
 .ln:last-child{border-bottom:0}
 .ln .fig{position:relative;width:52px;height:52px;border-radius:10px;background:#F4F1FA;display:grid;place-items:center;font-size:19px;overflow:visible}
 .ln .fig img{border-radius:10px}
-.ln .dup{position:absolute;top:-6px;right:-8px;display:flex;gap:2px}
-.ln .dup button{width:21px;height:21px;border-radius:50%;border:1.5px solid #fff;background:#5b3fc4;color:#fff;font:700 14px/1 Rubik,system-ui,sans-serif;padding:0;display:grid;place-items:center;box-shadow:0 1px 3px rgba(28,22,53,.3)}
-.ln .dup button.menos{background:#8a84a0}
 .ln .fig img{width:100%;height:100%;object-fit:cover}
 .ln .nm{min-width:0}
 .ln .nm b{display:block;font-size:14px;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -42,14 +39,14 @@
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=47594caa60"></script>
+<script src="app.js?v=30ac711697"></script>
 <script>
 (async()=>{
   const {$,$$,esc,qs,sessao,dados,nav,topo,voltar,nomeLoja,estado,salvar,cliente,definirCliente}=App;
   if(!await sessao())return;
   const D=await dados();const slug=qs.get("l");const l=D.lojas.find(x=>x.slug===slug);
   if(!l){$("#app").innerHTML=`${topo()}<p>Loja não encontrada.</p>${nav("pedidos")}`;return;}
-  const nome=nomeLoja(l.nome);definirCliente(l);let c=await cliente(l);
+  const nome=nomeLoja(l.nome);definirCliente(l);const c=await cliente(l);
   const R=v=>(Math.round(v*100)/100).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
   const NOMES={capacho:"Capacho",placas:"Placa",adesivos:"Adesivo de vitrine",uniformes:"Camisa polo",impressos:"Cartão de visita",panfleto:"Flyer",banners:"Banner retrátil",parede:"Adesivo de parede",brindes:"Ecobag",carimbo:"Carimbo",windbanner:"Wind banner",faixa:"Faixa",folheto:"Folheto",camiseta:"Camiseta",bone:"Boné",avental:"Avental",mostraai:"Mostraí",falaai:"Fala Aí",inpi:"Registro de marca (INPI)"};
   const ICON={mostraai:"📺",falaai:"📞",inpi:"®"};
@@ -59,7 +56,7 @@
     $("#app").innerHTML=`${topo()}${voltar(`produtos.html?l=${encodeURIComponent(slug)}`,"Produtos")}
     <h1>Orçamento</h1><p class="sub">${esc(nome)}</p>
     ${O.linhas.length?`<div class="orc">${O.linhas.map(x=>`<div class="ln" data-k="${x.k}">
-        <div class="fig">${x.img?`<img src="${esc(x.img)}" alt="" loading="lazy">`:(ICON[x.k]||"▫")}${x.servico?"":`<span class="dup"><button type="button" class="menos" data-tira="1" aria-label="tirar esta proposta">−</button><button type="button" data-dup="1" aria-label="duplicar esta proposta">+</button></span>`}</div>
+        <div class="fig">${x.img?`<img src="${esc(x.img)}" alt="" loading="lazy">`:(ICON[x.k]||"▫")}</div>
         <div class="nm"><b>${esc(x.nome)}</b><div class="sub2">${x.fixa?(x.k==="capacho"&&x.q>1?`<small>${x.q} un. · </small>`:""):`<span class="qt"><button type="button" data-q="-">−</button><span>${x.q.toLocaleString("pt-BR")}</span><button type="button" data-q="+">+</button></span>`}<small>${x.lote||!x.fixa?"un. · ":""}${esc(x.unid||"")}</small></div></div>
         <div class="pr">${x.total==null?`<span class="un">preço a confirmar</span>`:`<div class="aj"><button type="button" data-p="-" aria-label="baixar o preço">▼</button><button type="button" class="val" data-ed="1">${R(x.total)}</button><button type="button" data-p="+" aria-label="subir o preço">▲</button></div>
           ${x.pct?`<span><s>${R(x.lista)}</s> <span class="desc">${x.pct<0?"−":"+"}${Math.abs(x.pct).toLocaleString("pt-BR")}%</span></span>`:""}
@@ -74,14 +71,6 @@
     :`<section class="card"><p>Nada escolhido ainda.</p></section>`}
     <div class="acoes"><div class="w"><a class="btn sec" href="produtos.html?l=${encodeURIComponent(slug)}">← Produtos</a><a class="btn" href="pedidos.html">Pedidos →</a></div></div>
     ${nav("pedidos")}`;document.body.classList.add("com-acoes");
-    // + na foto: duplica a proposta (outra cor, outra arte, outra quantidade); − na foto: tira a proposta do orçamento
-    $$("[data-dup]").forEach(b=>b.onclick=async()=>{const k=b.closest(".ln").dataset.k;const kb=App.baseId(k);
-      if(kb==="capacho"){location.href=`capacho.html?l=${encodeURIComponent(slug)}&n=${encodeURIComponent(nome)}`;return;}   // outro tapete: o motor do capacho monta vários no mesmo orçamento
-      const e=estado();const S=e.sel[slug];let n=2;while(S[kb+"~"+n])n++;const nk=kb+"~"+n;S[nk]={...S[k],q:S[k].q};salvar(e);
-      c=await App.cliente(l);c.artes=c.artes||{};if(c.artes[k])c.artes[nk]=JSON.parse(JSON.stringify(c.artes[k]));if(c.formatos&&c.formatos[k]){c.formatos[nk]={...c.formatos[k]};}await App.gravarCliente(c);render();});
-    $$("[data-tira]").forEach(b=>b.onclick=async()=>{const k=b.closest(".ln").dataset.k;const e=estado();const S=e.sel[slug];const P=(e.pedidos||{})[slug];
-      if(k.includes("~")){delete S[k];if(P&&P.desc)delete P.desc[k];salvar(e);c=await App.cliente(l);if(c.artes)delete c.artes[k];if(c.formatos)delete c.formatos[k];await App.gravarCliente(c);}
-      else{S[k].q=0;salvar(e);}render();});
     // quantidade: segue a tabela da gráfica (lote: só as quantidades da tabela; unidade: de 1 em 1 a partir do mínimo)
     $$("[data-q]").forEach(b=>b.onclick=()=>{const k=b.closest(".ln").dataset.k;const e=estado();const s=((e.sel||{})[slug]||{})[k];if(!s)return;
       s.q=App.passoQtd(k,App.qtdNormal(k,s.q),b.dataset.q==="+"?1:-1);salvar(e);render();});
