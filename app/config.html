@@ -6,7 +6,7 @@
 <title>GênIO · Configuração</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="app.css?v=5ad77e32ad">
+<link rel="stylesheet" href="app.css?v=4808e50d9e">
 <style>
 .forn{display:grid;grid-template-columns:1fr;gap:6px;margin:8px 0 0}
 .forn .it{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;background:var(--lav);border-radius:12px;padding:10px 12px}
@@ -19,7 +19,7 @@
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=5ad77e32ad"></script>
+<script src="app.js?v=4808e50d9e"></script>
 <script>
 (async()=>{
   const {$,$$,esc,sessao,nav,topo}=App;
@@ -43,6 +43,8 @@
       <div class="metas-f"><label>Meta do dia<input type="number" min="0" inputmode="numeric" id="mDia" value="${App.METAS.dia||""}" placeholder="vendas"></label><label>Meta do mês<input type="number" min="0" inputmode="numeric" id="mMes" value="${App.METAS.mes||""}" placeholder="vendas"></label><label>Jornada (horas)<input type="number" min="1" max="14" inputmode="numeric" id="mJor" value="${App.METAS.jornada||8}"></label><label>Comissão (%)<input type="number" min="0" max="100" step="0.5" inputmode="decimal" id="mCom" value="${App.METAS.comissao||""}" placeholder="%"></label></div></section>
     <section class="card" id="lucro"><h2>Preço e lucro</h2><small class="muted" style="display:block;margin:0 0 8px">Preço de venda = preço do fornecedor (na unidade e quantidade dele) + lucro sobre esse preço + arte + revisão. O frete não entra aqui: é um valor único no fechamento do pedido.</small>
       <div class="metas-f"><label>Lucro sobre a base (%)<input type="number" min="0" step="1" inputmode="decimal" id="mLucro" value="${App.lucroPct()}"></label><label>Arte, por produto (R$)<input type="number" min="0" step="0.01" inputmode="decimal" id="mArte" value="${App.METAS.arte||""}" placeholder="0"></label><label>Revisão, por produto (R$)<input type="number" min="0" step="0.01" inputmode="decimal" id="mRev" value="${App.METAS.revisao||""}" placeholder="0"></label></div>
+      <h3 style="margin:14px 0 6px">Formas de pagamento no orçamento</h3>
+      <div class="metas-f">${(()=>{const g=Object.assign({pix:5,cartao:8,parc:6,sinal:50},App.METAS.pag||{});return `<label>Desconto no Pix (%)<input type="number" min="0" max="50" step="0.5" inputmode="decimal" id="gPix" value="${g.pix}"></label><label>Acréscimo no cartão (%)<input type="number" min="0" max="50" step="0.5" inputmode="decimal" id="gCart" value="${g.cartao}"></label><label>Parcelas no cartão<input type="number" min="1" max="24" step="1" inputmode="numeric" id="gParc" value="${g.parc}"></label><label>Sinal (%)<input type="number" min="0" max="100" step="5" inputmode="decimal" id="gSinal" value="${g.sinal}"></label>`;})()}</div>
       <div id="tabLucro"></div></section>
     <section class="card"><h2>Fornecedores por item</h2><small class="muted">Quem produz cada item e observações. Preços entram na fase do orçamento.</small>
       <div class="forn">${Object.entries(F).map(([k,v])=>`<div class="it"><div><b>${esc(v.item)}</b><small>${esc(v.fornecedor||"a definir")}${v.obs?" · "+esc(v.obs):""}${v.link?` · <a href="${esc(v.link)}" target="_blank" rel="noopener">site</a>`:""}</small></div><button type="button" data-f="${k}">Editar</button></div>`).join("")}</div></section>
@@ -50,7 +52,7 @@
     const NOMES={capacho:"Capacho",placas:"Placa",uniformes:"Polo",impressos:"Cartão de visita",panfleto:"Flyer",banners:"Banner retrátil",parede:"Adesivo de parede",brindes:"Ecobag",carimbo:"Carimbo",windbanner:"Wind banner",faixa:"Faixa",folheto:"Folheto",camiseta:"Camiseta",bone:"Boné",avental:"Avental"};
     const R=v=>v.toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
     const tab=()=>{const fr=0,L=App.lucroPct();$("#tabLucro").innerHTML=`<table class="tab-lucro"><tr><th>Produto</th><th>Fornecedor</th><th>Lucro</th><th>Venda</th></tr>${Object.entries(App.CUSTO).map(([k,c])=>{const b=c[0]+fr,v=App.venda(b);return `<tr><td>${esc(NOMES[k]||k)} <small>${esc(c[1])}</small></td><td>${R(b)}</td><td>${R(b*L/100)}</td><td><b>${R(v)}</b></td></tr>`;}).join("")}</table><small class="muted">Lucro de ${App.LUCRO_PADRAO}% = cobramos o mesmo valor do fornecedor em cima dele (preço = 2 × fornecedor).</small>`;};tab();
-    ["mDia","mMes","mJor","mCom","mLucro","mArte","mRev"].forEach(id=>{const i=$("#"+id);if(i)i.onchange=()=>{const m={...App.METAS,dia:+$("#mDia").value||0,mes:+$("#mMes").value||0,jornada:+$("#mJor").value||8,comissao:+$("#mCom").value||0,lucro:$("#mLucro").value===""?App.LUCRO_PADRAO:+$("#mLucro").value,arte:+$("#mArte").value||0,revisao:+$("#mRev").value||0};App.gravarChave("metas",m);Object.assign(App.METAS,m);tab();};});
+    ["mDia","mMes","mJor","mCom","mLucro","mArte","mRev","gPix","gCart","gParc","gSinal"].forEach(id=>{const i=$("#"+id);if(i)i.onchange=()=>{const m={...App.METAS,pag:{pix:+$("#gPix").value||0,cartao:+$("#gCart").value||0,parc:Math.max(1,+$("#gParc").value||1),sinal:+$("#gSinal").value||0},dia:+$("#mDia").value||0,mes:+$("#mMes").value||0,jornada:+$("#mJor").value||8,comissao:+$("#mCom").value||0,lucro:$("#mLucro").value===""?App.LUCRO_PADRAO:+$("#mLucro").value,arte:+$("#mArte").value||0,revisao:+$("#mRev").value||0};App.gravarChave("metas",m);Object.assign(App.METAS,m);tab();};});
     if(location.hash==="#metas"&&!render._r){render._r=1;setTimeout(()=>{const s=$("#metas");if(s)s.scrollIntoView({block:"start"});},50);}
     $$("#app [data-t]").forEach(b=>b.onclick=()=>{tipoSel=b.dataset.t;localStorage.setItem("rec-tipo",tipoSel);render();});
     $("#rTela").onchange=ev=>{telaAcesa=ev.target.checked;localStorage.setItem("rec-tela",telaAcesa?"1":"0");};

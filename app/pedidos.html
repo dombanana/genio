@@ -6,12 +6,12 @@
 <title>GênIO · Pedidos</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="app.css?v=5ad77e32ad">
+<link rel="stylesheet" href="app.css?v=4808e50d9e">
 <style>.novo-ped{position:fixed;left:12px;right:12px;top:8vh;max-height:80vh;overflow:auto;background:#fff;border-radius:18px;padding:14px;z-index:75;box-shadow:0 10px 40px rgba(28,22,53,.3)}.novo-ped h3{margin:0 0 8px}.novo-ped input{width:100%;box-sizing:border-box;font:inherit;font-size:16px;border:1.5px solid var(--linha);border-radius:12px;padding:10px 12px;margin:0 0 8px}.lista-cli{display:grid;gap:4px}.lista-cli button{border:0;background:var(--lav);border-radius:12px;text-align:left;padding:10px 12px;font:inherit;display:grid}.lista-cli button small{color:var(--texto2);font-size:12px}.fato{display:grid;grid-template-columns:auto 1fr;gap:10px;padding:6px 0;border-top:1px solid var(--linha)}.fato:first-of-type{border-top:0}.fato span{color:var(--texto2)}</style>
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=5ad77e32ad"></script>
+<script src="app.js?v=4808e50d9e"></script>
 <script>
 (async()=>{
   const {$,esc,sessao,dados,nav,topo,nomeLoja,estado}=App;
@@ -32,8 +32,7 @@
     const motivos=[...new Set(alertas.map(a=>(MOT.find(([re])=>re.test(a))||[0,"outro"])[1]))];
     const parado=P.hist&&P.hist.length?Math.floor((Date.now()-new Date(P.hist[P.hist.length-1].em))/864e5):0;
     // valor do pedido: soma dos produtos (preço de cada um × quantidade) + um frete único para a compra inteira
-    let soma=0,semPreco=0;its.forEach(([k,v])=>{if(v.servico)return;const cp=k==="capacho"&&c.capacho_preco&&c.capacho_preco.total?{valor:c.capacho_preco.total}:App.precoProduto(k,(c.formatos||{})[k]);if(cp&&cp.valor)soma+=cp.valor*(v.q||1);else semPreco++;});
-    const valor={soma:Math.round(soma*100)/100,semPreco,frete:P.frete!=null&&P.frete!==""?+P.frete:null};
+    const O=App.orcamento(c,S,P);const valor={soma:O.soma,semPreco:O.semPreco,frete:O.frete,total:O.total};
     lista.push({l,slug,its,et,P,alertas,nivel,motivos,parado,valor});}
   const grupo=et=>(et==="arte"||et==="qualidade")?"processamento":et;const cont={entrada:0,processamento:0,saida:0};lista.forEach(x=>{if(x.nivel==="urgente"&&cont[grupo(x.et)]!==undefined)cont[grupo(x.et)]++;});const ocorr={entrada:{n:0,u:0},processamento:{n:0,u:0},saida:{n:0,u:0}};lista.forEach(x=>{const g=ocorr[grupo(x.et)];if(!g||!x.nivel)return;g.n++;if(x.nivel==="urgente")g.u++;});
   try{window.top.postMessage({genio:"ocorrencias",cont:ocorr},location.origin);}catch(e){}
@@ -61,7 +60,7 @@
       <div class="itens">${x.its.length?x.its.map(([k,v])=>esc(v.nome||k)+(v.q>1?" ×"+v.q:"")).join(" · "):"sem itens"}${x.P.fornecedorPedido?` · pedido ${esc(x.P.fornecedorPedido)}`:""}${x.P.agendado?` · entrega ${esc(x.P.agendado)}`:""}</div>
       ${x.valor&&(x.valor.soma||x.valor.semPreco)?(()=>{const R=v=>v.toLocaleString("pt-BR",{style:"currency",currency:"BRL"});const v=x.valor;return `<div class="valor-ped">Produtos <b>${R(v.soma)}</b>${v.semPreco?` <small>(+${v.semPreco} sem preço)</small>`:""} · Frete <b>${v.frete!=null?R(v.frete):"a definir"}</b>${v.frete!=null?` · Total <b>${R(v.soma+v.frete)}</b>`:""}</div>`;})():""}
       ${x.alertas.map(a=>`<div class="alerta">• ${esc(a)}</div>`).join("")}
-      <div class="acs"><a href="visita.html?l=${encodeURIComponent(x.slug)}">Abrir loja</a>${etapa==="entrada"?`<a href="produtos.html?l=${encodeURIComponent(x.slug)}">Produtos</a>`:""}<button type="button" data-frete="${esc(x.slug)}">Frete</button>${x.et==="processamento"?`<button type="button" data-np="${esc(x.slug)}">Nº do pedido</button>`:""}${etapa==="saida"?`<button type="button" data-ag="${esc(x.slug)}">Agendar entrega</button>`:""}<button type="button" class="ok" data-mv="${esc(x.slug)}" data-para="${PROX[x.et]}">${ROT[x.et]}</button>${x.et==="qualidade"?`<button type="button" data-refazer="${esc(x.slug)}">↺ Refazer</button>`:""}${x.et!=="entrada"&&x.et!=="qualidade"?`<button type="button" data-volta="${esc(x.slug)}" data-de="${x.et}">← voltar</button>`:""}</div>${processo(x)}</div>`;
+      <div class="acs"><a href="orcamento.html?l=${encodeURIComponent(x.slug)}">Orçamento</a><a href="visita.html?l=${encodeURIComponent(x.slug)}">Abrir loja</a>${etapa==="entrada"?`<a href="produtos.html?l=${encodeURIComponent(x.slug)}">Produtos</a>`:""}<button type="button" data-frete="${esc(x.slug)}">Frete</button>${x.et==="processamento"?`<button type="button" data-np="${esc(x.slug)}">Nº do pedido</button>`:""}${etapa==="saida"?`<button type="button" data-ag="${esc(x.slug)}">Agendar entrega</button>`:""}<button type="button" class="ok" data-mv="${esc(x.slug)}" data-para="${PROX[x.et]}">${ROT[x.et]}</button>${x.et==="qualidade"?`<button type="button" data-refazer="${esc(x.slug)}">↺ Refazer</button>`:""}${x.et!=="entrada"&&x.et!=="qualidade"?`<button type="button" data-volta="${esc(x.slug)}" data-de="${x.et}">← voltar</button>`:""}</div>${processo(x)}</div>`;
   const avul=App.avulsos();
   $("#app").innerHTML=`${topo()}<h1>${TIT[etapa][0]}</h1><p class="sub">${TIT[etapa][1]}</p>
   ${etapa==="entrada"?`<button type="button" class="btn" id="novo" style="margin:0 0 12px;min-height:52px">＋ Novo pedido</button>`:""}
@@ -81,7 +80,7 @@
     L.innerHTML=vis.length?`<p class="muted cont-f">${vis.length} de ${daEtapa.length} pedido(s)</p>`+vis.map(bloco).join(""):`<section class="card"><p>Nenhum pedido com esses filtros.</p></section>`;
     L.querySelectorAll("[data-mv]").forEach(b=>b.onclick=()=>{let extra={};
       // confirmar a venda pede o valor fechado: é o que alimenta receita e comissão do mês
-      if(b.dataset.para==="arte"){const P=(e.pedidos||{})[b.dataset.mv]||{};const v=prompt("Valor fechado da venda (R$)",P.valor?String(P.valor).replace(".",","):"");if(v===null)return;const n=parseFloat(v.replace(/\./g,"").replace(",","."));if(!(n>0)){alert("Informe o valor da venda, por exemplo 850,00.");return;}extra={valor:Math.round(n*100)/100};}
+      if(b.dataset.para==="arte"){const P=(e.pedidos||{})[b.dataset.mv]||{};const xo=lista.find(y=>y.slug===b.dataset.mv);const sug=P.valor||(xo&&xo.valor&&xo.valor.total)||"";const v=prompt("Valor fechado da venda (R$)",sug?String(sug.toFixed?sug.toFixed(2):sug).replace(".",","):"");if(v===null)return;const n=parseFloat(v.replace(/\./g,"").replace(",","."));if(!(n>0)){alert("Informe o valor da venda, por exemplo 850,00.");return;}extra={valor:Math.round(n*100)/100};}
       moverEtapa(b.dataset.mv,b.dataset.para,extra);location.reload();});
   // qualidade reprovada: a peça volta para a etapa que precisa ser refeita
     L.querySelectorAll("[data-refazer]").forEach(b=>b.onclick=async()=>{const k=await App.menuLongo("Refazer: voltar para…",[{k:"arte",t:"Arte · o layout precisa mudar"},{k:"processamento",t:"Produção · refazer a peça"}]);if(!k)return;const m=prompt("O que está errado? (fica no histórico do pedido)");moverEtapa(b.dataset.refazer,k,m?{reprovacao:m.trim()}:{});location.reload();});

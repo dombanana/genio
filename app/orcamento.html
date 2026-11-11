@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover,user-scalable=no">
+<title>GênIO · Orçamento</title>
+<meta name="theme-color" content="#F1EEF8">
+<link rel="icon" href="../genio-favicon.png">
+<link rel="stylesheet" href="app.css?v=4808e50d9e">
+<style>
+.orc{background:#fff;border-radius:18px;padding:6px 10px;margin:0 0 12px;box-shadow:0 1px 0 rgba(28,22,53,.06)}
+.ln{display:grid;grid-template-columns:52px 1fr auto;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid #F0EDF6}
+.ln:last-child{border-bottom:0}
+.ln .fig{width:52px;height:52px;border-radius:10px;background:#F4F1FA center/cover no-repeat;display:grid;place-items:center;font-size:22px;overflow:hidden}
+.ln .fig img{width:100%;height:100%;object-fit:cover}
+.ln .nm b{display:block;font-size:15px;line-height:1.2}
+.ln .nm small{display:block;color:#7b7590;font-size:12.5px;line-height:1.3;margin-top:2px}
+.ln .qt{display:inline-flex;align-items:center;gap:4px;margin-top:6px}
+.ln .qt button{width:28px;height:28px;border-radius:8px;border:1px solid #DDD6EC;background:#fff;font:600 16px/1 Rubik,system-ui,sans-serif;color:#5b3fc4}
+.ln .qt span{min-width:30px;text-align:center;font-weight:600;font-size:14px}
+.pr{display:grid;grid-template-columns:auto;justify-items:end;gap:2px}
+.pr .aj{display:flex;align-items:center;gap:4px}
+.pr .aj button{width:30px;height:30px;border-radius:9px;border:0;background:#EEE9F7;color:#5b3fc4;font-size:13px}
+.pr .val{font-weight:700;font-size:15px;min-width:86px;text-align:right;border:0;background:none;padding:0;color:#141024}
+.pr s{color:#a19bb5;font-size:12px}
+.pr .desc{font-size:11.5px;color:#0E8A84;font-weight:600}
+.pr .un{font-size:11.5px;color:#7b7590}
+.tot{display:flex;justify-content:space-between;align-items:baseline;padding:12px 4px 4px;font-size:17px}
+.tot b{font-size:22px}
+.pag{display:grid;gap:8px;margin:0 0 12px}
+.pag .op{background:#fff;border-radius:14px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.pag .op small{display:block;color:#7b7590;font-size:12.5px}
+.pag .op b{font-size:17px;white-space:nowrap}
+.mensal{font-size:13px;color:#5b5570;margin:-4px 4px 12px}
+</style>
+</head>
+<body>
+<div class="w" id="app"></div>
+<script src="app.js?v=4808e50d9e"></script>
+<script>
+(async()=>{
+  const {$,$$,esc,qs,sessao,dados,nav,topo,voltar,nomeLoja,estado,salvar,cliente,definirCliente}=App;
+  if(!await sessao())return;
+  const D=await dados();const slug=qs.get("l");const l=D.lojas.find(x=>x.slug===slug);
+  if(!l){$("#app").innerHTML=`${topo()}<p>Loja não encontrada.</p>${nav("pedidos")}`;return;}
+  const nome=nomeLoja(l.nome);definirCliente(l);const c=await cliente(l);
+  const R=v=>(Math.round(v*100)/100).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
+  const NOMES={capacho:"Capacho",placas:"Placa",adesivos:"Adesivo de vitrine",uniformes:"Camisa polo",impressos:"Cartão de visita",panfleto:"Flyer",banners:"Banner retrátil",parede:"Adesivo de parede",brindes:"Ecobag",carimbo:"Carimbo",windbanner:"Wind banner",faixa:"Faixa",folheto:"Folheto",camiseta:"Camiseta",bone:"Boné",avental:"Avental",mostraai:"Mostraí",falaai:"Fala Aí",inpi:"Registro de marca (INPI)"};
+  const ICON={mostraai:"📺",falaai:"📞",inpi:"®"};
+  // passo das setas: 1% do preço de tabela (mínimo R$ 0,50); tocar no valor permite digitar
+  const passo=v=>Math.max(0.5,Math.round(v)/100);
+  function render(){
+    const e=estado();const S=(e.sel||{})[slug]||{};const P=((e.pedidos||{})[slug])||{};
+    const O=App.orcamento(c,S,P);
+    $("#app").innerHTML=`${topo()}${voltar(`produtos.html?l=${encodeURIComponent(slug)}`,"Produtos")}
+    <h1>Orçamento</h1><p class="sub">${esc(nome)}</p>
+    ${O.linhas.length?`<div class="orc">${O.linhas.map(x=>`<div class="ln" data-k="${x.k}">
+        <div class="fig">${x.img?`<img src="${esc(x.img)}" alt="" loading="lazy">`:(ICON[x.k]||"▫")}</div>
+        <div class="nm"><b>${esc(x.nome)}</b><small>${esc(x.unid||"")}</small>${x.servico?"":`<div class="qt"><button type="button" data-q="-">−</button><span>${x.q}</span><button type="button" data-q="+">+</button></div>`}</div>
+        <div class="pr">${x.lista==null?`<span class="un">preço a confirmar</span>`:`<div class="aj"><button type="button" data-p="-" aria-label="baixar o preço">▼</button><button type="button" class="val" data-ed="1">${R(x.unit*x.q)}</button><button type="button" data-p="+" aria-label="subir o preço">▲</button></div>
+          ${x.unit!==x.lista?`<span><s>${R(x.lista*x.q)}</s> <span class="desc">${x.unit<x.lista?"−":"+"}${Math.abs(Math.round((1-x.unit/x.lista)*1000)/10).toLocaleString("pt-BR")}%</span></span>`:""}
+          ${x.q>1?`<span class="un">${R(x.unit)} cada</span>`:""}${x.mensal?`<span class="un">+ ${R(x.mensal)}/mês</span>`:""}`}</div></div>`).join("")}
+      <div class="ln" data-k="_frete"><div class="fig">🚚</div><div class="nm"><b>Frete</b><small>um valor para o pedido inteiro</small></div>
+        <div class="pr"><div class="aj"><button type="button" data-p="-">▼</button><button type="button" class="val" data-ed="1">${O.frete!=null?R(O.frete):"definir"}</button><button type="button" data-p="+">▲</button></div></div></div>
+      <div class="tot"><span>Total</span><b>${R(O.total)}</b></div></div>
+      ${O.mensal?`<p class="mensal">Mais ${R(O.mensal)}/mês dos serviços.</p>`:""}
+      <h2 style="margin:4px 0 8px">Formas de pagamento</h2>
+      <div class="pag">${App.pagamentos(O.total).map(p=>`<div class="op"><div><b style="font-size:15px">${esc(p.t)}</b><small>${esc(p.d)}</small></div><b>${p.v}</b></div>`).join("")}</div>
+      ${O.semPreco?`<p class="mensal">${O.semPreco} item(ns) sem preço ainda não entram no total.</p>`:""}`
+    :`<section class="card"><p>Nada escolhido ainda.</p></section>`}
+    <div class="acoes"><div class="w"><a class="btn sec" href="produtos.html?l=${encodeURIComponent(slug)}">← Produtos</a><a class="btn" href="pedidos.html">Pedidos →</a></div></div>
+    ${nav("pedidos")}`;document.body.classList.add("com-acoes");
+    // quantidade
+    $$("[data-q]").forEach(b=>b.onclick=()=>{const k=b.closest(".ln").dataset.k;const e=estado();const s=((e.sel||{})[slug]||{})[k];if(!s)return;s.q=Math.max(0,(s.q||1)+(b.dataset.q==="+"?1:-1));salvar(e);render();});
+    // preço (desconto/acréscimo por item) e frete
+    const gravar=(k,v)=>{const e=estado();e.pedidos=e.pedidos||{};const p=e.pedidos[slug]=e.pedidos[slug]||{etapa:"entrada",hist:[]};
+      if(k==="_frete")p.frete=v;else{p.ajustes=p.ajustes||{};const x=O.linhas.find(y=>y.k===k);if(v==null||Math.abs(v-x.lista)<0.005)delete p.ajustes[k];else p.ajustes[k]=v;}salvar(e);render();};
+    $$("[data-p]").forEach(b=>b.onclick=()=>{const k=b.closest(".ln").dataset.k;const sinal=b.dataset.p==="+"?1:-1;
+      if(k==="_frete"){gravar(k,Math.max(0,Math.round(((O.frete||0)+sinal*5)*100)/100));return;}
+      const x=O.linhas.find(y=>y.k===k);gravar(k,Math.max(0,Math.round((x.unit+sinal*passo(x.lista))*100)/100));});
+    $$("[data-ed]").forEach(b=>b.onclick=()=>{const k=b.closest(".ln").dataset.k;const x=O.linhas.find(y=>y.k===k);
+      const atual=k==="_frete"?(O.frete||0):x.unit;const v=prompt(k==="_frete"?"Frete do pedido inteiro (R$)":`Preço de ${x.nome}${x.q>1?" (cada)":""} (R$)`,String(atual.toFixed(2)).replace(".",","));if(v===null)return;
+      const n=parseFloat(v.replace(/\./g,"").replace(",","."));if(isNaN(n)||n<0)return;gravar(k,Math.round(n*100)/100);});
+  }
+  render();
+})();
+</script>
+</body>
+</html>
