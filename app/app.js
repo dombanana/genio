@@ -199,7 +199,7 @@ const App=(()=>{
   // ---- arte automática: logotipo tratado centralizado preenchendo a área segura do gabarito, cor padrão do material
   const COR_PADRAO={capacho:"#2B2B2D",rigido:"#F4F1EA",vinil:null,tecido:"#F4F1EA",papel:"#FFFFFF",lona:"#FFFFFF",carimbo:null};
   const PRODUTOS_IDS=["capacho","placas","adesivos","uniformes","impressos","panfleto","banners","parede","brindes","carimbo","windbanner","faixa","folheto","camiseta","bone","avental"];
-  let _G=null;const gabaritos=async()=>_G||(_G=await (await fetch("gabaritos.json?v=fbffebb380")).json());
+  let _G=null;const gabaritos=async()=>_G||(_G=await (await fetch("gabaritos.json?v=002f8a8963")).json());
   const carregarImg=src=>new Promise(res=>{const i=new Image();i.crossOrigin="anonymous";i.onload=()=>res(i);i.onerror=()=>res(null);i.src=src;});
   // ---- carimbo: só texto — nome, razão social, CNPJ (negrito), endereço, telefone; nunca logotipo
   async function dadosCarimbo(l){const cad=await ficha(l.slug).catch(()=>null);const L=(cad&&cad.lacunas)||{};const leit=(L.leitura||{}).valor||"";const razao=((leit.match(/Razão social: ([^·]+)/)||[])[1]||"").trim();const cnpj=((leit.match(/CNPJ:? ?([\d./-]{14,18})/)||[])[1]||"");
@@ -246,7 +246,7 @@ const App=(()=>{
     const aw=W-2*(B+S),ah=H-2*(B+S);const f=Math.min(aw/LW,(P.ancora==="topo"?ah*0.45:ah)/LH);const w=LW*f,h=LH*f;const x=(W-w)/2,y=P.ancora==="topo"?B+S+ah*0.05:(H-h)/2;
     const fundo=P.sem_fundo?null:(COR_PADRAO[P.superficie]===undefined?"#FFFFFF":COR_PADRAO[P.superficie]);
     // kit de 14 setores (10/11): a maquete frontal do ramo da loja é a arte de partida de todos os produtos
-    await carregarScript("qr.js?v=fbffebb380");await carregarScript("impressos.js?v=fbffebb380");await carregarScript("kits14.js?v=fbffebb380");
+    await carregarScript("qr.js?v=002f8a8963");await carregarScript("impressos.js?v=002f8a8963");await carregarScript("kits14.js?v=002f8a8963");
     if(window.Kits14&&window.Kits14.ARQ[pid]){const K=await window.Kits14.montar(App,pid,c,l,{W,H,B,S,im,rec});
       if(K){const doc={fundo:K.fundo,fundoImg:null,el:K.el,campos:null,auto:true,kit:KIT14,setorKit:K.setorKit,kitRef:K.kitRef,W,H};const imgs={[c.manual.tratado]:im};
         const k=Math.min(1,1400/Math.max(W,H));const cv=document.createElement("canvas");cv.width=Math.round(W*k);cv.height=Math.round(H*k);const g=cv.getContext("2d");g.scale(k,k);
@@ -474,7 +474,7 @@ const App=(()=>{
     if(F.modo==="lote"){const x=F.t.find(y=>y[0]===q);return x?x[1]:null;}
     const us=[F.g,F.p].filter(Boolean).map(t=>degrau(t,q)).filter(v=>v!=null);return us.length?Math.max(...us)*q:null;}
   function precoEm(pid,q,fmt,fid){const c=custoEm(pid,q,fmt,fid);return c==null?null:venda(c);}
-  function precoProduto(pid,fmt){pid=baseId(pid);const fp=fornPreco(pid);if(fp){const t=fornTab(fp)[0];const v=venda(t[1]);
+  function precoProduto(pid,fmt,fid){pid=baseId(pid);const fp=fornPreco(pid,fid);if(fp){const t=fornTab(fp)[0];const v=venda(t[1]);
       return {valor:v,unid:fp.modo==="lote"?`${t[0].toLocaleString("pt-BR")} un. · ${fp.nome}`:`un. · mín. ${t[0]} · ${fp.nome}`,txt:v.toLocaleString("pt-BR",{style:"currency",currency:"BRL"})};}
     if(pid==="adesivos"){const f0=fmt||VITRINE_PADRAO;const v=vitrineMaisPerto(f0);const pais=f0.w_cm>=f0.h_cm;const f={w_cm:pais?v[1]:v[0],h_cm:pais?v[0]:v[1]};
       const val=venda(v[2]);return {valor:val,unid:`${String(f.w_cm).replace(".",",")}×${String(f.h_cm).replace(".",",")} cm · ${f.w_cm>f.h_cm?"paisagem":"retrato"}`,txt:val.toLocaleString("pt-BR",{style:"currency",currency:"BRL"})};}
@@ -505,7 +505,7 @@ const App=(()=>{
       if(v.servico){q=1;fixa=true;if(baseId(k)==="mostraai"&&v.entrada!=null){lista=+v.entrada;mensal=+v.mensal||0;unid=(v.nome||"").replace(/^Mostraí · /,"");}}
       else if(baseId(k)==="locacao"){q=1;fixa=true;lista=precoLocacao(v.inicio);const t=LOC_TEMAS.find(x=>x.id===v.tema);unid=`${t?t.nome:"tema a escolher"} · ${v.inicio?diaBR(v.inicio)+" a "+diaBR(locFim(v.inicio))+" · 15 dias":"data a escolher"}`;}
       else if(baseId(k)==="capacho"&&c&&c.capacho_preco&&c.capacho_preco.total){const cp=c.capacho_preco;lista=+cp.total;q=cp.qtd||1;fixa=true;unid=(cp.medidas||[]).map(m=>`${(m.w/100).toFixed(2).replace(".",",")} × ${(m.h/100).toFixed(2).replace(".",",")} m`).join(" + ");}
-      else{q=qtdNormal(k,q,fid);const fmt=(c&&c.formatos||{})[k];lista=precoEm(k,q,fmt,fid);const pr=precoProduto(k,fmt);unid=pr?pr.unid.replace(/^\d[\d.]* un\. · /,"").replace(/^un\. · /,""):"";}
+      else{q=qtdNormal(k,q,fid);const fmt=(c&&c.formatos||{})[k];lista=precoEm(k,q,fmt,fid);const pr=precoProduto(k,fmt,fid);unid=pr?pr.unid.replace(/^\d[\d.]* un\. · /,"").replace(/^un\. · /,""):"";}
       const pct=dc[k]!=null?+dc[k]:0;const total=lista==null?null:Math.round(lista*(1+pct/100)*100)/100;
       const kb=baseId(k),nv=k.includes("~")?" · "+k.split("~")[1]:"";linhas.push({k,base:kb,nome:(NOME_ORC[kb]||v.nome||kb)+nv,img,q,lista,total,pct,unid,mensal,servico:!!v.servico,fixa,lote:!!qtdOpcoes(k,fid),fid,forn:fo?{id:fo.id,nome:fo.nome,prazo:fo.prazo||null,frete:fo.frete||null,preco:!!fornTab(fo).length}:null,fornProprio:!!fid});});
     const soma=linhas.reduce((t,x)=>t+(x.total!=null?x.total:0),0);const frete=P.frete!=null&&P.frete!==""?+P.frete:null;
