@@ -6,7 +6,7 @@
 <title>GênIO · Produtos e serviços</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="app.css?v=a4c432bbba">
+<link rel="stylesheet" href="app.css?v=8f451cc6fa">
 <style>
 .grade{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .prod{background:#fff;border-radius:18px;box-shadow:0 2px 10px rgba(28,22,53,.06);overflow:hidden;display:flex;flex-direction:column;position:relative}
@@ -34,8 +34,8 @@
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=a4c432bbba"></script>
-<script src="qr.js?v=a4c432bbba"></script>
+<script src="app.js?v=8f451cc6fa"></script>
+<script src="qr.js?v=8f451cc6fa"></script>
 <script>
 (async()=>{
   const {$,$$,esc,qs,sessao,dados,nav,topo,voltar,setorNome,nomeLoja,estado,salvar,cliente,gravarCliente,definirCliente}=App;
@@ -44,13 +44,13 @@
   if(!l){$("#app").innerHTML=`${topo()}<p>Loja não encontrada.</p>${nav("rota")}`;return;}
   const nome=nomeLoja(l.nome);definirCliente(l);let c=await cliente(l);
   if(!(c.manual&&c.manual.editado)){location.href=`visita.html?l=${encodeURIComponent(slug)}`;return;}  // catálogo só depois do logotipo limpo
-  const G=await (await fetch("gabaritos.json?v=a4c432bbba")).json();
-  await App.carregarScript("kits14.js?v=a4c432bbba");
+  const G=await (await fetch("gabaritos.json?v=8f451cc6fa")).json();
+  await App.carregarScript("kits14.js?v=8f451cc6fa");
   // os 16 produtos do kit de 14 setores (10/11); a foto de cada um é a do ramo da loja
   const CAT=await Promise.all([["capacho","Capacho"],["placas","Placa"],["adesivos","Adesivo de vitrine"],["uniformes","Camisa polo"],["impressos","Cartão de visita"],["panfleto",/padaria|restaurante|bar|cafeteria/.test(l.setor||"")?"Flyer · cardápio":"Flyer · produtos e serviços"],["banners","Banner retrátil"],["parede","Adesivo de parede · rotas"],["brindes","Ecobag"],["carimbo","Carimbo"],["windbanner","Wind banner"],["faixa","Faixa"],["folheto","Folheto promocional"],["camiseta","Camiseta"],["bone","Boné"],["avental","Avental"]].map(async([id,n])=>({id,nome:n,img:await Kits14.foto(l.setor,id,true)})));
-  const SERV=[{id:"mostraai",nome:"Mostraí · TV de ofertas",desc:"Sua TV em pé com itens, preços e destaque · muda pelo celular",ic:"📺"},{id:"postaai",nome:"Posta Aí · postagens",desc:"Conteúdo para as redes (AI Negócios)",ic:"📣"},{id:"inpi",nome:"Registro de marca (INPI)",desc:"Proteção do nome e do logo",ic:"®"}];
+  const SERV=[{id:"mostraai",nome:"Mostraí · TV de ofertas",desc:"Sua TV em pé com itens, preços e destaque · muda pelo celular",ic:"📺"},{id:"falaai",nome:"Fala Aí · atendente no telefone",desc:"URA com o nome da loja · frases gravadas do sistema",ic:"📞"},{id:"inpi",nome:"Registro de marca (INPI)",desc:"Proteção do nome e do logo",ic:"®"}];
   // Mostraí: preço aprovado em 10/11 (TV do lojista; a GenIO liga e configura o TV Box)
-  const PLANOS=[{id:"comodato",rot:"Aparelho emprestado",entrada:249,mensal:99,txt:"R$ 249 de ativação + R$ 99/mês · 12 meses"},{id:"compra",rot:"Compra o aparelho",entrada:499,mensal:79,txt:"R$ 499 na entrada + R$ 79/mês"},{id:"anual",rot:"Anual à vista",entrada:1289,mensal:0,txt:"R$ 1.289 · aparelho e ativação incluídos"}];
+  const PLANOS=[{id:"comodato",rot:"Aparelho emprestado",entrada:249,mensal:99,txt:"R$ 249 de ativação + R$ 99/mês · 12 meses"},{id:"anual",rot:"Anual à vista",entrada:1289,mensal:0,txt:"R$ 1.289 · aparelho emprestado e ativação incluídos"}];
   const MOSTRAI_IMG=`/brand/mostrai/JPG/${Kits14.kitDe(l.setor)}_Mostrai.jpg`;
   const e=estado();e.sel=e.sel||{};const S=e.sel[slug]=e.sel[slug]||{};
   const UNI_CORES=new Set(["uniformes","camiseta","bone","avental"]);
