@@ -6,25 +6,27 @@
 <title>GênIO · Orçamento</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="app.css?v=4808e50d9e">
+<link rel="stylesheet" href="app.css?v=74638db5ce">
 <style>
 .orc{background:#fff;border-radius:18px;padding:6px 10px;margin:0 0 12px;box-shadow:0 1px 0 rgba(28,22,53,.06)}
-.ln{display:grid;grid-template-columns:52px 1fr auto;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid #F0EDF6}
+.ln{display:grid;grid-template-columns:44px minmax(0,1fr) auto;gap:8px;align-items:center;padding:7px 0;border-bottom:1px solid #F0EDF6}
 .ln:last-child{border-bottom:0}
-.ln .fig{width:52px;height:52px;border-radius:10px;background:#F4F1FA center/cover no-repeat;display:grid;place-items:center;font-size:22px;overflow:hidden}
+.ln .fig{width:44px;height:44px;border-radius:9px;background:#F4F1FA;display:grid;place-items:center;font-size:19px;overflow:hidden}
 .ln .fig img{width:100%;height:100%;object-fit:cover}
-.ln .nm b{display:block;font-size:15px;line-height:1.2}
-.ln .nm small{display:block;color:#7b7590;font-size:12.5px;line-height:1.3;margin-top:2px}
-.ln .qt{display:inline-flex;align-items:center;gap:4px;margin-top:6px}
-.ln .qt button{width:28px;height:28px;border-radius:8px;border:1px solid #DDD6EC;background:#fff;font:600 16px/1 Rubik,system-ui,sans-serif;color:#5b3fc4}
-.ln .qt span{min-width:30px;text-align:center;font-weight:600;font-size:14px}
-.pr{display:grid;grid-template-columns:auto;justify-items:end;gap:2px}
-.pr .aj{display:flex;align-items:center;gap:4px}
-.pr .aj button{width:30px;height:30px;border-radius:9px;border:0;background:#EEE9F7;color:#5b3fc4;font-size:13px}
-.pr .val{font-weight:700;font-size:15px;min-width:86px;text-align:right;border:0;background:none;padding:0;color:#141024}
-.pr s{color:#a19bb5;font-size:12px}
-.pr .desc{font-size:11.5px;color:#0E8A84;font-weight:600}
-.pr .un{font-size:11.5px;color:#7b7590}
+.ln .nm{min-width:0}
+.ln .nm b{display:block;font-size:14px;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ln .nm .sub2{display:flex;align-items:center;gap:6px;margin-top:3px;min-width:0}
+.ln .nm small{color:#7b7590;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.ln .qt{display:inline-flex;align-items:center;gap:2px;flex:none}
+.ln .qt button{width:24px;height:24px;border-radius:7px;border:1px solid #DDD6EC;background:#fff;font:600 14px/1 Rubik,system-ui,sans-serif;color:#5b3fc4;padding:0}
+.ln .qt span{min-width:22px;text-align:center;font-weight:600;font-size:13px}
+.pr{display:grid;justify-items:end;gap:1px}
+.pr .aj{display:flex;align-items:center;gap:3px}
+.pr .aj button{width:26px;height:28px;border-radius:8px;border:0;background:#EEE9F7;color:#5b3fc4;font-size:11px;padding:0}
+.pr .aj .val{width:auto;min-width:78px;background:none;font-weight:700;font-size:14px;text-align:right;color:#141024;padding:0 2px}
+.pr s{color:#a19bb5;font-size:11px}
+.pr .desc{font-size:11px;color:#0E8A84;font-weight:600}
+.pr .un{font-size:11px;color:#7b7590}
 .tot{display:flex;justify-content:space-between;align-items:baseline;padding:12px 4px 4px;font-size:17px}
 .tot b{font-size:22px}
 .pag{display:grid;gap:8px;margin:0 0 12px}
@@ -36,7 +38,7 @@
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=4808e50d9e"></script>
+<script src="app.js?v=74638db5ce"></script>
 <script>
 (async()=>{
   const {$,$$,esc,qs,sessao,dados,nav,topo,voltar,nomeLoja,estado,salvar,cliente,definirCliente}=App;
@@ -56,11 +58,11 @@
     <h1>Orçamento</h1><p class="sub">${esc(nome)}</p>
     ${O.linhas.length?`<div class="orc">${O.linhas.map(x=>`<div class="ln" data-k="${x.k}">
         <div class="fig">${x.img?`<img src="${esc(x.img)}" alt="" loading="lazy">`:(ICON[x.k]||"▫")}</div>
-        <div class="nm"><b>${esc(x.nome)}</b><small>${esc(x.unid||"")}</small>${x.servico?"":`<div class="qt"><button type="button" data-q="-">−</button><span>${x.q}</span><button type="button" data-q="+">+</button></div>`}</div>
+        <div class="nm"><b>${esc(x.nome)}</b><div class="sub2">${x.servico?"":`<span class="qt"><button type="button" data-q="-">−</button><span>${x.q}</span><button type="button" data-q="+">+</button></span>`}<small>${esc(x.unid||"")}</small></div></div>
         <div class="pr">${x.lista==null?`<span class="un">preço a confirmar</span>`:`<div class="aj"><button type="button" data-p="-" aria-label="baixar o preço">▼</button><button type="button" class="val" data-ed="1">${R(x.unit*x.q)}</button><button type="button" data-p="+" aria-label="subir o preço">▲</button></div>
           ${x.unit!==x.lista?`<span><s>${R(x.lista*x.q)}</s> <span class="desc">${x.unit<x.lista?"−":"+"}${Math.abs(Math.round((1-x.unit/x.lista)*1000)/10).toLocaleString("pt-BR")}%</span></span>`:""}
           ${x.q>1?`<span class="un">${R(x.unit)} cada</span>`:""}${x.mensal?`<span class="un">+ ${R(x.mensal)}/mês</span>`:""}`}</div></div>`).join("")}
-      <div class="ln" data-k="_frete"><div class="fig">🚚</div><div class="nm"><b>Frete</b><small>um valor para o pedido inteiro</small></div>
+      <div class="ln" data-k="_frete"><div class="fig">🚚</div><div class="nm"><b>Frete</b><div class="sub2"><small>um valor para o pedido inteiro</small></div></div>
         <div class="pr"><div class="aj"><button type="button" data-p="-">▼</button><button type="button" class="val" data-ed="1">${O.frete!=null?R(O.frete):"definir"}</button><button type="button" data-p="+">▲</button></div></div></div>
       <div class="tot"><span>Total</span><b>${R(O.total)}</b></div></div>
       ${O.mensal?`<p class="mensal">Mais ${R(O.mensal)}/mês dos serviços.</p>`:""}
