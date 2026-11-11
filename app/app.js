@@ -199,7 +199,7 @@ const App=(()=>{
   // ---- arte automática: logotipo tratado centralizado preenchendo a área segura do gabarito, cor padrão do material
   const COR_PADRAO={capacho:"#2B2B2D",rigido:"#F4F1EA",vinil:null,tecido:"#F4F1EA",papel:"#FFFFFF",lona:"#FFFFFF",carimbo:null};
   const PRODUTOS_IDS=["capacho","placas","adesivos","uniformes","impressos","panfleto","banners","parede","brindes","carimbo","windbanner","faixa","folheto","camiseta","bone","avental"];
-  let _G=null;const gabaritos=async()=>_G||(_G=await (await fetch("gabaritos.json?v=558c62664d")).json());
+  let _G=null;const gabaritos=async()=>_G||(_G=await (await fetch("gabaritos.json?v=9939870b4d")).json());
   const carregarImg=src=>new Promise(res=>{const i=new Image();i.crossOrigin="anonymous";i.onload=()=>res(i);i.onerror=()=>res(null);i.src=src;});
   // ---- carimbo: só texto — nome, razão social, CNPJ (negrito), endereço, telefone; nunca logotipo
   async function dadosCarimbo(l){const cad=await ficha(l.slug).catch(()=>null);const L=(cad&&cad.lacunas)||{};const leit=(L.leitura||{}).valor||"";const razao=((leit.match(/Razão social: ([^·]+)/)||[])[1]||"").trim();const cnpj=((leit.match(/CNPJ:? ?([\d./-]{14,18})/)||[])[1]||"");
@@ -246,7 +246,7 @@ const App=(()=>{
     const aw=W-2*(B+S),ah=H-2*(B+S);const f=Math.min(aw/LW,(P.ancora==="topo"?ah*0.45:ah)/LH);const w=LW*f,h=LH*f;const x=(W-w)/2,y=P.ancora==="topo"?B+S+ah*0.05:(H-h)/2;
     const fundo=P.sem_fundo?null:(COR_PADRAO[P.superficie]===undefined?"#FFFFFF":COR_PADRAO[P.superficie]);
     // kit de 14 setores (10/11): a maquete frontal do ramo da loja é a arte de partida de todos os produtos
-    await carregarScript("qr.js?v=558c62664d");await carregarScript("impressos.js?v=558c62664d");await carregarScript("kits14.js?v=558c62664d");
+    await carregarScript("qr.js?v=9939870b4d");await carregarScript("impressos.js?v=9939870b4d");await carregarScript("kits14.js?v=9939870b4d");
     if(window.Kits14&&window.Kits14.ARQ[pid]){const K=await window.Kits14.montar(App,pid,c,l,{W,H,B,S,im,rec});
       if(K){const doc={fundo:K.fundo,fundoImg:null,el:K.el,campos:null,auto:true,kit:KIT14,setorKit:K.setorKit,kitRef:K.kitRef,W,H};const imgs={[c.manual.tratado]:im};
         const k=Math.min(1,1400/Math.max(W,H));const cv=document.createElement("canvas");cv.width=Math.round(W*k);cv.height=Math.round(H*k);const g=cv.getContext("2d");g.scale(k,k);
@@ -471,12 +471,28 @@ const App=(()=>{
     const c=CUSTO[pid];if(!c)return null;const v=venda(c[0]);
     return {valor:v,unid:c[1],apartir:!!c[2],txt:`${c[2]?"a partir de ":""}${v.toLocaleString("pt-BR",{style:"currency",currency:"BRL"})}`};}
   // orçamento da loja: uma linha por item escolhido (preço de tabela, ajuste do vendedor, quantidade) + frete único do pedido
-  const ORDEM_ORC=["capacho","placas","adesivos","parede","faixa","banners","windbanner","impressos","panfleto","folheto","carimbo","uniformes","camiseta","bone","avental","brindes","mostraai","falaai","inpi"];
-  const NOME_ORC={capacho:"Capacho",placas:"Placa",adesivos:"Adesivo de vitrine",uniformes:"Camisa polo",impressos:"Cartão de visita",panfleto:"Flyer",banners:"Banner retrátil",parede:"Adesivo de parede",brindes:"Ecobag",carimbo:"Carimbo",windbanner:"Wind banner",faixa:"Faixa",folheto:"Folheto 2 dobras",camiseta:"Camiseta",bone:"Boné",avental:"Avental",mostraai:"Mostraí",falaai:"Fala Aí",inpi:"Registro de marca (INPI)"};
+  // ---- locação: kit tapete + wind banner, sempre 15 dias; tema escolhido na edição (liquidação, Black Friday, queima de estoque — arte só do tema, igual para todos);
+  // preço pela data de retirada (tabela de períodos em Config · decisão do dono em 11/11); reservas de todas as lojas no servidor (/api/estado/locacoes), para o calendário bloquear os dias sem kit livre
+  const LOC_DIAS=15,LOC_TEMAS=[{id:"liquidacao",nome:"Liquidação"},{id:"blackfriday",nome:"Black Friday"},{id:"queima",nome:"Queima de estoque"}];
+  const LOC_IMG=["/brand/kits14/00_Bases_Compartilhadas/SEM_ARTE/01_capacho.jpg","/brand/kits14/00_Bases_Compartilhadas/SEM_ARTE/11_wind_banner.jpg"];
+  const isoDia=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+  const maisDias=(iso,n)=>{const d=new Date(iso+"T12:00:00");d.setDate(d.getDate()+n);return isoDia(d);};
+  const diaBR=iso=>iso?iso.slice(8,10)+"/"+iso.slice(5,7):"";
+  const locFim=ini=>maisDias(ini,LOC_DIAS-1);
+  function precoLocacao(ini){if(!ini)return null;const L=METAS.locacao||{};const p=(L.periodos||[]).find(x=>x.de&&x.ate&&ini>=x.de&&ini<=x.ate&&x.valor!==""&&x.valor!=null);if(p)return +p.valor;return L.padrao!==""&&L.padrao!=null?+L.padrao:null;}
+  async function reservasLoc(){const r=await lerChave("locacoes");return Array.isArray(r)?r:[];}
+  function locLivre(R,tema,ini,ignorar){const n=+(((METAS.locacao||{}).kits||{})[tema])||0;if(!n)return true;const fim=locFim(ini);return R.filter(r=>r.tema===tema&&r.id!==ignorar&&!(r.fim<ini||r.inicio>fim)).length<n;}
+  // grava ou cancela (inicio vazio) a reserva de um kit; relê a lista na hora para não atropelar outro vendedor
+  async function reservarLoc(r){const R=await reservasLoc();const i=R.findIndex(x=>x.id===r.id);if(i>=0)R.splice(i,1);
+    if(r.inicio){if(!locLivre(R,r.tema,r.inicio))return false;R.push({id:r.id,slug:r.slug,loja:r.loja||"",tema:r.tema,inicio:r.inicio,fim:locFim(r.inicio),em:new Date().toISOString(),por:(EU&&EU.nome)||""});}
+    else if(i<0)return true;await gravarChave("locacoes",R);return true;}
+  const ORDEM_ORC=["capacho","placas","adesivos","parede","faixa","banners","windbanner","impressos","panfleto","folheto","carimbo","uniformes","camiseta","bone","avental","brindes","locacao","mostraai","falaai","inpi"];
+  const NOME_ORC={capacho:"Capacho",placas:"Placa",adesivos:"Adesivo de vitrine",uniformes:"Camisa polo",impressos:"Cartão de visita",panfleto:"Flyer",banners:"Banner retrátil",parede:"Adesivo de parede",brindes:"Ecobag",carimbo:"Carimbo",windbanner:"Wind banner",faixa:"Faixa",folheto:"Folheto 2 dobras",camiseta:"Camiseta",bone:"Boné",avental:"Avental",locacao:"Kit locação",mostraai:"Mostraí",falaai:"Fala Aí",inpi:"Registro de marca (INPI)"};
   function orcamento(c,S,P){P=P||{};const dc=P.desc||{};const artes=(c&&c.artes)||{};const linhas=[];
     Object.entries(S||{}).filter(([k,v])=>v&&v.q>0).sort((a,b)=>{const i=k=>{const n=ORDEM_ORC.indexOf(baseId(k));return n<0?999:n;};return i(a[0])-i(b[0])||(a[0]<b[0]?-1:1);}).forEach(([k,v])=>{
-      const A=artes[k]||(k.includes("~")?null:null);const img=A?((A.provas&&A.provas[0]&&A.provas[0].src)||A.contexto||A.png||null):null;let lista=null,unid="",mensal=0,q=v.q||1,fixa=false;
+      const A=artes[k];const img=baseId(k)==="locacao"?LOC_IMG[1]:A?((A.provas&&A.provas[0]&&A.provas[0].src)||A.contexto||A.png||null):null;let lista=null,unid="",mensal=0,q=v.q||1,fixa=false;
       if(v.servico){q=1;fixa=true;if(baseId(k)==="mostraai"&&v.entrada!=null){lista=+v.entrada;mensal=+v.mensal||0;unid=(v.nome||"").replace(/^Mostraí · /,"");}}
+      else if(baseId(k)==="locacao"){q=1;fixa=true;lista=precoLocacao(v.inicio);const t=LOC_TEMAS.find(x=>x.id===v.tema);unid=`${t?t.nome:"tema a escolher"} · ${v.inicio?diaBR(v.inicio)+" a "+diaBR(locFim(v.inicio))+" · 15 dias":"data a escolher"}`;}
       else if(baseId(k)==="capacho"&&c&&c.capacho_preco&&c.capacho_preco.total){const cp=c.capacho_preco;lista=+cp.total;q=cp.qtd||1;fixa=true;unid=(cp.medidas||[]).map(m=>`${(m.w/100).toFixed(2).replace(".",",")} × ${(m.h/100).toFixed(2).replace(".",",")} m`).join(" + ");}
       else{q=qtdNormal(k,q);const fmt=(c&&c.formatos||{})[k];lista=precoEm(k,q,fmt);const pr=precoProduto(k,fmt);unid=pr?pr.unid.replace(/^\d[\d.]* un\. · /,"").replace(/^un\. · /,""):"";}
       const pct=dc[k]!=null?+dc[k]:0;const total=lista==null?null:Math.round(lista*(1+pct/100)*100)/100;
@@ -489,7 +505,7 @@ const App=(()=>{
     return [{t:"Pix à vista",d:g.pix?`${String(g.pix).replace(".",",")}% de desconto`:"sem desconto",v:R(total*(1-g.pix/100))},
       {t:`Cartão em até ${g.parc}×`,d:`total ${R(cart)}`,v:`${g.parc}× ${R(cart/g.parc)}`},
       {t:"Com sinal",d:`${String(g.sinal).replace(".",",")}% agora e o restante na entrega`,v:`${R(sin)} + ${R(total-sin)}`}];}
-  return {baseId,qtdMin,qtdOpcoes,passoQtd,qtdNormal,precoEm,orcamento,pagamentos,VITRINE_PADRAO,vitrineMaisPerto,CUSTO,venda,lucroPct,LUCRO_PADRAO,fundoTransparente,logoComoTratado,VITRINE,precoProduto,$,$$,esc,qs,ZONA,zonaDe,desempenho,get METAS(){return METAS;},arquivarLoja,reagendarLoja,get PLANO(){return PLANO;},setorNome,nomeLoja,telFmt,ini,sessao,eu,dados,ficha,estrelas,estrelasHTML,estado,salvar,abrirVendas,lerCliente,gravarCliente,cliente,lerChave,gravarChave,API,definirCliente,classificar,logoPrincipal,removerLogo,estadoLogo,ROTULO_LOGO,aprovarLogo,escolherImagem,abrirLogotipo,entradas,ligarEntradas,artePadrao,gerarProdutos,contextualizar,aparar,assarRecortes,desenharElementos,desenharTexto,desenharQR,desenharVetor,carregarScript,recortarLogo,PRODUTOS_IDS,separarCores,garantirCamadas,dadosCarimbo,desenharCarimbo,cenaCarimbo,desenharLista,desenharSeta,listarNotas,gravarNota,apagarNota,diasDeRota,reagendar,hojeISO,dataCurta,META,ICONES,NA_CASCA,avulsos,novoAvulso,atualizarAvulso,ocorrenciasManuais,gravarOcorrencias,ocorrenciasAuto,ETAPAS,etapaDe,moverEtapa,nav,topo,voltar,acoes,menuLongo,ligarLongo};
+  return {LOC_DIAS,LOC_TEMAS,LOC_IMG,isoDia,maisDias,diaBR,locFim,precoLocacao,reservasLoc,locLivre,reservarLoc,baseId,qtdMin,qtdOpcoes,passoQtd,qtdNormal,precoEm,orcamento,pagamentos,VITRINE_PADRAO,vitrineMaisPerto,CUSTO,venda,lucroPct,LUCRO_PADRAO,fundoTransparente,logoComoTratado,VITRINE,precoProduto,$,$$,esc,qs,ZONA,zonaDe,desempenho,get METAS(){return METAS;},arquivarLoja,reagendarLoja,get PLANO(){return PLANO;},setorNome,nomeLoja,telFmt,ini,sessao,eu,dados,ficha,estrelas,estrelasHTML,estado,salvar,abrirVendas,lerCliente,gravarCliente,cliente,lerChave,gravarChave,API,definirCliente,classificar,logoPrincipal,removerLogo,estadoLogo,ROTULO_LOGO,aprovarLogo,escolherImagem,abrirLogotipo,entradas,ligarEntradas,artePadrao,gerarProdutos,contextualizar,aparar,assarRecortes,desenharElementos,desenharTexto,desenharQR,desenharVetor,carregarScript,recortarLogo,PRODUTOS_IDS,separarCores,garantirCamadas,dadosCarimbo,desenharCarimbo,cenaCarimbo,desenharLista,desenharSeta,listarNotas,gravarNota,apagarNota,diasDeRota,reagendar,hojeISO,dataCurta,META,ICONES,NA_CASCA,avulsos,novoAvulso,atualizarAvulso,ocorrenciasManuais,gravarOcorrencias,ocorrenciasAuto,ETAPAS,etapaDe,moverEtapa,nav,topo,voltar,acoes,menuLongo,ligarLongo};
 })();
 
 // ---- tela travada: a pinça não amplia o app; só as artes abrem (prancheta, logotipo e imagens de arte, que têm a própria pinça)

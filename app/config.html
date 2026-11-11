@@ -6,7 +6,7 @@
 <title>GênIO · Configuração</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="app.css?v=558c62664d">
+<link rel="stylesheet" href="app.css?v=9939870b4d">
 <style>
 .forn{display:grid;grid-template-columns:1fr;gap:6px;margin:8px 0 0}
 .forn .it{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;background:var(--lav);border-radius:12px;padding:10px 12px}
@@ -19,7 +19,7 @@
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=558c62664d"></script>
+<script src="app.js?v=9939870b4d"></script>
 <script>
 (async()=>{
   const {$,$$,esc,sessao,nav,topo}=App;
@@ -46,6 +46,10 @@
       <h3 style="margin:14px 0 6px">Formas de pagamento no orçamento</h3>
       <div class="metas-f">${(()=>{const g=Object.assign({pix:5,cartao:8,parc:6,sinal:50},App.METAS.pag||{});return `<label>Desconto no Pix (%)<input type="number" min="0" max="50" step="0.5" inputmode="decimal" id="gPix" value="${g.pix}"></label><label>Acréscimo no cartão (%)<input type="number" min="0" max="50" step="0.5" inputmode="decimal" id="gCart" value="${g.cartao}"></label><label>Parcelas no cartão<input type="number" min="1" max="24" step="1" inputmode="numeric" id="gParc" value="${g.parc}"></label><label>Sinal (%)<input type="number" min="0" max="100" step="5" inputmode="decimal" id="gSinal" value="${g.sinal}"></label>`;})()}</div>
       <div id="tabLucro"></div></section>
+    <section class="card" id="locacao"><h2>Locação · kit tapete + wind banner</h2><small class="muted" style="display:block;margin:0 0 8px">Sempre 15 dias. O preço sai da data de retirada: se ela cai num período da tabela, vale o valor do período; fora dos períodos, o valor padrão. Sem valor, o orçamento mostra "preço a confirmar". Kits por tema: quantos existem — o calendário risca os dias sem kit livre (vazio = sem limite).</small>
+      <div class="metas-f">${App.LOC_TEMAS.map(t=>`<label>Kits ${esc(t.nome)}<input type="number" min="0" step="1" inputmode="numeric" data-lk="${t.id}" value="${(((App.METAS.locacao||{}).kits||{})[t.id])??""}" placeholder="sem limite"></label>`).join("")}<label>Valor padrão · 15 dias (R$)<input type="number" min="0" step="0.01" inputmode="decimal" id="lPad" value="${(App.METAS.locacao||{}).padrao??""}" placeholder="a confirmar"></label></div>
+      <h3 style="margin:14px 0 6px">Períodos com preço próprio</h3><div id="lPer"></div><button type="button" class="btn sec sm" id="lAdd" style="margin-top:6px">+ período</button>
+      <h3 style="margin:14px 0 6px">Reservas</h3><div id="lRes"><small class="muted">carregando…</small></div></section>
     <section class="card"><h2>Fornecedores por item</h2><small class="muted">Quem produz cada item e observações. Preços entram na fase do orçamento.</small>
       <div class="forn">${Object.entries(F).map(([k,v])=>`<div class="it"><div><b>${esc(v.item)}</b><small>${esc(v.fornecedor||"a definir")}${v.obs?" · "+esc(v.obs):""}${v.link?` · <a href="${esc(v.link)}" target="_blank" rel="noopener">site</a>`:""}</small></div><button type="button" data-f="${k}">Editar</button></div>`).join("")}</div></section>
     ${nav("config")}`;
@@ -53,6 +57,19 @@
     const R=v=>v.toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
     const tab=()=>{const fr=0,L=App.lucroPct();$("#tabLucro").innerHTML=`<table class="tab-lucro"><tr><th>Produto</th><th>Fornecedor</th><th>Lucro</th><th>Venda</th></tr>${Object.entries(App.CUSTO).map(([k,c])=>{const b=c[0]+fr,v=App.venda(b);return `<tr><td>${esc(NOMES[k]||k)} <small>${esc(c[1])}</small></td><td>${R(b)}</td><td>${R(b*L/100)}</td><td><b>${R(v)}</b></td></tr>`;}).join("")}</table><small class="muted">Lucro de ${App.LUCRO_PADRAO}% = cobramos o mesmo valor do fornecedor em cima dele (preço = 2 × fornecedor).</small>`;};tab();
     ["mDia","mMes","mJor","mCom","mLucro","mArte","mRev","gPix","gCart","gParc","gSinal"].forEach(id=>{const i=$("#"+id);if(i)i.onchange=()=>{const m={...App.METAS,pag:{pix:+$("#gPix").value||0,cartao:+$("#gCart").value||0,parc:Math.max(1,+$("#gParc").value||1),sinal:+$("#gSinal").value||0},dia:+$("#mDia").value||0,mes:+$("#mMes").value||0,jornada:+$("#mJor").value||8,comissao:+$("#mCom").value||0,lucro:$("#mLucro").value===""?App.LUCRO_PADRAO:+$("#mLucro").value,arte:+$("#mArte").value||0,revisao:+$("#mRev").value||0};App.gravarChave("metas",m);Object.assign(App.METAS,m);tab();};});
+    // locação: tabela de preço por período e estoque de kits (em metas, no servidor); reservas de todas as lojas (/api/estado/locacoes)
+    const locL=()=>JSON.parse(JSON.stringify(App.METAS.locacao||{kits:{},padrao:"",periodos:[]}));
+    const locGravar=L=>{const m={...App.METAS,locacao:L};App.gravarChave("metas",m);Object.assign(App.METAS,m);};
+    const per=()=>{const L=locL();$("#lPer").innerHTML=(L.periodos||[]).length?`<table class="tab-lucro"><tr><th>De</th><th>Até</th><th>R$ · 15 dias</th><th></th></tr>${L.periodos.map((x,i)=>`<tr><td><input type="date" data-pi="${i}" data-pc="de" value="${x.de||""}"></td><td><input type="date" data-pi="${i}" data-pc="ate" value="${x.ate||""}"></td><td><input type="number" min="0" step="0.01" inputmode="decimal" data-pi="${i}" data-pc="valor" value="${x.valor??""}" style="width:90px"></td><td><button type="button" class="btn sec sm" data-px="${i}" aria-label="tirar período">×</button></td></tr>`).join("")}</table>`:`<small class="muted">Nenhum período: vale o valor padrão em qualquer data.</small>`;
+      $$("[data-pi]").forEach(i=>i.onchange=()=>{const L=locL();const x=L.periodos[+i.dataset.pi];x[i.dataset.pc]=i.dataset.pc==="valor"?(i.value===""?"":+i.value):i.value;locGravar(L);});
+      $$("[data-px]").forEach(b=>b.onclick=()=>{const L=locL();L.periodos.splice(+b.dataset.px,1);locGravar(L);per();});};
+    per();
+    $("#lAdd").onclick=()=>{const L=locL();L.periodos=L.periodos||[];L.periodos.push({de:"",ate:"",valor:""});locGravar(L);per();};
+    $("#lPad").onchange=ev=>{const L=locL();L.padrao=ev.target.value===""?"":+ev.target.value;locGravar(L);};
+    $$("[data-lk]").forEach(i=>i.onchange=()=>{const L=locL();L.kits=L.kits||{};if(i.value==="")delete L.kits[i.dataset.lk];else L.kits[i.dataset.lk]=+i.value;locGravar(L);});
+    (async()=>{const Rv=(await App.reservasLoc()).sort((a,b)=>a.inicio<b.inicio?-1:1);const el=$("#lRes");if(!el)return;
+      el.innerHTML=Rv.length?`<table class="tab-lucro"><tr><th>Loja</th><th>Tema</th><th>Período</th><th></th></tr>${Rv.map(r=>`<tr><td>${esc(r.loja||r.slug)}${r.por?`<br><small class="muted">${esc(r.por)}</small>`:""}</td><td>${esc((App.LOC_TEMAS.find(t=>t.id===r.tema)||{}).nome||r.tema)}</td><td>${App.diaBR(r.inicio)} a ${App.diaBR(r.fim)}</td><td><button type="button" class="btn sec sm" data-rx="${esc(r.id)}" aria-label="cancelar reserva">×</button></td></tr>`).join("")}</table>`:`<small class="muted">Nenhum kit reservado.</small>`;
+      el.querySelectorAll("[data-rx]").forEach(b=>b.onclick=async()=>{const r=Rv.find(x=>x.id===b.dataset.rx);if(!confirm(`Cancelar a reserva de ${r.loja||r.slug} (${App.diaBR(r.inicio)} a ${App.diaBR(r.fim)})?`))return;await App.reservarLoc({id:r.id,inicio:null});render();});})();
     if(location.hash==="#metas"&&!render._r){render._r=1;setTimeout(()=>{const s=$("#metas");if(s)s.scrollIntoView({block:"start"});},50);}
     $$("#app [data-t]").forEach(b=>b.onclick=()=>{tipoSel=b.dataset.t;localStorage.setItem("rec-tipo",tipoSel);render();});
     $("#rTela").onchange=ev=>{telaAcesa=ev.target.checked;localStorage.setItem("rec-tela",telaAcesa?"1":"0");};

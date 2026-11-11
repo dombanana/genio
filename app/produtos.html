@@ -6,7 +6,7 @@
 <title>GênIO · Produtos e serviços</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="app.css?v=558c62664d">
+<link rel="stylesheet" href="app.css?v=9939870b4d">
 <style>
 .grade{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .prod{background:#fff;border-radius:18px;box-shadow:0 2px 10px rgba(28,22,53,.06);overflow:hidden;display:flex;flex-direction:column;position:relative}
@@ -23,6 +23,23 @@
 .prod .dup button{width:32px;height:32px;border-radius:50%;border:2px solid #fff;background:var(--marca);color:#fff;font:700 19px/1 Rubik,system-ui,sans-serif;padding:0;display:grid;place-items:center;box-shadow:0 2px 6px rgba(28,22,53,.35)}
 .prod .dup button.menos{background:#6f6888}
 .prod .ir{margin:0 12px 8px;min-height:40px;border-radius:12px;background:var(--lav);color:var(--marca);font-weight:700;display:grid;place-items:center;text-decoration:none;font-size:15px}
+.loc-cena{display:grid!important;grid-template-columns:1fr 1fr;gap:2px;position:relative;background:#ddd}
+.loc-cena img{width:100%;height:100%;object-fit:cover}
+.loc-cena .tema{position:absolute;left:8px;right:8px;bottom:8px;text-align:center;font:800 15px/1.1 Rubik,system-ui,sans-serif;letter-spacing:.04em;text-transform:uppercase;padding:7px 6px;border-radius:9px;box-shadow:0 2px 8px rgba(0,0,0,.3)}
+.tema.t-liquidacao{background:#D7262E;color:#fff}.tema.t-blackfriday{background:#111;color:#FFD400}.tema.t-queima{background:#F26A1B;color:#fff}
+.temas{display:flex;flex-wrap:wrap;gap:6px;margin:0 12px 8px}
+.temas button{flex:1 1 auto;min-height:34px;border-radius:10px;border:1.5px solid var(--linha);background:#fff;font:600 12.5px/1.1 Rubik,system-ui,sans-serif;color:var(--texto);padding:4px 8px}
+.temas button.on{border-color:var(--marca);background:var(--lav);color:var(--marca)}
+.cal-fundo{position:fixed;inset:0;background:rgba(20,16,36,.45);z-index:80;display:flex;align-items:flex-end;justify-content:center}
+.cal{background:#fff;border-radius:20px 20px 0 0;width:100%;max-width:520px;padding:14px 14px calc(14px + env(safe-area-inset-bottom));max-height:92vh;overflow:auto}
+.cal .mes{display:flex;align-items:center;justify-content:space-between;margin:2px 0 8px}.cal .mes b{font-size:17px;text-transform:capitalize}
+.cal .mes button{width:38px;height:38px;border-radius:10px;border:0;background:var(--lav);color:var(--marca);font-size:18px}
+.cal .sem,.cal .dias{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}.cal .sem span{text-align:center;font-size:11px;color:var(--texto2);font-weight:700}
+.cal .dias button{height:46px;border-radius:9px;border:0;background:#F5F3FA;font:600 14px/1 Rubik,system-ui,sans-serif;color:var(--texto);display:grid;place-items:center;padding:2px 0}
+.cal .dias button small{display:block;font-size:9.5px;font-weight:500;color:var(--texto2)}
+.cal .dias button:disabled{background:none;color:#c9c4d6;text-decoration:line-through}.cal .dias button:disabled small{visibility:hidden}
+.cal .dias button.faixa-dia{background:#E4DCF7}.cal .dias button.ini{background:var(--marca);color:#fff}.cal .dias button.ini small{color:#fff}
+.cal .res{margin:10px 2px;font-size:14px;line-height:1.35}.cal .acoes-cal{display:grid;grid-template-columns:1fr 2fr;gap:8px}
 .serv{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;padding:12px 16px}
 .serv .ic{position:relative;width:56px;height:56px;border-radius:12px;background:var(--lav);display:grid;place-items:center;font-size:24px}
 .serv .ic .dup{position:absolute;top:-8px;right:-10px;display:flex;gap:3px}
@@ -40,8 +57,8 @@
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=558c62664d"></script>
-<script src="qr.js?v=558c62664d"></script>
+<script src="app.js?v=9939870b4d"></script>
+<script src="qr.js?v=9939870b4d"></script>
 <script>
 (async()=>{
   const {$,$$,esc,qs,sessao,dados,nav,topo,voltar,setorNome,nomeLoja,estado,salvar,cliente,gravarCliente,definirCliente}=App;
@@ -50,8 +67,8 @@
   if(!l){$("#app").innerHTML=`${topo()}<p>Loja não encontrada.</p>${nav("rota")}`;return;}
   const nome=nomeLoja(l.nome);definirCliente(l);let c=await cliente(l);
   if(!(c.manual&&c.manual.editado)){location.href=`visita.html?l=${encodeURIComponent(slug)}`;return;}  // catálogo só depois do logotipo limpo
-  const G=await (await fetch("gabaritos.json?v=558c62664d")).json();
-  await App.carregarScript("kits14.js?v=558c62664d");
+  const G=await (await fetch("gabaritos.json?v=9939870b4d")).json();
+  await App.carregarScript("kits14.js?v=9939870b4d");
   // os 16 produtos do kit de 14 setores (10/11); a foto de cada um é a do ramo da loja
   const CAT=await Promise.all([["capacho","Capacho"],["placas","Placa"],["adesivos","Adesivo de vitrine"],["uniformes","Camisa polo"],["impressos","Cartão de visita"],["panfleto",/padaria|restaurante|bar|cafeteria/.test(l.setor||"")?"Flyer · cardápio":"Flyer · produtos e serviços"],["banners","Banner retrátil"],["parede","Adesivo de parede · rotas"],["brindes","Ecobag"],["carimbo","Carimbo"],["windbanner","Wind banner"],["faixa","Faixa"],["folheto","Folheto promocional"],["camiseta","Camiseta"],["bone","Boné"],["avental","Avental"]].map(async([id,n])=>({id,nome:n,img:await Kits14.foto(l.setor,id,true)})));
   const SERV=[{id:"mostraai",nome:"Mostraí · TV de ofertas",desc:"Sua TV em pé com itens, preços e destaque · muda pelo celular",ic:"📺"},{id:"falaai",nome:"Fala Aí · atendente no telefone",desc:"URA com o nome da loja · frases gravadas do sistema",ic:"📞"},{id:"inpi",nome:"Registro de marca (INPI)",desc:"Proteção do nome e do logo",ic:"®"}];
@@ -88,6 +105,38 @@
   // propostas duplicadas no orçamento ("camiseta~2"): cada uma tem o seu card, com arte e cor próprias
   const variantes=id=>Object.keys(S).filter(k=>k.startsWith(id+"~")).sort((a,b)=>+a.split("~")[1]-+b.split("~")[1]).map(k=>{const b=CAT.find(x=>x.id===id);return {id:k,nome:`${b.nome} · ${k.split("~")[1]}`,img:b.img};});
   const catDe=id=>CAT.find(x=>x.id===id)||(()=>{const b=CAT.find(x=>x.id===App.baseId(id));return b?{id,nome:`${b.nome} · ${String(id).split("~")[1]}`,img:b.img}:{id,nome:id};})();
+  // locação: kit tapete + wind banner (imagens padrão do escritório), tema trocado aqui; no lugar da quantidade, o dia da retirada (15 dias)
+  const Rb=v=>Number(v).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
+  function cartaoLoc(id){const s=S[id]||{q:0},tema=s.tema||"liquidacao",t=App.LOC_TEMAS.find(x=>x.id===tema),pr=App.precoLocacao(s.inicio),n=id.includes("~")?" · "+id.split("~")[1]:"";
+    return `<div class="prod ${s.q>0?"sel":""}" id="p-${id}" data-p="${id}" data-loc="1">
+      <div class="cena loc-cena">${App.LOC_IMG.map(u=>`<img src="${u}" alt="" loading="lazy">`).join("")}<span class="tema t-${tema}">${esc(t.nome)}</span></div><span class="dup"><button type="button" class="menos" data-tira aria-label="${n?"tirar esta proposta":"não quero"}">−</button><button type="button" data-dup aria-label="duplicar esta proposta">+</button></span>
+      <b>Kit locação${n}</b><div class="preco-p">${s.inicio?(pr!=null?`<b>${Rb(pr)}</b><small>15 dias · tapete + wind banner</small>`:`<small>preço a confirmar para essa data · 15 dias</small>`):`<small>tapete + wind banner · 15 dias · preço pela data de retirada</small>`}</div>
+      <div class="st ${s.q>0?"ok":""}">${s.q>0?"✓ no orçamento":"escolha o tema e o dia"}</div>
+      <div class="temas">${App.LOC_TEMAS.map(x=>`<button type="button" data-tema="${x.id}" class="${x.id===tema?"on":""}">${esc(x.nome)}</button>`).join("")}</div>
+      <button type="button" class="ir" data-cal style="border:0;width:calc(100% - 24px)">📅 ${s.inicio?`Retira ${App.diaBR(s.inicio)} · devolve ${App.diaBR(App.locFim(s.inicio))}`:"Escolher o dia da retirada"}</button></div>`;}
+  const resId=k=>slug+"|"+k;
+  async function abrirCal(k){const s=S[k]||{},tema=s.tema||"liquidacao";const Rv=await App.reservasLoc();const hoje=App.isoDia(new Date());let ini=s.inicio||null;
+    let base=new Date((ini||hoje)+"T12:00:00");base.setDate(1);
+    const f=document.createElement("div");f.className="cal-fundo";document.body.appendChild(f);
+    const fechar=()=>f.remove();f.onclick=ev=>{if(ev.target===f)fechar();};
+    const desenha=()=>{const y=base.getFullYear(),m=base.getMonth(),pri=new Date(y,m,1).getDay(),nd=new Date(y,m+1,0).getDate();const fim=ini?App.locFim(ini):null;
+      let cel="";for(let i=0;i<pri;i++)cel+="<span></span>";
+      for(let d=1;d<=nd;d++){const iso=App.isoDia(new Date(y,m,d,12));const ok=iso>=hoje&&App.locLivre(Rv,tema,iso,resId(k));const p=App.precoLocacao(iso);
+        cel+=`<button type="button" data-d="${iso}" ${ok?"":"disabled"} class="${ini===iso?"ini":ini&&iso>ini&&iso<=fim?"faixa-dia":""}">${d}<small>${p!=null?Math.round(p):""}</small></button>`;}
+      const pr=ini?App.precoLocacao(ini):null;
+      f.innerHTML=`<div class="cal"><div class="mes"><button type="button" data-m="-1" aria-label="mês anterior">‹</button><b>${base.toLocaleDateString("pt-BR",{month:"long",year:"numeric"})}</b><button type="button" data-m="1" aria-label="próximo mês">›</button></div>
+        <p class="muted" style="margin:0 0 8px;font-size:13px">Kit ${esc(App.LOC_TEMAS.find(x=>x.id===tema).nome)} · toque no dia em que a loja retira; são sempre 15 dias. Dias riscados: sem kit livre.</p>
+        <div class="sem">${["D","S","T","Q","Q","S","S"].map(x=>`<span>${x}</span>`).join("")}</div><div class="dias">${cel}</div>
+        <div class="res">${ini?`Retira <b>${App.diaBR(ini)}</b> · devolve <b>${App.diaBR(fim)}</b> · ${pr!=null?`<b>${Rb(pr)}</b>`:"preço a confirmar para essa data"}`:"Nenhum dia escolhido."}</div>
+        <div class="acoes-cal"><button type="button" class="btn sec" data-x>${s.inicio?"Tirar data":"Fechar"}</button><button type="button" class="btn" data-ok ${ini?"":"disabled"}>Confirmar</button></div></div>`;
+      f.querySelectorAll("[data-m]").forEach(b=>b.onclick=()=>{base.setMonth(base.getMonth()+ +b.dataset.m);desenha();});
+      f.querySelectorAll("[data-d]").forEach(b=>b.onclick=()=>{ini=b.dataset.d;desenha();});
+      f.querySelector("[data-x]").onclick=async()=>{if(s.inicio){await App.reservarLoc({id:resId(k),inicio:null});const o=S[k];delete o.inicio;o.q=0;salvar(e);}fechar();render();};
+      f.querySelector("[data-ok]").onclick=async ev=>{ev.target.disabled=true;ev.target.textContent="Reservando…";
+        const ok=await App.reservarLoc({id:resId(k),slug,loja:nomeLoja(l.nome),tema,inicio:ini});
+        if(!ok){alert("Esse período acabou de ser reservado por outra loja. Escolha outro dia.");fechar();abrirCal(k);return;}
+        S[k]={...(S[k]||{}),q:1,locacao:true,tema,inicio:ini,nome:"Kit locação"};salvar(e);fechar();render();};};
+    desenha();}
   function render(){const n=Object.values(S).filter(v=>v&&v.q>0).length;const artes=c.artes||{};
     $("#app").innerHTML=`${topo()}${voltar(`visita.html?l=${encodeURIComponent(slug)}`,"Visita")}
     <h1>Produtos e serviços</h1><p class="sub">${esc(nome)} · ${esc(setorNome(l.setor))}</p>
@@ -101,18 +150,26 @@
       ${p.id==="capacho"?`<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:0 12px 8px"><a class="ir" style="margin:0" href="capacho.html?l=${encodeURIComponent(slug)}&n=${encodeURIComponent(nomeLoja(l.nome))}">${A?"Editar →":"Montar →"}</a><a class="ir" style="margin:0;background:var(--navy);color:#fff" href="capacho.html?l=${encodeURIComponent(slug)}&n=${encodeURIComponent(nomeLoja(l.nome))}&ver=1" title="foto do local · ao vivo">👁 Visualizar</a></div>`:(A?`<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:0 12px 8px"><a class="ir" style="margin:0" href="editor.html?l=${encodeURIComponent(slug)}&p=${p.id}">Editar →</a>${UNI_CORES.has(App.baseId(p.id))?`<a class="ir" style="margin:0;background:var(--navy);color:#fff" href="provar.html?l=${encodeURIComponent(slug)}&p=${p.id}" title="foto de quem vai vestir: recorte, cor e estampa no lugar">📷 Provar na foto</a>`:`<a class="ir" style="margin:0;background:var(--navy);color:#fff" href="local.html?l=${encodeURIComponent(slug)}&p=${p.id}" title="câmera ao vivo · a peça no lugar">👁 No local</a>`}</div>`:(UNI_CORES.has(App.baseId(p.id))?`<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:0 12px 8px"><a class="ir" style="margin:0" href="editor.html?l=${encodeURIComponent(slug)}&p=${p.id}">Criar arte</a><a class="ir" style="margin:0;background:var(--navy);color:#fff" href="provar.html?l=${encodeURIComponent(slug)}&p=${p.id}">📷 Provar na foto</a></div>`:`<a class="ir" href="editor.html?l=${encodeURIComponent(slug)}&p=${p.id}">Criar arte</a>`))}
       ${UNI_CORES.has(App.baseId(p.id))&&(A||(c.manual&&c.manual.editado))?coresPeca(p.id,A||{}):""}${p.id==="adesivos"?formatoVitrine():""}<div class="qtd"><button data-m="-">−</button><span class="${s.q>0?"":"zero"}">${s.q>0?(p.id==="capacho"?s.q+" un.":App.qtdNormal(p.id,s.q).toLocaleString("pt-BR")+" un."+(s.grade?" · grade":"")):"não quero"}</span><button data-m="+">+</button></div></div>`;};
       const comVar=p=>[p,...variantes(p.id)];return `<div class="grade">${CAT.filter(p=>!UNI.includes(p.id)).flatMap(comVar).map(cartao).join("")}</div><h2 style="margin:22px 0 10px">Uniforme</h2><div class="grade">${UNI.map(id=>CAT.find(p=>p.id===id)).filter(Boolean).flatMap(comVar).map(cartao).join("")}</div>`;})()}
+    <h2 style="margin:22px 0 10px">Locação</h2>
+    <div class="grade">${["locacao",...Object.keys(S).filter(k=>k.startsWith("locacao~")).sort((a,b)=>+a.split("~")[1]-+b.split("~")[1])].map(cartaoLoc).join("")}</div>
     <h2 style="margin:22px 0 10px">Serviços</h2>
     ${SERV.flatMap(s=>[s,...Object.keys(S).filter(k=>k.startsWith(s.id+"~")).sort((a,b)=>+a.split("~")[1]-+b.split("~")[1]).map(k=>({...s,id:k,nome:`${s.nome} · ${k.split("~")[1]}`}))]).map(s=>{const on=!!(S[s.id]&&S[s.id].q>0);const sb=App.baseId(s.id);return `<div class="card serv" data-s="${s.id}"><span class="ic">${s.ic}<span class="dup"><button type="button" class="menos" data-stira aria-label="${s.id.includes("~")?"tirar esta proposta":"não quero"}">−</button><button type="button" data-sdup aria-label="duplicar esta proposta">+</button></span></span><div><b>${esc(s.nome)}</b><small>${esc(s.desc)}${on?" · <b style='color:#0E8A84'>no orçamento</b>":""}</small></div><button class="tog ${on?"on":""}" data-t="${s.id}" aria-label="${esc(s.nome)}"></button>${sb==="mostraai"?`<div class="mostra-acao"><img class="mostrai-ref" src="${MOSTRAI_IMG}" alt="Mostraí numa loja do ramo" loading="lazy"><div class="planos">${PLANOS.map(p=>`<button type="button" class="plano ${on&&(S[s.id].plano||"comodato")===p.id?"on":""}" data-plano="${p.id}"><b>${p.rot}</b><small>${p.txt}</small></button>`).join("")}</div>${s.id==="mostraai"?`<button type="button" class="btn sec sm" id="acionarMostra">${c.mostra&&c.mostra.token?"📺 Abrir tela e programação":"📺 Acionar o Mostraí desta loja"}</button>`:""}</div>`:""}</div>`;}).join("")}
     <p class="ilus">Preços entram na fase do orçamento.</p>
     <div class="acoes"><div class="w"><a class="btn sec" href="visita.html?l=${encodeURIComponent(slug)}">← Visita</a><a class="btn" href="orcamento.html?l=${encodeURIComponent(slug)}">Orçamento →</a></div></div>
     ${nav("rota")}`;document.body.classList.add("com-acoes");
+    $$(".prod [data-tema]").forEach(b=>b.onclick=async()=>{const k=b.closest(".prod").dataset.p;const s=S[k]=S[k]||{q:0,locacao:true,nome:"Kit locação"};const novo=b.dataset.tema;if(s.tema===novo)return;
+      if(s.inicio){const ok=await App.reservarLoc({id:resId(k),slug,loja:nomeLoja(l.nome),tema:novo,inicio:s.inicio});if(!ok){alert("Não há kit desse tema livre nesse período. Escolha outro dia.");await App.reservarLoc({id:resId(k),inicio:null});delete s.inicio;s.q=0;}}
+      s.tema=novo;salvar(e);render();});
+    $$(".prod [data-cal]").forEach(b=>b.onclick=()=>abrirCal(b.closest(".prod").dataset.p));
     // + na foto: duplica a proposta (outra cor, outra arte, outra quantidade) num card próprio logo abaixo; − na foto: tira a cópia (no card original, "não quero")
     $$(".prod [data-dup]").forEach(b=>b.onclick=async ev=>{ev.stopPropagation();const k=b.closest(".prod").dataset.p;const kb=App.baseId(k);
       if(kb==="capacho"){location.href=`capacho.html?l=${encodeURIComponent(slug)}&n=${encodeURIComponent(nomeLoja(l.nome))}`;return;}   // outro tapete: o motor do capacho monta vários no mesmo orçamento
+      if(kb==="locacao"){let n=2;while(S["locacao~"+n])n++;S["locacao~"+n]={q:0,locacao:true,tema:(S[k]&&S[k].tema)||"liquidacao",nome:"Kit locação"};salvar(e);render();return;}   // outro kit: escolhe tema e dia próprios
       let n=2;while(S[kb+"~"+n])n++;const nk=kb+"~"+n;const s0=S[k]||{q:0};S[nk]={...s0,nome:catDe(nk).nome,q:s0.q>0?s0.q:App.passoQtd(nk,0,1)};salvar(e);
       c=await cliente(l);c.artes=c.artes||{};if(c.artes[k])c.artes[nk]=JSON.parse(JSON.stringify(c.artes[k]));if(c.formatos&&c.formatos[k])c.formatos[nk]=JSON.parse(JSON.stringify(c.formatos[k]));if(c.artes[nk]||(c.formatos&&c.formatos[nk]))await App.gravarCliente(c);
       render();setTimeout(()=>{const el=document.getElementById("p-"+nk);if(el)el.scrollIntoView({behavior:"smooth",block:"center"});},60);});
     $$(".prod [data-tira]").forEach(b=>b.onclick=async ev=>{ev.stopPropagation();const k=b.closest(".prod").dataset.p;
+      if(App.baseId(k)==="locacao"){if(S[k]&&S[k].inicio)await App.reservarLoc({id:resId(k),inicio:null});if(k.includes("~"))delete S[k];else if(S[k]){delete S[k].inicio;S[k].q=0;}salvar(e);render();return;}
       if(k.includes("~")){delete S[k];const P=(e.pedidos||{})[slug];if(P&&P.desc)delete P.desc[k];salvar(e);c=await cliente(l);let mud=false;if(c.artes&&c.artes[k]){delete c.artes[k];mud=true;}if(c.formatos&&c.formatos[k]){delete c.formatos[k];mud=true;}if(mud)await App.gravarCliente(c);}
       else if(S[k]){S[k].q=0;salvar(e);}render();});
     $$(".prod .qtd button").forEach(b=>b.onclick=()=>{const id=b.closest(".prod").dataset.p;if(S[id]&&S[id].grade&&S[id].q>0){location.href=`orcamento.html?l=${encodeURIComponent(slug)}#${id}`;return;}   // quantidade já distribuída por modelo e tamanho: ajusta na grade do orçamento
