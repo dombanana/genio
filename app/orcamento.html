@@ -6,7 +6,7 @@
 <title>GênIO · Orçamento</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="app.css?v=f42b2de279">
+<link rel="stylesheet" href="app.css?v=54c5e8020d">
 <style>
 .orc{background:#fff;border-radius:18px;padding:6px 10px;margin:0 0 12px;box-shadow:0 1px 0 rgba(28,22,53,.06)}
 .ln{display:grid;grid-template-columns:52px minmax(0,1fr) auto;gap:8px;align-items:center;padding:7px 0;border-bottom:1px solid #F0EDF6}
@@ -48,7 +48,7 @@
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=f42b2de279"></script>
+<script src="app.js?v=54c5e8020d"></script>
 <script>
 (async()=>{
   const {$,$$,esc,qs,sessao,dados,nav,topo,voltar,nomeLoja,estado,salvar,cliente,definirCliente}=App;
@@ -69,7 +69,7 @@
     const e=estado();const S=(e.sel||{})[slug]||{};const P=((e.pedidos||{})[slug])||{};
     const O=App.orcamento(c,S,P);
     $("#app").innerHTML=`${topo()}${voltar(`produtos.html?l=${encodeURIComponent(slug)}`,"Produtos")}
-    <h1>Orçamento</h1><p class="sub">${esc(nome)}</p>
+    ${App.cabCliente(l,{titulo:"Orçamento",extra:O.linhas.length?`${O.linhas.length} item(ns) · total ${R(O.total)}${O.frete!=null?" com frete":" · frete a definir"}`:""})}
     ${O.linhas.length?`<div class="orc">${O.linhas.map(x=>`<div class="ln" data-k="${x.k}">
         <div class="fig">${x.img?`<img src="${esc(x.img)}" alt="" loading="lazy">`:(ICON[x.base]||"▫")}</div>
         <div class="nm"><b>${esc(x.nome)}</b>${x.servico||x.base==="locacao"||x.base==="capacho"?"":`<button type="button" class="fo ${x.fornProprio?"proprio":""}" data-fo="1">🏭 ${esc(x.forn?x.forn.nome+(x.forn.prazo?` · ${x.forn.prazo} dias`:"")+(x.forn.preco?"":" · preço da tabela"):"Printi / GIV")}${x.fornProprio?" · só neste":""} ▾</button>`}<div class="sub2">${GRADE.has(x.base)&&somaG(S[x.k])?`<small>${x.q.toLocaleString("pt-BR")} un. pela grade</small>`:x.fixa?(x.k==="capacho"&&x.q>1?`<small>${x.q} un. · </small>`:""):`<span class="qt"><button type="button" data-q="-">−</button><span>${x.q.toLocaleString("pt-BR")}</span><button type="button" data-q="+">+</button></span>`}${GRADE.has(x.base)&&somaG(S[x.k])?"":`<small>${x.lote||!x.fixa?"un. · ":""}${esc(x.unid||"")}</small>`}</div></div>

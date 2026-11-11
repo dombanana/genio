@@ -457,3 +457,9 @@ svg.icone .w{fill:none}
 .prod .fmt-v{margin:4px 12px 8px;display:grid;gap:6px}.prod .fmt-v select{font:inherit;font-size:14px;padding:8px;border-radius:10px;border:1.5px solid var(--linha);background:#fff}.prod .fmt-v .ori{display:grid;grid-template-columns:1fr 1fr;gap:6px}.prod .fmt-v .ori button{font:inherit;font-size:13px;font-weight:600;min-height:38px;border-radius:10px;border:1.5px solid var(--linha);background:#fff;color:var(--texto2);cursor:pointer}.prod .fmt-v .ori button.on{border-color:var(--marca);color:var(--marca);background:var(--lav)}
 .tab-lucro{width:100%;border-collapse:collapse;margin:10px 0 6px;font-size:14px}.tab-lucro th{text-align:left;font-weight:600;color:var(--muted,#667);padding:6px 4px;border-bottom:1px solid #e6e2f0}.tab-lucro td{padding:6px 4px;border-bottom:1px solid #f0edf6}.tab-lucro td small{color:#889;font-size:12px}.tab-lucro td:nth-child(n+2),.tab-lucro th:nth-child(n+2){text-align:right;white-space:nowrap}
 .valor-ped{margin:6px 0 2px;font-size:14px;color:#3b3550}.valor-ped b{color:#141024}.valor-ped small{color:#8a84a0}
+
+/* cabeçalho do cliente nas telas da loja: produto/etapa em cima, loja, ramo · endereço · estrelas, e os detalhes de cada nível */
+.cab-cli{margin:0 0 12px}.cab-cli h1{margin:0 0 2px;font-size:24px;line-height:1.15}
+.cab-cli .cc-tit{display:block;font-size:13px;font-weight:700;letter-spacing:.02em;color:var(--marca);text-transform:uppercase;margin:0 0 2px}
+.cab-cli .sub{margin:0}.cab-cli .sub a{color:var(--marca);text-decoration:underline;text-underline-offset:3px}
+.cab-cli .cc-x{margin:6px 0 0;font-size:13.5px;color:var(--texto);background:#fff;border-radius:10px;padding:7px 10px;line-height:1.4}

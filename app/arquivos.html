@@ -6,7 +6,7 @@
 <title>GênIO · Arquivos da loja</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="app.css?v=f42b2de279">
+<link rel="stylesheet" href="app.css?v=54c5e8020d">
 <style>
 .arq-g{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .arq-g figure{margin:0;position:relative;aspect-ratio:1/1;border-radius:12px;overflow:hidden;background:#fff;display:grid;place-items:center;box-shadow:0 1px 0 rgba(28,22,53,.06)}
@@ -22,7 +22,7 @@
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=f42b2de279"></script>
+<script src="app.js?v=54c5e8020d"></script>
 <script>
 (async()=>{
   const {$,$$,esc,qs,sessao,dados,ficha,cliente,gravarCliente,definirCliente,nomeLoja,topo,voltar,nav,removerLogo,listarNotas,apagarNota}=App;
@@ -50,7 +50,7 @@
   const fig=(x,i,grupo)=>`<figure data-g="${grupo}" data-i="${i}">${x.src?`<img src="${esc(x.src)}" alt="" loading="lazy">`:`<span class="ic">${x.video?"🎬":x.audio?"🎙":"📝"}</span>`}<span class="tag">${esc(x.tag)}</span><button type="button" class="x" data-x aria-label="apagar">×</button></figure>`;
   let G=null;
   function render(){G=itens();const n=G.fotos.length+G.trab.length+G.nts.length;
-    $("#app").innerHTML=`${topo()}${voltar(volta[0],volta[1])}<h1>Arquivos</h1><p class="sub">${esc(nome)} · ${n} arquivo(s) · toque para ver, × para apagar</p>
+    $("#app").innerHTML=`${topo()}${voltar(volta[0],volta[1])}${App.cabCliente(l,{titulo:"Arquivos",extra:`${n} arquivo(s) · toque para ver, × para apagar`})}
     <section class="card"><h2>Fotos e imagens</h2>${G.fotos.length?`<div class="arq-g">${G.fotos.map((x,i)=>fig(x,i,"fotos")).join("")}</div>`:`<p class="vazio">Nenhuma imagem.</p>`}</section>
     <section class="card"><h2>Artes e provas</h2>${G.trab.length?`<div class="arq-g">${G.trab.map((x,i)=>fig(x,i,"trab")).join("")}</div>`:`<p class="vazio">Nenhuma arte ainda.</p>`}</section>
     <section class="card"><h2>Notas da loja</h2>${G.nts.length?`<div class="arq-g">${G.nts.map((x,i)=>fig(x,i,"nts")).join("")}</div>`:`<p class="vazio">Nenhuma nota ligada a esta loja.</p>`}</section>
