@@ -519,6 +519,72 @@ def peca_provar(d):
     ok, jpg = cv2.imencode(".jpg", out, [cv2.IMWRITE_JPEG_QUALITY, 86])
     return {"id": pid, "peca": peca, "w": int(img.shape[1]), "h": int(img.shape[0]), "medidas": med, "jpg": "data:image/jpeg;base64," + base64.b64encode(jpg.tobytes()).decode()}
 
+# ---- Mostraí: arquivos da loja e pesquisa de imagem dentro da programação (o código do Mostraí é a chave; só leitura da ficha)
+def mostra_arquivos(token):
+    """imagens ligadas à loja (logotipos, fachada, produtos, arquivo, artes e provas) para escolher a foto de uma tela"""
+    est = MOSTRA.ler(token)
+    if not est:
+        raise FileNotFoundError
+    f = DADOS.cliente_ler(est["slug"]) or {}
+    out, vistos = [], set()
+    def add(src, tag):
+        if isinstance(src, str) and src and src not in vistos and src not in (f.get("descartadas") or []):
+            vistos.add(src); out.append({"tag": tag, "src": src})
+    m = f.get("manual") or {}
+    add(m.get("tratado"), "Logotipo tratado")
+    for x in f.get("logos") or []:
+        add(x.get("src"), "Logotipo")
+    add((f.get("fachada") or {}).get("src"), "Fachada")
+    for x in f.get("produtos") or []:
+        add(x.get("src"), "Produto")
+    for x in f.get("arquivo") or []:
+        add(x.get("src"), "Arquivo")
+    for k, a in (f.get("artes") or {}).items():
+        if isinstance(a, dict):
+            add(a.get("contexto") or a.get("png"), "Arte · " + k.split("~")[0])
+            for pr in a.get("provas") or []:
+                add((pr or {}).get("src"), "Prova · " + k.split("~")[0])
+    return out[:80]
+
+def mostra_arquivo_bytes(token, i):
+    """bytes da i-ésima imagem da loja (para a miniatura e para virar foto da tela)"""
+    lista = mostra_arquivos(token)
+    if not (0 <= i < len(lista)):
+        raise FileNotFoundError
+    src = lista[i]["src"]
+    if src.startswith("data:image/"):
+        cab, b64 = src.split(",", 1); return cab[5:].split(";")[0], base64.b64decode(b64)
+    if src.startswith("/api/arq/"):
+        pt = src.split("?")[0].split("/")
+        return DADOS.arquivo(pt[3], pt[4], pt[5])
+    if src.startswith("http"):
+        return proxy_img(src)
+    rel = src.split("?")[0].lstrip("/")
+    cam = os.path.realpath(os.path.join(RAIZ, rel))
+    if not cam.startswith(os.path.realpath(os.path.join(RAIZ, "dados")) + os.sep) and not cam.startswith(os.path.realpath(os.path.join(RAIZ, "brand")) + os.sep):
+        raise ValueError("caminho inválido")
+    ext = cam.rsplit(".", 1)[-1].lower()
+    with open(cam, "rb") as fh:
+        return {"png": "image/png", "webp": "image/webp"}.get(ext, "image/jpeg"), fh.read()
+
+def mostra_foto_de(token, d):
+    """foto de uma tela a partir de um arquivo da loja ({arquivo: i}) ou de uma imagem da pesquisa ({url}); vira JPEG de até 1080 px"""
+    import numpy as np, cv2
+    if d.get("arquivo") is not None:
+        _, raw = mostra_arquivo_bytes(token, int(d["arquivo"]))
+    else:
+        _, raw = proxy_img(str(d.get("url") or ""))
+    img = cv2.imdecode(np.frombuffer(raw, np.uint8), cv2.IMREAD_UNCHANGED)
+    if img is None:
+        raise ValueError("imagem ilegível")
+    if img.ndim == 3 and img.shape[2] == 4:   # PNG com transparência: fundo branco
+        a = img[..., 3:4].astype(np.float32) / 255; img = (img[..., :3].astype(np.float32) * a + 255 * (1 - a)).astype(np.uint8)
+    elif img.ndim == 2:
+        img = cv2.cvtColor(img, cv2.COLOR_GRAY2BGR)
+    k = min(1.0, 1080 / max(img.shape[:2])); img = cv2.resize(img, None, fx=k, fy=k, interpolation=cv2.INTER_AREA) if k < 1 else img
+    ok, jpg = cv2.imencode(".jpg", img, [cv2.IMWRITE_JPEG_QUALITY, 84])
+    return MOSTRA.foto_gravar(token, "data:image/jpeg;base64," + base64.b64encode(jpg.tobytes()).decode(), d.get("tela"))
+
 def kit_aplicar(d):
     """Contextualização: a arte feita no editor (PNG transparente, base64) aplicada na capa calibrada do kit do setor."""
     import hashlib, tempfile
@@ -841,6 +907,16 @@ class H(BaseHTTPRequestHandler):
                     if len(partes) == 5 and partes[4].startswith(("logo.", "foto.", "foto-")):
                         ct, raw = MOSTRA.logo(partes[3], partes[4])
                         return self._send(200, body=raw, ctype=ct, cache="public, max-age=600")
+                    if len(partes) == 5 and partes[4] == "arquivos":
+                        return self._send(200, {"itens": [{"i": i, "tag": x["tag"]} for i, x in enumerate(mostra_arquivos(partes[3]))]})
+                    if len(partes) == 6 and partes[4] == "arquivo" and partes[5].isdigit():
+                        ct, raw = mostra_arquivo_bytes(partes[3], int(partes[5]))
+                        return self._send(200, body=raw, ctype=ct, cache="private, max-age=600")
+                    if len(partes) == 5 and partes[4] == "busca":
+                        if not MOSTRA.ler(partes[3]):
+                            return self._erro(404, "este Mostraí não existe")
+                        qb = {k: v[0] for k, v in _parse_qs(urlparse(self.path).query or "").items()}
+                        return self._send(200, busca_imagens(qb.get("q", "")[:120]))
                     if len(partes) == 5 and partes[4] == "mensagens":
                         est = MOSTRA.ler(partes[3])
                         if not est:
@@ -1005,7 +1081,10 @@ class H(BaseHTTPRequestHandler):
         try:
             if p.startswith("/api/mostra/") and p.endswith("/foto") and len(p.split("/")) == 5:   # foto principal da tela
                 try:
-                    return self._send(200, MOSTRA.foto_gravar(p.split("/")[3], (j := self._json()).get("foto"), j.get("tela")))
+                    j = self._json_grande()
+                    if j.get("arquivo") is not None or j.get("url"):
+                        return self._send(200, mostra_foto_de(p.split("/")[3], j))
+                    return self._send(200, MOSTRA.foto_gravar(p.split("/")[3], j.get("foto"), j.get("tela")))
                 except FileNotFoundError:
                     return self._erro(404, "este Mostraí não existe")
                 except ValueError as e:

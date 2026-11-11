@@ -65,13 +65,24 @@ details.av>summary::after{content:"▾";color:var(--roxo)}details.av[open]>summa
 .m small{display:block;font-size:11px;opacity:.75;margin-top:3px}
 textarea{width:100%;box-sizing:border-box;font:inherit;font-size:16px;padding:10px 12px;border:1px solid var(--linha);border-radius:10px;resize:vertical}
 .enviar{margin-top:8px;width:100%;min-height:46px;border:0;border-radius:12px;background:var(--roxo);color:#fff;font:700 15px Rubik,system-ui;cursor:pointer}
+/* origem da foto da tela: câmera, arquivo, arquivos da loja, pesquisa */
+.fo-fundo{position:fixed;inset:0;z-index:50;background:rgba(28,22,53,.45);display:flex;align-items:flex-end;justify-content:center}
+.fo-folha{background:#fff;border-radius:20px 20px 0 0;width:100%;max-width:640px;max-height:88vh;overflow:auto;padding:14px 14px calc(16px + env(safe-area-inset-bottom))}
+.fo-folha h3{margin:0 0 10px;font-size:17px}
+.fo-ops{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.fo-ops button{min-height:64px;border-radius:14px;border:1px solid var(--linha);background:var(--lav);font:600 15px Rubik,system-ui,sans-serif;color:var(--roxo);cursor:pointer}
+.fo-g{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:10px}
+.fo-g button{position:relative;aspect-ratio:1/1;border:0;border-radius:10px;overflow:hidden;background:#F2EFF9 center/contain no-repeat;cursor:pointer;padding:0}
+.fo-g button span{position:absolute;left:4px;right:4px;bottom:4px;background:rgba(20,16,36,.7);color:#fff;font-size:10px;border-radius:6px;padding:2px 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fo-busca{display:flex;gap:6px}.fo-busca input{flex:1}.fo-busca button{border:0;border-radius:10px;background:var(--roxo);color:#fff;font:600 15px Rubik,system-ui,sans-serif;padding:0 14px}
+.fo-voltar{margin-top:12px;width:100%;min-height:46px;border-radius:12px;border:1px solid var(--linha);background:#fff;font:600 15px Rubik,system-ui,sans-serif;color:var(--texto2)}
 </style>
 </head>
 <body>
 <div id="cab"></div>
 <div class="previa-box" id="pv" hidden></div>
 <div id="app"></div>
-<input type="file" id="arq" accept="image/*" hidden>
+<input type="file" id="arq" accept="image/*" hidden><input type="file" id="cam" accept="image/*" capture="environment" hidden>
 <div class="estado" id="estado"><span class="pt" id="pt"></span><span id="txt">Carregando…</span><a id="verTela" href="#" target="_blank" rel="noopener">Ver a tela ↗</a></div>
 <script>
 (()=>{
@@ -150,7 +161,7 @@ textarea{width:100%;box-sizing:border-box;font:inherit;font-size:16px;padding:10
     $$("[data-ta]").forEach(b=>b.onclick=()=>{const ti=+b.closest("[data-tela-card]").dataset.telaCard;const L=E.telas;const a=b.dataset.ta;
       if(a==="rm"){if(L.length<2)return alert("A TV precisa de pelo menos uma tela.");if(!confirm(`Tirar a Tela ${ti+1} da TV?`))return;L.splice(ti,1);atual=Math.min(atual,L.length-1);}
       else if(a==="sobe"&&ti>0){[L[ti-1],L[ti]]=[L[ti],L[ti-1]];atual=ti-1;}else if(a==="desce"&&ti<L.length-1){[L[ti+1],L[ti]]=[L[ti],L[ti+1]];atual=ti+1;}render();agendar();});
-    $$("[data-foto]").forEach(b=>b.onclick=()=>{fotoAlvo=+b.dataset.foto;$("#arq").click();});
+    $$("[data-foto]").forEach(b=>b.onclick=()=>{fotoAlvo=+b.dataset.foto;origemFoto();});
     $$("[data-semfoto]").forEach(b=>b.onclick=()=>{E.telas[+b.dataset.semfoto].foto=null;render();agendar();});
     $$(".tela .it input").forEach(inp=>inp.oninput=()=>{const it=inp.closest(".it");E.telas[+it.dataset.t].itens[+it.dataset.i][inp.dataset.k]=inp.value;agendar();});
     $$(".tela .it [data-a]").forEach(b=>b.onclick=()=>{const it=b.closest(".it");const ti=+it.dataset.t,i=+it.dataset.i;const L=E.telas[ti].itens;const a=b.dataset.a;
@@ -176,6 +187,30 @@ textarea{width:100%;box-sizing:border-box;font:inherit;font-size:16px;padding:10
       const r=await fetch(URL_API,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(corpo)});if(!r.ok)throw new Error(r.status);const d=await r.json();E.v=d.v;estado("ok","Na tela · "+agora());}
     catch(e){estado("erro","Não foi: confira a internet e mexa de novo.");}
     enviando=false;if(pendente)enviar();}
+  // de onde vem a foto da tela: câmera, arquivo do aparelho, arquivos da loja (o que já foi guardado na visita) ou pesquisa de imagem
+  function origemFoto(){const f=document.createElement("div");f.className="fo-fundo";document.body.appendChild(f);const fecha=()=>f.remove();f.onclick=ev=>{if(ev.target===f)fecha();};
+    const inicio=()=>{f.innerHTML=`<div class="fo-folha"><h3>Foto desta tela</h3><div class="fo-ops"><button type="button" data-o="cam">📷 Fotografar</button><button type="button" data-o="arq">📁 Enviar arquivo</button><button type="button" data-o="loja">🗂 Arquivos da loja</button><button type="button" data-o="busca">🔍 Pesquisa</button></div><button type="button" class="fo-voltar" data-x>Fechar</button></div>`;
+      f.querySelector("[data-x]").onclick=fecha;f.querySelectorAll("[data-o]").forEach(b=>b.onclick=()=>{const o=b.dataset.o;if(o==="cam"){fecha();$("#cam").click();}else if(o==="arq"){fecha();$("#arq").click();}else if(o==="loja")loja();else busca();});};
+    const usar=async corpo=>{const t=E.telas[fotoAlvo];fecha();estado("env","Colocando a foto…");
+      try{clearTimeout(timer);while(enviando)await new Promise(r=>setTimeout(r,150));await enviar();
+        const r=await fetch(URL_API+"/foto",{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify({...corpo,tela:t.id})});if(!r.ok)throw new Error(r.status);const d=await r.json();
+        const nova=(d.telas||[]).find(x=>x.id===t.id);t.foto=nova?nova.foto:d.foto;E.v=d.v;atual=fotoAlvo;render();estado("ok","Na tela · "+agora());}
+      catch(e){estado("erro","A foto não entrou: tente de novo.");}};
+    async function loja(){f.innerHTML=`<div class="fo-folha"><h3>Arquivos da loja</h3><p style="margin:0;color:var(--texto2);font-size:14px">Carregando…</p></div>`;
+      try{const r=await fetch(URL_API+"/arquivos",{cache:"no-store"});const d=await r.json();const it=d.itens||[];
+        f.innerHTML=`<div class="fo-folha"><h3>Arquivos da loja</h3>${it.length?`<div class="fo-g">${it.map(x=>`<button type="button" data-i="${x.i}" style="background-image:url('${URL_API}/arquivo/${x.i}')"><span>${esc(x.tag)}</span></button>`).join("")}</div>`:`<p style="color:var(--texto2);font-size:14px">Nenhuma foto guardada para esta loja ainda.</p>`}<button type="button" class="fo-voltar" data-v>← Voltar</button></div>`;
+        f.querySelector("[data-v]").onclick=inicio;f.querySelectorAll("[data-i]").forEach(b=>b.onclick=()=>usar({arquivo:+b.dataset.i}));}
+      catch(e){f.innerHTML=`<div class="fo-folha"><h3>Arquivos da loja</h3><p>Não consegui abrir os arquivos.</p><button type="button" class="fo-voltar" data-v>← Voltar</button></div>`;f.querySelector("[data-v]").onclick=inicio;}}
+    function busca(q){f.innerHTML=`<div class="fo-folha"><h3>Pesquisa de imagem</h3><form class="fo-busca"><input type="text" id="foQ" value="${esc(q||((E.nome||"")+" "+(E.titulo||"")).trim())}" placeholder="o que procurar" autocomplete="off"><button type="submit">Buscar</button></form><div id="foRes"></div><button type="button" class="fo-voltar" data-v>← Voltar</button></div>`;
+      f.querySelector("[data-v]").onclick=inicio;const res=f.querySelector("#foRes");
+      f.querySelector("form").onsubmit=async ev=>{ev.preventDefault();const t=f.querySelector("#foQ").value.trim();if(!t)return;res.innerHTML=`<p style="color:var(--texto2);font-size:14px">Buscando…</p>`;
+        try{const r=await fetch(URL_API+"/busca?q="+encodeURIComponent(t),{cache:"no-store"});const d=await r.json();const im=(d.imagens||[]).slice(0,24);
+          res.innerHTML=im.length?`<div class="fo-g">${im.map((x,i)=>`<button type="button" data-u="${esc(x.u)}" style="background-image:url('${esc(x.thumb||x.u)}')"><span>${esc(x.fonte||"")}</span></button>`).join("")}</div>`:`<p style="color:var(--texto2);font-size:14px">${esc(d.erro||"Nada encontrado.")}</p>`;
+          res.querySelectorAll("[data-u]").forEach(b=>b.onclick=()=>usar({url:b.dataset.u}));}
+        catch(e){res.innerHTML=`<p>Não consegui buscar agora.</p>`;}};
+      f.querySelector("form").requestSubmit();}
+    inicio();}
+  $("#cam").onchange=ev=>{const fl=ev.target.files[0];ev.target.value="";if(!fl)return;const dt=new DataTransfer();dt.items.add(fl);$("#arq").files=dt.files;$("#arq").dispatchEvent(new Event("change"));};
   // foto de cada tela: reduzida aqui (1080 px de largura) e guardada no servidor, ligada àquela tela
   $("#arq").onchange=async ev=>{const f=ev.target.files[0];ev.target.value="";if(!f||fotoAlvo==null)return;const t=E.telas[fotoAlvo];estado("env","Enviando a foto…");
     try{clearTimeout(timer);while(enviando)await new Promise(r=>setTimeout(r,150));await enviar();
