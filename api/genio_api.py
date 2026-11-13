@@ -368,7 +368,89 @@ def painel_dados(ac):
     msgs = [m for m in DADOS.mensagens_ler(ac["slug"]) if m.get("canal") in ("painel", "") or m.get("de") == "cliente"][-60:]
     return {"eu": {"nome": ac["nome"], "telefone": ac["telefone"]}, "loja": pn.get("loja") or {"nome": f.get("nome") or ac["slug"]},
             "orcamento": pn.get("orcamento"), "vendedor": pn.get("vendedor"), "em": pn.get("em"), "fotos": fotos,
-            "mensagens": [{"de": m.get("de"), "texto": m.get("texto"), "em": m.get("em")} for m in msgs]}
+            "mensagens": [{"de": m.get("de"), "texto": m.get("texto"), "em": m.get("em")} for m in msgs],
+            "cliente": DADOS.painel_cliente_ler(ac["slug"])}
+
+def _orc_pub(slug):
+    return ((DADOS.cliente_ler(slug) or {}).get("painel") or {}).get("orcamento") or {}
+
+def _brl(v):
+    s = f"{abs(v):,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
+    return ("-" if v < 0 else "") + "R$ " + s
+
+def painel_calcular(O, esc):
+    """total com as quantidades do cliente, só pelos valores que o vendedor publicou (opções da tabela do fornecedor)"""
+    linhas, soma = [], 0.0
+    for x in O.get("linhas") or []:
+        k, q, tot = x.get("k"), x.get("q"), x.get("total")
+        ops = x.get("opcoes") or []
+        if ops and k in esc and int(esc[k]) == 0:   # o cliente tirou o item
+            continue
+        if ops and k in esc:
+            achou = next((o for o in ops if int(o[0]) == int(esc[k])), None)
+            if achou is None:
+                raise ValueError(f"quantidade fora da tabela em {x.get('nome')}")
+            q, tot = int(achou[0]), float(achou[1])
+        if ops and int(q or 0) == 0:
+            continue
+        linhas.append({"k": k, "nome": x.get("nome"), "q": q, "total": tot, "servico": bool(x.get("servico"))})
+        soma += float(tot or 0)
+    fr = O.get("frete")
+    return linhas, round(soma, 2), round(soma + float(fr or 0), 2)
+
+def painel_escolhas(ac, d):
+    O = _orc_pub(ac["slug"])
+    esc = {str(k): int(v) for k, v in (d.get("escolhas") or {}).items() if str(v).lstrip("-").isdigit()}
+    painel_calcular(O, esc)   # valida
+    pc = DADOS.painel_cliente_ler(ac["slug"])
+    if (pc.get("pedido") or {}).get("confirmado"):
+        raise PermissionError("o pedido já foi confirmado pelo consultor")
+    pc["escolhas"] = esc; pc["escolhas_em"] = agora(); pc["escolhas_por"] = ac["nome"] or ac["telefone"]
+    DADOS.painel_cliente_gravar(ac["slug"], pc)
+
+def painel_fechar(ac, d):
+    O = _orc_pub(ac["slug"])
+    esc = {str(k): int(v) for k, v in (d.get("escolhas") or {}).items() if str(v).lstrip("-").isdigit()}
+    linhas, soma, total = painel_calcular(O, esc)
+    if not linhas or total <= 0:
+        raise ValueError("escolha pelo menos um produto")
+    g = O.get("pag") or {"pix": 5, "cartao": 8, "parc": 6, "sinal": 50}
+    forma = str(d.get("pagamento") or "")
+    if forma == "pix":
+        valor, txt = round(total * (1 - float(g["pix"]) / 100), 2), f"Pix à vista {_brl(round(total * (1 - float(g['pix']) / 100), 2))}"
+    elif forma == "cartao":
+        cart = round(total * (1 + float(g["cartao"]) / 100), 2); valor, txt = cart, f"cartão em até {int(g['parc'])}× · total {_brl(cart)}"
+    elif forma == "sinal":
+        sin = round(total * float(g["sinal"]) / 100, 2); valor, txt = total, f"sinal {_brl(sin)} + {_brl(round(total - sin, 2))} na entrega"
+    else:
+        raise ValueError("escolha a forma de pagamento")
+    pc = DADOS.painel_cliente_ler(ac["slug"])
+    if (pc.get("pedido") or {}).get("confirmado"):
+        raise PermissionError("o pedido já foi confirmado pelo consultor")
+    quem = ac["nome"] or ac["telefone"]
+    pc["escolhas"] = esc
+    pc["pedido"] = {"em": agora(), "por": quem, "telefone": ac["telefone"], "linhas": linhas, "frete": O.get("frete"), "soma": soma, "total": total,
+                    "pagamento": forma, "valor": valor, "texto_pagamento": txt}
+    DADOS.painel_cliente_gravar(ac["slug"], pc)
+    itens = ", ".join(f"{x['nome']}{'' if x['servico'] else ' (' + str(x['q']) + ' un.)'}" for x in linhas)
+    DADOS.mensagem_gravar(ac["slug"], "cliente", f"✅ Pedido fechado pelo painel: {itens} · total {_brl(total)} · {txt}.", "painel", quem + " · " + ac["telefone"])
+
+def painel_reabrir(ac):
+    pc = DADOS.painel_cliente_ler(ac["slug"])
+    if (pc.get("pedido") or {}).get("confirmado"):
+        raise PermissionError("o pedido já foi confirmado pelo consultor; fale com ele pela conversa")
+    if pc.get("pedido"):
+        pc.pop("pedido", None); DADOS.painel_cliente_gravar(ac["slug"], pc)
+        DADOS.mensagem_gravar(ac["slug"], "cliente", "↩ Reabri o pedido para ajustar.", "painel", (ac["nome"] or "cliente") + " · " + ac["telefone"])
+
+def painel_confirmar(slug, por):
+    pc = DADOS.painel_cliente_ler(slug)
+    if not pc.get("pedido"):
+        raise ValueError("não há pedido do cliente para confirmar")
+    pc["pedido"]["confirmado"] = agora(); pc["pedido"]["confirmado_por"] = por
+    DADOS.painel_cliente_gravar(slug, pc)
+    DADOS.mensagem_gravar(slug, "genio", "Pedido confirmado ✓. Agora vamos preparar a arte final para a sua aprovação.", "painel", por)
+    return pc
 
 def painel_arq(ac, src):
     """foto da ficha da loja para o painel (só arquivos da própria loja)"""
@@ -1050,6 +1132,10 @@ class H(BaseHTTPRequestHandler):
                         return self._erro(404, "arquivo não existe")
                     return self._send(200, body=raw, ctype=ct, cache="private, max-age=86400")
                 return self._send(200, painel_dados(ac))
+            if p.startswith("/api/clientes/") and p.endswith("/painel") and len(p.split("/")) == 5:
+                if not self._eu():
+                    return self._erro(401, "entre com a sua conta")
+                return self._send(200, DADOS.painel_cliente_ler(p.split("/")[3]))
             if p.startswith("/api/clientes/") and p.endswith("/acessos") and len(p.split("/")) == 5:
                 if not self._eu():
                     return self._erro(401, "entre com a sua conta")
@@ -1272,7 +1358,7 @@ class H(BaseHTTPRequestHandler):
                     return self._send(200, marca_preparar(self._json()))
                 except Exception as e:
                     return self._erro(500, "preparo falhou: " + str(e)[:160])
-            if p in ("/api/painel/entrar", "/api/painel/sair", "/api/painel/mensagem"):
+            if p in ("/api/painel/entrar", "/api/painel/sair", "/api/painel/mensagem", "/api/painel/escolhas", "/api/painel/fechar", "/api/painel/reabrir"):
                 if not self._origem_ok():
                     return self._erro(403, "origem não permitida")
                 if p == "/api/painel/sair":
@@ -1294,10 +1380,27 @@ class H(BaseHTTPRequestHandler):
                     return self._erro(401, "entre com o seu telefone e o seu código")
                 if not limite("pm:" + str(ac["id"]), 30, 3600):
                     return self._erro(429, "muitas mensagens seguidas. Tente daqui a pouco.")
-                quem = (ac["nome"] or "cliente") + " · " + ac["telefone"]
-                DADOS.mensagem_gravar(ac["slug"], "cliente", str(d.get("texto") or "")[:2000], "painel", quem)
+                try:
+                    if p == "/api/painel/escolhas":
+                        painel_escolhas(ac, d)
+                    elif p == "/api/painel/fechar":
+                        painel_fechar(ac, d)
+                    elif p == "/api/painel/reabrir":
+                        painel_reabrir(ac)
+                    else:
+                        quem = (ac["nome"] or "cliente") + " · " + ac["telefone"]
+                        DADOS.mensagem_gravar(ac["slug"], "cliente", str(d.get("texto") or "")[:2000], "painel", quem)
+                except PermissionError as e:
+                    return self._erro(409, str(e))
                 return self._send(200, painel_dados(ac))
             partes0 = p.split("/")
+            if p.startswith("/api/clientes/") and len(partes0) == 6 and partes0[4] == "painel" and partes0[5] == "confirmar":
+                eu = self._eu()
+                if not eu:
+                    return self._erro(401, "entre com a sua conta")
+                if not self._origem_ok():
+                    return self._erro(403, "origem")
+                return self._send(200, painel_confirmar(partes0[3], eu["nome"]))
             if p.startswith("/api/clientes/") and len(partes0) in (5, 7) and partes0[4] == "acessos":
                 eu = self._eu()
                 if not eu:

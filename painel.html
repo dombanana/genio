@@ -48,6 +48,17 @@ input:focus,textarea:focus{outline:2px solid var(--roxo);border-color:transparen
 .ver .t button{background:rgba(255,255,255,.16);color:#fff;border:0;border-radius:10px;min-height:38px;padding:0 14px;font:600 14px Rubik,system-ui,sans-serif}
 .ver .g{flex:1;overflow:auto;display:grid;gap:10px;align-content:start}.ver img{width:100%;border-radius:12px;background:#fff}
 .muted{color:var(--texto2);font-size:13.5px}
+.qt{display:inline-flex;align-items:center;gap:4px;margin-top:6px}
+.qt button{width:34px;height:34px;border-radius:10px;border:1.5px solid var(--linha);background:#fff;color:var(--roxo);font:700 18px/1 Rubik,system-ui,sans-serif;padding:0;cursor:pointer}
+.qt span{min-width:44px;text-align:center;font-weight:700;font-size:15px}
+.ln.fora{opacity:.5}.ln.fora .pr{text-decoration:line-through}
+.st{border-radius:16px;padding:14px;margin:14px 0 0;font-size:15px;line-height:1.45}.st.env{background:#FFF4DB;color:#6A4A00}.st.ok{background:#E3F6F3;color:#0B5E5A}.st b{display:block;font-size:17px;margin-bottom:2px}
+.formas{display:grid;gap:8px;margin:6px 0 0}
+.formas label{display:flex;align-items:center;gap:12px;margin:0;background:#fff;border:2px solid var(--linha);border-radius:14px;padding:12px 14px;cursor:pointer;font-weight:500}
+.formas label.on{border-color:var(--roxo);background:#F7F3FE}.formas input{width:22px;height:22px;accent-color:var(--roxo);flex:none}
+.formas .fv{margin-left:auto;font-weight:700;white-space:nowrap}.formas small{display:block;color:var(--texto2);font-size:12.5px}
+.folha{position:fixed;inset:0;z-index:60;background:rgba(20,16,36,.5);display:flex;align-items:flex-end;justify-content:center}
+.folha>div{background:var(--fundo);width:100%;max-width:640px;border-radius:22px 22px 0 0;padding:16px 16px calc(18px + env(safe-area-inset-bottom));max-height:92vh;overflow:auto}
 </style>
 </head>
 <body>
@@ -59,7 +70,17 @@ input:focus,textarea:focus{outline:2px solid var(--roxo);border-color:transparen
   const R=v=>(Math.round((+v||0)*100)/100).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
   const img=s=>!s?"":String(s).startsWith("/api/arq/")?"/api/painel/arq?s="+encodeURIComponent(s):s;
   const telF=t=>{const d=String(t||"").replace(/\D/g,"").slice(0,11);if(d.length<=2)return d;if(d.length<=6)return `(${d.slice(0,2)}) ${d.slice(2)}`;if(d.length<=10)return `(${d.slice(0,2)}) ${d.slice(2,6)}-${d.slice(6)}`;return `(${d.slice(0,2)}) ${d.slice(2,7)}-${d.slice(7)}`;};
-  const qs=new URLSearchParams(location.search);let D=null;
+  const qs=new URLSearchParams(location.search);let D=null,ESC={},salvarT=null;
+  // escolhas do cliente: só as quantidades da tabela publicada pelo consultor (0 = não quero)
+  const linhaAtual=x=>{if(!x.opcoes)return {q:x.q,total:x.total};const q=ESC[x.k]!=null?ESC[x.k]:x.q;if(q===0)return {q:0,total:0};const o=x.opcoes.find(o=>o[0]===q)||x.opcoes.find(o=>o[0]===x.q)||x.opcoes[0];return {q:o[0],total:o[1]};};
+  function contas(O){let soma=0;for(const x of O.linhas){const a=linhaAtual(x);if(a.total!=null)soma+=a.total;}soma=Math.round(soma*100)/100;return {soma,total:Math.round((soma+(+O.frete||0))*100)/100};}
+  function formas(O,total){const g=Object.assign({pix:5,cartao:8,parc:6,sinal:50},O.pag||{}),cart=total*(1+g.cartao/100),sin=total*g.sinal/100;
+    return [{id:"pix",t:"Pix à vista",d:g.pix?`${String(g.pix).replace(".",",")}% de desconto`:"sem desconto",v:R(total*(1-g.pix/100))},
+      {id:"cartao",t:`Cartão em até ${g.parc}×`,d:`total ${R(cart)}`,v:`${g.parc}× ${R(cart/g.parc)}`},
+      {id:"sinal",t:"Com sinal",d:`${String(g.sinal).replace(".",",")}% agora e o restante na entrega`,v:`${R(sin)} + ${R(total-sin)}`}];}
+  function passo(x,dir){const ops=x.opcoes;const q=linhaAtual(x).q;const i=ops.findIndex(o=>o[0]===q);
+    if(dir>0)ESC[x.k]=q===0?ops[0][0]:(ops[Math.min(ops.length-1,i+1)]||ops[0])[0];else ESC[x.k]=q===0?0:i<=0?0:ops[i-1][0];
+    clearTimeout(salvarT);salvarT=setTimeout(()=>api("/api/painel/escolhas",{escolhas:ESC}).then(d=>{D=d;}).catch(()=>{}),900);painel();}
   async function api(u,corpo){const r=await fetch(u,{method:corpo?"POST":"GET",credentials:"same-origin",headers:corpo?{"Content-Type":"application/json"}:{},body:corpo?JSON.stringify(corpo):undefined,cache:"no-store"});const d=await r.json().catch(()=>({}));if(!r.ok){const e=new Error(d.erro||("erro "+r.status));e.status=r.status;throw e;}return d;}
   // 1) entrar: telefone + código (o vendedor entrega o código; o aparelho fica lembrado por 90 dias)
   function entrar(msg){$("#sair").hidden=true;
@@ -74,29 +95,45 @@ input:focus,textarea:focus{outline:2px solid var(--roxo);border-color:transparen
       try{await api("/api/painel/entrar",{telefone:tel.value,codigo:cod.value});await abrir();}
       catch(e){b.disabled=false;b.textContent="Entrar";$("#err").textContent=e.status===403?"Telefone ou código não conferem.":e.message;}};}
   // 2) painel: cabeçalho da loja, orçamento, formas de pagamento, conversa
-  function painel(){const L=D.loja||{},O=D.orcamento,eu=D.eu||{};$("#sair").hidden=false;
+  function statusHTML(P){return P.confirmado?`<div class="st ok"><b>Pedido confirmado ✓</b>${esc(P.texto_pagamento||"")} · total ${R(P.total)}. Agora o consultor prepara a arte final para você aprovar.</div>`
+      :`<div class="st env"><b>Pedido enviado ✓</b>Em ${esc(new Date(P.em.replace(" ","T")).toLocaleDateString("pt-BR"))} · total ${R(P.total)} · ${esc(P.texto_pagamento||"")}. Aguardando a confirmação do consultor.<button type="button" class="btn sec" id="reabrir" style="margin-top:10px;min-height:44px">Mudar o pedido</button></div>`;}
+  function fecharFolha(O,T){const f=document.createElement("div");f.className="folha";let forma=null;
+    const itens=O.linhas.map(x=>({x,a:linhaAtual(x)})).filter(y=>y.a.q!==0);
+    f.innerHTML=`<div><h2 style="margin:0 0 6px">Fechar o pedido</h2><p class="muted" style="margin:0 0 10px">${itens.map(y=>`${esc(y.x.nome)}${y.x.servico?"":" · "+(+y.a.q).toLocaleString("pt-BR")+" un."}`).join(" · ")}${O.frete!=null?` · frete ${R(O.frete)}`:""}</p>
+      <div class="tot" style="padding-top:0"><span>Total</span><b>${R(T.total)}</b></div><h3 style="margin:12px 0 4px;font-size:16px">Como você prefere pagar?</h3>
+      <div class="formas">${formas(O,T.total).map(p=>`<label data-f="${p.id}"><input type="radio" name="fp" value="${p.id}"><span>${esc(p.t)}<small>${esc(p.d)}</small></span><span class="fv">${esc(p.v)}</span></label>`).join("")}</div>
+      <p class="erro" id="ferr"></p><button type="button" class="btn" id="fok" disabled>Fechar pedido</button><button type="button" class="btn sec" id="fx">Voltar</button></div>`;
+    document.body.appendChild(f);const fecha=()=>f.remove();f.onclick=ev=>{if(ev.target===f)fecha();};f.querySelector("#fx").onclick=fecha;
+    f.querySelectorAll("[data-f]").forEach(l=>l.onclick=()=>{forma=l.dataset.f;f.querySelectorAll("[data-f]").forEach(y=>y.classList.toggle("on",y===l));l.querySelector("input").checked=true;f.querySelector("#fok").disabled=false;});
+    f.querySelector("#fok").onclick=async ev=>{const b=ev.target;b.disabled=true;b.textContent="Enviando…";try{D=await api("/api/painel/fechar",{escolhas:ESC,pagamento:forma});fecha();painel();window.scrollTo({top:0,behavior:"smooth"});}
+      catch(e){b.disabled=false;b.textContent="Fechar pedido";f.querySelector("#ferr").textContent=e.message;}};}
+  function painel(){const L=D.loja||{},O=D.orcamento,eu=D.eu||{};$("#sair").hidden=false;const PED=(D.cliente||{}).pedido||null;const T=O&&O.linhas?contas(O):{soma:0,total:0};
     const est=n=>n?` · <span class="est">${"★".repeat(n)}<span>${"★".repeat(5-n)}</span></span>`:"";
     $("#app").innerHTML=`<h1>${esc(L.nome||"Sua loja")}</h1><p class="sub">${esc(L.setor||"")}${L.endereco?` · <a href="${esc(L.maps||"#")}" target="_blank" rel="noopener">📍 ${esc(L.endereco)}</a>`:""}${est(L.estrelas)}</p>
       <div class="ola">Olá${eu.nome?`, <b>${esc(eu.nome)}</b>`:""}! Aqui está o seu orçamento${D.vendedor&&D.vendedor.nome?` feito por <b>${esc(D.vendedor.nome)}</b>`:""}${D.em?` · atualizado em ${esc(new Date(D.em).toLocaleDateString("pt-BR"))}`:""}. Toque num produto para ver as fotos.</div>
-      ${O&&O.linhas&&O.linhas.length?`<h2>Seu orçamento</h2><div class="card">${O.linhas.map((x,i)=>`<div class="ln" data-i="${i}"><div class="fig" style="${x.img?`background-image:url('${esc(img(x.img))}')`:""}">${x.img?"":x.servico?"📺":"▫"}</div>
-          <div><b>${esc(x.nome)}</b><small>${x.servico?"":`${(+x.q||0).toLocaleString("pt-BR")} un. · `}${esc(x.unid||"")}</small></div>
-          <div class="pr">${x.total==null?`<small>a confirmar</small>`:`${x.pct?`<s>${R(x.lista)}</s>`:""}${R(x.total)}${x.mensal?`<small>+ ${R(x.mensal)}/mês</small>`:""}`}</div></div>`).join("")}
+      ${PED?statusHTML(PED):""}
+      ${O&&O.linhas&&O.linhas.length?`<h2>Seu orçamento</h2><div class="card">${O.linhas.map((x,i)=>{const a=linhaAtual(x);const pode=x.opcoes&&!PED;return `<div class="ln ${a.q===0?"fora":""}" data-i="${i}"><div class="fig" style="${x.img?`background-image:url('${esc(img(x.img))}')`:""}">${x.img?"":x.servico?"📺":"▫"}</div>
+          <div><b>${esc(x.nome)}</b><small>${x.servico?"":a.q===0?"não quero · ":`${(+a.q||0).toLocaleString("pt-BR")} un. · `}${esc(x.unid||"")}</small>${pode?`<span class="qt"><button type="button" data-q="-" aria-label="menos">−</button><span>${a.q===0?"0":a.q.toLocaleString("pt-BR")}</span><button type="button" data-q="+" aria-label="mais">+</button></span>`:""}</div>
+          <div class="pr">${x.total==null?`<small>a confirmar</small>`:`${x.pct&&a.q===x.q?`<s>${R(x.lista)}</s>`:""}${R(a.q===0?(linhaAtual({...x,opcoes:null}).total):a.total)}${a.q>1&&x.opcoes?`<small>${R(a.total/a.q)} cada</small>`:""}${x.mensal?`<small>+ ${R(x.mensal)}/mês</small>`:""}`}</div></div>`;}).join("")}
         <div class="ln" style="cursor:default"><div class="fig">🚚</div><div><b>Frete</b><small>um valor para o pedido inteiro</small></div><div class="pr">${O.frete!=null?R(O.frete):"<small>a combinar</small>"}</div></div>
-        <div class="tot"><span>Total</span><b>${R(O.total)}</b></div>${O.mensal?`<p class="muted" style="margin:2px 2px 0">Mais ${R(O.mensal)}/mês dos serviços.</p>`:""}</div>
-        ${(O.pagamentos||[]).length?`<h2>Formas de pagamento</h2><div class="pag">${O.pagamentos.map(p=>`<div class="op"><div><b style="font-size:15px">${esc(p.t)}</b><small>${esc(p.d)}</small></div><b>${esc(p.v)}</b></div>`).join("")}</div>`:""}`
+        <div class="tot"><span>Total</span><b>${R(T.total)}</b></div>${O.mensal?`<p class="muted" style="margin:2px 2px 0">Mais ${R(O.mensal)}/mês dos serviços.</p>`:""}</div>
+        ${T.total>0?`<h2>Formas de pagamento</h2><div class="pag">${formas(O,T.total).map(p=>`<div class="op"><div><b style="font-size:15px">${esc(p.t)}</b><small>${esc(p.d)}</small></div><b>${esc(p.v)}</b></div>`).join("")}</div>
+        ${PED?"":`<button type="button" class="btn" id="fechar" style="margin-top:16px">Quero estes · ${R(T.total)}</button>`}`:""}`
       :`<div class="card" style="margin-top:14px"><p style="margin:0">O seu orçamento ainda está sendo preparado. Assim que o consultor terminar, ele aparece aqui.</p></div>`}
       <h2>Conversa com a GênIO</h2><div class="card"><div class="conv" id="conv">${(D.mensagens||[]).length?D.mensagens.map(m=>`<div class="msg ${m.de==="cliente"?"cli":"gen"}">${esc(m.texto)}<small>${esc((m.em||"").slice(8,10)+"/"+(m.em||"").slice(5,7)+" "+(m.em||"").slice(11,16))}</small></div>`).join(""):`<p class="muted" style="margin:0">Escreva aqui o que quiser ajustar.</p>`}</div>
         <textarea id="txt" rows="3" placeholder="Escreva para o seu consultor" style="margin-top:10px;font-size:16px"></textarea><button type="button" class="btn" id="env">Enviar</button>
-        ${O&&O.linhas&&O.linhas.length?`<div class="rap"><button type="button" class="btn sec" data-r="ajuste">Pedir ajuste</button><button type="button" class="btn" data-r="quero">Quero estes</button></div>`:""}</div>`;
+        ${O&&O.linhas&&O.linhas.length?`<div class="rap" style="grid-template-columns:1fr"><button type="button" class="btn sec" data-r="ajuste">Pedir ajuste</button></div>`:""}</div>`;
     const cv=$("#conv");cv.scrollTop=cv.scrollHeight;
-    document.querySelectorAll(".ln[data-i]").forEach(el=>el.onclick=()=>verProduto(O.linhas[+el.dataset.i]));
+    document.querySelectorAll(".ln[data-i]").forEach(el=>el.onclick=ev=>{const x=O.linhas[+el.dataset.i];const b=ev.target.closest("[data-q]");if(b){passo(x,b.dataset.q==="+"?1:-1);return;}verProduto(x);});
+    const fb=$("#fechar");if(fb)fb.onclick=()=>{if(!(T.total>0)){alert("Escolha pelo menos um produto.");return;}fecharFolha(O,T);};
+    const rb=$("#reabrir");if(rb)rb.onclick=async()=>{rb.disabled=true;try{D=await api("/api/painel/reabrir",{});painel();}catch(e){rb.disabled=false;alert(e.message);}};
     const mandar=async t=>{t=String(t||"").trim();if(!t)return;const b=$("#env");b.disabled=true;try{D=await api("/api/painel/mensagem",{texto:t});painel();}catch(e){b.disabled=false;alert("Não enviou: "+e.message);}};
     $("#env").onclick=()=>mandar($("#txt").value);
-    document.querySelectorAll("[data-r]").forEach(b=>b.onclick=()=>{if(b.dataset.r==="quero")mandar(`Quero fechar o orçamento: ${O.linhas.map(x=>`${x.nome}${x.servico?"":" ("+(+x.q||0).toLocaleString("pt-BR")+" un.)"}`).join(", ")} · total ${R(O.total)}.`);else{const t=$("#txt");t.value="Quero ajustar: ";t.focus();t.setSelectionRange(t.value.length,t.value.length);}});}
+    document.querySelectorAll("[data-r]").forEach(b=>b.onclick=()=>{const t=$("#txt");t.value="Quero ajustar: ";t.focus();t.setSelectionRange(t.value.length,t.value.length);});}
   function verProduto(x){const f=(D.fotos||{})[x.k]||(x.img?[x.img]:[]);const v=document.createElement("div");v.className="ver";
     v.innerHTML=`<div class="t"><b>${esc(x.nome)}${x.total!=null?" · "+R(x.total):""}</b><button type="button">Fechar</button></div><div class="g">${f.length?f.map(s=>`<img src="${esc(img(s))}" alt="" loading="lazy">`).join(""):`<p style="color:#fff">Fotos deste produto em preparo.</p>`}</div>`;
     document.body.appendChild(v);v.querySelector("button").onclick=()=>v.remove();}
-  async function abrir(){try{D=await api("/api/painel/eu");painel();}catch(e){if(e.status===401)entrar();else $("#app").innerHTML=`<p class="erro">Não consegui abrir agora: ${esc(e.message)}</p>`;}}
+  async function abrir(){try{D=await api("/api/painel/eu");ESC=Object.assign({},((D.cliente||{}).escolhas)||{});painel();}catch(e){if(e.status===401)entrar();else $("#app").innerHTML=`<p class="erro">Não consegui abrir agora: ${esc(e.message)}</p>`;}}
   $("#sair").onclick=async()=>{try{await api("/api/painel/sair",{});}catch(e){}D=null;entrar();};
   abrir();
 })();

@@ -6,7 +6,7 @@
 <title>GênIO · Orçamento</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="app.css?v=98ae6a01e4">
+<link rel="stylesheet" href="app.css?v=ff7090001c">
 <style>
 .orc{background:#fff;border-radius:18px;padding:6px 10px;margin:0 0 12px;box-shadow:0 1px 0 rgba(28,22,53,.06)}
 .ln{display:grid;grid-template-columns:52px minmax(0,1fr) auto;gap:8px;align-items:center;padding:7px 0;border-bottom:1px solid #F0EDF6}
@@ -43,12 +43,14 @@
 .pag .op{background:#fff;border-radius:14px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;gap:10px}
 .pag .op small{display:block;color:#7b7590;font-size:12.5px}
 .pag .op b{font-size:17px;white-space:nowrap}
+.pcli{border-radius:16px;padding:12px 14px;margin:0 0 12px;font-size:14px;line-height:1.45}.pcli.env{background:#FFF4DB;color:#5C4000}.pcli.ok{background:#E3F6F3;color:#0B5E5A}.pcli.mx{background:#EEE9F7;color:#3B2D73}
+.pcli b{display:block;font-size:15.5px;margin-bottom:2px}.pcli .bt{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.pcli .bt .btn{min-height:42px;font-size:14px}
 .mensal{font-size:13px;color:#5b5570;margin:-4px 4px 12px}
 </style>
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=98ae6a01e4"></script>
+<script src="app.js?v=ff7090001c"></script>
 <script>
 (async()=>{
   const {$,$$,esc,qs,sessao,dados,nav,topo,voltar,nomeLoja,estado,salvar,cliente,definirCliente}=App;
@@ -65,12 +67,27 @@
   function grade(x,s){const g=(s&&s.grade)||{},soma=somaG(s),mn=App.qtdMin(x.k);
     return `<div class="grd"><span></span>${TAM.map(z=>`<span class="h">${z}</span>`).join("")}${SEXO.map(([sx,rot])=>`<span class="sx">${rot}</span>${TAM.map(z=>{const n=+((g[sx]||{})[z])||0;return `<span class="c"><button type="button" data-g="${sx}|${z}|-" aria-label="menos ${rot} ${z}">−</button><span class="${n?"":"z"}">${n}</span><button type="button" data-g="${sx}|${z}|+" aria-label="mais ${rot} ${z}">+</button></span>`;}).join("")}`).join("")}
       <span class="info ${soma&&soma<mn?"falta":""}">${!soma?`Distribua ${s.q.toLocaleString("pt-BR")} un. por modelo e tamanho`:soma<mn?`Grade: ${soma} un. · mínimo da gráfica ${mn} (faltam ${mn-soma}; o preço já conta ${mn})`:`Grade: ${soma} un.`}</span></div>`;}
+  // o que o cliente fez no painel (escolhas e pedido) — fica num arquivo próprio da loja no servidor
+  let PC={};const lerPC=async()=>{try{const r=await fetch(`/api/clientes/${encodeURIComponent(slug)}/painel`,{credentials:"same-origin",cache:"no-store"});PC=r.ok?await r.json():{};}catch(e){PC={};}};
+  const Rq=v=>(Math.round(v*100)/100).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
+  function pcHTML(O){const P=PC.pedido;
+    if(P){const its=(P.linhas||[]).map(x=>`${esc(x.nome)}${x.servico?"":" · "+(+x.q).toLocaleString("pt-BR")+" un."}`).join(" · ");
+      return P.confirmado?`<div class="pcli ok"><b>✓ Pedido do cliente confirmado</b>${its} · total ${Rq(P.total)} · ${esc(P.texto_pagamento||"")}</div>`
+        :`<div class="pcli env"><b>Pedido fechado pelo cliente no painel</b>${esc(P.por||"")} em ${esc((P.em||"").slice(8,10)+"/"+(P.em||"").slice(5,7)+" "+(P.em||"").slice(11,16))}<br>${its} · total ${Rq(P.total)}<br>${esc(P.texto_pagamento||"")}
+          <div class="bt"><a class="btn sec" href="visita.html?l=${encodeURIComponent(slug)}#mensagens" style="text-decoration:none;display:grid;place-items:center">Conversar</a><button type="button" class="btn" id="pcConf">Confirmar pedido</button></div></div>`;}
+    const E=PC.escolhas||{};const dif=O.linhas.filter(x=>E[x.k]!=null&&E[x.k]!==x.q);
+    return dif.length?`<div class="pcli mx"><b>O cliente mexeu nas quantidades no painel</b>${dif.map(x=>`${esc(x.nome)}: ${x.q.toLocaleString("pt-BR")} → ${E[x.k]?E[x.k].toLocaleString("pt-BR"):"não quer"}`).join(" · ")}<div class="bt" style="grid-template-columns:1fr"><button type="button" class="btn" id="pcAplicar">Aplicar no orçamento</button></div></div>`:"";}
+  // aplicar: as quantidades do cliente entram no orçamento (o que ele tirou fica 0)
+  function aplicarPC(){const e=estado();const S=(e.sel||{})[slug]||{};const P=PC.pedido;
+    if(P){const ped={};(P.linhas||[]).forEach(x=>ped[x.k]=x.q);const O=App.orcamento(c,S,(e.pedidos||{})[slug]||{});O.linhas.forEach(x=>{if(!S[x.k]||x.servico||x.fixa)return;S[x.k].q=ped[x.k]!=null?ped[x.k]:0;});}
+    else Object.entries(PC.escolhas||{}).forEach(([k,q])=>{if(S[k])S[k].q=q;});salvar(e);}
   let pubT=null;const publicar=()=>{clearTimeout(pubT);pubT=setTimeout(()=>App.publicarPainel(l),1500);};
   function render(){publicar();
     const e=estado();const S=(e.sel||{})[slug]||{};const P=((e.pedidos||{})[slug])||{};
     const O=App.orcamento(c,S,P);
     $("#app").innerHTML=`${topo()}${voltar(`produtos.html?l=${encodeURIComponent(slug)}`,"Produtos")}
     ${App.cabCliente(l,{titulo:"Orçamento",extra:O.linhas.length?`${O.linhas.length} item(ns) · total ${R(O.total)}${O.frete!=null?" com frete":" · frete a definir"}`:""})}
+    ${pcHTML(O)}
     ${O.linhas.length?`<div class="orc">${O.linhas.map(x=>`<div class="ln" data-k="${x.k}">
         <div class="fig">${x.img?`<img src="${esc(x.img)}" alt="" loading="lazy">`:(ICON[x.base]||"▫")}</div>
         <div class="nm"><b>${esc(x.nome)}</b>${x.servico||x.base==="locacao"||x.base==="capacho"?"":`<button type="button" class="fo ${x.fornProprio?"proprio":""}" data-fo="1">🏭 ${esc(x.forn?x.forn.nome+(x.forn.prazo?` · ${x.forn.prazo} dias`:"")+(x.forn.preco?"":" · preço da tabela"):"Printi / GIV")}${x.fornProprio?" · só neste":""} ▾</button>`}<div class="sub2">${GRADE.has(x.base)&&somaG(S[x.k])?`<small>${x.q.toLocaleString("pt-BR")} un. pela grade</small>`:x.fixa?(x.k==="capacho"&&x.q>1?`<small>${x.q} un. · </small>`:""):`<span class="qt"><button type="button" data-q="-">−</button><span>${x.q.toLocaleString("pt-BR")}</span><button type="button" data-q="+">+</button></span>`}${GRADE.has(x.base)&&somaG(S[x.k])?"":`<small>${x.lote||!x.fixa?"un. · ":""}${esc(x.unid||"")}</small>`}</div></div>
@@ -90,6 +107,11 @@
     $$("[data-g]").forEach(b=>b.onclick=()=>{const k=b.closest(".ln").dataset.k;const [sx,z,m]=b.dataset.g.split("|");const e=estado();const s=((e.sel||{})[slug]||{})[k];if(!s)return;
       s.grade=s.grade||{M:{},F:{}};s.grade[sx]=s.grade[sx]||{};const n=Math.max(0,(+s.grade[sx][z]||0)+(m==="+"?1:-1));if(n)s.grade[sx][z]=n;else delete s.grade[sx][z];
       const t=somaG(s);if(t)s.q=Math.max(App.qtdMin(k),t);else{s.q=Math.max(1,App.qtdMin(k));delete s.grade;}salvar(e);render();});
+    const pa=$("#pcAplicar");if(pa)pa.onclick=()=>{aplicarPC();render();};
+    const pk=$("#pcConf");if(pk)pk.onclick=async()=>{pk.disabled=true;pk.textContent="Confirmando…";try{aplicarPC();
+        const r=await fetch(`/api/clientes/${encodeURIComponent(slug)}/painel/confirmar`,{method:"POST",credentials:"same-origin",headers:{"Content-Type":"application/json"},body:"{}"});const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.erro||r.status);PC=d;
+        App.moverEtapa(slug,"arte",{valor:PC.pedido.valor,pagamento:PC.pedido.pagamento,origem:"painel"});render();}
+      catch(e){pk.disabled=false;pk.textContent="Confirmar pedido";alert("Não confirmou: "+e.message);}};
     // quantidade: segue a tabela da gráfica (lote: só as quantidades da tabela; unidade: de 1 em 1 a partir do mínimo)
     $$("[data-q]").forEach(b=>b.onclick=()=>{const k=b.closest(".ln").dataset.k;const e=estado();const s=((e.sel||{})[slug]||{})[k];if(!s)return;
       const fid=(((e.pedidos||{})[slug]||{}).forn||{})[k]||null;s.q=App.passoQtd(k,App.qtdNormal(k,s.q,fid),b.dataset.q==="+"?1:-1,fid);salvar(e);render();});
@@ -111,7 +133,7 @@
       const n=parseFloat(v.replace(/\./g,"").replace(",","."));if(isNaN(n)||n<0)return;
       if(k==="_frete"){gravar(k,Math.round(n*100)/100);return;}gravar(k,Math.round((n/x.lista-1)*1000)/10);});
   }
-  render();
+  await lerPC();render();
 })();
 </script>
 </body>

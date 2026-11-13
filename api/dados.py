@@ -184,6 +184,18 @@ def mensagem_gravar(slug, de, texto, canal="", por=None):
     lista.append(m); _escrever_json(_arq_msg(slug), lista[-500:])
     return m
 
+# painel do cliente: escolhas e pedido do cliente num arquivo próprio da loja (o vendedor regrava a ficha inteira; aqui não há atropelo)
+def _arq_painel(slug):
+    return os.path.join(_pasta("painel"), valida_slug(slug) + ".json")
+
+def painel_cliente_ler(slug):
+    return _ler_json(_arq_painel(slug)) or {}
+
+def painel_cliente_gravar(slug, obj):
+    obj = dict(obj or {}); obj["atualizado"] = time.strftime("%Y-%m-%dT%H:%M:%S")
+    _escrever_json(_arq_painel(slug), obj)
+    return obj
+
 def mensagens_lidas(slug):
     lista = mensagens_ler(slug)
     for m in lista:
