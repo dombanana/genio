@@ -1401,6 +1401,13 @@ class H(BaseHTTPRequestHandler):
                 if not self._origem_ok():
                     return self._erro(403, "origem")
                 return self._send(200, painel_confirmar(partes0[3], eu["nome"]))
+            if p.startswith("/api/clientes/") and len(partes0) == 6 and partes0[4] == "painel" and partes0[5] == "limpar":   # só administrador: desfaz escolhas e pedido do painel (engano ou teste)
+                eu = self._eu()
+                if not eu or eu["papel"] != "admin":
+                    return self._erro(403, "só o administrador")
+                if not self._origem_ok():
+                    return self._erro(403, "origem")
+                return self._send(200, DADOS.painel_cliente_gravar(partes0[3], {}))
             if p.startswith("/api/clientes/") and len(partes0) in (5, 7) and partes0[4] == "acessos":
                 eu = self._eu()
                 if not eu:
