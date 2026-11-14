@@ -6,7 +6,7 @@
 <title>GênIO · Orçamento</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="app.css?v=d5b8d2954d">
+<link rel="stylesheet" href="app.css?v=017d8aa9a1">
 <style>
 .orc{background:#fff;border-radius:18px;padding:6px 10px;margin:0 0 12px;box-shadow:0 1px 0 rgba(28,22,53,.06)}
 .ln{display:grid;grid-template-columns:52px minmax(0,1fr) auto;gap:8px;align-items:center;padding:7px 0;border-bottom:1px solid #F0EDF6}
@@ -50,7 +50,7 @@
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=d5b8d2954d"></script>
+<script src="app.js?v=017d8aa9a1"></script>
 <script>
 (async()=>{
   const {$,$$,esc,qs,sessao,dados,nav,topo,voltar,nomeLoja,estado,salvar,cliente,definirCliente}=App;
@@ -85,7 +85,7 @@
   function render(){publicar();
     const e=estado();const S=(e.sel||{})[slug]||{};const P=((e.pedidos||{})[slug])||{};
     const O=App.orcamento(c,S,P);
-    $("#app").innerHTML=`${topo()}${voltar(`produtos.html?l=${encodeURIComponent(slug)}`,"Produtos")}
+    $("#app").innerHTML=`${topo()}${qs.get("de")==="play"?voltar(`visita.html?l=${encodeURIComponent(slug)}&de=play`,"Visita"):voltar(`produtos.html?l=${encodeURIComponent(slug)}`,"Produtos")}
     ${App.cabCliente(l,{titulo:"Orçamento",extra:O.linhas.length?`${O.linhas.length} item(ns) · total ${R(O.total)}${O.frete!=null?" com frete":" · frete a definir"}`:""})}
     ${pcHTML(O)}
     ${O.linhas.length?`<div class="orc">${O.linhas.map(x=>`<div class="ln" data-k="${x.k}">

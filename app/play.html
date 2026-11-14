@@ -6,9 +6,7 @@
 <title>GênIO · Play</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
-<link rel="stylesheet" href="app.css?v=d5b8d2954d">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<link rel="stylesheet" href="app.css?v=017d8aa9a1">
 <style>
 /* Play (14/11): só a empresa da vez na fila da rota */
 .fila{display:flex;align-items:center;gap:10px;margin:0 0 10px}
@@ -33,7 +31,7 @@
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=d5b8d2954d"></script>
+<script src="app.js?v=017d8aa9a1"></script>
 <script>
 (async()=>{
   const {$,$$,esc,sessao,eu,dados,estado,salvar,nav,topo,nomeLoja,setorNome,cliente}=App;
@@ -57,70 +55,8 @@
       ${X.encerrada?`<a class="btn" href="index.html">Montar a próxima rota →</a>`:`<button class="btn" type="button" id="encerrar">■ Encerrar a rota</button>`}</section>${nav("play")}`;
     const b=$("#encerrar");if(b)b.onclick=async()=>{await gravar((e,X)=>{X.encerrada=true;X.encerradaEm=new Date().toISOString();const jj=(e.jornadas||{})["d"+dia];if(jj&&jj.status!=="encerrada"){const t=new Date().toISOString();const p=(jj.pausas||[]).slice(-1)[0];if(p&&!p.fim)p.fim=t;jj.fim=t;jj.status="encerrada";}});resumo();};}
 
-  async function tela(){const f=fila();const X=R();const pos=f.findIndex(s=>!X.res[s]);if(pos<0)return resumo();
-    const slug=f[pos];const l=L$(slug);const c=await cliente(l);const feitas=f.filter(s=>X.res[s]).length;const chegou=X.chegou[slug];
-    let H=null;
-    $("#app").innerHTML=`${topo()}
-    <div class="fila"><small>Loja <b>${pos+1}</b> de ${f.length}</small><div class="barra"><i style="width:${Math.round(feitas/f.length*100)}%"></i></div><small>${dia===hoje?"hoje":fmt(dia)}</small></div>
-    ${App.cabCliente(l,{titulo:"Loja da vez",extra:l.tel?`📞 ${esc(App.telFmt(l.tel))}`:""})}
-    <div class="pl-mapa" id="mapa"></div>
-    ${chegou?`<div class="chegou">✓ Chegou às ${new Date(chegou).toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"})}</div>
-      <section class="card"><h2>Produtos com o logotipo</h2><div id="prods">${prodsHTML(c)}</div></section>
-      <div class="bts"><a class="btn" href="produtos.html?l=${encodeURIComponent(slug)}&de=play" id="orc">🧾 Emitir orçamento</a><div class="dupla"><button class="btn nao" type="button" id="nao">Não estava</button><button class="btn sec" type="button" id="prox">Próxima loja →</button></div></div>`
-      :`<div class="bts"><button class="btn" type="button" id="cheguei">📍 Cheguei</button></div>`}
-    <section class="card" id="hist"><h2>História</h2><p class="muted" style="margin:0">Buscando na Receita e no Google…</p></section>
-    <section class="card" id="melhor"><h2>Pontos a melhorar</h2><p class="muted" style="margin:0">…</p></section>
-    ${nav("play")}`;
-    // ---- ações
-    const ch=$("#cheguei");if(ch)ch.onclick=async()=>{ch.disabled=true;const t=new Date().toISOString();
-      await gravar((e,X)=>{X.chegou[slug]=t;e.atend=e.atend||{};e.atend[slug]={...(e.atend[slug]||{}),ini:t};e.jornadas=e.jornadas||{};const k="d"+dia;
-        if(!e.jornadas[k]||e.jornadas[k].status==="encerrada"){for(const o of Object.values(e.jornadas))if(o&&o.status==="andando"){o.status="pausada";(o.pausas=o.pausas||[]).push({ini:t});}e.jornadas[k]={ini:t,pausas:[],status:"andando",data:hoje};}
-        else if(e.jornadas[k].status==="pausada"){e.jornadas[k].status="andando";const p=(e.jornadas[k].pausas||[]).slice(-1)[0];if(p&&!p.fim)p.fim=t;}});
-      tela();scrollTo(0,0);};
-    const oc=$("#orc");if(oc)oc.onclick=async ev=>{ev.preventDefault();await gravar((e,X)=>{X.orc[slug]=true;});location.href=oc.href;};
-    const fecha=async res=>{const t=new Date().toISOString();await gravar((e,X)=>{X.res[slug]=res==="nao_estava"?"nao_estava":(X.orc[slug]?"orcamento":"visitada");e.atend=e.atend||{};e.atend[slug]={...(e.atend[slug]||{}),fim:t,...(res==="nao_estava"?{res:"nao_estava"}:{})};
-      const ret=new Set(e.retornos||[]);if(res==="nao_estava")ret.add(slug);else{ret.delete(slug);e.feitas=[...new Set([...(e.feitas||[]),slug])];}e.retornos=[...ret];});tela();scrollTo(0,0);};
-    const na=$("#nao");if(na)na.onclick=()=>fecha("nao_estava");const px=$("#prox");if(px)px.onclick=()=>fecha("visitada");
-    const gp=$("#gerar");if(gp)gp.onclick=gerar;
-    async function gerar(){const b=$("#gerar");b.disabled=true;const r=await App.gerarProdutos(l,pid=>{b.textContent=`Gerando ${NOME[pid]||pid}…`;});$("#prods").innerHTML=prodsHTML(await cliente(l));const g2=$("#gerar");if(g2)g2.onclick=gerar;if(r.falhas&&r.falhas.length)alert("Não gerou: "+r.falhas.join(", "));}
-    mapa(l);historia(slug);}
-
-  function prodsHTML(c){const A=Object.entries(c.artes||{}).map(([k,a])=>({k,src:a&&(a.contexto||a.png||a.pngArte)})).filter(x=>x.src);const pronto=!!(c.manual&&c.manual.editado);
-    if(A.length)return `<div class="prods">${A.map(x=>`<figure><img src="${esc(x.src)}" alt="" loading="lazy"><figcaption>${esc((NOME[App.baseId(x.k)]||x.k)+(String(x.k).includes("~")?" · "+String(x.k).split("~")[1]:""))}</figcaption></figure>`).join("")}</div>`;
-    return pronto?`<p class="muted" style="margin:0 0 10px">Os produtos ainda não foram gerados com este logotipo.</p><button class="btn sec" type="button" id="gerar">✦ Gerar os produtos agora</button>`
-      :`<p class="muted" style="margin:0">Logotipo sem recorte. Volte à <a href="index.html?etapa=3">Rota · Recorte</a> para recortar e gerar os produtos.</p>`;}
-
-  async function historia(slug){let d=null;try{const r=await fetch(`/api/loja/${encodeURIComponent(slug)}/historia`,{credentials:"same-origin",cache:"no-store"});if(r.ok)d=await r.json();}catch(e){}
-    const hb=$("#hist"),mb=$("#melhor");if(!hb)return;
-    if(!d){hb.innerHTML=`<h2>História</h2><p class="muted" style="margin:0">Não consegui buscar agora (sem conexão).</p>`;mb.remove();return;}
-    const h=d.historia||{};const ab=h.abertura||((d.leitura||"").match(/desde (\S+)/)||[])[1]||"";
-    const dataBR=s=>/^\d{4}-\d{2}-\d{2}/.test(s)?s.slice(8,10)+"/"+s.slice(5,7)+"/"+s.slice(0,4):s;const anos=/^\d{4}/.test(ab)?(new Date().getFullYear()-(+ab.slice(0,4))):null;
-    const razao=h.razao||((d.leitura||"").match(/Razão social: ([^·]+)/)||[])[1]||"";
-    const cn=d.curiosidade||{};
-    const prem=h.premios_estado==="pesquisado"?(h.premios&&h.premios.length?h.premios.map(p=>`<div style="margin:0 0 6px"><b>${esc(p.titulo)}</b><small>${esc(p.trecho)}${p.link?` · <a href="${esc(p.link)}" target="_blank" rel="noopener" class="lk">fonte</a>`:""}</small></div>`).join(""):`<span class="muted">Nenhum prêmio encontrado na pesquisa.</span>`)
-      :`<span class="muted">Pesquisa sem créditos no momento.</span>`;
-    hb.innerHTML=`<h2>História</h2>
-      <div class="fato"><span>Fundação</span><b>${ab?esc(dataBR(ab))+(anos!==null&&anos>=0?` <small>${anos?`há ${anos} ano${anos>1?"s":""}`:"este ano"}</small>`:""):`<span class="muted">não consta</span>`}</b></div>
-      <div class="fato"><span>Proprietário</span><b>${(h.socios||[]).length?h.socios.map(s=>`${esc(s.nome)}${s.papel?` <small>${esc(s.papel)}</small>`:""}`).join(""):`<span class="muted">${h.cnpj?"a Receita não lista sócios":"CNPJ não encontrado"}</span>`}</b></div>
-      ${razao?`<div class="fato"><span>Razão social</span><b>${esc(razao.trim())}${h.cnpj?` <small>CNPJ ${esc(h.cnpj.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/,"$1.$2.$3/$4-$5"))}</small>`:""}</b></div>`:""}
-      <div class="fato"><span>Prêmios</span><b style="font-weight:400">${prem}</b></div>
-      ${cn.valor?`<div class="fato"><span>Curiosidade do nome</span><b style="font-weight:400">${esc(cn.valor)}</b></div>`:cn.palavra?`<div class="fato"><span>Curiosidade do nome</span><b style="font-weight:400">Sem fonte pública. Pergunte ao dono de onde vem “${esc(cn.palavra.charAt(0).toUpperCase()+cn.palavra.slice(1))}”: é nome de família ou de lugar?</b></div>`:""}
-      <p class="fonte">Fontes: ${[h.fonte_receita||(h.cnpj?"Receita Federal":""),h.premios_estado==="pesquisado"?"pesquisa Google":"",cn.valor?(cn.nota||"Wikipédia"):""].filter(Boolean).map(esc).join(" · ")||"—"}</p>`;
-    const G=d.gatilhos||[],ruins=(d.ruins||[]).filter(r=>!G.some(g=>g.autor&&g.autor===r.autor));
-    mb.innerHTML=`<h2>Pontos a melhorar <small class="muted" style="font-weight:400;font-size:14px">· avaliações do Google${d.nota?` · ${String(d.nota).replace(".",",")}★ em ${d.total||0}`:""}</small></h2>
-      ${G.length||ruins.length?G.map(g=>`<div class="melhora"><b>${esc(g.tema)}</b>${g.nota?` <small class="muted">· ${g.nota}★</small>`:""}<blockquote>“${esc((g.trecho||"").replace(/^…|…$/g,""))}”</blockquote><div class="prod">→ ${esc(String(g.produto||"").split("+").map(x=>NOME[x]||x).join(" + "))}: ${esc(g.argumento||"")}</div></div>`).join("")
-        +ruins.map(r=>`<div class="melhora"><b>${r.nota}★</b>${r.quando?` <small class="muted">· ${esc(r.quando)}</small>`:""}<blockquote>“${esc((r.texto||"").slice(0,220))}${(r.texto||"").length>220?"…":""}”</blockquote></div>`).join("")
-      :`<p class="muted" style="margin:0">Nenhuma reclamação nas avaliações lidas.</p>`}`;}
-
-  // mapa: a loja aparece na hora; "onde estou" entra quando o aparelho responder (a permissão pode ficar pendente)
-  function mapa(l){const box=$("#mapa");if(!box)return;if(!(l.lat&&l.lng)||typeof L==="undefined"){box.remove();return;}
-    const map=L.map(box,{zoomControl:false,attributionControl:true,dragging:false,touchZoom:false,doubleClickZoom:false,scrollWheelZoom:false,boxZoom:false,keyboard:false,tap:false});
-    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:"© OpenStreetMap"}).addTo(map);
-    L.marker([l.lat,l.lng],{icon:L.divIcon({className:"",html:`<div class="mk">●</div>`,iconSize:[34,34],iconAnchor:[17,17]})}).addTo(map).on("click",()=>window.open(App.mapaLoja(l),"_blank"));
-    map.setView([l.lat,l.lng],17);
-    if(navigator.geolocation)navigator.geolocation.getCurrentPosition(p=>{if(!box.isConnected)return;const eu={lat:p.coords.latitude,lng:p.coords.longitude};const km=Math.hypot((eu.lat-l.lat)*111,(eu.lng-l.lng)*111*Math.cos(l.lat*Math.PI/180));
-      L.marker([eu.lat,eu.lng],{icon:L.divIcon({className:"",html:'<div class="mk eu"></div>',iconSize:[18,18],iconAnchor:[9,9]})}).addTo(map);
-      if(km<5){L.polyline([[eu.lat,eu.lng],[l.lat,l.lng]],{color:"#6933C5",weight:4,dashArray:"6 8"}).addTo(map);map.fitBounds(L.latLngBounds([[eu.lat,eu.lng],[l.lat,l.lng]]).pad(.35));}},()=>{},{timeout:8000,maximumAge:60000});}
+  // a loja da vez abre na tela da visita (modo Play): produtos com o logotipo, seleção, orçamento, não estava, próxima (14/11)
+  function tela(){const f=fila();const X=R();const s0=f.find(s=>!X.res[s]);if(!s0)return resumo();location.replace(`visita.html?l=${encodeURIComponent(s0)}&de=play`);}
 
   tela();
 })();

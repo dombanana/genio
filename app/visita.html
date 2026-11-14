@@ -6,7 +6,7 @@
 <title>GênIO · Visita</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="app.css?v=d5b8d2954d">
+<link rel="stylesheet" href="app.css?v=017d8aa9a1">
 <style>
 .cab{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
 .fach{width:100%;aspect-ratio:16/9;border-radius:16px;overflow:hidden;background:var(--lav2);display:grid;place-items:center;position:relative}
@@ -16,12 +16,19 @@
 .fontes{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0 12px}
 .fontes .btn.sec{min-height:50px;font-size:16px;text-decoration:none}
 .fato{display:grid;grid-template-columns:auto 1fr;gap:10px;padding:6px 0;border-top:1px solid var(--linha);font-size:15px}
+.prods-p{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.prods-p figure{margin:0;background:#fff;border-radius:12px;overflow:hidden;border:2px solid var(--linha);position:relative;cursor:pointer}
+.prods-p img{width:100%;aspect-ratio:1/1;object-fit:contain;display:block;background:#fff;pointer-events:none}
+.prods-p figcaption{font-size:13px;font-weight:600;padding:6px 8px}
+.prods-p .ck{position:absolute;top:8px;right:8px;width:30px;height:30px;border-radius:50%;border:2px solid #fff;background:rgba(20,16,36,.35);color:transparent;display:grid;place-items:center;font-weight:700;box-shadow:0 1px 4px rgba(0,0,0,.3)}
+.prods-p figure.on{border-color:var(--marca);box-shadow:0 0 0 3px rgba(105,51,197,.18)}.prods-p figure.on .ck{background:var(--marca);color:#fff}
+.passos.fila-p{border:0;padding:10px 14px}.passos.fila-p ol{margin:0}.passos.fila-p li{min-width:0}
 .fato:first-of-type{border-top:0}.fato span{color:var(--texto2)}.fato .lk{color:var(--marca);text-decoration:underline;text-underline-offset:3px;word-break:break-all}
 </style>
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=d5b8d2954d"></script>
+<script src="app.js?v=017d8aa9a1"></script>
 <script>
 (async()=>{
   const {$,$$,esc,qs,sessao,dados,ficha,estrelasHTML,estado,salvar,nav,topo,voltar,setorNome,nomeLoja,telFmt,cliente,gravarCliente,classificar,definirCliente,menuLongo,ligarLongo,ZONA,entradas,ligarEntradas,abrirLogotipo,logoPrincipal,removerLogo}=App;
@@ -48,6 +55,7 @@
   // ---- atendimento: início e fim marcados aqui; o tempo de cada loja alimenta média, ciclo e conversão (chip de metas)
   const fmtT=ms=>{const s=Math.max(0,Math.floor(ms/1000));return `${Math.floor(s/60)}:${String(s%60).padStart(2,"0")}`;};
   function atendHTML(){const A=(estado().atend||{})[slug]||{};
+    if(modo==="play")return A.ini&&!A.fim?`<div class="atend rodando"><div class="t"><small>Em atendimento</small><b id="atT">${fmtT(Date.now()-new Date(A.ini))}</b></div></div>`:"";
     if(A.ini&&!A.fim)return `<div class="atend rodando"><div class="t"><small>Em atendimento</small><b id="atT">${fmtT(Date.now()-new Date(A.ini))}</b></div><button type="button" class="fim" id="atFim">Terminar atendimento</button></div>`;
     if(A.ini&&A.fim)return `<div class="atend"><div class="t"><small>Atendimento feito</small><b>${Math.max(1,Math.round((new Date(A.fim)-new Date(A.ini))/6e4))} min</b></div><button type="button" class="ini" id="atIni" style="background:var(--lav);color:var(--marca)">Recomeçar</button></div>`;
     return `<div class="atend"><div class="t"><small>Atendimento</small><b>Não iniciado</b></div><button type="button" class="ini" id="atIni">Iniciar atendimento</button></div>`;}
@@ -85,13 +93,47 @@
   document.addEventListener("change",ev=>{if(ev.target.id!=="pqSetor")return;l.setorSugerido=l.setorSugerido||l.setor;l.setor=ev.target.value;gravarPesquisa({setor:l.setor,setorSugerido:l.setorSugerido});});
   // ---- percurso passo a passo: em rota (▶) é a visita; fora dela é o preparo da loja (decisão do dono, 10/11)
   const emRotaAgora=()=>Object.values(estado().jornadas||{}).some(j=>j&&j.status==="andando");
-  const modo=qs.get("modo")||(emRotaAgora()?"visita":"preparo");
+  // ▶ Play (14/11): esta mesma tela, aberta pelo Play na loja da vez; os produtos com o logotipo entram no lugar da imagem e são selecionados aqui
+  const PLAY=qs.get("de")==="play";const RP=PLAY?App.rotaDoPlay():null;const diaP=RP&&RP[0];
+  const modo=PLAY&&RP?"play":qs.get("modo")||(emRotaAgora()?"visita":"preparo");
+  const Rp=()=>{const X=((estado().rotas||{})[diaP])||{slugs:[]};X.res=X.res||{};X.chegou=X.chegou||{};X.orc=X.orc||{};return X;};
+  const filaP=()=>{const e=estado();const arq=new Set(e.arquivadas||[]);return (Rp().slugs||[]).filter(s=>D.lojas.some(x=>x.slug===s)&&!arq.has(s));};
+  const PNOME={capacho:"Capacho",placas:"Placa",adesivos:"Adesivo de vitrine",uniformes:"Camisa polo",impressos:"Cartão de visita",panfleto:"Flyer",banners:"Banner retrátil",parede:"Adesivo de parede",brindes:"Ecobag",carimbo:"Carimbo",windbanner:"Wind banner",faixa:"Faixa",folheto:"Folheto",camiseta:"Camiseta",bone:"Boné",avental:"Avental"};
+  const pnome=k=>(PNOME[App.baseId(k)]||k)+(String(k).includes("~")?" · "+String(k).split("~")[1]:"");
+  const selP=()=>((estado().sel||{})[slug])||{};const nSelP=()=>Object.entries(selP()).filter(([k,v])=>v&&v.q>0&&(c.artes||{})[k]).length;
+  function filaHTML(){const f=filaP();const X=Rp();const i=f.indexOf(slug);const x=App.dataCurta(diaP);
+    return `<div class="passos fila-p"><div class="t"><span>${diaP===App.hojeISO()?"Rota de hoje":`Rota de ${x.sem} ${x.dia}/${x.mes}`} · loja ${i+1} de ${f.length}</span><b>${f.filter(s=>X.res[s]).length} feita(s)</b></div><ol>${f.map(s=>`<li class="${X.res[s]?"ok":s===slug?"agora":""}"></li>`).join("")}</ol></div>`;}
+  function prodsPlayHTML(){const A=Object.entries(c.artes||{}).map(([k,a])=>({k,src:a&&(a.contexto||a.png||a.pngArte)})).filter(x=>x.src);const S=selP();const n=nSelP();const pronto=!!(c.manual&&c.manual.editado);
+    return `<section class="card" id="prodsP"><h2>Produtos com o logotipo${A.length?` <small class="muted" style="font-weight:400;font-size:14px">· toque para selecionar · ${n} selecionado(s)</small>`:""}</h2>
+      ${A.length?`<div class="prods-p">${A.map(x=>`<figure data-pp="${esc(x.k)}" class="${S[x.k]&&S[x.k].q>0?"on":""}"><img src="${esc(x.src)}" alt="" loading="lazy"><span class="ck">✓</span><figcaption>${esc(pnome(x.k))}</figcaption></figure>`).join("")}</div>`
+      :pronto?`<p class="muted" style="margin:0 0 10px">Os produtos ainda não foram gerados com este logotipo.</p><button class="btn sec" type="button" id="gerarP">✦ Gerar os produtos agora</button>`
+      :`<p class="muted" style="margin:0">Logotipo sem recorte. Recorte na Rota (passo 3) ou em Logotipo, logo abaixo.</p>`}</section>`;}
+  async function fecharPlay(res){const t=new Date().toISOString();const e=estado();const X=e.rotas[diaP];X.res=X.res||{};X.orc=X.orc||{};
+    X.res[slug]=res==="nao_estava"?"nao_estava":(X.orc[slug]?"orcamento":"visitada");e.atend=e.atend||{};e.atend[slug]={...(e.atend[slug]||{}),fim:t,...(res==="nao_estava"?{res:"nao_estava"}:{})};
+    const ret=new Set(e.retornos||[]);if(res==="nao_estava")ret.add(slug);else{ret.delete(slug);e.feitas=[...new Set([...(e.feitas||[]),slug])];}e.retornos=[...ret];await salvar(e);location.href="play.html";}
+  async function chegueiPlay(){const t=new Date().toISOString();const e=estado();const X=e.rotas[diaP];X.chegou=X.chegou||{};X.chegou[slug]=t;e.atend=e.atend||{};
+    for(const [s2,a] of Object.entries(e.atend))if(s2!==slug&&a&&a.ini&&!a.fim)a.fim=t;e.atend[slug]={ini:t};
+    e.jornadas=e.jornadas||{};const k="d"+diaP;if(!e.jornadas[k]||e.jornadas[k].status==="encerrada"){for(const o of Object.values(e.jornadas))if(o&&o.status==="andando"){o.status="pausada";(o.pausas=o.pausas||[]).push({ini:t});}e.jornadas[k]={ini:t,pausas:[],status:"andando",data:App.hojeISO()};}
+    else if(e.jornadas[k].status==="pausada"){e.jornadas[k].status="andando";const p=(e.jornadas[k].pausas||[]).slice(-1)[0];if(p&&!p.fim)p.fim=t;}
+    await salvar(e);const y=scrollY;render();scrollTo(0,y);}
+  // história (Receita: fundação e sócios; prêmios com fonte): entra em "Antes de entrar"
+  let HIST=null;if(modo==="play")fetch(`/api/loja/${encodeURIComponent(slug)}/historia`,{credentials:"same-origin",cache:"no-store"}).then(r=>r.ok?r.json():null).then(d=>{HIST=d;const el=document.getElementById("histP");if(el)el.outerHTML=histHTML();}).catch(()=>{});
+  function histHTML(){if(!HIST)return `<div id="histP"><div class="fato"><span>História</span><b class="muted" style="font-weight:400">buscando na Receita…</b></div></div>`;const h=HIST.historia||{};
+    const dataBR=s=>/^\d{4}-\d{2}-\d{2}/.test(s)?s.slice(8,10)+"/"+s.slice(5,7)+"/"+s.slice(0,4):s;const anos=/^\d{4}/.test(h.abertura||"")?new Date().getFullYear()-(+h.abertura.slice(0,4)):null;
+    const prem=h.premios_estado==="pesquisado"?((h.premios||[]).length?h.premios.map(p=>`${esc(p.titulo)}${p.link?` · <a href="${esc(p.link)}" target="_blank" rel="noopener" class="lk">fonte</a>`:""}`).join("<br>"):"nenhum encontrado na pesquisa"):"pesquisa sem créditos no momento";
+    return `<div id="histP">${h.abertura?`<div class="fato"><span>Fundação</span><b>${esc(dataBR(h.abertura))}${anos!==null?` · há ${anos} ano${anos===1?"":"s"}`:""}</b></div>`:""}
+      ${(h.socios||[]).length?`<div class="fato"><span>Proprietário</span><b>${h.socios.map(x=>`${esc(x.nome)}${x.papel?` <small class="muted" style="font-weight:400">(${esc(x.papel)})</small>`:""}`).join("<br>")}</b></div>`:""}
+      <div class="fato"><span>Prêmios</span><b style="font-weight:400">${prem}</b></div></div>`;}
   const hojeI=()=>App.hojeISO();
   function proxima(cond){const e=estado();const o=(e.ordem&&e.ordem.slugs)||[];const i=o.indexOf(slug);const seq=[...o.slice(i+1),...o.slice(0,Math.max(0,i))];return seq.find(s=>cond(s,e))||null;}
   const proxVisita=()=>proxima((s,e)=>!(e.feitas||[]).includes(s)&&!(e.arquivadas||[]).includes(s));
   const proxPreparo=()=>proxima((s,e)=>!(e.preparadas||{})[s]&&!(e.arquivadas||[]).includes(s));
   function passosHTML(){const e=estado();const A=(e.atend||{})[slug]||{};const p=c.pesquisa||{};const pq=PQ.filter(([k])=>p[k]).length;
     let S,acao;
+    if(modo==="play"){const X=Rp();const n=nSelP();const ch=!!X.chegou[slug];
+      S=[["Cheguei",ch],["Produtos",n>0],["Orçamento",!!X.orc[slug]],["Encerrar",!!X.res[slug]]];const i=S.findIndex(x=>!x[1]);
+      acao=!ch?`<button type="button" class="btn" data-play="cheguei">📍 Cheguei</button>`:n?`<a class="btn" data-play="orc" href="orcamento.html?l=${encodeURIComponent(slug)}&de=play">🧾 Emitir orçamento · ${n} produto${n>1?"s":""} →</a>`:`<button type="button" class="btn" data-play="verprod">Selecionar os produtos ↓</button>`;
+      return `<div class="passos"><div class="t"><span>Percurso de visita · ${i<0?"concluído":"passo "+(i+1)+" de 4"}</span><b>${i<0?"✓ Loja encerrada":S[i][0]}</b></div><ol>${S.map((x,k)=>`<li class="${x[1]?"ok":k===i?"agora":""}">${x[1]?"✓ ":""}${x[0]}</li>`).join("")}</ol><div class="acao-p">${acao}</div></div>`;}
     if(modo==="visita"){S=[["Cheguei",!!A.ini],["A loja",pq>=3||!!A.lojaOk],["Apresentação",!!A.apres],["Resultado",!!A.res],["Encerrar",!!A.fim]];
       const i=S.findIndex(x=>!x[1]);const nx=proxVisita();
       acao=[`<button type="button" class="btn" data-passo="ini">Cheguei · iniciar atendimento</button>`,
@@ -119,11 +161,11 @@
   function render(){
     const cands=candidatos();const logos=c.logos||[];const principal=logos[0]||null;const logo=(c.manual&&c.manual.tratado)||(principal&&principal.src)||null;const fach=(c.fachada&&c.fachada.src)||null;
     const pronto=!!(c.manual&&c.manual.editado);const e=estado();
-    $("#app").innerHTML=`${topo()}${voltar("index.html","Rota")}
+    $("#app").innerHTML=`${topo()}${modo==="play"?filaHTML():voltar("index.html","Rota")}
     <div class="cab"><div><h1 style="margin-bottom:2px">${esc(nome)}${l.avulso?` <button type="button" id="edAvulso" class="btn sec sm" style="width:auto;min-height:32px;padding:0 10px;font-size:13px;vertical-align:middle">✎</button>`:""}</h1><p class="sub">${esc(setorNome(l.setor))} · <a href="${l.maps||(l.place_id?`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((l.endereco||l.nome)+", São Paulo")}&query_place_id=${encodeURIComponent(l.place_id)}`:(l.lat&&l.lng?`https://www.google.com/maps/search/?api=1&query=${l.lat},${l.lng}`:`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((l.endereco||l.nome)+", São Paulo")}`))}" target="_blank" rel="noopener" style="color:var(--marca);text-decoration:underline;text-underline-offset:3px">📍 ${esc(l.endereco||"ver no mapa")}</a></p></div><div style="padding-top:8px">${estrelasHTML(l.estrelas)}</div></div>
     ${passosHTML()}
-    ${modo==="visita"?atendHTML():""}
-    ${(()=>{const prod=(c.produtos||[])[0];const capa=fach?[fach,"Fachada"]:prod?[abs(prod.src),"Produto · sem fachada"]:logo?[logo,"Logotipo · sem fachada"]:null;
+    ${modo==="visita"||modo==="play"?atendHTML():""}
+    ${modo==="play"?prodsPlayHTML():(()=>{const prod=(c.produtos||[])[0];const capa=fach?[fach,"Fachada"]:prod?[abs(prod.src),"Produto · sem fachada"]:logo?[logo,"Logotipo · sem fachada"]:null;
       return `<div class="fach" data-longo data-src="${esc(capa?capa[0]:"")}">${capa?`<img src="${esc(capa[0])}" alt="" ${capa[1]!=="Fachada"?'style="object-fit:contain;background:#fff"':""}><span class="sel">${capa[1]}</span>`:`<div class="nome-logo"><b>${esc(nome)}</b><small>${esc(setorNome(l.setor))}</small></div><span class="sel">Nome · sem imagem</span>`}</div>`;})()}
     ${mensagensHTML()}
     <section class="card" id="painelCli"><h2>Painel do cliente <small class="muted" style="font-weight:400;font-size:14px">· telefone + código</small></h2><div id="pcLista"><small class="muted">carregando…</small></div>
@@ -143,15 +185,15 @@
       <small class="muted">O que as avaliações do Google sustentam — e qual inteligência resolve.</small>
       ${GAT.map(g=>`<div class="gelo"><div class="tema">${esc(g.tema)}${g.nota?` <span class="muted">· ${g.nota}★</span>`:""}</div><blockquote>“${esc((g.trecho||"").replace(/^…|…$/g,""))}”${g.autor?` <span class="muted">— ${esc(g.autor)}</span>`:""}</blockquote><div class="arg"><b>→ ${esc(prodNomes(g.produto))}</b><br>${esc(g.argumento)}</div></div>`).join("")}</section>`:""}
     <section class="card"><h2>Antes de entrar</h2>
-      ${razao?`<div class="fato"><span>Razão social</span><b>${esc(razao.trim())}</b></div>`:""}${desde?`<div class="fato"><span>Desde</span><b>${esc(desde)}</b></div>`:""}
+      ${modo==="play"?histHTML():""}${razao?`<div class="fato"><span>Razão social</span><b>${esc(razao.trim())}</b></div>`:""}${desde?`<div class="fato"><span>Desde</span><b>${esc(desde)}</b></div>`:""}
       ${l.tel?`<div class="fato"><span>Telefone</span><b><a href="tel:+55${esc(String(l.tel).replace(/\D/g,"").replace(/^55/,""))}" class="lk">📞 ${esc(telFmt(l.tel))}</a> · <a href="https://wa.me/55${esc(String(l.tel).replace(/\D/g,"").replace(/^55/,""))}" target="_blank" rel="noopener" class="lk">WhatsApp</a></b></div>`:""}
       ${(L.site&&L.site.estado==="encontrado"&&L.site.valor)||l.site?`<div class="fato"><span>Site</span><b><a href="${esc(((L.site&&L.site.valor)||l.site).match(/^https?:/)?((L.site&&L.site.valor)||l.site):"https://"+((L.site&&L.site.valor)||l.site))}" target="_blank" rel="noopener" class="lk">🌐 ${esc(((L.site&&L.site.valor)||l.site).replace(/^https?:\/\//,"").replace(/\/$/,""))}</a></b></div>`:""}
       ${(L.email&&L.email.valor)?`<div class="fato"><span>E-mail</span><b><a href="mailto:${esc(L.email.valor)}" class="lk">✉️ ${esc(L.email.valor)}</a></b></div>`:""}
       ${(L.redes&&L.redes.estado==="encontrado"&&/@/.test(L.redes.valor||""))?`<div class="fato"><span>Redes</span><b>${(L.redes.valor.match(/@[\w.]+/g)||[]).map(h=>`<a href="https://instagram.com/${esc(h.slice(1))}" target="_blank" rel="noopener" class="lk">${esc(h)}</a>`).join(" · ")}</b></div>`:""}${horarioHoje((L.horario||{}).valor)?`<div class="fato"><span>Hoje</span><b>${esc(horarioHoje(L.horario.valor))}</b></div>`:""}
       ${l.nota?`<div class="fato"><span>Google</span><b>${l.nota} · ${l.aval||0} avaliações${ganchos.length?` · reclamam de: ${esc(ganchos.join(", "))}`:""}</b></div>`:""}
     </section>
-    <div class="acoes"><div class="w"><a class="btn sec" href="index.html">← Rota</a>${pronto?`<a class="btn" href="produtos.html?l=${encodeURIComponent(slug)}">Produtos e serviços →</a>`:logo?`<button class="btn" type="button" id="seguirProd">Produtos e serviços →</button>`:`<a class="btn" href="fontes.html?l=${encodeURIComponent(slug)}&tipo=busca">Escolher logotipo →</a>`}</div></div>
-    ${nav("rota")}`;document.body.classList.add("com-acoes");conferirLogo();
+    ${modo==="play"?`<div class="acoes"><div class="w">${Rp().chegou[slug]?`<button class="btn sec" type="button" data-play="nao" style="background:#FBEBEB;color:#B42318">Não estava</button><button class="btn" type="button" data-play="prox">Próxima loja →</button>`:`<a class="btn sec" href="index.html">← Rota</a><button class="btn" type="button" data-play="cheguei">📍 Cheguei</button>`}</div></div>`:`<div class="acoes"><div class="w"><a class="btn sec" href="index.html">← Rota</a>${pronto?`<a class="btn" href="produtos.html?l=${encodeURIComponent(slug)}">Produtos e serviços →</a>`:logo?`<button class="btn" type="button" id="seguirProd">Produtos e serviços →</button>`:`<a class="btn" href="fontes.html?l=${encodeURIComponent(slug)}&tipo=busca">Escolher logotipo →</a>`}</div></div>`}
+    ${nav(modo==="play"?"play":"rota")}`;document.body.classList.add("com-acoes");conferirLogo();
     // abrir a loja não conta como visita: só o atendimento encerrado marca a loja como feita
     const editar=()=>{if(!principal)return location.href=`fontes.html?l=${encodeURIComponent(slug)}&tipo=busca`;abrirLogotipo(slug,principal.src,(principal.nome||"").replace(/^Logotipo ?·? ?/,""),"visita");};
     // painel do cliente: cada telefone com o seu código (6 números); o vendedor entrega pessoalmente ou pelo próprio WhatsApp
@@ -169,6 +211,16 @@
     const og=$("#ouvirGelo");if(og)og.onclick=()=>{if(!window.speechSynthesis){og.textContent="Sem voz";return;}if(speechSynthesis.speaking){speechSynthesis.cancel();og.textContent="▶ Ouvir";return;}const u=new SpeechSynthesisUtterance(falaGelo());u.lang="pt-BR";u.rate=1;u.onend=()=>{og.textContent="▶ Ouvir";};u.onerror=()=>{og.textContent="▶ Ouvir";};og.textContent="■ Parar";speechSynthesis.speak(u);};
     const ob=$("#ouvir");if(ob)ob.onclick=()=>{if(!window.speechSynthesis){ob.textContent="Sem voz";return;}if(speechSynthesis.speaking){speechSynthesis.cancel();ob.textContent="▶ Ouvir";return;}speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(`${nome}. ${curios.join(" ")}`);u.lang="pt-BR";u.rate=1;u.onend=()=>{ob.textContent="▶ Ouvir";};u.onerror=()=>{ob.textContent="▶ Ouvir";};ob.textContent="■ Parar";speechSynthesis.speak(u);};
     $("#logoArea").onclick=editar;
+    // ▶ Play: cheguei, selecionar produtos, orçamento, não estava, próxima
+    $$("[data-play]").forEach(b=>b.addEventListener("click",async ev=>{const k=b.dataset.play;
+      if(k==="cheguei"){b.disabled=true;await chegueiPlay();}
+      else if(k==="verprod"){const el=document.getElementById("prodsP");if(el)el.scrollIntoView({behavior:"smooth",block:"start"});}
+      else if(k==="orc"){ev.preventDefault();const e=estado();const X=e.rotas[diaP];X.orc=X.orc||{};X.orc[slug]=true;await salvar(e);location.href=b.href;}
+      else if(k==="nao"){b.disabled=true;await fecharPlay("nao_estava");}
+      else if(k==="prox"){b.disabled=true;await fecharPlay("visitada");}}));
+    $$("[data-pp]").forEach(f=>f.onclick=()=>{const k=f.dataset.pp;const e=estado();e.sel=e.sel||{};const S=e.sel[slug]=e.sel[slug]||{};const on=S[k]&&S[k].q>0;
+      S[k]={...(S[k]||{}),nome:pnome(k),q:on?0:(App.baseId(k)==="capacho"?1:App.passoQtd(k,0,1))};salvar(e);const y=scrollY;render();scrollTo(0,y);});
+    const gp=$("#gerarP");if(gp)gp.onclick=async()=>{gp.disabled=true;const r=await App.gerarProdutos(l,pid=>{gp.textContent=`Gerando ${pnome(pid)}…`;});c=await cliente(l);const y=scrollY;render();scrollTo(0,y);if(r&&r.falhas&&r.falhas.length)alert("Não gerou: "+r.falhas.join(", "));};
     // passos do percurso
     const marca=(mud)=>{const e=estado();e.atend=e.atend||{};e.atend[slug]={...(e.atend[slug]||{}),...mud};salvar(e);const y=scrollY;render();scrollTo(0,y);};
     $$("[data-passo]").forEach(b=>b.addEventListener("click",ev=>{const k=b.dataset.passo;

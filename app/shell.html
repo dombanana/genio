@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#6933C5">
 <link rel="icon" href="../genio-favicon.png">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="stylesheet" href="app.css?v=d5b8d2954d">
+<link rel="stylesheet" href="app.css?v=017d8aa9a1">
 <style>html,body{height:100%;overflow:hidden;padding:0}</style>
 </head>
 <body>
@@ -15,7 +15,7 @@
   <iframe id="tela" allow="camera; microphone; geolocation; display-capture; screen-wake-lock" title="GênIO"></iframe>
   <nav class="nav" id="barra"></nav>
 </div>
-<script src="app.js?v=d5b8d2954d"></script>
+<script src="app.js?v=017d8aa9a1"></script>
 <script>
 (()=>{
   const {$,esc,ICONES,gravarNota}=App;
@@ -40,7 +40,7 @@
     const grupo=(nome,itens,seta)=>`<div class="grupo" role="group" aria-label="${nome}"><div class="trio n${itens.length}${seta?" seta":""}">${itens.join("")}</div><small>${nome}</small></div>`;
     const item=(k,t,href,ativo)=>`<a href="#${href}" data-k="${k}" class="${ativo?"on":""}" data-ir="${href}" aria-label="${t}" title="${t}"><span class="ic">${ICONES[k]}</span><span class="badge" hidden></span></a>`;
     const rec=`<button type="button" class="rec-b ${REC.ativo?(REC.pausado?"pausado":"on"):""}" id="rec" aria-label="Gravar" title="grava no modo escolhido em Notas"><span class="ic">${ICONES.recModo(REC.ativo?REC.tipo:(localStorage.getItem("rec-tipo")||"audio"))}</span>${REC.ativo?`<span class="tempo" id="recTempo">${dur(REC.segundos())}</span>`:""}<span class="badge" hidden></span></button>`;
-    $("#barra").innerHTML=grupo("Atendimento",[item("rota","Rota","index.html",on("index")||on("visita")||on("fontes")||on("logotipo")||on("manual")||on("editor")||on("capacho")||on("local")),item("play","Play","play.html",on("play")||on("produtos")||on("orcamento")),item("clientes","Clientes","clientes.html",on("clientes"))])
+    $("#barra").innerHTML=grupo("Atendimento",[item("rota","Rota","index.html",on("index")||(on("visita")&&!/de=play/.test(atual))||on("fontes")||on("logotipo")||on("manual")||on("editor")||on("capacho")||on("local")),item("play","Play","play.html",on("play")||/de=play/.test(atual)||on("produtos")||on("orcamento")),item("clientes","Clientes","clientes.html",on("clientes"))])
       +`<span class="vao"></span>`+grupo("Produção",[["entrada","Entrada"],["processamento","Produção"],["saida","Saída"]].map(([k,t])=>item(k,t,"pedidos.html?etapa="+k,atual.includes("etapa="+k))),true)
       +`<span class="vao"></span>`+grupo("Gravação",[rec,item("notasLista","Notas","notas.html",on("notas"))]);
     // REC é um botão à parte: um toque grava no modo parametrizado em Notas; outro toque para
