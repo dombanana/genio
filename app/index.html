@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="stylesheet" href="app.css?v=1d67a6c18e">
+<link rel="stylesheet" href="app.css?v=fcfda3f6c3">
 <style>
 /* montagem da rota pelo vendedor (14/11): 1 lojas · 2 logotipos · 3 recorte e ordem */
 .dias-r{display:flex;gap:8px;overflow-x:auto;padding:2px 0 10px;margin:0 0 4px;scrollbar-width:none}.dias-r::-webkit-scrollbar{display:none}
@@ -59,7 +59,7 @@ select.campo,input.campo{width:100%;font:inherit;font-size:16px;min-height:46px;
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=1d67a6c18e"></script>
+<script src="app.js?v=fcfda3f6c3"></script>
 <script>
 (async()=>{
   const {$,$$,esc,qs,sessao,eu,dados,estrelasHTML,estado,salvar,nav,topo,setorNome,nomeLoja,cliente,gravarCliente,menuLongo}=App;
@@ -211,7 +211,7 @@ select.campo,input.campo{width:100%;font:inherit;font-size:16px;min-height:46px;
     function ligarLinha(row){const s=row.dataset.s;
       row.querySelectorAll("[data-logo]").forEach(f=>{let t=null;f.addEventListener("pointerdown",ev=>{if(ev.button===2)return;t=setTimeout(()=>{t=null;if(navigator.vibrate)navigator.vibrate(12);menu(s);},480);});["pointerup","pointercancel","pointerleave"].forEach(k=>f.addEventListener(k,()=>clearTimeout(t)));f.addEventListener("contextmenu",ev=>{ev.preventDefault();clearTimeout(t);menu(s);});});
       // arrastar pelo ≡: a linha segue o dedo e troca de lugar com as vizinhas
-      const al=row.querySelector(".alca");al.addEventListener("pointerdown",ev=>{ev.preventDefault();al.setPointerCapture(ev.pointerId);const lista=$("#lista");row.classList.add("arrasta");let y0=ev.clientY;
+      const al=row.querySelector(".alca");al.addEventListener("pointerdown",ev=>{ev.preventDefault();try{al.setPointerCapture(ev.pointerId);}catch(e){}const lista=$("#lista");row.classList.add("arrasta");let y0=ev.clientY;
         const mv=e=>{const dy=e.clientY-y0;row.style.transform=`translateY(${dy}px)`;const irmaos=[...lista.children].filter(x=>x!==row);const meio=row.getBoundingClientRect().top+row.offsetHeight/2;
           for(const x of irmaos){const r=x.getBoundingClientRect();if(meio<r.top+r.height/2&&x.compareDocumentPosition(row)&Node.DOCUMENT_POSITION_FOLLOWING){const antes=row.getBoundingClientRect().top;lista.insertBefore(row,x);y0+=row.getBoundingClientRect().top-antes;row.style.transform=`translateY(${e.clientY-y0}px)`;break;}
             if(meio>r.top+r.height/2&&x.compareDocumentPosition(row)&Node.DOCUMENT_POSITION_PRECEDING&&x===row.nextElementSibling){const antes=row.getBoundingClientRect().top;lista.insertBefore(row,x.nextSibling);y0+=row.getBoundingClientRect().top-antes;row.style.transform=`translateY(${e.clientY-y0}px)`;break;}}};

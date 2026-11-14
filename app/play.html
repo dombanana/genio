@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
-<link rel="stylesheet" href="app.css?v=1d67a6c18e">
+<link rel="stylesheet" href="app.css?v=fcfda3f6c3">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <style>
 /* Play (14/11): só a empresa da vez na fila da rota */
@@ -33,7 +33,7 @@
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=1d67a6c18e"></script>
+<script src="app.js?v=fcfda3f6c3"></script>
 <script>
 (async()=>{
   const {$,$$,esc,sessao,eu,dados,estado,salvar,nav,topo,nomeLoja,setorNome,cliente}=App;
@@ -112,16 +112,15 @@
         +ruins.map(r=>`<div class="melhora"><b>${r.nota}★</b>${r.quando?` <small class="muted">· ${esc(r.quando)}</small>`:""}<blockquote>“${esc((r.texto||"").slice(0,220))}${(r.texto||"").length>220?"…":""}”</blockquote></div>`).join("")
       :`<p class="muted" style="margin:0">Nenhuma reclamação nas avaliações lidas.</p>`}`;}
 
-  async function mapa(l){const box=$("#mapa");if(!box)return;if(!(l.lat&&l.lng)){box.remove();return;}
-    const eu=await new Promise(res=>{if(!navigator.geolocation)return res(null);navigator.geolocation.getCurrentPosition(p=>res({lat:p.coords.latitude,lng:p.coords.longitude}),()=>res(null),{timeout:5000,maximumAge:60000});});
-    if(typeof L==="undefined"){box.remove();return;}
+  // mapa: a loja aparece na hora; "onde estou" entra quando o aparelho responder (a permissão pode ficar pendente)
+  function mapa(l){const box=$("#mapa");if(!box)return;if(!(l.lat&&l.lng)||typeof L==="undefined"){box.remove();return;}
     const map=L.map(box,{zoomControl:false,attributionControl:true,dragging:false,touchZoom:false,doubleClickZoom:false,scrollWheelZoom:false,boxZoom:false,keyboard:false,tap:false});
     L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:"© OpenStreetMap"}).addTo(map);
-    if(eu)L.polyline([[eu.lat,eu.lng],[l.lat,l.lng]],{color:"#6933C5",weight:4,dashArray:"6 8"}).addTo(map);
     L.marker([l.lat,l.lng],{icon:L.divIcon({className:"",html:`<div class="mk">●</div>`,iconSize:[34,34],iconAnchor:[17,17]})}).addTo(map).on("click",()=>window.open(App.mapaLoja(l),"_blank"));
-    if(eu)L.marker([eu.lat,eu.lng],{icon:L.divIcon({className:"",html:'<div class="mk eu"></div>',iconSize:[18,18],iconAnchor:[9,9]})}).addTo(map);
-    const km=eu?Math.hypot((eu.lat-l.lat)*111,(eu.lng-l.lng)*111*Math.cos(l.lat*Math.PI/180)):99;
-    if(eu&&km<5)map.fitBounds(L.latLngBounds([[eu.lat,eu.lng],[l.lat,l.lng]]).pad(.35));else map.setView([l.lat,l.lng],17);}
+    map.setView([l.lat,l.lng],17);
+    if(navigator.geolocation)navigator.geolocation.getCurrentPosition(p=>{if(!box.isConnected)return;const eu={lat:p.coords.latitude,lng:p.coords.longitude};const km=Math.hypot((eu.lat-l.lat)*111,(eu.lng-l.lng)*111*Math.cos(l.lat*Math.PI/180));
+      L.marker([eu.lat,eu.lng],{icon:L.divIcon({className:"",html:'<div class="mk eu"></div>',iconSize:[18,18],iconAnchor:[9,9]})}).addTo(map);
+      if(km<5){L.polyline([[eu.lat,eu.lng],[l.lat,l.lng]],{color:"#6933C5",weight:4,dashArray:"6 8"}).addTo(map);map.fitBounds(L.latLngBounds([[eu.lat,eu.lng],[l.lat,l.lng]]).pad(.35));}},()=>{},{timeout:8000,maximumAge:60000});}
 
   tela();
 })();
