@@ -646,6 +646,8 @@ def rota_logo(slug, refazer, quem):
     """busca automática do logotipo de UMA loja, pedida pelo vendedor; refazer=True recusa o atual e traz o próximo"""
     import logos_auto
     zona, cad = _cad_de(slug)
+    if not zona and not DADOS.cliente_ler(slug):
+        return {"ok": False, "motivo": "loja não encontrada"}
     f = DADOS.cliente_ler(slug) or {"k": (cad.get("nome") or slug).lower(), "nome": cad.get("nome") or slug, "slug": slug, "logos": [], "arquivo": [], "criado": time.strftime("%Y-%m-%dT%H:%M:%S")}
     logos = f.get("logos") or []
     if logos and not refazer:
@@ -679,7 +681,10 @@ _PREMIO = re.compile(r"pr[eê]mi|premiad|vencedor|vencedora|trof[eé]u|selo |ele
 def loja_historia(slug, forcar=False):
     """o que o Play mostra antes de entrar: fundação e sócios (Receita, grátis) e prêmios (pesquisa web, só com fonte). Guardado na ficha."""
     zona, cad = _cad_de(slug)
-    f = DADOS.cliente_ler(slug) or {"k": (cad.get("nome") or slug).lower(), "nome": cad.get("nome") or slug, "slug": slug, "logos": [], "arquivo": []}
+    f0 = DADOS.cliente_ler(slug)
+    if not zona and not f0:
+        raise FileNotFoundError("loja não encontrada")
+    f = f0 or {"k": (cad.get("nome") or slug).lower(), "nome": cad.get("nome") or slug, "slug": slug, "logos": [], "arquivo": []}
     h = dict(f.get("historia") or {})
     L = cad.get("lacunas") or {}
     leit = (L.get("leitura") or {}).get("valor") or ""
@@ -1239,6 +1244,8 @@ class H(BaseHTTPRequestHandler):
                 qs_h = {k: v[0] for k, v in _parse_qs(urlparse(self.path).query or "").items()}
                 try:
                     return self._send(200, loja_historia(slug_h, forcar=qs_h.get("forcar") == "1"))
+                except FileNotFoundError as e:
+                    return self._erro(404, str(e))
                 except Exception as e:
                     return self._erro(500, "história: " + str(e)[:160])
             if p.startswith("/api/clientes/") and p.endswith("/painel") and len(p.split("/")) == 5:
