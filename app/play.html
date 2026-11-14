@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
-<link rel="stylesheet" href="app.css?v=fcfda3f6c3">
+<link rel="stylesheet" href="app.css?v=d5b8d2954d">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <style>
 /* Play (14/11): só a empresa da vez na fila da rota */
@@ -33,7 +33,7 @@
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=fcfda3f6c3"></script>
+<script src="app.js?v=d5b8d2954d"></script>
 <script>
 (async()=>{
   const {$,$$,esc,sessao,eu,dados,estado,salvar,nav,topo,nomeLoja,setorNome,cliente}=App;
@@ -104,7 +104,7 @@
       <div class="fato"><span>Proprietário</span><b>${(h.socios||[]).length?h.socios.map(s=>`${esc(s.nome)}${s.papel?` <small>${esc(s.papel)}</small>`:""}`).join(""):`<span class="muted">${h.cnpj?"a Receita não lista sócios":"CNPJ não encontrado"}</span>`}</b></div>
       ${razao?`<div class="fato"><span>Razão social</span><b>${esc(razao.trim())}${h.cnpj?` <small>CNPJ ${esc(h.cnpj.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/,"$1.$2.$3/$4-$5"))}</small>`:""}</b></div>`:""}
       <div class="fato"><span>Prêmios</span><b style="font-weight:400">${prem}</b></div>
-      ${cn.valor?`<div class="fato"><span>Curiosidade do nome</span><b style="font-weight:400">${esc(cn.valor)}</b></div>`:""}
+      ${cn.valor?`<div class="fato"><span>Curiosidade do nome</span><b style="font-weight:400">${esc(cn.valor)}</b></div>`:cn.palavra?`<div class="fato"><span>Curiosidade do nome</span><b style="font-weight:400">Sem fonte pública. Pergunte ao dono de onde vem “${esc(cn.palavra.charAt(0).toUpperCase()+cn.palavra.slice(1))}”: é nome de família ou de lugar?</b></div>`:""}
       <p class="fonte">Fontes: ${[h.fonte_receita||(h.cnpj?"Receita Federal":""),h.premios_estado==="pesquisado"?"pesquisa Google":"",cn.valor?(cn.nota||"Wikipédia"):""].filter(Boolean).map(esc).join(" · ")||"—"}</p>`;
     const G=d.gatilhos||[],ruins=(d.ruins||[]).filter(r=>!G.some(g=>g.autor&&g.autor===r.autor));
     mb.innerHTML=`<h2>Pontos a melhorar <small class="muted" style="font-weight:400;font-size:14px">· avaliações do Google${d.nota?` · ${String(d.nota).replace(".",",")}★ em ${d.total||0}`:""}</small></h2>
