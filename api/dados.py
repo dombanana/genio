@@ -203,6 +203,15 @@ def mensagens_lidas(slug):
     _escrever_json(_arq_msg(slug), lista)
     return {"ok": True}
 
+def mensagem_apagar(slug, mid):
+    """tira uma mensagem da conversa (administrador)"""
+    lista = mensagens_ler(slug)
+    nova = [m for m in lista if m.get("id") != mid]
+    if len(nova) == len(lista):
+        raise ValueError("mensagem não encontrada")
+    _escrever_json(_arq_msg(slug), nova)
+    return {"ok": True, "restam": len(nova)}
+
 def mensagens_resumo():
     """não lidas por cliente (para o sino de Clientes) e a última mensagem de cada conversa"""
     pasta = _pasta("mensagens"); out = {}

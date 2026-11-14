@@ -1453,6 +1453,8 @@ class H(BaseHTTPRequestHandler):
                 DADOS.nota_apagar(partes[3]); return self._send(200, {"ok": True})
             if p.startswith("/api/clientes/") and len(partes) == 4 and eu["papel"] == "admin":
                 DADOS.cliente_apagar(partes[3]); return self._send(200, {"ok": True})
+            if p.startswith("/api/mensagens/") and len(partes) == 5 and eu["papel"] == "admin":
+                return self._send(200, DADOS.mensagem_apagar(partes[3], partes[4]))
             return self._erro(404, "não existe")
         except ValueError as e:
             return self._erro(400, str(e))
