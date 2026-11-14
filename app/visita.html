@@ -6,7 +6,7 @@
 <title>GênIO · Visita</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="app.css?v=017d8aa9a1">
+<link rel="stylesheet" href="app.css?v=9c503e9a29">
 <style>
 .cab{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
 .fach{width:100%;aspect-ratio:16/9;border-radius:16px;overflow:hidden;background:var(--lav2);display:grid;place-items:center;position:relative}
@@ -18,7 +18,7 @@
 .fato{display:grid;grid-template-columns:auto 1fr;gap:10px;padding:6px 0;border-top:1px solid var(--linha);font-size:15px}
 .prods-p{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
 .prods-p figure{margin:0;background:#fff;border-radius:12px;overflow:hidden;border:2px solid var(--linha);position:relative;cursor:pointer}
-.prods-p img{width:100%;aspect-ratio:1/1;object-fit:contain;display:block;background:#fff;pointer-events:none}
+.prods-p img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;background:#fff;pointer-events:none}
 .prods-p figcaption{font-size:13px;font-weight:600;padding:6px 8px}
 .prods-p .ck{position:absolute;top:8px;right:8px;width:30px;height:30px;border-radius:50%;border:2px solid #fff;background:rgba(20,16,36,.35);color:transparent;display:grid;place-items:center;font-weight:700;box-shadow:0 1px 4px rgba(0,0,0,.3)}
 .prods-p figure.on{border-color:var(--marca);box-shadow:0 0 0 3px rgba(105,51,197,.18)}.prods-p figure.on .ck{background:var(--marca);color:#fff}
@@ -28,7 +28,7 @@
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=017d8aa9a1"></script>
+<script src="app.js?v=9c503e9a29"></script>
 <script>
 (async()=>{
   const {$,$$,esc,qs,sessao,dados,ficha,estrelasHTML,estado,salvar,nav,topo,voltar,setorNome,nomeLoja,telFmt,cliente,gravarCliente,classificar,definirCliente,menuLongo,ligarLongo,ZONA,entradas,ligarEntradas,abrirLogotipo,logoPrincipal,removerLogo}=App;
