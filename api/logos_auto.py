@@ -64,6 +64,64 @@ def candidato_pesquisa(api, nome, bairro):
                 continue
     return None
 
+def marca(src):
+    """impressão digital de uma imagem já usada (para não oferecer de novo o que o vendedor recusou)"""
+    import hashlib
+    return hashlib.sha1((src or "").encode()).hexdigest()[:16]
+
+def proximo(zona, slug, nome, bairro, api, recusados=(), pesquisar=True):
+    """painel do vendedor (14/11): o primeiro logotipo ainda não recusado — as opções da captação (melhor primeiro), depois a pesquisa de imagens.
+    Devolve {src, fonte, legenda, url?} ou {erro} ou None (nada novo)."""
+    recusados = set(recusados or ())
+    pasta = os.path.join(RAIZ, "dados", "captacao", zona or "")
+    try:
+        lo = ((json.load(open(os.path.join(pasta, "clientes", slug + ".json"))).get("lacunas") or {}).get("logoOriginal") or {}) if zona else {}
+    except Exception:
+        lo = {}
+    arqs = ([(lo["valor"], lo.get("nome") or "Captação")] if lo.get("valor") else []) + [(o["img"], o.get("legenda") or "Captação") for o in (lo.get("opcoes") or []) if o.get("img")]
+    vistos = set()
+    for rel, leg in arqs:
+        arq = os.path.join(pasta, rel)
+        if rel in vistos or not os.path.exists(arq):
+            continue
+        vistos.add(rel)
+        ext = arq.rsplit(".", 1)[-1].lower(); mime = {"jpg": "image/jpeg", "jpeg": "image/jpeg", "png": "image/png", "webp": "image/webp"}.get(ext, "image/jpeg")
+        src = _data_url(mime, open(arq, "rb").read())
+        if marca(src) not in recusados:
+            return {"src": src, "fonte": "captação", "legenda": leg}
+    if not pesquisar:
+        return None
+    try:
+        r = api.busca_imagens(f"{nome} logo {bairro}".strip())
+    except Exception as e:
+        return {"erro": "a pesquisa de imagens não respondeu (" + str(e)[:80] + "). Confira os créditos do Serper."}
+    if r.get("erro"):
+        return {"erro": r["erro"]}
+    pal = _palavras(nome)
+    def pontos(i):
+        p = 0
+        t = _norm((i.get("titulo") or "") + " " + (i.get("fonte") or "") + " " + (i.get("pagina") or ""))
+        p += sum(2 for w in pal if w in t)
+        if re.search(r"logo|marca|brand|perfil|instagram|facebook", t): p += 2
+        w, h = i.get("w") or 0, i.get("h") or 0
+        if w and h and 0.6 <= w / h <= 2.6: p += 2
+        return p
+    for i in sorted(r.get("imagens") or [], key=pontos, reverse=True)[:12]:
+        if pontos(i) < 2:
+            break
+        for u in (i.get("u"), i.get("thumb")):
+            try:
+                ct, raw = api.proxy_img(u)
+                if len(raw) <= 2000:
+                    continue
+                src = _data_url(ct, raw)
+                if marca(src) in recusados:
+                    continue
+                return {"src": src, "fonte": "pesquisa", "legenda": (i.get("titulo") or i.get("fonte") or "Pesquisa de imagens")[:80], "url": i.get("pagina") or u}
+            except Exception:
+                continue
+    return None
+
 def rodar(zona, api, limite=None, log=print):
     try:
         lojas = json.load(open(os.path.join(RAIZ, "dados", "captacao", zona, "lojas.json")))["lojas"]

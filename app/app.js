@@ -81,6 +81,8 @@ const App=(()=>{
   async function cliente(l){if(FICHAS[l.slug])return FICHAS[l.slug];const nome=nomeLoja(l.nome||"");
     try{const r=await API("GET",`/api/clientes/${l.slug}`);if(r.ok){const f=await r.json();FICHAS[l.slug]=f;return f;}}catch(e){}
     return FICHAS[l.slug]={k:chave(nome),nome,slug:l.slug,logos:[],arquivo:[],criado:new Date().toISOString()};}
+  // ficha mudada no servidor (busca automática do logotipo, história): relê e troca o espelho
+  async function recarregarFicha(slug){try{const r=await API("GET",`/api/clientes/${slug}`);if(r.ok){FICHAS[slug]=await r.json();return FICHAS[slug];}}catch(e){}return FICHAS[slug]||null;}
   // ---- migração única: fichas/notas/estado que ficaram no aparelho (versão anterior) sobem para o servidor e o local é apagado
   // aviso de progresso na tela enquanto o aparelho esvazia para o servidor (pode levar minutos no 4G/5G)
   function progresso(t){let d=document.getElementById("migrando");if(!t){if(d)d.remove();return;}if(!d){d=document.createElement("div");d.id="migrando";d.style.cssText="position:fixed;inset:0;z-index:9998;display:grid;place-items:center;background:#EFEAFB;padding:24px;text-align:center;font:600 17px/1.5 Rubik,system-ui,sans-serif;color:#1C1635";document.body.appendChild(d);}d.innerHTML=`<div><div style="font-size:40px;margin-bottom:10px">☁️</div>${t}<div style="font-weight:400;font-size:14px;color:#5B5675;margin-top:10px">Mantenha o app aberto. Isso acontece uma vez só.</div></div>`;}
@@ -199,11 +201,11 @@ const App=(()=>{
     if(!r.ok||!d.sem_fundo)return {ok:false,motivo:d.mensagem||d.erro||("servidor "+r.status)};
     const camadas=(d.camadas||[]).map((x,i)=>({nome:i===0?"Cor principal":(x.nome||"Cor")+" "+(x.hex||""),cor:x.hex||null,png:x.png,area:x.area}));
     c.manual={editado:true,tratado:d.sem_fundo,fundoMarca:d.fundo_hex||null,largura:d.largura,altura:d.altura,cores:(d.cores||[]).map(x=>({nome:x.nome||"Cor",hex:x.hex,area:x.area})),camadas:camadas.length>1?camadas:[{nome:"Logotipo",png:d.sem_fundo}],separado:true,auto:true,por:d.fundo_removido_por||"servidor",em:new Date().toISOString()};
-    p.tratado=true;p.src=d.sem_fundo;await gravarCliente(c);return {ok:true,por:d.fundo_removido_por};}
+    p.tratado=true;if(!p.original)p.original=p.src;p.src=d.sem_fundo;await gravarCliente(c);return {ok:true,por:d.fundo_removido_por};}
   // ---- arte automática: logotipo tratado centralizado preenchendo a área segura do gabarito, cor padrão do material
   const COR_PADRAO={capacho:"#2B2B2D",rigido:"#F4F1EA",vinil:null,tecido:"#F4F1EA",papel:"#FFFFFF",lona:"#FFFFFF",carimbo:null};
   const PRODUTOS_IDS=["capacho","placas","adesivos","uniformes","impressos","panfleto","banners","parede","brindes","carimbo","windbanner","faixa","folheto","camiseta","bone","avental"];
-  let _G=null;const gabaritos=async()=>_G||(_G=await (await fetch("gabaritos.json?v=ff7090001c")).json());
+  let _G=null;const gabaritos=async()=>_G||(_G=await (await fetch("gabaritos.json?v=1d67a6c18e")).json());
   const carregarImg=src=>new Promise(res=>{const i=new Image();i.crossOrigin="anonymous";i.onload=()=>res(i);i.onerror=()=>res(null);i.src=src;});
   // ---- carimbo: só texto — nome, razão social, CNPJ (negrito), endereço, telefone; nunca logotipo
   async function dadosCarimbo(l){const cad=await ficha(l.slug).catch(()=>null);const L=(cad&&cad.lacunas)||{};const leit=(L.leitura||{}).valor||"";const razao=((leit.match(/Razão social: ([^·]+)/)||[])[1]||"").trim();const cnpj=((leit.match(/CNPJ:? ?([\d./-]{14,18})/)||[])[1]||"");
@@ -250,7 +252,7 @@ const App=(()=>{
     const aw=W-2*(B+S),ah=H-2*(B+S);const f=Math.min(aw/LW,(P.ancora==="topo"?ah*0.45:ah)/LH);const w=LW*f,h=LH*f;const x=(W-w)/2,y=P.ancora==="topo"?B+S+ah*0.05:(H-h)/2;
     const fundo=P.sem_fundo?null:(COR_PADRAO[P.superficie]===undefined?"#FFFFFF":COR_PADRAO[P.superficie]);
     // kit de 14 setores (10/11): a maquete frontal do ramo da loja é a arte de partida de todos os produtos
-    await carregarScript("qr.js?v=ff7090001c");await carregarScript("impressos.js?v=ff7090001c");await carregarScript("kits14.js?v=ff7090001c");
+    await carregarScript("qr.js?v=1d67a6c18e");await carregarScript("impressos.js?v=1d67a6c18e");await carregarScript("kits14.js?v=1d67a6c18e");
     if(window.Kits14&&window.Kits14.ARQ[pid]){const K=await window.Kits14.montar(App,pid,c,l,{W,H,B,S,im,rec});
       if(K){const doc={fundo:K.fundo,fundoImg:null,el:K.el,campos:null,auto:true,kit:KIT14,setorKit:K.setorKit,kitRef:K.kitRef,W,H};const imgs={[c.manual.tratado]:im};
         const k=Math.min(1,1400/Math.max(W,H));const cv=document.createElement("canvas");cv.width=Math.round(W*k);cv.height=Math.round(H*k);const g=cv.getContext("2d");g.scale(k,k);
@@ -325,6 +327,15 @@ const App=(()=>{
     for(let i=out.length-1;i>=0;i--){const o=out[i];if(o.vazio&&(o.data<lim0||o.data>lim1))out.splice(i,1);}
     out.filter(o=>o.vazio).forEach(o=>{o.n=0;});let nn=Math.max(0,...out.map(o=>o.n))+1;out.sort((a,b)=>a.data.localeCompare(b.data));out.forEach(o=>{if(!o.n)o.n=nn++;});
     out.sort((a,b)=>a.data.localeCompare(b.data));return out;}
+  // ---- rota montada pelo vendedor (14/11): tipo, lojas, logotipos, recorte e ordem; o Play percorre a fila
+  const FAMILIAS={alimentacao:{nome:"Alimentação",setores:["restaurante","padaria","cereais/empório","cafeteria","mercado/hortifruti","bar"]},servicos:{nome:"Serviços e varejo",setores:null}};
+  const familiaDe=setor=>FAMILIAS.alimentacao.setores.includes(setor)?"alimentacao":"servicos";
+  const TIPOS_ROTA={"zona-familia":"Zona + família",zona:"Zona inteira",retorno:"Retornos"};
+  const rotaDe=(iso,e=estado())=>(e.rotas||{})[iso]||null;
+  function gravarRota(iso,R){const e=estado();e.rotas=e.rotas||{};e.rotas[iso]=R;if(R.pronta)e.ordem={n:"d"+iso,slugs:R.slugs.slice()};return salvar(e);}
+  // rota que o Play percorre: a de hoje; senão a pronta mais antiga com lojas na fila; senão a próxima pronta
+  function rotaDoPlay(){const e=estado();const hoje=hojeISO();const L=Object.entries(e.rotas||{}).filter(([,R])=>R&&R.pronta&&!R.encerrada).sort((a,b)=>a[0].localeCompare(b[0]));const fila=R=>(R.slugs||[]).some(x=>!(R.res||{})[x]);
+    const h=L.find(([d,R])=>d===hoje);if(h)return h;return L.find(([d,R])=>d<hoje&&fila(R))||L.find(([d])=>d>hoje)||null;}
   // rota não feita continua presa à sua data; reagendar move só aquela rota
   function arquivarLoja(slug,sim){const e=estado();const L=new Set(e.arquivadas||[]);if(sim)L.add(slug);else L.delete(slug);e.arquivadas=[...L];if(sim&&e.reag)delete e.reag[slug];salvar(e);}
   function reagendarLoja(slug,iso){const e=estado();e.reag=e.reag||{};if(iso)e.reag[slug]=iso;else delete e.reag[slug];salvar(e);}
@@ -356,6 +367,7 @@ const App=(()=>{
   // com o mesmo peso; nada de personagem (o único personagem aceito é o Gênio da marca). Cor = currentColor.
   const _eng=(()=>{let d="";for(let i=0;i<8;i++){const a=i*Math.PI/4,b=a+Math.PI/8;const p=(r,t)=>(12+r*Math.cos(t)).toFixed(2)+" "+(12+r*Math.sin(t)).toFixed(2);d+=(i?"L":"M")+p(9.2,a-.22)+"L"+p(9.2,a+.22)+"L"+p(7,b-.18)+"L"+p(7,b+.18);}return d+"Z";})();
   const SIMB={
+    play:'<circle cx="12" cy="12" r="9.5" class="d"/><path d="M10 8.2v7.6l6-3.8z" class="f"/>',
     rota:'<path d="M3 6.5 8.5 4l7 2.5L21 4v13.5L15.5 20l-7-2.5L3 20z"/><path d="M8.5 4v13.5M15.5 6.5V20"/>',
     notas:'<rect x="5" y="2.8" width="14" height="18.4" rx="2" class="d"/><path d="M8.5 8h7M8.5 12h7M8.5 16h4.5"/>',
     entrada:'<path d="M3 13.5h5l1.8 2.7h4.4l1.8-2.7h5"/><path d="M3 13.5v5.2A2.3 2.3 0 0 0 5.3 21h13.4a2.3 2.3 0 0 0 2.3-2.3v-5.2L18.2 6.5M5.8 6.5 3 13.5" class="d"/><path d="M12 2.5v8.2M8.8 7.6 12 10.8l3.2-3.2"/>',
@@ -374,7 +386,7 @@ const App=(()=>{
     clientes:'<path d="M3.5 9.5V20a1 1 0 0 0 1 1h15a1 1 0 0 0 1-1V9.5" class="d"/><path d="M2.5 4h19l1 5.5H1.5z" class="d"/><path d="M9.5 21v-6h5v6" class="w"/><path d="M6 9.5V4M12 9.5V4M18 9.5V4"/>',
     tela:'<rect x="6" y="2.5" width="12" height="19" rx="2.5" class="d"/><circle cx="12" cy="12" r="2.6" class="f"/>'};
   const ico=n=>`<svg class="icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${SIMB[n]||""}</svg>`;
-  const ICONES={rota:ico("rota"),clientes:ico("clientes"),mic:ico("mic"),pedidos:ico("pedidos"),perfil:ico("perfil"),notas:ico("mic"),notasLista:ico("notas"),config:ico("config"),financeiro:ico("financeiro"),ocorrencias:ico("ocorrencias"),entrada:ico("entrada"),processamento:ico("processamento"),saida:ico("saida"),
+  const ICONES={rota:ico("rota"),play:ico("play"),clientes:ico("clientes"),mic:ico("mic"),pedidos:ico("pedidos"),perfil:ico("perfil"),notas:ico("mic"),notasLista:ico("notas"),config:ico("config"),financeiro:ico("financeiro"),ocorrencias:ico("ocorrencias"),entrada:ico("entrada"),processamento:ico("processamento"),saida:ico("saida"),
     recModo:t=>ico({audio:"mic",transcrever:"transcrever","video-tras":"video","video-frente":"video",foto:"foto"}[t]||"mic")};
   // ---- etapas do pedido: entrada (selecionando/orçando) → processamento (produção) → saída (entrega/instalação) → entregue
   const ETAPAS=["entrada","arte","processamento","qualidade","saida","entregue"];
@@ -390,9 +402,9 @@ const App=(()=>{
       if(l.avulso&&(!l.tel||/^Pedido avulso/.test(l.nome)))out.push({nivel:"atencao",loja:l,texto:"Cliente avulso sem nome ou telefone",acao:`visita.html?l=${encodeURIComponent(l.slug)}`});
       if((c.logos||[]).length&&!(c.manual&&c.manual.editado)&&e.feitas&&e.feitas.includes(l.slug))out.push({nivel:"atencao",loja:l,texto:"Visitada, logotipo escolhido e ainda sem recorte",acao:`visita.html?l=${encodeURIComponent(l.slug)}`});}
     try{const notas=await listarNotas();const velhas=notas.filter(n=>!n.loja&&n.em.slice(0,10)<hoje);if(velhas.length)out.push({nivel:"atencao",texto:`${velhas.length} nota(s) de dias anteriores sem cliente`,acao:"notas.html"});}catch(e){}
-    try{const dias=diasDeRota(D);const pend=dias.filter(d=>!d.vazio&&d.data<hoje&&d.lojas.some(l=>!(e.feitas||[]).includes(l.slug)));if(pend.length)out.push({nivel:"atencao",texto:`${pend.length} rota(s) passada(s) com lojas não visitadas`,acao:"index.html"});}catch(e){}
+    try{const pend=Object.entries(e.rotas||{}).filter(([d,R])=>d<hoje&&R.pronta&&!R.encerrada&&(R.slugs||[]).some(x=>!(R.res||{})[x]));if(pend.length)out.push({nivel:"atencao",texto:`${pend.length} rota(s) passada(s) com lojas não visitadas`,acao:"play.html"});}catch(e){}
     return out;}
-  const nav=on=>NA_CASCA?"":`<nav class="nav"><a href="index.html" class="${on==="rota"?"on":""}"><span class="ic">${ICONES.rota}</span>Rota</a><a href="pedidos.html" class="${on==="pedidos"?"on":""}"><span class="ic">${ICONES.pedidos}</span>Pedidos</a><a href="perfil.html" class="${on==="perfil"?"on":""}"><span class="ic">${ICONES.perfil}</span>Perfil</a><a href="notas.html" class="${on==="notas"?"on":""}"><span class="ic">${ICONES.notasLista}</span>Notas</a></nav>`;
+  const nav=on=>NA_CASCA?"":`<nav class="nav"><a href="index.html" class="${on==="rota"?"on":""}"><span class="ic">${ICONES.rota}</span>Rota</a><a href="play.html" class="${on==="play"?"on":""}"><span class="ic">${ICONES.play}</span>Play</a><a href="pedidos.html" class="${on==="pedidos"?"on":""}"><span class="ic">${ICONES.pedidos}</span>Pedidos</a><a href="perfil.html" class="${on==="perfil"?"on":""}"><span class="ic">${ICONES.perfil}</span>Perfil</a><a href="notas.html" class="${on==="notas"?"on":""}"><span class="ic">${ICONES.notasLista}</span>Notas</a></nav>`;
   // avatar (canto superior direito) abre o menu da conta: Perfil · Configuração · Sair
   // ---- desempenho: venda = pedido confirmado (saiu da Entrada); atendimento = loja com início e fim marcados na visita
   const diaDe=iso=>{const d=new Date(iso);d.setMinutes(d.getMinutes()-d.getTimezoneOffset());return d.toISOString().slice(0,10);};
@@ -534,7 +546,7 @@ const App=(()=>{
     const ass=JSON.stringify(pn);if(_pubUlt[l.slug]===ass)return;pn.em=new Date().toISOString();c.painel=pn;await gravarCliente(c);_pubUlt[l.slug]=ass;}catch(e){}}
   async function acessosCliente(slug,acao,corpo){const u=`/api/clientes/${encodeURIComponent(slug)}/acessos${acao?"/"+acao:""}`;const r=await fetch(u,{method:corpo||acao?"POST":"GET",credentials:"same-origin",headers:{"Content-Type":"application/json"},body:corpo||acao?JSON.stringify(corpo||{}):undefined});const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.erro||r.status);return d.acessos||[];}
   return {publicarPainel,acessosCliente,cabCliente,mapaLoja,get FORNEC(){return FORNEC;},set FORNEC(v){FORNEC=v;},fornItem,fornDe,fornTab,fornPreco,FAIXAS,NOME_ORC,ORDEM_ORC,
-  LOC_DIAS,LOC_TEMAS,LOC_IMG,isoDia,maisDias,diaBR,locFim,precoLocacao,reservasLoc,locLivre,reservarLoc,baseId,qtdMin,qtdOpcoes,passoQtd,qtdNormal,precoEm,orcamento,pagamentos,VITRINE_PADRAO,vitrineMaisPerto,CUSTO,venda,lucroPct,LUCRO_PADRAO,fundoTransparente,logoComoTratado,VITRINE,precoProduto,$,$$,esc,qs,ZONA,zonaDe,desempenho,get METAS(){return METAS;},arquivarLoja,reagendarLoja,get PLANO(){return PLANO;},setorNome,nomeLoja,telFmt,ini,sessao,eu,dados,ficha,estrelas,estrelasHTML,estado,salvar,abrirVendas,lerCliente,gravarCliente,cliente,lerChave,gravarChave,API,definirCliente,classificar,logoPrincipal,removerLogo,estadoLogo,ROTULO_LOGO,aprovarLogo,escolherImagem,abrirLogotipo,entradas,ligarEntradas,artePadrao,gerarProdutos,contextualizar,aparar,assarRecortes,desenharElementos,desenharTexto,desenharQR,desenharVetor,carregarScript,recortarLogo,PRODUTOS_IDS,separarCores,garantirCamadas,dadosCarimbo,desenharCarimbo,cenaCarimbo,desenharLista,desenharSeta,listarNotas,gravarNota,apagarNota,diasDeRota,reagendar,hojeISO,dataCurta,META,ICONES,NA_CASCA,avulsos,novoAvulso,atualizarAvulso,ocorrenciasManuais,gravarOcorrencias,ocorrenciasAuto,ETAPAS,etapaDe,moverEtapa,nav,topo,voltar,acoes,menuLongo,ligarLongo};
+  LOC_DIAS,LOC_TEMAS,LOC_IMG,isoDia,maisDias,diaBR,locFim,precoLocacao,reservasLoc,locLivre,reservarLoc,baseId,qtdMin,qtdOpcoes,passoQtd,qtdNormal,precoEm,orcamento,pagamentos,VITRINE_PADRAO,vitrineMaisPerto,CUSTO,venda,lucroPct,LUCRO_PADRAO,fundoTransparente,logoComoTratado,VITRINE,precoProduto,$,$$,esc,qs,ZONA,zonaDe,desempenho,get METAS(){return METAS;},arquivarLoja,reagendarLoja,FAMILIAS,familiaDe,TIPOS_ROTA,rotaDe,gravarRota,rotaDoPlay,recarregarFicha,get PLANO(){return PLANO;},setorNome,nomeLoja,telFmt,ini,sessao,eu,dados,ficha,estrelas,estrelasHTML,estado,salvar,abrirVendas,lerCliente,gravarCliente,cliente,lerChave,gravarChave,API,definirCliente,classificar,logoPrincipal,removerLogo,estadoLogo,ROTULO_LOGO,aprovarLogo,escolherImagem,abrirLogotipo,entradas,ligarEntradas,artePadrao,gerarProdutos,contextualizar,aparar,assarRecortes,desenharElementos,desenharTexto,desenharQR,desenharVetor,carregarScript,recortarLogo,PRODUTOS_IDS,separarCores,garantirCamadas,dadosCarimbo,desenharCarimbo,cenaCarimbo,desenharLista,desenharSeta,listarNotas,gravarNota,apagarNota,diasDeRota,reagendar,hojeISO,dataCurta,META,ICONES,NA_CASCA,avulsos,novoAvulso,atualizarAvulso,ocorrenciasManuais,gravarOcorrencias,ocorrenciasAuto,ETAPAS,etapaDe,moverEtapa,nav,topo,voltar,acoes,menuLongo,ligarLongo};
 })();
 
 // ---- tela travada: a pinça não amplia o app; só as artes abrem (prancheta, logotipo e imagens de arte, que têm a própria pinça)

@@ -7,151 +7,226 @@
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
-<link rel="stylesheet" href="app.css?v=ff7090001c">
-<style>.leaflet-div-icon{background:transparent;border:0}.mapa svg.esq{width:100%;height:100%}</style>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<link rel="stylesheet" href="app.css?v=1d67a6c18e">
+<style>
+/* montagem da rota pelo vendedor (14/11): 1 lojas · 2 logotipos · 3 recorte e ordem */
+.dias-r{display:flex;gap:8px;overflow-x:auto;padding:2px 0 10px;margin:0 0 4px;scrollbar-width:none}.dias-r::-webkit-scrollbar{display:none}
+.dias-r a,.dias-r label{flex:0 0 auto;text-decoration:none;color:var(--texto);background:#fff;border:1.5px solid var(--linha);border-radius:14px;padding:8px 12px;font-size:14px;line-height:1.25;position:relative}
+.dias-r a.on{border-color:var(--marca);background:var(--lav2);color:var(--marca);font-weight:700}.dias-r small{display:block;color:var(--texto2);font-size:12px}
+.dias-r label input{position:absolute;inset:0;opacity:0;width:100%}
+.etapas{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:0 0 12px}
+.etapas button{border:0;border-radius:12px;padding:10px 4px;font:inherit;font-size:13.5px;font-weight:700;background:#fff;color:var(--texto2);line-height:1.2}
+.etapas button.on{background:var(--marca);color:#fff}.etapas button.ok{color:#0E6E6A}.etapas button:disabled{opacity:.45}
+.op{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 12px}
+.op button{border:1.5px solid var(--linha);background:#fff;border-radius:999px;padding:9px 14px;font:inherit;font-size:15px;font-weight:600;color:var(--texto)}
+.op button.on{background:var(--marca);border-color:var(--marca);color:#fff}
+select.campo,input.campo{width:100%;font:inherit;font-size:16px;min-height:46px;padding:0 12px;border:1.5px solid var(--linha);border-radius:12px;background:#fff;margin:0 0 6px}
+.cand{display:grid;gap:6px}
+.cand label{display:grid;grid-template-columns:24px 44px 1fr auto;gap:10px;align-items:center;background:var(--lav);border-radius:12px;padding:8px 10px}
+.cand input{width:20px;height:20px;accent-color:var(--marca)}
+.cand .mi{width:44px;height:44px;border-radius:9px;background:#fff;display:grid;place-items:center;overflow:hidden;font-size:9.5px;color:var(--texto2);text-align:center;line-height:1.1}
+.cand .mi img{width:100%;height:100%;object-fit:contain}
+.cand b{display:block;font-size:15px}.cand small{color:var(--texto2);font-size:12.5px}
+.cand .tag{font-size:11.5px;background:#FFF2DC;color:#8A5A0D;border-radius:8px;padding:2px 7px;white-space:nowrap}
+.linha-b{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 10px}.linha-b .btn{width:auto;flex:1 1 auto;min-height:44px;font-size:15px;padding:0 12px}
+.lg-g{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.lg-g figure{margin:0;background:#fff;border:2px solid var(--linha);border-radius:14px;overflow:hidden;position:relative;cursor:pointer;-webkit-user-select:none;user-select:none;touch-action:manipulation}
+.lg-g .im{aspect-ratio:1/1;display:grid;place-items:center;background:#fff;padding:8px}.lg-g .im img{max-width:100%;max-height:100%;object-fit:contain;pointer-events:none}
+.lg-g .im i{font-size:12px;color:var(--texto2);text-align:center}
+.lg-g figcaption{font-size:12px;padding:5px 7px 7px;line-height:1.2;border-top:1px solid var(--linha)}.lg-g figcaption b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:12.5px}
+.lg-g figcaption small{color:var(--texto2);font-size:11px}
+.lg-g figure.errada{border-color:#C62828;box-shadow:0 0 0 3px rgba(198,40,40,.18)}.lg-g figure.errada::after{content:"✕ deu errado";position:absolute;top:6px;left:6px;background:#C62828;color:#fff;font-size:11px;font-weight:700;border-radius:8px;padding:2px 7px}
+.lg-g figure.busy::before{content:"buscando…";position:absolute;inset:0;background:rgba(255,255,255,.8);display:grid;place-items:center;font-size:13px;font-weight:700;color:var(--marca);z-index:2}
+.lg-g figure.alvo{outline:3px dashed var(--teal);outline-offset:-3px}
+.bandeja{display:flex;gap:8px;overflow-x:auto;padding:8px;background:var(--teal2);border-radius:12px;margin:0 0 10px}
+.bandeja img{width:64px;height:64px;object-fit:contain;background:#fff;border-radius:10px;border:3px solid transparent;flex:0 0 auto}.bandeja img.on{border-color:var(--marca)}
+.st{font-size:13.5px;color:var(--texto2);margin:0 0 10px;min-height:1em}
+.rc-l{display:grid;gap:8px}
+.rc{display:grid;grid-template-columns:26px 28px 1fr 14px 1fr;gap:8px;align-items:center;background:#fff;border-radius:14px;padding:8px;box-shadow:var(--sombra);position:relative;touch-action:pan-y}
+.rc .pos{width:26px;height:26px;border-radius:50%;background:var(--lav);color:var(--marca);font-weight:700;font-size:13px;display:grid;place-items:center}
+.rc .alca{font-size:22px;color:var(--texto2);text-align:center;cursor:grab;touch-action:none;padding:8px 0}
+.rc figure{margin:0;aspect-ratio:4/3;border-radius:10px;background:repeating-conic-gradient(#EEE 0 25%,#fff 0 50%) 0 0/14px 14px;display:grid;place-items:center;overflow:hidden;position:relative;-webkit-user-select:none;user-select:none}
+.rc figure img{max-width:92%;max-height:92%;object-fit:contain;pointer-events:none}.rc figure i{font-size:11.5px;color:var(--texto2);text-align:center;padding:4px;font-style:normal;background:rgba(255,255,255,.85);border-radius:8px}
+.rc figure span.r{position:absolute;left:4px;top:4px;font-size:10.5px;font-weight:700;background:rgba(20,16,36,.7);color:#fff;border-radius:6px;padding:1px 6px}
+.rc .seta{color:var(--texto2);text-align:center}
+.rc .nm{grid-column:1/-1;display:flex;justify-content:space-between;gap:8px;font-size:14px;padding:0 4px}.rc .nm small{color:var(--texto2)}
+.rc.ok .nm small{color:#0E6E6A;font-weight:600}
+.rc.arrasta{z-index:5;box-shadow:0 10px 30px rgba(28,22,53,.3);opacity:.95}
+.rc.busy figure.dep::after{content:"recortando…";position:absolute;inset:0;background:rgba(255,255,255,.85);display:grid;place-items:center;font-size:12px;font-weight:700;color:var(--marca)}
+.pronta{background:var(--teal2);color:#0E6E6A;border-radius:14px;padding:12px 14px;margin:0 0 12px;font-weight:600}
+.pronta a{color:#0E6E6A}
+</style>
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=ff7090001c"></script>
+<script src="app.js?v=1d67a6c18e"></script>
 <script>
 (async()=>{
-  const {$,$$,esc,qs,sessao,eu,dados,estrelasHTML,estado,salvar,nav,topo,setorNome,nomeLoja}=App;
+  const {$,$$,esc,qs,sessao,eu,dados,estrelasHTML,estado,salvar,nav,topo,setorNome,nomeLoja,cliente,gravarCliente,menuLongo}=App;
   if(!await sessao())return;
-  let D;try{D=await dados();}catch(e){$("#app").innerHTML=`${topo()}<section class="card"><h2>Rota ainda não preparada</h2><p>A zona <b>${esc(App.ZONA)}</b> não tem captação pronta. Peça ao administrador para rodar a varredura.</p></section>${nav("rota")}`;return;}
-  const e=estado();e.feitas=e.feitas||[];
-  if(!e.migFeitas){e.feitas=e.feitas.filter(s=>e.atend&&e.atend[s]&&e.atend[s].fim);e.migFeitas=1;salvar(e);}
-  // jornada da rota: ▶ começa a contar, ⏸ para e libera o planejamento, ■ encerra com o resumo do dia
-  e.jornadas=e.jornadas||{};const J=n=>e.jornadas[n]||null;
-  const tempoJ=j=>{if(!j)return 0;const fim=j.fim?new Date(j.fim):new Date();let t=fim-new Date(j.ini);for(const p of j.pausas||[])t-=((p.fim?new Date(p.fim):fim)-new Date(p.ini));return Math.max(0,t);};
-  const pausaJ=j=>{if(!j)return 0;const fim=j.fim?new Date(j.fim):new Date();return (j.pausas||[]).reduce((a,p)=>a+((p.fim?new Date(p.fim):fim)-new Date(p.ini)),0);};
-  const hms=ms=>{const m=Math.floor(ms/60000);return `${Math.floor(m/60)}h${String(m%60).padStart(2,"0")}`;};
-  // agenda: todas as lojas da zona por estrelas, em dias de 50; cada dia tem uma data (pula domingo)
-  const DIAS=App.diasDeRota(D);const hoje=App.hojeISO();
-  const pedida=qs.get("dia")?+qs.get("dia"):0;const feitasSet=new Set(e.feitas);
-  const pend=d=>d.lojas.some(l=>!feitasSet.has(l.slug));
-  // abre a rota de hoje; sem rota hoje (sábado) ou com atraso, a pendente mais antiga; senão a próxima
-  const atual=DIAS.find(d=>d.n===pedida)||DIAS.find(d=>d.data===hoje&&pend(d))||DIAS.find(d=>d.data<hoje&&pend(d))||DIAS.find(d=>d.data>hoje&&pend(d))||DIAS.find(d=>pend(d))||DIAS[0];
-  const sel=atual.lojas;if(!sel.length){const dc0=App.dataCurta(atual.data);$("#app").innerHTML=`${topo()}<h1>Olá, ${esc(eu().nome.split(" ")[0])}</h1><p class="sub">${esc(D.zona.nome)} · ${dc0.sem} ${dc0.dia}/${dc0.mes}</p>
-    <div class="agenda">${DIAS.map(d=>{const q=d.lojas.filter(l=>feitasSet.has(l.slug)).length;const x=App.dataCurta(d.data);const st=d.vazio?"a captar":q>=d.lojas.length?"feita":d.data<hoje?"pendente":d.data===hoje?"hoje":"";const j=J(d.n);return `<a href="?dia=${d.n}" class="${d===atual?"on":""} ${d.data===hoje?"hoje":""} ${d.data<hoje?"passado":""} ${j&&j.status==="andando"?"andando":""}"><span class="s">${x.sem}</span><span class="d">${x.dia}</span><span class="s">${x.mes}</span>${d===atual&&!d.vazio?`<span class="play ${j&&j.status==="andando"?"pausa":""} ${j&&j.status==="encerrada"?"fim":""}" data-play title="${j&&j.status==="andando"?"Pausar a rota":"Começar a rota"}">${j&&j.status==="andando"?"❚❚":j&&j.status==="encerrada"?"✓":"▶"}</span>`:""}${st?`<span class="tag ${st}">${st}</span>`:""}</a>`;}).join("")}</div>
-    <section class="card"><h2>Sem rota neste dia</h2><p>As lojas desta zona (3 a 5 estrelas) preenchem ${DIAS.filter(d=>!d.vazio).length} dias de rota. Para preencher os próximos dias, a captação precisa varrer novas zonas — hoje está pausada por decisão do dono.</p></section>${nav("rota")}`;return;}
-  // percurso do dia: encadeado ponto a ponto a partir da base (vizinho mais próximo)
-  const dist=(a,b)=>Math.hypot((a.lat-b.lat)*111,(a.lng-b.lng)*111*Math.cos(a.lat*Math.PI/180));
-  const Z=D.zonas[atual.zona]||D.zona;const rota=[];{let cur={lat:Z.base[0],lng:Z.base[1]};const resto=sel.filter(l=>l.lat&&l.lng);const semGeo=sel.filter(l=>!(l.lat&&l.lng));while(resto.length){let k=0;for(let i=1;i<resto.length;i++)if(dist(cur,resto[i])<dist(cur,resto[k]))k=i;cur=resto.splice(k,1)[0];rota.push(cur);}rota.push(...semGeo);}
-  rota.forEach((l,i)=>l.parada=i+1);
-  const filtro=qs.get("min")?+qs.get("min"):0;const vis=rota.filter(l=>l.estrelas>=filtro);
-  const LOGO={},MINI={};for(const l of vis){const c=await App.cliente(l);LOGO[l.slug]=App.estadoLogo(c);MINI[l.slug]=(c.manual&&c.manual.tratado)||(c.logos&&c.logos[0]&&c.logos[0].src)||null;}const feitasDia=rota.filter(l=>feitasSet.has(l.slug)).length;const dc=App.dataCurta(atual.data);
-  const feitas=new Set(e.feitas);const prox=rota.find(l=>!feitas.has(l.slug))||null;
-  const emRota=(J(atual.n)||{}).status==="andando";
-  // ordem da rota guardada para o "Próxima loja →" dos percursos de visita e de preparo
-  {const slugs=rota.map(l=>l.slug);if(!e.ordem||e.ordem.n!==atual.n||e.ordem.slugs.join()!==slugs.join()){e.ordem={n:atual.n,slugs};salvar(e);}}
-  const cont=[5,4,3].map(n=>[n,rota.filter(l=>l.estrelas===n).length]).filter(x=>x[1]);
-  $("#app").innerHTML=`${topo()}
-  <h1>Olá, ${esc(eu().nome.split(" ")[0])}</h1><p class="sub">${esc(Z.nome)} · rota ${atual.n} · ${dc.sem} ${dc.dia}/${dc.mes} · ${rota.length} lojas · ${feitasDia} visitadas</p>
-  <div class="agenda">${DIAS.map(d=>{const q=d.lojas.filter(l=>feitasSet.has(l.slug)).length;const x=App.dataCurta(d.data);const st=d.vazio?"a captar":q>=d.lojas.length?"feita":d.data<hoje?"pendente":d.data===hoje?"hoje":"";const j=J(d.n);return `<a href="?dia=${d.n}" class="${d===atual?"on":""} ${d.data===hoje?"hoje":""} ${d.data<hoje?"passado":""} ${j&&j.status==="andando"?"andando":""}"><span class="s">${x.sem}</span><span class="d">${x.dia}</span><span class="s">${x.mes}</span>${d===atual&&!d.vazio?`<span class="play ${j&&j.status==="andando"?"pausa":""} ${j&&j.status==="encerrada"?"fim":""}" data-play title="${j&&j.status==="andando"?"Pausar a rota":"Começar a rota"}">${j&&j.status==="andando"?"❚❚":j&&j.status==="encerrada"?"✓":"▶"}</span>`:""}${st?`<span class="tag ${st}">${st}</span>`:""}</a>`;}).join("")}</div>
-  ${(()=>{const j=J(atual.n);if(!j)return `<div class="jornada plan"><b>Planejamento</b><span>Toque ▶ no dia para começar a rota. Até lá, nada conta como visita.</span></div>`;
-    if(j.status==="encerrada")return `<div class="jornada fim"><b>Rota encerrada</b><span>${hms(tempoJ(j))} em rota · ${hms(pausaJ(j))} de intervalo · ${feitasDia}/${rota.length} lojas</span><button type="button" id="jResumo">Resumo</button></div>`;
-    return `<div class="jornada ${j.status}"><b>${j.status==="andando"?"Em rota":"Pausada · ajustes"}</b><span><b id="jT">${hms(tempoJ(j))}</b> · ${feitasDia}/${rota.length} lojas${pausaJ(j)?` · ${hms(pausaJ(j))} de intervalo`:""}</span><button type="button" data-play>${j.status==="andando"?"❚❚ Pausar":"▶ Retomar"}</button><button type="button" id="jFim">■ Encerrar</button></div>`;})()}
-  ${atual.data!==hoje&&feitasDia<rota.length?`<div class="linha-rota"><span class="muted">Rota ${atual.n} agendada para ${dc.sem} ${dc.dia}/${dc.mes}${atual.data<hoje?" · ainda não feita":""}</span><button type="button" class="btn sec sm" id="reHoje" style="width:auto;min-height:36px;padding:0 12px;font-size:13px">Fazer hoje</button><label class="btn sec sm" style="width:auto;min-height:36px;padding:0 12px;font-size:13px;display:inline-grid;place-items:center;position:relative">Outra data<input type="date" id="reData" value="${atual.data}" style="position:absolute;inset:0;opacity:0;width:100%"></label></div>`:""}
-  <section class="card" style="padding:12px 16px"><div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">${cont.map(([n,q])=>`<a href="?dia=${atual.n}&min=${n}" class="chip ${filtro===n?"ok":""}" style="text-decoration:none">${"★".repeat(n)} <b>${q}</b></a>`).join("")}${filtro?`<a href="?dia=${atual.n}" class="chip">todas</a>`:""}</div><small class="muted">Só lojas de 3 a 5 estrelas; 5 e 4 primeiro. <span class="leg-auto">Azul</span> = logotipo automático aguardando aprovação · <span class="leg-falta">âmbar</span> = logotipo ainda não organizado.</small></section>
-  <div class="mapa" id="mapa"></div>
-  <div style="display:${emRota?"none":"grid"};grid-template-columns:1fr 1fr;gap:8px;margin:0 0 6px"><button class="btn sec" id="recortarTodas" type="button" style="min-height:48px;font-size:14px">✂ Recortar logotipos em lote</button><button class="btn sec" id="gerarTodas" type="button" style="min-height:48px;font-size:14px">✦ Gerar produtos de todas</button></div><div class="muted" id="gerarSt" style="font-size:13px;margin:0 0 10px"></div>
-  <div class="lista">${vis.map((l,i)=>`<div class="desliza" data-slug="${esc(l.slug)}"><span class="acao reag">📅 Reagendar</span><span class="acao arq">Arquivar 🗂</span><a class="card loja-l ${e.feitas.includes(l.slug)?"feita":""} logo-${LOGO[l.slug]}" href="visita.html?l=${encodeURIComponent(l.slug)}&modo=${emRota?"visita":"preparo"}" style="display:grid;color:inherit;text-decoration:none"><span class="n">${e.feitas.includes(l.slug)?"✓":l.parada}</span><span class="mini ${LOGO[l.slug]}" data-mini="${esc(l.slug)}">${MINI[l.slug]?`<img src="${esc(MINI[l.slug])}" alt="" loading="lazy">`:"<i>sem<br>logo</i>"}</span><div><b>${esc(nomeLoja(l.nome))}</b><small>${esc(setorNome(l.setor))} · ${esc((l.endereco||"").split(" · ")[0])}</small></div><div style="text-align:right">${estrelasHTML(l.estrelas)}<br><small class="${LOGO[l.slug]==="pronto"?"ok-logo":"falta-logo"}">${LOGO[l.slug]==="pronto"?"✓ logotipo pronto":LOGO[l.slug]==="falta"?"◷ falta tratar":"✦ falta logotipo"}</small>${l.reagendada?`<br><small class="reag-tag">📅 reagendada</small>`:""}${(e.preparadas||{})[l.slug]&&!e.feitas.includes(l.slug)?`<br><small class="ok-logo">✓ preparada</small>`:""}</div></a></div>`).join("")}</div>
-  <p class="muted" style="font-size:13px;text-align:center;margin:6px 0 10px">${emRota?"Em rota: a ordem fica travada. Pause (❚❚) para reagendar, arquivar ou mudar a ordem.":"Arraste a loja para a direita para reagendar · para a esquerda para arquivar"}</p>
-  ${(e.arquivadas||[]).length?`<details class="card" style="padding:12px 16px"><summary><b>Arquivadas (${e.arquivadas.length})</b></summary>${e.arquivadas.map(s=>{const lj=D.lojas.find(x=>x.slug===s);return `<div class="arq-l"><span>${esc(lj?nomeLoja(lj.nome):s)}</span><button type="button" class="btn sec sm" data-volta="${esc(s)}" style="width:auto;min-height:36px;padding:0 12px;font-size:13px">Voltar para a rota</button></div>`;}).join("")}</details>`:""}
-  ${nav("rota")}`;
-  const agoraISO=()=>new Date().toISOString();
-  function tocar(){const j=J(atual.n);const t=agoraISO();
-    if(!j||j.status==="encerrada"){if(j&&j.status==="encerrada"&&!confirm("Esta rota já foi encerrada. Começar de novo?"))return;
-      for(const [n,o] of Object.entries(e.jornadas))if(o.status==="andando"&&+n!==atual.n){o.status="pausada";(o.pausas=o.pausas||[]).push({ini:t});}   // só uma rota anda por vez
-      if(atual.data!==hoje)App.reagendar(atual.n,hoje);   // play numa rota de outro dia: ela vem para hoje
-      const e2=estado();e2.jornadas=e2.jornadas||{};Object.assign(e2.jornadas,e.jornadas);e2.jornadas[atual.n]={ini:t,pausas:[],status:"andando",data:hoje};Promise.resolve(salvar(e2)).finally(()=>location.reload());return;}
-    if(j.status==="andando"){j.status="pausada";(j.pausas=j.pausas||[]).push({ini:t});}
-    else{j.status="andando";const p=(j.pausas||[]).slice(-1)[0];if(p&&!p.fim)p.fim=t;}
-    Promise.resolve(salvar(e)).finally(()=>location.reload());}
-  $$("[data-play]").forEach(b=>b.addEventListener("click",ev=>{ev.preventDefault();ev.stopPropagation();tocar();},true));
-  function resumo(){const j=J(atual.n);const pend=rota.filter(l=>!feitasSet.has(l.slug));const at=e.atend||{};const res=k=>rota.filter(l=>at[l.slug]&&at[l.slug].res===k).length;
-    const dUtil=(()=>{const d=new Date(hoje+"T12:00:00");do{d.setDate(d.getDate()+1);}while(d.getDay()===0||d.getDay()===6);return d.toISOString().slice(0,10);})();
-    const f=document.createElement("div");f.className="fundo";const m=document.createElement("div");m.className="menu-lado resumo";
-    m.innerHTML=`<b>Resumo da rota ${atual.n}</b><div class="res-g"><span>Tempo em rota<b>${hms(tempoJ(j))}</b></span><span>Intervalo<b>${hms(pausaJ(j))}</b></span><span>Lojas atendidas<b>${rota.length-pend.length}/${rota.length}</b></span><span>Vendeu<b>${res("vendeu")}</b></span><span>Voltar outro dia<b>${res("voltar")}</b></span><span>Sem interesse<b>${res("sem")}</b></span></div>
-      ${pend.length?`<button type="button" data-k="reag">📅 Reagendar ${pend.length} pendente(s) para ${App.dataCurta(dUtil).sem} ${App.dataCurta(dUtil).dia}/${App.dataCurta(dUtil).mes}</button>`:""}<button type="button" class="cancela" data-k="">Fechar</button>`;
-    document.body.append(f,m);const sai=()=>{f.remove();m.remove();};f.onclick=sai;m.querySelector(".cancela").onclick=sai;
-    const rb=m.querySelector("[data-k=reag]");if(rb)rb.onclick=async()=>{const e3=estado();e3.reag=e3.reag||{};pend.forEach(l=>{e3.reag[l.slug]=dUtil;});await salvar(e3);sai();location.reload();};}
-  const jf=$("#jFim");if(jf)jf.onclick=()=>{if(!confirm("Encerrar a rota de hoje?"))return;const j=J(atual.n);const t=agoraISO();const p=(j.pausas||[]).slice(-1)[0];if(p&&!p.fim)p.fim=t;j.fim=t;j.status="encerrada";salvar(e);resumo();};
-  const jr=$("#jResumo");if(jr)jr.onclick=resumo;
-  {const jt=$("#jT");const j=J(atual.n);if(jt&&j&&j.status==="andando")setInterval(()=>{jt.textContent=hms(tempoJ(j));},20000);}
-  const rh=$("#reHoje");if(rh)rh.onclick=()=>{App.reagendar(atual.n,hoje);location.href=`?dia=${atual.n}`;};const rd=$("#reData");if(rd)rd.onchange=()=>{if(rd.value){App.reagendar(atual.n,rd.value);location.href=`?dia=${atual.n}`;}};
-  // ---- arrastar a loja para o lado: direita reagenda, esquerda arquiva (grava no servidor)
-  (()=>{const proxUtil=(n)=>{const d=new Date(hoje+"T12:00:00");let c=0;while(c<n){d.setDate(d.getDate()+1);if(d.getDay()!==0&&d.getDay()!==6)c++;}return d.toISOString().slice(0,10);};
-    const fmt=iso=>{const x=App.dataCurta(iso);return `${x.sem} ${x.dia}/${x.mes}`;};
-    const aviso=(txt,desfazer)=>{const t=document.createElement("div");t.className="aviso-acao";t.innerHTML=`<span>${esc(txt)}</span><button type="button">Desfazer</button>`;document.body.appendChild(t);let feito=false;const fim=()=>{if(feito)return;feito=true;t.remove();location.reload();};t.querySelector("button").onclick=()=>{feito=true;desfazer();t.remove();location.reload();};setTimeout(fim,3500);};
-    async function reagendar(l,el){const am=proxUtil(1),sem=proxUtil(5);const k=await App.menuLongo("Reagendar "+nomeLoja(l.nome),[{k:am,ic:"📅",t:"Amanhã · "+fmt(am)},{k:sem,ic:"📅",t:"Semana que vem · "+fmt(sem)},{k:"data",ic:"🗓",t:"Escolher a data"}]);
-      if(!k){el.style.transform="";return;}let iso=k;
-      if(k==="data"){iso=await new Promise(res=>{const f=document.createElement("div");f.className="fundo";const m=document.createElement("div");m.className="menu-lado";m.innerHTML=`<b>Nova data · ${esc(nomeLoja(l.nome))}</b><input type="date" min="${hoje}" value="${am}" style="width:100%;font:inherit;font-size:17px;min-height:48px;padding:0 12px;border:1.5px solid var(--linha);border-radius:12px;margin:8px 0"><button type="button" data-k="ok">Confirmar</button><button type="button" class="cancela" data-k="">Cancelar</button>`;document.body.append(f,m);const sai=v=>{f.remove();m.remove();res(v);};f.onclick=()=>sai(null);m.querySelector("[data-k=ok]").onclick=()=>sai(m.querySelector("input").value||null);m.querySelector(".cancela").onclick=()=>sai(null);});if(!iso){el.style.transform="";return;}}
-      const antes=(estado().reag||{})[l.slug]||null;App.reagendarLoja(l.slug,iso);el.closest(".desliza").classList.add("some");aviso(`${nomeLoja(l.nome)} → ${fmt(iso)}`,()=>App.reagendarLoja(l.slug,antes));}
-    function arquivar(l,el){App.arquivarLoja(l.slug,true);el.closest(".desliza").classList.add("some");aviso(`${nomeLoja(l.nome)} arquivada`,()=>App.arquivarLoja(l.slug,false));}
-    if(emRota)return;
-    $$(".desliza").forEach(cx=>{const el=cx.querySelector(".loja-l");const l=vis.find(x=>x.slug===cx.dataset.slug);let x0=0,y0=0,dx=0,modo=null,id=null;
-      el.addEventListener("pointerdown",ev=>{if(ev.target.closest("[data-mini]"))return;x0=ev.clientX;y0=ev.clientY;dx=0;modo=null;id=ev.pointerId;});
-      el.addEventListener("pointermove",ev=>{if(ev.pointerId!==id)return;const mx=ev.clientX-x0,my=ev.clientY-y0;if(!modo){if(Math.abs(mx)>12&&Math.abs(mx)>Math.abs(my)*1.4){modo="lado";try{el.setPointerCapture(id);}catch(e){}el.style.transition="none";}else if(Math.abs(my)>12){id=null;return;}else return;}
-        dx=mx;el.style.transform=`translateX(${dx}px)`;cx.classList.toggle("dir",dx>0);cx.classList.toggle("esq",dx<0);cx.classList.toggle("vai",Math.abs(dx)>96);});
-      const solta=()=>{if(modo!=="lado"){id=null;return;}id=null;el.style.transition="";cx.classList.remove("vai");const d=dx;modo="solto";setTimeout(()=>{modo=null;},350);
-        if(d>96){el.style.transform="translateX(110%)";reagendar(l,el);}else if(d<-96){el.style.transform="translateX(-110%)";arquivar(l,el);}else el.style.transform="";};
-      el.addEventListener("pointerup",solta);el.addEventListener("pointercancel",()=>{if(modo==="lado"){el.style.transition="";el.style.transform="";}modo=null;id=null;});
-      el.addEventListener("click",ev=>{if(modo){ev.preventDefault();ev.stopPropagation();}},true);el.addEventListener("dragstart",ev=>ev.preventDefault());});
-    $$("[data-volta]").forEach(b=>b.onclick=()=>{App.arquivarLoja(b.dataset.volta,false);location.reload();});})();
-  // recorte em lote: só as lojas desta rota com logotipo escolhido e ainda não tratado (o manual não é mexido)
-  $("#recortarTodas").onclick=async()=>{const b=$("#recortarTodas"),st=$("#gerarSt");b.disabled=true;let fila=[];for(const l of D.lojas){const c=await App.cliente(l);if((c.logos||[]).length&&!(c.manual&&c.manual.editado))fila.push(l);}  // todas as lojas da zona, qualquer dia
-    if(!fila.length){st.textContent="Nenhuma loja com logotipo esperando recorte.";b.disabled=false;return;}
-    let ok=0,falhas=[];for(let i=0;i<fila.length;i++){const l=fila[i];b.textContent=`✂ ${i+1}/${fila.length}`;st.textContent=`Recortando ${nomeLoja(l.nome)}…`;const r=await App.recortarLogo(l);if(r.ok)ok++;else falhas.push(nomeLoja(l.nome)+": "+r.motivo);}
-    b.textContent="✂ Recortar logotipos em lote";b.disabled=false;st.textContent=`${ok} logotipo(s) recortado(s)${falhas.length?" · "+falhas.length+" falha(s)":""}`;if(falhas.length)alert(falhas.slice(0,8).join("\n"));setTimeout(()=>location.reload(),1200);};
-  $("#gerarTodas").onclick=async()=>{const b=$("#gerarTodas"),st=$("#gerarSt");b.disabled=true;let prontas=0,feitas=0,falhas=[];
-    for(const l of rota){const c=await App.cliente(l);if(!(c.manual&&c.manual.editado))continue;prontas++;b.textContent=`${nomeLoja(l.nome)}…`;
-      const r=await App.gerarProdutos(l,pid=>{st.textContent=`${nomeLoja(l.nome)} · ${pid} (loja ${prontas})`;});feitas+=r.ok;if(r.falhas.length)falhas.push(nomeLoja(l.nome)+": "+r.falhas.join(", "));}
-    b.textContent="✦ Gerar produtos de todas";b.disabled=false;st.textContent=`${prontas} loja(s) com logotipo · ${feitas} arte(s) geradas${falhas.length?" · falhas: "+falhas.length:""}`;if(falhas.length)alert(falhas.slice(0,8).join("\n"));};
-  // miniatura do logotipo: toque = pop-up maior para analisar (toque de novo fecha); segurar = abre a edição
-  (()=>{let pop=null;const fechar=()=>{if(pop){pop.remove();pop=null;}};
-    const abrir=(l)=>{fechar();const src=MINI[l.slug];pop=document.createElement("div");pop.className="pop-logo";pop.innerHTML=`<div class="cx"><div class="img">${src?`<img src="${esc(src)}" alt="">`:"<i>sem logotipo</i>"}</div><div class="rod"><b>${esc(nomeLoja(l.nome))}</b><small>${App.ROTULO_LOGO[LOGO[l.slug]]} · toque para fechar · segure para editar</small>${LOGO[l.slug]==="auto"?`<div class="aprov"><button type="button" class="btn sm" id="aprovar">✓ Aprovar</button><button type="button" class="btn sec sm" id="trocar">Trocar</button></div>`:""}</div></div>`;document.body.appendChild(pop);
-      const ba=pop.querySelector("#aprovar");if(ba){ba.onpointerdown=ev=>ev.stopPropagation();ba.onclick=async ev=>{ev.stopPropagation();ba.disabled=true;ba.textContent="Aprovando…";await App.aprovarLogo(l);location.reload();};}
-      const bt=pop.querySelector("#trocar");if(bt){bt.onpointerdown=ev=>ev.stopPropagation();bt.onclick=ev=>{ev.stopPropagation();location.href=`fontes.html?l=${encodeURIComponent(l.slug)}&tipo=busca`;};}
-      let t=null,longo=false;pop.addEventListener("pointerdown",()=>{longo=false;t=setTimeout(()=>{longo=true;if(navigator.vibrate)navigator.vibrate(12);menuLogo(l);},450);});
-      const fim=()=>{clearTimeout(t);if(!longo)fechar();};pop.addEventListener("pointerup",fim);pop.addEventListener("pointercancel",()=>clearTimeout(t));};
-    async function menuLogo(l){fechar();const src=MINI[l.slug];const k=await App.menuLongo(nomeLoja(l.nome),[{k:"editar",ic:"✂",t:"Editar logotipo"},{k:"auto",ic:"✦",t:"Recorte automático"},{k:"pesquisa",ic:"🔍",t:"Substituir · pesquisa"},{k:"foto",ic:"📷",t:"Substituir · fotografar"},{k:"arquivo",ic:"📁",t:"Substituir · enviar arquivo"},{k:"remover",ic:"🗑",t:"Remover logotipo"}]);if(!k)return;
-      if(k==="editar"){if(src)App.abrirLogotipo(l.slug,src,"","visita");else location.href=`fontes.html?l=${encodeURIComponent(l.slug)}&tipo=busca`;return;}
-      if(k==="pesquisa"){location.href=`fontes.html?l=${encodeURIComponent(l.slug)}&tipo=busca`;return;}
-      if(k==="foto"||k==="arquivo"){const img=await App.escolherImagem(k==="foto");if(img)App.abrirLogotipo(l.slug,img,k==="foto"?"foto":"arquivo","visita");return;}
-      if(k==="auto"){const r=await App.recortarLogo(l);if(!r.ok)alert("Não consegui: "+r.motivo);location.reload();return;}
-      if(k==="remover"){const c=await App.cliente(l);const p=(c.logos||[])[0];if(p){await App.removerLogo(l,p.id);}location.reload();}}
-    document.querySelectorAll("[data-mini]").forEach(m=>{let t=null,longo=false;const l=vis.find(x=>x.slug===m.dataset.mini);
-      m.addEventListener("click",ev=>{ev.preventDefault();ev.stopPropagation();});
-      m.addEventListener("pointerdown",ev=>{ev.preventDefault();ev.stopPropagation();longo=false;t=setTimeout(()=>{longo=true;if(navigator.vibrate)navigator.vibrate(12);menuLogo(l);},450);});
-      m.addEventListener("pointerup",ev=>{ev.preventDefault();ev.stopPropagation();clearTimeout(t);if(!longo)abrir(l);});m.addEventListener("pointercancel",()=>clearTimeout(t));m.addEventListener("contextmenu",ev=>ev.preventDefault());});})();
-  {const a=document.querySelector(".agenda a.on")||document.querySelector(".agenda a.hoje");if(a)a.scrollIntoView({inline:"center",block:"nearest"});}
-  // mapa travado (decisão do dono, 10/11): só onde aqui estou e a próxima loja; não arrasta nem amplia, para não atrapalhar a rolagem
-  const alvo=prox&&prox.lat&&prox.lng?prox:null;if(!alvo){$("#mapa").remove();return;}
-  const ondeEu=await new Promise(res=>{if(!navigator.geolocation)return res(null);navigator.geolocation.getCurrentPosition(p=>res({lat:p.coords.latitude,lng:p.coords.longitude,gps:true}),()=>res(null),{timeout:6000,maximumAge:60000});});
-  const ultimaFeita=rota.filter(l=>feitas.has(l.slug)&&l.lat&&l.lng).pop();
-  const aqui=ondeEu||(ultimaFeita?{lat:ultimaFeita.lat,lng:ultimaFeita.lng}:(Z.base?{lat:Z.base[0],lng:Z.base[1]}:null));
-  const km=aqui?dist(aqui,alvo):0;
-  $("#mapa").insertAdjacentHTML("afterend",`<a class="prox-mapa" href="visita.html?l=${encodeURIComponent(alvo.slug)}"><span><small>Próxima parada · ${alvo.parada}</small><b>${esc(nomeLoja(alvo.nome))}</b></span><span class="d">${aqui?(km<1?Math.round(km*1000)+" m":km.toFixed(1).replace(".",",")+" km"):""} ›</span></a>`);
-  const pts=[aqui,alvo].filter(Boolean);
-  let gkey="";try{const r=await fetch("/api/mapa",{cache:"no-store"});if(r.ok)gkey=(await r.json()).google||"";}catch(e){}
-  if(gkey){await new Promise(res=>{const sc=document.createElement("script");sc.src=`https://maps.googleapis.com/maps/api/js?key=${encodeURIComponent(gkey)}&v=weekly&language=pt-BR&region=BR&loading=async&callback=__gm`;window.__gm=res;sc.onerror=res;document.head.appendChild(sc);});}
-  if(gkey&&window.google&&google.maps){const g=google.maps;const map=new g.Map($("#mapa"),{disableDefaultUI:true,gestureHandling:"none",draggable:false,zoomControl:false,keyboardShortcuts:false,clickableIcons:false,styles:[{featureType:"poi",stylers:[{visibility:"off"}]}]});
-    if(pts.length>1){const b=new g.LatLngBounds();pts.forEach(p=>b.extend(p));map.fitBounds(b,56);}else{map.setCenter(alvo);map.setZoom(17);}
-    if(aqui)new g.Polyline({path:[aqui,{lat:alvo.lat,lng:alvo.lng}],strokeOpacity:0,icons:[{icon:{path:"M 0,-1 0,1",strokeOpacity:1,strokeColor:"#6933C5",scale:3},offset:"0",repeat:"12px"}],map});
-    const pin=(txt,c,size)=>({url:"data:image/svg+xml;charset=UTF-8,"+encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' width='${size}' height='${size}'><circle cx='${size/2}' cy='${size/2}' r='${size/2-3}' fill='${c}' stroke='#fff' stroke-width='3'/><text x='50%' y='50%' dy='.36em' text-anchor='middle' font-family='Rubik,Arial' font-weight='700' font-size='${size*0.42}' fill='#fff'>${txt}</text></svg>`),scaledSize:new g.Size(size,size),anchor:new g.Point(size/2,size/2)});
-    const mk=new g.Marker({position:{lat:alvo.lat,lng:alvo.lng},map,icon:pin(alvo.parada,"#6933C5",40),title:alvo.nome,zIndex:9});mk.addListener("click",()=>location.href=`visita.html?l=${encodeURIComponent(alvo.slug)}`);
-    if(aqui)new g.Marker({position:aqui,map,icon:{path:g.SymbolPath.CIRCLE,scale:9,fillColor:"#14B8B0",fillOpacity:1,strokeColor:"#fff",strokeWeight:3}});
-    return;}
-  if(typeof L==="undefined"){$("#mapa").remove();return;}
-  const map=L.map("mapa",{zoomControl:false,attributionControl:true,dragging:false,touchZoom:false,doubleClickZoom:false,scrollWheelZoom:false,boxZoom:false,keyboard:false,tap:false});
-  L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:"© OpenStreetMap"}).addTo(map);
-  if(aqui)L.polyline([[aqui.lat,aqui.lng],[alvo.lat,alvo.lng]],{color:"#6933C5",weight:4,dashArray:"6 8"}).addTo(map);
-  L.marker([alvo.lat,alvo.lng],{icon:L.divIcon({className:"",html:`<div class="mk prox">${alvo.parada}</div>`,iconSize:[34,34],iconAnchor:[17,17]})}).addTo(map).on("click",()=>location.href=`visita.html?l=${encodeURIComponent(alvo.slug)}`);
-  if(aqui)L.marker([aqui.lat,aqui.lng],{icon:L.divIcon({className:"",html:'<div class="mk eu"></div>',iconSize:[18,18],iconAnchor:[9,9]})}).addTo(map);
-  if(pts.length>1)map.fitBounds(L.latLngBounds(pts.map(p=>[p.lat,p.lng])).pad(.35));else map.setView([alvo.lat,alvo.lng],17);
+  let D;try{D=await dados();}catch(e){$("#app").innerHTML=`${topo()}<section class="card"><h2>Rota ainda não preparada</h2><p>Nenhuma zona tem captação pronta. Peça ao administrador para rodar a varredura.</p></section>${nav("rota")}`;return;}
+  const hoje=App.hojeISO();
+  const dia=/^\d{4}-\d{2}-\d{2}$/.test(qs.get("d")||"")?qs.get("d"):hoje;
+  const zonas=App.PLANO.filter(z=>D.zonas[z]);
+  let R=JSON.parse(JSON.stringify(App.rotaDe(dia)||{tipo:"zona-familia",zona:zonas[0],familia:"alimentacao",slugs:[],etapa:1,criada:new Date().toISOString(),por:eu().nome}));
+  let etapa=+qs.get("etapa")||R.etapa||1;
+  const L$=s=>D.lojas.find(l=>l.slug===s);
+  const salvaR=()=>App.gravarRota(dia,R);
+  const fmt=iso=>{const x=App.dataCurta(iso);return `${x.sem} ${x.dia}/${x.mes}`;};
+  const ir=(n,extra)=>{location.href=`?d=${dia}&etapa=${n}${extra||""}`;};
+  const norm=t=>String(t||"").normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase();
+  const logoDe=c=>(c.manual&&c.manual.tratado)||(c.logos&&c.logos[0]&&c.logos[0].src)||null;
+  // ---- candidatas: tipo de rota + zona + família; fora: arquivadas, já visitadas e (marcadas) as que estão em outra rota aberta
+  function candidatas(){const e=estado();const arq=new Set(e.arquivadas||[]);const feitas=new Set(e.feitas||[]);
+    const outras={};for(const [d,X] of Object.entries(e.rotas||{}))if(d!==dia&&X&&!X.encerrada)for(const s of X.slugs||[])if(!(X.res||{})[s])outras[s]=d;
+    let L;
+    if(R.tipo==="retorno"){const ret=new Set([...(e.retornos||[]),...Object.entries(e.atend||{}).filter(([,a])=>a&&(a.res==="voltar"||a.res==="nao_estava")).map(([s])=>s)]);L=D.lojas.filter(l=>ret.has(l.slug)&&!arq.has(l.slug));}
+    else{L=D.lojas.filter(l=>l.zona===R.zona&&l.estrelas>=3&&!arq.has(l.slug)&&!feitas.has(l.slug));if(R.tipo==="zona-familia")L=L.filter(l=>App.familiaDe(l.setor)===R.familia);}
+    return L.sort((a,b)=>b.estrelas-a.estrelas||(a.dia||0)-(b.dia||0)||(a.ordem||0)-(b.ordem||0)).map(l=>({l,outra:outras[l.slug]||null}));}
+  // ---- cabeçalho: dias com rota + escolher outro dia; etapas
+  function cabecalho(){const e=estado();const dias=Object.entries(e.rotas||{}).filter(([d,X])=>X&&(X.slugs||[]).length&&!X.encerrada).sort((a,b)=>a[0].localeCompare(b[0])).filter(([d,X])=>d>=hoje||(X.slugs||[]).some(s=>!(X.res||{})[s]));
+    if(!dias.some(([d])=>d===dia))dias.push([dia,R]);dias.sort((a,b)=>a[0].localeCompare(b[0]));
+    const ok=[R.slugs.length>0,R.etapa>=3||R.pronta,!!R.pronta];
+    return `<h1>Rota</h1><p class="sub">Monte a rota do dia: lojas, logotipos, recorte e ordem. Depois, ▶ Play no menu.</p>
+    <div class="dias-r">${dias.map(([d,X])=>`<a href="?d=${d}" class="${d===dia?"on":""}">${d===hoje?"Hoje":fmt(d)}<small>${(X.slugs||[]).length} lojas${X.pronta?" · pronta ✓":""}</small></a>`).join("")}<label>+ Outro dia<small>escolher a data</small><input type="date" id="outroDia" min="${hoje}"></label></div>
+    <div class="etapas"><button type="button" data-et="1" class="${etapa===1?"on":ok[0]?"ok":""}">1 · Lojas${ok[0]?" ✓":""}</button><button type="button" data-et="2" class="${etapa===2?"on":ok[1]?"ok":""}" ${R.slugs.length?"":"disabled"}>2 · Logotipos${ok[1]?" ✓":""}</button><button type="button" data-et="3" class="${etapa===3?"on":ok[2]?"ok":""}" ${R.etapa>=3||R.pronta?"":"disabled"}>3 · Recorte e ordem${ok[2]?" ✓":""}</button></div>`;}
+  function ligarCab(){$$("[data-et]").forEach(b=>b.onclick=()=>ir(+b.dataset.et));const od=$("#outroDia");if(od)od.onchange=()=>{if(od.value)location.href=`?d=${od.value}`;};}
+
+  // =============== 1 · LOJAS ===============
+  function etapa1(){const C=candidatas();const sel=new Set(R.slugs);const naLista=new Set(C.map(x=>x.l.slug));const fora=R.slugs.filter(s=>!naLista.has(s)).map(L$).filter(Boolean);
+    const linha=(l,outra)=>{return `<label><input type="checkbox" data-s="${esc(l.slug)}" ${sel.has(l.slug)?"checked":""}><span class="mi" data-mi="${esc(l.slug)}"><i>…</i></span><span><b>${esc(nomeLoja(l.nome))}</b><small>${esc(setorNome(l.setor))} · ${esc((l.endereco||"").split(" · ")[0])}</small></span><span style="text-align:right">${estrelasHTML(l.estrelas||0)}${outra?`<br><span class="tag">na rota de ${esc(fmt(outra))}</span>`:""}</span></label>`;};
+    $("#app").innerHTML=`${topo()}${cabecalho()}
+    <section class="card"><h2>Tipo de rota</h2>
+      <div class="op">${Object.entries(App.TIPOS_ROTA).map(([k,t])=>`<button type="button" data-tipo="${k}" class="${R.tipo===k?"on":""}">${t}</button>`).join("")}</div>
+      ${R.tipo!=="retorno"?`<label class="muted" style="font-size:13px">Zona</label><select class="campo" id="zona">${zonas.map(z=>`<option value="${z}" ${z===R.zona?"selected":""}>${esc(D.zonas[z].nome)} · ${D.lojas.filter(l=>l.zona===z&&l.estrelas>=3).length} lojas 3–5★</option>`).join("")}</select>`:`<p class="muted" style="margin:0">Lojas que pediram para voltar e as que não estavam quando o vendedor passou.</p>`}
+      ${R.tipo==="zona-familia"?`<label class="muted" style="font-size:13px">Família</label><div class="op">${Object.entries(App.FAMILIAS).map(([k,f])=>`<button type="button" data-fam="${k}" class="${R.familia===k?"on":""}">${f.nome}</button>`).join("")}</div>`:""}
+    </section>
+    <section class="card"><h2>Lojas da rota <small class="muted" style="font-weight:400;font-size:14px">· <b id="nSel">${R.slugs.length}</b> marcadas de ${C.length}</small></h2>
+      <div class="linha-b"><button type="button" class="btn sec" id="m35">Marcar as 35 primeiras</button><button type="button" class="btn sec" id="limpa">Limpar</button></div>
+      ${fora.length?`<p class="muted" style="margin:0 0 6px;font-size:13px">Adicionadas por fora do filtro</p><div class="cand" style="margin-bottom:10px">${fora.map(l=>linha(l,null)).join("")}</div>`:""}
+      ${C.length?`<div class="cand">${C.map(x=>linha(x.l,x.outra)).join("")}</div>`:`<p class="muted">Nenhuma loja com esse filtro${R.tipo==="retorno"?" (ainda não há retornos)":""}.</p>`}
+    </section>
+    <section class="card"><h2>Adicionar outras lojas</h2><input class="campo" id="busca" placeholder="Nome da loja (qualquer zona)" autocomplete="off"><div class="cand" id="buscaRes"></div></section>
+    <div class="acoes"><div class="w"><button class="btn" type="button" id="seguir" ${R.slugs.length?"":"disabled"}>Seguir: logotipos →</button></div></div>${nav("rota")}`;
+    document.body.classList.add("com-acoes");ligarCab();
+    // miniaturas (fichas já estão em memória)
+    $$("[data-mi]").forEach(async m=>{const c=await cliente({slug:m.dataset.mi});const s=logoDe(c);m.innerHTML=s?`<img src="${esc(s)}" alt="" loading="lazy">`:"<i>sem<br>logo</i>";});
+    const conta=()=>{$("#nSel").textContent=R.slugs.length;$("#seguir").disabled=!R.slugs.length;};
+    const marca=(s,on)=>{R.slugs=R.slugs.filter(x=>x!==s);if(on)R.slugs.push(s);};
+    if(!window.__chg&&(window.__chg=1))document.addEventListener("change",ev=>{const i=ev.target.closest&&ev.target.closest("input[data-s]");if(!i)return;marca(i.dataset.s,i.checked);$$(`input[data-s="${i.dataset.s}"]`).forEach(x=>x.checked=i.checked);conta();salvaR();});
+    $$("[data-tipo]").forEach(b=>b.onclick=()=>{R.tipo=b.dataset.tipo;salvaR();etapa1();});
+    $$("[data-fam]").forEach(b=>b.onclick=()=>{R.familia=b.dataset.fam;salvaR();etapa1();});
+    const z=$("#zona");if(z)z.onchange=()=>{R.zona=z.value;salvaR();etapa1();};
+    $("#m35").onclick=()=>{const livres=C.filter(x=>!x.outra).map(x=>x.l.slug);const novas=livres.filter(s=>!R.slugs.includes(s)).slice(0,Math.max(0,35-R.slugs.length));R.slugs=R.slugs.concat(novas);salvaR();etapa1();};
+    $("#limpa").onclick=()=>{if(R.slugs.length&&!confirm(`Tirar as ${R.slugs.length} lojas marcadas?`))return;R.slugs=[];R.pronta=false;salvaR();etapa1();};
+    $("#busca").oninput=()=>{const t=norm($("#busca").value.trim());const box=$("#buscaRes");if(t.length<2){box.innerHTML="";return;}
+      const achou=D.lojas.filter(l=>norm(l.nome).includes(t)).slice(0,20);
+      box.innerHTML=achou.length?achou.map(l=>`<label><input type="checkbox" data-s="${esc(l.slug)}" ${R.slugs.includes(l.slug)?"checked":""}><span class="mi"><i>${esc((D.zonas[l.zona]||{}).nome||"")}</i></span><span><b>${esc(nomeLoja(l.nome))}</b><small>${esc(setorNome(l.setor))} · ${esc((l.endereco||"").split(" · ")[0])}</small></span><span>${estrelasHTML(l.estrelas||0)}</span></label>`).join(""):`<p class="muted" style="margin:6px 0 0">Nenhuma loja com esse nome.</p>`;};
+    $("#seguir").onclick=async()=>{R.etapa=Math.max(R.etapa||1,2);await salvaR();ir(2);};}
+
+  // =============== 2 · LOGOTIPOS ===============
+  async function etapa2(){const lojas=R.slugs.map(L$).filter(Boolean);const C={};for(const l of lojas)C[l.slug]=await cliente(l);
+    const marcadas=new Set(JSON.parse(sessionStorage.getItem("rota-erradas-"+dia)||"[]").filter(s=>R.slugs.includes(s)));
+    let bandeja=[],escolhida=-1;
+    const semLogo=()=>lojas.filter(l=>!logoDe(C[l.slug]));
+    const rot=c=>(c.manual&&c.manual.editado)?"✓ recortado":!(c.logos||[]).length?"sem logotipo":c.aprovacao==="pendente"?"✦ automático":"✓ escolhido";
+    const card=l=>{const c=C[l.slug];const s=logoDe(c);return `<figure data-s="${esc(l.slug)}" class="${marcadas.has(l.slug)?"errada":""}"><div class="im">${s?`<img src="${esc(s)}" alt="">`:`<i>sem<br>logotipo</i>`}</div><figcaption><b>${esc(nomeLoja(l.nome))}</b><small>${rot(c)}</small></figcaption></figure>`;};
+    function desenha(){const nM=marcadas.size,nS=semLogo().length;
+      $("#app").innerHTML=`${topo()}${cabecalho()}
+      <section class="card"><h2>Logotipos <small class="muted" style="font-weight:400;font-size:14px">· ${lojas.length-nS} de ${lojas.length} com logotipo</small></h2>
+        <p class="muted" style="margin:0 0 10px;font-size:14px">Toque nos que vieram errados para marcar. Segure (ou botão direito) para pôr um à mão.</p>
+        <div class="linha-b"><button type="button" class="btn" id="auto" style="min-height:48px;font-size:15px">${nM?`✦ Buscar de novo · ${nM} marcada(s)`:`✦ Buscar automático · ${nS} sem logotipo`}</button></div>
+        <div class="linha-b"><label class="btn sec" style="position:relative">📁 Pôr à mão em lote<input type="file" id="lote" accept="image/*" multiple style="position:absolute;inset:0;opacity:0"></label>${nM?`<button type="button" class="btn sec" id="desm">Desmarcar</button>`:""}</div>
+        ${bandeja.length?`<p class="muted" style="margin:0 0 6px;font-size:13px">Toque numa imagem e depois na loja dela.${nM===bandeja.length?` Ou <a href="#" id="naOrdem">pôr na ordem das ${nM} marcadas</a>.`:""}</p><div class="bandeja">${bandeja.map((s,i)=>`<img src="${esc(s)}" data-b="${i}" class="${i===escolhida?"on":""}" alt="">`).join("")}</div>`:""}
+        <div class="st" id="st"></div>
+        <div class="lg-g">${lojas.map(card).join("")}</div>
+      </section>
+      <div class="acoes"><div class="w"><button class="btn sec" type="button" id="volta">← Lojas</button><button class="btn" type="button" id="aceitar">Aceitar as escolhas →</button></div></div>${nav("rota")}`;
+      document.body.classList.add("com-acoes");ligarCab();ligar();}
+    const guardaM=()=>sessionStorage.setItem("rota-erradas-"+dia,JSON.stringify([...marcadas]));
+    async function porLogo(slug,src,origem){const c=await cliente({slug});c.logos=[{id:"man"+Date.now().toString(36),src,nome:"Logotipo · "+(origem==="foto"?"foto":"enviado"),origem,auto:false}].concat((c.logos||[]).filter(x=>!x.auto));delete c.manual;c.aprovacao="ok";await gravarCliente(c);C[slug]=c;marcadas.delete(slug);guardaM();}
+    const reduz=src=>new Promise(res=>{const im=new Image();im.onload=()=>{const k=Math.min(1,1400/Math.max(im.naturalWidth,im.naturalHeight));if(k>=1&&src.length<2.5e6)return res(src);const cv=document.createElement("canvas");cv.width=Math.round(im.naturalWidth*k);cv.height=Math.round(im.naturalHeight*k);cv.getContext("2d").drawImage(im,0,0,cv.width,cv.height);res(cv.toDataURL("image/png"));};im.onerror=()=>res(src);im.src=src;});
+    const lerArq=f=>new Promise(res=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=()=>res(null);r.readAsDataURL(f);});
+    function ligar(){
+      $$(".lg-g figure").forEach(f=>{const s=f.dataset.s;
+        f.onclick=async()=>{if(f.dataset.longo==="1"){f.dataset.longo="";return;}
+          if(escolhida>=0){const src=bandeja[escolhida];f.classList.add("busy");await porLogo(s,src,"arquivo");bandeja.splice(escolhida,1);escolhida=-1;desenha();return;}
+          if(marcadas.has(s))marcadas.delete(s);else marcadas.add(s);guardaM();desenha();};
+        let t=null;f.addEventListener("pointerdown",ev=>{if(ev.button===2)return;t=setTimeout(()=>{t=null;f.dataset.longo="1";if(navigator.vibrate)navigator.vibrate(12);menu(s);},480);});
+        ["pointerup","pointercancel","pointerleave"].forEach(k=>f.addEventListener(k,()=>{clearTimeout(t);}));
+        f.addEventListener("contextmenu",ev=>{ev.preventDefault();clearTimeout(t);menu(s);});});
+      $("#auto").onclick=()=>auto();const dm=$("#desm");if(dm)dm.onclick=()=>{marcadas.clear();guardaM();desenha();};
+      $("#lote").onchange=async ev=>{const fs=[...ev.target.files].slice(0,40);$("#st").textContent=`Lendo ${fs.length} imagem(ns)…`;for(const f of fs){const s=await lerArq(f);if(s)bandeja.push(await reduz(s));}escolhida=bandeja.length?0:-1;desenha();};
+      $$(".bandeja img").forEach(im=>im.onclick=()=>{escolhida=+im.dataset.b;desenha();$$(".lg-g figure").forEach(f=>f.classList.add("alvo"));});
+      if(escolhida>=0)$$(".lg-g figure").forEach(f=>f.classList.add("alvo"));
+      const no=$("#naOrdem");if(no)no.onclick=async ev=>{ev.preventDefault();const alvos=lojas.filter(l=>marcadas.has(l.slug));for(let i=0;i<alvos.length;i++){$("#st").textContent=`Gravando ${i+1}/${alvos.length}…`;await porLogo(alvos[i].slug,bandeja[i],"arquivo");}bandeja=[];escolhida=-1;desenha();};
+      $("#volta").onclick=()=>ir(1);
+      $("#aceitar").onclick=async()=>{const sem=semLogo();if(sem.length&&!confirm(`${sem.length} loja(s) ainda sem logotipo:\n${sem.slice(0,6).map(l=>nomeLoja(l.nome)).join("\n")}${sem.length>6?"\n…":""}\n\nSeguir mesmo assim?`))return;
+        const b=$("#aceitar");b.disabled=true;b.textContent="Gravando…";
+        for(const l of lojas){const c=C[l.slug];if(c.aprovacao==="pendente"&&(c.logos||[]).length){c.aprovacao="ok";if(c.logos[0]){c.logos[0].aprovadoEm=new Date().toISOString();c.logos[0].aprovadoPor=eu().nome;}await gravarCliente(c);}}
+        marcadas.clear();guardaM();R.etapa=3;await salvaR();ir(3);};}
+    async function auto(so){const alvo=so?[L$(so)]:marcadas.size?lojas.filter(l=>marcadas.has(l.slug)):semLogo();if(!alvo.length){$("#st").textContent="Todas já têm logotipo. Marque as que vieram erradas para buscar de novo.";return;}
+      const b=$("#auto");b.disabled=true;let ok=0;const falhas=[];
+      for(let i=0;i<alvo.length;i++){const l=alvo[i];const f=document.querySelector(`.lg-g figure[data-s="${l.slug}"]`);if(f)f.classList.add("busy");$("#st").textContent=`${i+1}/${alvo.length} · ${nomeLoja(l.nome)}`;
+        try{const r=await fetch(`/api/rota/logo/${encodeURIComponent(l.slug)}`,{method:"POST",credentials:"same-origin",headers:{"Content-Type":"application/json"},body:JSON.stringify({refazer:!!logoDe(C[l.slug])})});const d=await r.json().catch(()=>({}));
+          if(r.ok&&d.ok){ok++;marcadas.delete(l.slug);}else falhas.push(nomeLoja(l.nome)+": "+(d.motivo||d.erro||r.status));}catch(e){falhas.push(nomeLoja(l.nome)+": sem conexão");}
+        C[l.slug]=await App.recarregarFicha(l.slug)||C[l.slug];
+        if(f){const n=document.createElement("div");n.innerHTML=card(l);f.replaceWith(n.firstChild);}}
+      guardaM();desenha();$("#st").textContent=`${ok} logotipo(s) novo(s)`+(falhas.length?` · ${falhas.length} sem resultado: ${falhas.slice(0,3).join(" · ")}${falhas.length>3?" …":""}`:"");}
+    async function menu(slug){const l=L$(slug);const temLogo=!!logoDe(C[slug]);
+      const k=await menuLongo(nomeLoja(l.nome),[{k:"auto",ic:"✦",t:temLogo?"Buscar outro automático":"Buscar automático"},{k:"foto",ic:"📷",t:"Fotografar o logotipo"},{k:"arquivo",ic:"📁",t:"Enviar arquivo"},{k:"pesquisa",ic:"🔍",t:"Pesquisa de imagens"}].concat(temLogo?[{k:"tirar",ic:"🗑",t:"Tirar o logotipo"}]:[]));if(!k)return;
+      if(k==="auto"){await auto(slug);return;}
+      if(k==="foto"||k==="arquivo"){const img=await App.escolherImagem(k==="foto");if(!img)return;await porLogo(slug,await reduz(img),k);desenha();return;}
+      if(k==="pesquisa"){location.href=`fontes.html?l=${encodeURIComponent(slug)}&tipo=busca`;return;}
+      if(k==="tirar"){const c=await cliente({slug});const p=(c.logos||[])[0];if(p)await App.removerLogo(l,p.id);C[slug]=await cliente({slug});desenha();}}
+    desenha();}
+
+  // =============== 3 · RECORTE E ORDEM ===============
+  async function etapa3(){const C={};for(const s of R.slugs){const l=L$(s);if(l)C[s]=await cliente(l);}
+    const lojas=()=>R.slugs.map(L$).filter(Boolean);
+    const linha=(l,i)=>{const c=C[l.slug];const p=(c.logos||[])[0]||{};const feito=!!(c.manual&&c.manual.editado);const antes=p.original||(!feito?p.src:null)||p.src;const depois=feito?(c.manual.tratado||p.src):null;
+      return `<div class="rc ${feito?"ok":""}" data-s="${esc(l.slug)}"><span class="pos">${i+1}</span><span class="alca" aria-label="arrastar">≡</span>
+        <figure class="ant" data-logo>${antes?`<img src="${esc(antes)}" alt=""><span class="r">antes</span>`:`<i>sem logotipo</i>`}</figure><span class="seta">→</span>
+        <figure class="dep" data-logo>${depois?`<img src="${esc(depois)}" alt=""><span class="r">depois</span>`:`<i>${antes?"segure ou botão direito<br>para recortar":"—"}</i>`}</figure>
+        <div class="nm"><span><b>${esc(nomeLoja(l.nome))}</b></span><small>${feito?"✓ recortado":antes?"falta recortar":"sem logotipo"}</small></div></div>`;};
+    function desenha(){const L=lojas();const nOk=L.filter(l=>C[l.slug]&&C[l.slug].manual&&C[l.slug].manual.editado).length;
+      $("#app").innerHTML=`${topo()}${cabecalho()}
+      ${R.pronta?`<div class="pronta">✓ Rota pronta · ${L.length} lojas. Toque <a href="play.html">▶ Play</a> no menu para começar.</div>`:""}
+      <section class="card" style="padding:14px"><h2>Recorte e ordem <small class="muted" style="font-weight:400;font-size:14px">· ${nOk} de ${L.length} recortados</small></h2>
+        <p class="muted" style="margin:0 0 10px;font-size:14px">Segure o logotipo (ou botão direito) e peça o recorte: o antes e o depois aparecem lado a lado. Arraste pelo ≡ para mudar a fila.</p>
+        <div class="linha-b"><button type="button" class="btn sec" id="caminho">Ordenar pelo caminho</button></div>
+        <div class="rc-l" id="lista">${L.map(linha).join("")}</div></section>
+      <div class="acoes"><div class="w"><button class="btn sec" type="button" id="volta">← Logotipos</button><button class="btn" type="button" id="pronta">${R.pronta?"✓ Rota pronta":"✓ Rota pronta"}</button></div></div>${nav("rota")}`;
+      document.body.classList.add("com-acoes");ligarCab();ligar();}
+    async function recortar(s){const row=document.querySelector(`.rc[data-s="${s}"]`);if(row)row.classList.add("busy");const r=await App.recortarLogo(L$(s));C[s]=await cliente(L$(s));if(!r.ok)alert("Não consegui recortar: "+r.motivo);troca(s);}
+    function troca(s){const row=document.querySelector(`.rc[data-s="${s}"]`);if(!row)return desenha();const n=document.createElement("div");n.innerHTML=linha(L$(s),R.slugs.indexOf(s));row.replaceWith(n.firstChild);ligarLinha(document.querySelector(`.rc[data-s="${s}"]`));
+      const L=lojas();$("h2 small").innerHTML=`· ${L.filter(l=>C[l.slug]&&C[l.slug].manual&&C[l.slug].manual.editado).length} de ${L.length} recortados`;}
+    async function menu(s){const c=C[s];const p=(c.logos||[])[0];const feito=!!(c.manual&&c.manual.editado);if(!p){if(confirm("Esta loja está sem logotipo. Voltar ao passo 2?"))ir(2);return;}
+      const k=await menuLongo(nomeLoja(L$(s).nome),[{k:"rec",ic:"✂",t:feito?"Recortar de novo":"Recortar"},{k:"mao",ic:"✏",t:"Editar à mão"}].concat(feito&&p.original?[{k:"desf",ic:"↩",t:"Desfazer o recorte"}]:[]).concat([{k:"trocar",ic:"✦",t:"Trocar o logotipo (passo 2)"}]));if(!k)return;
+      if(k==="rec"){if(feito){await desfazer(s);}await recortar(s);}
+      if(k==="mao")App.abrirLogotipo(s,p.original||p.src,"","rota");
+      if(k==="desf"){await desfazer(s);troca(s);}
+      if(k==="trocar")ir(2);}
+    async function desfazer(s){const c=await cliente(L$(s));const p=(c.logos||[])[0];if(p&&p.original){p.src=p.original;delete p.original;p.tratado=false;}delete c.manual;await gravarCliente(c);C[s]=c;}
+    function ligarLinha(row){const s=row.dataset.s;
+      row.querySelectorAll("[data-logo]").forEach(f=>{let t=null;f.addEventListener("pointerdown",ev=>{if(ev.button===2)return;t=setTimeout(()=>{t=null;if(navigator.vibrate)navigator.vibrate(12);menu(s);},480);});["pointerup","pointercancel","pointerleave"].forEach(k=>f.addEventListener(k,()=>clearTimeout(t)));f.addEventListener("contextmenu",ev=>{ev.preventDefault();clearTimeout(t);menu(s);});});
+      // arrastar pelo ≡: a linha segue o dedo e troca de lugar com as vizinhas
+      const al=row.querySelector(".alca");al.addEventListener("pointerdown",ev=>{ev.preventDefault();al.setPointerCapture(ev.pointerId);const lista=$("#lista");row.classList.add("arrasta");let y0=ev.clientY;
+        const mv=e=>{const dy=e.clientY-y0;row.style.transform=`translateY(${dy}px)`;const irmaos=[...lista.children].filter(x=>x!==row);const meio=row.getBoundingClientRect().top+row.offsetHeight/2;
+          for(const x of irmaos){const r=x.getBoundingClientRect();if(meio<r.top+r.height/2&&x.compareDocumentPosition(row)&Node.DOCUMENT_POSITION_FOLLOWING){const antes=row.getBoundingClientRect().top;lista.insertBefore(row,x);y0+=row.getBoundingClientRect().top-antes;row.style.transform=`translateY(${e.clientY-y0}px)`;break;}
+            if(meio>r.top+r.height/2&&x.compareDocumentPosition(row)&Node.DOCUMENT_POSITION_PRECEDING&&x===row.nextElementSibling){const antes=row.getBoundingClientRect().top;lista.insertBefore(row,x.nextSibling);y0+=row.getBoundingClientRect().top-antes;row.style.transform=`translateY(${e.clientY-y0}px)`;break;}}};
+        const up=async()=>{al.removeEventListener("pointermove",mv);al.removeEventListener("pointerup",up);al.removeEventListener("pointercancel",up);row.classList.remove("arrasta");row.style.transform="";
+          R.slugs=[...lista.children].map(x=>x.dataset.s);[...lista.children].forEach((x,i)=>x.querySelector(".pos").textContent=i+1);await salvaR();};
+        al.addEventListener("pointermove",mv);al.addEventListener("pointerup",up);al.addEventListener("pointercancel",up);});}
+    function ligar(){$$(".rc").forEach(ligarLinha);$("#volta").onclick=()=>ir(2);
+      $("#caminho").onclick=async()=>{const Z=D.zonas[R.zona]||D.zona;const dist=(a,b)=>Math.hypot((a.lat-b.lat)*111,(a.lng-b.lng)*111*Math.cos(a.lat*Math.PI/180));let cur=Z&&Z.base?{lat:Z.base[0],lng:Z.base[1]}:null;
+        const resto=lojas().filter(l=>l.lat&&l.lng),sem=lojas().filter(l=>!(l.lat&&l.lng));const out=[];if(!cur&&resto.length)cur=resto[0];
+        while(resto.length){let k=0;for(let i=1;i<resto.length;i++)if(dist(cur,resto[i])<dist(cur,resto[k]))k=i;cur=resto.splice(k,1)[0];out.push(cur);}R.slugs=out.concat(sem).map(l=>l.slug);await salvaR();desenha();};
+      $("#pronta").onclick=async()=>{const falta=lojas().filter(l=>!(C[l.slug]&&C[l.slug].manual&&C[l.slug].manual.editado));if(falta.length&&!confirm(`${falta.length} loja(s) sem recorte. Marcar a rota como pronta mesmo assim?`))return;
+        R.pronta=true;R.prontaEm=new Date().toISOString();R.res=R.res||{};await salvaR();desenha();scrollTo(0,0);};}
+    desenha();}
+
+  if(etapa===2&&R.slugs.length)await etapa2();else if(etapa===3&&(R.etapa>=3||R.pronta))await etapa3();else etapa1();
 })();
 </script>
 </body>

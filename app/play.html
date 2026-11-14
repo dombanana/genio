@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover,user-scalable=no">
+<title>GênIO · Play</title>
+<meta name="theme-color" content="#F1EEF8">
+<link rel="icon" href="../genio-favicon.png">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<link rel="stylesheet" href="app.css?v=1d67a6c18e">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<style>
+/* Play (14/11): só a empresa da vez na fila da rota */
+.fila{display:flex;align-items:center;gap:10px;margin:0 0 10px}
+.fila .barra{flex:1;height:8px;border-radius:99px;background:#fff;overflow:hidden}.fila .barra i{display:block;height:100%;background:var(--marca);border-radius:99px}
+.fila small{color:var(--texto2);font-size:13px;white-space:nowrap}
+.pl-mapa{height:190px;border-radius:16px;overflow:hidden;margin:0 0 12px;background:#E9E6F2}
+.pl-mapa .leaflet-div-icon{background:transparent;border:0}
+.mk{width:34px;height:34px;border-radius:50%;background:var(--marca);color:#fff;font-weight:700;display:grid;place-items:center;border:3px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.3)}.mk.eu{width:18px;height:18px;background:#14B8B0}
+.fato{display:grid;grid-template-columns:120px 1fr;gap:10px;padding:8px 0;border-top:1px solid var(--linha);font-size:15px}.fato:first-of-type{border-top:0}
+.fato span{color:var(--texto2);font-size:13.5px}.fato small{display:block;color:var(--texto2);font-size:12.5px;font-weight:400}
+.fonte{font-size:12px;color:var(--texto2);margin:8px 0 0}
+.melhora{border-top:1px solid var(--linha);padding:10px 0}.melhora:first-of-type{border-top:0}
+.melhora b{font-size:15px}.melhora blockquote{margin:4px 0;font-size:14px;color:var(--texto2);font-style:italic}.melhora .prod{font-size:13.5px;color:var(--marca);font-weight:600}
+.prods{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.prods figure{margin:0;background:#fff;border-radius:12px;overflow:hidden;border:1px solid var(--linha)}.prods img{width:100%;aspect-ratio:1/1;object-fit:contain;display:block;background:#fff}
+.prods figcaption{font-size:12.5px;font-weight:600;padding:6px 8px}
+.bts{display:grid;gap:8px;margin:0 0 14px}.bts .dupla{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.bts .btn.nao{background:#FBEBEB;color:#B42318}
+.chegou{background:var(--teal2);color:#0E6E6A;border-radius:12px;padding:8px 12px;font-size:14px;font-weight:600;margin:0 0 10px}
+.res-g{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}.res-g span{background:var(--lav);border-radius:12px;padding:10px;font-size:13px;color:var(--texto2)}.res-g b{display:block;font-size:22px;color:var(--texto)}
+</style>
+</head>
+<body>
+<div class="w" id="app"></div>
+<script src="app.js?v=1d67a6c18e"></script>
+<script>
+(async()=>{
+  const {$,$$,esc,sessao,eu,dados,estado,salvar,nav,topo,nomeLoja,setorNome,cliente}=App;
+  if(!await sessao())return;
+  let D;try{D=await dados();}catch(e){$("#app").innerHTML=`${topo()}<section class="card"><h2>Sem captação</h2><p>Nenhuma zona tem lojas captadas.</p></section>${nav("play")}`;return;}
+  const hoje=App.hojeISO();const fmt=iso=>{const x=App.dataCurta(iso);return `${x.sem} ${x.dia}/${x.mes}`;};
+  const L$=s=>D.lojas.find(l=>l.slug===s);
+  const NOME={capacho:"Capacho",placas:"Placa",adesivos:"Adesivo de vitrine",uniformes:"Camisa polo",impressos:"Cartão de visita",panfleto:"Flyer",banners:"Banner retrátil",parede:"Adesivo de parede",brindes:"Ecobag",carimbo:"Carimbo",windbanner:"Wind banner",faixa:"Faixa",folheto:"Folheto",camiseta:"Camiseta",bone:"Boné",avental:"Avental"};
+  const rp=App.rotaDoPlay();
+  if(!rp){$("#app").innerHTML=`${topo()}<h1>Play</h1><section class="card"><h2>Nenhuma rota pronta</h2><p>Monte a rota na tela Rota (lojas, logotipos, recorte e ordem) e marque "Rota pronta". Ela aparece aqui.</p><a class="btn" href="index.html">Montar a rota →</a></section>${nav("play")}`;return;}
+  const dia=rp[0];
+  const R=()=>{const e=estado();const X=e.rotas[dia];X.res=X.res||{};X.chegou=X.chegou||{};X.orc=X.orc||{};return X;};
+  const gravar=async(fn)=>{const e=estado();const X=e.rotas[dia];X.res=X.res||{};X.chegou=X.chegou||{};X.orc=X.orc||{};fn(e,X);await salvar(e);};
+  const fila=()=>{const e=estado();const arq=new Set(e.arquivadas||[]);return R().slugs.filter(s=>L$(s)&&!arq.has(s));};
+
+  // ---- fim da fila: resumo e encerrar
+  function resumo(){const X=R();const f=fila();const c=k=>f.filter(s=>X.res[s]===k).length;const j=(estado().jornadas||{})["d"+dia];
+    $("#app").innerHTML=`${topo()}<h1>Play</h1><p class="sub">Rota de ${dia===hoje?"hoje":fmt(dia)} · ${f.length} lojas</p>
+    <section class="card"><h2>${X.encerrada?"Rota encerrada":"Fila concluída"}</h2><div class="res-g"><span>Visitadas<b>${c("visitada")+c("orcamento")}</b></span><span>Com orçamento<b>${c("orcamento")}</b></span><span>Não estavam<b>${c("nao_estava")}</b></span><span>Lojas na rota<b>${f.length}</b></span></div>
+      <p class="muted" style="margin:0 0 12px;font-size:14px">As que não estavam entram sozinhas no tipo de rota "Retornos".</p>
+      ${X.encerrada?`<a class="btn" href="index.html">Montar a próxima rota →</a>`:`<button class="btn" type="button" id="encerrar">■ Encerrar a rota</button>`}</section>${nav("play")}`;
+    const b=$("#encerrar");if(b)b.onclick=async()=>{await gravar((e,X)=>{X.encerrada=true;X.encerradaEm=new Date().toISOString();const jj=(e.jornadas||{})["d"+dia];if(jj&&jj.status!=="encerrada"){const t=new Date().toISOString();const p=(jj.pausas||[]).slice(-1)[0];if(p&&!p.fim)p.fim=t;jj.fim=t;jj.status="encerrada";}});resumo();};}
+
+  async function tela(){const f=fila();const X=R();const pos=f.findIndex(s=>!X.res[s]);if(pos<0)return resumo();
+    const slug=f[pos];const l=L$(slug);const c=await cliente(l);const feitas=f.filter(s=>X.res[s]).length;const chegou=X.chegou[slug];
+    let H=null;
+    $("#app").innerHTML=`${topo()}
+    <div class="fila"><small>Loja <b>${pos+1}</b> de ${f.length}</small><div class="barra"><i style="width:${Math.round(feitas/f.length*100)}%"></i></div><small>${dia===hoje?"hoje":fmt(dia)}</small></div>
+    ${App.cabCliente(l,{titulo:"Loja da vez",extra:l.tel?`📞 ${esc(App.telFmt(l.tel))}`:""})}
+    <div class="pl-mapa" id="mapa"></div>
+    ${chegou?`<div class="chegou">✓ Chegou às ${new Date(chegou).toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"})}</div>
+      <section class="card"><h2>Produtos com o logotipo</h2><div id="prods">${prodsHTML(c)}</div></section>
+      <div class="bts"><a class="btn" href="produtos.html?l=${encodeURIComponent(slug)}&de=play" id="orc">🧾 Emitir orçamento</a><div class="dupla"><button class="btn nao" type="button" id="nao">Não estava</button><button class="btn sec" type="button" id="prox">Próxima loja →</button></div></div>`
+      :`<div class="bts"><button class="btn" type="button" id="cheguei">📍 Cheguei</button></div>`}
+    <section class="card" id="hist"><h2>História</h2><p class="muted" style="margin:0">Buscando na Receita e no Google…</p></section>
+    <section class="card" id="melhor"><h2>Pontos a melhorar</h2><p class="muted" style="margin:0">…</p></section>
+    ${nav("play")}`;
+    // ---- ações
+    const ch=$("#cheguei");if(ch)ch.onclick=async()=>{ch.disabled=true;const t=new Date().toISOString();
+      await gravar((e,X)=>{X.chegou[slug]=t;e.atend=e.atend||{};e.atend[slug]={...(e.atend[slug]||{}),ini:t};e.jornadas=e.jornadas||{};const k="d"+dia;
+        if(!e.jornadas[k]||e.jornadas[k].status==="encerrada"){for(const o of Object.values(e.jornadas))if(o&&o.status==="andando"){o.status="pausada";(o.pausas=o.pausas||[]).push({ini:t});}e.jornadas[k]={ini:t,pausas:[],status:"andando",data:hoje};}
+        else if(e.jornadas[k].status==="pausada"){e.jornadas[k].status="andando";const p=(e.jornadas[k].pausas||[]).slice(-1)[0];if(p&&!p.fim)p.fim=t;}});
+      tela();scrollTo(0,0);};
+    const oc=$("#orc");if(oc)oc.onclick=async ev=>{ev.preventDefault();await gravar((e,X)=>{X.orc[slug]=true;});location.href=oc.href;};
+    const fecha=async res=>{const t=new Date().toISOString();await gravar((e,X)=>{X.res[slug]=res==="nao_estava"?"nao_estava":(X.orc[slug]?"orcamento":"visitada");e.atend=e.atend||{};e.atend[slug]={...(e.atend[slug]||{}),fim:t,...(res==="nao_estava"?{res:"nao_estava"}:{})};
+      const ret=new Set(e.retornos||[]);if(res==="nao_estava")ret.add(slug);else{ret.delete(slug);e.feitas=[...new Set([...(e.feitas||[]),slug])];}e.retornos=[...ret];});tela();scrollTo(0,0);};
+    const na=$("#nao");if(na)na.onclick=()=>fecha("nao_estava");const px=$("#prox");if(px)px.onclick=()=>fecha("visitada");
+    const gp=$("#gerar");if(gp)gp.onclick=gerar;
+    async function gerar(){const b=$("#gerar");b.disabled=true;const r=await App.gerarProdutos(l,pid=>{b.textContent=`Gerando ${NOME[pid]||pid}…`;});$("#prods").innerHTML=prodsHTML(await cliente(l));const g2=$("#gerar");if(g2)g2.onclick=gerar;if(r.falhas&&r.falhas.length)alert("Não gerou: "+r.falhas.join(", "));}
+    mapa(l);historia(slug);}
+
+  function prodsHTML(c){const A=Object.entries(c.artes||{}).map(([k,a])=>({k,src:a&&(a.contexto||a.png||a.pngArte)})).filter(x=>x.src);const pronto=!!(c.manual&&c.manual.editado);
+    if(A.length)return `<div class="prods">${A.map(x=>`<figure><img src="${esc(x.src)}" alt="" loading="lazy"><figcaption>${esc((NOME[App.baseId(x.k)]||x.k)+(String(x.k).includes("~")?" · "+String(x.k).split("~")[1]:""))}</figcaption></figure>`).join("")}</div>`;
+    return pronto?`<p class="muted" style="margin:0 0 10px">Os produtos ainda não foram gerados com este logotipo.</p><button class="btn sec" type="button" id="gerar">✦ Gerar os produtos agora</button>`
+      :`<p class="muted" style="margin:0">Logotipo sem recorte. Volte à <a href="index.html?etapa=3">Rota · Recorte</a> para recortar e gerar os produtos.</p>`;}
+
+  async function historia(slug){let d=null;try{const r=await fetch(`/api/loja/${encodeURIComponent(slug)}/historia`,{credentials:"same-origin",cache:"no-store"});if(r.ok)d=await r.json();}catch(e){}
+    const hb=$("#hist"),mb=$("#melhor");if(!hb)return;
+    if(!d){hb.innerHTML=`<h2>História</h2><p class="muted" style="margin:0">Não consegui buscar agora (sem conexão).</p>`;mb.remove();return;}
+    const h=d.historia||{};const ab=h.abertura||((d.leitura||"").match(/desde (\S+)/)||[])[1]||"";
+    const dataBR=s=>/^\d{4}-\d{2}-\d{2}/.test(s)?s.slice(8,10)+"/"+s.slice(5,7)+"/"+s.slice(0,4):s;const anos=/^\d{4}/.test(ab)?(new Date().getFullYear()-(+ab.slice(0,4))):null;
+    const razao=h.razao||((d.leitura||"").match(/Razão social: ([^·]+)/)||[])[1]||"";
+    const cn=d.curiosidade||{};
+    const prem=h.premios_estado==="pesquisado"?(h.premios&&h.premios.length?h.premios.map(p=>`<div style="margin:0 0 6px"><b>${esc(p.titulo)}</b><small>${esc(p.trecho)}${p.link?` · <a href="${esc(p.link)}" target="_blank" rel="noopener" class="lk">fonte</a>`:""}</small></div>`).join(""):`<span class="muted">Nenhum prêmio encontrado na pesquisa.</span>`)
+      :`<span class="muted">Pesquisa sem créditos no momento.</span>`;
+    hb.innerHTML=`<h2>História</h2>
+      <div class="fato"><span>Fundação</span><b>${ab?esc(dataBR(ab))+(anos!==null&&anos>=0?` <small>${anos?`há ${anos} ano${anos>1?"s":""}`:"este ano"}</small>`:""):`<span class="muted">não consta</span>`}</b></div>
+      <div class="fato"><span>Proprietário</span><b>${(h.socios||[]).length?h.socios.map(s=>`${esc(s.nome)}${s.papel?` <small>${esc(s.papel)}</small>`:""}`).join(""):`<span class="muted">${h.cnpj?"a Receita não lista sócios":"CNPJ não encontrado"}</span>`}</b></div>
+      ${razao?`<div class="fato"><span>Razão social</span><b>${esc(razao.trim())}${h.cnpj?` <small>CNPJ ${esc(h.cnpj.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/,"$1.$2.$3/$4-$5"))}</small>`:""}</b></div>`:""}
+      <div class="fato"><span>Prêmios</span><b style="font-weight:400">${prem}</b></div>
+      ${cn.valor?`<div class="fato"><span>Curiosidade do nome</span><b style="font-weight:400">${esc(cn.valor)}</b></div>`:""}
+      <p class="fonte">Fontes: ${[h.fonte_receita||(h.cnpj?"Receita Federal":""),h.premios_estado==="pesquisado"?"pesquisa Google":"",cn.valor?(cn.nota||"Wikipédia"):""].filter(Boolean).map(esc).join(" · ")||"—"}</p>`;
+    const G=d.gatilhos||[],ruins=(d.ruins||[]).filter(r=>!G.some(g=>g.autor&&g.autor===r.autor));
+    mb.innerHTML=`<h2>Pontos a melhorar <small class="muted" style="font-weight:400;font-size:14px">· avaliações do Google${d.nota?` · ${String(d.nota).replace(".",",")}★ em ${d.total||0}`:""}</small></h2>
+      ${G.length||ruins.length?G.map(g=>`<div class="melhora"><b>${esc(g.tema)}</b>${g.nota?` <small class="muted">· ${g.nota}★</small>`:""}<blockquote>“${esc((g.trecho||"").replace(/^…|…$/g,""))}”</blockquote><div class="prod">→ ${esc(String(g.produto||"").split("+").map(x=>NOME[x]||x).join(" + "))}: ${esc(g.argumento||"")}</div></div>`).join("")
+        +ruins.map(r=>`<div class="melhora"><b>${r.nota}★</b>${r.quando?` <small class="muted">· ${esc(r.quando)}</small>`:""}<blockquote>“${esc((r.texto||"").slice(0,220))}${(r.texto||"").length>220?"…":""}”</blockquote></div>`).join("")
+      :`<p class="muted" style="margin:0">Nenhuma reclamação nas avaliações lidas.</p>`}`;}
+
+  async function mapa(l){const box=$("#mapa");if(!box)return;if(!(l.lat&&l.lng)){box.remove();return;}
+    const eu=await new Promise(res=>{if(!navigator.geolocation)return res(null);navigator.geolocation.getCurrentPosition(p=>res({lat:p.coords.latitude,lng:p.coords.longitude}),()=>res(null),{timeout:5000,maximumAge:60000});});
+    if(typeof L==="undefined"){box.remove();return;}
+    const map=L.map(box,{zoomControl:false,attributionControl:true,dragging:false,touchZoom:false,doubleClickZoom:false,scrollWheelZoom:false,boxZoom:false,keyboard:false,tap:false});
+    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:"© OpenStreetMap"}).addTo(map);
+    if(eu)L.polyline([[eu.lat,eu.lng],[l.lat,l.lng]],{color:"#6933C5",weight:4,dashArray:"6 8"}).addTo(map);
+    L.marker([l.lat,l.lng],{icon:L.divIcon({className:"",html:`<div class="mk">●</div>`,iconSize:[34,34],iconAnchor:[17,17]})}).addTo(map).on("click",()=>window.open(App.mapaLoja(l),"_blank"));
+    if(eu)L.marker([eu.lat,eu.lng],{icon:L.divIcon({className:"",html:'<div class="mk eu"></div>',iconSize:[18,18],iconAnchor:[9,9]})}).addTo(map);
+    const km=eu?Math.hypot((eu.lat-l.lat)*111,(eu.lng-l.lng)*111*Math.cos(l.lat*Math.PI/180)):99;
+    if(eu&&km<5)map.fitBounds(L.latLngBounds([[eu.lat,eu.lng],[l.lat,l.lng]]).pad(.35));else map.setView([l.lat,l.lng],17);}
+
+  tela();
+})();
+</script>
+</body>
+</html>

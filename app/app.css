@@ -89,8 +89,8 @@ h2{font-size:20px;margin:0 0 10px;font-weight:700}
 .voz{position:fixed;right:16px;bottom:calc(92px + env(safe-area-inset-bottom,0));z-index:20}
 50%{transform:scale(1.06)}
 /* barra inferior */
-.nav{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--linha);display:grid;grid-template-columns:1fr 1fr 1fr 1px 1fr;gap:4px;padding:8px 10px calc(8px + env(safe-area-inset-bottom,0));z-index:15}
-.nav a{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 0;border-radius:14px;color:var(--texto);font-weight:600;font-size:15px}
+.nav{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--linha);display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:4px;padding:8px 10px calc(8px + env(safe-area-inset-bottom,0));z-index:15}
+.nav a{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 0;border-radius:14px;color:var(--texto);font-weight:600;font-size:14px}
 .nav a .ic{width:30px;height:30px;line-height:0;position:relative}.nav a .ic img{width:100%;height:100%;object-fit:contain;display:block}.nav a .ic .ic-mapa{display:block;width:100%;height:100%;position:relative}.nav a .ic .ic-mapa img{position:absolute;inset:0}.nav a .ic .ic-mapa svg{position:absolute;inset:-2px;width:calc(100% + 4px);height:calc(100% + 4px);filter:drop-shadow(0 1px 1px rgba(0,0,0,.3))}.nav .sep{background:var(--linha);margin:6px 2px}
 .nav a.on{background:var(--lav2);color:var(--marca)}
 .ilus{color:var(--texto2);font-size:13px;margin:6px 0 0}
@@ -463,3 +463,5 @@ svg.icone .w{fill:none}
 .cab-cli .cc-tit{display:block;font-size:13px;font-weight:700;letter-spacing:.02em;color:var(--marca);text-transform:uppercase;margin:0 0 2px}
 .cab-cli .sub{margin:0}.cab-cli .sub a{color:var(--marca);text-decoration:underline;text-underline-offset:3px}
 .cab-cli .cc-x{margin:6px 0 0;font-size:13.5px;color:var(--texto);background:#fff;border-radius:10px;padding:7px 10px;line-height:1.4}
+/* 14/11: Atendimento passa a ter três itens (Rota · Play · Clientes) */
+.casca .nav .grupo:nth-of-type(1){flex:3 1 0}

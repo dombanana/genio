@@ -17,7 +17,7 @@ Configuração por variáveis de ambiente (arquivo /etc/genio/env, só o root l�
   GENIO_CHAVE   (chave de publicação dos vendedores)
   GENIO_PORT    (porta local, padrão 8110)
 """
-import base64, hashlib, hmac, json, os, re, secrets, subprocess, sys, threading, time
+import base64, hashlib, hmac, json, os, re, secrets, subprocess, sys, threading, time, unicodedata
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import urlparse
 
@@ -620,8 +620,108 @@ def proxy_img(u):
         raise ValueError("não é imagem")
     return ct, r.read(8_000_000)
 
+def serper_web(qtxt, num=10):
+    k = chaves_ler().get("SERPER_KEY")
+    if not k:
+        raise RuntimeError("SERPER_KEY não definida na tela Chaves")
+    body = json.dumps({"q": qtxt, "gl": "br", "hl": "pt-br", "num": num}).encode()
+    r = _rq.urlopen(_rq.Request("https://google.serper.dev/search", data=body, headers={"X-API-KEY": k, "Content-Type": "application/json"}), timeout=25)
+    return json.loads(r.read().decode("utf-8", "replace"))
+
+# ---------- painel do vendedor (14/11): rota montada pelo vendedor e Play ----------
+def _cad_de(slug):
+    """ficha da captação (lacunas) e a zona onde ela está"""
+    base = os.path.join(RAIZ, "dados", "captacao")
+    if os.path.isdir(base):
+        for z in sorted(os.listdir(base)):
+            f = os.path.join(base, z, "clientes", slug + ".json")
+            if os.path.exists(f):
+                try:
+                    return z, json.load(open(f))
+                except Exception:
+                    return z, {}
+    return None, {}
+
+def rota_logo(slug, refazer, quem):
+    """busca automática do logotipo de UMA loja, pedida pelo vendedor; refazer=True recusa o atual e traz o próximo"""
+    import logos_auto
+    zona, cad = _cad_de(slug)
+    f = DADOS.cliente_ler(slug) or {"k": (cad.get("nome") or slug).lower(), "nome": cad.get("nome") or slug, "slug": slug, "logos": [], "arquivo": [], "criado": time.strftime("%Y-%m-%dT%H:%M:%S")}
+    logos = f.get("logos") or []
+    if logos and not refazer:
+        return {"ok": True, "ja": True, "src": logos[0].get("src")}
+    rec = list(f.get("logosRecusados") or [])
+    if refazer and logos:
+        # a ficha guarda as imagens como arquivo (/api/arq/…): a marca é calculada quando o logotipo entra e fica junto dele
+        if logos[0].get("marca"):
+            rec.append(logos[0]["marca"])
+        for s in (logos[0].get("original"), logos[0].get("src")):
+            if s and s.startswith("data:"):
+                rec.append(logos_auto.marca(s))
+    nome = cad.get("nome") or f.get("nome") or slug
+    end = ((cad.get("lacunas") or {}).get("endereco") or {}).get("valor") or ""
+    bairro = (str(end).split(" · ")[1:] or [(zona or "").replace("zona-", "").replace("-", " ")])[0]
+    c = logos_auto.proximo(zona, slug, nome, bairro, sys.modules[__name__], rec)
+    f["logosRecusados"] = sorted(set(rec))[-60:]
+    if not c or c.get("erro"):
+        if refazer and logos:   # o atual foi recusado: sai da ficha mesmo sem substituto
+            f["logos"] = logos[1:]; f.pop("manual", None); f.pop("aprovacao", None)
+        DADOS.cliente_gravar(slug, f, "logotipo recusado pelo vendedor" if refazer else "busca automática sem resultado")
+        return {"ok": False, "motivo": (c or {}).get("erro") or "nenhum logotipo novo nas fontes da captação"}
+    novo = {"id": "auto" + str(int(time.time() * 1000))[-8:], "src": c["src"], "nome": "Logotipo · automático", "origem": c["fonte"], "legenda": c.get("legenda"), "url": c.get("url"), "auto": True, "marca": logos_auto.marca(c["src"])}
+    f["logos"] = [novo] + (logos[1:] if refazer else logos)
+    f.pop("manual", None) if refazer else None
+    f["aprovacao"] = "pendente"; f["logoAutoEm"] = time.strftime("%Y-%m-%dT%H:%M:%S"); f["logoAutoPor"] = quem
+    DADOS.cliente_gravar(slug, f, "busca automática (vendedor)")
+    return {"ok": True, "src": c["src"], "fonte": c["fonte"]}
+
+_PREMIO = re.compile(r"pr[eê]mi|premiad|vencedor|vencedora|trof[eé]u|selo |eleit[oa]|ganhou|campe[aã]o|melhor(es)? .{0,30}(de|da|do) (s[aã]o paulo|sp|bairro|cidade|brasil)", re.I)
+def loja_historia(slug, forcar=False):
+    """o que o Play mostra antes de entrar: fundação e sócios (Receita, grátis) e prêmios (pesquisa web, só com fonte). Guardado na ficha."""
+    zona, cad = _cad_de(slug)
+    f = DADOS.cliente_ler(slug) or {"k": (cad.get("nome") or slug).lower(), "nome": cad.get("nome") or slug, "slug": slug, "logos": [], "arquivo": []}
+    h = dict(f.get("historia") or {})
+    L = cad.get("lacunas") or {}
+    leit = (L.get("leitura") or {}).get("valor") or ""
+    m = re.search(r"CNPJ (\d{14})", leit)
+    novo = False
+    if m and (forcar or "receita_em" not in h):
+        import captacao
+        r = captacao.receita(m.group(1))
+        h["receita_em"] = time.strftime("%Y-%m-%d"); novo = True
+        if "_erro" not in r:
+            h["cnpj"] = m.group(1)
+            h["razao"] = r.get("razao_social") or r.get("nome") or ""
+            h["abertura"] = r.get("data_inicio_atividade") or r.get("abertura") or ""
+            h["socios"] = [{"nome": (s.get("nome_socio") or s.get("nome") or "").title(), "papel": s.get("qualificacao_socio") or s.get("qual") or "", "desde": s.get("data_entrada_sociedade") or ""} for s in (r.get("qsa") or []) if (s.get("nome_socio") or s.get("nome"))][:5]
+            h["fonte_receita"] = "Receita Federal (minhareceita.org / BrasilAPI)"
+        else:
+            h["receita_erro"] = str(r.get("_erro"))[:120]
+    if forcar or not h.get("premios_em") or h.get("premios_estado") == "sem_pesquisa":
+        nome = cad.get("nome") or f.get("nome") or slug
+        try:
+            d = serper_web(f'"{nome}" prêmio OR premiado OR vencedor São Paulo')
+            pal = [w for w in re.sub(r"[^a-z0-9 ]", " ", unicodedata.normalize("NFKD", nome.lower()).encode("ascii", "ignore").decode()).split() if len(w) > 3 and w not in ("loja", "casa", "restaurante", "padaria", "bar", "cafe", "comercio", "ltda")]
+            achou = []
+            for o in d.get("organic") or []:
+                t = (o.get("title") or "") + " " + (o.get("snippet") or "")
+                tn = unicodedata.normalize("NFKD", t.lower()).encode("ascii", "ignore").decode()
+                if pal and all(w in tn for w in pal[:2]) and _PREMIO.search(t):
+                    achou.append({"titulo": (o.get("title") or "")[:120], "trecho": (o.get("snippet") or "")[:240], "link": o.get("link")})
+            h["premios"] = achou[:3]; h["premios_estado"] = "pesquisado"
+        except Exception as e:
+            h["premios"] = []; h["premios_estado"] = "sem_pesquisa"; h["premios_erro"] = str(e)[:120]
+        h["premios_em"] = time.strftime("%Y-%m-%d"); novo = True
+    if novo:
+        f["historia"] = h
+        DADOS.cliente_gravar(slug, f, "história da loja (Play)")
+    av = L.get("avaliacoes") or {}
+    ruins = [a for a in (av.get("lista") or []) if (a.get("nota") or 5) <= 3][:3]
+    return {"historia": h, "curiosidade": L.get("nome_curiosidade"), "gatilhos": av.get("gatilhos") or [], "ruins": ruins,
+            "nota": av.get("nota_media"), "total": av.get("total"), "leitura": leit}
+
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-ESTADO_DIR = os.path.dirname(CHAVES_ARQ) if os.path.dirname(CHAVES_ARQ) else "/var/lib/genio"
+ESTADO_DIR =os.path.dirname(CHAVES_ARQ) if os.path.dirname(CHAVES_ARQ) else "/var/lib/genio"
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__))); import dados as DADOS; import mostra as MOSTRA  # fichas, notas e estado do app: fonte única no servidor
 MAX_FICHA = 60 * 1024 * 1024  # ficha com artes em base64 (vira arquivos no servidor)
 KIT_IDS = {"capacho": "01", "placas": "02", "adesivos": "03", "uniformes": "04", "impressos": "05", "panfleto": "06", "banners": "07", "parede": "08", "brindes": "09", "carimbo": "10",
@@ -1132,6 +1232,15 @@ class H(BaseHTTPRequestHandler):
                         return self._erro(404, "arquivo não existe")
                     return self._send(200, body=raw, ctype=ct, cache="private, max-age=86400")
                 return self._send(200, painel_dados(ac))
+            if p.startswith("/api/loja/") and p.endswith("/historia") and len(p.split("/")) == 5:
+                if not self._eu():
+                    return self._erro(401, "entre com a sua conta")
+                slug_h = re.sub(r"[^a-z0-9-]", "", p.split("/")[3])
+                qs_h = {k: v[0] for k, v in _parse_qs(urlparse(self.path).query or "").items()}
+                try:
+                    return self._send(200, loja_historia(slug_h, forcar=qs_h.get("forcar") == "1"))
+                except Exception as e:
+                    return self._erro(500, "história: " + str(e)[:160])
             if p.startswith("/api/clientes/") and p.endswith("/painel") and len(p.split("/")) == 5:
                 if not self._eu():
                     return self._erro(401, "entre com a sua conta")
@@ -1351,6 +1460,17 @@ class H(BaseHTTPRequestHandler):
                     return self._send(200, ia_fundo(self._json()))
                 except Exception as e:
                     return self._erro(502, "IA: " + str(e)[:400])
+            if p.startswith("/api/rota/logo/"):
+                eu_r = self._eu()
+                if not eu_r:
+                    return self._erro(401, "entre com a sua conta")
+                slug_r = re.sub(r"[^a-z0-9-]", "", p.split("/")[4] if len(p.split("/")) > 4 else "")
+                if not slug_r:
+                    return self._erro(400, "loja?")
+                try:
+                    return self._send(200, rota_logo(slug_r, bool(self._json().get("refazer")), eu_r.get("nome") or ""))
+                except Exception as e:
+                    return self._erro(500, "busca falhou: " + str(e)[:160])
             if p == "/api/marca/preparar":
                 if not self._eu():
                     return self._erro(401, "entre com a sua conta")

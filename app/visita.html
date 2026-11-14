@@ -6,7 +6,7 @@
 <title>GênIO · Visita</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="app.css?v=ff7090001c">
+<link rel="stylesheet" href="app.css?v=1d67a6c18e">
 <style>
 .cab{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
 .fach{width:100%;aspect-ratio:16/9;border-radius:16px;overflow:hidden;background:var(--lav2);display:grid;place-items:center;position:relative}
@@ -21,7 +21,7 @@
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=ff7090001c"></script>
+<script src="app.js?v=1d67a6c18e"></script>
 <script>
 (async()=>{
   const {$,$$,esc,qs,sessao,dados,ficha,estrelasHTML,estado,salvar,nav,topo,voltar,setorNome,nomeLoja,telFmt,cliente,gravarCliente,classificar,definirCliente,menuLongo,ligarLongo,ZONA,entradas,ligarEntradas,abrirLogotipo,logoPrincipal,removerLogo}=App;
@@ -73,11 +73,11 @@
   const PQ=[["degrau","Degrau na entrada",["Não","1 degrau","2 ou mais"]],["alaga","Alaga ou pega chuva na porta",["Não","Sim"]],["porta","Porta abre para",["Dentro","Fora","De correr","Sem porta"]],["vitrine","Vitrine de vidro",["Não","Sim"]],["mesas","Mesinhas na calçada",["Não","Sim"]],["movimento","Movimento agora",["Fraco","Médio","Forte"]],["dono","Quem decide está na loja",["Sim","Não","Volta depois"]]];
   const JA=["Capacho","Banner","Faixa","Placa","Adesivo na vitrine","Wind banner","Uniforme","TV ou cardápio na parede"];
   function pesquisaHTML(){const p=c.pesquisa||{};const ja=p.ja||[];const feitas=PQ.filter(([k])=>p[k]).length+(p.jaVisto?1:0);
-    return `<section class="card pesq" id="pesq"><h2>Como é a loja <small class="muted" style="font-weight:400;font-size:14px">· ${feitas}/${PQ.length+1}</small></h2>
+    // formulário "como é a loja" retirado a pedido do dono (14/11); fica só o segmento
+    return `<section class="card pesq" id="pesq"><h2>Segmento</h2>
       <label class="pq-l">Segmento${l.setorSugerido&&l.setorSugerido!==l.setor?` <small class="muted">· sugerido: ${esc(setorNome(l.setorSugerido))}</small>`:""}</label>
       <select id="pqSetor">${SEGS.concat(SEGS.includes(l.setor)?[]:[l.setor]).map(s=>`<option value="${esc(s)}" ${s===l.setor?"selected":""}>${esc(setorNome(s))}</option>`).join("")}</select>
-      ${PQ.map(([k,t,ops])=>`<label class="pq-l">${t}</label><div class="pq-o">${ops.map(o=>`<button type="button" data-pq="${k}" data-v="${esc(o)}" class="${p[k]===o?"on":""}">${o}</button>`).join("")}</div>`).join("")}
-      <label class="pq-l">Já tem na loja <small class="muted">· toque em tudo que vir</small></label><div class="pq-o">${JA.map(o=>`<button type="button" data-ja="${esc(o)}" class="${ja.includes(o)?"on":""}">${o}</button>`).join("")}<button type="button" data-ja="" class="${p.jaVisto&&!ja.length?"on":""}">Nada disso</button></div></section>`;}
+</section>`;}
   async function gravarPesquisa(mud){c=await cliente(l);c.pesquisa={...(c.pesquisa||{}),...mud,em:new Date().toISOString()};await gravarCliente(c);const y=scrollY;render();scrollTo(0,y);}
   document.addEventListener("click",ev=>{const b=ev.target.closest&&ev.target.closest("#pesq button");if(!b)return;const p=c.pesquisa||{};
     if(b.dataset.pq)gravarPesquisa({[b.dataset.pq]:p[b.dataset.pq]===b.dataset.v?"":b.dataset.v});
