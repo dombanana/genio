@@ -8,7 +8,7 @@
 <link rel="icon" href="../genio-favicon.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
-<link rel="stylesheet" href="app.css?v=ca114ae8c9">
+<link rel="stylesheet" href="app.css?v=876308231f">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <style>
 /* montagem da rota pelo vendedor (14/11): 1 lojas · 2 logotipos · 3 recorte e ordem */
@@ -71,7 +71,7 @@ select.campo,input.campo{width:100%;font:inherit;font-size:16px;min-height:46px;
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=ca114ae8c9"></script>
+<script src="app.js?v=876308231f"></script>
 <script>
 (async()=>{
   const {$,$$,esc,qs,sessao,eu,dados,estrelasHTML,estado,salvar,nav,topo,setorNome,nomeLoja,cliente,gravarCliente,menuLongo}=App;
@@ -253,7 +253,7 @@ select.campo,input.campo{width:100%;font:inherit;font-size:16px;min-height:46px;
       if(!(l0.lat&&l0.lng)||!cand.length){alert(cand.length?"Esta loja não tem localização para achar as vizinhas.":"Não há mais lojas livres com esse filtro.");return;}
       const viz=cand.map(l=>({l,d:km(l0,l)})).sort((a,b)=>a.d-b.d).slice(0,6);const md=d=>d<1?Math.round(d*1000)+" m":d.toFixed(1).replace(".",",")+" km";
       const k=await menuLongo(`Perto de ${nomeLoja(l0.nome)}`,viz.map(v=>({k:v.l.slug,ic:"📍",t:`${nomeLoja(v.l.nome)} · ${setorNome(v.l.setor)} · ${md(v.d)} · ${"★".repeat(v.l.estrelas||0)}`})));if(!k)return;
-      const como=await menuLongo(nomeLoja(L$(k).nome),[{k:"trocar",ic:"⇄",t:`Trocar por ${nomeLoja(l0.nome)}`},{k:"depois",ic:"＋",t:"Pôr logo depois dela"}]);if(!como)return;
+      const como=await menuLongo(nomeLoja(L$(k).nome),[{k:"trocar",ic:"⇄",t:`Entrar no lugar de ${nomeLoja(l0.nome)}`},{k:"depois",ic:"＋",t:"Pôr logo depois dela"}]);if(!como)return;
       const i=R.slugs.indexOf(s);if(como==="trocar")R.slugs.splice(i,1,k);else R.slugs.splice(i+1,0,k);await salvaR();
       C[k]=await cliente(L$(k));desenha();
       // a loja nova ainda pode estar sem logotipo: busca automática na hora
