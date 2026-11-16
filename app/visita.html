@@ -6,7 +6,7 @@
 <title>GênIO · Visita</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="app.css?v=9c503e9a29">
+<link rel="stylesheet" href="app.css?v=ca114ae8c9">
 <style>
 .cab{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
 .fach{width:100%;aspect-ratio:16/9;border-radius:16px;overflow:hidden;background:var(--lav2);display:grid;place-items:center;position:relative}
@@ -21,6 +21,7 @@
 .prods-p img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;background:#fff;pointer-events:none}
 .prods-p figcaption{font-size:13px;font-weight:600;padding:6px 8px}
 .prods-p .ck{position:absolute;top:8px;right:8px;width:30px;height:30px;border-radius:50%;border:2px solid #fff;background:rgba(20,16,36,.35);color:transparent;display:grid;place-items:center;font-weight:700;box-shadow:0 1px 4px rgba(0,0,0,.3)}
+.prods-p .tst{position:absolute;left:8px;top:8px;background:rgba(20,16,36,.78);color:#fff;font-size:12px;font-weight:700;border-radius:999px;padding:5px 10px;text-decoration:none;z-index:2}
 .prods-p figure.on{border-color:var(--marca);box-shadow:0 0 0 3px rgba(105,51,197,.18)}.prods-p figure.on .ck{background:var(--marca);color:#fff}
 .passos.fila-p{border:0;padding:10px 14px}.passos.fila-p ol{margin:0}.passos.fila-p li{min-width:0}
 .fato:first-of-type{border-top:0}.fato span{color:var(--texto2)}.fato .lk{color:var(--marca);text-decoration:underline;text-underline-offset:3px;word-break:break-all}
@@ -28,7 +29,7 @@
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=9c503e9a29"></script>
+<script src="app.js?v=ca114ae8c9"></script>
 <script>
 (async()=>{
   const {$,$$,esc,qs,sessao,dados,ficha,estrelasHTML,estado,salvar,nav,topo,voltar,setorNome,nomeLoja,telFmt,cliente,gravarCliente,classificar,definirCliente,menuLongo,ligarLongo,ZONA,entradas,ligarEntradas,abrirLogotipo,logoPrincipal,removerLogo}=App;
@@ -105,9 +106,14 @@
     return `<div class="passos fila-p"><div class="t"><span>${diaP===App.hojeISO()?"Rota de hoje":`Rota de ${x.sem} ${x.dia}/${x.mes}`} · loja ${i+1} de ${f.length}</span><b>${f.filter(s=>X.res[s]).length} feita(s)</b></div><ol>${f.map(s=>`<li class="${X.res[s]?"ok":s===slug?"agora":""}"></li>`).join("")}</ol></div>`;}
   function prodsPlayHTML(){const A=Object.entries(c.artes||{}).map(([k,a])=>({k,src:a&&(a.contexto||a.png||a.pngArte)})).filter(x=>x.src);const S=selP();const n=nSelP();const pronto=!!(c.manual&&c.manual.editado);
     return `<section class="card" id="prodsP"><h2>Produtos com o logotipo${A.length?` <small class="muted" style="font-weight:400;font-size:14px">· toque para selecionar · ${n} selecionado(s)</small>`:""}</h2>
-      ${A.length?`<div class="prods-p">${A.map(x=>`<figure data-pp="${esc(x.k)}" class="${S[x.k]&&S[x.k].q>0?"on":""}"><img src="${esc(x.src)}" alt="" loading="lazy"><span class="ck">✓</span><figcaption>${esc(pnome(x.k))}</figcaption></figure>`).join("")}</div>`
+      ${A.length?`<div class="prods-p">${A.map(x=>`<figure data-pp="${esc(x.k)}" class="${S[x.k]&&S[x.k].q>0?"on":""}"><img src="${esc(x.src)}" alt="" loading="lazy"><span class="ck">✓</span>${testeP(x.k)}<figcaption>${esc(pnome(x.k))}</figcaption></figure>`).join("")}</div>`
       :pronto?`<p class="muted" style="margin:0 0 10px">Os produtos ainda não foram gerados com este logotipo.</p><button class="btn sec" type="button" id="gerarP">✦ Gerar os produtos agora</button>`
       :`<p class="muted" style="margin:0">Logotipo sem recorte. Recorte na Rota (passo 3) ou em Logotipo, logo abaixo.</p>`}</section>`;}
+  // teste de cada produto sem sair do fluxo do Play: capacho no chão (cartão Gênio), vestíveis no Provar, o resto no editor do produto
+  function testeP(k){const b=App.baseId(k),q=`l=${encodeURIComponent(slug)}`;
+    if(b==="capacho")return `<a class="tst" data-tst href="capacho.html?${q}&n=${encodeURIComponent(nome)}&ver=1&de=play">📷 Testar no chão</a>`;
+    if(["uniformes","camiseta","bone","avental"].includes(b))return `<a class="tst" data-tst href="provar.html?${q}&p=${encodeURIComponent(k)}&de=play">👕 Provar</a>`;
+    return `<a class="tst" data-tst href="produtos.html?${q}&de=play#p-${encodeURIComponent(k)}">✎ Editar</a>`;}
   async function fecharPlay(res){const t=new Date().toISOString();const e=estado();const X=e.rotas[diaP];X.res=X.res||{};X.orc=X.orc||{};
     X.res[slug]=res==="nao_estava"?"nao_estava":(X.orc[slug]?"orcamento":"visitada");e.atend=e.atend||{};e.atend[slug]={...(e.atend[slug]||{}),fim:t,...(res==="nao_estava"?{res:"nao_estava"}:{})};
     const ret=new Set(e.retornos||[]);if(res==="nao_estava")ret.add(slug);else{ret.delete(slug);e.feitas=[...new Set([...(e.feitas||[]),slug])];}e.retornos=[...ret];await salvar(e);location.href="play.html";}
@@ -218,7 +224,8 @@
       else if(k==="orc"){ev.preventDefault();const e=estado();const X=e.rotas[diaP];X.orc=X.orc||{};X.orc[slug]=true;await salvar(e);location.href=b.href;}
       else if(k==="nao"){b.disabled=true;await fecharPlay("nao_estava");}
       else if(k==="prox"){b.disabled=true;await fecharPlay("visitada");}}));
-    $$("[data-pp]").forEach(f=>f.onclick=()=>{const k=f.dataset.pp;const e=estado();e.sel=e.sel||{};const S=e.sel[slug]=e.sel[slug]||{};const on=S[k]&&S[k].q>0;
+    $$("[data-tst]").forEach(a=>a.addEventListener("click",ev=>ev.stopPropagation()));
+    $$("[data-pp]").forEach(f=>f.onclick=ev=>{if(ev.target.closest("[data-tst]"))return;const k=f.dataset.pp;const e=estado();e.sel=e.sel||{};const S=e.sel[slug]=e.sel[slug]||{};const on=S[k]&&S[k].q>0;
       S[k]={...(S[k]||{}),nome:pnome(k),q:on?0:(App.baseId(k)==="capacho"?1:App.passoQtd(k,0,1))};salvar(e);const y=scrollY;render();scrollTo(0,y);});
     const gp=$("#gerarP");if(gp)gp.onclick=async()=>{gp.disabled=true;const r=await App.gerarProdutos(l,pid=>{gp.textContent=`Gerando ${pnome(pid)}…`;});c=await cliente(l);const y=scrollY;render();scrollTo(0,y);if(r&&r.falhas&&r.falhas.length)alert("Não gerou: "+r.falhas.join(", "));};
     // passos do percurso

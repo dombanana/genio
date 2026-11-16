@@ -6,7 +6,7 @@
 <title>GênIO · Provar</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="app.css?v=9c503e9a29">
+<link rel="stylesheet" href="app.css?v=ca114ae8c9">
 <style>
 .palco-p{position:relative;background:#111;border-radius:14px;overflow:hidden;touch-action:none;margin:0 0 8px;user-select:none;-webkit-user-select:none}
 .palco-p .vista{transform-origin:0 0;will-change:transform}
@@ -45,15 +45,15 @@
 <div class="w" id="app"></div>
 <input type="file" id="cam" accept="image/*" capture="environment" hidden>
 <input type="file" id="gal" accept="image/*" hidden>
-<script src="app.js?v=9c503e9a29"></script>
-<script src="kits14.js?v=9c503e9a29"></script>
+<script src="app.js?v=ca114ae8c9"></script>
+<script src="kits14.js?v=ca114ae8c9"></script>
 <script>
 (async()=>{
   const {$,$$,esc,qs,sessao,dados,cliente,gravarCliente,gravarNota,nomeLoja,topo,voltar,nav}=App;
   if(!await sessao())return;
   const slug=qs.get("l"),pid=qs.get("p")||"camiseta",pb=App.baseId(pid);const D=await dados();const l=D.lojas.find(x=>x.slug===slug);if(!l){$("#app").textContent="Loja não encontrada.";return;}
   let c=await cliente(l);const NOME={camiseta:"Camiseta",uniformes:"Camisa polo",bone:"Boné",avental:"Avental"}[pb]||pb;
-  const volta=`produtos.html?l=${encodeURIComponent(slug)}#p-${pid}`,orc=`orcamento.html?l=${encodeURIComponent(slug)}`;
+  const volta=qs.get("de")==="play"?`visita.html?l=${encodeURIComponent(slug)}&de=play`:`produtos.html?l=${encodeURIComponent(slug)}#p-${pid}`,orc=`orcamento.html?l=${encodeURIComponent(slug)}`;
   const NV=pid.includes("~")?" · "+pid.split("~")[1]:"";
   const BASE_ARQ={uniformes:"04_uniforme_polo.jpg",camiseta:"14_camiseta.jpg",bone:"15_bone.jpg",avental:"16_avental.jpg"}[pb];
   const TECIDO=[["#F4F1EA","Branco"],["#2B2B2D","Preto"],["#1F3A5F","Marinho"],["#9A9B9D","Cinza"],["#C62828","Vermelho"],["#2E7D32","Verde"],["#14B8B0","Verde-água"],["#EDE6D6","Cru"]];

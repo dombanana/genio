@@ -8,7 +8,7 @@
 <link rel="icon" href="../genio-favicon.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
-<link rel="stylesheet" href="app.css?v=9c503e9a29">
+<link rel="stylesheet" href="app.css?v=ca114ae8c9">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <style>
 /* montagem da rota pelo vendedor (14/11): 1 lojas · 2 logotipos · 3 recorte e ordem */
@@ -53,9 +53,14 @@ select.campo,input.campo{width:100%;font:inherit;font-size:16px;min-height:46px;
 .rc .seta{color:var(--texto2);text-align:center}
 .rc .nm{grid-column:1/-1;display:flex;justify-content:space-between;gap:8px;font-size:14px;padding:0 4px}.rc .nm small{color:var(--texto2)}
 .rc.ok .nm small{color:#0E6E6A;font-weight:600}
+.rc-l{position:relative}
+.rc.puxa{transition:none;z-index:3}.rc.volta{transition:transform .2s ease}
+.rc-fundo{position:absolute;left:0;right:0;border-radius:14px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;font-weight:700;font-size:14px;color:#fff;z-index:1;pointer-events:none}
+.rc-fundo.esq{background:#C62828;justify-content:flex-end}.rc-fundo.dir{background:#0E8A84;justify-content:flex-start}
 .rc.arrasta{z-index:5;box-shadow:0 10px 30px rgba(28,22,53,.3);opacity:.95}
 .rc.busy figure.dep::after{content:"recortando…";position:absolute;inset:0;background:rgba(255,255,255,.85);display:grid;place-items:center;font-size:12px;font-weight:700;color:var(--marca)}
 .mapa-r{height:300px;border-radius:14px;overflow:hidden;margin:0 0 12px;background:#E9E6F2}
+.mapa-r,.mapa-r.leaflet-container{touch-action:pan-y!important}   /* mapa travado: o dedo rola a página, não o mapa (16/11) */
 .mapa-r .leaflet-div-icon{background:transparent;border:0}
 .mapa-r .n{width:26px;height:26px;border-radius:50%;background:var(--marca);color:#fff;font:700 12px/1 Rubik,system-ui,sans-serif;display:grid;place-items:center;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.35)}
 .mapa-r .b{width:16px;height:16px;border-radius:4px;background:#14B8B0;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.35)}
@@ -66,7 +71,7 @@ select.campo,input.campo{width:100%;font:inherit;font-size:16px;min-height:46px;
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=9c503e9a29"></script>
+<script src="app.js?v=ca114ae8c9"></script>
 <script>
 (async()=>{
   const {$,$$,esc,qs,sessao,eu,dados,estrelasHTML,estado,salvar,nav,topo,setorNome,nomeLoja,cliente,gravarCliente,menuLongo}=App;
@@ -128,7 +133,7 @@ select.campo,input.campo{width:100%;font:inherit;font-size:16px;min-height:46px;
     // mapa: as marcadas aparecem numeradas na ordem do caminho, ligadas a partir da base; as outras candidatas são pontos cinza (toque marca/desmarca)
     let mapa=null,camada=null;
     function desenhaMapa(){const box=$("#mapaR");if(!box||typeof L==="undefined"){if(box)box.remove();return;}
-      if(!mapa){mapa=L.map(box,{zoomControl:true,attributionControl:true,scrollWheelZoom:false});L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:"© OpenStreetMap"}).addTo(mapa);camada=L.layerGroup().addTo(mapa);}
+      if(!mapa){mapa=L.map(box,{zoomControl:true,attributionControl:true,scrollWheelZoom:false,dragging:false,touchZoom:false,doubleClickZoom:false,boxZoom:false,keyboard:false,tap:false});L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:"© OpenStreetMap"}).addTo(mapa);camada=L.layerGroup().addTo(mapa);}
       camada.clearLayers();const sel=new Set(R.slugs);const pts=[];const b=baseZ();
       const todas=[...C.map(x=>x.l),...fora];
       for(const l of todas){if(!(l.lat&&l.lng)||sel.has(l.slug))continue;L.circleMarker([l.lat,l.lng],{radius:6,color:"#fff",weight:1.5,fillColor:"#9A93AE",fillOpacity:.85}).addTo(camada).bindTooltip(nomeLoja(l.nome)).on("click",()=>alternar(l.slug,true));pts.push([l.lat,l.lng]);}
@@ -224,7 +229,7 @@ select.campo,input.campo{width:100%;font:inherit;font-size:16px;min-height:46px;
       $("#app").innerHTML=`${topo()}${cabecalho()}
       ${R.pronta?`<div class="pronta">✓ Rota pronta · ${L.length} lojas. Toque <a href="play.html">▶ Play</a> no menu para começar.</div>`:""}
       <section class="card" style="padding:14px"><h2>Recorte e ordem <small class="muted" style="font-weight:400;font-size:14px">· ${nOk} de ${L.length} recortados</small></h2>
-        <p class="muted" style="margin:0 0 10px;font-size:14px">Segure o logotipo (ou botão direito) e peça o recorte: o antes e o depois aparecem lado a lado. Arraste pelo ≡ para mudar a fila.</p>
+        <p class="muted" style="margin:0 0 10px;font-size:14px">Segure o logotipo (ou botão direito) e peça o recorte: o antes e o depois aparecem lado a lado. Arraste pelo ≡ para mudar a fila. Puxe a loja para a <b>esquerda</b> para tirar da rota; para a <b>direita</b>, para ver lojas perto dela.</p>
         <div class="linha-b"><button type="button" class="btn sec" id="caminho">Ordenar pelo caminho</button></div>
         <div class="rc-l" id="lista">${L.map(linha).join("")}</div></section>
       <div class="acoes"><div class="w"><button class="btn sec" type="button" id="volta">← Logotipos</button><button class="btn" type="button" id="pronta">${R.pronta?"✓ Rota pronta":"✓ Rota pronta"}</button></div></div>${nav("rota")}`;
@@ -239,8 +244,32 @@ select.campo,input.campo{width:100%;font:inherit;font-size:16px;min-height:46px;
       if(k==="desf"){await desfazer(s);troca(s);}
       if(k==="trocar")ir(2);}
     async function desfazer(s){const c=await cliente(L$(s));const p=(c.logos||[])[0];if(p&&p.original){p.src=p.original;delete p.original;p.tratado=false;}delete c.manual;await gravarCliente(c);C[s]=c;}
-    function ligarLinha(row){const s=row.dataset.s;
-      row.querySelectorAll("[data-logo]").forEach(f=>{let t=null;f.addEventListener("pointerdown",ev=>{if(ev.button===2)return;t=setTimeout(()=>{t=null;if(navigator.vibrate)navigator.vibrate(12);menu(s);},480);});["pointerup","pointercancel","pointerleave"].forEach(k=>f.addEventListener(k,()=>clearTimeout(t)));f.addEventListener("contextmenu",ev=>{ev.preventDefault();clearTimeout(t);menu(s);});});
+    // ---- puxar a linha: esquerda = tirar da rota / arquivar; direita = lojas perto para trocar ou pôr depois (16/11)
+    function renumera(){[...$("#lista").children].filter(x=>x.classList.contains("rc")).forEach((x,i)=>x.querySelector(".pos").textContent=i+1);
+      const L=lojas();const h=$("h2 small");if(h)h.innerHTML=`· ${L.filter(l=>C[l.slug]&&C[l.slug].manual&&C[l.slug].manual.editado).length} de ${L.length} recortados`;}
+    async function tirar(s){const l=L$(s);const k=await menuLongo(nomeLoja(l.nome),[{k:"tirar",ic:"✕",t:"Tirar da rota"},{k:"arq",ic:"🗄",t:"Arquivar a loja (não volta nas próximas rotas)"}]);if(!k)return;
+      R.slugs=R.slugs.filter(x=>x!==s);if(k==="arq")App.arquivarLoja(s,true);await salvaR();const row=document.querySelector(`.rc[data-s="${s}"]`);if(row)row.remove();renumera();}
+    async function perto(s){const l0=L$(s);const ja=new Set(R.slugs);const cand=candidatas().filter(x=>!x.outra&&!ja.has(x.l.slug)&&x.l.lat&&x.l.lng).map(x=>x.l);
+      if(!(l0.lat&&l0.lng)||!cand.length){alert(cand.length?"Esta loja não tem localização para achar as vizinhas.":"Não há mais lojas livres com esse filtro.");return;}
+      const viz=cand.map(l=>({l,d:km(l0,l)})).sort((a,b)=>a.d-b.d).slice(0,6);const md=d=>d<1?Math.round(d*1000)+" m":d.toFixed(1).replace(".",",")+" km";
+      const k=await menuLongo(`Perto de ${nomeLoja(l0.nome)}`,viz.map(v=>({k:v.l.slug,ic:"📍",t:`${nomeLoja(v.l.nome)} · ${setorNome(v.l.setor)} · ${md(v.d)} · ${"★".repeat(v.l.estrelas||0)}`})));if(!k)return;
+      const como=await menuLongo(nomeLoja(L$(k).nome),[{k:"trocar",ic:"⇄",t:`Trocar por ${nomeLoja(l0.nome)}`},{k:"depois",ic:"＋",t:"Pôr logo depois dela"}]);if(!como)return;
+      const i=R.slugs.indexOf(s);if(como==="trocar")R.slugs.splice(i,1,k);else R.slugs.splice(i+1,0,k);await salvaR();
+      C[k]=await cliente(L$(k));desenha();
+      // a loja nova ainda pode estar sem logotipo: busca automática na hora
+      if(!((C[k].logos||[]).length)){try{const r=await fetch(`/api/rota/logo/${encodeURIComponent(k)}`,{method:"POST",credentials:"same-origin",headers:{"Content-Type":"application/json"},body:JSON.stringify({refazer:false})});await r.json().catch(()=>({}));C[k]=await App.recarregarFicha(k)||C[k];troca(k);}catch(e){}}}
+    function ligarPuxar(row){const s=row.dataset.s;let x0=0,y0=0,dx=0,ativo=false,decidiu=false,fundo=null;
+      row.addEventListener("pointerdown",ev=>{if(ev.button===2||ev.target.closest(".alca"))return;x0=ev.clientX;y0=ev.clientY;dx=0;ativo=true;decidiu=false;});
+      row.addEventListener("pointermove",ev=>{if(!ativo)return;const ddx=ev.clientX-x0,ddy=ev.clientY-y0;
+        if(!decidiu){if(Math.abs(ddy)>10&&Math.abs(ddy)>Math.abs(ddx)){ativo=false;return;}if(Math.abs(ddx)<12)return;decidiu=true;try{row.setPointerCapture(ev.pointerId);}catch(e){}row.classList.add("puxa");
+          fundo=document.createElement("div");fundo.className="rc-fundo";fundo.style.top=row.offsetTop+"px";fundo.style.height=row.offsetHeight+"px";row.parentNode.insertBefore(fundo,row);}
+        dx=Math.max(-160,Math.min(160,ddx));row.style.transform=`translateX(${dx}px)`;fundo.className="rc-fundo "+(dx<0?"esq":"dir");fundo.textContent=dx<0?"Tirar da rota ✕":"📍 Lojas perto";});
+      const fim=async()=>{if(!ativo)return;ativo=false;if(!decidiu)return;row.classList.remove("puxa");row.classList.add("volta");row.style.transform="";setTimeout(()=>{row.classList.remove("volta");if(fundo)fundo.remove();fundo=null;},220);
+        // um toque/segurar no logotipo não vira puxada
+        if(dx<=-90)await tirar(s);else if(dx>=90)await perto(s);dx=0;};
+      row.addEventListener("pointerup",fim);row.addEventListener("pointercancel",fim);}
+    function ligarLinha(row){const s=row.dataset.s;ligarPuxar(row);
+      row.querySelectorAll("[data-logo]").forEach(f=>{let t=null;f.addEventListener("pointerdown",ev=>{if(ev.button===2)return;t=setTimeout(()=>{t=null;if(row.classList.contains("puxa"))return;if(navigator.vibrate)navigator.vibrate(12);menu(s);},480);});f.addEventListener("pointermove",ev=>{if(row.classList.contains("puxa"))clearTimeout(t);});["pointerup","pointercancel","pointerleave"].forEach(k=>f.addEventListener(k,()=>clearTimeout(t)));f.addEventListener("contextmenu",ev=>{ev.preventDefault();clearTimeout(t);menu(s);});});
       // arrastar pelo ≡: a linha segue o dedo e troca de lugar com as vizinhas
       const al=row.querySelector(".alca");al.addEventListener("pointerdown",ev=>{ev.preventDefault();try{al.setPointerCapture(ev.pointerId);}catch(e){}const lista=$("#lista");row.classList.add("arrasta");let y0=ev.clientY;
         const mv=e=>{const dy=e.clientY-y0;row.style.transform=`translateY(${dy}px)`;const irmaos=[...lista.children].filter(x=>x!==row);const meio=row.getBoundingClientRect().top+row.offsetHeight/2;

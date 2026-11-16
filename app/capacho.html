@@ -3926,7 +3926,9 @@ async function sessRestore(){let o=null;try{o=await sessRead();}catch(e){}
   // logotipo da identidade já vem recortado: todos os blocos vão para o tapete (o motor não deixa parte da marca de fora)
   try{var _pb=window.proposeBlocks;if(typeof _pb==="function")window.proposeBlocks=function(b){return (typeof LOGO_ORIGEM!=="undefined"&&LOGO_ORIGEM==="identidade")?b.map(function(){return true;}):_pb(b);};}catch(e){}
   // voltar = para os produtos da loja (de onde o vendedor veio)
-  try{var rv=document.getElementById("repVolta");if(rv){rv.href="/app/produtos.html?l="+encodeURIComponent(slug)+"#p-capacho";rv.textContent="← Produtos";rv.setAttribute("aria-label","Voltar aos produtos");}}catch(e){}
+  // aberto pelo Play (16/11): a volta é para a visita da loja da vez
+  var dePlay=qs.get("de")==="play",voltaUrl=dePlay?"/app/visita.html?l="+encodeURIComponent(slug)+"&de=play":"/app/produtos.html?l="+encodeURIComponent(slug)+"#p-capacho";
+  try{var rv=document.getElementById("repVolta");if(rv){rv.href=voltaUrl;rv.textContent=dePlay?"← Visita":"← Produtos";rv.setAttribute("aria-label",dePlay?"Voltar à visita":"Voltar aos produtos");}}catch(e){}
   // preço do tapete montado (o mesmo do orçamento do motor) vai para a ficha da loja no servidor: o card do produto mostra esse valor
   var ultPreco="";async function enviarPreco(){try{if(typeof Q==="undefined"||!Q||!Q.cliente||(Q.cliente.nome||"").trim().toLowerCase()!==nome.toLowerCase())return;
       var G=grandPrice();if(!G||!G.ready)return;var Ts=(Q.tapetes&&Q.tapetes.length?Q.tapetes:[{spec:Q.spec}]);
@@ -3938,8 +3940,8 @@ async function sessRestore(){let o=null;try{o=await sessRead();}catch(e){}
   setInterval(enviarPreco,3000);
   // no fim do capacho não há "Gerar orçamento": o preço já vai sozinho para o card; o botão leva para a tela de todos os produtos
   try{var _bs=window.barSpec;if(typeof _bs==="function")window.barSpec=function(){var b=_bs.apply(this,arguments);
-    if(b&&/^Gerar orçamento/.test(b.next||"")){b.next="Produtos →";b.ns="Produtos →";b.go=async function(){try{Q.feito=Object.assign({},Q.feito,{local:true});await saveQuote();}catch(e){}
-      ultPreco="";await enviarPreco();location.href="/app/produtos.html?l="+encodeURIComponent(slug)+"#p-capacho";};}
+    if(b&&/^Gerar orçamento/.test(b.next||"")){b.next=dePlay?"Visita →":"Produtos →";b.ns=b.next;b.go=async function(){try{Q.feito=Object.assign({},Q.feito,{local:true});await saveQuote();}catch(e){}
+      ultPreco="";await enviarPreco();location.href=voltaUrl;};}
     return b;};if(typeof renderBar==="function")renderBar();}catch(e){}document.addEventListener("visibilitychange",function(){if(document.visibilityState==="hidden")enviarPreco();});
   var n=0,t=setInterval(async function(){n++;var pronto=false;try{pronto=typeof Q!=="undefined"&&Q&&Q.cliente&&(Q.cliente.nome||"").trim().toLowerCase()===nome.toLowerCase();}catch(e){}
     if(!pronto){if(n>80)clearInterval(t);return;}clearInterval(t);
