@@ -8,7 +8,7 @@
 <link rel="icon" href="../genio-favicon.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
-<link rel="stylesheet" href="app.css?v=4532878a5f">
+<link rel="stylesheet" href="app.css?v=e29cfb4e22">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <style>
 /* montagem da rota pelo vendedor (14/11): 1 lojas · 2 logotipos · 3 recorte e ordem */
@@ -46,6 +46,9 @@ select.campo,input.campo{width:100%;font:inherit;font-size:16px;min-height:46px;
 .rc-l{display:grid;gap:8px}
 .rc{display:grid;grid-template-columns:26px 28px 1fr 14px 1fr;gap:8px;align-items:center;background:#fff;border-radius:14px;padding:8px;box-shadow:var(--sombra);position:relative;touch-action:pan-y}
 .rc .pos{width:26px;height:26px;border-radius:50%;background:var(--lav);color:var(--marca);font-weight:700;font-size:13px;display:grid;place-items:center}
+.so-recorte .alca{display:none}.so-recorte .rc{grid-template-columns:26px 1fr 14px 1fr}
+.aq{display:grid;grid-template-columns:28px 1fr auto;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--linha)}.aq:last-child{border-bottom:0}.aq .pos{font-weight:800;color:#141C3A}.aq b{display:block}.aq small{color:var(--texto2);font-size:13px}.aq .btn{min-height:44px;padding:0 12px;font-size:14px}
+.chks{display:flex;flex-direction:column;gap:6px}.chk{display:flex;gap:10px;align-items:center;min-height:44px;border-radius:12px;padding:0 12px;background:#F1EEF8;color:inherit;text-decoration:none;font-weight:600}.chk span{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-weight:800;flex-shrink:0}.chk.ok span{background:#0E6E6A;color:#fff}.chk.falta{background:#FFF1DC;color:#7A4A00}.chk.falta span{background:#fff;border:2px solid #C77700}
 .rc .alca{font-size:22px;color:var(--texto2);text-align:center;cursor:grab;touch-action:none;padding:8px 0}
 .rc figure{margin:0;aspect-ratio:4/3;border-radius:10px;background:repeating-conic-gradient(#EEE 0 25%,#fff 0 50%) 0 0/14px 14px;display:grid;place-items:center;overflow:hidden;position:relative;-webkit-user-select:none;user-select:none}
 .rc figure img{max-width:92%;max-height:92%;object-fit:contain;pointer-events:none}.rc figure i{font-size:11.5px;color:var(--texto2);text-align:center;padding:4px;font-style:normal;background:rgba(255,255,255,.85);border-radius:8px}
@@ -71,12 +74,12 @@ select.campo,input.campo{width:100%;font:inherit;font-size:16px;min-height:46px;
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=4532878a5f"></script>
+<script src="app.js?v=e29cfb4e22"></script>
 <script>
 (async()=>{
   const {$,$$,esc,qs,sessao,eu,dados,estrelasHTML,estado,salvar,nav,topo,setorNome,nomeLoja,cliente,gravarCliente,menuLongo}=App;
   if(!await sessao())return;
-  let D;try{D=await dados();}catch(e){$("#app").innerHTML=`${topo()}<section class="card"><h2>Rota ainda não preparada</h2><p>Nenhuma zona tem captação pronta. Peça ao administrador para rodar a varredura.</p></section>${nav("rota")}`;return;}
+  let D;try{D=await dados();}catch(e){$("#app").innerHTML=`${topo()}<section class="card"><h2>Rota ainda não preparada</h2><p>Nenhuma zona tem captação pronta. Peça ao administrador para rodar a varredura.</p></section>${rodape()}${nav("rota")}`;return;}
   const hoje=App.hojeISO();
   const dia=/^\d{4}-\d{2}-\d{2}$/.test(qs.get("d")||"")?qs.get("d"):hoje;
   const zonas=App.PLANO.filter(z=>D.zonas[z]);
@@ -101,13 +104,19 @@ select.campo,input.campo{width:100%;font:inherit;font-size:16px;min-height:46px;
     else{L=D.lojas.filter(l=>l.zona===R.zona&&l.estrelas>=3&&!arq.has(l.slug)&&!feitas.has(l.slug));if(R.tipo==="zona-familia")L=L.filter(l=>App.familiaDe(l.setor)===R.familia);}
     return L.sort((a,b)=>b.estrelas-a.estrelas||(a.dia||0)-(b.dia||0)||(a.ordem||0)-(b.ordem||0)).map(l=>({l,outra:outras[l.slug]||null}));}
   // ---- cabeçalho: dias com rota + escolher outro dia; etapas
+  const AJ=["Escolha o tipo de rota, a zona e marque as lojas. O mapa mostra o melhor caminho.","Confira os logotipos. Toque nos errados; segure para pôr um à mão.","Peça o recorte de cada logotipo: antes e depois lado a lado.","Arrume a fila: arraste pelo ≡, tire lojas ou troque por outras perto.","Avise as lojas pelo WhatsApp que você vai passar.","Confira tudo e marque a rota como pronta."];
+  let ROD="";
   function cabecalho(){const e=estado();const dias=Object.entries(e.rotas||{}).filter(([d,X])=>X&&(X.slugs||[]).length&&!X.encerrada).sort((a,b)=>a[0].localeCompare(b[0])).filter(([d,X])=>d>=hoje||(X.slugs||[]).some(s=>!(X.res||{})[s]));
     if(!dias.some(([d])=>d===dia))dias.push([dia,R]);dias.sort((a,b)=>a[0].localeCompare(b[0]));
-    const ok=[R.slugs.length>0,R.etapa>=3||R.pronta,!!R.pronta];
-    return `<h1>Rota</h1><p class="sub">Monte a rota do dia: lojas, logotipos, recorte e ordem. Depois, ▶ Play no menu.</p>
-    <div class="dias-r">${dias.map(([d,X])=>`<a href="?d=${d}" class="${d===dia?"on":""}">${d===hoje?"Hoje":fmt(d)}<small>${(X.slugs||[]).length} lojas${X.pronta?" · pronta ✓":""}</small></a>`).join("")}<label>+ Outro dia<small>escolher a data</small><input type="date" id="outroDia" min="${hoje}"></label></div>
-    <div class="etapas"><button type="button" data-et="1" class="${etapa===1?"on":ok[0]?"ok":""}">1 · Lojas${ok[0]?" ✓":""}</button><button type="button" data-et="2" class="${etapa===2?"on":ok[1]?"ok":""}" ${R.slugs.length?"":"disabled"}>2 · Logotipos${ok[1]?" ✓":""}</button><button type="button" data-et="3" class="${etapa===3?"on":ok[2]?"ok":""}" ${R.etapa>=3||R.pronta?"":"disabled"}>3 · Recorte e ordem${ok[2]?" ✓":""}</button></div>`;}
-  function ligarCab(){$$("[data-et]").forEach(b=>b.onclick=()=>ir(+b.dataset.et));const od=$("#outroDia");if(od)od.onchange=()=>{if(od.value)location.href=`?d=${od.value}`;};}
+    const feitas=[R.slugs.length>0,R.etapa>=3||!!R.pronta,!!R.recOk||!!R.pronta,!!R.filaOk||!!R.pronta,!!R.aqOk,!!R.pronta];
+    const nAq=Object.keys(R.aq||{}).filter(s=>R.slugs.includes(s)).length;
+    const faltas={0:"nenhuma loja marcada.",1:"logotipos não conferidos.",2:R.faltaRec?`${R.faltaRec} loja(s) sem recorte.`:"recorte não conferido.",3:"fila não conferida.",4:`${nAq} de ${R.slugs.length} loja(s) avisada(s).`};
+    const B=App.barraEtapas({proc:"rota",atual:etapa-1,feitas,href:i=>`?d=${dia}&etapa=${i+1}`,titulo:dia===hoje?"Hoje":fmt(dia),sub:`${R.slugs.length} lojas`,faltas,seguir:etapa<6?{id:"peSeguir"}:false});
+    ROD=B.rodape;
+    return `${B.topo}<div class="dias-r">${dias.map(([d,X])=>`<a href="?d=${d}" class="${d===dia?"on":""}">${d===hoje?"Hoje":fmt(d)}<small>${(X.slugs||[]).length} lojas${X.pronta?" · pronta ✓":""}</small></a>`).join("")}<label>+ Outro dia<small>escolher a data</small><input type="date" id="outroDia" min="${hoje}"></label></div>
+    ${B.titulo}<p class="sub">${AJ[etapa-1]}</p>`;}
+  const rodape=()=>ROD;
+  function ligarCab(){const ps=$("#peSeguir");if(ps)ps.onclick=ev=>{ev.preventDefault();const alvo=$("#seguir")||$("#aceitar")||$("#seguir3")||$("#seguir5");if(alvo&&alvo.disabled){alert("Marque ao menos uma loja para seguir.");return;}if(alvo)alvo.click();else ir(etapa+1);};const od=$("#outroDia");if(od)od.onchange=()=>{if(od.value)location.href=`?d=${od.value}`;};}
 
   // =============== 1 · LOJAS ===============
   function etapa1(){const C=candidatas();const sel=new Set(R.slugs);const naLista=new Set(C.map(x=>x.l.slug));const fora=R.slugs.filter(s=>!naLista.has(s)).map(L$).filter(Boolean);
@@ -125,7 +134,7 @@ select.campo,input.campo{width:100%;font:inherit;font-size:16px;min-height:46px;
       ${C.length?`<div class="cand">${C.map(x=>linha(x.l,x.outra)).join("")}</div>`:`<p class="muted">Nenhuma loja com esse filtro${R.tipo==="retorno"?" (ainda não há retornos)":""}.</p>`}
     </section>
     <section class="card"><h2>Adicionar outras lojas</h2><input class="campo" id="busca" placeholder="Nome da loja (qualquer zona)" autocomplete="off"><div class="cand" id="buscaRes"></div></section>
-    <div class="acoes"><div class="w"><button class="btn" type="button" id="seguir" ${R.slugs.length?"":"disabled"}>Seguir: logotipos →</button></div></div>${nav("rota")}`;
+    <div class="acoes"><div class="w"><button class="btn" type="button" id="seguir" ${R.slugs.length?"":"disabled"}>Seguir: logotipos →</button></div></div>${rodape()}${nav("rota")}`;
     document.body.classList.add("com-acoes");ligarCab();
     // miniaturas (fichas já estão em memória)
     $$("[data-mi]").forEach(async m=>{const c=await cliente({slug:m.dataset.mi});const s=logoDe(c);m.innerHTML=s?`<img src="${esc(s)}" alt="" loading="lazy">`:"<i>sem<br>logo</i>";});
@@ -177,7 +186,7 @@ select.campo,input.campo{width:100%;font:inherit;font-size:16px;min-height:46px;
         <div class="st" id="st"></div>
         <div class="lg-g">${lojas.map(card).join("")}</div>
       </section>
-      <div class="acoes"><div class="w"><button class="btn sec" type="button" id="volta">← Lojas</button><button class="btn" type="button" id="aceitar">Aceitar as escolhas →</button></div></div>${nav("rota")}`;
+      <div class="acoes"><div class="w"><button class="btn sec" type="button" id="volta">← Lojas</button><button class="btn" type="button" id="aceitar">Aceitar as escolhas →</button></div></div>${rodape()}${nav("rota")}`;
       document.body.classList.add("com-acoes");ligarCab();ligar();}
     const guardaM=()=>sessionStorage.setItem("rota-erradas-"+dia,JSON.stringify([...marcadas]));
     async function porLogo(slug,src,origem){const c=await cliente({slug});c.logos=[{id:"man"+Date.now().toString(36),src,nome:"Logotipo · "+(origem==="foto"?"foto":"enviado"),origem,auto:false}].concat((c.logos||[]).filter(x=>!x.auto));delete c.manual;c.aprovacao="ok";await gravarCliente(c);C[slug]=c;marcadas.delete(slug);guardaM();}
@@ -218,7 +227,7 @@ select.campo,input.campo{width:100%;font:inherit;font-size:16px;min-height:46px;
     desenha();}
 
   // =============== 3 · RECORTE E ORDEM ===============
-  async function etapa3(){const C={};for(const s of R.slugs){const l=L$(s);if(l)C[s]=await cliente(l);}
+  async function etapa3(modo){const FILA=modo==="fila";const C={};for(const s of R.slugs){const l=L$(s);if(l)C[s]=await cliente(l);}
     const lojas=()=>R.slugs.map(L$).filter(Boolean);
     const linha=(l,i)=>{const c=C[l.slug];const p=(c.logos||[])[0]||{};const feito=!!(c.manual&&c.manual.editado);const antes=p.original||(!feito?p.src:null)||p.src;const depois=feito?(c.manual.tratado||p.src):null;
       return `<div class="rc ${feito?"ok":""}" data-s="${esc(l.slug)}"><span class="pos">${i+1}</span><span class="alca" aria-label="arrastar">≡</span>
@@ -227,12 +236,11 @@ select.campo,input.campo{width:100%;font:inherit;font-size:16px;min-height:46px;
         <div class="nm"><span><b>${esc(nomeLoja(l.nome))}</b></span><small>${feito?"✓ recortado":antes?"falta recortar":"sem logotipo"}</small></div></div>`;};
     function desenha(){const L=lojas();const nOk=L.filter(l=>C[l.slug]&&C[l.slug].manual&&C[l.slug].manual.editado).length;
       $("#app").innerHTML=`${topo()}${cabecalho()}
-      ${R.pronta?`<div class="pronta">✓ Rota pronta · ${L.length} lojas. Toque <a href="play.html">▶ Play</a> no menu para começar.</div>`:""}
-      <section class="card" style="padding:14px"><h2>Recorte e ordem <small class="muted" style="font-weight:400;font-size:14px">· ${nOk} de ${L.length} recortados</small></h2>
-        <p class="muted" style="margin:0 0 10px;font-size:14px">Segure o logotipo (ou botão direito) e peça o recorte: o antes e o depois aparecem lado a lado. Arraste pelo ≡ para mudar a fila. Puxe a loja para a <b>esquerda</b> para tirar da rota; para a <b>direita</b>, para ver lojas perto dela.</p>
-        <div class="linha-b"><button type="button" class="btn sec" id="caminho">Ordenar pelo caminho</button></div>
-        <div class="rc-l" id="lista">${L.map(linha).join("")}</div></section>
-      <div class="acoes"><div class="w"><button class="btn sec" type="button" id="volta">← Logotipos</button><button class="btn" type="button" id="pronta">${R.pronta?"✓ Rota pronta":"✓ Rota pronta"}</button></div></div>${nav("rota")}`;
+      <section class="card" style="padding:14px"><h2>${FILA?`Fila <small class="muted" style="font-weight:400;font-size:14px">· ${L.length} lojas</small>`:`Recorte <small class="muted" style="font-weight:400;font-size:14px">· ${nOk} de ${L.length} recortados</small>`}</h2>
+        <p class="muted" style="margin:0 0 10px;font-size:14px">${FILA?"Arraste pelo ≡ para mudar a ordem. Puxe a loja para a <b>esquerda</b> para tirar da rota; para a <b>direita</b>, para ver lojas perto dela.":"Segure o logotipo (ou botão direito) e peça o recorte: o antes e o depois aparecem lado a lado. Puxe para a <b>esquerda</b> para tirar da rota; para a <b>direita</b>, para trocar por uma loja perto."}</p>
+        ${FILA?`<div class="linha-b"><button type="button" class="btn sec" id="caminho">${App.nb("4.1","Ordenar pelo caminho")}</button></div>`:""}
+        <div class="rc-l ${FILA?"":"so-recorte"}" id="lista">${L.map(linha).join("")}</div></section>
+      <div class="acoes"><div class="w"><button class="btn" type="button" id="seguir3">Seguir</button></div></div>${rodape()}${nav("rota")}`;
       document.body.classList.add("com-acoes");ligarCab();ligar();}
     async function recortar(s){const row=document.querySelector(`.rc[data-s="${s}"]`);if(row)row.classList.add("busy");const r=await App.recortarLogo(L$(s));C[s]=await cliente(L$(s));if(!r.ok)alert("Não consegui recortar: "+r.motivo);troca(s);}
     function troca(s){const row=document.querySelector(`.rc[data-s="${s}"]`);if(!row)return desenha();const n=document.createElement("div");n.innerHTML=linha(L$(s),R.slugs.indexOf(s));row.replaceWith(n.firstChild);ligarLinha(document.querySelector(`.rc[data-s="${s}"]`));
@@ -278,15 +286,48 @@ select.campo,input.campo{width:100%;font:inherit;font-size:16px;min-height:46px;
         const up=async()=>{al.removeEventListener("pointermove",mv);al.removeEventListener("pointerup",up);al.removeEventListener("pointercancel",up);row.classList.remove("arrasta");row.style.transform="";
           R.slugs=[...lista.children].map(x=>x.dataset.s);[...lista.children].forEach((x,i)=>x.querySelector(".pos").textContent=i+1);await salvaR();};
         al.addEventListener("pointermove",mv);al.addEventListener("pointerup",up);al.addEventListener("pointercancel",up);});}
-    function ligar(){$$(".rc").forEach(ligarLinha);$("#volta").onclick=()=>ir(2);
-      $("#caminho").onclick=async()=>{const Z=D.zonas[R.zona]||D.zona;const dist=(a,b)=>Math.hypot((a.lat-b.lat)*111,(a.lng-b.lng)*111*Math.cos(a.lat*Math.PI/180));let cur=Z&&Z.base?{lat:Z.base[0],lng:Z.base[1]}:null;
+    function ligar(){$$(".rc").forEach(ligarLinha);
+      $("#seguir3").onclick=async()=>{if(FILA){R.filaOk=true;R.etapa=Math.max(R.etapa||1,5);}else{R.faltaRec=lojas().filter(l=>!(C[l.slug]&&C[l.slug].manual&&C[l.slug].manual.editado)).length;R.recOk=!R.faltaRec;R.etapa=Math.max(R.etapa||1,4);}await salvaR();ir(FILA?5:4);};
+      const cm=$("#caminho");if(cm)cm.onclick=async()=>{const Z=D.zonas[R.zona]||D.zona;const dist=(a,b)=>Math.hypot((a.lat-b.lat)*111,(a.lng-b.lng)*111*Math.cos(a.lat*Math.PI/180));let cur=Z&&Z.base?{lat:Z.base[0],lng:Z.base[1]}:null;
         const resto=lojas().filter(l=>l.lat&&l.lng),sem=lojas().filter(l=>!(l.lat&&l.lng));const out=[];if(!cur&&resto.length)cur=resto[0];
         while(resto.length){let k=0;for(let i=1;i<resto.length;i++)if(dist(cur,resto[i])<dist(cur,resto[k]))k=i;cur=resto.splice(k,1)[0];out.push(cur);}R.slugs=out.concat(sem).map(l=>l.slug);await salvaR();desenha();};
-      $("#pronta").onclick=async()=>{const falta=lojas().filter(l=>!(C[l.slug]&&C[l.slug].manual&&C[l.slug].manual.editado));if(falta.length&&!confirm(`${falta.length} loja(s) sem recorte. Marcar a rota como pronta mesmo assim?`))return;
-        R.pronta=true;R.prontaEm=new Date().toISOString();R.res=R.res||{};await salvaR();desenha();scrollTo(0,0);};}
+}
     desenha();}
 
-  if(etapa===2&&R.slugs.length)await etapa2();else if(etapa===3&&(R.etapa>=3||R.pronta))await etapa3();else etapa1();
+  // =============== 5 · AQUECIMENTO ===============
+  async function etapa5(){const lojas=R.slugs.map(L$).filter(Boolean);R.aq=R.aq||{};
+    const padrao=`Olá! Aqui é ${eu().nome} da GênIO. Vou passar aí na loja ${dia===hoje?"hoje":"no dia "+dia.slice(8,10)+"/"+dia.slice(5,7)} para mostrar como fica a marca de vocês em capacho, uniforme e outros produtos. Posso passar?`;
+    const msg=()=>R.aqMsg||padrao;
+    const tel=l=>String(l.tel||"").replace(/\D/g,"");
+    function desenha(){const n=lojas.filter(l=>R.aq[l.slug]).length;
+      $("#app").innerHTML=`${topo()}${cabecalho()}
+      <section class="card"><h2>Mensagem <small class="muted" style="font-weight:400;font-size:14px">· ${n} de ${lojas.length} avisadas</small></h2>
+        <textarea class="campo" id="aqMsg" rows="4" style="width:100%;box-sizing:border-box">${esc(msg())}</textarea>
+        <p class="muted" style="margin:6px 0 0;font-size:13px">O nome da loja entra no começo de cada mensagem. Toque em WhatsApp em cada loja; depois de enviar, ela fica marcada.</p></section>
+      <section class="card" style="padding:6px 14px">${lojas.map((l,i)=>`<div class="aq" data-s="${esc(l.slug)}"><span class="pos">${i+1}</span><span class="nm"><b>${esc(nomeLoja(l.nome))}</b><small>${tel(l)?App.telFmt(l.tel):"sem telefone"}${R.aq[l.slug]?" · ✓ avisada":""}</small></span>
+        ${tel(l)?`<a class="btn ${R.aq[l.slug]?"sec":""}" target="_blank" rel="noopener" data-wa="${esc(l.slug)}" href="https://wa.me/55${tel(l).replace(/^55(?=\d{10,11}$)/,"")}?text=${encodeURIComponent(nomeLoja(l.nome)+", "+msg().replace(/^Olá!\s*/,"olá! "))}">${App.nb(`5.${i+1}`,"WhatsApp")}</a>`:`<button type="button" class="btn sec" data-pula="${esc(l.slug)}">${R.aq[l.slug]?"✓":"Pular"}</button>`}</div>`).join("")}</section>
+      <div class="acoes"><div class="w"><button class="btn" type="button" id="seguir5">Seguir</button></div></div>${rodape()}${nav("rota")}`;
+      ligarCab();
+      const t=$("#aqMsg");t.onchange=()=>{R.aqMsg=t.value.trim()===padrao?"":t.value.trim();salvaR();desenha();};
+      $$("[data-wa]").forEach(a=>a.addEventListener("click",()=>{R.aq[a.dataset.wa]=new Date().toISOString();salvaR();setTimeout(desenha,400);}));
+      $$("[data-pula]").forEach(b=>b.onclick=()=>{const s2=b.dataset.pula;if(R.aq[s2])delete R.aq[s2];else R.aq[s2]="pulada";salvaR();desenha();});
+      $("#seguir5").onclick=async()=>{R.aqOk=lojas.every(l=>R.aq[l.slug]);R.etapa=Math.max(R.etapa||1,6);await salvaR();ir(6);};}
+    desenha();}
+  // =============== 6 · PRONTA ===============
+  async function etapa6(){const lojas=R.slugs.map(L$).filter(Boolean);const C={};for(const l of lojas)C[l.slug]=await cliente(l);
+    const nLogo=lojas.filter(l=>logoDe(C[l.slug])).length,nRec=lojas.filter(l=>C[l.slug].manual&&C[l.slug].manual.editado).length,nAq=lojas.filter(l=>(R.aq||{})[l.slug]).length;
+    const it=(ok,t,et)=>`<a class="chk ${ok?"ok":"falta"}" href="?d=${dia}&etapa=${et}"><span>${ok?"✓":"!"}</span>${t}</a>`;
+    $("#app").innerHTML=`${topo()}${cabecalho()}
+      ${R.pronta?`<div class="pronta">✓ Rota pronta · ${lojas.length} lojas.</div>`:""}
+      <section class="card"><h2>Resumo</h2><div class="chks">
+        ${it(lojas.length>0,`${lojas.length} loja(s) na rota`,1)}${it(nLogo===lojas.length,`${nLogo} de ${lojas.length} com logotipo`,2)}${it(nRec===lojas.length,`${nRec} de ${lojas.length} recortados`,3)}${it(!!R.filaOk,R.filaOk?"Fila conferida":"Fila não conferida",4)}${it(nAq===lojas.length,`${nAq} de ${lojas.length} avisadas`,5)}</div></section>
+      <div class="linha-b" style="flex-direction:column;gap:8px">${R.pronta?`<a class="btn" href="play.html" style="min-height:56px;font-size:17px">${App.nb("6.1","▶ Começar a rota")}</a>`:`<button class="btn" type="button" id="pronta" style="min-height:56px;font-size:17px">${App.nb("6.1","✓ Marcar a rota como pronta")}</button>`}</div>
+      ${rodape()}${nav("rota")}`;
+    ligarCab();
+    const b=$("#pronta");if(b)b.onclick=async()=>{const falta=lojas.length-nRec;if(falta&&!confirm(`${falta} loja(s) sem recorte. Marcar a rota como pronta mesmo assim?`))return;R.pronta=true;R.prontaEm=new Date().toISOString();R.res=R.res||{};R.etapa=6;await salvaR();etapa6();};}
+
+  if(etapa>=2&&!R.slugs.length)etapa=1;
+  if(etapa===2)await etapa2();else if(etapa===3)await etapa3("recorte");else if(etapa===4)await etapa3("fila");else if(etapa===5)await etapa5();else if(etapa===6)await etapa6();else etapa1();
 })();
 </script>
 </body>

@@ -6,7 +6,7 @@
 <title>GênIO · Visita</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="app.css?v=4532878a5f">
+<link rel="stylesheet" href="app.css?v=e29cfb4e22">
 <style>
 .cab{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
 .fach{width:100%;aspect-ratio:16/9;border-radius:16px;overflow:hidden;background:var(--lav2);display:grid;place-items:center;position:relative}
@@ -25,11 +25,15 @@
 .prods-p figure.on{border-color:var(--marca);box-shadow:0 0 0 3px rgba(105,51,197,.18)}.prods-p figure.on .ck{background:var(--marca);color:#fff}
 .passos.fila-p{border:0;padding:10px 14px}.passos.fila-p ol{margin:0}.passos.fila-p li{min-width:0}
 .fato:first-of-type{border-top:0}.fato span{color:var(--texto2)}.fato .lk{color:var(--marca);text-decoration:underline;text-underline-offset:3px;word-break:break-all}
+.ln-o{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid var(--linha);font-size:15px}.ln-o:last-child{border-bottom:0}
+.grade-nb{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:0 0 12px}.grade-nb .btn{min-height:56px;display:flex;align-items:center;justify-content:center;gap:6px;text-align:center}
+.ops-s{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.ops-s button{min-height:56px;border:1.5px solid var(--linha);background:#fff;border-radius:12px;font:inherit;font-size:14px;font-weight:600;color:var(--texto);padding:6px}.ops-s button.on{background:var(--marca);border-color:var(--marca);color:#fff}
+[hidden]{display:none!important}
 </style>
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=4532878a5f"></script>
+<script src="app.js?v=e29cfb4e22"></script>
 <script>
 (async()=>{
   const {$,$$,esc,qs,sessao,dados,ficha,estrelasHTML,estado,salvar,nav,topo,voltar,setorNome,nomeLoja,telFmt,cliente,gravarCliente,classificar,definirCliente,menuLongo,ligarLongo,ZONA,entradas,ligarEntradas,abrirLogotipo,logoPrincipal,removerLogo}=App;
@@ -122,6 +126,36 @@
     e.jornadas=e.jornadas||{};const k="d"+diaP;if(!e.jornadas[k]||e.jornadas[k].status==="encerrada"){for(const o of Object.values(e.jornadas))if(o&&o.status==="andando"){o.status="pausada";(o.pausas=o.pausas||[]).push({ini:t});}e.jornadas[k]={ini:t,pausas:[],status:"andando",data:App.hojeISO()};}
     else if(e.jornadas[k].status==="pausada"){e.jornadas[k].status="andando";const p=(e.jornadas[k].pausas||[]).slice(-1)[0];if(p&&!p.fim)p.fim=t;}
     await salvar(e);const y=scrollY;render();scrollTo(0,y);}
+  // ---- processo Loja (17/11): 1 Chegada · 2 Apresentação · 3 Orçamento · 4 Fechamento · 5 Saída, com a barra de etapas no rodapé
+  const A_=()=>((estado().atend||{})[slug])||{};
+  const feitasL=()=>{const X=Rp(),A=A_();return [!!X.chegou[slug],nSelP()>0,!!X.orc[slug],!!A.fech,!!X.res[slug]];};
+  const etapaAuto=()=>{const f=feitasL();const i=f.findIndex(x=>!x);return i<0?4:i;};
+  let ETL=qs.has("e")?Math.max(0,Math.min(4,+qs.get("e")||0)):null;
+  const irL=i=>{location.href=`visita.html?l=${encodeURIComponent(slug)}&de=play&e=${i}`;};
+  const LOCs=[];if(modo==="play")App.reservasLoc().then(r=>{(r||[]).filter(x=>x&&x.slug===slug&&x.inicio).forEach(x=>LOCs.push(x));if(LOCs.length&&ETL===2){const y=scrollY;render();scrollTo(0,y);}}).catch(()=>{});
+  function orcPlayHTML(){const S=selP();const it=Object.entries(S).filter(([k,v])=>v&&v.q>0);
+    return `<section class="card" data-pe="2"><span class="tag-prod">■ PRODUTOS</span>${it.length?it.map(([k,v])=>`<div class="ln-o"><span>${esc(v.nome||pnome(k))}</span><b>${v.q} un.</b></div>`).join(""):`<p class="muted" style="margin:8px 0 0">Nenhum produto selecionado. Volte à etapa 2 e toque nos produtos.</p>`}</section>
+      <section class="card" data-pe="2"><span class="tag-serv">● SERVIÇOS</span>${LOCs.length?LOCs.map(x=>`<div class="ln-o"><span>Locação de kit · ${esc(((App.LOC_TEMAS||[]).find(t=>t.id===x.tema)||{}).nome||x.tema)}</span><b>${esc(App.diaBR?App.diaBR(x.inicio):x.inicio)}</b></div>`).join(""):`<p class="muted" style="margin:8px 0 0">Nenhum serviço nesta venda. Aluguel de kit e os itens do AI Negócios entram aqui, separados dos produtos.</p>`}</section>
+      <div class="grade-nb" data-pe="2"><a class="btn" data-play="orc" href="orcamento.html?l=${encodeURIComponent(slug)}&de=play">${App.nb("3.1","Emitir orçamento")}</a><a class="btn sec" href="visita.html?l=${encodeURIComponent(slug)}&de=play&e=1">${App.nb("3.2","Mudar produtos")}</a></div>`;}
+  function fechPlayHTML(){const A=A_();
+    return `<section class="card" data-pe="3"><h2>Fechamento</h2><p class="muted" style="margin:0 0 10px">Forma de pagamento (Pix à vista, cartão a prazo, com ou sem sinal) fica no orçamento. Depois, entregue o código do painel do cliente.</p>
+      <div class="grade-nb"><a class="btn sec" href="orcamento.html?l=${encodeURIComponent(slug)}&de=play">${App.nb("4.1","Pagamento no orçamento")}</a><button type="button" class="btn sec" data-pe-ir="painelCli">${App.nb("4.2","Painel do cliente")}</button>
+      <button type="button" class="btn ${A.fech?"sec":""}" id="vendaOk" style="grid-column:1/-1">${App.nb("4.3",A.fech?"✓ Venda fechada · desfazer":"Venda fechada")}</button></div>
+      <p class="muted" style="margin:8px 0 0;font-size:13px">Não fechou? Siga para a etapa 5 e marque orçamento em aberto, voltar outro dia ou não estava.</p></section>`;}
+  const RES_L=[["vendeu","✓ Vendeu"],["aberto","🧾 Orçamento em aberto"],["voltar","📅 Voltar outro dia"],["nao_estava","✕ Não estava"]];
+  function saidaPlayHTML(){const A=A_();const V=((estado().voltas||{})[slug])||{};const r=A.saida||(A.fech?"vendeu":"");
+    return `<section class="card" data-pe="4"><h2>Como saiu desta loja</h2><div class="ops-s">${RES_L.map(([k,t])=>`<button type="button" data-saida="${k}" class="${r===k?"on":""}">${t}</button>`).join("")}</div>
+      <label class="muted" style="font-size:13px;display:block;margin-top:12px">Próxima volta</label><input type="date" class="campo" id="voltaD" value="${esc(V.data||"")}" min="${App.hojeISO()}">
+      <input class="campo" id="voltaM" placeholder="Motivo (pós-venda, orçamento, pediu para voltar…)" value="${esc(V.motivo||"")}" style="margin-top:6px">
+      <p class="muted" style="margin:6px 0 0;font-size:13px">Com data, a loja entra sozinha nos Retornos da rota daquela semana.</p>
+      <button type="button" class="btn" id="saiLoja" style="margin-top:12px;min-height:56px" ${r?"":"disabled"}>${App.nb("5.1","Encerrar e ir para a próxima loja")}</button></section>`;}
+  async function sairLoja(){const A=A_();const r=A.saida;if(!r)return;const t=new Date().toISOString();const e=estado();const X=e.rotas[diaP];X.res=X.res||{};X.orc=X.orc||{};
+    X.res[slug]=r==="nao_estava"?"nao_estava":r==="vendeu"?"vendeu":X.orc[slug]||r==="aberto"?"orcamento":"visitada";
+    e.atend=e.atend||{};const at={...(e.atend[slug]||{}),fim:t};if(r==="nao_estava"||r==="voltar")at.res=r;else if(r==="vendeu")at.res="vendeu";e.atend[slug]=at;
+    const d=($("#voltaD")||{}).value||"",m=(($("#voltaM")||{}).value||"").trim();e.voltas=e.voltas||{};if(d)e.voltas[slug]={data:d,motivo:m||({vendeu:"pós-venda",aberto:"orçamento em aberto",voltar:"pediu para voltar",nao_estava:"não estava"}[r]),por:App.eu().nome,em:t};
+    if(d&&r==="voltar")at.volta=d;
+    if(r==="vendeu"){e.pedidos=e.pedidos||{};if(!e.pedidos[slug])e.pedidos[slug]={etapa:"entrada",hist:[{etapa:"entrada",em:t}]};}
+    const ret=new Set(e.retornos||[]);if(r==="nao_estava")ret.add(slug);else{ret.delete(slug);e.feitas=[...new Set([...(e.feitas||[]),slug])];}e.retornos=[...ret];await salvar(e);location.href="play.html";}
   // história (Receita: fundação e sócios; prêmios com fonte): entra em "Antes de entrar"
   let HIST=null;if(modo==="play")fetch(`/api/loja/${encodeURIComponent(slug)}/historia`,{credentials:"same-origin",cache:"no-store"}).then(r=>r.ok?r.json():null).then(d=>{HIST=d;const el=document.getElementById("histP");if(el)el.outerHTML=histHTML();}).catch(()=>{});
   function histHTML(){if(!HIST)return `<div id="histP"><div class="fato"><span>História</span><b class="muted" style="font-weight:400">buscando na Receita…</b></div></div>`;const h=HIST.historia||{};
@@ -136,7 +170,8 @@
   const proxPreparo=()=>proxima((s,e)=>!(e.preparadas||{})[s]&&!(e.arquivadas||[]).includes(s));
   function passosHTML(){const e=estado();const A=(e.atend||{})[slug]||{};const p=c.pesquisa||{};const pq=PQ.filter(([k])=>p[k]).length;
     let S,acao;
-    if(modo==="play"){const X=Rp();const n=nSelP();const ch=!!X.chegou[slug];
+    if(modo==="play")return "";
+    if(modo==="play__antigo"){const X=Rp();const n=nSelP();const ch=!!X.chegou[slug];
       S=[["Cheguei",ch],["Produtos",n>0],["Orçamento",!!X.orc[slug]],["Encerrar",!!X.res[slug]]];const i=S.findIndex(x=>!x[1]);
       acao=!ch?`<button type="button" class="btn" data-play="cheguei">📍 Cheguei</button>`:n?`<a class="btn" data-play="orc" href="orcamento.html?l=${encodeURIComponent(slug)}&de=play">🧾 Emitir orçamento · ${n} produto${n>1?"s":""} →</a>`:`<button type="button" class="btn" data-play="verprod">Selecionar os produtos ↓</button>`;
       return `<div class="passos"><div class="t"><span>Percurso de visita · ${i<0?"concluído":"passo "+(i+1)+" de 4"}</span><b>${i<0?"✓ Loja encerrada":S[i][0]}</b></div><ol>${S.map((x,k)=>`<li class="${x[1]?"ok":k===i?"agora":""}">${x[1]?"✓ ":""}${x[0]}</li>`).join("")}</ol><div class="acao-p">${acao}</div></div>`;}
@@ -164,11 +199,19 @@
   let conferido=false;
   async function conferirLogo(){if(conferido)return;conferido=true;const p=(c.logos||[])[0];if(!p||!p.src||(c.manual&&c.manual.editado))return;
     if(await App.fundoTransparente(p.src)){c=await cliente(l);const q=(c.logos||[])[0];if(q&&q.src===p.src&&!(c.manual&&c.manual.editado)){App.logoComoTratado(c,q);await gravarCliente(c);const y=scrollY;render();scrollTo(0,y);}}}
+  // cada bloco da tela pertence a uma etapa da Loja; os de outras etapas ficam escondidos (nada é apagado)
+  function mostrarEtapa(){const app=$("#app");const grupo=el=>{if(el.matches(".pe-topo,.pe-tit,.pe-barra,.nav,.acoes,.topo,header"))return "sempre";if(el.dataset.pe!==undefined)return el.dataset.pe;
+      if(el.matches(".fila-p,.cab,.atend"))return "0";if(el.id==="prodsP")return "1";if(el.id==="painelCli")return "3";if(el.id==="mensagens")return "0";
+      const h=(el.querySelector("h2")||{}).textContent||"";if(/^Logotipo/.test(h))return "1";if(/Antes de entrar|Curiosidade|Quebra-gelo/.test(h))return "0";return "fora";};
+    [...app.children].forEach(el=>{const g=grupo(el);if(g==="sempre")return;el.hidden=!(g===String(ETL)||(g==="3"&&false));});}
   function render(){
     const cands=candidatos();const logos=c.logos||[];const principal=logos[0]||null;const logo=(c.manual&&c.manual.tratado)||(principal&&principal.src)||null;const fach=(c.fachada&&c.fachada.src)||null;
     const pronto=!!(c.manual&&c.manual.editado);const e=estado();
-    $("#app").innerHTML=`${topo()}${modo==="play"?filaHTML():voltar("index.html","Rota")}
+    let BL=null;if(modo==="play"){if(ETL===null)ETL=etapaAuto();const f=feitasL();const i=filaP().indexOf(slug);
+      BL=App.barraEtapas({proc:"loja",atual:ETL,feitas:f,href:k=>`visita.html?l=${encodeURIComponent(slug)}&de=play&e=${k}`,titulo:nome,sub:`loja ${i+1} de ${filaP().length}`,faltas:{0:"chegada não marcada.",1:"nenhum produto selecionado.",2:"orçamento não emitido.",3:"venda não fechada."},seguir:ETL<4?{id:"peSeguir"}:false});}
+    $("#app").innerHTML=`${topo()}${modo==="play"?BL.topo+filaHTML():voltar("index.html","Rota")}
     <div class="cab"><div><h1 style="margin-bottom:2px">${esc(nome)}${l.avulso?` <button type="button" id="edAvulso" class="btn sec sm" style="width:auto;min-height:32px;padding:0 10px;font-size:13px;vertical-align:middle">✎</button>`:""}</h1><p class="sub">${esc(setorNome(l.setor))} · <a href="${l.maps||(l.place_id?`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((l.endereco||l.nome)+", São Paulo")}&query_place_id=${encodeURIComponent(l.place_id)}`:(l.lat&&l.lng?`https://www.google.com/maps/search/?api=1&query=${l.lat},${l.lng}`:`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((l.endereco||l.nome)+", São Paulo")}`))}" target="_blank" rel="noopener" style="color:var(--marca);text-decoration:underline;text-underline-offset:3px">📍 ${esc(l.endereco||"ver no mapa")}</a></p></div><div style="padding-top:8px">${estrelasHTML(l.estrelas)}</div></div>
+    ${modo==="play"?BL.titulo+`<div data-pe="0" class="grade-nb">${Rp().chegou[slug]?`<span class="chip ok" style="grid-column:1/-1">✓ Chegada marcada · atendimento correndo</span>`:`<button class="btn" type="button" data-play="cheguei">${App.nb("1.1","📍 Cheguei")}</button><button class="btn sec" type="button" data-play="naoAqui" style="background:#FBEBEB;color:#B42318">${App.nb("1.2","Não estava")}</button>`}</div>`+(ETL===2?orcPlayHTML():ETL===3?fechPlayHTML():ETL===4?saidaPlayHTML():""):""}
     ${passosHTML()}
     ${modo==="visita"||modo==="play"?atendHTML():""}
     ${modo==="play"?prodsPlayHTML():(()=>{const prod=(c.produtos||[])[0];const capa=fach?[fach,"Fachada"]:prod?[abs(prod.src),"Produto · sem fachada"]:logo?[logo,"Logotipo · sem fachada"]:null;
@@ -199,7 +242,8 @@
       ${l.nota?`<div class="fato"><span>Google</span><b>${l.nota} · ${l.aval||0} avaliações${ganchos.length?` · reclamam de: ${esc(ganchos.join(", "))}`:""}</b></div>`:""}
     </section>
     ${modo==="play"?`<div class="acoes"><div class="w">${Rp().chegou[slug]?`<button class="btn sec" type="button" data-play="nao" style="background:#FBEBEB;color:#B42318">Não estava</button><button class="btn" type="button" data-play="prox">Próxima loja →</button>`:`<a class="btn sec" href="index.html">← Rota</a><button class="btn" type="button" data-play="cheguei">📍 Cheguei</button>`}</div></div>`:`<div class="acoes"><div class="w"><a class="btn sec" href="index.html">← Rota</a>${pronto?`<a class="btn" href="produtos.html?l=${encodeURIComponent(slug)}">Produtos e serviços →</a>`:logo?`<button class="btn" type="button" id="seguirProd">Produtos e serviços →</button>`:`<a class="btn" href="fontes.html?l=${encodeURIComponent(slug)}&tipo=busca">Escolher logotipo →</a>`}</div></div>`}
-    ${nav(modo==="play"?"play":"rota")}`;document.body.classList.add("com-acoes");conferirLogo();
+    ${modo==="play"?BL.rodape:""}${nav(modo==="play"?"play":"rota")}`;document.body.classList.add("com-acoes");conferirLogo();
+    if(modo==="play")mostrarEtapa();
     // abrir a loja não conta como visita: só o atendimento encerrado marca a loja como feita
     const editar=()=>{if(!principal)return location.href=`fontes.html?l=${encodeURIComponent(slug)}&tipo=busca`;abrirLogotipo(slug,principal.src,(principal.nome||"").replace(/^Logotipo ?·? ?/,""),"visita");};
     // painel do cliente: cada telefone com o seu código (6 números); o vendedor entrega pessoalmente ou pelo próprio WhatsApp
@@ -219,12 +263,18 @@
     $("#logoArea").onclick=editar;
     // ▶ Play: cheguei, selecionar produtos, orçamento, não estava, próxima
     $$("[data-play]").forEach(b=>b.addEventListener("click",async ev=>{const k=b.dataset.play;
-      if(k==="cheguei"){b.disabled=true;await chegueiPlay();}
+      if(k==="cheguei"){b.disabled=true;await chegueiPlay();if(modo==="play")irL(1);}
       else if(k==="verprod"){const el=document.getElementById("prodsP");if(el)el.scrollIntoView({behavior:"smooth",block:"start"});}
       else if(k==="orc"){ev.preventDefault();const e=estado();const X=e.rotas[diaP];X.orc=X.orc||{};X.orc[slug]=true;await salvar(e);location.href=b.href;}
       else if(k==="nao"){b.disabled=true;await fecharPlay("nao_estava");}
+      else if(k==="naoAqui"){const e=estado();e.atend=e.atend||{};e.atend[slug]={...(e.atend[slug]||{}),saida:"nao_estava"};await salvar(e);irL(4);}
       else if(k==="prox"){b.disabled=true;await fecharPlay("visitada");}}));
     $$("[data-tst]").forEach(a=>a.addEventListener("click",ev=>ev.stopPropagation()));
+    if(modo==="play"){const ps=$("#peSeguir");if(ps)ps.onclick=async ev=>{ev.preventDefault();if(ETL===0&&!Rp().chegou[slug]){await chegueiPlay();}irL(ETL+1);};
+      $$("[data-pe-ir]").forEach(b=>b.onclick=()=>{const el=document.getElementById(b.dataset.peIr);if(el){el.hidden=false;el.scrollIntoView({behavior:"smooth",block:"start"});}});
+      const vo=$("#vendaOk");if(vo)vo.onclick=async()=>{const e=estado();e.atend=e.atend||{};const A={...(e.atend[slug]||{})};A.fech=!A.fech;if(A.fech)A.saida="vendeu";else if(A.saida==="vendeu")delete A.saida;e.atend[slug]=A;await salvar(e);if(A.fech)irL(4);else{const y=scrollY;render();scrollTo(0,y);}};
+      $$("[data-saida]").forEach(b=>b.onclick=async()=>{const e=estado();e.atend=e.atend||{};const k=b.dataset.saida;e.atend[slug]={...(e.atend[slug]||{}),saida:k,...(k==="vendeu"?{fech:true}:{})};await salvar(e);const d=$("#voltaD").value,m=$("#voltaM").value;const y=scrollY;render();scrollTo(0,y);$("#voltaD").value=d;$("#voltaM").value=m;});
+      const sl=$("#saiLoja");if(sl)sl.onclick=async()=>{sl.disabled=true;await sairLoja();};}
     $$("[data-pp]").forEach(f=>f.onclick=ev=>{if(ev.target.closest("[data-tst]"))return;const k=f.dataset.pp;const e=estado();e.sel=e.sel||{};const S=e.sel[slug]=e.sel[slug]||{};const on=S[k]&&S[k].q>0;
       S[k]={...(S[k]||{}),nome:pnome(k),q:on?0:(App.baseId(k)==="capacho"?1:App.passoQtd(k,0,1))};salvar(e);const y=scrollY;render();scrollTo(0,y);});
     const gp=$("#gerarP");if(gp)gp.onclick=async()=>{gp.disabled=true;const r=await App.gerarProdutos(l,pid=>{gp.textContent=`Gerando ${pnome(pid)}…`;});c=await cliente(l);const y=scrollY;render();scrollTo(0,y);if(r&&r.falhas&&r.falhas.length)alert("Não gerou: "+r.falhas.join(", "));};

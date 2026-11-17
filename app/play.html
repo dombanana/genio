@@ -6,7 +6,7 @@
 <title>GênIO · Play</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="app.css?v=4532878a5f">
+<link rel="stylesheet" href="app.css?v=e29cfb4e22">
 <style>
 /* Play (14/11): só a empresa da vez na fila da rota */
 .fila{display:flex;align-items:center;gap:10px;margin:0 0 10px}
@@ -31,7 +31,7 @@
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=4532878a5f"></script>
+<script src="app.js?v=e29cfb4e22"></script>
 <script>
 (async()=>{
   const {$,$$,esc,sessao,eu,dados,estado,salvar,nav,topo,nomeLoja,setorNome,cliente}=App;
@@ -50,7 +50,7 @@
   // ---- fim da fila: resumo e encerrar
   function resumo(){const X=R();const f=fila();const c=k=>f.filter(s=>X.res[s]===k).length;const j=(estado().jornadas||{})["d"+dia];
     $("#app").innerHTML=`${topo()}<h1>Play</h1><p class="sub">Rota de ${dia===hoje?"hoje":fmt(dia)} · ${f.length} lojas</p>
-    <section class="card"><h2>${X.encerrada?"Rota encerrada":"Fila concluída"}</h2><div class="res-g"><span>Visitadas<b>${c("visitada")+c("orcamento")}</b></span><span>Com orçamento<b>${c("orcamento")}</b></span><span>Não estavam<b>${c("nao_estava")}</b></span><span>Lojas na rota<b>${f.length}</b></span></div>
+    <section class="card"><h2>${X.encerrada?"Rota encerrada":"Fila concluída"}</h2><div class="res-g"><span>Visitadas<b>${c("visitada")+c("orcamento")+c("vendeu")}</b></span><span>Vendeu<b>${c("vendeu")}</b></span><span>Com orçamento<b>${c("orcamento")}</b></span><span>Não estavam<b>${c("nao_estava")}</b></span><span>Lojas na rota<b>${f.length}</b></span></div>
       <p class="muted" style="margin:0 0 12px;font-size:14px">As que não estavam entram sozinhas no tipo de rota "Retornos".</p>
       ${X.encerrada?`<a class="btn" href="index.html">Montar a próxima rota →</a>`:`<button class="btn" type="button" id="encerrar">■ Encerrar a rota</button>`}</section>${nav("play")}`;
     const b=$("#encerrar");if(b)b.onclick=async()=>{await gravar((e,X)=>{X.encerrada=true;X.encerradaEm=new Date().toISOString();const jj=(e.jornadas||{})["d"+dia];if(jj&&jj.status!=="encerrada"){const t=new Date().toISOString();const p=(jj.pausas||[]).slice(-1)[0];if(p&&!p.fim)p.fim=t;jj.fim=t;jj.status="encerrada";}});resumo();};}
