@@ -6,19 +6,21 @@
 <title>GênIO · Pedidos</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="app.css?v=e29cfb4e22">
-<style>.novo-ped{position:fixed;left:12px;right:12px;top:8vh;max-height:80vh;overflow:auto;background:#fff;border-radius:18px;padding:14px;z-index:75;box-shadow:0 10px 40px rgba(28,22,53,.3)}.novo-ped h3{margin:0 0 8px}.novo-ped input{width:100%;box-sizing:border-box;font:inherit;font-size:16px;border:1.5px solid var(--linha);border-radius:12px;padding:10px 12px;margin:0 0 8px}.lista-cli{display:grid;gap:4px}.lista-cli button{border:0;background:var(--lav);border-radius:12px;text-align:left;padding:10px 12px;font:inherit;display:grid}.lista-cli button small{color:var(--texto2);font-size:12px}.fato{display:grid;grid-template-columns:auto 1fr;gap:10px;padding:6px 0;border-top:1px solid var(--linha)}.fato:first-of-type{border-top:0}.fato span{color:var(--texto2)}</style>
+<link rel="stylesheet" href="app.css?v=39e9b662b6">
+<style>.novo-ped{position:fixed;left:12px;right:12px;top:8vh;max-height:80vh;overflow:auto;background:#fff;border-radius:18px;padding:14px;z-index:75;box-shadow:0 10px 40px rgba(28,22,53,.3)}.novo-ped h3{margin:0 0 8px}.novo-ped input{width:100%;box-sizing:border-box;font:inherit;font-size:16px;border:1.5px solid var(--linha);border-radius:12px;padding:10px 12px;margin:0 0 8px}.lista-cli{display:grid;gap:4px}.lista-cli button{border:0;background:var(--lav);border-radius:12px;text-align:left;padding:10px 12px;font:inherit;display:grid}.lista-cli button small{color:var(--texto2);font-size:12px}.fato{display:grid;grid-template-columns:auto 1fr;gap:10px;padding:6px 0;border-top:1px solid var(--linha)}.fato:first-of-type{border-top:0}.fato span{color:var(--texto2)}.pos-v{margin:8px 0 0;padding:8px 10px;background:#E8F5F4;border-radius:10px;font-size:14px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}.pos-v button{border:0;background:#fff;border-radius:8px;padding:6px 10px;font:inherit;font-size:13px;font-weight:600;color:#0E6E6A}
+</style>
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=e29cfb4e22"></script>
+<script src="app.js?v=39e9b662b6"></script>
 <script>
 (async()=>{
   const {$,esc,sessao,dados,nav,topo,nomeLoja,estado}=App;
   if(!await sessao())return;
   const D=await dados();const e=estado();const sel=e.sel||{};const {qs,cliente,etapaDe,moverEtapa}=App;
-  const etapa=["entrada","processamento","saida"].includes(qs.get("etapa"))?qs.get("etapa"):"entrada";
-  const TIT={entrada:["Entrada","Pedidos em aberto: seleção, arte e orçamento."],processamento:["Produção","Arte em revisão final, pedidos em produção e conferência de qualidade."],saida:["Saída","Prontos para entrega / instalação."]};
+  // processo Pedidos (17/11): 1 Confirmação · 2 Arte · 3 Produção · 4 Qualidade · 5 Entrega · 6 Pós-venda — cada etapa é uma lista; a barra no rodapé troca de etapa
+  const ETS=App.ETAPAS;let etapa=ETS.includes(qs.get("etapa"))?qs.get("etapa"):null;
+  const TIT={entrada:["Confirmação","Pedidos em aberto: confirmar itens, valor e pagamento."],arte:["Arte","Arte em revisão final antes de produzir."],processamento:["Produção","Pedidos no fornecedor."],qualidade:["Qualidade","Conferir a peça: aprovar ou mandar refazer."],saida:["Entrega","Prontos para entrega ou instalação."],entregue:["Pós-venda","Entregues: comissão, indicação e a data da próxima volta."]};
   // pedidos = lojas com itens selecionados (ou movidas de etapa); urgência = o que trava a etapa
   const slugs=new Set([...Object.keys(sel).filter(k=>Object.values(sel[k]).some(v=>v&&v.q>0)),...Object.keys(e.pedidos||{})]);
   const lista=[];for(const slug of slugs){const l=D.lojas.find(x=>x.slug===slug);if(!l)continue;const S=sel[slug]||{};const its=Object.entries(S).filter(([k,v])=>v&&v.q>0);const c=await cliente(l);const et=etapaDe(slug);const P=(e.pedidos||{})[slug]||{};
@@ -34,10 +36,13 @@
     // valor do pedido: soma dos produtos (preço de cada um × quantidade) + um frete único para a compra inteira
     const O=App.orcamento(c,S,P);const valor={soma:O.soma,semPreco:O.semPreco,frete:O.frete,total:O.total,linhas:O.linhas};
     lista.push({l,slug,its,et,P,alertas,nivel,motivos,parado,valor});}
-  const grupo=et=>(et==="arte"||et==="qualidade")?"processamento":et;const cont={entrada:0,processamento:0,saida:0};lista.forEach(x=>{if(x.nivel==="urgente"&&cont[grupo(x.et)]!==undefined)cont[grupo(x.et)]++;});const ocorr={entrada:{n:0,u:0},processamento:{n:0,u:0},saida:{n:0,u:0}};lista.forEach(x=>{const g=ocorr[grupo(x.et)];if(!g||!x.nivel)return;g.n++;if(x.nivel==="urgente")g.u++;});
+  const grupo=et=>(et==="arte"||et==="qualidade")?"processamento":et;const porEt={};lista.forEach(x=>{porEt[x.et]=(porEt[x.et]||0)+1;});if(!etapa)etapa=ETS.find(k=>k!=="entregue"&&porEt[k])||"entrada";const cont={entrada:0,processamento:0,saida:0};lista.forEach(x=>{if(x.nivel==="urgente"&&cont[grupo(x.et)]!==undefined)cont[grupo(x.et)]++;});const ocorr={entrada:{n:0,u:0},processamento:{n:0,u:0},saida:{n:0,u:0}};lista.forEach(x=>{const g=ocorr[grupo(x.et)];if(!g||!x.nivel)return;g.n++;if(x.nivel==="urgente")g.u++;});
   try{window.top.postMessage({genio:"ocorrencias",cont:ocorr},location.origin);}catch(e){}
   if(qs.get("contar"))return;
-  const daEtapa=lista.filter(x=>grupo(x.et)===etapa);
+  const daEtapa=lista.filter(x=>x.et===etapa);
+  const iEt=ETS.indexOf(etapa);
+  const BP=App.barraEtapas({proc:"pedido",atual:iEt,feitas:ETS.map(k=>k==="entregue"?false:!porEt[k]),href:i=>`pedidos.html?etapa=${ETS[i]}`,titulo:`${lista.filter(x=>x.et!=="entregue").length} em andamento`,sub:`${daEtapa.length} nesta etapa`,
+    faltas:Object.fromEntries(ETS.map((k,i)=>[i,porEt[k]?`${porEt[k]} pedido(s) parado(s) aqui.`:""]))});
   // filtros (no lugar das abas): busca, produto, ocorrência, etapa interna da Produção e ordem
   const F={busca:"",produto:"",ocorr:"",sub:"",ordem:"urgente"};
   const PRODS=[...new Map(daEtapa.flatMap(x=>x.its.map(([k,v])=>[k,v.nome||k]))).entries()].sort((a,b)=>a[1].localeCompare(b[1]));
@@ -60,23 +65,25 @@
       <div class="itens">${x.its.length?x.its.map(([k,v])=>esc(v.nome||k)+(v.q>1?" ×"+v.q:"")).join(" · "):"sem itens"}${x.P.fornecedorPedido?` · pedido ${esc(x.P.fornecedorPedido)}`:""}${x.P.agendado?` · entrega ${esc(x.P.agendado)}`:""}</div>
       ${x.valor&&(x.valor.soma||x.valor.semPreco)?(()=>{const R=v=>v.toLocaleString("pt-BR",{style:"currency",currency:"BRL"});const v=x.valor;return `<div class="valor-ped">Produtos <b>${R(v.soma)}</b>${v.semPreco?` <small>(+${v.semPreco} sem preço)</small>`:""} · Frete <b>${v.frete!=null?R(v.frete):"a definir"}</b>${v.frete!=null?` · Total <b>${R(v.soma+v.frete)}</b>`:""}</div>`;})():""}
       ${x.alertas.map(a=>`<div class="alerta">• ${esc(a)}</div>`).join("")}
+      ${x.et==="entregue"?(()=>{const V=(e.voltas||{})[x.slug]||{};const pc=+App.METAS.comissao||0;const val=+x.P.valor||0;return `<div class="pos-v">${pc&&val?`Comissão <b>${(val*pc/100).toLocaleString("pt-BR",{style:"currency",currency:"BRL"})}</b> · `:""}Próxima volta <b>${V.data?esc(V.data.split("-").reverse().join("/"))+(V.motivo?" · "+esc(V.motivo):""):"sem data"}</b> <button type="button" data-volta="${esc(x.slug)}">${App.nb("6.1",V.data?"Mudar":"Marcar data")}</button></div>`;})():""}
       <div class="acs"><a href="orcamento.html?l=${encodeURIComponent(x.slug)}">Orçamento</a><a href="visita.html?l=${encodeURIComponent(x.slug)}">Abrir loja</a>${etapa==="entrada"?`<a href="produtos.html?l=${encodeURIComponent(x.slug)}">Produtos</a>`:""}<button type="button" data-frete="${esc(x.slug)}">Frete</button>${["arte","processamento"].includes(x.et)?`<button type="button" data-pf="${esc(x.slug)}">Pedir ao fornecedor</button>`:""}${x.et==="processamento"?`<button type="button" data-np="${esc(x.slug)}">Nº do pedido</button>`:""}${etapa==="saida"?`<button type="button" data-ag="${esc(x.slug)}">Agendar entrega</button>`:""}<button type="button" class="ok" data-mv="${esc(x.slug)}" data-para="${PROX[x.et]}">${ROT[x.et]}</button>${x.et==="qualidade"?`<button type="button" data-refazer="${esc(x.slug)}">↺ Refazer</button>`:""}${x.et!=="entrada"&&x.et!=="qualidade"?`<button type="button" data-volta="${esc(x.slug)}" data-de="${x.et}">← voltar</button>`:""}</div>${processo(x)}</div>`;
   const avul=App.avulsos();
-  $("#app").innerHTML=`${topo()}<h1>${TIT[etapa][0]}</h1><p class="sub">${TIT[etapa][1]}</p>
+  $("#app").innerHTML=`${topo()}${BP.topo}${BP.titulo}<p class="sub"><span class="tag-prod">■ PRODUTO</span> ${TIT[etapa][1]}</p>
   ${etapa==="entrada"?`<button type="button" class="btn" id="novo" style="margin:0 0 12px;min-height:52px">＋ Novo pedido</button>`:""}
-  ${daEtapa.length?`<div class="filtros-p"><input id="fBusca" type="search" placeholder="Buscar cliente ou nº do pedido" autocomplete="off"><div class="fl" id="fl"></div></div><div id="listaPed"></div>`:`<section class="card"><p>${etapa==="entrada"?"Nenhum pedido em aberto. As seleções nascem na visita, em “Produtos e serviços”, ou num pedido novo.":etapa==="processamento"?"Nada em arte nem em produção.":"Nada aguardando entrega."}</p></section>`}
+  ${daEtapa.length?`<div class="filtros-p"><input id="fBusca" type="search" placeholder="Buscar cliente ou nº do pedido" autocomplete="off"><div class="fl" id="fl"></div></div><div id="listaPed"></div>`:`<section class="card"><p>${etapa==="entrada"?"Nenhum pedido em aberto. As seleções nascem na visita, em “Produtos e serviços”, ou num pedido novo.":etapa==="entregue"?"Nenhum pedido entregue ainda.":"Nenhum pedido nesta etapa."}</p></section>`}
   ${etapa==="entrada"&&avul.length?`<section class="card"><h2>Clientes avulsos</h2>${avul.map(a=>`<div class="fato"><span>${new Date(a.criado).toLocaleDateString("pt-BR")}</span><b><a href="visita.html?l=${encodeURIComponent(a.slug)}">${esc(a.nome)}</a></b></div>`).join("")}</section>`:""}
-  ${nav("pedidos")}`;
+  ${BP.rodape}${nav("pedidos")}`;
   const rot=(lista,v)=>(lista.find(o=>o[0]===v)||["",""])[1];
   function desenharFiltros(){const fl=$("#fl");if(!fl)return;const b=(k,t,v,padrao)=>`<button type="button" data-fil="${k}" class="${v!==padrao?"on":""}">${esc(t)}${v!==padrao?"":""} ▾</button>`;
     fl.innerHTML=(PRODS.length>1?b("produto",F.produto?rot(PRODS,F.produto):"Produto",F.produto,""):"")+b("ocorr",F.ocorr?rot(OCORR,F.ocorr):"Ocorrência",F.ocorr,"")
-      +(etapa==="processamento"?b("sub",F.sub?rot(SUB,F.sub):"Etapa",F.sub,""):"")+b("ordem",rot(ORD,F.ordem),F.ordem,"urgente")
+      +(false?b("sub",F.sub?rot(SUB,F.sub):"Etapa",F.sub,""):"")+b("ordem",rot(ORD,F.ordem),F.ordem,"urgente")
       +((F.busca||F.produto||F.ocorr||F.sub||F.ordem!=="urgente")?`<button type="button" class="limpa" data-fil="limpar">limpar</button>`:"");
     fl.querySelectorAll("[data-fil]").forEach(x=>x.onclick=async()=>{const k=x.dataset.fil;
       if(k==="limpar"){Object.assign(F,{busca:"",produto:"",ocorr:"",sub:"",ordem:"urgente"});$("#fBusca").value="";desenharFiltros();desenharLista();return;}
       const ops={produto:[["","Todos"],...PRODS],ocorr:OCORR,sub:SUB,ordem:ORD}[k];const tit={produto:"Produto",ocorr:"Ocorrência",sub:"Etapa",ordem:"Ordem"}[k];
       const v=await App.menuLongo(tit,ops.map(([id,t])=>({k:id===""?"_todos":id,t:(F[k]===id?"✓ ":"")+t})));if(v===null||v===undefined||v==="")return;F[k]=v==="_todos"?"":v;desenharFiltros();desenharLista();});}
   function desenharLista(){const L=$("#listaPed");if(!L)return;const vis=filtrar();
+    setTimeout(()=>L.querySelectorAll("[data-volta]").forEach(b=>b.onclick=()=>{const s2=b.dataset.volta;const V=(e.voltas||{})[s2]||{};const d=prompt("Data da próxima volta (DD/MM/AAAA)",V.data?V.data.split("-").reverse().join("/"):"");if(d===null)return;const m=d.trim().match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);if(d.trim()&&!m){alert("Use o formato 25/12/2026.");return;}const mot=d.trim()?prompt("Motivo",V.motivo||"pós-venda"):"";e.voltas=e.voltas||{};if(!d.trim())delete e.voltas[s2];else e.voltas[s2]={data:`${m[3]}-${m[2].padStart(2,"0")}-${m[1].padStart(2,"0")}`,motivo:(mot||"pós-venda").trim(),por:App.eu().nome,em:new Date().toISOString()};App.salvar(e);desenharLista();}),0);
     L.innerHTML=vis.length?`<p class="muted cont-f">${vis.length} de ${daEtapa.length} pedido(s)</p>`+vis.map(bloco).join(""):`<section class="card"><p>Nenhum pedido com esses filtros.</p></section>`;
     L.querySelectorAll("[data-mv]").forEach(b=>b.onclick=()=>{let extra={};
       // confirmar a venda pede o valor fechado: é o que alimenta receita e comissão do mês

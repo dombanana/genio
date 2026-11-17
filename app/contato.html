@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover,user-scalable=no">
+<title>GênIO · Contato</title>
+<meta name="theme-color" content="#F1EEF8">
+<link rel="icon" href="../genio-favicon.png">
+<link rel="stylesheet" href="app.css?v=39e9b662b6">
+<style>
+.ct-cab{background:#fff;border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:12px;margin:0 0 12px}
+.ct-cab .lk{color:var(--marca);font-weight:600;text-decoration:none;font-size:15px}
+.ct-id{display:flex;gap:12px;align-items:center}.ct-id .lg{width:64px;height:64px;border-radius:14px;background:var(--lav);display:grid;place-items:center;overflow:hidden;flex-shrink:0;font-size:11px;color:var(--texto2)}.ct-id .lg img{width:100%;height:100%;object-fit:contain}
+.ct-id h1{margin:0;font-size:22px}.ct-id small{display:block;color:var(--texto2);font-size:13px}
+.ct-ac{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.ct-ac a,.ct-ac span{min-height:64px;background:var(--lav);border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;color:var(--texto);text-decoration:none;font-size:13px;font-weight:600}
+.ct-ac span{opacity:.45}
+.pv{background:#141C3A;color:#fff;border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:8px;margin:0 0 12px}
+.pv .t{display:flex;justify-content:space-between;align-items:baseline}.pv small{font-size:12px;font-weight:700;letter-spacing:.12em;color:#C9C2DC}
+.pv button{border:0;background:transparent;color:#fff;text-decoration:underline;font:inherit;font-size:13px}
+.pv .d{display:flex;align-items:baseline;gap:10px}.pv .d b{font-size:26px}.pv .d span{font-size:14px;color:#C9C2DC}
+.pv .ed{display:grid;grid-template-columns:1fr;gap:6px}.pv .ed input{min-height:44px;border-radius:10px;border:0;padding:0 10px;font:inherit;font-size:15px}
+.pv .ed .btn{min-height:44px}
+.hs{background:#fff;border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:4px;margin:0 0 12px;border-top:4px solid var(--c)}
+.hs .t{display:flex;justify-content:space-between;align-items:baseline;margin:0 0 4px}.hs .t b{font-size:16px}.hs .t span{font-size:13px;color:var(--texto2)}
+.hl{position:relative;border-radius:10px;overflow:hidden;touch-action:pan-y}
+.hl .fundo{position:absolute;inset:0;display:flex;align-items:center;justify-content:space-between;padding:0 12px;font-size:13px;font-weight:700;color:#fff}
+.hl .fundo .arq{background:#5E5A70}.hl .fundo .apg{background:#B42318}
+.hl .fundo i{font-style:normal;position:absolute;top:0;bottom:0;display:flex;align-items:center;padding:0 12px}
+.hl .fundo .arq{left:0;right:50%}.hl .fundo .apg{right:0;left:50%;justify-content:flex-end}
+.hl a.row{position:relative;display:flex;gap:10px;align-items:center;padding:8px 6px;background:#fff;color:inherit;text-decoration:none;transition:transform .15s;border-bottom:1px solid var(--linha)}
+.hl a.row .dt{font-size:13px;color:var(--texto2);width:46px;flex-shrink:0}
+.hl a.row .bs{display:flex;gap:3px;flex-shrink:0}.hl a.row .bs i{width:11px;height:11px;border-radius:50%;border:2px solid #C9C2DC;box-sizing:border-box}.hl a.row .bs i.ok{background:#0E6E6A;border-color:#0E6E6A}.hl a.row .bs i.eu{background:var(--c);border-color:var(--c)}.hl a.row .bs i.pul{background:#FFF1DC;border-color:#C77700}
+.hl a.row .tx{font-size:14px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hs .vazio{font-size:13px;color:var(--texto2);margin:0}
+.msg{border-radius:12px;padding:8px 10px;font-size:14px;max-width:85%;margin:0 0 6px}.msg.cliente{background:var(--lav);border-bottom-left-radius:4px}.msg.voce{background:var(--marca);color:#fff;margin-left:auto;border-bottom-right-radius:4px}.msg small{display:block;font-size:11.5px;opacity:.75;margin-top:2px}
+</style>
+</head>
+<body>
+<div class="w" id="app"></div>
+<script src="app.js?v=39e9b662b6"></script>
+<script>
+(async()=>{
+  const {$,$$,esc,sessao,dados,estado,salvar,nav,topo,nomeLoja,setorNome,cliente,etapaDe,ficha,qs,PROCESSOS,hojeISO,telFmt,ETAPAS}=App;
+  if(!await sessao())return;
+  const D=await dados();const slug=qs.get("l");const l=D.lojas.find(x=>x.slug===slug);
+  if(!l){$("#app").innerHTML=`${topo()}<section class="card"><p>Contato não encontrado. <a href="contatos.html">Voltar</a></p></section>${nav("contatos")}`;return;}
+  const nome=nomeLoja(l.nome);const c=await cliente(l);const logo=(c.manual&&c.manual.tratado)||(c.logos&&c.logos[0]&&c.logos[0].src)||null;
+  let cad=null;try{cad=await ficha(slug);}catch(err){}const LC=(cad&&cad.lacunas)||{};
+  let MSGS=[];try{const r=await fetch(`/api/mensagens/${encodeURIComponent(slug)}`,{credentials:"same-origin",cache:"no-store"});if(r.ok)MSGS=(await r.json()).mensagens||[];}catch(err){}
+  const hoje=hojeISO();const dBR=iso=>iso?iso.slice(8,10)+"/"+iso.slice(5,7):"";
+  const tel=String(l.tel||"").replace(/\D/g,"").replace(/^55(?=\d{10,11}$)/,"");const email=(LC.email&&LC.email.valor)||"";
+  const P=PROCESSOS;
+  let verArq=false,editaVolta=false;
+  // ---- históricos: cada linha com as bolinhas do processo; tocar abre na etapa em que parou
+  function linhas(){const e=estado();const arq=new Set(((e.histArq||{})[slug])||[]);const H={rota:[],loja:[],pedido:[],servico:[]};
+    for(const [d,R] of Object.entries(e.rotas||{})){if(!R||!(R.slugs||[]).includes(slug))continue;const i=R.slugs.indexOf(slug);
+      const f=[true,R.etapa>=3||!!R.pronta,!!R.recOk||!!R.pronta,!!R.filaOk||!!R.pronta,!!R.aqOk,!!R.pronta];const at=f.findIndex(x=>!x);
+      H.rota.push({id:"rota:"+d,dia:d,f,at:at<0?5:at,tx:`${(D.zonas[R.zona]||{}).nome||R.zona||"Retornos"} · loja ${i+1} de ${R.slugs.length}`,href:`index.html?d=${d}&etapa=${at<0?6:at+1}`});
+      const res=(R.res||{})[slug],ch=(R.chegou||{})[slug];
+      if(res||ch){const A=(e.atend||{})[slug]||{};const n=Object.values(((e.sel||{})[slug])||{}).filter(v=>v&&v.q>0).length;const fl=[!!ch,n>0,!!(R.orc||{})[slug],res==="vendeu"||!!A.fech,!!res];const a2=fl.findIndex(x=>!x);
+        const TX={vendeu:"Vendeu",orcamento:"Orçamento em aberto",visitada:"Visitada",nao_estava:"Não estava"};
+        H.loja.push({id:"loja:"+d,dia:(ch||d).slice(0,10),f:fl,at:a2<0?4:a2,tx:`${TX[res]||"Em atendimento"}${n?` · ${n} produto(s)`:""}`,href:`visita.html?l=${encodeURIComponent(slug)}&de=play&e=${a2<0?4:a2}`});}}
+    const p=(e.pedidos||{})[slug];if(p){const k=etapaDe(slug);const at=ETAPAS.indexOf(k);const h=(p.hist||[])[0];
+      H.pedido.push({id:"pedido",dia:h?h.em.slice(0,10):"",f:ETAPAS.map((x,i)=>i<at||k==="entregue"),at:at<0?0:at,tx:`Etapa ${at+1} · ${P.pedido.etapas[at]||k}${p.valor?" · "+Number(p.valor).toLocaleString("pt-BR",{style:"currency",currency:"BRL"}):""}`,href:`pedidos.html?etapa=${k}`});}
+    for(const [id,s] of Object.entries(e.servicos||{}))if(s&&s.slug===slug){const at=s.etapa||0;H.servico.push({id:"serv:"+id,dia:((s.hist||[])[0]||{em:""}).em.slice(0,10),f:P.servico.etapas.map((x,i)=>!!(s.feitas||[])[i]),at,tx:`${s.item||"Serviço"} · ${P.servico.etapas[at]}`,href:`servicos.html?s=${encodeURIComponent(id)}`});}
+    for(const k of Object.keys(H))H[k]=H[k].filter(x=>verArq?arq.has(x.id):!arq.has(x.id)).sort((a,b)=>(b.dia||"").localeCompare(a.dia||""));
+    return {H,nArq:arq.size};}
+  const linhaHTML=(x,proc)=>`<div class="hl" data-h="${esc(x.id)}"><div class="fundo"><i class="arq">${verArq?"Desarquivar":"Arquivar"}</i><i class="apg">Apagar ✕</i></div><a class="row" href="${x.href}"><span class="dt">${dBR(x.dia)}</span><span class="bs">${P[proc].etapas.map((t,i)=>`<i class="${x.f[i]?"ok":i===x.at?"eu":i<x.at?"pul":""}"></i>`).join("")}</span><span class="tx">${esc(x.tx)}</span></a></div>`;
+  const bloco=(proc,tit,arr,un)=>`<section class="hs" style="--c:${P[proc].cor}"><div class="t"><b>${tit}</b><span>${arr.length} ${un}</span></div>${arr.length?arr.map(x=>linhaHTML(x,proc)).join(""):`<p class="vazio">Nada ainda.</p>`}</section>`;
+  // ---- apagar (teste, visita mal feita) tira também das metas e do ranking; arquivar só esconde
+  async function apagar(id){const e=estado();const [tipo,ref]=id.split(":");
+    if(tipo==="rota"){const R=(e.rotas||{})[ref];if(R){R.slugs=(R.slugs||[]).filter(s=>s!==slug);["res","chegou","orc"].forEach(k=>{if(R[k])delete R[k][slug];});}}
+    else if(tipo==="loja"){const R=(e.rotas||{})[ref];if(R)["res","chegou","orc"].forEach(k=>{if(R[k])delete R[k][slug];});const ainda=Object.values(e.rotas||{}).some(X=>X&&((X.res||{})[slug]||(X.chegou||{})[slug]));if(!ainda){if(e.atend)delete e.atend[slug];e.feitas=(e.feitas||[]).filter(s=>s!==slug);e.retornos=(e.retornos||[]).filter(s=>s!==slug);}}
+    else if(tipo==="pedido"){if(e.pedidos)delete e.pedidos[slug];if(e.sel)delete e.sel[slug];}
+    else if(tipo==="serv"){if(e.servicos)delete e.servicos[ref];}
+    if(e.histArq&&e.histArq[slug])e.histArq[slug]=e.histArq[slug].filter(x=>x!==id);
+    await salvar(e);render();}
+  async function arquivar(id){const e=estado();e.histArq=e.histArq||{};const a=new Set(e.histArq[slug]||[]);if(a.has(id))a.delete(id);else a.add(id);e.histArq[slug]=[...a];await salvar(e);render();}
+  function ligarPuxar(box){const row=box.querySelector(".row");let x0=0,y0=0,dx=0,ativo=false,decidiu=false,horiz=false;
+    row.addEventListener("pointerdown",ev=>{x0=ev.clientX;y0=ev.clientY;dx=0;ativo=true;decidiu=false;horiz=false;});
+    row.addEventListener("pointermove",ev=>{if(!ativo)return;const ddx=ev.clientX-x0,ddy=ev.clientY-y0;if(!decidiu&&(Math.abs(ddx)>8||Math.abs(ddy)>8)){decidiu=true;horiz=Math.abs(ddx)>Math.abs(ddy);}if(!horiz)return;dx=Math.max(-140,Math.min(140,ddx));row.style.transform=`translateX(${dx}px)`;});
+    const fim=async()=>{if(!ativo)return;ativo=false;row.style.transform="";if(!horiz)return;const id=box.dataset.h;
+      if(dx<-90){if(confirm("Apagar este registro do histórico?\n\nSai também das metas e do ranking. Não dá para desfazer."))await apagar(id);}
+      else if(dx>90)await arquivar(id);};
+    row.addEventListener("pointerup",fim);row.addEventListener("pointercancel",fim);
+    row.addEventListener("click",ev=>{if(horiz&&Math.abs(dx)>8){ev.preventDefault();}});}
+  function render(){const e=estado();const V=((e.voltas||{})[slug])||{};const vd=V.data||((e.atend||{})[slug]||{}).volta||"";
+    const dias=vd?Math.round((new Date(vd+"T12:00:00")-new Date(hoje+"T12:00:00"))/864e5):null;
+    const {H,nArq}=linhas();
+    $("#app").innerHTML=`${topo()}
+      <section class="ct-cab"><a class="lk" href="contatos.html">‹ Contatos · ${esc(setorNome(l.setor))}</a>
+        <div class="ct-id"><span class="lg">${logo?`<img src="${esc(logo)}" alt="">`:"logo"}</span><div><h1>${esc(nome)}</h1><small>${esc(setorNome(l.setor))} · ${esc((l.endereco||"").split(" · ")[0])}</small></div></div>
+        <div class="ct-ac">${tel?`<a href="tel:+55${tel}">${App.ICONES.ligar||"📞"}Ligar</a><a href="https://wa.me/55${tel}" target="_blank" rel="noopener">WhatsApp</a>`:`<span>Ligar</span><span>WhatsApp</span>`}${email?`<a href="mailto:${esc(email)}">E-mail</a>`:`<span>E-mail</span>`}</div>
+        ${tel?`<small class="muted">${esc(telFmt(l.tel))}${email?" · "+esc(email):""}</small>`:""}</section>
+      <section class="pv"><div class="t"><small>PRÓXIMA VOLTA</small><button type="button" id="mudaV">${vd?"mudar":"marcar"}</button></div>
+        ${editaVolta?`<div class="ed"><input type="date" id="vD" value="${esc(vd)}" min="${hoje}"><input id="vM" placeholder="Motivo (pós-venda, orçamento…)" value="${esc(V.motivo||"")}"><button type="button" class="btn" id="vOk">Guardar</button>${vd?`<button type="button" class="btn sec" id="vTira">Tirar a data</button>`:""}</div>`
+        :vd?`<div class="d"><b>${dBR(vd)}</b><span>${dias===0?"hoje":dias>0?`daqui a ${dias} dia(s)`:`venceu há ${-dias} dia(s)`}${V.motivo?" · "+esc(V.motivo):""}</span></div><span style="font-size:12.5px;color:#C9C2DC">Entra sozinha nos Retornos da rota daquela semana, mesmo fora da zona do dia.</span>`
+        :`<span style="font-size:14px;color:#C9C2DC">Sem data marcada.</span>`}</section>
+      <section class="card"><h2 style="display:flex;justify-content:space-between;align-items:baseline">Mensagens <a href="visita.html?l=${encodeURIComponent(slug)}#mensagens" style="font-size:13px;color:var(--marca);font-weight:600">ver todas (${MSGS.length})</a></h2>
+        ${MSGS.length?MSGS.slice(-3).map(m=>`<div class="msg ${m.de==="cliente"?"cliente":"voce"}">${esc(m.texto)}<small>${m.de==="cliente"?"cliente":esc(m.por||"você")}${m.canal?" · "+esc(m.canal):""} · ${dBR((m.em||"").slice(0,10))}</small></div>`).join(""):`<p class="muted" style="margin:0">Nenhuma mensagem.</p>`}</section>
+      ${bloco("rota","Histórico de Rota",H.rota,"rota(s)")}${bloco("loja","Histórico de Loja",H.loja,"visita(s)")}${bloco("pedido","Histórico de Pedido",H.pedido,"pedido(s)")}${bloco("servico","Histórico de Serviços",H.servico,"serviço(s)")}
+      <p class="muted" style="font-size:12.5px;margin:0 0 8px">Puxe uma linha para a <b>esquerda</b> para apagar (teste, visita mal feita); para a <b>direita</b>, para arquivar. Apagar pede confirmação e tira também das metas e do ranking.</p>
+      ${nArq||verArq?`<button type="button" class="btn sec" id="verArq" style="margin:0 0 12px">${verArq?"Voltar ao histórico":`Ver arquivados (${nArq})`}</button>`:""}
+      ${nav("contatos")}`;
+    $$(".hl").forEach(ligarPuxar);
+    $("#mudaV").onclick=()=>{editaVolta=!editaVolta;render();};
+    const ok=$("#vOk");if(ok)ok.onclick=async()=>{const d=$("#vD").value;if(!d){alert("Escolha a data.");return;}const e2=estado();e2.voltas=e2.voltas||{};e2.voltas[slug]={data:d,motivo:$("#vM").value.trim(),por:App.eu().nome,em:new Date().toISOString()};await salvar(e2);editaVolta=false;render();};
+    const vt=$("#vTira");if(vt)vt.onclick=async()=>{const e2=estado();if(e2.voltas)delete e2.voltas[slug];if(e2.atend&&e2.atend[slug])delete e2.atend[slug].volta;await salvar(e2);editaVolta=false;render();};
+    const va=$("#verArq");if(va)va.onclick=()=>{verArq=!verArq;render();};}
+  render();
+})();
+</script>
+</body>
+</html>

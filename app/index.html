@@ -8,7 +8,7 @@
 <link rel="icon" href="../genio-favicon.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
-<link rel="stylesheet" href="app.css?v=e29cfb4e22">
+<link rel="stylesheet" href="app.css?v=39e9b662b6">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <style>
 /* montagem da rota pelo vendedor (14/11): 1 lojas · 2 logotipos · 3 recorte e ordem */
@@ -46,6 +46,8 @@ select.campo,input.campo{width:100%;font:inherit;font-size:16px;min-height:46px;
 .rc-l{display:grid;gap:8px}
 .rc{display:grid;grid-template-columns:26px 28px 1fr 14px 1fr;gap:8px;align-items:center;background:#fff;border-radius:14px;padding:8px;box-shadow:var(--sombra);position:relative;touch-action:pan-y}
 .rc .pos{width:26px;height:26px;border-radius:50%;background:var(--lav);color:var(--marca);font-weight:700;font-size:13px;display:grid;place-items:center}
+.ret-b{display:flex;flex-direction:column;gap:2px;width:100%;text-align:left;background:#fff;border:2px solid #141C3A;border-radius:12px;padding:10px 12px;margin:0 0 12px;font:inherit;color:var(--texto);cursor:pointer}.ret-b b{font-size:14px}.ret-b small{font-size:13px;color:var(--texto2)}.ret-b:disabled{opacity:.7;cursor:default}
+.mapa-r .n.ret{background:#fff!important;color:#141C3A!important;border:3px solid #141C3A!important;box-sizing:border-box}
 .so-recorte .alca{display:none}.so-recorte .rc{grid-template-columns:26px 1fr 14px 1fr}
 .aq{display:grid;grid-template-columns:28px 1fr auto;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--linha)}.aq:last-child{border-bottom:0}.aq .pos{font-weight:800;color:#141C3A}.aq b{display:block}.aq small{color:var(--texto2);font-size:13px}.aq .btn{min-height:44px;padding:0 12px;font-size:14px}
 .chks{display:flex;flex-direction:column;gap:6px}.chk{display:flex;gap:10px;align-items:center;min-height:44px;border-radius:12px;padding:0 12px;background:#F1EEF8;color:inherit;text-decoration:none;font-weight:600}.chk span{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-weight:800;flex-shrink:0}.chk.ok span{background:#0E6E6A;color:#fff}.chk.falta{background:#FFF1DC;color:#7A4A00}.chk.falta span{background:#fff;border:2px solid #C77700}
@@ -74,7 +76,7 @@ select.campo,input.campo{width:100%;font:inherit;font-size:16px;min-height:46px;
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=e29cfb4e22"></script>
+<script src="app.js?v=39e9b662b6"></script>
 <script>
 (async()=>{
   const {$,$$,esc,qs,sessao,eu,dados,estrelasHTML,estado,salvar,nav,topo,setorNome,nomeLoja,cliente,gravarCliente,menuLongo}=App;
@@ -97,10 +99,14 @@ select.campo,input.campo{width:100%;font:inherit;font-size:16px;min-height:46px;
   function caminho(slugs){const ls=slugs.map(L$).filter(Boolean);const resto=ls.filter(l=>l.lat&&l.lng),sem=ls.filter(l=>!(l.lat&&l.lng));let cur=baseZ()||resto[0];const out=[];
     while(resto.length){let k=0;for(let i=1;i<resto.length;i++)if(km(cur,resto[i])<km(cur,resto[k]))k=i;cur=resto.splice(k,1)[0];out.push(cur);}return out.concat(sem).map(l=>l.slug);}
   // ---- candidatas: tipo de rota + zona + família; fora: arquivadas, já visitadas e (marcadas) as que estão em outra rota aberta
+  // retornos com data: a próxima volta marcada na saída da loja, no pós-venda ou no contato; vencem até 6 dias depois do dia da rota
+  const limVolta=()=>App.maisDias(dia,6);
+  const voltaDe=s=>{const e=estado();return ((e.voltas||{})[s]||{}).data||((e.atend||{})[s]||{}).volta||"";};
+  const retornosVencendo=z=>D.lojas.filter(l=>(!z||l.zona===z)&&voltaDe(l.slug)&&voltaDe(l.slug)<=limVolta());
   function candidatas(){const e=estado();const arq=new Set(e.arquivadas||[]);const feitas=new Set(e.feitas||[]);
     const outras={};for(const [d,X] of Object.entries(e.rotas||{}))if(d!==dia&&X&&!X.encerrada)for(const s of X.slugs||[])if(!(X.res||{})[s])outras[s]=d;
     let L;
-    if(R.tipo==="retorno"){const ret=new Set([...(e.retornos||[]),...Object.entries(e.atend||{}).filter(([,a])=>a&&(a.res==="voltar"||a.res==="nao_estava")).map(([s])=>s)]);L=D.lojas.filter(l=>ret.has(l.slug)&&!arq.has(l.slug));}
+    if(R.tipo==="retorno"){const ret=new Set([...(e.retornos||[]),...retornosVencendo(null).map(l=>l.slug),...Object.entries(e.atend||{}).filter(([,a])=>a&&(a.res==="voltar"||a.res==="nao_estava")).map(([s])=>s)]);L=D.lojas.filter(l=>ret.has(l.slug)&&!arq.has(l.slug));}
     else{L=D.lojas.filter(l=>l.zona===R.zona&&l.estrelas>=3&&!arq.has(l.slug)&&!feitas.has(l.slug));if(R.tipo==="zona-familia")L=L.filter(l=>App.familiaDe(l.setor)===R.familia);}
     return L.sort((a,b)=>b.estrelas-a.estrelas||(a.dia||0)-(b.dia||0)||(a.ordem||0)-(b.ordem||0)).map(l=>({l,outra:outras[l.slug]||null}));}
   // ---- cabeçalho: dias com rota + escolher outro dia; etapas
@@ -127,6 +133,8 @@ select.campo,input.campo{width:100%;font:inherit;font-size:16px;min-height:46px;
       ${R.tipo!=="retorno"?`<label class="muted" style="font-size:13px">Zona</label><select class="campo" id="zona">${zonas.map(z=>`<option value="${z}" ${z===R.zona?"selected":""}>${esc(D.zonas[z].nome)} · ${D.lojas.filter(l=>l.zona===z&&l.estrelas>=3).length} lojas 3–5★</option>`).join("")}</select>`:`<p class="muted" style="margin:0">Lojas que pediram para voltar e as que não estavam quando o vendedor passou.</p>`}
       ${R.tipo==="zona-familia"?`<label class="muted" style="font-size:13px">Família</label><div class="op">${Object.entries(App.FAMILIAS).map(([k,f])=>`<button type="button" data-fam="${k}" class="${R.familia===k?"on":""}">${f.nome}</button>`).join("")}</div>`:""}
     </section>
+    ${(()=>{if(R.tipo==="retorno")return "";const rv=retornosVencendo(R.zona);const fora2=rv.filter(l=>!R.slugs.includes(l.slug));if(!rv.length)return "";const MOT=s=>((estado().voltas||{})[s]||{}).motivo||"retorno";
+      return `<button type="button" class="ret-b" id="incRet" ${fora2.length?"":"disabled"}><b>${rv.length} retorno(s) vencem nesta zona até ${limVolta().slice(8,10)}/${limVolta().slice(5,7)}</b><small>${rv.slice(0,4).map(l=>`${esc(nomeLoja(l.nome))} (${esc(MOT(l.slug))})`).join(" · ")}${rv.length>4?" …":""}. ${fora2.length?"Toque para incluir na rota.":"Já estão na rota."}</small></button>`;})()}
     <section class="card"><h2>Lojas da rota <small class="muted" style="font-weight:400;font-size:14px">· <b id="nSel">${R.slugs.length}</b> marcadas de ${C.length}</small></h2>
       <div class="mapa-r" id="mapaR"></div><p class="mapa-leg" id="mapaLeg"></p>
       <div class="linha-b"><button type="button" class="btn sec" id="m35">Marcar as 35 primeiras</button><button type="button" class="btn sec" id="limpa">Limpar</button></div>
@@ -149,10 +157,10 @@ select.campo,input.campo{width:100%;font:inherit;font-size:16px;min-height:46px;
       const ord=R.slugs.map(L$).filter(l=>l&&l.lat&&l.lng);const linha=(b?[[b.lat,b.lng]]:[]).concat(ord.map(l=>[l.lat,l.lng]));
       if(linha.length>1)L.polyline(linha,{color:"#6933C5",weight:3.5,opacity:.85,dashArray:"7 7"}).addTo(camada);
       if(b){L.marker([b.lat,b.lng],{icon:L.divIcon({className:"",html:'<div class="b"></div>',iconSize:[16,16],iconAnchor:[8,8]})}).addTo(camada).bindTooltip("Início da zona");pts.push([b.lat,b.lng]);}
-      ord.forEach((l,i)=>{L.marker([l.lat,l.lng],{icon:L.divIcon({className:"",html:`<div class="n">${i+1}</div>`,iconSize:[26,26],iconAnchor:[13,13]}),zIndexOffset:1000}).addTo(camada).bindTooltip(`${i+1} · ${nomeLoja(l.nome)}`).on("click",()=>alternar(l.slug,false));pts.push([l.lat,l.lng]);});
+      ord.forEach((l,i)=>{L.marker([l.lat,l.lng],{icon:L.divIcon({className:"",html:`<div class="n${voltaDe(l.slug)?" ret":""}">${i+1}</div>`,iconSize:[26,26],iconAnchor:[13,13]}),zIndexOffset:1000}).addTo(camada).bindTooltip(`${i+1} · ${nomeLoja(l.nome)}`).on("click",()=>alternar(l.slug,false));pts.push([l.lat,l.lng]);});
       const foco=ord.length?ord.map(l=>[l.lat,l.lng]).concat(b?[[b.lat,b.lng]]:[]):pts;if(foco.length)mapa.fitBounds(L.latLngBounds(foco).pad(.15),{maxZoom:17});
       let tot=0;for(let i=1;i<linha.length;i++)tot+=km({lat:linha[i-1][0],lng:linha[i-1][1]},{lat:linha[i][0],lng:linha[i][1]});
-      $("#mapaLeg").textContent=ord.length?`${ord.length} loja(s) no caminho · cerca de ${tot.toFixed(1).replace(".",",")} km em linha reta${R.slugs.length>ord.length?` · ${R.slugs.length-ord.length} sem localização`:""} · toque num ponto para marcar ou tirar`:"Toque nos pontos ou marque na lista: a rota aparece aqui.";}
+      $("#mapaLeg").textContent=ord.length?`● loja nova · ◯ retorno com data · ${ord.length} loja(s) no caminho · cerca de ${tot.toFixed(1).replace(".",",")} km em linha reta${R.slugs.length>ord.length?` · ${R.slugs.length-ord.length} sem localização`:""} · toque num ponto para marcar ou tirar`:"Toque nos pontos ou marque na lista: a rota aparece aqui.";}
     function alternar(s,on){const i=document.querySelector(`input[data-s="${s}"]`);if(i){i.checked=on;i.dispatchEvent(new Event("change",{bubbles:true}));}else{R.slugs=R.slugs.filter(x=>x!==s);if(on)R.slugs.push(s);depois();}}
     function depois(){R.slugs=caminho(R.slugs);conta();desenhaMapa();salvaR();}
     window.__aoMudar=depois;
@@ -167,6 +175,7 @@ select.campo,input.campo{width:100%;font:inherit;font-size:16px;min-height:46px;
       const achou=D.lojas.filter(l=>norm(l.nome).includes(t)).slice(0,20);
       box.innerHTML=achou.length?achou.map(l=>`<label><input type="checkbox" data-s="${esc(l.slug)}" ${R.slugs.includes(l.slug)?"checked":""}><span class="mi"><i>${esc((D.zonas[l.zona]||{}).nome||"")}</i></span><span><b>${esc(nomeLoja(l.nome))}</b><small>${esc(setorNome(l.setor))} · ${esc((l.endereco||"").split(" · ")[0])}</small></span><span>${estrelasHTML(l.estrelas||0)}</span></label>`).join(""):`<p class="muted" style="margin:6px 0 0">Nenhuma loja com esse nome.</p>`;};
     desenhaMapa();
+    const ir2=$("#incRet");if(ir2)ir2.onclick=()=>{const add=retornosVencendo(R.zona).map(l=>l.slug).filter(s2=>!R.slugs.includes(s2));R.slugs=caminho(R.slugs.concat(add));salvaR();etapa1();};
     $("#seguir").onclick=async()=>{R.etapa=Math.max(R.etapa||1,2);await salvaR();ir(2);};}
 
   // =============== 2 · LOGOTIPOS ===============

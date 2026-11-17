@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover,user-scalable=no">
+<title>GênIO · Contatos</title>
+<meta name="theme-color" content="#F1EEF8">
+<link rel="icon" href="../genio-favicon.png">
+<link rel="stylesheet" href="app.css?v=39e9b662b6">
+<style>
+.busca-c{width:100%;box-sizing:border-box;min-height:48px;border:1.5px solid var(--linha);border-radius:12px;padding:0 14px;font:inherit;font-size:16px;margin:0 0 10px;background:#fff}
+.seg{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));background:#fff;border-radius:12px;padding:4px;gap:4px;margin:0 0 10px}
+.seg button{min-height:40px;border:0;border-radius:9px;background:transparent;font:inherit;font-size:14px;font-weight:600;color:var(--texto2)}.seg button.on{background:var(--marca);color:#fff}
+.chips{display:flex;gap:6px;overflow-x:auto;padding:0 0 10px;scrollbar-width:none}.chips::-webkit-scrollbar{display:none}
+.chips button{flex-shrink:0;min-height:36px;border:1.5px solid var(--linha);background:#fff;border-radius:999px;padding:0 12px;font:inherit;font-size:13px;font-weight:600;color:var(--texto)}.chips button.on{background:#141C3A;border-color:#141C3A;color:#fff}
+.ct{display:grid;grid-template-columns:48px 1fr auto;gap:10px;align-items:center;background:#fff;border-radius:14px;padding:10px 12px;margin:0 0 8px;color:inherit;text-decoration:none}
+.ct .mini{width:48px;height:40px;border-radius:10px;background:var(--lav);display:grid;place-items:center;overflow:hidden;font-size:10px;color:var(--texto2);text-align:center;line-height:1.1}.ct .mini img{width:100%;height:100%;object-fit:contain}
+.ct b{display:block;font-size:16px}.ct small{display:block;color:var(--texto2);font-size:13px;margin-top:2px}
+.ct .lado{display:flex;flex-direction:column;align-items:flex-end;gap:4px;font-size:12px;color:var(--texto2);white-space:nowrap}
+.ct .nl{min-width:22px;height:22px;border-radius:999px;background:#C62828;color:#fff;font-weight:800;font-size:12px;display:grid;place-items:center;padding:0 6px}
+.ct .vt{background:#141C3A;color:#fff;border-radius:8px;padding:2px 8px;font-weight:600}
+.ct.forn{border-left:4px solid #0E6E6A}
+</style>
+</head>
+<body>
+<div class="w" id="app"></div>
+<script src="app.js?v=39e9b662b6"></script>
+<script>
+(async()=>{
+  const {$,$$,esc,sessao,dados,estado,nav,topo,nomeLoja,setorNome,cliente,etapaDe,familiaDe,FAMILIAS,hojeISO,lerChave}=App;
+  if(!await sessao())return;
+  const D=await dados();const e=estado();const sel=e.sel||{};const feitas=new Set(e.feitas||[]);const ped=e.pedidos||{};const hoje=hojeISO();
+  let conv={};try{const r=await fetch("/api/mensagens",{credentials:"same-origin",cache:"no-store"});if(r.ok)conv=(await r.json()).conversas||{};}catch(err){}
+  // clientes = lojas que já tiveram contato (rota, visita, seleção, pedido, mensagem, avulsa)
+  const naRota=new Set();for(const R of Object.values(e.rotas||{}))for(const s of (R&&R.slugs)||[])naRota.add(s);
+  const temSel=s=>Object.values(sel[s]||{}).some(v=>v&&v.q>0);
+  const volta=s=>((e.voltas||{})[s]||{}).data||((e.atend||{})[s]||{}).volta||"";
+  const CL=D.lojas.map(l=>{const c=conv[l.slug]||null;return {tipo:"cliente",l,slug:l.slug,nome:nomeLoja(l.nome),setor:l.setor,fam:familiaDe(l.setor),c,nl:c?c.nao_lidas:0,ped:!!ped[l.slug]||temSel(l.slug),volta:volta(l.slug),
+    contato:feitas.has(l.slug)||naRota.has(l.slug)||!!ped[l.slug]||temSel(l.slug)||!!c||!!l.avulso||!!(e.atend||{})[l.slug]};});
+  // fornecedores: os cadastrados por item (Config → Fornecedores)
+  const FO=[];const vistos=new Map();
+  try{const fo=(await lerChave("fornecedores"))||{};for(const [k,v] of Object.entries(fo))if(v&&v.fornecedor){const n=v.fornecedor.trim();const x=vistos.get(n)||{tipo:"forn",nome:n,itens:[],whats:v.whats||""};x.itens.push(v.item||k);if(!x.whats&&v.whats)x.whats=v.whats;vistos.set(n,x);}}catch(err){}
+  try{for(const [k,it] of Object.entries((App.FORNEC||{}).itens||{}))for(const f of (it&&it.lista)||[]){const n=(f.nome||"").trim();if(!n)continue;const x=vistos.get(n)||{tipo:"forn",nome:n,itens:[],whats:f.whats||f.tel||""};x.itens.push(k);vistos.set(n,x);}}catch(err){}
+  FO.push(...vistos.values());
+  let F={tipo:"clientes",fam:"",sit:"",termo:""};
+  try{Object.assign(F,JSON.parse(sessionStorage.getItem("contatos-f")||"{}"));}catch(err){}
+  const SIT=[["","Todos"],["msg","Com mensagem"],["ped","Com pedido"],["volta","Com próxima volta"],["vence","Volta vencendo"]];
+  const norm=t=>(t||"").normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase();
+  const MINI={};
+  async function render(){try{sessionStorage.setItem("contatos-f",JSON.stringify(F));}catch(err){}
+    let cl=CL.filter(x=>F.termo?norm(x.l.nome+" "+(x.l.endereco||"")+" "+setorNome(x.setor)).includes(norm(F.termo)):x.contato);
+    if(F.fam)cl=cl.filter(x=>x.fam===F.fam);
+    if(F.sit==="msg")cl=cl.filter(x=>x.c);else if(F.sit==="ped")cl=cl.filter(x=>x.ped);else if(F.sit==="volta")cl=cl.filter(x=>x.volta);else if(F.sit==="vence"){const lim=App.maisDias?App.maisDias(hoje,7):hoje;cl=cl.filter(x=>x.volta&&x.volta<=lim);}
+    cl.sort((a,b)=>b.nl-a.nl||(a.volta||"9").localeCompare(b.volta||"9")||a.nome.localeCompare(b.nome));
+    let fo=FO.filter(x=>!F.termo||norm(x.nome+" "+x.itens.join(" ")).includes(norm(F.termo)));
+    const L=[...(F.tipo!=="fornecedores"?cl:[]),...(F.tipo!=="clientes"?fo:[])].slice(0,150);
+    for(const x of L)if(x.tipo==="cliente"&&MINI[x.slug]===undefined){const f=await cliente(x.l);MINI[x.slug]=(f.manual&&f.manual.tratado)||(f.logos&&f.logos[0]&&f.logos[0].src)||null;}
+    const fams=[...new Set(CL.filter(x=>x.contato).map(x=>x.fam).filter(Boolean))];
+    const dBR=iso=>iso.slice(8,10)+"/"+iso.slice(5,7);
+    $("#app").innerHTML=`${topo()}<h1>Contatos</h1><p class="sub">${CL.filter(x=>x.contato).length} cliente(s) · ${FO.length} fornecedor(es)</p>
+      <input class="busca-c" id="busca" type="search" placeholder="Buscar por nome, rua ou ramo" value="${esc(F.termo)}" autocomplete="off">
+      <div class="seg">${[["clientes","Clientes"],["fornecedores","Fornecedores"],["todos","Todos"]].map(([k,t])=>`<button type="button" data-tipo="${k}" class="${F.tipo===k?"on":""}">${t}</button>`).join("")}</div>
+      ${F.tipo!=="fornecedores"?`<div class="chips"><button type="button" data-fam="" class="${!F.fam?"on":""}">Todos os setores</button>${fams.map(k=>`<button type="button" data-fam="${k}" class="${F.fam===k?"on":""}">${esc((FAMILIAS[k]||{}).nome||k)}</button>`).join("")}</div>
+      <div class="chips">${SIT.map(([k,t])=>`<button type="button" data-sit="${k}" class="${F.sit===k?"on":""}">${t}</button>`).join("")}</div>`:""}
+      ${L.length?L.map(x=>x.tipo==="cliente"?`<a class="ct" href="contato.html?l=${encodeURIComponent(x.slug)}"><span class="mini">${MINI[x.slug]?`<img src="${esc(MINI[x.slug])}" alt="" loading="lazy">`:"sem<br>logo"}</span>
+          <div><b>${esc(x.nome)}</b><small>${x.c?esc((x.c.ultima.de==="cliente"?"":"Você: ")+x.c.ultima.texto.slice(0,60)):esc(setorNome(x.setor)+" · "+(x.l.endereco||"").split(" · ")[0])}</small></div>
+          <div class="lado">${x.nl?`<span class="nl">${x.nl}</span>`:""}${x.volta?`<span class="vt">volta ${dBR(x.volta)}</span>`:x.ped?"pedido":""}</div></a>`
+        :`<div class="ct forn"><span class="mini">forn.</span><div><b>${esc(x.nome)}</b><small>${esc(x.itens.slice(0,4).join(" · "))}</small></div><div class="lado">${x.whats?`<a href="https://wa.me/${esc(String(x.whats).replace(/\D/g,"").replace(/^(?!55)/,"55"))}" target="_blank" rel="noopener" style="color:#0E6E6A;font-weight:700">WhatsApp</a>`:""}</div></div>`).join("")
+        :`<section class="card"><p>Nenhum contato com esses filtros.</p></section>`}
+      ${nav("contatos")}`;
+    const b=$("#busca");b.oninput=()=>{clearTimeout(b._t);b._t=setTimeout(async()=>{F.termo=b.value.trim();await render();const nb=$("#busca");nb.focus();nb.setSelectionRange(nb.value.length,nb.value.length);},250);};
+    $$("[data-tipo]").forEach(x=>x.onclick=()=>{F.tipo=x.dataset.tipo;render();});
+    $$("[data-fam]").forEach(x=>x.onclick=()=>{F.fam=x.dataset.fam;render();});
+    $$("[data-sit]").forEach(x=>x.onclick=()=>{F.sit=x.dataset.sit;render();});}
+  render();
+})();
+</script>
+</body>
+</html>
