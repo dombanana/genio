@@ -205,7 +205,7 @@ const App=(()=>{
   // ---- arte automática: logotipo tratado centralizado preenchendo a área segura do gabarito, cor padrão do material
   const COR_PADRAO={capacho:"#2B2B2D",rigido:"#F4F1EA",vinil:null,tecido:"#F4F1EA",papel:"#FFFFFF",lona:"#FFFFFF",carimbo:null};
   const PRODUTOS_IDS=["capacho","placas","adesivos","uniformes","impressos","panfleto","banners","parede","brindes","carimbo","windbanner","faixa","folheto","camiseta","bone","avental"];
-  let _G=null;const gabaritos=async()=>_G||(_G=await (await fetch("gabaritos.json?v=876308231f")).json());
+  let _G=null;const gabaritos=async()=>_G||(_G=await (await fetch("gabaritos.json?v=4532878a5f")).json());
   const carregarImg=src=>new Promise(res=>{const i=new Image();i.crossOrigin="anonymous";i.onload=()=>res(i);i.onerror=()=>res(null);i.src=src;});
   // ---- carimbo: só texto — nome, razão social, CNPJ (negrito), endereço, telefone; nunca logotipo
   async function dadosCarimbo(l){const cad=await ficha(l.slug).catch(()=>null);const L=(cad&&cad.lacunas)||{};const leit=(L.leitura||{}).valor||"";const razao=((leit.match(/Razão social: ([^·]+)/)||[])[1]||"").trim();const cnpj=((leit.match(/CNPJ:? ?([\d./-]{14,18})/)||[])[1]||"");
@@ -252,7 +252,7 @@ const App=(()=>{
     const aw=W-2*(B+S),ah=H-2*(B+S);const f=Math.min(aw/LW,(P.ancora==="topo"?ah*0.45:ah)/LH);const w=LW*f,h=LH*f;const x=(W-w)/2,y=P.ancora==="topo"?B+S+ah*0.05:(H-h)/2;
     const fundo=P.sem_fundo?null:(COR_PADRAO[P.superficie]===undefined?"#FFFFFF":COR_PADRAO[P.superficie]);
     // kit de 14 setores (10/11): a maquete frontal do ramo da loja é a arte de partida de todos os produtos
-    await carregarScript("qr.js?v=876308231f");await carregarScript("impressos.js?v=876308231f");await carregarScript("kits14.js?v=876308231f");
+    await carregarScript("qr.js?v=4532878a5f");await carregarScript("impressos.js?v=4532878a5f");await carregarScript("kits14.js?v=4532878a5f");
     if(window.Kits14&&window.Kits14.ARQ[pid]){const K=await window.Kits14.montar(App,pid,c,l,{W,H,B,S,im,rec});
       if(K){const doc={fundo:K.fundo,fundoImg:null,el:K.el,campos:null,auto:true,kit:KIT14,setorKit:K.setorKit,kitRef:K.kitRef,W,H};const imgs={[c.manual.tratado]:im};
         const k=Math.min(1,1400/Math.max(W,H));const cv=document.createElement("canvas");cv.width=Math.round(W*k);cv.height=Math.round(H*k);const g=cv.getContext("2d");g.scale(k,k);
@@ -384,12 +384,41 @@ const App=(()=>{
     selfie:'<rect x="6" y="2.5" width="12" height="19" rx="2.5" class="d"/><circle cx="12" cy="10" r="2.4" class="w"/><path d="M8.6 17a3.4 3.4 0 0 1 6.8 0"/>',
     foto:'<path d="M3 8.5a2 2 0 0 1 2-2h2.5L9 4.5h6l1.5 2H19a2 2 0 0 1 2 2V18a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" class="d"/><circle cx="12" cy="13" r="3.6" class="w"/>',
     clientes:'<path d="M3.5 9.5V20a1 1 0 0 0 1 1h15a1 1 0 0 0 1-1V9.5" class="d"/><path d="M2.5 4h19l1 5.5H1.5z" class="d"/><path d="M9.5 21v-6h5v6" class="w"/><path d="M6 9.5V4M12 9.5V4M18 9.5V4"/>',
-    tela:'<rect x="6" y="2.5" width="12" height="19" rx="2.5" class="d"/><circle cx="12" cy="12" r="2.6" class="f"/>'};
+    tela:'<rect x="6" y="2.5" width="12" height="19" rx="2.5" class="d"/><circle cx="12" cy="12" r="2.6" class="f"/>',
+    servicos:'<circle cx="12" cy="12" r="9.2" class="d"/><path d="M12 6.5v2M12 15.5v2M6.5 12h2M15.5 12h2"/><circle cx="12" cy="12" r="2.6" class="w"/>',
+    inicio:'<path d="M3.5 11 12 4l8.5 7" class="d"/><path d="M5.8 9.4V20h12.4V9.4" class="d"/><path d="M10 20v-5h4v5"/>',
+    ferramentas:'<rect x="3.5" y="3.5" width="7" height="7" rx="1.6" class="d"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.6" class="d"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.6" class="d"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.6" class="d"/>',
+    calc:'<rect x="5" y="2.5" width="14" height="19" rx="2" class="d"/><path d="M8 6.5h8M8.3 11h1.4M14.3 11h1.4M8.3 14.5h1.4M14.3 14.5h1.4M8.3 18h1.4M14.3 18h1.4"/>',
+    contatos:'<rect x="4.5" y="2.8" width="15" height="18.4" rx="2" class="d"/><circle cx="12" cy="10" r="2.8" class="w"/><path d="M7.8 17.2a4.2 4.2 0 0 1 8.4 0M2.8 7.5h2.4M2.8 12h2.4M2.8 16.5h2.4"/>',
+    arquivos:'<path d="M3 6.5A1.5 1.5 0 0 1 4.5 5H9l2 2h8.5A1.5 1.5 0 0 1 21 8.5V18a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 18z" class="d"/>',
+    mensagens:'<path d="M4 5.5A2 2 0 0 1 6 3.5h12a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H9.5L5 20v-3.5h0A2 2 0 0 1 4 14.5z" class="d"/>'};
   const ico=n=>`<svg class="icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${SIMB[n]||""}</svg>`;
-  const ICONES={rota:ico("rota"),play:ico("play"),clientes:ico("clientes"),mic:ico("mic"),pedidos:ico("pedidos"),perfil:ico("perfil"),notas:ico("mic"),notasLista:ico("notas"),config:ico("config"),financeiro:ico("financeiro"),ocorrencias:ico("ocorrencias"),entrada:ico("entrada"),processamento:ico("processamento"),saida:ico("saida"),
+  const ICONES={servicos:ico("servicos"),inicio:ico("inicio"),ferramentas:ico("ferramentas"),calc:ico("calc"),contatos:ico("contatos"),arquivos:ico("arquivos"),mensagens:ico("mensagens"),loja:ico("clientes"),foto:ico("foto"),rota:ico("rota"),play:ico("play"),clientes:ico("clientes"),mic:ico("mic"),pedidos:ico("pedidos"),perfil:ico("perfil"),notas:ico("mic"),notasLista:ico("notas"),config:ico("config"),financeiro:ico("financeiro"),ocorrencias:ico("ocorrencias"),entrada:ico("entrada"),processamento:ico("processamento"),saida:ico("saida"),
     recModo:t=>ico({audio:"mic",transcrever:"transcrever","video-tras":"video","video-frente":"video",foto:"foto"}[t]||"mic")};
   // ---- etapas do pedido: entrada (selecionando/orçando) → processamento (produção) → saída (entrega/instalação) → entregue
   const ETAPAS=["entrada","arte","processamento","qualidade","saida","entregue"];
+  // ---- quatro processos, cada um com a sua sequência de etapas e a mesma barra no rodapé (decisão do dono, 17/11)
+  const PROCESSOS={
+    rota:{nome:"Rota",cor:"#141C3A",etapas:["Lojas","Logotipos","Recorte","Fila","Aquecimento","Pronta"],curto:["Lojas","Logos","Recorte","Fila","Aquecer","Pronta"]},
+    loja:{nome:"Loja",cor:"#6933C5",etapas:["Chegada","Apresentação","Orçamento","Fechamento","Saída"],curto:["Chegada","Apresent.","Orçamento","Fecham.","Saída"]},
+    pedido:{nome:"Pedidos",cor:"#0E6E6A",etapas:["Confirmação","Arte","Produção","Qualidade","Entrega","Pós-venda"],curto:["Confirm.","Arte","Produção","Qualid.","Entrega","Pós-venda"],chaves:ETAPAS},
+    servico:{nome:"Serviços",cor:"#1E63D6",etapas:["Confirmação","Preparação","Instalação","Ativação","Acompanhamento","Encerramento"],curto:["Confirm.","Preparo","Instal.","Ativação","Acomp.","Encerra"]}};
+  // barra de etapas: linha fina no topo + rodapé com ‹, as bolinhas tocáveis e "N ›".
+  // estado de cada etapa: feita (verde ✓), atual (roxo), pulada sem concluir (laranja !), futura (cinza)
+  // o = {proc, atual (0..n-1), feitas:[bool], href:i=>url, titulo, sub, faltas:{i:"motivo"}, seguir:{href|id,texto}}
+  function barraEtapas(o){const P=PROCESSOS[o.proc];const n=P.etapas.length;const at=o.atual;const feitas=o.feitas||[];const href=o.href||(()=>"#");
+    const est=i=>feitas[i]?"ok":i===at?"agora":i<at?"pulada":"futura";
+    const pul=P.etapas.map((t,i)=>i).filter(i=>est(i)==="pulada");
+    const bol=P.etapas.map((t,i)=>{const e=est(i);const simb=e==="ok"&&i!==at?"✓":e==="pulada"?"!":i+1;return `<a href="${href(i)}" class="pe-b ${e}${i===at?" eu":""}" aria-label="Etapa ${i+1} ${esc(t)}${e==="pulada"?", incompleta":e==="ok"?", concluída":""}"><span>${simb}</span><small>${esc(P.curto[i])}</small></a>`;}).join("");
+    const ant=at>0?`<a class="pe-ant" href="${href(at-1)}" aria-label="Voltar para a etapa ${at}">‹</a>`:`<span class="pe-ant off" aria-hidden="true">‹</span>`;
+    const sg=o.seguir===false?"":at<n-1?`<a class="pe-seg" ${o.seguir&&o.seguir.id?`id="${o.seguir.id}" href="#"`:`href="${(o.seguir&&o.seguir.href)||href(at+1)}"`} aria-label="Seguir para a etapa ${at+2}">${at+2} ›</a>`:(o.seguir&&o.seguir.texto?`<a class="pe-seg" ${o.seguir.id?`id="${o.seguir.id}" href="#"`:`href="${o.seguir.href||"#"}"`}>${esc(o.seguir.texto)}</a>`:"");
+    const aviso=pul.length?`<a class="pe-aviso" href="${href(pul[0])}"><b>Etapa ${pul[0]+1} incompleta${(o.faltas||{})[pul[0]]?":":"."}</b> ${esc((o.faltas||{})[pul[0]]||"")} Toque para voltar.</a>`:"";
+    document.body.classList.add("com-barra");
+    return {topo:`<div class="pe-topo" style="--pc:${P.cor}"><span>${esc(P.nome.toUpperCase())}${o.titulo?" · "+esc(o.titulo):""}</span><small>etapa ${at+1} de ${n}${o.sub?" · "+esc(o.sub):""}</small></div>`,
+      titulo:`<div class="pe-tit"><small>ETAPA ${at+1}</small><h1>${esc(P.etapas[at])}</h1></div>`,
+      rodape:`<footer class="pe-barra" style="--pc:${P.cor}">${aviso}<div class="pe-linha">${ant}<div class="pe-bols" style="grid-template-columns:repeat(${n},minmax(0,1fr))">${bol}</div>${sg}</div></footer>`};}
+  // botão numerado da etapa: 3.1, 3.2…
+  const nb=(num,txt)=>`<span class="nb">${num}</span>${txt}`;
   const etapaDe=slug=>{const e=estado();return ((e.pedidos||{})[slug]||{}).etapa||"entrada";};
   function moverEtapa(slug,etapa,dados){const e=estado();e.pedidos=e.pedidos||{};const p=e.pedidos[slug]||{};p.etapa=etapa;p.hist=(p.hist||[]).concat([{etapa,em:new Date().toISOString()}]);Object.assign(p,dados||{});e.pedidos[slug]=p;salvar(e);return p;}
   // ---- ocorrências: o que está atravancando algum processo (automáticas) + as que o vendedor registra
@@ -404,7 +433,7 @@ const App=(()=>{
     try{const notas=await listarNotas();const velhas=notas.filter(n=>!n.loja&&n.em.slice(0,10)<hoje);if(velhas.length)out.push({nivel:"atencao",texto:`${velhas.length} nota(s) de dias anteriores sem cliente`,acao:"notas.html"});}catch(e){}
     try{const pend=Object.entries(e.rotas||{}).filter(([d,R])=>d<hoje&&R.pronta&&!R.encerrada&&(R.slugs||[]).some(x=>!(R.res||{})[x]));if(pend.length)out.push({nivel:"atencao",texto:`${pend.length} rota(s) passada(s) com lojas não visitadas`,acao:"play.html"});}catch(e){}
     return out;}
-  const nav=on=>NA_CASCA?"":`<nav class="nav"><a href="index.html" class="${on==="rota"?"on":""}"><span class="ic">${ICONES.rota}</span>Rota</a><a href="play.html" class="${on==="play"?"on":""}"><span class="ic">${ICONES.play}</span>Play</a><a href="pedidos.html" class="${on==="pedidos"?"on":""}"><span class="ic">${ICONES.pedidos}</span>Pedidos</a><a href="perfil.html" class="${on==="perfil"?"on":""}"><span class="ic">${ICONES.perfil}</span>Perfil</a><a href="notas.html" class="${on==="notas"?"on":""}"><span class="ic">${ICONES.notasLista}</span>Notas</a></nav>`;
+  const nav=on=>NA_CASCA?"":`<nav class="nav"><a href="index.html" class="${on==="rota"?"on":""}"><span class="ic">${ICONES.rota}</span>Rota</a><a href="play.html" class="${on==="play"||on==="loja"?"on":""}"><span class="ic">${ICONES.loja}</span>Loja</a><a href="pedidos.html" class="${on==="pedidos"?"on":""}"><span class="ic">${ICONES.pedidos}</span>Pedidos</a><a href="servicos.html" class="${on==="servicos"?"on":""}"><span class="ic">${ICONES.servicos}</span>Serviços</a><a href="inicio.html" class="${on==="inicio"?"on":""}"><span class="ic">${ICONES.inicio}</span>Início</a></nav>`;
   // avatar (canto superior direito) abre o menu da conta: Perfil · Configuração · Sair
   // ---- desempenho: venda = pedido confirmado (saiu da Entrada); atendimento = loja com início e fim marcados na visita
   const diaDe=iso=>{const d=new Date(iso);d.setMinutes(d.getMinutes()-d.getTimezoneOffset());return d.toISOString().slice(0,10);};
@@ -424,7 +453,7 @@ const App=(()=>{
   const brl=v=>"R$ "+Number(v||0).toLocaleString("pt-BR",{minimumFractionDigits:2,maximumFractionDigits:2});
   const chipMeta=()=>{const d=desempenho();const ok=x=>x[1]&&x[0]>=x[1];const it=(rot,v,m)=>`<span class="mc ${m&&v>=m?"bateu":""}"><small>${rot}</small><b>${v}${m?"/"+m:""}</b>${m?`<i style="--p:${Math.min(1,v/m)}"></i>`:""}</span>`;
     return `<button type="button" class="meta-chip ${ok([d.vDia,d.mDia])?"bateu":""}" id="metaBtn" aria-label="Metas e conversão">${d.aberto?'<span class="rodando" title="atendimento em andamento"></span>':""}${it("Dia",d.vDia,d.mDia)}${it("Mês",d.vMes,d.mMes)}<span class="mc"><small>Conv.</small><b>${d.conv===null?"–":d.conv+"%"}</b></span></button>`;};
-  const topo=()=>`<header class="topo"><div class="logo">Gên<i>IO</i></div><div class="papel">Representante</div><div class="fill"></div>${chipMeta()}<button type="button" class="avatar" id="avatarBtn" title="${esc(eu().nome)}" aria-label="Conta">${esc(ini(eu().nome))}</button></header>`;
+  const topo=()=>`<header class="topo"><a class="logo" href="inicio.html" aria-label="Início" style="text-decoration:none;color:inherit">Gên<i>IO</i></a><div class="papel">Representante</div><div class="fill"></div>${chipMeta()}<button type="button" class="avatar" id="avatarBtn" title="${esc(eu().nome)}" aria-label="Conta">${esc(ini(eu().nome))}</button></header>`;
   document.addEventListener("click",ev=>{const b=ev.target.closest("#metaBtn");const ab=document.querySelector(".meta-pop");if(!b){if(ab&&!ev.target.closest(".meta-pop"))ab.remove();return;}if(ab){ab.remove();return;}
     const d=desempenho();const barra=(rot,v,m)=>`<div class="mp-l"><div><b>${rot}</b><span>${v} venda(s)${m?` de ${m}`:""}${m&&v>=m?' · <em>meta batida ✓</em>':""}</span></div>${m?`<i style="--p:${Math.min(1,v/m)}" class="${v>=m?"ok":""}"></i>`:'<small>meta não definida</small>'}</div>`;
     const mm=x=>x?Math.round(x)+" min":"–";const p=document.createElement("div");p.className="meta-pop";
@@ -545,7 +574,7 @@ const App=(()=>{
         soma:O.soma,frete:O.frete,total:O.total,mensal:O.mensal||0,semPreco:O.semPreco||0,pagamentos:O.total?pagamentos(O.total):[],pag:Object.assign({pix:5,cartao:8,parc:6,sinal:50},METAS.pag||{})}};
     const ass=JSON.stringify(pn);if(_pubUlt[l.slug]===ass)return;pn.em=new Date().toISOString();c.painel=pn;await gravarCliente(c);_pubUlt[l.slug]=ass;}catch(e){}}
   async function acessosCliente(slug,acao,corpo){const u=`/api/clientes/${encodeURIComponent(slug)}/acessos${acao?"/"+acao:""}`;const r=await fetch(u,{method:corpo||acao?"POST":"GET",credentials:"same-origin",headers:{"Content-Type":"application/json"},body:corpo||acao?JSON.stringify(corpo||{}):undefined});const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.erro||r.status);return d.acessos||[];}
-  return {publicarPainel,acessosCliente,cabCliente,mapaLoja,get FORNEC(){return FORNEC;},set FORNEC(v){FORNEC=v;},fornItem,fornDe,fornTab,fornPreco,FAIXAS,NOME_ORC,ORDEM_ORC,
+  return {PROCESSOS,barraEtapas,nb,publicarPainel,acessosCliente,cabCliente,mapaLoja,get FORNEC(){return FORNEC;},set FORNEC(v){FORNEC=v;},fornItem,fornDe,fornTab,fornPreco,FAIXAS,NOME_ORC,ORDEM_ORC,
   LOC_DIAS,LOC_TEMAS,LOC_IMG,isoDia,maisDias,diaBR,locFim,precoLocacao,reservasLoc,locLivre,reservarLoc,baseId,qtdMin,qtdOpcoes,passoQtd,qtdNormal,precoEm,orcamento,pagamentos,VITRINE_PADRAO,vitrineMaisPerto,CUSTO,venda,lucroPct,LUCRO_PADRAO,fundoTransparente,logoComoTratado,VITRINE,precoProduto,$,$$,esc,qs,ZONA,zonaDe,desempenho,get METAS(){return METAS;},arquivarLoja,reagendarLoja,FAMILIAS,familiaDe,TIPOS_ROTA,rotaDe,gravarRota,rotaDoPlay,recarregarFicha,get PLANO(){return PLANO;},setorNome,nomeLoja,telFmt,ini,sessao,eu,dados,ficha,estrelas,estrelasHTML,estado,salvar,abrirVendas,lerCliente,gravarCliente,cliente,lerChave,gravarChave,API,definirCliente,classificar,logoPrincipal,removerLogo,estadoLogo,ROTULO_LOGO,aprovarLogo,escolherImagem,abrirLogotipo,entradas,ligarEntradas,artePadrao,gerarProdutos,contextualizar,aparar,assarRecortes,desenharElementos,desenharTexto,desenharQR,desenharVetor,carregarScript,recortarLogo,PRODUTOS_IDS,separarCores,garantirCamadas,dadosCarimbo,desenharCarimbo,cenaCarimbo,desenharLista,desenharSeta,listarNotas,gravarNota,apagarNota,diasDeRota,reagendar,hojeISO,dataCurta,META,ICONES,NA_CASCA,avulsos,novoAvulso,atualizarAvulso,ocorrenciasManuais,gravarOcorrencias,ocorrenciasAuto,ETAPAS,etapaDe,moverEtapa,nav,topo,voltar,acoes,menuLongo,ligarLongo};
 })();
 

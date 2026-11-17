@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover,user-scalable=no">
+<title>GênIO · Início</title>
+<meta name="theme-color" content="#F1EEF8">
+<link rel="icon" href="../genio-favicon.png">
+<link rel="stylesheet" href="app.css?v=4532878a5f">
+<style>
+.ini-meta{background:#141C3A;color:#fff;border-radius:18px;padding:18px;display:flex;flex-direction:column;gap:10px;margin:0 0 12px}
+.ini-meta small{font-size:12px;font-weight:700;letter-spacing:.12em;color:#C9C2DC}
+.ini-meta .num{display:flex;align-items:baseline;gap:8px}.ini-meta .num b{font-size:56px;line-height:56px;font-weight:800}.ini-meta .num span{font-size:18px;color:#C9C2DC}
+.ini-meta .trilho{height:12px;border-radius:99px;background:rgba(255,255,255,.15);overflow:hidden}.ini-meta .trilho i{display:block;height:100%;background:#14B8B0;border-radius:99px}
+.ini-meta .pe{display:flex;justify-content:space-between;font-size:13px;color:#C9C2DC;gap:8px}
+.ini-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:0 0 12px}
+.ini-2>div{background:#fff;border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:4px;min-width:0}
+.ini-2 span{font-size:12px;color:var(--texto2)}.ini-2 b{font-size:21px;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.ini-sec{background:#fff;border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:10px;margin:0 0 12px}
+.ini-sec>small,.ini-cont>small{font-size:12px;font-weight:700;letter-spacing:.12em;color:var(--texto2)}
+.ini-proc{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.ini-proc a{border-top:4px solid var(--c);background:#F7F5FC;border-radius:10px;padding:10px;display:flex;flex-direction:column;gap:2px;color:inherit;text-decoration:none}
+.ini-proc a em{font-style:normal;font-size:12px;font-weight:700;color:var(--c)}.ini-proc a b{font-size:22px}.ini-proc a span{font-size:11.5px;color:var(--texto2)}
+.ini-proc a .baixo{color:#B45309;font-weight:700}
+.ini-rk{display:flex;align-items:center;gap:10px;border-radius:12px;padding:10px;background:#FFF6E6}
+.ini-rk b.pos{width:28px;height:28px;border-radius:50%;background:#F2A33A;display:grid;place-items:center;flex-shrink:0}
+.ini-rk span.n{flex-grow:1;font-size:15px;font-weight:600}.ini-rk span.d{font-size:13px;color:var(--texto2);text-align:right}
+.ini-cont{display:flex;flex-direction:column;gap:8px;margin:0 0 12px}
+.ini-cont a{min-height:52px;background:#fff;border-radius:12px;display:flex;align-items:center;gap:10px;padding:8px 14px;text-decoration:none;color:var(--texto);font-size:15px;font-weight:600;box-sizing:border-box}
+.ini-cont a i{width:10px;height:10px;border-radius:50%;background:var(--c);flex-shrink:0}
+.ini-cont a.vez{background:#6933C5;color:#fff}.ini-cont a.vez i{background:#fff}
+.ini-cont a.vazio{color:var(--texto2);font-weight:400}
+</style>
+</head>
+<body>
+<div class="w" id="app"></div>
+<script src="app.js?v=4532878a5f"></script>
+<script>
+(async()=>{
+  const {$,esc,sessao,eu,dados,estado,nav,topo,desempenho,etapaDe,PROCESSOS,hojeISO,reservasLoc}=App;
+  if(!await sessao())return;
+  try{await dados();}catch(err){}
+  const e=estado(),d=desempenho(),hoje=hojeISO(),u=eu();
+  const brl=v=>"R$ "+Number(v||0).toLocaleString("pt-BR",{minimumFractionDigits:2,maximumFractionDigits:2});
+  const dBR=iso=>iso?iso.slice(8,10)+"/"+iso.slice(5,7):"";
+  const MES=["janeiro","fevereiro","março","abril","maio","junho","julho","agosto","setembro","outubro","novembro","dezembro"][+hoje.slice(5,7)-1];
+  // dias úteis que faltam no mês (seg a sex, contando hoje)
+  let uteis=0;{const x=new Date(hoje+"T12:00:00"),m=x.getMonth();while(x.getMonth()===m){if(x.getDay()%6)uteis++;x.setDate(x.getDate()+1);}}
+  // ---- desde que entrei (venda = pedido que saiu da Entrada)
+  const ped=Object.entries(e.pedidos||{});
+  const vendidos=ped.filter(([,p])=>(p.hist||[]).some(h=>h.etapa!=="entrada"));
+  const receitaTotal=vendidos.reduce((s,[,p])=>s+(+p.valor||0),0);
+  const pc=d.pc;const ganhoTotal=pc?receitaTotal*pc/100:null;
+  const atTodos=Object.entries(e.atend||{}).filter(([,a])=>a&&a.ini&&a.fim);
+  const vendSlugs=new Set(vendidos.map(([s])=>s));
+  const por10=atTodos.length?(10*atTodos.filter(([s])=>vendSlugs.has(s)).length/atTodos.length):null;
+  const rotas=Object.entries(e.rotas||{});
+  const rotasFeitas=rotas.filter(([,R])=>R&&(R.pronta||R.encerrada));
+  const lojasRota=rotasFeitas.reduce((s,[,R])=>s+((R.slugs||[]).length),0);
+  const entregues=ped.filter(([s])=>etapaDe(s)==="entregue").length,andamento=ped.filter(([s])=>{const k=etapaDe(s);return k&&k!=="entregue";}).length;
+  const servicos=Object.values(e.servicos||{});let kits=0;try{kits=(await reservasLoc()).filter(r=>r&&!r.cancelada&&(!r.fim||r.fim>=hoje)).length;}catch(err){}
+  const desde=e.inicio||"";
+  const diasAtivos=new Set(atTodos.filter(([,a])=>(a.ini||"").slice(0,7)===hoje.slice(0,7)).map(([,a])=>a.ini.slice(0,10))).size;
+  const pctMeta=d.mMes?Math.round(100*d.vMes/d.mMes):null;
+  // ---- continuar de onde parei: uma linha por processo
+  const P=PROCESSOS;
+  const rotaAberta=rotas.filter(([dia,R])=>R&&!R.pronta&&!R.encerrada&&dia>=hoje).sort((a,b)=>a[0].localeCompare(b[0]))[0];
+  const lRota=rotaAberta?`<a href="index.html?d=${rotaAberta[0]}&etapa=${rotaAberta[1].etapa||1}" style="--c:${P.rota.cor}"><i></i>Rota de ${dBR(rotaAberta[0])} · etapa ${rotaAberta[1].etapa||1} ${esc(P.rota.etapas[(rotaAberta[1].etapa||1)-1]||"")}</a>`
+    :`<a href="index.html" style="--c:${P.rota.cor}" class="vazio"><i></i>Nenhuma rota pela metade · montar a próxima</a>`;
+  let lLoja;const ab=d.aberto;
+  if(ab){const [slug]=ab;let nome=slug;try{const D=await dados();const l=D.lojas.find(x=>x.slug===slug);if(l)nome=App.nomeLoja(l.nome);}catch(err){}
+    lLoja=`<a class="vez" href="visita.html?l=${encodeURIComponent(slug)}&de=play" style="--c:${P.loja.cor}"><i></i>${esc(nome)} · atendimento aberto</a>`;}
+  else{const R=App.rotaDoPlay&&App.rotaDoPlay();lLoja=R?`<a class="vez" href="play.html" style="--c:${P.loja.cor}"><i></i>Rota pronta · ▶ seguir para a próxima loja</a>`:`<a href="play.html" style="--c:${P.loja.cor}" class="vazio"><i></i>Nenhuma loja em atendimento</a>`;}
+  const porEt={};ped.forEach(([s])=>{const k=etapaDe(s);if(k&&k!=="entregue")porEt[k]=(porEt[k]||0)+1;});
+  const NOMEP={entrada:"confirmação",arte:"arte",processamento:"produção",qualidade:"qualidade",saida:"entrega"};
+  const lPed=andamento?`<a href="pedidos.html" style="--c:${P.pedido.cor}"><i></i>${Object.entries(porEt).map(([k,n])=>`${n} em ${NOMEP[k]||k}`).join(" · ")}</a>`:`<a href="pedidos.html" style="--c:${P.pedido.cor}" class="vazio"><i></i>Nenhum pedido em andamento</a>`;
+  const lServ=servicos.length||kits?`<a href="servicos.html" style="--c:${P.servico.cor}"><i></i>${servicos.length} serviço(s) · ${kits} kit(s) alugado(s)</a>`:`<a href="servicos.html" style="--c:${P.servico.cor}" class="vazio"><i></i>Nenhum serviço ativo ainda</a>`;
+  const iniciais=(u.nome||"?").split(/\s+/).filter(Boolean).slice(0,2).map(x=>x[0].toUpperCase()).join("");
+  $("#app").innerHTML=`${topo()}
+    <section class="ini-meta"><small>META DO MÊS · ${MES.toUpperCase()}</small>
+      <div class="num"><b>${d.vMes}</b><span>${d.mMes?`de ${d.mMes} vendas`:"vendas · meta do mês não definida"}</span></div>
+      ${d.mMes?`<div class="trilho"><i style="width:${Math.min(100,pctMeta)}%"></i></div>`:""}
+      <div class="pe"><span>Hoje: ${d.vDia}${d.mDia?` de ${d.mDia}`:""}</span><span>faltam ${uteis} dia(s) útil(eis)</span></div></section>
+    <section class="ini-2"><div><span>Ganhei no mês</span><b>${d.comissao===null?"—":brl(d.comissao)}</b><span style="color:#0E6E6A">${d.comissao===null?"comissão ainda não definida":`comissão de ${pc}% a receber`}</span></div>
+      <div><span>Desde que entrei</span><b>${ganhoTotal===null?"—":brl(ganhoTotal)}</b><span>${desde?`desde ${dBR(desde)}/${desde.slice(0,4)}`:""}</span></div></section>
+    <section class="ini-sec"><small>DESDE QUE ENTREI, POR PROCESSO</small>
+      <div class="ini-proc">
+        <a href="index.html" style="--c:${P.rota.cor}"><em>Rota</em><b>${rotasFeitas.length}</b><span>rota(s) montada(s)</span><span>${lojasRota} loja(s)</span></a>
+        <a href="play.html" style="--c:${P.loja.cor}"><em>Loja</em><b>${atTodos.length}</b><span>atendimento(s)</span><span class="${por10!==null&&por10<3.3?"baixo":""}">${por10===null?"sem venda ainda":por10.toLocaleString("pt-BR",{maximumFractionDigits:1})+" venda(s) a cada 10"}</span></a>
+        <a href="pedidos.html" style="--c:${P.pedido.cor}"><em>Pedidos</em><b>${entregues}</b><span>entregue(s)</span><span>${andamento} em andamento</span></a>
+        <a href="servicos.html" style="--c:${P.servico.cor}"><em style="color:#1E4FA8">Serviços</em><b>${servicos.length}</b><span>ativo(s)</span><span>${kits} kit(s) alugado(s)</span></a>
+      </div>
+      <p class="muted" style="margin:0;font-size:12.5px">Meta da equipe: 3,3 vendas a cada 10 atendimentos. Abaixo disso, o número fica laranja.</p></section>
+    <section class="ini-sec"><div style="display:flex;justify-content:space-between;align-items:center"><small style="font-size:12px;font-weight:700;letter-spacing:.12em;color:var(--texto2)">RANKING DO MÊS</small>
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#C77700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="Troféu"><path d="M8 4h8v5a4 4 0 0 1-8 0zM8 6H5a3 3 0 0 0 3 4M16 6h3a3 3 0 0 1-3 4M12 13v4M9 20h6M10 17h4"/></svg></div>
+      <div class="ini-rk"><b class="pos">1</b><span class="n">${esc(u.nome||"Você")}</span><span class="d">${pctMeta===null?"meta não definida":pctMeta+"% da meta"} · ${diasAtivos} dia(s) ativo(s)</span></div>
+      <p class="muted" style="margin:0;font-size:12.5px">Os outros vendedores entram aqui quando cada atendimento e cada venda guardarem quem fez. Isso muda onde os dados ficam, então espera o seu sim.</p>
+      <div style="border-top:1px solid var(--linha,#E0DAEE);padding-top:10px"><b style="font-size:14px">Bônus do mês</b><p class="muted" style="margin:4px 0 0;font-size:13px">Regra a definir pelo dono.</p></div></section>
+    <section class="ini-cont"><small>CONTINUAR DE ONDE PAREI</small>${lRota}${lLoja}${lPed}${lServ}</section>
+    ${nav("inicio")}`;
+})();
+</script>
+</body>
+</html>

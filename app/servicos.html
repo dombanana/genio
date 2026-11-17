@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover,user-scalable=no">
+<title>GênIO · Serviços</title>
+<meta name="theme-color" content="#F1EEF8">
+<link rel="icon" href="../genio-favicon.png">
+<link rel="stylesheet" href="app.css?v=4532878a5f">
+<style>
+.sv{display:flex;gap:10px;align-items:center;background:#fff;border-radius:14px;padding:12px;margin:0 0 8px;color:inherit;text-decoration:none;border-left:4px solid #1E63D6}
+.sv>div{flex-grow:1;min-width:0}.sv b{display:block;font-size:16px}.sv small{display:block;color:var(--texto2);font-size:13px;margin-top:2px}
+.dots{display:flex;gap:3px;margin-top:6px}.dots i{width:11px;height:11px;border-radius:50%;border:2px solid #C9C2DC;box-sizing:border-box}.dots i.ok{background:#0E6E6A;border-color:#0E6E6A}.dots i.eu{background:#1E63D6;border-color:#1E63D6}
+.sv-et{font-size:12px;background:#E3ECFC;color:#1E4FA8;border-radius:8px;padding:2px 8px;font-weight:600;white-space:nowrap}
+.sv-grade{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.sv-grade .btn{display:flex;align-items:center;justify-content:center;gap:6px;min-height:56px}
+</style>
+</head>
+<body>
+<div class="w" id="app"></div>
+<script src="app.js?v=4532878a5f"></script>
+<script>
+(async()=>{
+  const {$,$$,esc,sessao,dados,estado,salvar,nav,topo,qs,PROCESSOS,barraEtapas,nb,hojeISO,reservasLoc,diaBR,LOC_TEMAS}=App;
+  if(!await sessao())return;
+  try{await dados();}catch(err){}
+  const e=estado(),hoje=hojeISO(),P=PROCESSOS.servico;
+  // serviço = contrato guardado em e.servicos[id] (nasce no fechamento da loja) ou kit alugado (locações já reservadas)
+  let loc=[];try{loc=(await reservasLoc()).filter(r=>r&&r.inicio);}catch(err){}
+  const temaNome=t=>{try{const x=(LOC_TEMAS||[]).find(z=>z.k===t||z.id===t);return x?(x.nome||x.t||t):t;}catch(err){return t;}};
+  const etapaLoc=r=>hoje<r.inicio?1:hoje===r.inicio?2:r.fim&&hoje>r.fim?5:4;
+  e.servicos=e.servicos||{};
+  const lista=[...Object.entries(e.servicos).map(([id,s])=>({id,slug:s.slug,loja:s.loja||s.slug,item:s.item||"Serviço",etapa:s.etapa||0,feitas:s.feitas||[],obs:s.obs||"",tipo:"contrato"})),
+    ...loc.map(r=>{const id="loc-"+r.id,s=e.servicos[id]||{};return {id,slug:r.slug,loja:r.loja||r.slug,item:"Locação de kit · "+temaNome(r.tema),etapa:s.etapa!=null?s.etapa:etapaLoc(r),feitas:s.feitas||[],obs:`${diaBR?diaBR(r.inicio):r.inicio} a ${diaBR?diaBR(r.fim):r.fim}`,tipo:"kit"};})]
+    .filter((x,i,a)=>a.findIndex(y=>y.id===x.id)===i);
+  const id=qs.get("s");
+  if(!id){
+    $("#app").innerHTML=`${topo()}<h1>Serviços</h1><p class="sub"><span class="tag-serv">● SERVIÇO</span> locação de kits, Mostraí, Fala Aí, atendente virtual e criação de sistema</p>
+      ${lista.length?lista.map(x=>`<a class="sv" href="?s=${encodeURIComponent(x.id)}"><div><b>${esc(x.loja)}</b><small>${esc(x.item)}${x.obs?" · "+esc(x.obs):""}</small>
+        <span class="dots">${P.etapas.map((t,i)=>`<i class="${x.feitas[i]||i<x.etapa?"ok":i===x.etapa?"eu":""}"></i>`).join("")}</span></div><span class="sv-et">${x.etapa+1} ${esc(P.curto[x.etapa])}</span></a>`).join("")
+        :`<section class="card"><h2>Nenhum serviço ainda</h2><p>Quando uma venda tiver serviço (aluguel de kit ou qualquer item do AI Negócios), ele entra aqui sozinho no fechamento da loja, com o mesmo número da venda, e segue as 6 etapas: ${P.etapas.join(" · ")}.</p></section>`}
+      ${nav("servicos")}`;
+    return;}
+  const x=lista.find(y=>y.id===id);
+  if(!x){$("#app").innerHTML=`${topo()}<section class="card"><h2>Serviço não encontrado</h2><p><a href="servicos.html">Voltar para Serviços</a></p></section>${nav("servicos")}`;return;}
+  const atual=Math.max(0,Math.min(5,qs.has("e")?+qs.get("e"):x.etapa));
+  const grava=(etapa,feitas)=>{const s=e.servicos[id]||{slug:x.slug,loja:x.loja,item:x.item,tipo:x.tipo};if(etapa!==null){s.etapa=etapa;s.hist=(s.hist||[]).concat([{etapa,em:new Date().toISOString()}]);}else if(s.etapa==null)s.etapa=x.etapa;s.feitas=feitas;e.servicos[id]=s;salvar(e);};
+  const feitas=P.etapas.map((t,i)=>!!x.feitas[i]||(x.tipo==="kit"&&!e.servicos[id]&&i<x.etapa));
+  const B=barraEtapas({proc:"servico",atual,feitas,href:i=>`?s=${encodeURIComponent(id)}&e=${i}`,titulo:x.loja,sub:x.item,seguir:atual<5?{id:"seguir"}:false});
+  const AJUDA=["Conferir com a loja o que foi contratado, plano e data de início.","Separar o kit ou preparar a conta, textos e materiais do serviço.","Instalar na loja; vai junto com a rota de entrega da zona.","Ligar e testar com a loja; mostrar como usar.","Mensalidade, suporte e a data da próxima volta.","Renovar, trocar de plano ou retirar o kit."];
+  $("#app").innerHTML=`${B.topo}${B.titulo}<p class="sub"><span class="tag-serv">● SERVIÇO</span> ${esc(x.item)}${x.obs?" · "+esc(x.obs):""}</p>
+    <section class="card"><p>${esc(AJUDA[atual])}</p>
+      <div class="sv-grade"><button class="btn" type="button" id="feito">${nb(`${atual+1}.1`,feitas[atual]?"Desmarcar feito":"Marcar como feito")}</button>
+      <a class="btn sec" href="visita.html?l=${encodeURIComponent(x.slug)}">${nb(`${atual+1}.2`,"Abrir a loja")}</a></div></section>
+    ${B.rodape}${nav("servicos")}`;
+  $("#feito").onclick=()=>{const f=feitas.slice();f[atual]=!f[atual];grava(null,f);location.reload();};
+  const sg=$("#seguir");if(sg)sg.onclick=ev=>{ev.preventDefault();const f=feitas.slice();f[atual]=true;grava(Math.max(atual+1,x.etapa),f);location.href=`?s=${encodeURIComponent(id)}&e=${atual+1}`;};
+})();
+</script>
+</body>
+</html>

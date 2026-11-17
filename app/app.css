@@ -465,3 +465,63 @@ svg.icone .w{fill:none}
 .cab-cli .cc-x{margin:6px 0 0;font-size:13.5px;color:var(--texto);background:#fff;border-radius:10px;padding:7px 10px;line-height:1.4}
 /* 14/11: Atendimento passa a ter três itens (Rota · Play · Clientes) */
 .casca .nav .grupo:nth-of-type(1){flex:3 1 0}
+/* ---- barra de etapas dos processos (17/11): linha fina no topo, rodapé com etapas tocáveis */
+.pe-topo{display:flex;justify-content:space-between;align-items:center;gap:8px;background:#fff;border-radius:12px;padding:9px 12px;margin:0 0 12px;font-size:12px}
+.pe-topo span{font-weight:700;letter-spacing:.08em;color:var(--pc)}.pe-topo small{color:var(--texto2);white-space:nowrap}
+.pe-tit{margin:0 0 12px}.pe-tit small{font-size:12px;font-weight:700;letter-spacing:.12em;color:var(--texto2)}.pe-tit h1{margin:2px 0 0;font-size:26px}
+.pe-barra{position:fixed;left:0;right:0;bottom:calc(74px + env(safe-area-inset-bottom,0));z-index:17;background:#fff;box-shadow:0 -4px 14px rgba(28,22,53,.1);padding:8px 10px 8px;display:flex;flex-direction:column;gap:6px}
+html.na-casca .pe-barra{bottom:0;padding-bottom:calc(8px + env(safe-area-inset-bottom,0))}
+.pe-linha{display:flex;align-items:center;gap:6px;max-width:640px;margin:0 auto;width:100%}
+.pe-ant,.pe-seg{display:grid;place-items:center;height:48px;border-radius:12px;text-decoration:none;font-weight:700;flex:0 0 auto}
+.pe-ant{width:42px;background:var(--lav);color:var(--marca);font-size:24px}.pe-ant.off{color:#C9C2DC}
+.pe-seg{background:var(--navy,#141C3A);color:#fff;font-size:15px;padding:0 12px;min-width:48px}
+.pe-bols{flex:1;display:grid;min-width:0}
+.pe-b{display:flex;flex-direction:column;align-items:center;gap:3px;text-decoration:none;min-width:0}
+.pe-b span{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:13px;box-sizing:border-box;border:2px solid #C9C2DC;color:var(--texto2);background:#fff}
+.pe-b small{font-size:10px;color:var(--texto2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.pe-b.ok span{background:#0E6E6A;border-color:#0E6E6A;color:#fff}.pe-b.ok small{color:#0E6E6A;font-weight:600}
+.pe-b.pulada span{background:#FFF1DC;border-color:#C77700;color:#7A4A00}.pe-b.pulada small{color:#7A4A00;font-weight:600}
+.pe-b.eu span{background:var(--pc);border-color:var(--pc);color:#fff;box-shadow:0 0 0 3px rgba(105,51,197,.18)}.pe-b.eu small{color:var(--pc);font-weight:700}
+.pe-aviso{display:block;max-width:640px;margin:0 auto;width:100%;box-sizing:border-box;background:#FFF1DC;color:#7A4A00;border-radius:10px;padding:7px 10px;font-size:13px;text-decoration:none}
+body.com-barra{padding-bottom:calc(230px + env(safe-area-inset-bottom,0))}
+html.na-casca body.com-barra{padding-bottom:150px}
+body.com-barra .acoes{display:none}
+.nb{display:inline-block;background:#E6DDF6;color:var(--marca);border-radius:6px;padding:1px 7px;font-size:12.5px;font-weight:700;margin-right:8px;vertical-align:1px}
+.btn .nb{background:rgba(255,255,255,.2);color:inherit}.btn.sec .nb{background:#fff;color:var(--marca)}
+.tag-prod,.tag-serv{display:inline-block;border-radius:6px;padding:2px 8px;font-size:11.5px;font-weight:700;letter-spacing:.05em}
+.tag-prod{background:#D9F0EE;color:#0E6E6A}.tag-serv{background:#E3ECFC;color:#1E4FA8}
+/* ---- 17/11: menu dos quatro processos, botão de ferramentas, gaveta e calculadora flutuante (vivem na casca) */
+.casca .nav .proc4{flex:1 1 auto;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;padding:6px 2px 7px}
+.casca .nav .proc4 a.pn{display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 0 5px;border-radius:12px;color:#fff;font-size:12.5px;font-weight:600;position:relative;min-width:0}
+.casca .nav .proc4 a.pn .ic{width:34px;height:34px;display:grid;place-items:center}
+.casca .nav .proc4 a.pn .ic svg.icone{width:28px;height:28px;--ic-fundo:var(--marca)}
+.casca .nav .proc4 a.pn.on{background:rgba(255,255,255,.18)}.casca .nav .proc4 a.pn.on .ic svg.icone{--ic-fundo:#8154CE}
+.casca .nav .proc4 a.pn b{font-weight:600;white-space:nowrap}
+.casca .nav .proc4 .badge{position:absolute;top:0;right:calc(50% - 28px);min-width:18px;height:18px;border-radius:999px;background:#FF5A4E;color:#fff;font-size:11px;font-weight:800;display:grid;place-items:center;padding:0 5px;border:2px solid var(--marca)}
+.casca .nav .proc4 .alerta .badge{background:#F2A33A;color:#1C1635}
+.fab{position:fixed;right:14px;bottom:calc(92px + env(safe-area-inset-bottom,0));z-index:40;width:52px;height:52px;border-radius:50%;border:0;background:#6933C5;color:#fff;box-shadow:0 6px 16px rgba(105,51,197,.4);display:grid;place-items:center;padding:0;cursor:pointer}
+.fab.alto{bottom:calc(196px + env(safe-area-inset-bottom,0))}
+.fab svg.icone{width:28px;height:28px;--ic-fundo:#6933C5}
+.fab .badge{position:absolute;top:-2px;right:-2px;min-width:18px;height:18px;border-radius:999px;background:#FF5A4E;color:#fff;font-size:11px;font-weight:800;display:grid;place-items:center;padding:0 5px;border:2px solid #fff}
+.fab .rec-on{position:absolute;left:-2px;top:-2px;width:14px;height:14px;border-radius:50%;background:#FF3B30;border:2px solid #fff;animation:pisca 1s infinite}
+.gaveta{position:fixed;inset:0;z-index:60}
+.gaveta .g-fundo{position:absolute;inset:0;background:rgba(20,28,58,.35);opacity:0;transition:opacity .2s}
+.gaveta aside{position:absolute;top:0;right:0;bottom:0;width:min(320px,86vw);background:#fff;box-shadow:-8px 0 24px rgba(28,22,53,.18);padding:14px 14px calc(14px + env(safe-area-inset-bottom,0));transform:translateX(100%);transition:transform .2s;overflow:auto;display:flex;flex-direction:column;gap:12px;box-sizing:border-box;font-family:Rubik,system-ui,sans-serif;color:#1C1635}
+.gaveta.aberta .g-fundo{opacity:1}.gaveta.aberta aside{transform:none}
+.gaveta .g-cab{display:flex;justify-content:space-between;align-items:center}.gaveta .g-cab b{font-size:18px}
+.gaveta .g-cab button{width:40px;height:40px;border:0;border-radius:12px;background:#F1EEF8;font-size:24px;line-height:1;color:#1C1635;cursor:pointer}
+.gaveta .g-grade{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.gaveta .g-grade button{min-height:84px;border:0;border-radius:14px;background:#F1EEF8;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;font:inherit;font-size:14px;font-weight:600;color:#1C1635;cursor:pointer;padding:8px}
+.gaveta .g-grade button span{width:32px;height:32px;display:grid;place-items:center}.gaveta .g-grade button svg.icone{width:28px;height:28px;--ic-fundo:#F1EEF8}
+.gaveta .g-grade button em{font-style:normal;background:#FF5A4E;color:#fff;border-radius:999px;padding:0 6px;font-size:12px}
+.gaveta .g-conf{border-top:1px solid #E0DAEE;padding-top:10px;font-size:14px}.gaveta .g-conf summary{font-weight:600;color:#6933C5;cursor:pointer;min-height:32px}
+.gaveta .g-conf label{display:flex;justify-content:space-between;align-items:center;min-height:40px}.gaveta .g-conf input{width:22px;height:22px}
+.calc{position:fixed;left:calc(50% - 130px);top:120px;z-index:55;width:260px;background:#1C1635;color:#fff;border-radius:18px;box-shadow:0 12px 32px rgba(28,22,53,.45);padding:10px;font-family:Rubik,system-ui,sans-serif;touch-action:none}
+.calc .c-cab{display:flex;justify-content:space-between;align-items:center;font-size:11px;letter-spacing:.1em;color:#C9C2DC;cursor:grab;padding:0 2px 6px}
+.calc .c-cab button{width:32px;height:32px;border:0;border-radius:10px;background:rgba(255,255,255,.12);color:#fff;font-size:20px;cursor:pointer}
+.calc .c-exp{min-height:18px;text-align:right;font-size:14px;color:#C9C2DC;overflow:hidden;white-space:nowrap}
+.calc .c-res{text-align:right;font-size:32px;font-weight:700;font-variant-numeric:tabular-nums;padding:0 2px 8px;overflow:hidden}
+.calc .c-tec{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.calc .c-tec button{height:46px;border:0;border-radius:12px;background:rgba(255,255,255,.12);color:#fff;font:inherit;font-size:18px;font-weight:600;cursor:pointer}
+.calc .c-tec button.op{background:rgba(129,84,206,.55)}.calc .c-tec button.ig{background:#14B8B0;color:#1C1635}
+.calc .c-tec button[data-k="usar"]{background:#6933C5;font-size:15px}

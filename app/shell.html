@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#6933C5">
 <link rel="icon" href="../genio-favicon.png">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="stylesheet" href="app.css?v=876308231f">
+<link rel="stylesheet" href="app.css?v=4532878a5f">
 <style>html,body{height:100%;overflow:hidden;padding:0}</style>
 </head>
 <body>
@@ -15,17 +15,16 @@
   <iframe id="tela" allow="camera; microphone; geolocation; display-capture; screen-wake-lock" title="GênIO"></iframe>
   <nav class="nav" id="barra"></nav>
 </div>
-<script src="app.js?v=876308231f"></script>
+<script src="app.js?v=4532878a5f"></script>
 <script>
 (()=>{
   const {$,esc,ICONES,gravarNota}=App;
-  const fr=$("#tela");const alvo=()=>decodeURIComponent((location.hash||"#index.html").slice(1))||"index.html";
+  const fr=$("#tela");const alvo=()=>decodeURIComponent((location.hash||"#inicio.html").slice(1))||"inicio.html";
   let atual=alvo();fr.src=atual;
   let CONT={entrada:{n:0,u:0},processamento:{n:0,u:0},saida:{n:0,u:0}};
   let MSG=0,SOLTAS=0;
   const marca=(el,n,classe)=>{if(!el)return;el.classList.remove("alerta","urgente");if(n&&classe)el.classList.add(classe);const b=el.querySelector(".badge");if(b){b.textContent=n;b.hidden=!n;}};
-  const pintarMonitor=()=>{for(const k of Object.keys(CONT)){const c=CONT[k];marca(document.querySelector(`.grupo [data-k="${k}"]`),c.n,c.u?"urgente":"alerta");}
-    marca(document.querySelector('.grupo [data-k="clientes"]'),MSG,"urgente");marca(document.querySelector('.grupo [data-k="notasLista"]'),SOLTAS,"alerta");};
+  const pintarMonitor=()=>{const n=Object.values(CONT).reduce((a,c)=>a+(c.n||0),0),u=Object.values(CONT).some(c=>c.u);marca(document.querySelector('.proc4 [data-k="pedido"]'),n,u?"urgente":"alerta");try{pintarFab();}catch(e){}};
   // mensagens de clientes e notas soltas: conferidas no servidor a cada minuto
   async function conferirAvisos(){try{const [m,n]=await Promise.all([fetch("/api/mensagens",{credentials:"same-origin",cache:"no-store"}).then(r=>r.ok?r.json():null),fetch("/api/notas",{credentials:"same-origin",cache:"no-store"}).then(r=>r.ok?r.json():null)]);
     if(m)MSG=Object.values(m.conversas||{}).reduce((a,c)=>a+(c.nao_lidas||0),0);if(n)SOLTAS=(n.notas||[]).filter(x=>!x.loja&&!x.pedido).length;pintarMonitor();}catch(e){}}
@@ -36,20 +35,55 @@
   const on=p=>atual.startsWith(p)?"on":"";
   const ir=h=>{atual=h;fr.src=h;history.replaceState(null,"","#"+h);marcar();};
   const dur=s=>`${Math.floor(s/60)}:${String(Math.floor(s%60)).padStart(2,"0")}`;
-  function marcar(){const rotOn=on("index")||on("visita")||on("fontes")||on("logotipo")||on("manual")||on("produtos")||on("editor")||on("capacho");
-    const grupo=(nome,itens,seta)=>`<div class="grupo" role="group" aria-label="${nome}"><div class="trio n${itens.length}${seta?" seta":""}">${itens.join("")}</div><small>${nome}</small></div>`;
-    const item=(k,t,href,ativo)=>`<a href="#${href}" data-k="${k}" class="${ativo?"on":""}" data-ir="${href}" aria-label="${t}" title="${t}"><span class="ic">${ICONES[k]}</span><span class="badge" hidden></span></a>`;
-    const rec=`<button type="button" class="rec-b ${REC.ativo?(REC.pausado?"pausado":"on"):""}" id="rec" aria-label="Gravar" title="grava no modo escolhido em Notas"><span class="ic">${ICONES.recModo(REC.ativo?REC.tipo:(localStorage.getItem("rec-tipo")||"audio"))}</span>${REC.ativo?`<span class="tempo" id="recTempo">${dur(REC.segundos())}</span>`:""}<span class="badge" hidden></span></button>`;
-    $("#barra").innerHTML=grupo("Atendimento",[item("rota","Rota","index.html",on("index")||(on("visita")&&!/de=play/.test(atual))||on("fontes")||on("logotipo")||on("manual")||on("editor")||on("capacho")||on("local")),item("play","Play","play.html",on("play")||/de=play/.test(atual)||on("produtos")||on("orcamento")),item("clientes","Clientes","clientes.html",on("clientes"))])
-      +`<span class="vao"></span>`+grupo("Produção",[["entrada","Entrada"],["processamento","Produção"],["saida","Saída"]].map(([k,t])=>item(k,t,"pedidos.html?etapa="+k,atual.includes("etapa="+k))),true)
-      +`<span class="vao"></span>`+grupo("Gravação",[rec,item("notasLista","Notas","notas.html",on("notas"))]);
-    // REC é um botão à parte: um toque grava no modo parametrizado em Notas; outro toque para
-    $("#rec").onclick=async()=>{if(REC.ativo){await parar();return;}const tipo=localStorage.getItem("rec-tipo")||"audio",tela=localStorage.getItem("rec-tela")!=="0";
-      // foto e vídeo usam a câmera do próprio celular (o navegador não grava vídeo direito); áudio e transcrição gravam aqui
-      try{if(tipo==="foto"){await foto(false);if(atual.startsWith("notas"))fr.contentWindow.location.reload();return;}
-        if(tipo==="video-tras"||tipo==="video-frente"){await video(false);if(atual.startsWith("notas"))fr.contentWindow.location.reload();return;}
-        await iniciar(tipo==="transcrever"?"transcrever":"audio",{telaAcesa:tela});}catch(e){alert(e.message);}};
-    $("#barra").querySelectorAll("[data-ir]").forEach(a=>a.onclick=ev=>{ev.preventDefault();ir(a.dataset.ir);});pintarMonitor();}
+  // ---- menu dos quatro processos (17/11): Rota · Loja · Pedidos · Serviços. Ferramentas ficam no botão flutuante.
+  const QUAL=()=>{if(/de=play/.test(atual)||on("play")||on("produtos")||on("orcamento")||on("provar")||on("capacho")||on("local"))return "loja";
+    if(on("index")||on("visita")||on("fontes")||on("logotipo")||on("manual")||on("editor"))return "rota";if(on("pedidos"))return "pedido";if(on("servicos"))return "servico";return "";};
+  function marcar(){const q=QUAL();
+    const item=(k,t,href,ic)=>`<a href="#${href}" data-k="${k}" class="pn ${q===k?"on":""}" data-ir="${href}"><span class="ic">${ICONES[ic]}</span><b>${t}</b><span class="badge" hidden></span></a>`;
+    $("#barra").innerHTML=`<div class="proc4">${item("rota","Rota","index.html","rota")}${item("loja","Loja","play.html","loja")}${item("pedido","Pedidos","pedidos.html","pedidos")}${item("servico","Serviços","servicos.html","servicos")}</div>`;
+    $("#barra").querySelectorAll("[data-ir]").forEach(a=>a.onclick=ev=>{ev.preventDefault();ir(a.dataset.ir);});pintarMonitor();pintarFab();}
+  // ---- botão flutuante das ferramentas + gaveta da borda direita + calculadora flutuante
+  const FERR={notas:["Notas","notasLista",()=>ir("notas.html")],gravar:["Gravar","mic",()=>gravar()],calc:["Calculadora","calc",()=>calc(true)],contatos:["Contatos","contatos",()=>ir("contatos.html")],
+    arquivos:["Arquivos da loja","arquivos",()=>{const l=lojaAtual();if(l&&l.slug)ir("arquivos.html?l="+encodeURIComponent(l.slug));else alert("Abra uma loja primeiro.");}],mensagens:["Mensagens","mensagens",()=>ir("clientes.html")],
+    camera:["Câmera","foto",async()=>{await foto(false);}],inicio:["Início","inicio",()=>ir("inicio.html")]};
+  const ferrOn=()=>{try{const v=JSON.parse(localStorage.getItem("ferr-on")||"null");if(Array.isArray(v))return v;}catch(e){}return ["inicio","notas","gravar","calc","contatos","arquivos","mensagens","camera"];};
+  const fab=document.createElement("button");fab.type="button";fab.className="fab";fab.setAttribute("aria-label","Ferramentas");document.body.appendChild(fab);
+  const gav=document.createElement("div");gav.className="gaveta";gav.hidden=true;document.body.appendChild(gav);
+  function pintarFab(){fab.innerHTML=`${ICONES.ferramentas}${REC.ativo?`<i class="rec-on"></i>`:""}<span class="badge" ${MSG?"":"hidden"}>${MSG||""}</span>`;}
+  function abrirGaveta(){const on=ferrOn();
+    gav.innerHTML=`<div class="g-fundo" data-f></div><aside><div class="g-cab"><b>Ferramentas</b><button type="button" data-f aria-label="Fechar">×</button></div>
+      <div class="g-grade">${Object.entries(FERR).filter(([k])=>on.includes(k)).map(([k,[t,ic]])=>`<button type="button" data-t="${k}"><span>${ICONES[ic]||ICONES.ferramentas}</span>${k==="gravar"&&REC.ativo?"Parar gravação":t}${k==="mensagens"&&MSG?` <em>${MSG}</em>`:""}</button>`).join("")}</div>
+      <details class="g-conf"><summary>Configurar o botão</summary>${Object.entries(FERR).map(([k,[t]])=>`<label><span>${t}</span><input type="checkbox" data-c="${k}" ${on.includes(k)?"checked":""}></label>`).join("")}</details></aside>`;
+    gav.hidden=false;requestAnimationFrame(()=>gav.classList.add("aberta"));
+    gav.querySelectorAll("[data-f]").forEach(x=>x.onclick=fecharGaveta);
+    gav.querySelectorAll("[data-t]").forEach(x=>x.onclick=()=>{const k=x.dataset.t;fecharGaveta();FERR[k][2]();});
+    gav.querySelectorAll("[data-c]").forEach(x=>x.onchange=()=>{const v=[...gav.querySelectorAll("[data-c]")].filter(y=>y.checked).map(y=>y.dataset.c);localStorage.setItem("ferr-on",JSON.stringify(v));abrirGaveta();});}
+  function fecharGaveta(){gav.classList.remove("aberta");setTimeout(()=>{gav.hidden=true;},200);}
+  fab.onclick=abrirGaveta;
+  // com a barra de etapas na tela, o botão sobe para não cobrir o rodapé
+  setInterval(()=>{try{fab.classList.toggle("alto",!!fr.contentDocument.body.classList.contains("com-barra"));}catch(e){}},700);
+  // puxar da borda direita para dentro abre a gaveta
+  let bx=null;document.addEventListener("touchstart",e=>{const t=e.touches[0];bx=t.clientX>innerWidth-18?t.clientX:null;},{passive:true});
+  document.addEventListener("touchmove",e=>{if(bx===null)return;const t=e.touches[0];if(bx-t.clientX>40){bx=null;abrirGaveta();}},{passive:true});
+  async function gravar(){if(REC.ativo){await parar();return;}const tipo=localStorage.getItem("rec-tipo")||"audio",tela=localStorage.getItem("rec-tela")!=="0";
+    try{if(tipo==="foto"){await foto(false);return;}if(tipo==="video-tras"||tipo==="video-frente"){await video(false);return;}await iniciar(tipo==="transcrever"?"transcrever":"audio",{telaAcesa:tela});}catch(e){alert(e.message);}}
+  // calculadora flutuante: arrasta pelo topo; "usar" leva o resultado ao campo aberto na tela
+  let CALC=null;function calc(abre){if(CALC){CALC.remove();CALC=null;if(!abre)return;}
+    const c=document.createElement("section");c.className="calc";c.innerHTML=`<div class="c-cab"><span>CALCULADORA · ARRASTE</span><button type="button" data-x aria-label="Fechar">×</button></div><div class="c-exp"></div><div class="c-res">0</div>
+      <div class="c-tec">${["C","%","÷","×","7","8","9","−","4","5","6","+","1","2","3","=","0",",","⌫","usar"].map(k=>`<button type="button" data-k="${k}" class="${"÷×−+=".includes(k)?"op":""}${k==="="?" ig":""}">${k}</button>`).join("")}</div>`;
+    document.body.appendChild(c);CALC=c;let exp="";const res=c.querySelector(".c-res"),ex=c.querySelector(".c-exp");
+    const conta=t=>{try{const js=t.replace(/×/g,"*").replace(/÷/g,"/").replace(/−/g,"-").replace(/,/g,".").replace(/(\d+(?:\.\d+)?)%/g,"($1/100)");if(!/^[\d+\-*/(). ]*$/.test(js)||!js)return null;const v=Function('"use strict";return ('+js+')')();return isFinite(v)?v:null;}catch(e){return null;}};
+    const fmt=v=>Number(v).toLocaleString("pt-BR",{maximumFractionDigits:2});
+    const mostra=()=>{ex.textContent=exp;const v=conta(exp);res.textContent=v===null?(exp?res.textContent:"0"):fmt(v);};
+    c.querySelectorAll("[data-k]").forEach(b=>b.onclick=()=>{const k=b.dataset.k;if(k==="C")exp="";else if(k==="⌫")exp=exp.slice(0,-1);else if(k==="="){const v=conta(exp);if(v!==null)exp=String(Math.round(v*100)/100).replace(".",",");}
+      else if(k==="usar"){const v=conta(exp);if(v===null)return;try{const d=fr.contentDocument,el=d.activeElement&&/INPUT|TEXTAREA/.test(d.activeElement.tagName)?d.activeElement:(fr.contentWindow.__ultimoCampo||null);if(el){el.value=String(Math.round(v*100)/100);el.dispatchEvent(new Event("input",{bubbles:true}));el.dispatchEvent(new Event("change",{bubbles:true}));}else alert("Toque num campo da tela antes de usar.");}catch(e){}return;}
+      else exp+=k;mostra();});
+    c.querySelector("[data-x]").onclick=()=>calc(false);
+    const cab=c.querySelector(".c-cab");let ox=0,oy=0,arr=false;cab.addEventListener("pointerdown",e=>{if(e.target.closest("button"))return;arr=true;ox=e.clientX-c.offsetLeft;oy=e.clientY-c.offsetTop;cab.setPointerCapture(e.pointerId);});
+    cab.addEventListener("pointermove",e=>{if(!arr)return;c.style.left=Math.max(0,Math.min(innerWidth-c.offsetWidth,e.clientX-ox))+"px";c.style.top=Math.max(0,Math.min(innerHeight-60,e.clientY-oy))+"px";});
+    cab.addEventListener("pointerup",()=>{arr=false;});}
+  // o último campo tocado na tela fica guardado para o "usar" da calculadora
+  fr.addEventListener("load",()=>{try{fr.contentDocument.addEventListener("focusin",e=>{if(/INPUT|TEXTAREA/.test(e.target.tagName))fr.contentWindow.__ultimoCampo=e.target;});}catch(e){}});
   // conferência das ocorrências em segundo plano: a própria tela de pedidos conta (mesma regra) e avisa a casca
   const conferir=()=>{const f=document.createElement("iframe");f.hidden=true;f.src="pedidos.html?contar=1&t="+Date.now();document.body.appendChild(f);setTimeout(()=>f.remove(),60000);};
   setTimeout(conferir,2500);setInterval(conferir,10*60*1000);
