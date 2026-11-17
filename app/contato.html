@@ -6,7 +6,7 @@
 <title>GênIO · Contato</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="app.css?v=39e9b662b6">
+<link rel="stylesheet" href="app.css?v=48bcced083">
 <style>
 .ct-cab{background:#fff;border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:12px;margin:0 0 12px}
 .ct-cab .lk{color:var(--marca);font-weight:600;text-decoration:none;font-size:15px}
@@ -24,21 +24,21 @@
 .hs{background:#fff;border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:4px;margin:0 0 12px;border-top:4px solid var(--c)}
 .hs .t{display:flex;justify-content:space-between;align-items:baseline;margin:0 0 4px}.hs .t b{font-size:16px}.hs .t span{font-size:13px;color:var(--texto2)}
 .hl{position:relative;border-radius:10px;overflow:hidden;touch-action:pan-y}
-.hl .fundo{position:absolute;inset:0;display:flex;align-items:center;justify-content:space-between;padding:0 12px;font-size:13px;font-weight:700;color:#fff}
-.hl .fundo .arq{background:#5E5A70}.hl .fundo .apg{background:#B42318}
-.hl .fundo i{font-style:normal;position:absolute;top:0;bottom:0;display:flex;align-items:center;padding:0 12px}
-.hl .fundo .arq{left:0;right:50%}.hl .fundo .apg{right:0;left:50%;justify-content:flex-end}
-.hl a.row{position:relative;display:flex;gap:10px;align-items:center;padding:8px 6px;background:#fff;color:inherit;text-decoration:none;transition:transform .15s;border-bottom:1px solid var(--linha)}
-.hl a.row .dt{font-size:13px;color:var(--texto2);width:46px;flex-shrink:0}
-.hl a.row .bs{display:flex;gap:3px;flex-shrink:0}.hl a.row .bs i{width:11px;height:11px;border-radius:50%;border:2px solid #C9C2DC;box-sizing:border-box}.hl a.row .bs i.ok{background:#0E6E6A;border-color:#0E6E6A}.hl a.row .bs i.eu{background:var(--c);border-color:var(--c)}.hl a.row .bs i.pul{background:#FFF1DC;border-color:#C77700}
-.hl a.row .tx{font-size:14px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hl .hfundo{position:absolute;inset:0;display:flex;align-items:center;justify-content:space-between;padding:0 12px;font-size:13px;font-weight:700;color:#fff}
+.hl .hfundo .arq{background:#5E5A70}.hl .hfundo .apg{background:#B42318}
+.hl .hfundo i{font-style:normal;position:absolute;top:0;bottom:0;display:flex;align-items:center;padding:0 12px}
+.hl .hfundo .arq{left:0;right:50%}.hl .hfundo .apg{right:0;left:50%;justify-content:flex-end}
+.hl a.hrow{position:relative;z-index:1;display:flex;gap:10px;align-items:center;padding:8px 6px;background:#fff;color:inherit;text-decoration:none;transition:transform .15s;border-bottom:1px solid var(--linha)}
+.hl a.hrow .dt{font-size:13px;color:var(--texto2);width:46px;flex-shrink:0}
+.hl a.hrow .bs{display:flex;gap:3px;flex-shrink:0}.hl a.hrow .bs i{width:11px;height:11px;border-radius:50%;border:2px solid #C9C2DC;box-sizing:border-box}.hl a.hrow .bs i.ok{background:#0E6E6A;border-color:#0E6E6A}.hl a.hrow .bs i.eu{background:var(--c);border-color:var(--c)}.hl a.hrow .bs i.pul{background:#FFF1DC;border-color:#C77700}
+.hl a.hrow .tx{font-size:14px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .hs .vazio{font-size:13px;color:var(--texto2);margin:0}
 .msg{border-radius:12px;padding:8px 10px;font-size:14px;max-width:85%;margin:0 0 6px}.msg.cliente{background:var(--lav);border-bottom-left-radius:4px}.msg.voce{background:var(--marca);color:#fff;margin-left:auto;border-bottom-right-radius:4px}.msg small{display:block;font-size:11.5px;opacity:.75;margin-top:2px}
 </style>
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=39e9b662b6"></script>
+<script src="app.js?v=48bcced083"></script>
 <script>
 (async()=>{
   const {$,$$,esc,sessao,dados,estado,salvar,nav,topo,nomeLoja,setorNome,cliente,etapaDe,ficha,qs,PROCESSOS,hojeISO,telFmt,ETAPAS}=App;
@@ -66,7 +66,7 @@
     for(const [id,s] of Object.entries(e.servicos||{}))if(s&&s.slug===slug){const at=s.etapa||0;H.servico.push({id:"serv:"+id,dia:((s.hist||[])[0]||{em:""}).em.slice(0,10),f:P.servico.etapas.map((x,i)=>!!(s.feitas||[])[i]),at,tx:`${s.item||"Serviço"} · ${P.servico.etapas[at]}`,href:`servicos.html?s=${encodeURIComponent(id)}`});}
     for(const k of Object.keys(H))H[k]=H[k].filter(x=>verArq?arq.has(x.id):!arq.has(x.id)).sort((a,b)=>(b.dia||"").localeCompare(a.dia||""));
     return {H,nArq:arq.size};}
-  const linhaHTML=(x,proc)=>`<div class="hl" data-h="${esc(x.id)}"><div class="fundo"><i class="arq">${verArq?"Desarquivar":"Arquivar"}</i><i class="apg">Apagar ✕</i></div><a class="row" href="${x.href}"><span class="dt">${dBR(x.dia)}</span><span class="bs">${P[proc].etapas.map((t,i)=>`<i class="${x.f[i]?"ok":i===x.at?"eu":i<x.at?"pul":""}"></i>`).join("")}</span><span class="tx">${esc(x.tx)}</span></a></div>`;
+  const linhaHTML=(x,proc)=>`<div class="hl" data-h="${esc(x.id)}"><div class="hfundo"><i class="arq">${verArq?"Desarquivar":"Arquivar"}</i><i class="apg">Apagar ✕</i></div><a class="hrow" href="${x.href}"><span class="dt">${dBR(x.dia)}</span><span class="bs">${P[proc].etapas.map((t,i)=>`<i class="${x.f[i]?"ok":i===x.at?"eu":i<x.at?"pul":""}"></i>`).join("")}</span><span class="tx">${esc(x.tx)}</span></a></div>`;
   const bloco=(proc,tit,arr,un)=>`<section class="hs" style="--c:${P[proc].cor}"><div class="t"><b>${tit}</b><span>${arr.length} ${un}</span></div>${arr.length?arr.map(x=>linhaHTML(x,proc)).join(""):`<p class="vazio">Nada ainda.</p>`}</section>`;
   // ---- apagar (teste, visita mal feita) tira também das metas e do ranking; arquivar só esconde
   async function apagar(id){const e=estado();const [tipo,ref]=id.split(":");
@@ -77,7 +77,7 @@
     if(e.histArq&&e.histArq[slug])e.histArq[slug]=e.histArq[slug].filter(x=>x!==id);
     await salvar(e);render();}
   async function arquivar(id){const e=estado();e.histArq=e.histArq||{};const a=new Set(e.histArq[slug]||[]);if(a.has(id))a.delete(id);else a.add(id);e.histArq[slug]=[...a];await salvar(e);render();}
-  function ligarPuxar(box){const row=box.querySelector(".row");let x0=0,y0=0,dx=0,ativo=false,decidiu=false,horiz=false;
+  function ligarPuxar(box){const row=box.querySelector(".hrow");let x0=0,y0=0,dx=0,ativo=false,decidiu=false,horiz=false;
     row.addEventListener("pointerdown",ev=>{x0=ev.clientX;y0=ev.clientY;dx=0;ativo=true;decidiu=false;horiz=false;});
     row.addEventListener("pointermove",ev=>{if(!ativo)return;const ddx=ev.clientX-x0,ddy=ev.clientY-y0;if(!decidiu&&(Math.abs(ddx)>8||Math.abs(ddy)>8)){decidiu=true;horiz=Math.abs(ddx)>Math.abs(ddy);}if(!horiz)return;dx=Math.max(-140,Math.min(140,ddx));row.style.transform=`translateX(${dx}px)`;});
     const fim=async()=>{if(!ativo)return;ativo=false;row.style.transform="";if(!horiz)return;const id=box.dataset.h;
