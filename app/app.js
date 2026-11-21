@@ -205,7 +205,7 @@ const App=(()=>{
   // ---- arte automática: logotipo tratado centralizado preenchendo a área segura do gabarito, cor padrão do material
   const COR_PADRAO={capacho:"#2B2B2D",rigido:"#F4F1EA",vinil:null,tecido:"#F4F1EA",papel:"#FFFFFF",lona:"#FFFFFF",carimbo:null};
   const PRODUTOS_IDS=["capacho","placas","adesivos","uniformes","impressos","panfleto","banners","parede","brindes","carimbo","windbanner","faixa","folheto","camiseta","bone","avental"];
-  let _G=null;const gabaritos=async()=>_G||(_G=await (await fetch("gabaritos.json?v=48bcced083")).json());
+  let _G=null;const gabaritos=async()=>_G||(_G=await (await fetch("gabaritos.json?v=9562256732")).json());
   const carregarImg=src=>new Promise(res=>{const i=new Image();i.crossOrigin="anonymous";i.onload=()=>res(i);i.onerror=()=>res(null);i.src=src;});
   // ---- carimbo: só texto — nome, razão social, CNPJ (negrito), endereço, telefone; nunca logotipo
   async function dadosCarimbo(l){const cad=await ficha(l.slug).catch(()=>null);const L=(cad&&cad.lacunas)||{};const leit=(L.leitura||{}).valor||"";const razao=((leit.match(/Razão social: ([^·]+)/)||[])[1]||"").trim();const cnpj=((leit.match(/CNPJ:? ?([\d./-]{14,18})/)||[])[1]||"");
@@ -252,7 +252,7 @@ const App=(()=>{
     const aw=W-2*(B+S),ah=H-2*(B+S);const f=Math.min(aw/LW,(P.ancora==="topo"?ah*0.45:ah)/LH);const w=LW*f,h=LH*f;const x=(W-w)/2,y=P.ancora==="topo"?B+S+ah*0.05:(H-h)/2;
     const fundo=P.sem_fundo?null:(COR_PADRAO[P.superficie]===undefined?"#FFFFFF":COR_PADRAO[P.superficie]);
     // kit de 14 setores (10/11): a maquete frontal do ramo da loja é a arte de partida de todos os produtos
-    await carregarScript("qr.js?v=48bcced083");await carregarScript("impressos.js?v=48bcced083");await carregarScript("kits14.js?v=48bcced083");
+    await carregarScript("qr.js?v=9562256732");await carregarScript("impressos.js?v=9562256732");await carregarScript("kits14.js?v=9562256732");
     if(window.Kits14&&window.Kits14.ARQ[pid]){const K=await window.Kits14.montar(App,pid,c,l,{W,H,B,S,im,rec});
       if(K){const doc={fundo:K.fundo,fundoImg:null,el:K.el,campos:null,auto:true,kit:KIT14,setorKit:K.setorKit,kitRef:K.kitRef,W,H};const imgs={[c.manual.tratado]:im};
         const k=Math.min(1,1400/Math.max(W,H));const cv=document.createElement("canvas");cv.width=Math.round(W*k);cv.height=Math.round(H*k);const g=cv.getContext("2d");g.scale(k,k);
@@ -398,6 +398,32 @@ const App=(()=>{
   // ---- etapas do pedido: entrada (selecionando/orçando) → processamento (produção) → saída (entrega/instalação) → entregue
   const ETAPAS=["entrada","arte","processamento","qualidade","saida","entregue"];
   // ---- quatro processos, cada um com a sua sequência de etapas e a mesma barra no rodapé (decisão do dono, 17/11)
+  // ---- os 5 grupos do que se oferece numa loja (21/11): mesmo peso para cada um. Personalização abre o leque dos produtos; os serviços não dependem do logotipo
+  const IC_G={personalizacao:'<path d="M4 7l8-4 8 4v10l-8 4-8-4z"/><path d="M4 7l8 4 8-4M12 11v10"/>',mostraai:'<rect x="6" y="2.5" width="12" height="19" rx="1.5"/><path d="M9 7h6M9 10.5h6M9 14h4"/>',falaai:'<path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/>',locacao:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4M8 15h3"/>',inpi:'<circle cx="12" cy="12" r="9"/><path d="M9.5 16.5v-9h3.2a2.6 2.6 0 0 1 0 5.2H9.5M12.5 12.7l2.6 3.8"/>'};
+  const GRUPOS=[{id:"personalizacao",nome:"Personalização da loja",linha:"Capacho, placa, vitrine, uniforme, impressos, carimbo e mais",tipo:"produto"},
+    {id:"mostraai",nome:"Mostraí",linha:"TV com itens, preços e destaque · muda pelo celular",tipo:"servico"},
+    {id:"falaai",nome:"Fala Aí",linha:"Atendente no telefone com o nome da loja",tipo:"servico"},
+    {id:"locacao",nome:"Locação de kit",linha:"Capacho e wind banner por 15 dias · Liquidação, Black Friday, Queima de estoque",tipo:"servico"},
+    {id:"inpi",nome:"Registro de marca",linha:"INPI · proteção do nome e do logotipo",tipo:"servico"}];
+  const SERV_IDS=["mostraai","falaai","locacao","inpi"];
+  const grupoDe=k=>{const b=baseId(k);return SERV_IDS.includes(b)?b:"personalizacao";};
+  const ehServico=k=>grupoDe(k)!=="personalizacao";
+  // Mostraí: preço aprovado em 10/11; aparelho só emprestado (comodato), TV do lojista
+  const MOSTRAI_PLANOS=[{id:"comodato",rot:"Aparelho emprestado",entrada:249,mensal:99,txt:"R$ 249 de ativação + R$ 99/mês · 12 meses"},{id:"anual",rot:"Anual à vista",entrada:1289,mensal:0,txt:"R$ 1.289 · aparelho emprestado e ativação incluídos"}];
+  const SERV_NOMES={falaai:"Fala Aí · atendente no telefone",inpi:"Registro de marca (INPI)"};
+  function selMostrai(S,plano,sid="mostraai"){const p=MOSTRAI_PLANOS.find(x=>x.id===plano)||MOSTRAI_PLANOS[0];S[sid]={q:1,servico:true,plano:p.id,entrada:p.entrada,mensal:p.mensal,nome:`Mostraí · ${p.rot.toLowerCase()} · ${p.txt}`};}
+  // situação de cada grupo para a loja: quantos escolhidos / no orçamento
+  function estadoGrupos(S,artes){const st={};for(const g of GRUPOS){const ks=Object.keys(S||{}).filter(k=>grupoDe(k)===g.id&&S[k]&&S[k].q>0);st[g.id]={n:ks.length,ks};}
+    st.personalizacao.total=Object.keys(artes||{}).filter(k=>grupoDe(k)==="personalizacao").length;return st;}
+  // a lista dos 5 grupos; o aberto mostra o seu conteúdo logo abaixo (leque). img: {grupo:url}
+  function gruposHTML({S,artes,aberto,img,conteudo,dataAttr="data-grupo"}){const st=estadoGrupos(S,artes);
+    const sit=g=>{const x=st[g.id];if(g.id==="personalizacao")return x.n?`${x.n} escolhido(s)`:x.total?`${x.total} pronto(s) · nenhum escolhido`:"produtos ainda não gerados";
+      if(g.id==="locacao"){const k=x.ks[0];const v=k&&S[k];return v&&v.inicio?`✓ reservado · retira ${diaBR(v.inicio)}`:"fora do orçamento";}
+      return x.n?`✓ no orçamento${x.n>1?" · "+x.n:""}`:"fora do orçamento";};
+    return `<div class="grupos">${GRUPOS.map(g=>`<div class="gt-box ${aberto===g.id?"aberto":""}"><button type="button" class="gt ${st[g.id].n?"tem":""}" ${dataAttr}="${g.id}" aria-expanded="${aberto===g.id}">
+        <span class="gt-vis">${img&&img[g.id]?`<img src="${esc(img[g.id])}" alt="" loading="lazy">`:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${IC_G[g.id]}</svg>`}</span>
+        <span class="gt-tx"><span class="${g.tipo==="produto"?"tag-prod":"tag-serv"}">${g.tipo==="produto"?"■ PRODUTO":"● SERVIÇO"}</span><b>${g.nome}</b><small>${g.linha}</small><em>${sit(g)}</em></span><span class="gt-seta">${aberto===g.id?"▴":"▾"}</span></button>
+        ${aberto===g.id?`<div class="gt-cont">${conteudo(g.id)}</div>`:""}</div>`).join("")}</div>`;}
   const PROCESSOS={
     rota:{nome:"Rota",cor:"#141C3A",etapas:["Lojas","Logotipos","Recorte","Fila","Aquecimento","Pronta"],curto:["Lojas","Logos","Recorte","Fila","Aquecer","Pronta"]},
     loja:{nome:"Loja",cor:"#6933C5",etapas:["Chegada","Apresentação","Orçamento","Fechamento","Saída"],curto:["Chegada","Apresent.","Orçamento","Fecham.","Saída"]},
@@ -574,7 +600,7 @@ const App=(()=>{
         soma:O.soma,frete:O.frete,total:O.total,mensal:O.mensal||0,semPreco:O.semPreco||0,pagamentos:O.total?pagamentos(O.total):[],pag:Object.assign({pix:5,cartao:8,parc:6,sinal:50},METAS.pag||{})}};
     const ass=JSON.stringify(pn);if(_pubUlt[l.slug]===ass)return;pn.em=new Date().toISOString();c.painel=pn;await gravarCliente(c);_pubUlt[l.slug]=ass;}catch(e){}}
   async function acessosCliente(slug,acao,corpo){const u=`/api/clientes/${encodeURIComponent(slug)}/acessos${acao?"/"+acao:""}`;const r=await fetch(u,{method:corpo||acao?"POST":"GET",credentials:"same-origin",headers:{"Content-Type":"application/json"},body:corpo||acao?JSON.stringify(corpo||{}):undefined});const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.erro||r.status);return d.acessos||[];}
-  return {PROCESSOS,barraEtapas,nb,publicarPainel,acessosCliente,cabCliente,mapaLoja,get FORNEC(){return FORNEC;},set FORNEC(v){FORNEC=v;},fornItem,fornDe,fornTab,fornPreco,FAIXAS,NOME_ORC,ORDEM_ORC,
+  return {GRUPOS,SERV_IDS,grupoDe,ehServico,MOSTRAI_PLANOS,SERV_NOMES,selMostrai,estadoGrupos,gruposHTML,PROCESSOS,barraEtapas,nb,publicarPainel,acessosCliente,cabCliente,mapaLoja,get FORNEC(){return FORNEC;},set FORNEC(v){FORNEC=v;},fornItem,fornDe,fornTab,fornPreco,FAIXAS,NOME_ORC,ORDEM_ORC,
   LOC_DIAS,LOC_TEMAS,LOC_IMG,isoDia,maisDias,diaBR,locFim,precoLocacao,reservasLoc,locLivre,reservarLoc,baseId,qtdMin,qtdOpcoes,passoQtd,qtdNormal,precoEm,orcamento,pagamentos,VITRINE_PADRAO,vitrineMaisPerto,CUSTO,venda,lucroPct,LUCRO_PADRAO,fundoTransparente,logoComoTratado,VITRINE,precoProduto,$,$$,esc,qs,ZONA,zonaDe,desempenho,get METAS(){return METAS;},arquivarLoja,reagendarLoja,FAMILIAS,familiaDe,TIPOS_ROTA,rotaDe,gravarRota,rotaDoPlay,recarregarFicha,get PLANO(){return PLANO;},setorNome,nomeLoja,telFmt,ini,sessao,eu,dados,ficha,estrelas,estrelasHTML,estado,salvar,abrirVendas,lerCliente,gravarCliente,cliente,lerChave,gravarChave,API,definirCliente,classificar,logoPrincipal,removerLogo,estadoLogo,ROTULO_LOGO,aprovarLogo,escolherImagem,abrirLogotipo,entradas,ligarEntradas,artePadrao,gerarProdutos,contextualizar,aparar,assarRecortes,desenharElementos,desenharTexto,desenharQR,desenharVetor,carregarScript,recortarLogo,PRODUTOS_IDS,separarCores,garantirCamadas,dadosCarimbo,desenharCarimbo,cenaCarimbo,desenharLista,desenharSeta,listarNotas,gravarNota,apagarNota,diasDeRota,reagendar,hojeISO,dataCurta,META,ICONES,NA_CASCA,avulsos,novoAvulso,atualizarAvulso,ocorrenciasManuais,gravarOcorrencias,ocorrenciasAuto,ETAPAS,etapaDe,moverEtapa,nav,topo,voltar,acoes,menuLongo,ligarLongo};
 })();
 

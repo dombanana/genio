@@ -6,7 +6,7 @@
 <title>GênIO · Produtos e serviços</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="app.css?v=48bcced083">
+<link rel="stylesheet" href="app.css?v=9562256732">
 <style>
 .grade{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .prod{background:#fff;border-radius:18px;box-shadow:0 2px 10px rgba(28,22,53,.06);overflow:hidden;display:flex;flex-direction:column;position:relative}
@@ -57,8 +57,8 @@
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=48bcced083"></script>
-<script src="qr.js?v=48bcced083"></script>
+<script src="app.js?v=9562256732"></script>
+<script src="qr.js?v=9562256732"></script>
 <script>
 (async()=>{
   const {$,$$,esc,qs,sessao,dados,nav,topo,voltar,setorNome,nomeLoja,estado,salvar,cliente,gravarCliente,definirCliente}=App;
@@ -66,14 +66,17 @@
   const D=await dados();const slug=qs.get("l");const l=D.lojas.find(x=>x.slug===slug);
   if(!l){$("#app").innerHTML=`${topo()}<p>Loja não encontrada.</p>${nav("rota")}`;return;}
   const nome=nomeLoja(l.nome);definirCliente(l);let c=await cliente(l);
-  if(!(c.manual&&c.manual.editado)){location.href=`visita.html?l=${encodeURIComponent(slug)}`;return;}  // catálogo só depois do logotipo limpo
-  const G=await (await fetch("gabaritos.json?v=48bcced083")).json();
-  await App.carregarScript("kits14.js?v=48bcced083");
+  // a personalização só abre depois do logotipo limpo; os serviços (Mostraí, Fala Aí, locação, registro de marca) não dependem dele
+  const SEMLOGO=!(c.manual&&c.manual.editado);
+  const G=await (await fetch("gabaritos.json?v=9562256732")).json();
+  await App.carregarScript("kits14.js?v=9562256732");
   // os 16 produtos do kit de 14 setores (10/11); a foto de cada um é a do ramo da loja
   const CAT=await Promise.all([["capacho","Capacho"],["placas","Placa"],["adesivos","Adesivo de vitrine"],["uniformes","Camisa polo"],["impressos","Cartão de visita"],["panfleto",/padaria|restaurante|bar|cafeteria/.test(l.setor||"")?"Flyer · cardápio":"Flyer · produtos e serviços"],["banners","Banner retrátil"],["parede","Adesivo de parede · rotas"],["brindes","Ecobag"],["carimbo","Carimbo"],["windbanner","Wind banner"],["faixa","Faixa"],["folheto","Folheto promocional"],["camiseta","Camiseta"],["bone","Boné"],["avental","Avental"]].map(async([id,n])=>({id,nome:n,img:await Kits14.foto(l.setor,id,true)})));
   const SERV=[{id:"mostraai",nome:"Mostraí · TV de ofertas",desc:"Sua TV em pé com itens, preços e destaque · muda pelo celular",ic:"📺"},{id:"falaai",nome:"Fala Aí · atendente no telefone",desc:"URA com o nome da loja · frases gravadas do sistema",ic:"📞"},{id:"inpi",nome:"Registro de marca (INPI)",desc:"Proteção do nome e do logo",ic:"®"}];
   // Mostraí: preço aprovado em 10/11 (TV do lojista; a GenIO liga e configura o TV Box)
-  const PLANOS=[{id:"comodato",rot:"Aparelho emprestado",entrada:249,mensal:99,txt:"R$ 249 de ativação + R$ 99/mês · 12 meses"},{id:"anual",rot:"Anual à vista",entrada:1289,mensal:0,txt:"R$ 1.289 · aparelho emprestado e ativação incluídos"}];
+  const PLANOS=App.MOSTRAI_PLANOS;
+  // grupo aberto: ?g=, ou o do produto do #p-…, ou Personalização
+  let GA=qs.get("g")||(/^#p-/.test(location.hash)?App.grupoDe(decodeURIComponent(location.hash.slice(3))):"")||(SEMLOGO?"mostraai":"personalizacao");
   const MOSTRAI_IMG=`/brand/mostrai/JPG/${Kits14.kitDe(l.setor)}_Mostrai.jpg`;
   const e=estado();e.sel=e.sel||{};const S=e.sel[slug]=e.sel[slug]||{};
   const UNI_CORES=new Set(["uniformes","camiseta","bone","avental"]);
@@ -140,23 +143,26 @@
   function render(){const n=Object.values(S).filter(v=>v&&v.q>0).length;const artes=c.artes||{};
     $("#app").innerHTML=`${topo()}${qs.get("de")==="play"?voltar("play.html","Play"):voltar(`visita.html?l=${encodeURIComponent(slug)}`,"Visita")}
     ${App.cabCliente(l,{titulo:"Produtos e serviços"})}
-    <div class="resumo"><div><b>${n?`${n} item(ns) no orçamento`:"Nada escolhido ainda"}</b><br><small class="muted">${Object.keys(artes).length} arte(s) feita(s) · logotipo tratado</small></div><img src="${esc(c.manual.tratado)}" alt="" style="width:56px;height:40px;object-fit:contain;background:#fff;border-radius:8px"></div>
-    <div style="display:grid;grid-template-columns:1fr ${Object.keys(artes).length?"1fr":""};gap:8px;margin:0 0 12px"><button class="btn sec" id="todos" type="button" style="min-height:50px">✦ Gerar todos os produtos</button>${Object.keys(artes).length?`<button class="btn sec" id="ctx" type="button" style="min-height:50px">Contextualizar (${Object.keys(artes).length})</button>`:""}</div>
-    ${(()=>{const UNI=["uniformes","camiseta","bone","avental"];const cartao=p=>{const s=S[p.id]||{q:0},A=artes[p.id];const prova=A&&A.provas&&A.provas[0]&&A.provas[0].src;const mock=prova||(A&&A.contexto)||(A&&A.png)||null;return `<div class="prod ${s.q>0?"sel":""}" id="p-${p.id}" data-p="${p.id}">
+    <div class="resumo"><div><b>${n?`${n} item(ns) no orçamento`:"Nada escolhido ainda"}</b><br><small class="muted">${SEMLOGO?"logotipo ainda sem recorte":`${Object.keys(artes).length} arte(s) feita(s) · logotipo tratado`}</small></div>${c.manual&&c.manual.tratado?`<img src="${esc(c.manual.tratado)}" alt="" style="width:56px;height:40px;object-fit:contain;background:#fff;border-radius:8px">`:""}</div>
+    ${App.gruposHTML({S,artes,aberto:GA,img:{personalizacao:Object.values(artes).map(a=>a&&(a.contexto||a.png)).find(Boolean)||(c.manual&&c.manual.tratado)||"",mostraai:MOSTRAI_IMG,locacao:App.LOC_IMG[1]},conteudo:g=>SEC[g]?SEC[g]():""})}
+    <p class="ilus">Preços entram na fase do orçamento.</p>
+    <div class="acoes"><div class="w"><a class="btn sec" href="visita.html?l=${encodeURIComponent(slug)}">← Visita</a><a class="btn" href="orcamento.html?l=${encodeURIComponent(slug)}">Orçamento →</a></div></div>
+    ${nav("rota")}`;document.body.classList.add("com-acoes");ligar();}
+  const SEC={personalizacao:()=>SEMLOGO?`<p class="muted" style="margin:0 0 10px">O logotipo desta loja ainda não foi recortado. A personalização abre depois do recorte.</p><a class="sv-lk" href="visita.html?l=${encodeURIComponent(slug)}">✂ Recortar o logotipo</a>`:`
+    <div style="display:grid;grid-template-columns:1fr ${Object.keys(c.artes||{}).length?"1fr":""};gap:8px;margin:0 0 12px"><button class="btn sec" id="todos" type="button" style="min-height:50px">✦ Gerar todos os produtos</button>${Object.keys(c.artes||{}).length?`<button class="btn sec" id="ctx" type="button" style="min-height:50px">Contextualizar (${Object.keys(c.artes||{}).length})</button>`:""}</div>
+    ${(()=>{const artes=c.artes||{};const UNI=["uniformes","camiseta","bone","avental"];const cartao=p=>{const s=S[p.id]||{q:0},A=artes[p.id];const prova=A&&A.provas&&A.provas[0]&&A.provas[0].src;const mock=prova||(A&&A.contexto)||(A&&A.png)||null;return `<div class="prod ${s.q>0?"sel":""}" id="p-${p.id}" data-p="${p.id}">
       <div class="cena" ${mock?"":`style="background-image:url('${p.img}')"`} data-ctx="${p.id}">${mock?`<img src="${mock}" alt="">`:""}</div><span class="dup"><button type="button" class="menos" data-tira aria-label="${p.id.includes("~")?"tirar esta proposta":"não quero"}">−</button><button type="button" data-dup aria-label="duplicar esta proposta">+</button></span>
       <b>${esc(p.nome)}</b>${(()=>{const cp=p.id==="capacho"&&c.capacho_preco;if(cp&&cp.total){const R=v=>Number(v).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});const md=(cp.medidas||[]).map(m=>`${String((m.w/100).toFixed(2)).replace(".",",")} × ${String((m.h/100).toFixed(2)).replace(".",",")} m`).join(" + ");
         return `<div class="preco-p"><b>${R(cp.total)}</b><small>${esc(md)}${cp.qtd>1?` · ${cp.qtd} un.`:""} · Pix ${R(cp.pix)} · ${cp.parc}× ${R(cp.cartao/cp.parc)} no cartão</small></div>`;}
       const pr=App.precoProduto(p.id,(c.formatos||{})[p.id]);return pr?`<div class="preco-p"><b>${pr.txt}</b><small>${esc(pr.unid)} · frete no fechamento</small></div>`:`<div class="preco-p"><small>preço a confirmar</small></div>`;})()}<div class="st ${s.q>0?"ok":""}">${s.q>0?"✓ no orçamento":A?(A.doc&&A.doc.auto?"arte automática":"arte feita"):"sem arte"}${prova?" · foto real":A&&A.contexto?" · no ambiente":""}</div>
       ${p.id==="capacho"?`<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:0 12px 8px"><a class="ir" style="margin:0" href="capacho.html?l=${encodeURIComponent(slug)}&n=${encodeURIComponent(nomeLoja(l.nome))}">${A?"Editar →":"Montar →"}</a><a class="ir" style="margin:0;background:var(--navy);color:#fff" href="capacho.html?l=${encodeURIComponent(slug)}&n=${encodeURIComponent(nomeLoja(l.nome))}&ver=1" title="foto do local · ao vivo">👁 Visualizar</a></div>`:(A?`<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:0 12px 8px"><a class="ir" style="margin:0" href="editor.html?l=${encodeURIComponent(slug)}&p=${p.id}">Editar →</a>${UNI_CORES.has(App.baseId(p.id))?`<a class="ir" style="margin:0;background:var(--navy);color:#fff" href="provar.html?l=${encodeURIComponent(slug)}&p=${p.id}" title="foto de quem vai vestir: recorte, cor e estampa no lugar">Provar</a>`:`<a class="ir" style="margin:0;background:var(--navy);color:#fff" href="local.html?l=${encodeURIComponent(slug)}&p=${p.id}" title="câmera ao vivo · a peça no lugar">👁 No local</a>`}</div>`:(UNI_CORES.has(App.baseId(p.id))?`<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:0 12px 8px"><a class="ir" style="margin:0" href="editor.html?l=${encodeURIComponent(slug)}&p=${p.id}">Criar arte</a><a class="ir" style="margin:0;background:var(--navy);color:#fff" href="provar.html?l=${encodeURIComponent(slug)}&p=${p.id}">Provar</a></div>`:`<a class="ir" href="editor.html?l=${encodeURIComponent(slug)}&p=${p.id}">Criar arte</a>`))}
       ${UNI_CORES.has(App.baseId(p.id))&&(A||(c.manual&&c.manual.editado))?coresPeca(p.id,A||{}):""}${p.id==="adesivos"?formatoVitrine():""}<div class="qtd"><button data-m="-">−</button><span class="${s.q>0?"":"zero"}">${s.q>0?(p.id==="capacho"?s.q+" un.":App.qtdNormal(p.id,s.q).toLocaleString("pt-BR")+" un."+(s.grade?" · grade":"")):"não quero"}</span><button data-m="+">+</button></div></div>`;};
-      const comVar=p=>[p,...variantes(p.id)];return `<div class="grade">${CAT.filter(p=>!UNI.includes(p.id)).flatMap(comVar).map(cartao).join("")}</div><h2 style="margin:22px 0 10px">Uniforme</h2><div class="grade">${UNI.map(id=>CAT.find(p=>p.id===id)).filter(Boolean).flatMap(comVar).map(cartao).join("")}</div>`;})()}
-    <h2 style="margin:22px 0 10px">Locação</h2>
-    <div class="grade">${["locacao",...Object.keys(S).filter(k=>k.startsWith("locacao~")).sort((a,b)=>+a.split("~")[1]-+b.split("~")[1])].map(cartaoLoc).join("")}</div>
-    <h2 style="margin:22px 0 10px">Serviços</h2>
-    ${SERV.flatMap(s=>[s,...Object.keys(S).filter(k=>k.startsWith(s.id+"~")).sort((a,b)=>+a.split("~")[1]-+b.split("~")[1]).map(k=>({...s,id:k,nome:`${s.nome} · ${k.split("~")[1]}`}))]).map(s=>{const on=!!(S[s.id]&&S[s.id].q>0);const sb=App.baseId(s.id);return `<div class="card serv" data-s="${s.id}"><span class="ic">${s.ic}<span class="dup"><button type="button" class="menos" data-stira aria-label="${s.id.includes("~")?"tirar esta proposta":"não quero"}">−</button><button type="button" data-sdup aria-label="duplicar esta proposta">+</button></span></span><div><b>${esc(s.nome)}</b><small>${esc(s.desc)}${on?" · <b style='color:#0E8A84'>no orçamento</b>":""}</small></div><button class="tog ${on?"on":""}" data-t="${s.id}" aria-label="${esc(s.nome)}"></button>${sb==="mostraai"?`<div class="mostra-acao"><img class="mostrai-ref" src="${MOSTRAI_IMG}" alt="Mostraí numa loja do ramo" loading="lazy"><div class="planos">${PLANOS.map(p=>`<button type="button" class="plano ${on&&(S[s.id].plano||"comodato")===p.id?"on":""}" data-plano="${p.id}"><b>${p.rot}</b><small>${p.txt}</small></button>`).join("")}</div>${s.id==="mostraai"?`<button type="button" class="btn sec sm" id="acionarMostra">${c.mostra&&c.mostra.token?"📺 Abrir tela e programação":"📺 Acionar o Mostraí desta loja"}</button>`:""}</div>`:""}</div>`;}).join("")}
-    <p class="ilus">Preços entram na fase do orçamento.</p>
-    <div class="acoes"><div class="w"><a class="btn sec" href="visita.html?l=${encodeURIComponent(slug)}">← Visita</a><a class="btn" href="orcamento.html?l=${encodeURIComponent(slug)}">Orçamento →</a></div></div>
-    ${nav("rota")}`;document.body.classList.add("com-acoes");
+      const comVar=p=>[p,...variantes(p.id)];return `<div class="grade">${CAT.filter(p=>!UNI.includes(p.id)).flatMap(comVar).map(cartao).join("")}</div><h2 style="margin:22px 0 10px">Uniforme</h2><div class="grade">${UNI.map(id=>CAT.find(p=>p.id===id)).filter(Boolean).flatMap(comVar).map(cartao).join("")}</div>`;})()}`,
+    locacao:()=>`<div class="grade">${["locacao",...Object.keys(S).filter(k=>k.startsWith("locacao~")).sort((a,b)=>+a.split("~")[1]-+b.split("~")[1])].map(cartaoLoc).join("")}</div>`,
+    mostraai:()=>servHTML("mostraai"),falaai:()=>servHTML("falaai"),inpi:()=>servHTML("inpi")};
+  const servHTML=gid=>`${SERV.filter(s=>s.id===gid).flatMap(s=>[s,...Object.keys(S).filter(k=>k.startsWith(s.id+"~")).sort((a,b)=>+a.split("~")[1]-+b.split("~")[1]).map(k=>({...s,id:k,nome:`${s.nome} · ${k.split("~")[1]}`}))]).map(s=>{const on=!!(S[s.id]&&S[s.id].q>0);const sb=App.baseId(s.id);return `<div class="card serv" data-s="${s.id}"><span class="ic">${s.ic}<span class="dup"><button type="button" class="menos" data-stira aria-label="${s.id.includes("~")?"tirar esta proposta":"não quero"}">−</button><button type="button" data-sdup aria-label="duplicar esta proposta">+</button></span></span><div><b>${esc(s.nome)}</b><small>${esc(s.desc)}${on?" · <b style='color:#0E8A84'>no orçamento</b>":""}</small></div><button class="tog ${on?"on":""}" data-t="${s.id}" aria-label="${esc(s.nome)}"></button>${sb==="mostraai"?`<div class="mostra-acao"><img class="mostrai-ref" src="${MOSTRAI_IMG}" alt="Mostraí numa loja do ramo" loading="lazy"><div class="planos">${PLANOS.map(p=>`<button type="button" class="plano ${on&&(S[s.id].plano||"comodato")===p.id?"on":""}" data-plano="${p.id}"><b>${p.rot}</b><small>${p.txt}</small></button>`).join("")}</div>${s.id==="mostraai"?`<button type="button" class="btn sec sm" id="acionarMostra">${c.mostra&&c.mostra.token?"📺 Abrir tela e programação":"📺 Acionar o Mostraí desta loja"}</button>`:""}</div>`:""}</div>`;}).join("")}`;
+  function ligar(){const artes=c.artes||{};
+    $$("[data-grupo]").forEach(b=>b.onclick=()=>{const g=b.dataset.grupo;GA=GA===g?"":g;try{const u=new URL(location.href);if(GA)u.searchParams.set("g",GA);else u.searchParams.delete("g");u.hash="";history.replaceState(null,"",u);}catch(err){}render();const el=document.querySelector(`[data-grupo="${g}"]`);if(el)el.scrollIntoView({block:"start"});});
     $$(".prod [data-tema]").forEach(b=>b.onclick=async()=>{const k=b.closest(".prod").dataset.p;const s=S[k]=S[k]||{q:0,locacao:true,nome:"Kit locação"};const novo=b.dataset.tema;if(s.tema===novo)return;
       if(s.inicio){const ok=await App.reservarLoc({id:resId(k),slug,loja:nomeLoja(l.nome),tema:novo,inicio:s.inicio});if(!ok){alert("Não há kit desse tema livre nesse período. Escolha outro dia.");await App.reservarLoc({id:resId(k),inicio:null});delete s.inicio;s.q=0;}}
       s.tema=novo;salvar(e);render();});
@@ -194,7 +200,7 @@ const s=S[id]=S[id]||{q:0,nome:catDe(id).nome};s.q=id==="capacho"?Math.max(0,s.q
     $$(".tog").forEach(b=>b.onclick=()=>{const id=b.dataset.t,ib=App.baseId(id);if(ib==="mostraai"){if(S[id]&&S[id].q>0)S[id].q=0;else porPlano((S[id]&&S[id].plano)||"comodato",id);salvar(e);render();return;}const sv=SERV.find(x=>x.id===ib);const s=S[id]=S[id]||{q:0,nome:sv.nome+(id.includes("~")?" · "+id.split("~")[1]:""),servico:true};s.q=s.q>0?0:1;salvar(e);render();});
     // item do kit com arte: tocar volta para a edição daquela arte
     $$(".cena[data-ctx]").forEach(el=>{let t0=0,mv=false;el.addEventListener("pointerdown",()=>{t0=Date.now();mv=false;});el.addEventListener("pointermove",()=>{mv=true;});el.addEventListener("pointerup",()=>{if(mv||Date.now()-t0>450)return;if(UNI_CORES.has(App.baseId(el.dataset.ctx))){location.href=`provar.html?l=${encodeURIComponent(slug)}&p=${encodeURIComponent(el.dataset.ctx)}`;return;}const A=artes[el.dataset.ctx];if(A&&A.contexto){const g=document.createElement("div");g.className="galeria-ctx";g.innerHTML=`<div class="top"><b>${esc(catDe(el.dataset.ctx).nome)}</b><span><a class="btn sec sm" style="width:auto;display:inline-grid;min-height:40px;padding:0 12px;text-decoration:none;margin-right:6px" href="editor.html?l=${encodeURIComponent(slug)}&p=${el.dataset.ctx}">${A.verso?"Editar frente":"Editar"}</a>${A.verso?`<a class="btn sec sm" style="width:auto;display:inline-grid;min-height:40px;padding:0 12px;text-decoration:none;margin-right:6px" href="editor.html?l=${encodeURIComponent(slug)}&p=${el.dataset.ctx}&face=verso">Editar verso</a>`:""}<button class="btn sec sm" id="fechar" style="width:auto;min-height:40px;padding:0 12px">Fechar</button></span></div><div class="rolo"><img src="${A.contexto}" alt="">${A.verso?`<div class="faces2"><figure><img src="${A.png}" alt=""><figcaption>Frente</figcaption></figure><figure><img src="${A.verso.png}" alt=""><figcaption>Verso</figcaption></figure></div>`:""}</div>`;document.body.appendChild(g);g.querySelector("#fechar").onclick=()=>g.remove();}else location.href=el.dataset.ctx==="capacho"?`capacho.html?l=${encodeURIComponent(slug)}&n=${encodeURIComponent(nomeLoja(l.nome))}`:`editor.html?l=${encodeURIComponent(slug)}&p=${el.dataset.ctx}`;});});
-    $("#todos").onclick=async()=>{const b=$("#todos");b.disabled=true;const r=await App.gerarProdutos(l,pid=>{b.textContent=`Gerando ${catDe(pid).nome}…`;});c=await cliente(l);render();if(r.falhas.length)alert("Não consegui em: "+r.falhas.join(" · "));};
+    const tdb=$("#todos");if(tdb)tdb.onclick=async()=>{const b=$("#todos");b.disabled=true;const r=await App.gerarProdutos(l,pid=>{b.textContent=`Gerando ${catDe(pid).nome}…`;});c=await cliente(l);render();if(r.falhas.length)alert("Não consegui em: "+r.falhas.join(" · "));};
     const cb=$("#ctx");if(cb)cb.onclick=async()=>{cb.disabled=true;const ids=Object.keys(artes);let k=0,falhas=[];
       for(const id of ids){const A=artes[id];cb.textContent=`Aplicando ${catDe(id).nome}… (${++k}/${ids.length})`;
         if(id==="carimbo"){A.contexto=App.cenaCarimbo((A.doc&&A.doc.campos)||{});A.kit="carimbo-folha";continue;}
@@ -203,6 +209,8 @@ const s=S[id]=S[id]||{q:0,nome:catDe(id).nome};s.q=id==="capacho"?Math.max(0,s.q
   render();
   // volta da ferramenta: abre no mesmo produto
   if(/^#p-/.test(location.hash)){const el=document.getElementById(location.hash.slice(1));if(el)setTimeout(()=>el.scrollIntoView({block:"center"}),60);}
+  // vindo da Loja por "Ligar a TV de demonstração": já abre o link e o QR do Mostraí
+  if(location.hash==="#acionar"){const b=document.getElementById("acionarMostra");if(b){b.scrollIntoView({block:"center"});b.click();}}
 })();
 </script>
 </body>

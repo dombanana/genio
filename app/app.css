@@ -525,3 +525,26 @@ body.com-barra .acoes{display:none}
 .calc .c-tec button{height:46px;border:0;border-radius:12px;background:rgba(255,255,255,.12);color:#fff;font:inherit;font-size:18px;font-weight:600;cursor:pointer}
 .calc .c-tec button.op{background:rgba(129,84,206,.55)}.calc .c-tec button.ig{background:#14B8B0;color:#1C1635}
 .calc .c-tec button[data-k="usar"]{background:#6933C5;font-size:15px}
+
+/* ---- 21/11: os 5 grupos (Personalização da loja · Mostraí · Fala Aí · Locação de kit · Registro de marca), mesmo peso */
+.grupos{display:flex;flex-direction:column;gap:10px;margin:0 0 12px}
+.gt-box{background:#fff;border-radius:16px;border:2px solid var(--linha);overflow:hidden}
+.gt-box.aberto{border-color:var(--marca)}
+.gt{display:grid;grid-template-columns:96px 1fr 24px;gap:12px;align-items:center;width:100%;border:0;background:transparent;padding:10px;text-align:left;font:inherit;color:var(--texto);cursor:pointer;min-height:96px}
+.gt-vis{width:96px;height:76px;border-radius:12px;background:var(--lav);display:grid;place-items:center;overflow:hidden;color:var(--marca)}
+.gt-vis img{width:100%;height:100%;object-fit:cover}.gt-vis svg{width:40px;height:40px}
+.gt-tx{display:flex;flex-direction:column;gap:2px;min-width:0}.gt-tx b{font-size:17px}.gt-tx small{font-size:13px;color:var(--texto2);line-height:1.3}
+.gt-tx em{font-style:normal;font-size:13px;font-weight:600;color:var(--texto2);margin-top:2px}.gt.tem .gt-tx em{color:#0E6E6A}
+.gt-tx .tag-prod,.gt-tx .tag-serv{align-self:flex-start;margin-bottom:2px}
+.gt-seta{font-size:18px;color:var(--marca);text-align:center}
+.gt-cont{padding:0 12px 14px}
+.sv-planos{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:10px 0}
+.sv-planos button{min-height:72px;border:2px solid var(--linha);background:#fff;border-radius:12px;font:inherit;text-align:left;padding:8px 10px;color:var(--texto);cursor:pointer}
+.sv-planos button b{display:block;font-size:14px}.sv-planos button small{font-size:12.5px;color:var(--texto2)}
+.sv-planos button.on{border-color:#1E63D6;background:#E3ECFC}
+.sv-ref{width:100%;border-radius:12px;display:block;max-height:340px;object-fit:cover;object-position:top}
+.sv-tog{width:100%;min-height:56px;border-radius:12px;border:2px solid #1E63D6;background:#fff;color:#1E4FA8;font:inherit;font-size:16px;font-weight:700;cursor:pointer;margin-top:10px}
+.sv-tog.on{background:#1E63D6;color:#fff}
+.sv-nota{font-size:13px;color:var(--texto2);margin:8px 0 0}
+.sv-temas{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0 0}.sv-temas button{min-height:40px;border:2px solid var(--linha);background:#fff;border-radius:999px;padding:0 14px;font:inherit;font-size:14px;font-weight:600;cursor:pointer}.sv-temas button.on{border-color:#1E63D6;background:#E3ECFC;color:#1E4FA8}
+.sv-lk{display:flex;align-items:center;justify-content:center;min-height:52px;border-radius:12px;background:var(--lav);color:var(--marca);font-weight:700;text-decoration:none;margin-top:10px;text-align:center;padding:0 10px}

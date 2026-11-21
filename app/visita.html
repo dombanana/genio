@@ -6,7 +6,7 @@
 <title>GênIO · Visita</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="app.css?v=48bcced083">
+<link rel="stylesheet" href="app.css?v=9562256732">
 <style>
 .cab{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
 .fach{width:100%;aspect-ratio:16/9;border-radius:16px;overflow:hidden;background:var(--lav2);display:grid;place-items:center;position:relative}
@@ -33,7 +33,7 @@
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=48bcced083"></script>
+<script src="app.js?v=9562256732"></script>
 <script>
 (async()=>{
   const {$,$$,esc,qs,sessao,dados,ficha,estrelasHTML,estado,salvar,nav,topo,voltar,setorNome,nomeLoja,telFmt,cliente,gravarCliente,classificar,definirCliente,menuLongo,ligarLongo,ZONA,entradas,ligarEntradas,abrirLogotipo,logoPrincipal,removerLogo}=App;
@@ -105,14 +105,31 @@
   const filaP=()=>{const e=estado();const arq=new Set(e.arquivadas||[]);return (Rp().slugs||[]).filter(s=>D.lojas.some(x=>x.slug===s)&&!arq.has(s));};
   const PNOME={capacho:"Capacho",placas:"Placa",adesivos:"Adesivo de vitrine",uniformes:"Camisa polo",impressos:"Cartão de visita",panfleto:"Flyer",banners:"Banner retrátil",parede:"Adesivo de parede",brindes:"Ecobag",carimbo:"Carimbo",windbanner:"Wind banner",faixa:"Faixa",folheto:"Folheto",camiseta:"Camiseta",bone:"Boné",avental:"Avental"};
   const pnome=k=>(PNOME[App.baseId(k)]||k)+(String(k).includes("~")?" · "+String(k).split("~")[1]:"");
-  const selP=()=>((estado().sel||{})[slug])||{};const nSelP=()=>Object.entries(selP()).filter(([k,v])=>v&&v.q>0&&(c.artes||{})[k]).length;
+  const selP=()=>((estado().sel||{})[slug])||{};const nSelP=()=>Object.entries(selP()).filter(([k,v])=>v&&v.q>0&&((c.artes||{})[k]||App.ehServico(k))).length;
   function filaHTML(){const f=filaP();const X=Rp();const i=f.indexOf(slug);const x=App.dataCurta(diaP);
     return `<div class="passos fila-p"><div class="t"><span>${diaP===App.hojeISO()?"Rota de hoje":`Rota de ${x.sem} ${x.dia}/${x.mes}`} · loja ${i+1} de ${f.length}</span><b>${f.filter(s=>X.res[s]).length} feita(s)</b></div><ol>${f.map(s=>`<li class="${X.res[s]?"ok":s===slug?"agora":""}"></li>`).join("")}</ol></div>`;}
-  function prodsPlayHTML(){const A=Object.entries(c.artes||{}).map(([k,a])=>({k,src:a&&(a.contexto||a.png||a.pngArte)})).filter(x=>x.src);const S=selP();const n=nSelP();const pronto=!!(c.manual&&c.manual.editado);
-    return `<section class="card" id="prodsP"><h2>Produtos com o logotipo${A.length?` <small class="muted" style="font-weight:400;font-size:14px">· toque para selecionar · ${n} selecionado(s)</small>`:""}</h2>
-      ${A.length?`<div class="prods-p">${A.map(x=>`<figure data-pp="${esc(x.k)}" class="${S[x.k]&&S[x.k].q>0?"on":""}"><img src="${esc(x.src)}" alt="" loading="lazy"><span class="ck">✓</span>${testeP(x.k)}<figcaption>${esc(pnome(x.k))}</figcaption></figure>`).join("")}</div>`
-      :pronto?`<p class="muted" style="margin:0 0 10px">Os produtos ainda não foram gerados com este logotipo.</p><button class="btn sec" type="button" id="gerarP">✦ Gerar os produtos agora</button>`
-      :`<p class="muted" style="margin:0">Logotipo sem recorte. Recorte na Rota (passo 3) ou em Logotipo, logo abaixo.</p>`}</section>`;}
+  let KIT14=null;App.carregarScript("kits14.js?v=9562256732").then(()=>{KIT14=window.Kits14;if(modo==="play"&&ETL===1){const y=scrollY;render();scrollTo(0,y);}}).catch(()=>{});
+  const kGrupo="grupo-"+slug;let GRUPO_AB=(()=>{try{return sessionStorage.getItem(kGrupo)||"personalizacao";}catch(e){return "personalizacao";}})();
+  const qsL=`l=${encodeURIComponent(slug)}`;
+  function conteudoGrupo(g){const S=selP();
+    if(g==="personalizacao"){const A=Object.entries(c.artes||{}).filter(([k])=>App.grupoDe(k)==="personalizacao").map(([k,a])=>({k,src:a&&(a.contexto||a.png||a.pngArte)})).filter(x=>x.src);const pronto=!!(c.manual&&c.manual.editado);
+      return A.length?`<p class="muted" style="margin:0 0 8px;font-size:13px">Toque para escolher · o selo do canto testa a peça.</p><div class="prods-p">${A.map(x=>`<figure data-pp="${esc(x.k)}" class="${S[x.k]&&S[x.k].q>0?"on":""}"><img src="${esc(x.src)}" alt="" loading="lazy"><span class="ck">✓</span>${testeP(x.k)}<figcaption>${esc(pnome(x.k))}</figcaption></figure>`).join("")}</div><a class="sv-lk" href="produtos.html?${qsL}&de=play&g=personalizacao">Cores, tamanhos e quantidades →</a>`
+        :pronto?`<p class="muted" style="margin:0 0 10px">Os produtos ainda não foram gerados com este logotipo.</p><button class="btn sec" type="button" id="gerarP">✦ Gerar os produtos agora</button>`
+        :`<p class="muted" style="margin:0">O logotipo ainda não foi recortado. A personalização abre depois do recorte (Rota, etapa 3, ou Logotipo, logo abaixo). Os serviços já podem ser oferecidos.</p>`;}
+    if(g==="mostraai"){const v=S.mostraai,on=!!(v&&v.q>0);const img=KIT14?`/brand/mostrai/JPG/${KIT14.kitDe(l.setor)}_Mostrai.jpg`:"";
+      return `${img?`<img class="sv-ref" src="${img}" alt="Mostraí numa loja do mesmo ramo" loading="lazy">`:""}<div class="sv-planos">${App.MOSTRAI_PLANOS.map(p=>`<button type="button" data-plano-m="${p.id}" class="${on&&(v.plano||"comodato")===p.id?"on":""}"><b>${p.rot}</b><small>${p.txt}</small></button>`).join("")}</div>
+        <p class="sv-nota">${on?"✓ No orçamento. Toque no plano escolhido para tirar.":"Toque num plano para pôr no orçamento."} A TV é do lojista; a GênIO liga e configura o aparelho.</p>
+        <a class="sv-lk" href="produtos.html?${qsL}&de=play&g=mostraai#acionar">📺 Ligar a TV de demonstração (link e QR)</a>`;}
+    if(g==="falaai"||g==="inpi"){const v=S[g],on=!!(v&&v.q>0);
+      return `<p class="sv-nota" style="margin-top:0">${g==="falaai"?"O telefone da loja atendido com o nome dela, com frases gravadas no sistema. Preço e número de demonstração: a definir.":"Pedido de registro do nome e do logotipo no INPI. Preço: a confirmar."}</p><button type="button" class="sv-tog ${on?"on":""}" data-svtog="${g}">${on?"✓ No orçamento · tocar para tirar":"Pôr no orçamento"}</button>`;}
+    if(g==="locacao"){const v=S.locacao||{},tema=v.tema||"liquidacao";
+      return `<div class="prods-p" style="grid-template-columns:1fr 1fr">${App.LOC_IMG.map(u=>`<figure style="cursor:default"><img src="${u}" alt="" loading="lazy"></figure>`).join("")}</div>
+        <div class="sv-temas">${App.LOC_TEMAS.map(t=>`<button type="button" data-loc-tema="${t.id}" class="${t.id===tema?"on":""}">${esc(t.nome)}</button>`).join("")}</div>
+        <a class="sv-lk" href="produtos.html?${qsL}&de=play&g=locacao#p-locacao">📅 ${v.inicio?`Retira ${App.diaBR(v.inicio)} · devolve ${App.diaBR(App.locFim(v.inicio))} · mudar`:"Escolher o dia da retirada"}</a>`;}
+    return "";}
+  function prodsPlayHTML(){const S=selP();const artes=c.artes||{};const pri=Object.values(artes).map(a=>a&&(a.contexto||a.png)).find(Boolean)||(c.manual&&c.manual.tratado)||"";
+    return `<section class="card" id="prodsP" style="padding:12px"><h2 style="margin:0 0 10px">O que oferecer nesta loja</h2>
+      ${App.gruposHTML({S,artes,aberto:GRUPO_AB,img:{personalizacao:pri,mostraai:KIT14?`/brand/mostrai/JPG/${KIT14.kitDe(l.setor)}_Mostrai.jpg`:"",locacao:App.LOC_IMG[1]},conteudo:conteudoGrupo})}</section>`;}
   // teste de cada produto sem sair do fluxo do Play: capacho no chão (cartão Gênio), vestíveis no Provar, o resto no editor do produto
   function testeP(k){const b=App.baseId(k),q=`l=${encodeURIComponent(slug)}`;
     if(b==="capacho")return `<a class="tst" data-tst href="capacho.html?${q}&n=${encodeURIComponent(nome)}&ver=1&de=play">📷 Testar no chão</a>`;
@@ -133,9 +150,10 @@
   let ETL=qs.has("e")?Math.max(0,Math.min(4,+qs.get("e")||0)):null;
   const irL=i=>{location.href=`visita.html?l=${encodeURIComponent(slug)}&de=play&e=${i}`;};
   const LOCs=[];if(modo==="play")App.reservasLoc().then(r=>{(r||[]).filter(x=>x&&x.slug===slug&&x.inicio).forEach(x=>LOCs.push(x));if(LOCs.length&&ETL===2){const y=scrollY;render();scrollTo(0,y);}}).catch(()=>{});
-  function orcPlayHTML(){const S=selP();const it=Object.entries(S).filter(([k,v])=>v&&v.q>0);
+  function orcPlayHTML(){const S=selP();const todos=Object.entries(S).filter(([k,v])=>v&&v.q>0);const it=todos.filter(([k])=>!App.ehServico(k));const sv=todos.filter(([k])=>App.ehServico(k));
+    const locFora=LOCs.filter(x=>!S[String(x.id||"").split("|")[1]]);
     return `<section class="card" data-pe="2"><span class="tag-prod">■ PRODUTOS</span>${it.length?it.map(([k,v])=>`<div class="ln-o"><span>${esc(v.nome||pnome(k))}</span><b>${v.q} un.</b></div>`).join(""):`<p class="muted" style="margin:8px 0 0">Nenhum produto selecionado. Volte à etapa 2 e toque nos produtos.</p>`}</section>
-      <section class="card" data-pe="2"><span class="tag-serv">● SERVIÇOS</span>${LOCs.length?LOCs.map(x=>`<div class="ln-o"><span>Locação de kit · ${esc(((App.LOC_TEMAS||[]).find(t=>t.id===x.tema)||{}).nome||x.tema)}</span><b>${esc(App.diaBR?App.diaBR(x.inicio):x.inicio)}</b></div>`).join(""):`<p class="muted" style="margin:8px 0 0">Nenhum serviço nesta venda. Aluguel de kit e os itens do AI Negócios entram aqui, separados dos produtos.</p>`}</section>
+      <section class="card" data-pe="2"><span class="tag-serv">● SERVIÇOS</span>${sv.map(([k,v])=>`<div class="ln-o"><span>${esc(App.baseId(k)==="locacao"?"Locação de kit · "+(((App.LOC_TEMAS||[]).find(t=>t.id===v.tema)||{}).nome||"tema a escolher"):v.nome||k)}</span><b>${App.baseId(k)==="locacao"?(v.inicio?esc(App.diaBR(v.inicio)):"sem data"):App.baseId(k)==="mostraai"?"mensal":App.baseId(k)==="inpi"?"1 registro":"mensal"}</b></div>`).join("")}${!sv.length&&!locFora.length?`<p class="muted" style="margin:8px 0 0">Nenhum serviço nesta venda. Mostraí, Fala Aí, locação de kit e registro de marca entram aqui, separados dos produtos.</p>`:""}${locFora.length?locFora.map(x=>`<div class="ln-o"><span>Locação de kit · ${esc(((App.LOC_TEMAS||[]).find(t=>t.id===x.tema)||{}).nome||x.tema)}</span><b>${esc(App.diaBR?App.diaBR(x.inicio):x.inicio)}</b></div>`).join(""):""}</section>
       <div class="grade-nb" data-pe="2"><a class="btn" data-play="orc" href="orcamento.html?l=${encodeURIComponent(slug)}&de=play">${App.nb("3.1","Emitir orçamento")}</a><a class="btn sec" href="visita.html?l=${encodeURIComponent(slug)}&de=play&e=1">${App.nb("3.2","Mudar produtos")}</a></div>`;}
   function fechPlayHTML(){const A=A_();
     return `<section class="card" data-pe="3"><h2>Fechamento</h2><p class="muted" style="margin:0 0 10px">Forma de pagamento (Pix à vista, cartão a prazo, com ou sem sinal) fica no orçamento. Depois, entregue o código do painel do cliente.</p>
@@ -275,6 +293,11 @@
       const vo=$("#vendaOk");if(vo)vo.onclick=async()=>{const e=estado();e.atend=e.atend||{};const A={...(e.atend[slug]||{})};A.fech=!A.fech;if(A.fech)A.saida="vendeu";else if(A.saida==="vendeu")delete A.saida;e.atend[slug]=A;await salvar(e);if(A.fech)irL(4);else{const y=scrollY;render();scrollTo(0,y);}};
       $$("[data-saida]").forEach(b=>b.onclick=async()=>{const e=estado();e.atend=e.atend||{};const k=b.dataset.saida;e.atend[slug]={...(e.atend[slug]||{}),saida:k,...(k==="vendeu"?{fech:true}:{})};await salvar(e);const d=$("#voltaD").value,m=$("#voltaM").value;const y=scrollY;render();scrollTo(0,y);$("#voltaD").value=d;$("#voltaM").value=m;});
       const sl=$("#saiLoja");if(sl)sl.onclick=async()=>{sl.disabled=true;await sairLoja();};}
+    $$("[data-grupo]").forEach(b=>b.onclick=()=>{const g=b.dataset.grupo;GRUPO_AB=GRUPO_AB===g?"":g;try{sessionStorage.setItem(kGrupo,GRUPO_AB);}catch(e){}render();const el=document.querySelector(`[data-grupo="${g}"]`);if(el)el.scrollIntoView({block:"start",behavior:"smooth"});});
+    const selG=fn=>{const e=estado();e.sel=e.sel||{};const S=e.sel[slug]=e.sel[slug]||{};fn(S);salvar(e);const y=scrollY;render();scrollTo(0,y);};
+    $$("[data-plano-m]").forEach(b=>b.onclick=()=>selG(S=>{const v=S.mostraai;if(v&&v.q>0&&(v.plano||"comodato")===b.dataset.planoM)v.q=0;else App.selMostrai(S,b.dataset.planoM);}));
+    $$("[data-svtog]").forEach(b=>b.onclick=()=>selG(S=>{const g=b.dataset.svtog;const v=S[g]=S[g]||{q:0,servico:true,nome:App.SERV_NOMES[g]};v.q=v.q>0?0:1;v.servico=true;v.nome=v.nome||App.SERV_NOMES[g];}));
+    $$("[data-loc-tema]").forEach(b=>b.onclick=()=>{const S0=selP();if(S0.locacao&&S0.locacao.inicio){location.href=`produtos.html?${qsL}&de=play&g=locacao#p-locacao`;return;}selG(S=>{S.locacao={...(S.locacao||{q:0,locacao:true,nome:"Kit locação"}),tema:b.dataset.locTema};});});
     $$("[data-pp]").forEach(f=>f.onclick=ev=>{if(ev.target.closest("[data-tst]"))return;const k=f.dataset.pp;const e=estado();e.sel=e.sel||{};const S=e.sel[slug]=e.sel[slug]||{};const on=S[k]&&S[k].q>0;
       S[k]={...(S[k]||{}),nome:pnome(k),q:on?0:(App.baseId(k)==="capacho"?1:App.passoQtd(k,0,1))};salvar(e);const y=scrollY;render();scrollTo(0,y);});
     const gp=$("#gerarP");if(gp)gp.onclick=async()=>{gp.disabled=true;const r=await App.gerarProdutos(l,pid=>{gp.textContent=`Gerando ${pnome(pid)}…`;});c=await cliente(l);const y=scrollY;render();scrollTo(0,y);if(r&&r.falhas&&r.falhas.length)alert("Não gerou: "+r.falhas.join(", "));};
