@@ -98,7 +98,7 @@ def ler(fotos, setor, chaves, log_dir):
                 registrar("claude", modelo, f"in={u.get('input_tokens')} out={u.get('output_tokens')}")
                 return dict(res, provedor=modelo)
             except Exception as e:
-                erros.append(f"{modelo}: {_erro_http(e)}")
+                erros.append(f"{modelo}: {_erro_http(e)[:90]}")
     if chaves.get("GEMINI_KEY"):
         modelos = ["gemini-2.5-flash"]
         try:   # os nomes mudam: pega os "flash" de texto disponíveis para a chave
@@ -108,9 +108,13 @@ def ler(fotos, setor, chaves, log_dir):
                     and "live" not in m.get("name", "") and "generateContent" in (m.get("supportedGenerationMethods") or [])]
             if disp:
                 pref = [n for n in disp if re.fullmatch(r"gemini-\d(\.\d)?-flash", n)]
-                modelos = (sorted(pref, reverse=True) or sorted(disp, reverse=True))[:2]
+                modelos = (sorted(pref, reverse=True) or sorted(disp, reverse=True))[:3]
         except Exception:
             pass
+        # os mais novos às vezes ficam sobrecarregados (503): sempre há os estáveis de reserva
+        for reserva in ("gemini-2.5-flash", "gemini-2.0-flash"):
+            if reserva not in modelos:
+                modelos.append(reserva)
         for modelo in modelos:
             try:
                 partes = [{"inlineData": {"mimeType": mt, "data": b64}} for mt, b64 in F] + [{"text": prompt}]
@@ -123,8 +127,8 @@ def ler(fotos, setor, chaves, log_dir):
                 registrar("gemini", modelo, f"in={u.get('promptTokenCount')} out={u.get('candidatesTokenCount')}")
                 return dict(res, provedor=modelo)
             except Exception as e:
-                msg = _erro_http(e); erros.append(f"{modelo}: {msg}")
-                if "429" in msg:
+                msg = _erro_http(e); erros.append(f"{modelo}: {msg[:90]}")
+                if "429" in msg and "quota" in msg.lower():
                     break
     if chaves.get("OPENAI_KEY"):
         try:
@@ -137,5 +141,5 @@ def ler(fotos, setor, chaves, log_dir):
             registrar("openai", "gpt-4o-mini", f"in={u.get('prompt_tokens')} out={u.get('completion_tokens')}")
             return dict(res, provedor="gpt-4o-mini")
         except Exception as e:
-            erros.append("openai: " + _erro_http(e))
+            erros.append("openai: " + _erro_http(e)[:90])
     raise ValueError(" · ".join(erros) or "nenhuma chave de leitura gravada (Claude, Gemini ou OpenAI)")
