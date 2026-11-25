@@ -59,6 +59,16 @@ input:focus,textarea:focus{outline:2px solid var(--roxo);border-color:transparen
 .formas .fv{margin-left:auto;font-weight:700;white-space:nowrap}.formas small{display:block;color:var(--texto2);font-size:12.5px}
 .folha{position:fixed;inset:0;z-index:60;background:rgba(20,16,36,.5);display:flex;align-items:flex-end;justify-content:center}
 .folha>div{background:var(--fundo);width:100%;max-width:640px;border-radius:22px 22px 0 0;padding:16px 16px calc(18px + env(safe-area-inset-bottom));max-height:92vh;overflow:auto}
+.rel-ind{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 10px}.rel-ind span{background:#fff;border-radius:999px;padding:6px 12px;font-size:13.5px;font-weight:600}
+.rel-ind span b{color:var(--roxo)}
+.rc{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:center;padding:12px 0;border-bottom:1px solid #F0EDF6;cursor:pointer}
+.rc:last-child{border-bottom:0}.rc b{display:block;font-size:15px}.rc small{display:block;color:var(--texto2);font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rc .q{font-size:12px;color:var(--texto2);text-align:right;white-space:nowrap}.rc .q i{display:block;font-style:normal;font-weight:700;margin-top:3px}
+.as{border-radius:8px;padding:3px 8px;font-size:12px;font-weight:700;white-space:nowrap}
+.as.elogio{background:#E3F6F3;color:#0B5E5A}.as.sugestao{background:#E9F0FD;color:#1E4FA8}.as.reclamacao{background:#FDECEA;color:#9B2C1F}.as.duvida{background:#F2EEFA;color:#5B2BA8}
+.novo{width:10px;height:10px;border-radius:50%;background:#E5484D;display:inline-block;margin-left:6px;vertical-align:middle}
+.msg.sis{justify-self:stretch;max-width:100%;background:#E6F4F3;color:#0B4F4B;text-align:center}
+.prontas{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0 0}.prontas button{border:1.5px solid var(--linha);background:#fff;border-radius:999px;padding:6px 12px;font:600 13px Rubik,system-ui,sans-serif;color:var(--roxo);cursor:pointer;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 </style>
 </head>
 <body>
@@ -111,6 +121,7 @@ input:focus,textarea:focus{outline:2px solid var(--roxo);border-color:transparen
     const est=n=>n?` · <span class="est">${"★".repeat(n)}<span>${"★".repeat(5-n)}</span></span>`:"";
     $("#app").innerHTML=`<h1>${esc(L.nome||"Sua loja")}</h1><p class="sub">${esc(L.setor||"")}${L.endereco?` · <a href="${esc(L.maps||"#")}" target="_blank" rel="noopener">📍 ${esc(L.endereco)}</a>`:""}${est(L.estrelas)}</p>
       <div class="ola">Olá${eu.nome?`, <b>${esc(eu.nome)}</b>`:""}! Aqui está o seu orçamento${D.vendedor&&D.vendedor.nome?` feito por <b>${esc(D.vendedor.nome)}</b>`:""}${D.em?` · atualizado em ${esc(new Date(D.em).toLocaleDateString("pt-BR"))}`:""}. Toque num produto para ver as fotos.</div>
+      <div id="rel"></div>
       ${PED?statusHTML(PED):""}
       ${O&&O.linhas&&O.linhas.length?`<h2>Seu orçamento</h2><div class="card">${O.linhas.map((x,i)=>{const a=linhaAtual(x);const pode=x.opcoes&&!PED;return `<div class="ln ${a.q===0?"fora":""}" data-i="${i}"><div class="fig" style="${x.img?`background-image:url('${esc(img(x.img))}')`:""}">${x.img?"":x.servico?"📺":"▫"}</div>
           <div><b>${esc(x.nome)}</b><small>${x.servico?"":a.q===0?"não quero · ":`${(+a.q||0).toLocaleString("pt-BR")} un. · `}${esc(x.unid||"")}</small>${pode?`<span class="qt"><button type="button" data-q="-" aria-label="menos">−</button><span>${a.q===0?"0":a.q.toLocaleString("pt-BR")}</span><button type="button" data-q="+" aria-label="mais">+</button></span>`:""}</div>
@@ -119,7 +130,7 @@ input:focus,textarea:focus{outline:2px solid var(--roxo);border-color:transparen
         <div class="tot"><span>Total</span><b>${R(T.total)}</b></div>${O.mensal?`<p class="muted" style="margin:2px 2px 0">Mais ${R(O.mensal)}/mês dos serviços.</p>`:""}</div>
         ${T.total>0?`<h2>Formas de pagamento</h2><div class="pag">${formas(O,T.total).map(p=>`<div class="op"><div><b style="font-size:15px">${esc(p.t)}</b><small>${esc(p.d)}</small></div><b>${esc(p.v)}</b></div>`).join("")}</div>
         ${PED?"":`<button type="button" class="btn" id="fechar" style="margin-top:16px">Quero estes · ${R(T.total)}</button>`}`:""}`
-      :`<div class="card" style="margin-top:14px"><p style="margin:0">O seu orçamento ainda está sendo preparado. Assim que o consultor terminar, ele aparece aqui.</p></div>`}
+      :`<div class="card" id="orcVazio" style="margin-top:14px"><p style="margin:0">O seu orçamento ainda está sendo preparado. Assim que o consultor terminar, ele aparece aqui.</p></div>`}
       <h2>Conversa com a GênIO</h2><div class="card"><div class="conv" id="conv">${(D.mensagens||[]).length?D.mensagens.map(m=>`<div class="msg ${m.de==="cliente"?"cli":"gen"}">${esc(m.texto)}<small>${esc((m.em||"").slice(8,10)+"/"+(m.em||"").slice(5,7)+" "+(m.em||"").slice(11,16))}</small></div>`).join(""):`<p class="muted" style="margin:0">Escreva aqui o que quiser ajustar.</p>`}</div>
         <textarea id="txt" rows="3" placeholder="Escreva para o seu consultor" style="margin-top:10px;font-size:16px"></textarea><button type="button" class="btn" id="env">Enviar</button>
         ${O&&O.linhas&&O.linhas.length?`<div class="rap" style="grid-template-columns:1fr"><button type="button" class="btn sec" data-r="ajuste">Pedir ajuste</button></div>`:""}</div>`;
@@ -129,11 +140,49 @@ input:focus,textarea:focus{outline:2px solid var(--roxo);border-color:transparen
     const rb=$("#reabrir");if(rb)rb.onclick=async()=>{rb.disabled=true;try{D=await api("/api/painel/reabrir",{});painel();}catch(e){rb.disabled=false;alert(e.message);}};
     const mandar=async t=>{t=String(t||"").trim();if(!t)return;const b=$("#env");b.disabled=true;try{D=await api("/api/painel/mensagem",{texto:t});painel();}catch(e){b.disabled=false;alert("Não enviou: "+e.message);}};
     $("#env").onclick=()=>mandar($("#txt").value);
-    document.querySelectorAll("[data-r]").forEach(b=>b.onclick=()=>{const t=$("#txt");t.value="Quero ajustar: ";t.focus();t.setSelectionRange(t.value.length,t.value.length);});}
+    document.querySelectorAll("[data-r]").forEach(b=>b.onclick=()=>{const t=$("#txt");t.value="Quero ajustar: ";t.focus();t.setSelectionRange(t.value.length,t.value.length);});
+    desenharRel();}
+  // ---- relacionamento com os clientes da loja (conversas que chegam pelo QR do balcão)
+  let REL=null,relAberta=null;
+  const MOT={elogio:"elogio",resolvido:"resolvido por você",cliente:"o cliente encerrou",tempo:"sem resposta do cliente por 2 h"};
+  const dh=s=>(s||"").slice(8,10)+"/"+(s||"").slice(5,7)+" "+(s||"").slice(11,16);
+  async function puxarRel(){try{REL=await api("/api/painel/relacionamento");}catch(e){REL=null;}desenharRel();if(relAberta)abrirConversa(relAberta,true);}
+  function desenharRel(){const el=$("#rel");if(!el)return;if(!REL||!REL.ativo){el.innerHTML="";return;}const I=REL.indicadores||{};
+    const ov=$("#orcVazio");if(ov)ov.hidden=true;   // loja só com o adesivo: não mostra "orçamento em preparo"
+    el.innerHTML=`<h2>Relacionamento com os seus clientes</h2><div class="rel-ind"><span><b>${I.abertas||0}</b> em aberto</span><span><b>${I.mes||0}</b> este mês</span><span><b>${I.voltaram||0}</b> voltaram à loja</span></div>
+      <div class="card">${REL.conversas.length?REL.conversas.map(c=>{const u=c.msgs[c.msgs.length-1]||{};return `<div class="rc" data-c="${esc(c.id)}"><span class="as ${esc(c.assunto)}">${esc(REL.assuntos[c.assunto]||c.assunto)}</span>
+          <div><b>${esc(c.nome||"Cliente")}${c.excelencia?" ★":""}${!c.lida?'<span class="novo" aria-label="nova"></span>':""}</b><small>${esc(u.texto||"")}</small></div>
+          <div class="q">${esc(dh(u.em))}<i>${c.estado==="aberta"?"em aberto":"encerrada"}</i></div></div>`;}).join("")
+        :`<p class="muted" style="margin:0">Quando um cliente ler o QR do balcão e escrever, a conversa aparece aqui.</p>`}</div>
+      <details class="card" style="margin-top:10px"><summary style="font-weight:600;cursor:pointer">Respostas automáticas</summary><p class="muted">A primeira mensagem de cada cliente recebe na hora a resposta do assunto dele. Você continua a conversa depois.</p>
+        ${Object.entries(REL.assuntos).map(([k,t])=>`<label>${esc(t)}</label><textarea data-rp="${k}" rows="2" style="font-size:15px">${esc((REL.respostas||{})[k]||"")}</textarea>`).join("")}
+        <button type="button" class="btn sec" id="rpSalvar">Salvar respostas</button></details>`;
+    el.querySelectorAll("[data-c]").forEach(r=>r.onclick=()=>abrirConversa(r.dataset.c));
+    const rs=$("#rpSalvar");if(rs)rs.onclick=async()=>{const d={};el.querySelectorAll("[data-rp]").forEach(t=>d[t.dataset.rp]=t.value);rs.disabled=true;try{REL=await api("/api/painel/relacionamento/respostas",d);rs.textContent="Salvas ✓";}catch(e){alert(e.message);}rs.disabled=false;};}
+  function abrirConversa(cid,soAtualizar){const c=(REL&&REL.conversas||[]).find(x=>x.id===cid);if(!c)return;relAberta=cid;
+    let f=document.querySelector(".folha.rel");if(!f){if(soAtualizar)return;f=document.createElement("div");f.className="folha rel";document.body.appendChild(f);f.onclick=ev=>{if(ev.target===f){f.remove();relAberta=null;}};}
+    const rascunho=(f.querySelector("#rTxt")||{}).value||"";
+    f.innerHTML=`<div><div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><b style="font-size:18px">${esc(c.nome||"Cliente")} · <span class="as ${esc(c.assunto)}">${esc(REL.assuntos[c.assunto]||"")}</span></b><button type="button" class="btn sec" id="rX" style="width:auto;margin:0;min-height:40px;padding:0 14px">Fechar</button></div>
+      <p class="muted" style="margin:6px 0 10px">${c.estado==="aberta"?"Em aberto":"Encerrada · "+esc(MOT[c.motivo_fim]||"")}${c.visitas>1?` · voltou à loja ${c.visitas} vezes`:""}</p>
+      <div class="conv" id="rConv">${c.msgs.map(m=>`<div class="msg ${m.de==="cliente"?"gen":m.de==="sistema"?"sis":"cli"}">${esc(m.texto)}<small>${m.de==="cliente"?esc(c.nome||"Cliente"):m.de==="sistema"?"convite enviado":"Loja"+(m.auto?" · automática":"")} · ${esc(dh(m.em))}</small></div>`).join("")}</div>
+      <textarea id="rTxt" rows="2" placeholder="Responder" style="margin-top:10px;font-size:16px">${esc(rascunho)}</textarea>
+      <div class="prontas">${["Obrigado!","Já resolvemos, pode conferir na próxima visita.","Pode me contar mais detalhes?"].map(t=>`<button type="button" data-pr="${esc(t)}">${esc(t)}</button>`).join("")}</div>
+      <button type="button" class="btn" id="rEnv">Enviar</button>
+      ${c.estado==="aberta"?`<button type="button" class="btn sec" id="rRes">Resolvido ✓</button><p class="muted" style="margin:6px 2px 0">Ao marcar resolvido, o cliente recebe o agradecimento e o convite para avaliar no Google, igual para todos os clientes.</p>`:""}
+      <button type="button" class="btn sec" id="rExc">${c.excelencia?"★ Tirar de excelência":"☆ Marcar como relacionamento excelente"}</button></div>`;
+    const cv=f.querySelector("#rConv");cv.scrollTop=cv.scrollHeight;
+    f.querySelector("#rX").onclick=()=>{f.remove();relAberta=null;};
+    f.querySelectorAll("[data-pr]").forEach(b=>b.onclick=()=>{const t=f.querySelector("#rTxt");t.value=b.dataset.pr;t.focus();});
+    const acao=async(u,corpo)=>{try{REL=await api(u,corpo||{});desenharRel();abrirConversa(cid,true);}catch(e){alert(e.message);}};
+    f.querySelector("#rEnv").onclick=()=>{const t=f.querySelector("#rTxt").value.trim();if(!t)return;f.querySelector("#rTxt").value="";acao(`/api/painel/relacionamento/${cid}/responder`,{texto:t});};
+    const rr=f.querySelector("#rRes");if(rr)rr.onclick=()=>acao(`/api/painel/relacionamento/${cid}/resolvido`);
+    f.querySelector("#rExc").onclick=()=>acao(`/api/painel/relacionamento/${cid}/excelencia`);
+    if(!c.lida&&!soAtualizar)acao(`/api/painel/relacionamento/${cid}/lida`);}
+  setInterval(()=>{if(!document.hidden&&D)puxarRel();},20000);
   function verProduto(x){const f=(D.fotos||{})[x.k]||(x.img?[x.img]:[]);const v=document.createElement("div");v.className="ver";
     v.innerHTML=`<div class="t"><b>${esc(x.nome)}${x.total!=null?" · "+R(x.total):""}</b><button type="button">Fechar</button></div><div class="g">${f.length?f.map(s=>`<img src="${esc(img(s))}" alt="" loading="lazy">`).join(""):`<p style="color:#fff">Fotos deste produto em preparo.</p>`}</div>`;
     document.body.appendChild(v);v.querySelector("button").onclick=()=>v.remove();}
-  async function abrir(){try{D=await api("/api/painel/eu");ESC=Object.assign({},((D.cliente||{}).escolhas)||{});painel();}catch(e){if(e.status===401)entrar();else $("#app").innerHTML=`<p class="erro">Não consegui abrir agora: ${esc(e.message)}</p>`;}}
+  async function abrir(){try{D=await api("/api/painel/eu");ESC=Object.assign({},((D.cliente||{}).escolhas)||{});painel();puxarRel();}catch(e){if(e.status===401)entrar();else $("#app").innerHTML=`<p class="erro">Não consegui abrir agora: ${esc(e.message)}</p>`;}}
   $("#sair").onclick=async()=>{try{await api("/api/painel/sair",{});}catch(e){}D=null;entrar();};
   abrir();
 })();

@@ -6,7 +6,7 @@
 <title>GênIO · Visita</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="app.css?v=2147003129">
+<link rel="stylesheet" href="app.css?v=121eb8fc34">
 <style>
 .cab{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
 .fach{width:100%;aspect-ratio:16/9;border-radius:16px;overflow:hidden;background:var(--lav2);display:grid;place-items:center;position:relative}
@@ -33,7 +33,7 @@
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=2147003129"></script>
+<script src="app.js?v=121eb8fc34"></script>
 <script>
 (async()=>{
   const {$,$$,esc,qs,sessao,dados,ficha,estrelasHTML,estado,salvar,nav,topo,voltar,setorNome,nomeLoja,telFmt,cliente,gravarCliente,classificar,definirCliente,menuLongo,ligarLongo,ZONA,entradas,ligarEntradas,abrirLogotipo,logoPrincipal,removerLogo}=App;
@@ -108,7 +108,7 @@
   const selP=()=>((estado().sel||{})[slug])||{};const nSelP=()=>Object.entries(selP()).filter(([k,v])=>v&&v.q>0&&((c.artes||{})[k]||App.ehServico(k))).length;
   function filaHTML(){const f=filaP();const X=Rp();const i=f.indexOf(slug);const x=App.dataCurta(diaP);
     return `<div class="passos fila-p"><div class="t"><span>${diaP===App.hojeISO()?"Rota de hoje":`Rota de ${x.sem} ${x.dia}/${x.mes}`} · loja ${i+1} de ${f.length}</span><b>${f.filter(s=>X.res[s]).length} feita(s)</b></div><ol>${f.map(s=>`<li class="${X.res[s]?"ok":s===slug?"agora":""}"></li>`).join("")}</ol></div>`;}
-  let KIT14=null;App.carregarScript("kits14.js?v=2147003129").then(()=>{KIT14=window.Kits14;if(modo==="play"&&ETL===1){const y=scrollY;render();scrollTo(0,y);}}).catch(()=>{});
+  let KIT14=null;App.carregarScript("kits14.js?v=121eb8fc34").then(()=>{KIT14=window.Kits14;if(modo==="play"&&ETL===1){const y=scrollY;render();scrollTo(0,y);}}).catch(()=>{});
   const kGrupo="grupo-"+slug;let GRUPO_AB=(()=>{try{return sessionStorage.getItem(kGrupo)||"";}catch(e){return "";}})();  // começa com os 5 fechados: todos à vista, com o mesmo peso
   const qsL=`l=${encodeURIComponent(slug)}`;
   function conteudoGrupo(g){const S=selP();
@@ -119,7 +119,8 @@
     if(g==="mostraai"){const v=S.mostraai,on=!!(v&&v.q>0);const img=KIT14?`/brand/mostrai/JPG/${KIT14.kitDe(l.setor)}_Mostrai.jpg`:"";
       return `${img?`<img class="sv-ref" src="${img}" alt="Mostraí numa loja do mesmo ramo" loading="lazy">`:""}<div class="sv-planos">${App.MOSTRAI_PLANOS.map(p=>`<button type="button" data-plano-m="${p.id}" class="${on&&(v.plano||"comodato")===p.id?"on":""}"><b>${p.rot}</b><small>${p.txt}</small></button>`).join("")}</div>
         <p class="sv-nota">${on?"✓ No orçamento. Toque no plano escolhido para tirar.":"Toque num plano para pôr no orçamento."} A TV é do lojista; a GênIO liga e configura o aparelho.</p>
-        <a class="sv-lk" href="produtos.html?${qsL}&de=play&g=mostraai#acionar">📺 Ligar a TV de demonstração (link e QR)</a>`;}
+        <a class="sv-lk" href="produtos.html?${qsL}&de=play&g=mostraai#acionar">📺 Ligar a TV de demonstração (link e QR)</a>
+        <a class="sv-lk" href="produtos.html?${qsL}&de=play&g=mostraai#cardapio">📷 Fotografar o cardápio da loja</a>`;}
     if(g==="falaai"||g==="inpi"){const v=S[g],on=!!(v&&v.q>0);
       return `<p class="sv-nota" style="margin-top:0">${g==="falaai"?"O telefone da loja atendido com o nome dela, com frases gravadas no sistema. Preço e número de demonstração: a definir.":"Pedido de registro do nome e do logotipo no INPI. Preço: a confirmar."}</p><button type="button" class="sv-tog ${on?"on":""}" data-svtog="${g}">${on?"✓ No orçamento · tocar para tirar":"Pôr no orçamento"}</button>`;}
     if(g==="locacao"){const v=S.locacao||{},tema=v.tema||"liquidacao";
@@ -161,12 +162,21 @@
       <button type="button" class="btn ${A.fech?"sec":""}" id="vendaOk" style="grid-column:1/-1">${App.nb("4.3",A.fech?"✓ Venda fechada · desfazer":"Venda fechada")}</button></div>
       <p class="muted" style="margin:8px 0 0;font-size:13px">Não fechou? Siga para a etapa 5 e marque orçamento em aberto, voltar outro dia ou não estava.</p></section>`;}
   const RES_L=[["vendeu","✓ Vendeu"],["aberto","🧾 Orçamento em aberto"],["voltar","📅 Voltar outro dia"],["nao_estava","✕ Não estava"]];
+  // adesivo do balcão (brinde): QR numerado GA-0001 que abre a conversa da loja com os clientes dela
+  let ADES=null;fetch(`/api/relaciona/${encodeURIComponent(slug)}`,{credentials:"same-origin",cache:"no-store"}).then(r=>r.ok?r.json():null).then(j=>{ADES=j||{codigos:[]};if(modo==="play"&&ETL===4){const y=scrollY;render();scrollTo(0,y);}}).catch(()=>{ADES={codigos:[]};});
+  function adesivoHTML(){const cs=(ADES&&ADES.codigos)||[];const I=(ADES&&ADES.indicadores)||null;
+    return `<section class="card" data-pe="4"><h2>${App.nb("5.2","Adesivo do balcão")}</h2>
+      <p class="muted" style="margin:0 0 10px;font-size:14px">Cole o adesivo no balcão ou no caixa e digite o código dele. O QR passa a abrir a conversa dos clientes com o gerente desta loja. O gerente responde pelo Painel do cliente (etapa 4 · Painel do cliente → + Telefone).</p>
+      ${cs.length?`<div class="ln-o" style="flex-wrap:wrap">${cs.map(c=>`<span>✓ <b>${esc(c)}</b> ligado</span><span><a href="/q.html?c=${encodeURIComponent(c)}" target="_blank" rel="noopener">abrir a página</a> · <a href="#" data-ades-x="${esc(c)}">desligar</a></span>`).join("")}</div>`:""}
+      ${I?`<p class="muted" style="margin:6px 0 0;font-size:13px">${I.mes||0} conversa(s) este mês · ${I.abertas||0} em aberto · ${I.voltaram||0} cliente(s) voltaram</p>`:""}
+      <div style="display:flex;gap:8px;margin-top:10px"><input class="campo" id="adesCod" placeholder="GA-0001" inputmode="text" autocapitalize="characters" style="flex:1;text-transform:uppercase"><button type="button" class="btn" id="adesOk" style="width:auto;padding:0 18px">Ativar</button></div>
+      <p class="muted" id="adesMsg" style="margin:6px 0 0;font-size:13px">${ADES&&ADES.codigos&&ADES.codigos.length&&!ADES.google?"Sem o código da loja no Google: a conversa funciona, só sem o convite para avaliar.":""}</p></section>`;}
   function saidaPlayHTML(){const A=A_();const V=((estado().voltas||{})[slug])||{};const r=A.saida||(A.fech?"vendeu":"");
     return `<section class="card" data-pe="4"><h2>Como saiu desta loja</h2><div class="ops-s">${RES_L.map(([k,t])=>`<button type="button" data-saida="${k}" class="${r===k?"on":""}">${t}</button>`).join("")}</div>
       <label class="muted" style="font-size:13px;display:block;margin-top:12px">Próxima volta</label><input type="date" class="campo" id="voltaD" value="${esc(V.data||"")}" min="${App.hojeISO()}">
       <input class="campo" id="voltaM" placeholder="Motivo (pós-venda, orçamento, pediu para voltar…)" value="${esc(V.motivo||"")}" style="margin-top:6px">
       <p class="muted" style="margin:6px 0 0;font-size:13px">Com data, a loja entra sozinha nos Retornos da rota daquela semana.</p>
-      <button type="button" class="btn" id="saiLoja" style="margin-top:12px;min-height:56px" ${r?"":"disabled"}>${App.nb("5.1","Encerrar e ir para a próxima loja")}</button></section>`;}
+      <button type="button" class="btn" id="saiLoja" style="margin-top:12px;min-height:56px" ${r?"":"disabled"}>${App.nb("5.1","Encerrar e ir para a próxima loja")}</button></section>${adesivoHTML()}`;}
   async function sairLoja(){const A=A_();const r=A.saida;if(!r)return;const t=new Date().toISOString();const e=estado();const X=e.rotas[diaP];X.res=X.res||{};X.orc=X.orc||{};
     X.res[slug]=r==="nao_estava"?"nao_estava":r==="vendeu"?"vendeu":X.orc[slug]||r==="aberto"?"orcamento":"visitada";
     e.atend=e.atend||{};const at={...(e.atend[slug]||{}),fim:t};if(r==="nao_estava"||r==="voltar")at.res=r;else if(r==="vendeu")at.res="vendeu";e.atend[slug]=at;
@@ -292,7 +302,14 @@
       $$("[data-pe-ir]").forEach(b=>b.onclick=()=>{const el=document.getElementById(b.dataset.peIr);if(el){el.hidden=false;el.scrollIntoView({behavior:"smooth",block:"start"});}});
       const vo=$("#vendaOk");if(vo)vo.onclick=async()=>{const e=estado();e.atend=e.atend||{};const A={...(e.atend[slug]||{})};A.fech=!A.fech;if(A.fech)A.saida="vendeu";else if(A.saida==="vendeu")delete A.saida;e.atend[slug]=A;await salvar(e);if(A.fech)irL(4);else{const y=scrollY;render();scrollTo(0,y);}};
       $$("[data-saida]").forEach(b=>b.onclick=async()=>{const e=estado();e.atend=e.atend||{};const k=b.dataset.saida;e.atend[slug]={...(e.atend[slug]||{}),saida:k,...(k==="vendeu"?{fech:true}:{})};await salvar(e);const d=$("#voltaD").value,m=$("#voltaM").value;const y=scrollY;render();scrollTo(0,y);$("#voltaD").value=d;$("#voltaM").value=m;});
-      const sl=$("#saiLoja");if(sl)sl.onclick=async()=>{sl.disabled=true;await sairLoja();};}
+      const sl=$("#saiLoja");if(sl)sl.onclick=async()=>{sl.disabled=true;await sairLoja();};
+      const ao=$("#adesOk");if(ao)ao.onclick=async()=>{const c=($("#adesCod").value||"").trim().toUpperCase();if(!c){$("#adesMsg").textContent="Digite o código impresso no adesivo.";return;}ao.disabled=true;
+        try{const r=await fetch("/api/relaciona/ativar",{method:"POST",credentials:"same-origin",headers:{"Content-Type":"application/json"},body:JSON.stringify({codigo:c,slug,loja:{nome:l.nome,setor:l.setor,endereco:l.endereco,tel:l.tel,place_id:l.place_id,maps:l.maps,horario:l.horario}})});
+          const j=await r.json();if(!r.ok)throw new Error(j.erro||"não ativou");const r2=await fetch(`/api/relaciona/${encodeURIComponent(slug)}`,{credentials:"same-origin",cache:"no-store"});ADES=r2.ok?await r2.json():{codigos:[j.codigo]};const y=scrollY;render();scrollTo(0,y);}
+        catch(e){$("#adesMsg").textContent=e.message;ao.disabled=false;}};
+      $$("[data-ades-x]").forEach(a=>a.onclick=async ev=>{ev.preventDefault();if(!confirm(`Desligar o adesivo ${a.dataset.adesX} desta loja?`))return;
+        await fetch("/api/relaciona/desativar",{method:"POST",credentials:"same-origin",headers:{"Content-Type":"application/json"},body:JSON.stringify({codigo:a.dataset.adesX,slug})});
+        const r2=await fetch(`/api/relaciona/${encodeURIComponent(slug)}`,{credentials:"same-origin",cache:"no-store"});ADES=r2.ok?await r2.json():{codigos:[]};const y=scrollY;render();scrollTo(0,y);});}
     $$("[data-grupo]").forEach(b=>b.onclick=()=>{const g=b.dataset.grupo;GRUPO_AB=GRUPO_AB===g?"":g;try{sessionStorage.setItem(kGrupo,GRUPO_AB);}catch(e){}render();const el=document.querySelector(`[data-grupo="${g}"]`);if(el)el.scrollIntoView({block:"start",behavior:"smooth"});});
     const selG=fn=>{const e=estado();e.sel=e.sel||{};const S=e.sel[slug]=e.sel[slug]||{};fn(S);salvar(e);const y=scrollY;render();scrollTo(0,y);};
     $$("[data-plano-m]").forEach(b=>b.onclick=()=>selG(S=>{const v=S.mostraai;if(v&&v.q>0&&(v.plano||"comodato")===b.dataset.planoM)v.q=0;else App.selMostrai(S,b.dataset.planoM);}));

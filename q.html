@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Fale com o gerente</title>
+<meta name="theme-color" content="#1C1635">
+<meta name="robots" content="noindex,nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&display=swap">
+<style>
+:root{--escuro:#1C1635;--fundo:#F4F2F8;--linha:#E2DDEC;--texto:#141024;--texto2:#6B6580;--cor:#6933C5;--ok:#0E8A84}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--fundo);color:var(--texto);font-family:Rubik,system-ui,sans-serif;-webkit-text-size-adjust:100%}
+main{max-width:560px;margin:0 auto;padding:calc(16px + env(safe-area-inset-top)) 16px calc(28px + env(safe-area-inset-bottom))}
+.cab{display:flex;gap:14px;align-items:center;margin:4px 0 16px}
+.cab .lg{width:72px;height:72px;border-radius:16px;background:#fff;display:grid;place-items:center;overflow:hidden;flex-shrink:0;box-shadow:0 1px 0 rgba(28,22,53,.08)}
+.cab .lg img{width:100%;height:100%;object-fit:contain}
+.cab .lg span{font-size:28px;font-weight:800;color:var(--cor)}
+.cab h1{margin:0;font-size:24px;line-height:1.15}.cab small{display:block;color:var(--texto2);font-size:14px;margin-top:4px}
+.card{background:#fff;border-radius:18px;padding:16px;box-shadow:0 1px 0 rgba(28,22,53,.06);margin:0 0 14px}
+.card h2{margin:0 0 4px;font-size:20px}.card p.sub{margin:0 0 12px;color:var(--texto2);font-size:14.5px;line-height:1.4}
+.ass{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:0 0 12px}
+.ass button{min-height:52px;border:2px solid var(--linha);background:#fff;border-radius:14px;font:600 16px Rubik,system-ui,sans-serif;color:var(--texto);cursor:pointer}
+.ass button.on{border-color:var(--cor);background:var(--cor);color:#fff}
+textarea,input{width:100%;font:500 17px Rubik,system-ui,sans-serif;border:1.5px solid var(--linha);border-radius:14px;padding:12px 14px;background:#fff;color:var(--texto)}
+textarea:focus,input:focus{outline:2px solid var(--cor);border-color:transparent}
+label{display:block;font-weight:600;font-size:14px;margin:12px 0 6px}
+.btn{display:flex;align-items:center;justify-content:center;width:100%;min-height:54px;border:0;border-radius:14px;background:var(--cor);color:#fff;font:700 17px Rubik,system-ui,sans-serif;margin-top:12px;text-decoration:none;cursor:pointer;gap:8px;text-align:center;padding:0 12px}
+.btn.sec{background:#EFEBF6;color:var(--escuro)}.btn:disabled{opacity:.55}
+.aviso{font-size:12.5px;color:var(--texto2);margin:10px 0 0;line-height:1.4}
+.erro{color:#B4472E;font-weight:600;font-size:14px;min-height:18px;margin:8px 0 0}
+.conv{display:flex;flex-direction:column;gap:8px;margin:0 0 4px}
+.m{max-width:86%;border-radius:16px;padding:10px 12px;font-size:15.5px;line-height:1.4;white-space:pre-wrap;word-wrap:break-word}
+.m small{display:block;font-size:11.5px;opacity:.7;margin-top:3px}
+.m.cliente{align-self:flex-end;background:var(--cor);color:#fff;border-bottom-right-radius:4px}
+.m.loja{align-self:flex-start;background:#EFEBF6;border-bottom-left-radius:4px}
+.m.sistema{align-self:stretch;max-width:100%;background:#E6F4F3;color:#0B4F4B;text-align:center;border-radius:14px}
+.m.sistema .btn{background:#fff;color:var(--escuro);border:2px solid #0E8A84;margin-top:10px}
+.acoes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.acoes a,.acoes button{min-height:64px;border:0;border-radius:14px;background:#fff;color:var(--texto);text-decoration:none;font:600 15px Rubik,system-ui,sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;box-shadow:0 1px 0 rgba(28,22,53,.06);cursor:pointer;padding:6px;text-align:center}
+.acoes svg{width:24px;height:24px;stroke:var(--cor);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.acoes .larg{grid-column:1/-1}
+.menu h3{margin:16px 0 6px;font-size:16px}.menu h3:first-child{margin-top:0}
+.menu .i{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid #F0EDF6;font-size:15.5px}
+.menu .i:last-child{border-bottom:0}.menu .i small{display:block;color:var(--texto2);font-size:13px}.menu .i b{white-space:nowrap}
+.hor{white-space:pre-line;font-size:15px;line-height:1.6;color:var(--texto)}
+.vazio{text-align:center;padding:40px 10px}.vazio h1{font-size:22px;margin:0 0 8px}.vazio p{color:var(--texto2);margin:0 0 6px;line-height:1.5}
+.cod{display:inline-block;background:#fff;border-radius:10px;padding:4px 10px;font-weight:700;letter-spacing:.06em}
+</style>
+</head>
+<body>
+<main id="app"><p style="color:#6B6580">Abrindo…</p></main>
+<script>
+(()=>{
+  const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+  const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  const cod=(new URLSearchParams(location.search).get("c")||"").toUpperCase();
+  const hm=s=>{try{const d=new Date(s);return d.toLocaleDateString("pt-BR",{day:"2-digit",month:"2-digit"})+" "+d.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});}catch(e){return "";}};
+  const telFmt=t=>{t=String(t||"");return t.length===11?`(${t.slice(0,2)}) ${t.slice(2,7)}-${t.slice(7)}`:t.length===10?`(${t.slice(0,2)}) ${t.slice(2,6)}-${t.slice(6)}`:t;};
+  const IC={whats:'<path d="M4 20l1.3-4A8 8 0 1 1 8 19z"/>',tel:'<path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/>',mapa:'<path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/>',menu:'<rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h4"/>',hora:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>'};
+  const ic=k=>`<svg viewBox="0 0 24 24" aria-hidden="true">${IC[k]}</svg>`;
+  let D=null,ASS="",aberto="",timer=null;
+  async function api(u,corpo){const r=await fetch(u,{method:corpo?"POST":"GET",credentials:"same-origin",cache:"no-store",headers:corpo?{"Content-Type":"application/json"}:{},body:corpo?JSON.stringify(corpo):undefined});
+    const j=await r.json().catch(()=>({}));if(!r.ok)throw Object.assign(new Error(j.erro||"Não deu certo. Tente de novo."),{status:r.status});return j;}
+  async function carregar(){try{D=await api(`/api/q/${encodeURIComponent(cod)}`);desenhar();}catch(e){$("#app").innerHTML=`<div class="vazio"><h1>Não abriu</h1><p>${esc(e.message)}</p></div>`;}}
+  function convHTML(C){return `<div class="conv">${C.msgs.map(m=>m.convite?`<div class="m sistema">${esc(m.texto)}${C.google?`<a class="btn" href="${esc(C.google)}" target="_blank" rel="noopener">Avaliar no Google</a>`:""}</div>`
+      :`<div class="m ${m.de==="cliente"?"cliente":"loja"}">${esc(m.texto)}<small>${m.de==="cliente"?"Você":esc(D.loja.nome)} · ${hm(m.em)}</small></div>`).join("")}</div>
+    <textarea id="txt" rows="2" placeholder="Escreva aqui" style="margin-top:10px"></textarea><p class="erro" id="err"></p>
+    <button type="button" class="btn" id="env">Enviar</button>
+    ${C.estado==="aberta"?`<button type="button" class="btn sec" id="ok">Está tudo certo, obrigado</button>`:""}
+    <button type="button" class="btn sec" id="nova" style="margin-top:8px">Começar outra conversa</button>`;}
+  function novaHTML(){return `<p class="sub">Elogio, sugestão, reclamação ou dúvida: a mensagem vai direto para o gerente, que responde por aqui.</p>
+    <div class="ass">${Object.entries(D.assuntos).map(([k,t])=>`<button type="button" data-a="${k}" class="${ASS===k?"on":""}">${esc(t)}</button>`).join("")}</div>
+    <textarea id="txt" rows="3" placeholder="Escreva a sua mensagem"></textarea>
+    <label for="nome">Seu nome (se quiser)</label><input id="nome" maxlength="40" autocomplete="given-name">
+    <p class="erro" id="err"></p><button type="button" class="btn" id="env">Enviar para o gerente</button>
+    <p class="aviso">A conversa fica guardada para a loja responder, e só a loja vê. Volte a esta página pelo mesmo celular para ver a resposta.</p>`;}
+  function desenhar(){
+    if(!D.ativo){$("#app").innerHTML=`<div class="vazio"><h1>Este adesivo ainda não foi ativado</h1><p>Código <span class="cod">${esc(cod||"—")}</span></p>
+      ${D.vendedor?`<p>Para ligar este adesivo a uma loja, abra a loja no app e vá na etapa <b>5 · Saída → Adesivo do balcão</b>.</p><a class="btn" href="/app/">Abrir o app</a>`:`<p>Peça ajuda no balcão da loja.</p>`}</div>`;return;}
+    const L=D.loja,C=D.conversa,nova=!C||C._nova;document.title=`${L.nome} · Fale com o gerente`;
+    const ini=(L.nome||"?").trim().charAt(0).toUpperCase();
+    const mapa=L.maps||`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((L.endereco||L.nome)+", São Paulo")}`;
+    const temMenu=(D.cardapio||[]).length>0;
+    $("#app").innerHTML=`<div class="cab"><span class="lg">${L.logo?`<img src="${esc(L.logo)}" alt="">`:`<span>${esc(ini)}</span>`}</span><div><h1>${esc(L.nome)}</h1>${L.endereco?`<small>${esc(L.endereco)}</small>`:""}</div></div>
+      <section class="card"><h2>Fale com o gerente</h2>${nova?novaHTML():convHTML(C)}</section>
+      <div class="acoes">
+        ${temMenu?`<button type="button" data-ab="menu" class="larg">${ic("menu")}${aberto==="menu"?"Fechar o cardápio":"Ver o cardápio"}</button>`:""}
+        ${L.tel?(L.whats?`<a href="https://wa.me/55${esc(L.tel)}" target="_blank" rel="noopener">${ic("whats")}WhatsApp</a>`:`<a href="tel:+55${esc(L.tel)}">${ic("tel")}Ligar · ${esc(telFmt(L.tel))}</a>`):""}
+        <a href="${esc(mapa)}" target="_blank" rel="noopener">${ic("mapa")}Como chegar</a>
+        ${L.horario?`<button type="button" data-ab="hora" class="${L.tel?"":""}">${ic("hora")}Horário</button>`:""}
+      </div>
+      ${aberto==="menu"&&temMenu?`<section class="card menu" style="margin-top:14px">${D.cardapio.map(g=>`${g.titulo?`<h3>${esc(g.titulo)}</h3>`:""}${g.itens.map(i=>`<div class="i"><span>${esc(i.nome)}${i.desc?`<small>${esc(i.desc)}</small>`:""}</span><b>${i.preco?(i.apartir?"a partir de ":"")+"R$ "+esc(i.preco):""}</b></div>`).join("")}`).join("")}</section>`:""}
+      ${aberto==="hora"&&L.horario?`<section class="card" style="margin-top:14px"><h2 style="font-size:17px;margin:0 0 6px">Horário</h2><div class="hor">${esc(L.horario).replace(/ · /g,"\n")}</div></section>`:""}`;
+    ligar(nova);}
+  function ligar(nova){
+    $$("[data-a]").forEach(b=>b.onclick=()=>{ASS=b.dataset.a;$$("[data-a]").forEach(x=>x.classList.toggle("on",x===b));});
+    $$("[data-ab]").forEach(b=>b.onclick=()=>{aberto=aberto===b.dataset.ab?"":b.dataset.ab;desenhar();});
+    const env=$("#env");if(env)env.onclick=async()=>{const t=$("#txt").value.trim();if(!t){$("#err").textContent="Escreva a sua mensagem.";return;}
+      if(nova&&!ASS){$("#err").textContent="Escolha: elogio, sugestão, reclamação ou dúvida.";return;}
+      env.disabled=true;env.textContent="Enviando…";
+      try{const C=await api(`/api/q/${encodeURIComponent(cod)}/mensagem`,nova?{assunto:ASS,texto:t,nome:($("#nome")||{}).value||"",nova:true}:{texto:t});D.conversa=C;ASS="";desenhar();rolar();}
+      catch(e){$("#err").textContent=e.message;env.disabled=false;env.textContent="Enviar";}};
+    const ok=$("#ok");if(ok)ok.onclick=async()=>{ok.disabled=true;try{D.conversa=await api(`/api/q/${encodeURIComponent(cod)}/encerrar`,{});desenhar();rolar();}catch(e){$("#err").textContent=e.message;ok.disabled=false;}};
+    const nv=$("#nova");if(nv)nv.onclick=()=>{D.conversa=Object.assign({},D.conversa,{_nova:true});desenhar();};}
+  function rolar(){const c=document.querySelector(".conv");if(c){const ult=c.lastElementChild;if(ult)ult.scrollIntoView({block:"center",behavior:"smooth"});}}
+  // a resposta do gerente aparece sozinha enquanto a página está aberta
+  async function conferir(){if(document.hidden||!D||!D.ativo||!D.conversa||D.conversa._nova)return;const foco=document.activeElement;if(foco&&foco.id==="txt"&&foco.value)return;
+    try{const N=await api(`/api/q/${encodeURIComponent(cod)}`);if(N.conversa&&JSON.stringify(N.conversa)!==JSON.stringify(D.conversa)){D=N;desenhar();rolar();}}catch(e){}}
+  setInterval(conferir,10000);document.addEventListener("visibilitychange",conferir);
+  if(!/^GA-\d{4}$/.test(cod)){$("#app").innerHTML=`<div class="vazio"><h1>Código inválido</h1><p>Leia de novo o QR do adesivo.</p></div>`;return;}
+  carregar();
+})();
+</script>
+</body>
+</html>

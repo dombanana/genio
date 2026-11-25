@@ -6,7 +6,7 @@
 <title>GênIO · Produtos e serviços</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="app.css?v=2147003129">
+<link rel="stylesheet" href="app.css?v=121eb8fc34">
 <style>
 .grade{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .prod{background:#fff;border-radius:18px;box-shadow:0 2px 10px rgba(28,22,53,.06);overflow:hidden;display:flex;flex-direction:column;position:relative}
@@ -57,8 +57,8 @@
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=2147003129"></script>
-<script src="qr.js?v=2147003129"></script>
+<script src="app.js?v=121eb8fc34"></script>
+<script src="qr.js?v=121eb8fc34"></script>
 <script>
 (async()=>{
   const {$,$$,esc,qs,sessao,dados,nav,topo,voltar,setorNome,nomeLoja,estado,salvar,cliente,gravarCliente,definirCliente}=App;
@@ -68,8 +68,8 @@
   const nome=nomeLoja(l.nome);definirCliente(l);let c=await cliente(l);
   // a personalização só abre depois do logotipo limpo; os serviços (Mostraí, Fala Aí, locação, registro de marca) não dependem dele
   const SEMLOGO=!(c.manual&&c.manual.editado);
-  const G=await (await fetch("gabaritos.json?v=2147003129")).json();
-  await App.carregarScript("kits14.js?v=2147003129");
+  const G=await (await fetch("gabaritos.json?v=121eb8fc34")).json();
+  await App.carregarScript("kits14.js?v=121eb8fc34");
   // os 16 produtos do kit de 14 setores (10/11); a foto de cada um é a do ramo da loja
   const CAT=await Promise.all([["capacho","Capacho"],["placas","Placa"],["adesivos","Adesivo de vitrine"],["uniformes","Camisa polo"],["impressos","Cartão de visita"],["panfleto",/padaria|restaurante|bar|cafeteria/.test(l.setor||"")?"Flyer · cardápio":"Flyer · produtos e serviços"],["banners","Banner retrátil"],["parede","Adesivo de parede · rotas"],["brindes","Ecobag"],["carimbo","Carimbo"],["windbanner","Wind banner"],["faixa","Faixa"],["folheto","Folheto promocional"],["camiseta","Camiseta"],["bone","Boné"],["avental","Avental"]].map(async([id,n])=>({id,nome:n,img:await Kits14.foto(l.setor,id,true)})));
   const SERV=[{id:"mostraai",nome:"Mostraí · TV de ofertas",desc:"Sua TV em pé com itens, preços e destaque · muda pelo celular",ic:"📺"},{id:"falaai",nome:"Fala Aí · atendente no telefone",desc:"URA com o nome da loja · frases gravadas do sistema",ic:"📞"},{id:"inpi",nome:"Registro de marca (INPI)",desc:"Proteção do nome e do logo",ic:"®"}];
@@ -184,6 +184,7 @@ const s=S[id]=S[id]||{q:0,nome:catDe(id).nome};s.q=id==="capacho"?Math.max(0,s.q
       try{const r=await fetch("/api/mostra",{method:"POST",credentials:"same-origin",headers:{"Content-Type":"application/json"},body:JSON.stringify({slug,loja:{nome:l.nome,setor:l.setor}})});const d=await r.json();if(!r.ok)throw new Error(d.erro||r.status);
         c=await cliente(l);c.mostra={token:d.token,criado:(c.mostra&&c.mostra.criado)||new Date().toISOString()};await gravarCliente(c);
         const tela=location.origin+d.tela,prog=location.origin+d.programacao;
+        if(location.hash==="#cardapio"){location.href=d.programacao+"&foto=1";return;}   // vindo de "Fotografar o cardápio": vai direto para a programação
         const g=document.createElement("div");g.className="galeria-ctx";g.innerHTML=`<div class="top"><b>Mostraí · ${esc(nome)}</b><button class="btn sec sm" id="fecharM" style="width:auto;min-height:40px;padding:0 12px">Fechar</button></div><div class="rolo" style="padding:0 16px 24px">
           <section class="card" style="text-align:center"><h2 style="margin:0 0 6px">Tela</h2><p class="sub" style="margin:0 0 10px">Abra no TV Box (TV em pé) ou no seu celular. Aponte a câmera:</p><canvas id="qrTela" width="220" height="220" style="width:220px;height:220px;border-radius:12px"></canvas><p style="word-break:break-all;font-size:13px;color:var(--texto2);margin:8px 0">${esc(tela)}</p><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><a class="btn" href="${esc(tela)}" target="_blank" rel="noopener" style="text-decoration:none">Abrir tela</a><button type="button" class="btn sec" data-copia="${esc(tela)}">Copiar · enviar</button></div></section>
           <section class="card" style="text-align:center"><h2 style="margin:0 0 6px">Programação (painel do cliente)</h2><p class="sub" style="margin:0 0 10px">O cliente troca itens, preços, foto e destaque; a TV muda em segundos.</p><canvas id="qrProg" width="220" height="220" style="width:220px;height:220px;border-radius:12px"></canvas><p style="word-break:break-all;font-size:13px;color:var(--texto2);margin:8px 0">${esc(prog)}</p><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><a class="btn" href="${esc(prog)}" target="_blank" rel="noopener" style="text-decoration:none">Abrir programação</a><button type="button" class="btn sec" data-copia="${esc(prog)}">Copiar · enviar</button></div></section></div>`;
@@ -210,6 +211,7 @@ const s=S[id]=S[id]||{q:0,nome:catDe(id).nome};s.q=id==="capacho"?Math.max(0,s.q
   // volta da ferramenta: abre no mesmo produto
   if(/^#p-/.test(location.hash)){const el=document.getElementById(location.hash.slice(1));if(el)setTimeout(()=>el.scrollIntoView({block:"center"}),60);}
   // vindo da Loja por "Ligar a TV de demonstração": já abre o link e o QR do Mostraí
+  if(location.hash==="#cardapio"){const b=document.getElementById("acionarMostra");if(b)b.click();}
   if(location.hash==="#acionar"){const b=document.getElementById("acionarMostra");if(b){b.scrollIntoView({block:"center"});b.click();}}
 })();
 </script>

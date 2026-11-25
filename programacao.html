@@ -40,6 +40,12 @@ input[type=text],input[type=date],select{width:100%;font:inherit;font-size:16px;
 .mini.rm{color:#B42318}
 .it.off input{opacity:.55}
 .cabe{font-size:13px;color:var(--texto2);margin:8px 0 0}.cabe.mais{color:#9A5B00}
+.foto-card{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;min-height:60px;border:0;border-radius:14px;background:var(--roxo);color:#fff;font:700 17px Rubik,system-ui;cursor:pointer}
+.lc-cat{margin:14px 0 6px}.lc-cat input{font-weight:700}
+.lc-it{display:grid;grid-template-columns:26px minmax(0,1fr) 92px;gap:6px;align-items:center;padding:6px 0;border-bottom:1px solid #F0EDF6}
+.lc-it.inc{background:#FFF4DB;border-radius:10px;padding:6px 4px}.lc-it input[type=text]{min-height:40px;font-size:15px;padding:6px 8px}
+.lc-it small{grid-column:2/-1;color:var(--texto2);font-size:12.5px}
+.lc-bts{display:grid;gap:8px;margin-top:14px}.lc-bts button{min-height:52px;border-radius:12px;border:0;font:700 16px Rubik,system-ui;cursor:pointer}
 .add{width:100%;min-height:44px;border-radius:12px;border:2px dashed #C9B8F2;background:transparent;color:var(--roxo);font:700 15px Rubik,system-ui;cursor:pointer;margin-top:10px}
 .sug{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
 .sug button{font:inherit;font-size:13px;padding:7px 10px;border-radius:999px;border:1px dashed #C9B8F2;background:#FAF8FE;color:var(--roxo);cursor:pointer}
@@ -82,7 +88,7 @@ textarea{width:100%;box-sizing:border-box;font:inherit;font-size:16px;padding:10
 <div id="cab"></div>
 <div class="previa-box" id="pv" hidden></div>
 <div id="app"></div>
-<input type="file" id="arq" accept="image/*" hidden><input type="file" id="cam" accept="image/*" capture="environment" hidden>
+<input type="file" id="cardIn" accept="image/*" multiple hidden><input type="file" id="arq" accept="image/*" hidden><input type="file" id="cam" accept="image/*" capture="environment" hidden>
 <div class="estado" id="estado"><span class="pt" id="pt"></span><span id="txt">Carregando…</span><a id="verTela" href="#" target="_blank" rel="noopener">Ver a tela ↗</a></div>
 <script>
 (()=>{
@@ -120,6 +126,8 @@ textarea{width:100%;box-sizing:border-box;font:inherit;font-size:16px;padding:10
   const opc=(k,rot,ops)=>`<div class="grupo"><span>${rot}</span><div class="opc">${ops.map(([v,t,st])=>`<button type="button" data-st="${k}" data-v="${v}" class="${String(ST[k]===undefined?ops[0][0]:ST[k])===String(v)?"on":""}" ${st?`style="${st}"`:""}>${t}</button>`).join("")}</div></div>`;
   function render(){const D=E.destaque=E.destaque||{rotulo:"",texto:"",valor:"",ate:""};const y=scrollY;
     $("#app").innerHTML=`<div class="card"><label style="margin-top:0">Título (aparece em todas as telas)</label><input type="text" id="titulo" value="${esc(E.titulo||"")}" maxlength="40"></div>
+    <div class="card"><button type="button" class="foto-card" id="cardBtn">📷 Fotografar o cardápio</button>
+      <p class="sub" style="margin:8px 2px 0">Tire foto de cada página do cardápio (até 4). O sistema lê os itens e os preços, você confere e eles entram nas telas.</p></div>
     <h2 style="margin:16px 2px 8px">Telas · cada uma com a sua foto e os seus itens</h2>
     ${E.telas.map((t,i)=>telaHTML(t,i)).join("")}
     <button type="button" class="add" id="novaTela" style="margin:0 0 12px">+ Nova tela</button>
@@ -148,7 +156,7 @@ textarea{width:100%;box-sizing:border-box;font:inherit;font-size:16px;padding:10
   let abertoAv=false;
   const recarregarPrevia=()=>{const pv=$("#pv");pv.hidden=false;pv.innerHTML=previa();ligarChips();};
   function ligarChips(){$$("[data-tela]").forEach(b=>b.onclick=()=>{atual=+b.dataset.tela;render();const el=$(`[data-tela-card="${atual}"]`);if(el)el.scrollIntoView({behavior:"smooth",block:"center"});});}
-  function ligar(){$("#msgEnviar").onclick=enviarMsg;desenharConv();
+  function ligar(){$("#msgEnviar").onclick=enviarMsg;desenharConv();$("#cardBtn").onclick=()=>$("#cardIn").click();
     $("#giro").value=String(E.giro||0);$("#formato").value=E.formato||"auto";$("#polegadas").value=String(E.polegadas||0);
     const liga=(id,f)=>{$(id).oninput=()=>{f($(id).value);agendar();};};const D=E.destaque;
     liga("#titulo",v=>E.titulo=v);liga("#aviso",v=>E.aviso=v);liga("#dRot",v=>D.rotulo=v);liga("#dVal",v=>D.valor=v);liga("#dTxt",v=>D.texto=v);liga("#dAte",v=>D.ate=v);
@@ -218,11 +226,35 @@ textarea{width:100%;box-sizing:border-box;font:inherit;font-size:16px;padding:10
       const r=await fetch(URL_API+"/foto",{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify({foto:cv.toDataURL("image/jpeg",.84),tela:t.id})});if(!r.ok)throw new Error(r.status);const d=await r.json();
       const nova=(d.telas||[]).find(x=>x.id===t.id);t.foto=nova?nova.foto:d.foto;E.v=d.v;atual=fotoAlvo;render();estado("ok","Na tela · "+agora());}
     catch(e){estado("erro","A foto não subiu: tente de novo.");}};
+  // ---- leitura do cardápio por foto: lê, mostra para conferir, e só então entra nas telas
+  const reduzir=f=>new Promise((ok,ruim)=>{const im=new Image();const u=URL.createObjectURL(f);im.onload=()=>{const k=Math.min(1,1600/Math.max(im.width,im.height));const cv=document.createElement("canvas");
+    cv.width=Math.round(im.width*k);cv.height=Math.round(im.height*k);cv.getContext("2d").drawImage(im,0,0,cv.width,cv.height);URL.revokeObjectURL(u);ok(cv.toDataURL("image/jpeg",.85));};im.onerror=()=>ruim(new Error("foto ilegível"));im.src=u;});
+  $("#cardIn").onchange=async ev=>{const fs=[...ev.target.files].slice(0,4);ev.target.value="";if(!fs.length)return;
+    const f=document.createElement("div");f.className="fo-fundo";f.innerHTML=`<div class="fo-folha"><h3>Lendo o cardápio…</h3><p class="sub">${fs.length} foto(s). Leva até um minuto.</p></div>`;document.body.appendChild(f);
+    try{const fotos=[];for(const x of fs)fotos.push(await reduzir(x));
+      const r=await fetch(URL_API+"/ler-cardapio",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({fotos})});const j=await r.json();if(!r.ok)throw new Error(j.erro||"não leu");
+      conferirCardapio(f,j);}
+    catch(e){f.innerHTML=`<div class="fo-folha"><h3>Não consegui ler</h3><p class="sub">${esc(e.message)}</p><div class="lc-bts"><button type="button" style="background:var(--lav);color:var(--roxo)" id="lcX">Fechar</button></div></div>`;f.querySelector("#lcX").onclick=()=>f.remove();}};
+  function conferirCardapio(f,R){const cats=R.categorias||[];const nInc=cats.reduce((n,c)=>n+c.itens.filter(i=>i.incerto).length,0);
+    if(!cats.length){f.innerHTML=`<div class="fo-folha"><h3>Nenhum item encontrado</h3><p class="sub">${esc(R.observacoes||"Tente uma foto mais de perto, com boa luz.")}</p><div class="lc-bts"><button type="button" style="background:var(--lav);color:var(--roxo)" id="lcX">Fechar</button></div></div>`;f.querySelector("#lcX").onclick=()=>f.remove();return;}
+    f.innerHTML=`<div class="fo-folha"><h3>Confira o que foi lido</h3><p class="sub">${cats.reduce((n,c)=>n+c.itens.length,0)} itens em ${cats.length} seção(ões).${nInc?` <b>${nInc} em amarelo para conferir com o dono</b> (preço vazio quando não deu para ler).`:""}${R.observacoes?" "+esc(R.observacoes):""}</p>
+      ${cats.map((c,ci)=>`<div class="lc-cat"><input type="text" data-cat="${ci}" value="${esc(c.nome)}" maxlength="40"></div>${c.itens.map((i,ii)=>`<label class="lc-it ${i.incerto?"inc":""}" style="margin:0;font-weight:400"><input type="checkbox" data-ok="${ci}.${ii}" checked style="width:22px;height:22px">
+        <input type="text" data-n="${ci}.${ii}" value="${esc(i.nome)}" maxlength="60"><input type="text" data-p="${ci}.${ii}" value="${esc(i.preco)}" placeholder="preço" maxlength="20" inputmode="decimal">${i.desc?`<small>${esc(i.desc)}</small>`:""}</label>`).join("")}`).join("")}
+      <div class="lc-bts"><button type="button" style="background:var(--roxo);color:#fff" data-lc="trocar">Trocar as telas por este cardápio</button><button type="button" style="background:var(--lav);color:var(--roxo)" data-lc="somar">Acrescentar às telas que já existem</button><button type="button" style="background:#fff;color:var(--texto2)" data-lc="x">Cancelar</button></div>
+      <p class="sub" style="margin-top:8px;font-size:12px">Leitura: ${esc(R.provedor||"")}</p></div>`;
+    f.querySelectorAll("[data-lc]").forEach(b=>b.onclick=()=>{const a=b.dataset.lc;if(a==="x"){f.remove();return;}
+      const novas=[];cats.forEach((c,ci)=>{const nome=(f.querySelector(`[data-cat="${ci}"]`).value||"").trim();
+        const its=c.itens.map((i,ii)=>({ok:f.querySelector(`[data-ok="${ci}.${ii}"]`).checked,nome:(f.querySelector(`[data-n="${ci}.${ii}"]`).value||"").trim(),preco:(f.querySelector(`[data-p="${ci}.${ii}"]`).value||"").trim(),desc:i.desc||"",apartir:!!i.apartir}))
+          .filter(i=>i.ok&&i.nome).map(i=>({id:novoId("i"),nome:i.nome,preco:i.preco,desc:i.desc,apartir:i.apartir,ativo:true}));
+        for(let k=0;k<its.length;k+=12)novas.push({id:novoId("t"),modelo:"sem-foto",foto:null,titulo:nome,itens:its.slice(k,k+12)});});
+      if(!novas.length){alert("Marque ao menos um item.");return;}
+      E.telas=(a==="trocar"?novas:E.telas.concat(novas)).slice(0,20);atual=0;f.remove();render();agendar();estado("env","Cardápio entrando nas telas…");});}
   (async()=>{try{const r=await fetch(URL_API,{cache:"no-store"});if(!r.ok)throw 0;E=await r.json();ST=E.estilo||{};
       // telas antigas (lista única + foto principal) viram a Tela 1, com a mesma foto e os mesmos itens
       if(!E.telas||!E.telas.length)E.telas=[{id:"t1",modelo:E.foto?"lista":"sem-foto",foto:E.foto||null,itens:(E.itens||[]).map(i=>({...i}))}];
       E.telas.forEach(t=>{t.itens=t.itens||[];t.itens.forEach(i=>{if(!i.id)i.id=novoId("i");});});
-      $("#cab").innerHTML=`<h1>${esc(E.nome)}</h1><p class="sub">O que você muda aqui aparece na TV em poucos segundos.</p>`;render();puxarConv();estado("ok","Na tela");}catch(e){$("#app").innerHTML='<div class="erro">Este Mostraí não existe ou foi desligado.</div>';estado("erro","Sem programação");}})();
+      $("#cab").innerHTML=`<h1>${esc(E.nome)}</h1><p class="sub">O que você muda aqui aparece na TV em poucos segundos.</p>`;render();puxarConv();estado("ok","Na tela");
+      if(new URLSearchParams(location.search).get("foto")==="1"){const b=$("#cardBtn");if(b){b.scrollIntoView({block:"center"});b.style.outline="4px solid #04C6C0";b.style.outlineOffset="3px";}}}catch(e){$("#app").innerHTML='<div class="erro">Este Mostraí não existe ou foi desligado.</div>';estado("erro","Sem programação");}})();
 })();
 </script>
 </body>

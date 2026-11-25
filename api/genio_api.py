@@ -727,7 +727,9 @@ def loja_historia(slug, forcar=False):
 
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ESTADO_DIR =os.path.dirname(CHAVES_ARQ) if os.path.dirname(CHAVES_ARQ) else "/var/lib/genio"
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__))); import dados as DADOS; import mostra as MOSTRA  # fichas, notas e estado do app: fonte única no servidor
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__))); import dados as DADOS
+import relaciona as RELACIONA
+import cardapio as CARDAPIO; import mostra as MOSTRA  # fichas, notas e estado do app: fonte única no servidor
 MAX_FICHA = 60 * 1024 * 1024  # ficha com artes em base64 (vira arquivos no servidor)
 KIT_IDS = {"capacho": "01", "placas": "02", "adesivos": "03", "uniformes": "04", "impressos": "05", "panfleto": "06", "banners": "07", "parede": "08", "brindes": "09", "carimbo": "10",
            "windbanner": "11", "faixa": "12", "folheto": "13", "camiseta": "14", "bone": "15", "avental": "16"}
@@ -1072,7 +1074,7 @@ def dt_now():
     import datetime; return datetime.datetime.now().isoformat(timespec="seconds")
 
 CHAVES_NOMES = ["GOOGLE_PLACES_KEY", "SERPER_KEY", "APIFY_TOKEN", "ZAPSIGN_TOKEN", "ASAAS_TOKEN", "OPENAI_KEY", "GEMINI_KEY", "GOOGLE_MAPS_KEY",
-                "MELHORENVIO_TOKEN", "TELEGRAM_BOT_TOKEN", "TELEGRAM_CHAT_ID", "ML_APP_ID", "ML_SECRET"]
+                "MELHORENVIO_TOKEN", "TELEGRAM_BOT_TOKEN", "TELEGRAM_CHAT_ID", "ML_APP_ID", "ML_SECRET", "ANTHROPIC_KEY"]
 def chaves_ler():
     try:
         with open(CHAVES_ARQ) as f:
@@ -1225,6 +1227,34 @@ class H(BaseHTTPRequestHandler):
                 except (FileNotFoundError, ValueError):
                     return self._erro(404, "arquivo não existe")
                 return self._send(200, body=raw, ctype=ct, cache="private, max-age=31536000, immutable")
+            # ---- página da loja pelo QR do balcão (pública) e relacionamento com o cliente
+            if p.startswith("/api/q/") and len(p.split("/")) == 4:
+                cod = p.split("/")[3].upper()
+                tok = self._tok("genio_r"); novo = None
+                if not tok:
+                    tok = novo = secrets.token_urlsafe(24)
+                RELACIONA.registrar_visita(cod, tok)
+                dq = RELACIONA.pagina(cod, tok)
+                dq["vendedor"] = bool(self._eu())
+                return self._send(200, dq, cookie=novo, cookie_nome="genio_r", cookie_dias=730) if novo else self._send(200, dq)
+            if p.startswith("/api/loja/") and len(p.split("/")) == 5 and p.split("/")[4].startswith("logo."):
+                try:
+                    ct, raw = RELACIONA.logo(p.split("/")[3], p.split("/")[4])
+                    return self._send(200, body=raw, ctype=ct, cache="public, max-age=600")
+                except (FileNotFoundError, ValueError):
+                    return self._erro(404, "sem logotipo")
+            if p == "/api/painel/relacionamento":
+                ac = painel_acesso(self._tok("genio_c"))
+                if not ac:
+                    return self._erro(401, "entre com o seu telefone e o seu código")
+                return self._send(200, RELACIONA.painel(ac["slug"]))
+            if p.startswith("/api/relaciona/") and len(p.split("/")) == 4:
+                if not self._eu():
+                    return self._erro(401, "entre com a sua conta")
+                try:
+                    return self._send(200, RELACIONA.resumo_vendedor(p.split("/")[3]))
+                except ValueError:
+                    return self._erro(400, "loja?")
             if p == "/api/painel/eu" or p == "/api/painel/arq":
                 ac = painel_acesso(self._tok("genio_c"))
                 if not ac:
@@ -1337,12 +1367,12 @@ class H(BaseHTTPRequestHandler):
                             st = os.stat(os.path.join(pasta, n)); arqs.append(st.st_mtime)
                     except Exception:
                         pass
-                    arqs.sort(); agora = time.time(); fmt = lambda t: _dt.datetime.fromtimestamp(t).strftime("%d/%m %H:%M")
+                    arqs.sort(); t_ag = time.time(); fmt = lambda t: _dt.datetime.fromtimestamp(t).strftime("%d/%m %H:%M")
                     horas = {}
                     for t in arqs:
-                        if agora - t < 48 * 3600:
+                        if t_ag - t < 48 * 3600:
                             k = _dt.datetime.fromtimestamp(t).strftime("%d/%m %Hh"); horas[k] = horas.get(k, 0) + 1
-                    return self._send(200, {"total": len(arqs), "ultima": fmt(arqs[-1]) if arqs else None, "ultimas_2h": sum(1 for t in arqs if agora - t < 7200), "ultimas_24h": sum(1 for t in arqs if agora - t < 86400), "por_hora_48h": horas})
+                    return self._send(200, {"total": len(arqs), "ultima": fmt(arqs[-1]) if arqs else None, "ultimas_2h": sum(1 for t in arqs if t_ag - t < 7200), "ultimas_24h": sum(1 for t in arqs if t_ag - t < 86400), "por_hora_48h": horas})
                 if p == "/api/admin/esteira":
                     out = {}
                     for n in ("esteira.log", "apt.log"):
@@ -1487,6 +1517,81 @@ class H(BaseHTTPRequestHandler):
                     return self._send(200, marca_preparar(self._json()))
                 except Exception as e:
                     return self._erro(500, "preparo falhou: " + str(e)[:160])
+            if p.startswith("/api/q/") and len(p.split("/")) == 5 and p.split("/")[4] in ("mensagem", "encerrar"):
+                if not self._origem_ok():
+                    return self._erro(403, "origem não permitida")
+                cod = p.split("/")[3].upper()
+                if not limite("rq:" + self._ip(), 40, 900):
+                    return self._erro(429, "muitas mensagens seguidas. Tente daqui a pouco.")
+                tok = self._tok("genio_r"); novo = None
+                if not tok:
+                    tok = novo = secrets.token_urlsafe(24)
+                try:
+                    res = RELACIONA.cliente_escrever(cod, tok, self._json()) if p.endswith("/mensagem") else RELACIONA.cliente_encerrar(cod, tok)
+                except FileNotFoundError:
+                    return self._erro(404, "este adesivo ainda não foi ativado")
+                except ValueError as e:
+                    return self._erro(400, str(e))
+                return self._send(200, res, cookie=novo, cookie_nome="genio_r", cookie_dias=730) if novo else self._send(200, res)
+            if p.startswith("/api/painel/relacionamento"):
+                if not self._origem_ok():
+                    return self._erro(403, "origem não permitida")
+                ac = painel_acesso(self._tok("genio_c"))
+                if not ac:
+                    return self._erro(401, "entre com o seu telefone e o seu código")
+                pr = p.split("/")
+                try:
+                    if p == "/api/painel/relacionamento/respostas":
+                        RELACIONA.loja_respostas(ac["slug"], self._json())
+                    elif len(pr) == 6 and pr[5] == "responder":
+                        RELACIONA.loja_responder(ac["slug"], pr[4], self._json().get("texto"), (ac["nome"] or "gerente"))
+                    elif len(pr) == 6 and pr[5] in ("resolvido", "lida", "excelencia"):
+                        RELACIONA.loja_marcar(ac["slug"], pr[4], pr[5])
+                    else:
+                        return self._erro(404, "rota?")
+                except FileNotFoundError:
+                    return self._erro(404, "conversa não encontrada")
+                except ValueError as e:
+                    return self._erro(400, str(e))
+                return self._send(200, RELACIONA.painel(ac["slug"]))
+            if p in ("/api/relaciona/ativar", "/api/relaciona/desativar"):
+                eu_a = self._eu()
+                if not eu_a:
+                    return self._erro(401, "entre com a sua conta")
+                if not self._origem_ok():
+                    return self._erro(403, "origem não permitida")
+                d = self._json(); slug_a = d.get("slug") or ""
+                try:
+                    if p.endswith("/desativar"):
+                        return self._send(200, RELACIONA.desativar(str(d.get("codigo") or "").upper(), slug_a))
+                    ficha = DADOS.cliente_ler(slug_a) or {"nome": (d.get("loja") or {}).get("nome") or slug_a}
+                    return self._send(200, RELACIONA.ativar(RAIZ, d.get("codigo"), slug_a, ficha, d.get("loja") or {}, eu_a.get("nome")))
+                except PermissionError as e:
+                    return self._erro(409, str(e))
+                except ValueError as e:
+                    return self._erro(400, str(e))
+            if p == "/api/admin/ler-cardapio":   # teste da leitura sem mexer em dados de loja (só administrador)
+                eu_c = self._eu()
+                if not eu_c or eu_c.get("papel") != "admin":
+                    return self._erro(403, "só o administrador")
+                try:
+                    return self._send(200, CARDAPIO.ler(self._json_grande().get("fotos"), "padaria", chaves_ler(), ESTADO_DIR))
+                except ValueError as e:
+                    return self._erro(502, "leitura: " + str(e)[:400])
+            if p.startswith("/api/mostra/") and p.endswith("/ler-cardapio") and len(p.split("/")) == 5:
+                tk = p.split("/")[3]
+                try:
+                    est_m = MOSTRA.ler(tk)
+                except ValueError:
+                    est_m = None
+                if not est_m:
+                    return self._erro(404, "este Mostraí não existe")
+                if not limite("card:" + tk, 15, 86400):
+                    return self._erro(429, "limite de 15 leituras por dia neste Mostraí. Tente amanhã.")
+                try:
+                    return self._send(200, CARDAPIO.ler(self._json_grande().get("fotos"), est_m.get("setor"), chaves_ler(), ESTADO_DIR))
+                except ValueError as e:
+                    return self._erro(502, "leitura: " + str(e)[:400])
             if p in ("/api/painel/entrar", "/api/painel/sair", "/api/painel/mensagem", "/api/painel/escolhas", "/api/painel/fechar", "/api/painel/reabrir"):
                 if not self._origem_ok():
                     return self._erro(403, "origem não permitida")

@@ -51,7 +51,8 @@ def _telas(lista, antigas, token):
         # foto: só as desta tela guardadas no servidor; sem o campo, fica a que já estava; null tira
         f = t.get("foto")
         foto = f if isinstance(f, str) and f.startswith(f"/api/mostra/{token}/") else (None if ("foto" in t and f is None) else fotos.get(tid))
-        out.append({"id": tid, "modelo": t.get("modelo") if t.get("modelo") in MODELOS else "lista", "foto": foto, "itens": itens})
+        out.append({"id": tid, "modelo": t.get("modelo") if t.get("modelo") in MODELOS else "lista", "foto": foto, "itens": itens,
+                    "titulo": str(t.get("titulo") or "")[:40]})   # nome da seção do cardápio (usado na página da loja)
     return out
 
 def _estilo(e, ant):
