@@ -59,6 +59,21 @@ input:focus,textarea:focus{outline:2px solid var(--roxo);border-color:transparen
 .formas .fv{margin-left:auto;font-weight:700;white-space:nowrap}.formas small{display:block;color:var(--texto2);font-size:12.5px}
 .folha{position:fixed;inset:0;z-index:60;background:rgba(20,16,36,.5);display:flex;align-items:flex-end;justify-content:center}
 .folha>div{background:var(--fundo);width:100%;max-width:640px;border-radius:22px 22px 0 0;padding:16px 16px calc(18px + env(safe-area-inset-bottom));max-height:92vh;overflow:auto}
+.ag-dia{font-weight:700;font-size:15px;margin:14px 0 6px}.ag-dia::first-letter{text-transform:uppercase}.ag-dia:first-child{margin-top:0}
+.ag-r{display:grid;grid-template-columns:54px minmax(0,1fr);gap:10px;padding:10px 0;border-top:1px solid #EEE9F7}.ag-dia+.ag-r{border-top:0}
+.ag-r .h{font-weight:700;font-size:17px;font-variant-numeric:tabular-nums}.ag-r .h small{display:block;font-weight:500;font-size:12px;color:#6B6580}
+.ag-r b{display:block;font-size:16px}.ag-r small{display:block;color:#6B6580;font-size:13.5px;margin-top:2px}.ag-r small a{color:var(--roxo);font-weight:600}
+.ag-r .st{display:inline-block;border-radius:999px;padding:2px 9px;font-size:12px;font-weight:700;background:#FFF2D6;color:#7A5200;margin-top:6px}
+.ag-r .st.confirmado{background:#E6F4F3;color:#0B4F4B}.ag-r .st.feito{background:#EEE9F7;color:#49258B}.ag-r .st.cancelado,.ag-r .st.faltou{background:#FDECEC;color:#B3261E}
+.ag-b{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}.ag-b button{min-height:40px;border:1.5px solid #E2DDEC;background:#fff;border-radius:10px;padding:0 12px;font:600 14px Rubik,system-ui,sans-serif;color:#1C1635}
+.ag-b button.p{background:var(--roxo);border-color:var(--roxo);color:#fff}
+.ag-f{display:grid;grid-template-columns:1fr 1fr;gap:8px}.ag-f .larg{grid-column:1/-1}
+.ag-f label{font-size:13px;font-weight:600;margin:0}.ag-f input,.ag-f select{width:100%;min-height:44px;border:1.5px solid #E2DDEC;border-radius:10px;padding:0 10px;font:500 16px Rubik,system-ui,sans-serif;background:#fff}
+.ag-ln{display:grid;grid-template-columns:minmax(0,1fr) 68px 84px 40px;gap:6px;margin:0 0 6px}.ag-ln input{min-height:44px;border:1.5px solid #E2DDEC;border-radius:10px;padding:0 8px;font:500 15px Rubik,system-ui,sans-serif;width:100%;min-width:0}
+.ag-ln button,.ag-x{min-height:44px;border:0;border-radius:10px;background:#F3EFFA;font:700 16px Rubik,system-ui,sans-serif;color:#6B6580}
+.ag-sem{display:grid;grid-template-columns:44px 1fr 1fr 76px;gap:6px;align-items:center;margin:0 0 6px;font-size:14px}.ag-sem input[type=time]{min-height:44px;border:1.5px solid #E2DDEC;border-radius:10px;padding:0 6px;font:500 15px Rubik,system-ui,sans-serif;width:100%;min-width:0}
+.ag-chk{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 10px}.ag-chk label{display:flex;align-items:center;gap:6px;background:#F6F3FB;border-radius:999px;padding:6px 10px;font-size:13.5px;font-weight:500;margin:0}
+.ag-err{color:#B4472E;font-weight:600;font-size:14px;min-height:18px;margin:8px 0 0}
 .rel-ind{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 10px}.rel-ind span{background:#fff;border-radius:999px;padding:6px 12px;font-size:13.5px;font-weight:600}
 .rel-ind span b{color:var(--roxo)}
 .rc{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:center;padding:12px 0;border-bottom:1px solid #F0EDF6;cursor:pointer}
@@ -121,7 +136,7 @@ input:focus,textarea:focus{outline:2px solid var(--roxo);border-color:transparen
     const est=n=>n?` · <span class="est">${"★".repeat(n)}<span>${"★".repeat(5-n)}</span></span>`:"";
     $("#app").innerHTML=`<h1>${esc(L.nome||"Sua loja")}</h1><p class="sub">${esc(L.setor||"")}${L.endereco?` · <a href="${esc(L.maps||"#")}" target="_blank" rel="noopener">📍 ${esc(L.endereco)}</a>`:""}${est(L.estrelas)}</p>
       <div class="ola">Olá${eu.nome?`, <b>${esc(eu.nome)}</b>`:""}! Aqui está o seu orçamento${D.vendedor&&D.vendedor.nome?` feito por <b>${esc(D.vendedor.nome)}</b>`:""}${D.em?` · atualizado em ${esc(new Date(D.em).toLocaleDateString("pt-BR"))}`:""}. Toque num produto para ver as fotos.</div>
-      <div id="rel"></div>
+      <div id="rel"></div><div id="ag"></div>
       ${PED?statusHTML(PED):""}
       ${O&&O.linhas&&O.linhas.length?`<h2>Seu orçamento</h2><div class="card">${O.linhas.map((x,i)=>{const a=linhaAtual(x);const pode=x.opcoes&&!PED;return `<div class="ln ${a.q===0?"fora":""}" data-i="${i}"><div class="fig" style="${x.img?`background-image:url('${esc(img(x.img))}')`:""}">${x.img?"":x.servico?"📺":"▫"}</div>
           <div><b>${esc(x.nome)}</b><small>${x.servico?"":a.q===0?"não quero · ":`${(+a.q||0).toLocaleString("pt-BR")} un. · `}${esc(x.unid||"")}</small>${pode?`<span class="qt"><button type="button" data-q="-" aria-label="menos">−</button><span>${a.q===0?"0":a.q.toLocaleString("pt-BR")}</span><button type="button" data-q="+" aria-label="mais">+</button></span>`:""}</div>
@@ -146,7 +161,71 @@ input:focus,textarea:focus{outline:2px solid var(--roxo);border-color:transparen
   let REL=null,relAberta=null;
   const MOT={elogio:"elogio",resolvido:"resolvido por você",cliente:"o cliente encerrou",tempo:"sem resposta do cliente por 2 h"};
   const dh=s=>(s||"").slice(8,10)+"/"+(s||"").slice(5,7)+" "+(s||"").slice(11,16);
-  async function puxarRel(){try{REL=await api("/api/painel/relacionamento");}catch(e){REL=null;}desenharRel();if(relAberta)abrirConversa(relAberta,true);}
+  // ---- agenda simples da loja (28/11): reservas por profissional, feitas pelo cliente no QR do balcão ou pelo lojista aqui
+  let AGD=null,AGC=null,AGU={form:false,remarca:"",cfg:false,erro:"",horas:null,rh:null};
+  const SEM=["Seg","Ter","Qua","Qui","Sex","Sáb","Dom"],EST={marcado:"a confirmar",confirmado:"confirmado",feito:"atendido",faltou:"não veio",cancelado:"cancelado"};
+  const diaL=iso=>new Date(iso+"T12:00:00").toLocaleDateString("pt-BR",{weekday:"long",day:"numeric",month:"long"});
+  const telL=t=>{t=String(t||"");return t.length===11?`(${t.slice(0,2)}) ${t.slice(2,7)}-${t.slice(7)}`:t.length===10?`(${t.slice(0,2)}) ${t.slice(2,6)}-${t.slice(6)}`:t;};
+  async function puxarAg(){try{AGD=await api("/api/painel/agenda");}catch(e){AGD=null;}desenharAg();}
+  async function agPost(u,corpo){try{AGD=await api(u,corpo||{});AGU.erro="";return true;}catch(e){AGU.erro=e.message;return false;}}
+  function agCfgHTML(){const c=AGC;return `<p class="muted" style="margin:0 0 10px">O cliente só vê a agenda depois que houver pelo menos um serviço e um profissional e ela estiver aberta.</p>
+      <h3 style="margin:0 0 6px;font-size:16px">Serviços</h3><div class="ag-ln" style="font-size:12px;color:#6B6580;margin-bottom:2px"><span>Nome</span><span>Minutos</span><span>Preço (R$)</span><span></span></div>
+      ${c.servicos.map((s,i)=>`<div class="ag-ln"><input data-sv="${i}" data-k="nome" maxlength="40" value="${esc(s.nome)}" placeholder="Corte"><input data-sv="${i}" data-k="min" type="number" inputmode="numeric" min="10" max="480" step="5" value="${s.min}"><input data-sv="${i}" data-k="preco" inputmode="decimal" maxlength="10" value="${esc(s.preco||"")}" placeholder="opcional"><button type="button" data-svx="${i}" aria-label="tirar serviço">×</button></div>`).join("")}
+      <button type="button" class="btn sec" id="agSvMais" style="min-height:44px;margin-top:4px">+ Serviço</button>
+      <h3 style="margin:16px 0 6px;font-size:16px">Profissionais</h3>
+      ${c.profissionais.map((p,i)=>`<div style="display:grid;grid-template-columns:1fr 40px;gap:6px"><input data-pf="${i}" maxlength="30" value="${esc(p.nome)}" placeholder="Nome" style="min-height:44px;border:1.5px solid #E2DDEC;border-radius:10px;padding:0 10px;font:500 16px Rubik,system-ui,sans-serif"><button type="button" class="ag-x" data-pfx="${i}" aria-label="tirar profissional">×</button></div>
+        <div class="ag-chk">${c.servicos.filter(s=>s.id&&s.nome).map(s=>`<label><input type="checkbox" data-pfs="${i}" value="${esc(s.id)}" ${!p.servicos.length||p.servicos.includes(s.id)?"checked":""}> ${esc(s.nome)}</label>`).join("")||`<small class="muted">faz todos os serviços</small>`}</div>`).join("")}
+      <button type="button" class="btn sec" id="agPfMais" style="min-height:44px;margin-top:0">+ Profissional</button>
+      <h3 style="margin:16px 0 6px;font-size:16px">Dias e horários</h3>
+      ${SEM.map((n,i)=>{const j=(c.horario[String(i)]||[])[0];return `<div class="ag-sem"><b>${n}</b><input type="time" data-hz="${i}" data-k="0" value="${j?j[0]:"09:00"}" ${j?"":"disabled"}><input type="time" data-hz="${i}" data-k="1" value="${j?j[1]:"18:00"}" ${j?"":"disabled"}><label style="display:flex;gap:4px;align-items:center;margin:0;font-weight:500"><input type="checkbox" data-hzf="${i}" ${j?"":"checked"}> fechado</label></div>`;}).join("")}
+      <div class="ag-f" style="margin-top:10px"><div><label>Horários de quanto em quanto</label><select id="agPasso">${[15,20,30,60].map(v=>`<option value="${v}" ${+c.passo===v?"selected":""}>${v} min</option>`).join("")}</select></div>
+        <div><label>Antecedência mínima</label><select id="agAnt">${[[0,"nenhuma"],[30,"30 min"],[60,"1 hora"],[120,"2 horas"],[1440,"1 dia"]].map(([v,n])=>`<option value="${v}" ${+c.antecedencia_min===v?"selected":""}>${n}</option>`).join("")}</select></div></div>
+      <label style="display:flex;gap:8px;align-items:center;margin:14px 0 0;font-weight:600"><input type="checkbox" id="agAtivo" ${c.ativo?"checked":""} style="width:22px;height:22px"> Agenda aberta para os clientes</label>
+      <p class="ag-err" id="agCfgErr">${esc(AGU.erro)}</p><button type="button" class="btn" id="agCfgSalvar">Salvar a agenda</button>`;}
+  function agLerCfg(){const c=AGC;document.querySelectorAll("#ag [data-sv]").forEach(i=>{const s=c.servicos[+i.dataset.sv];if(s)s[i.dataset.k]=i.dataset.k==="min"?(+i.value||30):i.value;});
+    document.querySelectorAll("#ag [data-pf]").forEach(i=>{const p=c.profissionais[+i.dataset.pf];if(p)p.nome=i.value;});
+    c.profissionais.forEach((p,i)=>{const cs=[...document.querySelectorAll(`#ag [data-pfs="${i}"]`)];if(cs.length){const on=cs.filter(x=>x.checked).map(x=>x.value);p.servicos=on.length===cs.length?[]:on;}});
+    SEM.forEach((n,i)=>{const f=document.querySelector(`#ag [data-hzf="${i}"]`);if(!f)return;const a=document.querySelector(`#ag [data-hz="${i}"][data-k="0"]`).value,b=document.querySelector(`#ag [data-hz="${i}"][data-k="1"]`).value;c.horario[String(i)]=f.checked||!a||!b?[]:[[a,b]];});
+    const ps=$("#agPasso"),an=$("#agAnt"),at=$("#agAtivo");if(ps)c.passo=+ps.value;if(an)c.antecedencia_min=+an.value;if(at)c.ativo=at.checked;}
+  function agFormHTML(){const c=AGD.config,F=AGU.form;const profs=c.profissionais.filter(p=>!F.s||!p.servicos.length||p.servicos.includes(F.s));
+    return `<div class="card" style="margin-top:10px"><h3 style="margin:0 0 10px;font-size:17px">Marcar um horário</h3><div class="ag-f">
+      <div class="larg"><label>Serviço</label><select id="afS"><option value="">escolha</option>${c.servicos.map(s=>`<option value="${esc(s.id)}" ${F.s===s.id?"selected":""}>${esc(s.nome)} · ${s.min} min</option>`).join("")}</select></div>
+      <div><label>Com quem</label><select id="afP"><option value="">qualquer um</option>${profs.map(p=>`<option value="${esc(p.id)}" ${F.p===p.id?"selected":""}>${esc(p.nome)}</option>`).join("")}</select></div>
+      <div><label>Dia</label><input type="date" id="afD" min="${AGD.hoje}" value="${F.d||""}"></div>
+      <div class="larg"><label>Horário</label><select id="afH">${AGU.horas===null?`<option value="">${F.s&&F.d?"procurando…":"escolha serviço e dia"}</option>`:AGU.horas.length?`<option value="">escolha</option>`+AGU.horas.map(x=>`<option value="${x.h}" ${F.h===x.h?"selected":""}>${x.h}</option>`).join(""):`<option value="">sem horário livre nesse dia</option>`}</select></div>
+      <div><label>Nome do cliente</label><input id="afN" maxlength="60" value="${esc(F.n||"")}"></div><div><label>WhatsApp (opcional)</label><input id="afT" inputmode="tel" maxlength="16" value="${esc(F.t||"")}"></div></div>
+      <p class="ag-err" id="afErr">${esc(AGU.erro)}</p><div class="rap"><button type="button" class="btn sec" id="afX">Voltar</button><button type="button" class="btn" id="afOk">Marcar</button></div></div>`;}
+  async function agHoras(){const F=AGU.form;AGU.horas=null;if(!F||!F.s||!F.d){desenharAg();return;}desenharAg();try{AGU.horas=(await api(`/api/painel/agenda/horarios?s=${encodeURIComponent(F.s)}&p=${encodeURIComponent(F.p||"")}&d=${F.d}`)).horarios||[];}catch(e){AGU.horas=[];}desenharAg();}
+  function desenharAg(){const el=$("#ag");if(!el)return;if(!AGD||!REL||!REL.ativo){el.innerHTML="";return;}const c=AGD.config,I=AGD.indicadores||{};
+    const vivos=AGD.reservas.filter(r=>r.dia>=AGD.hoje||["marcado","confirmado"].includes(r.estado));const dias=[...new Set(vivos.map(r=>r.dia))];
+    const linha=r=>`<div class="ag-r"><div class="h">${esc(r.ini)}<small>${r.min} min</small></div><div><b>${esc(r.nome)}</b><small>${esc(r.serv_nome)} · com ${esc(r.prof_nome)}${r.tel?` · <a href="https://wa.me/55${esc(r.tel)}" target="_blank" rel="noopener">${esc(telL(r.tel))}</a>`:""}</small>
+        <span class="st ${esc(r.estado)}">${esc(EST[r.estado]||r.estado)}${r.estado==="cancelado"&&r.cancelado_por?" pelo "+(r.cancelado_por==="cliente"?"cliente":"salão"):""}</span>
+        ${["marcado","confirmado"].includes(r.estado)?`<div class="ag-b">${r.estado==="marcado"?`<button type="button" class="p" data-agm="${esc(r.id)}" data-ac="confirmar">Confirmar</button>`:""}${r.dia<=AGD.hoje?`<button type="button" data-agm="${esc(r.id)}" data-ac="feito">Atendido</button><button type="button" data-agm="${esc(r.id)}" data-ac="faltou">Não veio</button>`:""}<button type="button" data-agr="${esc(r.id)}">Remarcar</button><button type="button" data-agm="${esc(r.id)}" data-ac="cancelar">Cancelar</button></div>`:""}
+        ${AGU.remarca===r.id?`<div class="ag-f" style="margin-top:8px"><div><label>Novo dia</label><input type="date" id="arD" min="${AGD.hoje}" value="${AGU.rd||r.dia}"></div><div><label>Horário</label><select id="arH">${AGU.rh===null?`<option value="">procurando…</option>`:AGU.rh.length?`<option value="">escolha</option>`+AGU.rh.map(x=>`<option value="${x.h}">${x.h}</option>`).join(""):`<option value="">sem horário livre</option>`}</select></div><div class="larg rap" style="margin:0"><button type="button" class="btn sec" id="arX">Voltar</button><button type="button" class="btn" id="arOk">Remarcar</button></div></div>`:""}</div></div>`;
+    el.innerHTML=`<h2>Agenda</h2>${AGD.pronta?`<div class="rel-ind"><span><b>${I.hoje||0}</b> hoje</span><span><b>${I.proximos||0}</b> nos próximos dias</span><span><b>${I.a_confirmar||0}</b> a confirmar</span></div>`:""}
+      ${AGD.pronta?`<div class="card">${dias.length?dias.map(d=>`<div class="ag-dia">${d===AGD.hoje?"Hoje · ":""}${esc(diaL(d))}</div>${vivos.filter(r=>r.dia===d).map(linha).join("")}`).join(""):`<p class="muted" style="margin:0">Nenhum horário marcado. Quando um cliente agendar pelo QR do balcão, aparece aqui.</p>`}<p class="ag-err">${AGU.form||AGU.cfg?"":esc(AGU.erro)}</p></div>
+        ${AGU.form?agFormHTML():`<button type="button" class="btn sec" id="agNovo" style="margin-top:10px">+ Marcar um horário</button>`}`
+        :`<div class="card"><p class="muted" style="margin:0">${c.servicos.length&&c.profissionais.length?"A sua agenda está fechada para os clientes. Abra em “Configurar a agenda”.":"Deixe os seus clientes marcarem horário pelo QR do balcão. Cadastre os serviços e os profissionais para começar."}</p></div>`}
+      <details class="card" style="margin-top:10px" id="agCfg" ${AGU.cfg?"open":""}><summary style="font-weight:600;cursor:pointer">Configurar a agenda</summary><div style="margin-top:10px">${AGU.cfg?agCfgHTML():""}</div></details>`;
+    const cf=$("#agCfg");cf.ontoggle=()=>{if(cf.open&&!AGU.cfg){AGU.cfg=true;AGU.erro="";AGC=JSON.parse(JSON.stringify(AGD.config));desenharAg();}else if(!cf.open&&AGU.cfg){AGU.cfg=false;desenharAg();}};
+    if(AGU.cfg){const redes=()=>{agLerCfg();desenharAg();};
+      $("#agSvMais").onclick=()=>{agLerCfg();AGC.servicos.push({id:"",nome:"",min:30,preco:""});desenharAg();};$("#agPfMais").onclick=()=>{agLerCfg();AGC.profissionais.push({id:"",nome:"",servicos:[]});desenharAg();};
+      el.querySelectorAll("[data-svx]").forEach(b=>b.onclick=()=>{agLerCfg();AGC.servicos.splice(+b.dataset.svx,1);desenharAg();});el.querySelectorAll("[data-pfx]").forEach(b=>b.onclick=()=>{agLerCfg();AGC.profissionais.splice(+b.dataset.pfx,1);desenharAg();});
+      el.querySelectorAll("[data-hzf]").forEach(b=>b.onchange=redes);
+      $("#agCfgSalvar").onclick=async ev=>{agLerCfg();ev.target.disabled=true;ev.target.textContent="Salvando…";
+        // serviço novo ainda sem identificador: grava os serviços primeiro, para os profissionais poderem apontar para eles
+        const novoServ=AGC.servicos.some(s=>!s.id);if(novoServ){if(!await agPost("/api/painel/agenda/config",{servicos:AGC.servicos})){desenharAg();return;}AGC.servicos=JSON.parse(JSON.stringify(AGD.config.servicos));}
+        if(await agPost("/api/painel/agenda/config",AGC)){AGU.cfg=false;}desenharAg();};}
+    el.querySelectorAll("[data-agm]").forEach(b=>b.onclick=async()=>{if(b.dataset.ac==="cancelar"&&b.dataset.certo!=="1"){b.dataset.certo="1";b.textContent="Toque de novo para cancelar";return;}b.disabled=true;await agPost(`/api/painel/agenda/${b.dataset.agm}/${b.dataset.ac}`);desenharAg();});
+    const rem=async()=>{const r=AGD.reservas.find(x=>x.id===AGU.remarca);AGU.rh=null;desenharAg();try{AGU.rh=(await api(`/api/painel/agenda/horarios?s=${encodeURIComponent(r.serv)}&p=${encodeURIComponent(r.prof)}&d=${AGU.rd||r.dia}&fora=${r.id}`)).horarios||[];}catch(e){AGU.rh=[];}desenharAg();};
+    el.querySelectorAll("[data-agr]").forEach(b=>b.onclick=()=>{AGU.remarca=b.dataset.agr;AGU.rd="";AGU.erro="";rem();});
+    const arD=$("#arD");if(arD){arD.onchange=()=>{AGU.rd=arD.value;rem();};$("#arX").onclick=()=>{AGU.remarca="";desenharAg();};
+      $("#arOk").onclick=async()=>{const h=$("#arH").value;if(!h)return;const r=AGD.reservas.find(x=>x.id===AGU.remarca);if(await agPost(`/api/painel/agenda/${r.id}/remarcar`,{dia:AGU.rd||r.dia,hora:h,profissional:r.prof}))AGU.remarca="";desenharAg();};}
+    const nv=$("#agNovo");if(nv)nv.onclick=()=>{AGU.form={s:c.servicos.length===1?c.servicos[0].id:"",p:"",d:AGD.hoje,h:"",n:"",t:""};AGU.erro="";agHoras();};
+    if(AGU.form){const F=AGU.form;$("#afS").onchange=ev=>{F.s=ev.target.value;F.p="";F.h="";agHoras();};$("#afP").onchange=ev=>{F.p=ev.target.value;F.h="";agHoras();};$("#afD").onchange=ev=>{F.d=ev.target.value;F.h="";agHoras();};
+      $("#afH").onchange=ev=>{F.h=ev.target.value;};$("#afN").oninput=ev=>{F.n=ev.target.value;};$("#afT").oninput=ev=>{F.t=ev.target.value;};$("#afX").onclick=()=>{AGU.form=false;AGU.erro="";desenharAg();};
+      $("#afOk").onclick=async()=>{if(!F.s||!F.d||!F.h){$("#afErr").textContent="Escolha o serviço, o dia e o horário.";return;}if(await agPost("/api/painel/agenda/reservar",{servico:F.s,profissional:F.p,dia:F.d,hora:F.h,nome:F.n,tel:F.t})){AGU.form=false;}desenharAg();};}}
+  async function puxarRel(){try{REL=await api("/api/painel/relacionamento");}catch(e){REL=null;}desenharRel();if(relAberta)abrirConversa(relAberta,true);if(AGD===null&&REL&&REL.ativo)puxarAg();}
   function desenharRel(){const el=$("#rel");if(!el)return;if(!REL||!REL.ativo){el.innerHTML="";return;}const I=REL.indicadores||{};
     const ov=$("#orcVazio");if(ov)ov.hidden=true;   // loja só com o adesivo: não mostra "orçamento em preparo"
     el.innerHTML=`<h2>Relacionamento com os seus clientes</h2><div class="rel-ind"><span><b>${I.abertas||0}</b> em aberto</span><span><b>${I.mes||0}</b> este mês</span><span><b>${I.voltaram||0}</b> voltaram à loja</span></div>
@@ -178,7 +257,7 @@ input:focus,textarea:focus{outline:2px solid var(--roxo);border-color:transparen
     const rr=f.querySelector("#rRes");if(rr)rr.onclick=()=>acao(`/api/painel/relacionamento/${cid}/resolvido`);
     f.querySelector("#rExc").onclick=()=>acao(`/api/painel/relacionamento/${cid}/excelencia`);
     if(!c.lida&&!soAtualizar)acao(`/api/painel/relacionamento/${cid}/lida`);}
-  setInterval(()=>{if(!document.hidden&&D)puxarRel();},20000);
+  setInterval(()=>{if(!document.hidden&&D){puxarRel();const a=document.activeElement;if(!(a&&a.closest&&a.closest("#ag"))&&!AGU.form&&!AGU.remarca&&!AGU.cfg)puxarAg();}},20000);
   function verProduto(x){const f=(D.fotos||{})[x.k]||(x.img?[x.img]:[]);const v=document.createElement("div");v.className="ver";
     v.innerHTML=`<div class="t"><b>${esc(x.nome)}${x.total!=null?" · "+R(x.total):""}</b><button type="button">Fechar</button></div><div class="g">${f.length?f.map(s=>`<img src="${esc(img(s))}" alt="" loading="lazy">`).join(""):`<p style="color:#fff">Fotos deste produto em preparo.</p>`}</div>`;
     document.body.appendChild(v);v.querySelector("button").onclick=()=>v.remove();}

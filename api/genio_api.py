@@ -729,6 +729,7 @@ RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ESTADO_DIR =os.path.dirname(CHAVES_ARQ) if os.path.dirname(CHAVES_ARQ) else "/var/lib/genio"
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__))); import dados as DADOS
 import relaciona as RELACIONA
+import agenda as AGENDA
 import cardapio as CARDAPIO; import mostra as MOSTRA  # fichas, notas e estado do app: fonte única no servidor
 MAX_FICHA = 60 * 1024 * 1024  # ficha com artes em base64 (vira arquivos no servidor)
 KIT_IDS = {"capacho": "01", "placas": "02", "adesivos": "03", "uniformes": "04", "impressos": "05", "panfleto": "06", "banners": "07", "parede": "08", "brindes": "09", "carimbo": "10",
@@ -1267,6 +1268,26 @@ class H(BaseHTTPRequestHandler):
                     return self._erro(404, "arquivo não existe")
                 return self._send(200, body=raw, ctype=ct, cache="private, max-age=31536000, immutable")
             # ---- página da loja pelo QR do balcão (pública) e relacionamento com o cliente
+            # ---- agenda simples da loja (28/11): horários livres para o cliente (pelo QR) e para o lojista (painel)
+            if p.startswith("/api/q/") and p.endswith("/agenda/horarios") and len(p.split("/")) == 6:
+                slug_ag = RELACIONA.slug_do_codigo(p.split("/")[3].upper())
+                qa = {k: v[0] for k, v in _parse_qs(urlparse(self.path).query or "").items()}
+                try:
+                    if not slug_ag:
+                        raise FileNotFoundError
+                    return self._send(200, AGENDA.horarios(slug_ag, qa.get("s") or "", qa.get("p") or "", qa.get("d") or ""))
+                except FileNotFoundError:
+                    return self._erro(404, "esta loja não tem agenda aberta")
+                except ValueError as e:
+                    return self._erro(400, str(e))
+            if p == "/api/painel/agenda" or p == "/api/painel/agenda/horarios":
+                ac = painel_acesso(self._tok("genio_c"))
+                if not ac:
+                    return self._erro(401, "entre com o seu telefone e o seu código")
+                if p == "/api/painel/agenda":
+                    return self._send(200, AGENDA.painel(ac["slug"]))
+                qa = {k: v[0] for k, v in _parse_qs(urlparse(self.path).query or "").items()}
+                return self._send(200, AGENDA.loja_horarios(ac["slug"], qa.get("s") or "", qa.get("p") or "", qa.get("d") or "", qa.get("fora") or None))
             if p.startswith("/api/q/") and len(p.split("/")) == 4:
                 cod = p.split("/")[3].upper()
                 tok = self._tok("genio_r"); novo = None
@@ -1274,6 +1295,11 @@ class H(BaseHTTPRequestHandler):
                     tok = novo = secrets.token_urlsafe(24)
                 RELACIONA.registrar_visita(cod, tok)
                 dq = RELACIONA.pagina(cod, tok)
+                try:
+                    slug_ag = RELACIONA.slug_do_codigo(cod)
+                    dq["agenda"] = AGENDA.publica(slug_ag, tok) if slug_ag else {"ativo": False}
+                except Exception:
+                    dq["agenda"] = {"ativo": False}
                 dq["vendedor"] = bool(self._eu())
                 return self._send(200, dq, cookie=novo, cookie_nome="genio_r", cookie_dias=730) if novo else self._send(200, dq)
             if p.startswith("/api/loja/") and len(p.split("/")) == 5 and p.split("/")[4].startswith("logo."):
@@ -1562,6 +1588,51 @@ class H(BaseHTTPRequestHandler):
                     return self._send(200, marca_preparar(self._json()))
                 except Exception as e:
                     return self._erro(500, "preparo falhou: " + str(e)[:160])
+            if p.startswith("/api/q/") and len(p.split("/")) == 6 and p.split("/")[4] == "agenda" and p.split("/")[5] in ("reservar", "cancelar"):
+                if not self._origem_ok():
+                    return self._erro(403, "origem não permitida")
+                if not limite("ag:" + self._ip(), 20, 900):
+                    return self._erro(429, "muitas tentativas seguidas. Tente daqui a pouco.")
+                slug_ag = RELACIONA.slug_do_codigo(p.split("/")[3].upper())
+                tok = self._tok("genio_r"); novo = None
+                if not tok:
+                    tok = novo = secrets.token_urlsafe(24)
+                try:
+                    if not slug_ag:
+                        raise FileNotFoundError
+                    d = self._json()
+                    res = AGENDA.reservar(slug_ag, tok, d) if p.endswith("/reservar") else AGENDA.cancelar(slug_ag, tok, str(d.get("id") or ""))
+                except FileNotFoundError:
+                    return self._erro(404, "não encontrei esse horário")
+                except ValueError as e:
+                    return self._erro(400, str(e))
+                return self._send(200, {"reserva": res, "agenda": AGENDA.publica(slug_ag, tok)}, cookie=novo, cookie_nome="genio_r", cookie_dias=730) if novo else self._send(200, {"reserva": res, "agenda": AGENDA.publica(slug_ag, tok)})
+            if p.startswith("/api/painel/agenda"):
+                if not self._origem_ok():
+                    return self._erro(403, "origem não permitida")
+                ac = painel_acesso(self._tok("genio_c"))
+                if not ac:
+                    return self._erro(401, "entre com o seu telefone e o seu código")
+                pr = p.split("/")
+                try:
+                    d = self._json()
+                    if p == "/api/painel/agenda/config":
+                        AGENDA.config_gravar(ac["slug"], d)
+                    elif p == "/api/painel/agenda/reservar":
+                        AGENDA.loja_reservar(ac["slug"], d, ac["nome"] or "gerente")
+                    elif p == "/api/painel/agenda/bloqueio":
+                        AGENDA.bloquear(ac["slug"], d)
+                    elif len(pr) == 7 and pr[4] == "bloqueio" and pr[6] == "apagar":
+                        AGENDA.desbloquear(ac["slug"], pr[5])
+                    elif len(pr) == 6 and pr[5] in ("confirmar", "cancelar", "feito", "faltou", "remarcar"):
+                        AGENDA.loja_marcar(ac["slug"], pr[4], pr[5], d)
+                    else:
+                        return self._erro(404, "rota?")
+                except FileNotFoundError:
+                    return self._erro(404, "não encontrei")
+                except ValueError as e:
+                    return self._erro(400, str(e))
+                return self._send(200, AGENDA.painel(ac["slug"]))
             if p.startswith("/api/q/") and len(p.split("/")) == 5 and p.split("/")[4] in ("mensagem", "encerrar"):
                 if not self._origem_ok():
                     return self._erro(403, "origem não permitida")
