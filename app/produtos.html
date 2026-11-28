@@ -6,9 +6,21 @@
 <title>GênIO · Produtos e serviços</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="app.css?v=121eb8fc34">
+<link rel="stylesheet" href="app.css?v=8c1c91e58c">
 <style>
 .grade{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.sec-t{margin:4px 0 10px;font-size:15px;color:var(--texto2);text-transform:uppercase;letter-spacing:.04em}
+.giv{margin:22px 0 6px}.giv>p{margin:0 0 10px;font-size:14px;color:var(--texto2)}
+.giv input[type=search]{width:100%;box-sizing:border-box;min-height:50px;border:1.5px solid var(--linha);border-radius:12px;padding:0 14px;font:inherit;font-size:16px;background:#fff}
+.giv-at{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 10px}.giv-at button{min-height:38px;border:1.5px solid var(--linha);background:#fff;border-radius:999px;padding:0 12px;font:inherit;font-size:13px;font-weight:600;color:var(--texto)}
+.giv-it{display:grid;grid-template-columns:56px minmax(0,1fr) auto;gap:10px;align-items:center;background:#fff;border-radius:14px;padding:8px 10px;margin:8px 0;box-shadow:0 1px 6px rgba(28,22,53,.05)}
+.giv-it.sel{outline:2px solid var(--marca)}
+.giv-it img,.giv-it .semimg{width:56px;height:56px;object-fit:contain;border-radius:8px;background:#F4F1EA}
+.giv-it b{display:block;font-size:15px;line-height:1.2}.giv-it small{display:block;color:var(--texto2);font-size:12px;line-height:1.3;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.giv-it small.pr{color:var(--texto);font-size:13px;white-space:normal}
+.giv-it .add{min-height:44px;min-width:44px;border:0;border-radius:12px;background:var(--marca);color:#fff;font:inherit;font-size:22px;font-weight:700}
+.giv-it .gq{display:flex;align-items:center;gap:6px}.giv-it .gq button{width:38px;height:38px;border:0;border-radius:10px;background:var(--lav);font:inherit;font-size:20px;font-weight:700}.giv-it .gq span{min-width:22px;text-align:center;font-weight:700}
+.giv-n{margin:8px 0 0;font-size:13px;color:var(--texto2)}
+.mais-p{margin:18px 0 0}.mais-p summary{min-height:48px;display:flex;align-items:center;font-weight:600;font-size:15px;cursor:pointer;color:var(--texto2)}.mais-p[open] summary{margin:0 0 10px}
 .prod{background:#fff;border-radius:18px;box-shadow:0 2px 10px rgba(28,22,53,.06);overflow:hidden;display:flex;flex-direction:column;position:relative}
 .prod .cena{aspect-ratio:4/3;background:var(--lav) center/cover no-repeat;display:grid;place-items:center;overflow:hidden}
 .prod .cena img{width:100%;height:100%;object-fit:cover;display:block}
@@ -57,8 +69,8 @@
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=121eb8fc34"></script>
-<script src="qr.js?v=121eb8fc34"></script>
+<script src="app.js?v=8c1c91e58c"></script>
+<script src="qr.js?v=8c1c91e58c"></script>
 <script>
 (async()=>{
   const {$,$$,esc,qs,sessao,dados,nav,topo,voltar,setorNome,nomeLoja,estado,salvar,cliente,gravarCliente,definirCliente}=App;
@@ -68,8 +80,8 @@
   const nome=nomeLoja(l.nome);definirCliente(l);let c=await cliente(l);
   // a personalização só abre depois do logotipo limpo; os serviços (Mostraí, Fala Aí, locação, registro de marca) não dependem dele
   const SEMLOGO=!(c.manual&&c.manual.editado);
-  const G=await (await fetch("gabaritos.json?v=121eb8fc34")).json();
-  await App.carregarScript("kits14.js?v=121eb8fc34");
+  const G=await (await fetch("gabaritos.json?v=8c1c91e58c")).json();
+  await App.carregarScript("kits14.js?v=8c1c91e58c");
   // os 16 produtos do kit de 14 setores (10/11); a foto de cada um é a do ramo da loja
   const CAT=await Promise.all([["capacho","Capacho"],["placas","Placa"],["adesivos","Adesivo de vitrine"],["uniformes","Camisa polo"],["impressos","Cartão de visita"],["panfleto",/padaria|restaurante|bar|cafeteria/.test(l.setor||"")?"Flyer · cardápio":"Flyer · produtos e serviços"],["banners","Banner retrátil"],["parede","Adesivo de parede · rotas"],["brindes","Ecobag"],["carimbo","Carimbo"],["windbanner","Wind banner"],["faixa","Faixa"],["folheto","Folheto promocional"],["camiseta","Camiseta"],["bone","Boné"],["avental","Avental"]].map(async([id,n])=>({id,nome:n,img:await Kits14.foto(l.setor,id,true)})));
   const SERV=[{id:"mostraai",nome:"Mostraí · TV de ofertas",desc:"Sua TV em pé com itens, preços e destaque · muda pelo celular",ic:"📺"},{id:"falaai",nome:"Fala Aí · atendente no telefone",desc:"URA com o nome da loja · frases gravadas do sistema",ic:"📞"},{id:"inpi",nome:"Registro de marca (INPI)",desc:"Proteção do nome e do logo",ic:"®"}];
@@ -140,15 +152,35 @@
         if(!ok){alert("Esse período acabou de ser reservado por outra loja. Escolha outro dia.");fechar();abrirCal(k);return;}
         S[k]={...(S[k]||{}),q:1,locacao:true,tema,inicio:ini,nome:"Kit locação"};salvar(e);fechar();render();};};
     desenha();}
+  // ---- catálogo completo (GIV): não é vitrine, é busca — para o que o lojista pedir fora do cardápio; entra no orçamento com o mesmo lucro dos outros
+  let GIV=null,GT="";const normG=t=>(t||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
+  const givUn=p=>`${Number(p.q||1).toLocaleString("pt-BR")} un.`;
+  const givImg=u=>u?`<img src="${esc(u)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.visibility='hidden'">`:`<span class="semimg"></span>`;
+  const ATALHOS=[["display-em-acrilico","Plaquinha de balcão (Pix, WhatsApp)"],...(/padaria|restaurante|bar|cafeteria/.test(l.setor||"")?[["cardapio-em-plastico","Cardápio em plástico"],["cardapio-em-papel","Cardápio em papel"]]:[])];
+  function givSelHTML(){givConta();return Object.keys(S).filter(k=>S[k]&&S[k].giv&&S[k].q>0).map(k=>{const v=S[k],g=v.giv;return `<div class="giv-it sel" data-gk="${esc(k)}">${givImg(g.img)}<div><b>${esc(v.nome)}</b><small>${esc(g.unid||"")}</small><small class="pr"><b>${Rb(App.venda((+g.custo||0)*v.q))}</b>${g.prazo?` · ${g.prazo} dias úteis + frete`:""}</small></div><div class="gq"><button type="button" data-gm="-" aria-label="menos">−</button><span>${v.q}</span><button type="button" data-gm="+" aria-label="mais">+</button></div></div>`;}).join("");}
+  function givHTML(){return `<section class="giv" id="giv"><h2 class="sec-t">Catálogo completo</h2><p>O lojista pediu outra coisa? Busque aqui e ponha no orçamento.</p>
+      <div class="giv-at">${ATALHOS.map(([s,t])=>`<button type="button" data-gat="${s}">+ ${esc(t)}</button>`).join("")}</div>
+      <input type="search" id="givQ" placeholder="Buscar: cardápio, ímã, sacola, display…" value="${esc(GT)}" autocomplete="off"><div id="givSel">${givSelHTML()}</div><div id="givR"></div></section>`;}
+  const givConta=()=>{const b=$("#resN");if(b){const n=Object.values(S).filter(v=>v&&v.q>0).length;b.textContent=n?`${n} item(ns) no orçamento`:"Nada escolhido ainda";}};
+  function givAdd(p){const k=App.givChave(p.s);const v=S[k];if(v&&v.giv){v.q=(v.q||0)+1;}else S[k]={q:1,nome:p.n,giv:{slug:p.s,sku:p.sku,custo:p.p,qtd:p.q,unid:((+p.q>1?"pacote de "+givUn(p)+(p.e?" · ":""):"")+(p.e||"")).slice(0,110),img:p.i||"",prazo:p.pz||null}};salvar(e);}
+  async function givBusca(){const box=$("#givR");if(!box)return;const t=normG(GT).trim();if(t.length<2){box.innerHTML="";return;}
+    try{GIV=GIV||await App.givCatalogo();}catch(err){box.innerHTML=`<p class="giv-n">Não consegui abrir o catálogo (${esc(err.message)}).</p>`;return;}
+    const pal=t.split(/\s+/);const ach=GIV.itens.filter(p=>{const x=normG(p.n+" "+p.d+" "+p.e);return pal.every(w=>x.includes(w));}).sort((a,b)=>(normG(b.n).includes(t)?1:0)-(normG(a.n).includes(t)?1:0)||a.n.localeCompare(b.n));
+    box.innerHTML=(ach.slice(0,30).map(p=>`<div class="giv-it">${givImg(p.i)}<div><b>${esc(p.n)}</b><small>${esc(p.d)}${p.e?" · "+esc(p.e):""}</small><small class="pr"><b>${Rb(App.venda(p.p))}</b> · ${givUn(p)}${p.pz?` · ${p.pz} dias úteis + frete`:""}</small></div><button type="button" class="add" data-gadd="${esc(p.s)}" aria-label="Pôr no orçamento">+</button></div>`).join("")||`<p class="giv-n">Nada com “${esc(GT)}” no catálogo. Anote o pedido na ficha da loja.</p>`)+(ach.length>30?`<p class="giv-n">Mostrando 30 de ${ach.length}. Escreva mais para afinar.</p>`:"");
+    box.querySelectorAll("[data-gadd]").forEach(b=>b.onclick=()=>{const p=GIV.itens.find(x=>x.s===b.dataset.gadd);if(!p)return;givAdd(p);const sl=$("#givSel");if(sl){sl.innerHTML=givSelHTML();ligarGiv();}b.textContent="✓";setTimeout(()=>{b.textContent="+";},700);});}
+  function ligarGiv(){const q=$("#givQ");if(q&&!q._ok){q._ok=true;q.oninput=()=>{GT=q.value;clearTimeout(q._t);q._t=setTimeout(givBusca,220);};}
+    $$("#givSel [data-gm]").forEach(b=>b.onclick=()=>{const k=b.closest("[data-gk]").dataset.gk;const v=S[k];if(!v)return;v.q=(v.q||0)+(b.dataset.gm==="+"?1:-1);if(v.q<=0){delete S[k];const P=(e.pedidos||{})[slug];if(P&&P.desc)delete P.desc[k];}salvar(e);const sl=$("#givSel");sl.innerHTML=givSelHTML();ligarGiv();});
+    $$("[data-gat]").forEach(b=>b.onclick=async()=>{b.disabled=true;try{GIV=GIV||await App.givCatalogo();const p=GIV.itens.find(x=>x.s===b.dataset.gat);if(p){givAdd(p);const sl=$("#givSel");sl.innerHTML=givSelHTML();ligarGiv();}else alert("Esse item não está no catálogo lido.");}catch(err){alert("Não consegui abrir o catálogo.");}b.disabled=false;});
+    if(GT)givBusca();}
   function render(){const n=Object.values(S).filter(v=>v&&v.q>0).length;const artes=c.artes||{};
     $("#app").innerHTML=`${topo()}${qs.get("de")==="play"?voltar("play.html","Play"):voltar(`visita.html?l=${encodeURIComponent(slug)}`,"Visita")}
     ${App.cabCliente(l,{titulo:"Produtos e serviços"})}
-    <div class="resumo"><div><b>${n?`${n} item(ns) no orçamento`:"Nada escolhido ainda"}</b><br><small class="muted">${SEMLOGO?"logotipo ainda sem recorte":`${Object.keys(artes).length} arte(s) feita(s) · logotipo tratado`}</small></div>${c.manual&&c.manual.tratado?`<img src="${esc(c.manual.tratado)}" alt="" style="width:56px;height:40px;object-fit:contain;background:#fff;border-radius:8px">`:""}</div>
+    <div class="resumo"><div><b id="resN">${n?`${n} item(ns) no orçamento`:"Nada escolhido ainda"}</b><br><small class="muted">${SEMLOGO?"logotipo ainda sem recorte":`${Object.keys(artes).length} arte(s) feita(s) · logotipo tratado`}</small></div>${c.manual&&c.manual.tratado?`<img src="${esc(c.manual.tratado)}" alt="" style="width:56px;height:40px;object-fit:contain;background:#fff;border-radius:8px">`:""}</div>
     ${App.gruposHTML({S,artes,aberto:GA,img:{personalizacao:Object.values(artes).map(a=>a&&(a.contexto||a.png)).find(Boolean)||(c.manual&&c.manual.tratado)||"",mostraai:MOSTRAI_IMG,locacao:App.LOC_IMG[1]},conteudo:g=>SEC[g]?SEC[g]():""})}
     <p class="ilus">Preços entram na fase do orçamento.</p>
     <div class="acoes"><div class="w"><a class="btn sec" href="visita.html?l=${encodeURIComponent(slug)}">← Visita</a><a class="btn" href="orcamento.html?l=${encodeURIComponent(slug)}">Orçamento →</a></div></div>
     ${nav("rota")}`;document.body.classList.add("com-acoes");ligar();}
-  const SEC={personalizacao:()=>SEMLOGO?`<p class="muted" style="margin:0 0 10px">O logotipo desta loja ainda não foi recortado. A personalização abre depois do recorte.</p><a class="sv-lk" href="visita.html?l=${encodeURIComponent(slug)}">✂ Recortar o logotipo</a>`:`
+  const SEC={personalizacao:()=>SEMLOGO?`<p class="muted" style="margin:0 0 10px">O logotipo desta loja ainda não foi recortado. A personalização abre depois do recorte.</p><a class="sv-lk" href="visita.html?l=${encodeURIComponent(slug)}">✂ Recortar o logotipo</a>${givHTML()}`:`
     <div style="display:grid;grid-template-columns:1fr ${Object.keys(c.artes||{}).length?"1fr":""};gap:8px;margin:0 0 12px"><button class="btn sec" id="todos" type="button" style="min-height:50px">✦ Gerar todos os produtos</button>${Object.keys(c.artes||{}).length?`<button class="btn sec" id="ctx" type="button" style="min-height:50px">Contextualizar (${Object.keys(c.artes||{}).length})</button>`:""}</div>
     ${(()=>{const artes=c.artes||{};const UNI=["uniformes","camiseta","bone","avental"];const cartao=p=>{const s=S[p.id]||{q:0},A=artes[p.id];const prova=A&&A.provas&&A.provas[0]&&A.provas[0].src;const mock=prova||(A&&A.contexto)||(A&&A.png)||null;return `<div class="prod ${s.q>0?"sel":""}" id="p-${p.id}" data-p="${p.id}">
       <div class="cena" ${mock?"":`style="background-image:url('${p.img}')"`} data-ctx="${p.id}">${mock?`<img src="${mock}" alt="">`:""}</div><span class="dup"><button type="button" class="menos" data-tira aria-label="${p.id.includes("~")?"tirar esta proposta":"não quero"}">−</button><button type="button" data-dup aria-label="duplicar esta proposta">+</button></span>
@@ -157,11 +189,14 @@
       const pr=App.precoProduto(p.id,(c.formatos||{})[p.id]);return pr?`<div class="preco-p"><b>${pr.txt}</b><small>${esc(pr.unid)} · frete no fechamento</small></div>`:`<div class="preco-p"><small>preço a confirmar</small></div>`;})()}<div class="st ${s.q>0?"ok":""}">${s.q>0?"✓ no orçamento":A?(A.doc&&A.doc.auto?"arte automática":"arte feita"):"sem arte"}${prova?" · foto real":A&&A.contexto?" · no ambiente":""}</div>
       ${p.id==="capacho"?`<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:0 12px 8px"><a class="ir" style="margin:0" href="capacho.html?l=${encodeURIComponent(slug)}&n=${encodeURIComponent(nomeLoja(l.nome))}">${A?"Editar →":"Montar →"}</a><a class="ir" style="margin:0;background:var(--navy);color:#fff" href="capacho.html?l=${encodeURIComponent(slug)}&n=${encodeURIComponent(nomeLoja(l.nome))}&ver=1" title="foto do local · ao vivo">👁 Visualizar</a></div>`:(A?`<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:0 12px 8px"><a class="ir" style="margin:0" href="editor.html?l=${encodeURIComponent(slug)}&p=${p.id}">Editar →</a>${UNI_CORES.has(App.baseId(p.id))?`<a class="ir" style="margin:0;background:var(--navy);color:#fff" href="provar.html?l=${encodeURIComponent(slug)}&p=${p.id}" title="foto de quem vai vestir: recorte, cor e estampa no lugar">Provar</a>`:`<a class="ir" style="margin:0;background:var(--navy);color:#fff" href="local.html?l=${encodeURIComponent(slug)}&p=${p.id}" title="câmera ao vivo · a peça no lugar">👁 No local</a>`}</div>`:(UNI_CORES.has(App.baseId(p.id))?`<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:0 12px 8px"><a class="ir" style="margin:0" href="editor.html?l=${encodeURIComponent(slug)}&p=${p.id}">Criar arte</a><a class="ir" style="margin:0;background:var(--navy);color:#fff" href="provar.html?l=${encodeURIComponent(slug)}&p=${p.id}">Provar</a></div>`:`<a class="ir" href="editor.html?l=${encodeURIComponent(slug)}&p=${p.id}">Criar arte</a>`))}
       ${UNI_CORES.has(App.baseId(p.id))&&(A||(c.manual&&c.manual.editado))?coresPeca(p.id,A||{}):""}${p.id==="adesivos"?formatoVitrine():""}<div class="qtd"><button data-m="-">−</button><span class="${s.q>0?"":"zero"}">${s.q>0?(p.id==="capacho"?s.q+" un.":App.qtdNormal(p.id,s.q).toLocaleString("pt-BR")+" un."+(s.grade?" · grade":"")):"não quero"}</span><button data-m="+">+</button></div></div>`;};
-      const comVar=p=>[p,...variantes(p.id)];return `<div class="grade">${CAT.filter(p=>!UNI.includes(p.id)).flatMap(comVar).map(cartao).join("")}</div><h2 style="margin:22px 0 10px">Uniforme</h2><div class="grade">${UNI.map(id=>CAT.find(p=>p.id===id)).filter(Boolean).flatMap(comVar).map(cartao).join("")}</div>`;})()}`,
+      const comVar=p=>[p,...variantes(p.id)];const temSel=id=>Object.keys(S).some(k=>App.baseId(k)===id&&S[k]&&S[k].q>0);const pega=ids=>ids.map(id=>CAT.find(p=>p.id===id)).filter(Boolean).flatMap(comVar).map(cartao).join("");
+      // cardápio de venda (28/11): primeira visita na frente; terceira visita e sob pedido recolhidos; o que saiu do cardápio só aparece se já estiver no orçamento
+      const mais=["uniformes","avental","banners","parede","windbanner","faixa"],fora=App.FORA_CARDAPIO.filter(temSel);
+      return `<h2 class="sec-t">Primeira visita</h2><div class="grade">${pega(App.PRIMEIRA)}</div>${givHTML()}<details class="mais-p" ${mais.some(temSel)||fora.length?"open":""}><summary>Mais produtos · terceira visita e sob pedido</summary><div class="grade">${pega([...mais,...fora])}</div></details>`;})()}`,
     locacao:()=>`<div class="grade">${["locacao",...Object.keys(S).filter(k=>k.startsWith("locacao~")).sort((a,b)=>+a.split("~")[1]-+b.split("~")[1])].map(cartaoLoc).join("")}</div>`,
     mostraai:()=>servHTML("mostraai"),falaai:()=>servHTML("falaai"),inpi:()=>servHTML("inpi")};
   const servHTML=gid=>`${SERV.filter(s=>s.id===gid).flatMap(s=>[s,...Object.keys(S).filter(k=>k.startsWith(s.id+"~")).sort((a,b)=>+a.split("~")[1]-+b.split("~")[1]).map(k=>({...s,id:k,nome:`${s.nome} · ${k.split("~")[1]}`}))]).map(s=>{const on=!!(S[s.id]&&S[s.id].q>0);const sb=App.baseId(s.id);return `<div class="card serv" data-s="${s.id}"><span class="ic">${s.ic}<span class="dup"><button type="button" class="menos" data-stira aria-label="${s.id.includes("~")?"tirar esta proposta":"não quero"}">−</button><button type="button" data-sdup aria-label="duplicar esta proposta">+</button></span></span><div><b>${esc(s.nome)}</b><small>${esc(s.desc)}${on?" · <b style='color:#0E8A84'>no orçamento</b>":""}</small></div><button class="tog ${on?"on":""}" data-t="${s.id}" aria-label="${esc(s.nome)}"></button>${sb==="mostraai"?`<div class="mostra-acao"><img class="mostrai-ref" src="${MOSTRAI_IMG}" alt="Mostraí numa loja do ramo" loading="lazy"><div class="planos">${PLANOS.map(p=>`<button type="button" class="plano ${on&&(S[s.id].plano||"comodato")===p.id?"on":""}" data-plano="${p.id}"><b>${p.rot}</b><small>${p.txt}</small></button>`).join("")}</div>${s.id==="mostraai"?`<button type="button" class="btn sec sm" id="acionarMostra">${c.mostra&&c.mostra.token?"📺 Abrir tela e programação":"📺 Acionar o Mostraí desta loja"}</button>`:""}</div>`:""}</div>`;}).join("")}`;
-  function ligar(){const artes=c.artes||{};
+  function ligar(){const artes=c.artes||{};ligarGiv();
     $$("[data-grupo]").forEach(b=>b.onclick=()=>{const g=b.dataset.grupo;GA=GA===g?"":g;try{const u=new URL(location.href);if(GA)u.searchParams.set("g",GA);else u.searchParams.delete("g");u.hash="";history.replaceState(null,"",u);}catch(err){}render();const el=document.querySelector(`[data-grupo="${g}"]`);if(el)el.scrollIntoView({block:"start"});});
     $$(".prod [data-tema]").forEach(b=>b.onclick=async()=>{const k=b.closest(".prod").dataset.p;const s=S[k]=S[k]||{q:0,locacao:true,nome:"Kit locação"};const novo=b.dataset.tema;if(s.tema===novo)return;
       if(s.inicio){const ok=await App.reservarLoc({id:resId(k),slug,loja:nomeLoja(l.nome),tema:novo,inicio:s.inicio});if(!ok){alert("Não há kit desse tema livre nesse período. Escolha outro dia.");await App.reservarLoc({id:resId(k),inicio:null});delete s.inicio;s.q=0;}}

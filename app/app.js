@@ -205,7 +205,7 @@ const App=(()=>{
   // ---- arte automática: logotipo tratado centralizado preenchendo a área segura do gabarito, cor padrão do material
   const COR_PADRAO={capacho:"#2B2B2D",rigido:"#F4F1EA",vinil:null,tecido:"#F4F1EA",papel:"#FFFFFF",lona:"#FFFFFF",carimbo:null};
   const PRODUTOS_IDS=["capacho","placas","adesivos","uniformes","impressos","panfleto","banners","parede","brindes","carimbo","windbanner","faixa","folheto","camiseta","bone","avental"];
-  let _G=null;const gabaritos=async()=>_G||(_G=await (await fetch("gabaritos.json?v=121eb8fc34")).json());
+  let _G=null;const gabaritos=async()=>_G||(_G=await (await fetch("gabaritos.json?v=8c1c91e58c")).json());
   const carregarImg=src=>new Promise(res=>{const i=new Image();i.crossOrigin="anonymous";i.onload=()=>res(i);i.onerror=()=>res(null);i.src=src;});
   // ---- carimbo: só texto — nome, razão social, CNPJ (negrito), endereço, telefone; nunca logotipo
   async function dadosCarimbo(l){const cad=await ficha(l.slug).catch(()=>null);const L=(cad&&cad.lacunas)||{};const leit=(L.leitura||{}).valor||"";const razao=((leit.match(/Razão social: ([^·]+)/)||[])[1]||"").trim();const cnpj=((leit.match(/CNPJ:? ?([\d./-]{14,18})/)||[])[1]||"");
@@ -252,7 +252,7 @@ const App=(()=>{
     const aw=W-2*(B+S),ah=H-2*(B+S);const f=Math.min(aw/LW,(P.ancora==="topo"?ah*0.45:ah)/LH);const w=LW*f,h=LH*f;const x=(W-w)/2,y=P.ancora==="topo"?B+S+ah*0.05:(H-h)/2;
     const fundo=P.sem_fundo?null:(COR_PADRAO[P.superficie]===undefined?"#FFFFFF":COR_PADRAO[P.superficie]);
     // kit de 14 setores (10/11): a maquete frontal do ramo da loja é a arte de partida de todos os produtos
-    await carregarScript("qr.js?v=121eb8fc34");await carregarScript("impressos.js?v=121eb8fc34");await carregarScript("kits14.js?v=121eb8fc34");
+    await carregarScript("qr.js?v=8c1c91e58c");await carregarScript("impressos.js?v=8c1c91e58c");await carregarScript("kits14.js?v=8c1c91e58c");
     if(window.Kits14&&window.Kits14.ARQ[pid]){const K=await window.Kits14.montar(App,pid,c,l,{W,H,B,S,im,rec});
       if(K){const doc={fundo:K.fundo,fundoImg:null,el:K.el,campos:null,auto:true,kit:KIT14,setorKit:K.setorKit,kitRef:K.kitRef,W,H};const imgs={[c.manual.tratado]:im};
         const k=Math.min(1,1400/Math.max(W,H));const cv=document.createElement("canvas");cv.width=Math.round(W*k);cv.height=Math.round(H*k);const g=cv.getContext("2d");g.scale(k,k);
@@ -464,8 +464,8 @@ const App=(()=>{
   // ---- desempenho: venda = pedido confirmado (saiu da Entrada); atendimento = loja com início e fim marcados na visita
   const diaDe=iso=>{const d=new Date(iso);d.setMinutes(d.getMinutes()-d.getTimezoneOffset());return d.toISOString().slice(0,10);};
   function desempenho(){const e=EST||{};const hoje=hojeISO(),mes=hoje.slice(0,7);
-    const vendasP=Object.values(e.pedidos||{}).map(p=>({p,h:(p.hist||[]).find(h=>h.etapa!=="entrada")})).filter(x=>x.h).map(x=>({dia:diaDe(x.h.em),valor:+x.p.valor||0}));const vendas=vendasP.map(x=>x.dia);
-    const doMes=vendasP.filter(x=>x.dia.slice(0,7)===mes);const receita=doMes.reduce((s,x)=>s+x.valor,0);const semValor=doMes.filter(x=>!x.valor).length;const pc=+METAS.comissao||0;
+    const vendasP=Object.entries(e.pedidos||{}).map(([s,p])=>({s,p,h:(p.hist||[]).find(h=>h.etapa!=="entrada")})).filter(x=>x.h).map(x=>({dia:diaDe(x.h.em),valor:+x.p.valor||0,com:comissaoPedido(x.s,x.p)||0}));const vendas=vendasP.map(x=>x.dia);
+    const doMes=vendasP.filter(x=>x.dia.slice(0,7)===mes);const receita=doMes.reduce((s,x)=>s+x.valor,0);const semValor=doMes.filter(x=>!x.valor).length;const pc=+METAS.comissao||0,nm=+METAS.comMensal||0;
     const at=Object.entries(e.atend||{}).filter(([s,x])=>x&&x.ini&&x.fim).map(([s,x])=>({s,ini:new Date(x.ini),fim:new Date(x.fim),dia:diaDe(x.ini)}));
     const vendSlugs=new Set(Object.entries(e.pedidos||{}).filter(([s,p])=>(p.hist||[]).some(h=>h.etapa!=="entrada")).map(([s])=>s));
     const atHoje=at.filter(x=>x.dia===hoje),atMes=at.filter(x=>x.dia.slice(0,7)===mes);
@@ -475,7 +475,7 @@ const App=(()=>{
     const ciclo=ciclos.length?ciclos.reduce((s,c)=>s+c,0)/ciclos.length:media;const jornada=(+METAS.jornada||8)*60;
     const conv=atMes.length?Math.round(100*atMes.filter(x=>vendSlugs.has(x.s)).length/atMes.length):null;
     const aberto=Object.entries(e.atend||{}).find(([s,x])=>x&&x.ini&&!x.fim);
-    return {receita,comissao:pc?receita*pc/100:null,pc,semValor,vDia:vendas.filter(d=>d===hoje).length,vMes:vendas.filter(d=>d.slice(0,7)===mes).length,mDia:+METAS.dia||0,mMes:+METAS.mes||0,atHoje:atHoje.length,atMes:atMes.length,media,ciclo,projecao:ciclo?Math.floor(jornada/ciclo):0,conv,aberto};}
+    return {receita,comissao:(pc||nm)?doMes.reduce((s,x)=>s+x.com,0):null,pc,nm,semValor,vDia:vendas.filter(d=>d===hoje).length,vMes:vendas.filter(d=>d.slice(0,7)===mes).length,mDia:+METAS.dia||0,mMes:+METAS.mes||0,atHoje:atHoje.length,atMes:atMes.length,media,ciclo,projecao:ciclo?Math.floor(jornada/ciclo):0,conv,aberto};}
   const brl=v=>"R$ "+Number(v||0).toLocaleString("pt-BR",{minimumFractionDigits:2,maximumFractionDigits:2});
   const chipMeta=()=>{const d=desempenho();const ok=x=>x[1]&&x[0]>=x[1];const it=(rot,v,m)=>`<span class="mc ${m&&v>=m?"bateu":""}"><small>${rot}</small><b>${v}${m?"/"+m:""}</b>${m?`<i style="--p:${Math.min(1,v/m)}"></i>`:""}</span>`;
     return `<button type="button" class="meta-chip ${ok([d.vDia,d.mDia])?"bateu":""}" id="metaBtn" aria-label="Metas e conversão">${d.aberto?'<span class="rodando" title="atendimento em andamento"></span>':""}${it("Dia",d.vDia,d.mDia)}${it("Mês",d.vMes,d.mMes)}<span class="mc"><small>Conv.</small><b>${d.conv===null?"–":d.conv+"%"}</b></span></button>`;};
@@ -484,7 +484,7 @@ const App=(()=>{
     const d=desempenho();const barra=(rot,v,m)=>`<div class="mp-l"><div><b>${rot}</b><span>${v} venda(s)${m?` de ${m}`:""}${m&&v>=m?' · <em>meta batida ✓</em>':""}</span></div>${m?`<i style="--p:${Math.min(1,v/m)}" class="${v>=m?"ok":""}"></i>`:'<small>meta não definida</small>'}</div>`;
     const mm=x=>x?Math.round(x)+" min":"–";const p=document.createElement("div");p.className="meta-pop";
     p.innerHTML=`${barra("Hoje",d.vDia,d.mDia)}${barra("Mês",d.vMes,d.mMes)}
-      <div class="mp-g dois"><div><small>Receita no mês</small><b>${brl(d.receita)}</b><span>${d.semValor?d.semValor+" venda(s) sem valor":"vendas confirmadas"}</span></div><div><small>Comissão no mês</small><b>${d.comissao===null?"–":brl(d.comissao)}</b><span>${d.pc?d.pc.toLocaleString("pt-BR")+"% da receita":"defina a % em Ajustar metas"}</span></div></div>
+      <div class="mp-g dois"><div><small>Receita no mês</small><b>${brl(d.receita)}</b><span>${d.semValor?d.semValor+" venda(s) sem valor":"vendas confirmadas"}</span></div><div><small>Comissão no mês</small><b>${d.comissao===null?"–":brl(d.comissao)}</b><span>${d.pc||d.nm?(d.pc?d.pc.toLocaleString("pt-BR")+"% dos pedidos":"")+(d.pc&&d.nm?" + ":"")+(d.nm?d.nm+" mensalidade(s) por contrato":""):"defina a comissão em Ajustar metas"}</span></div></div>
       <div class="mp-g"><div><small>Conversão no mês</small><b>${d.conv===null?"–":d.conv+"%"}</b><span>${d.atMes} atendimento(s)</span></div><div><small>Tempo médio na loja</small><b>${mm(d.media)}</b><span>${d.atHoje} hoje</span></div><div><small>Lojas por dia</small><b>${d.projecao||"–"}</b><span>ciclo de ${mm(d.ciclo)} com deslocamento</span></div></div>
       <a href="config.html#metas" class="mp-aj">Ajustar metas</a>`;document.body.appendChild(p);});
   document.addEventListener("click",ev=>{const b=ev.target.closest("#avatarBtn");const aberto=document.querySelector(".menu-conta");if(!b){if(aberto&&!ev.target.closest(".menu-conta"))aberto.remove();return;}if(aberto){aberto.remove();return;}
@@ -569,6 +569,13 @@ const App=(()=>{
     else if(i<0)return true;await gravarChave("locacoes",R);return true;}
   const ORDEM_ORC=["capacho","placas","adesivos","parede","faixa","banners","windbanner","impressos","panfleto","folheto","carimbo","uniformes","camiseta","bone","avental","brindes","locacao","mostraai","falaai","inpi"];
   const NOME_ORC={capacho:"Capacho",placas:"Placa",adesivos:"Adesivo de vitrine",uniformes:"Camisa polo",impressos:"Cartão de visita",panfleto:"Flyer",banners:"Banner retrátil",parede:"Adesivo de parede",brindes:"Ecobag",carimbo:"Carimbo",windbanner:"Wind banner",faixa:"Faixa",folheto:"Folheto 2 dobras",camiseta:"Camiseta",bone:"Boné",avental:"Avental",locacao:"Kit locação",mostraai:"Mostraí",falaai:"Fala Aí",inpi:"Registro de marca (INPI)"};
+  // cardápio de venda (28/11): os 4 impressos da primeira visita; os que saíram do cardápio só aparecem se já estiverem num orçamento
+  const PRIMEIRA=["capacho","impressos","adesivos","placas"],FORA_CARDAPIO=["panfleto","folheto","brindes","bone","camiseta","carimbo"];
+  // catálogo completo da GIV: leitura do site guardada no servidor (estado "giv-catalogo": {lido, itens:[{s,n,d,e,p,q,pz,i,sku}]}) — fica na busca, para o que o lojista pedir fora do cardápio
+  let _GIV=null;const givCatalogo=async()=>{if(_GIV)return _GIV;const v=await lerChave("giv-catalogo");if(!v||!Array.isArray(v.itens))throw new Error("catálogo ainda não carregado");return (_GIV=v);};const givChave=s=>"giv-"+s;
+  // comissão (decisão do dono, 28/11 — opção B): % sobre o valor do pedido + N mensalidades por contrato de serviço mensal ativado
+  const mensalSel=slug=>Object.values(((EST||{}).sel||{})[slug]||{}).filter(v=>v&&v.q>0&&v.servico&&+v.mensal>0).reduce((s,v)=>s+(+v.mensal),0);
+  function comissaoPedido(slug,P){const pc=+METAS.comissao||0,nm=+METAS.comMensal||0;if(!pc&&!nm)return null;return Math.round(((+(P&&P.valor)||0)*pc/100+(nm?mensalSel(slug)*nm:0))*100)/100;}
   function orcamento(c,S,P){P=P||{};const dc=P.desc||{};const artes=(c&&c.artes)||{};const linhas=[];
     Object.entries(S||{}).filter(([k,v])=>v&&v.q>0).sort((a,b)=>{const i=k=>{const n=ORDEM_ORC.indexOf(baseId(k));return n<0?999:n;};return i(a[0])-i(b[0])||(a[0]<b[0]?-1:1);}).forEach(([k,v])=>{
       const fid=(P.forn||{})[k]||null;const fo=fornDe(k,fid);
@@ -576,6 +583,7 @@ const App=(()=>{
       if(v.servico){q=1;fixa=true;if(baseId(k)==="mostraai"&&v.entrada!=null){lista=+v.entrada;mensal=+v.mensal||0;unid=(v.nome||"").replace(/^Mostraí · /,"");}}
       else if(baseId(k)==="locacao"){q=1;fixa=true;lista=precoLocacao(v.inicio);const t=LOC_TEMAS.find(x=>x.id===v.tema);unid=`${t?t.nome:"tema a escolher"} · ${v.inicio?diaBR(v.inicio)+" a "+diaBR(locFim(v.inicio))+" · 15 dias":"data a escolher"}`;}
       else if(baseId(k)==="capacho"&&c&&c.capacho_preco&&c.capacho_preco.total){const cp=c.capacho_preco;lista=+cp.total;q=cp.qtd||1;fixa=true;unid=(cp.medidas||[]).map(m=>`${(m.w/100).toFixed(2).replace(".",",")} × ${(m.h/100).toFixed(2).replace(".",",")} m`).join(" + ");}
+      else if(v.giv){lista=venda((+v.giv.custo||0)*q);unid=v.giv.unid||"";}
       else{q=qtdNormal(k,q,fid);const fmt=(c&&c.formatos||{})[k];lista=precoEm(k,q,fmt,fid);const pr=precoProduto(k,fmt,fid);unid=pr?pr.unid.replace(/^\d[\d.]* un\. · /,"").replace(/^un\. · /,""):"";}
       const pct=dc[k]!=null?+dc[k]:0;const total=lista==null?null:Math.round(lista*(1+pct/100)*100)/100;
       const kb=baseId(k),nv=k.includes("~")?" · "+k.split("~")[1]:"";linhas.push({k,base:kb,nome:(NOME_ORC[kb]||v.nome||kb)+nv,img,q,lista,total,pct,unid,mensal,servico:!!v.servico,fixa,lote:!!qtdOpcoes(k,fid),fid,forn:fo?{id:fo.id,nome:fo.nome,prazo:fo.prazo||null,frete:fo.frete||null,preco:!!fornTab(fo).length}:null,fornProprio:!!fid});});
@@ -600,7 +608,7 @@ const App=(()=>{
         soma:O.soma,frete:O.frete,total:O.total,mensal:O.mensal||0,semPreco:O.semPreco||0,pagamentos:O.total?pagamentos(O.total):[],pag:Object.assign({pix:5,cartao:8,parc:6,sinal:50},METAS.pag||{})}};
     const ass=JSON.stringify(pn);if(_pubUlt[l.slug]===ass)return;pn.em=new Date().toISOString();c.painel=pn;await gravarCliente(c);_pubUlt[l.slug]=ass;}catch(e){}}
   async function acessosCliente(slug,acao,corpo){const u=`/api/clientes/${encodeURIComponent(slug)}/acessos${acao?"/"+acao:""}`;const r=await fetch(u,{method:corpo||acao?"POST":"GET",credentials:"same-origin",headers:{"Content-Type":"application/json"},body:corpo||acao?JSON.stringify(corpo||{}):undefined});const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.erro||r.status);return d.acessos||[];}
-  return {GRUPOS,SERV_IDS,grupoDe,ehServico,MOSTRAI_PLANOS,SERV_NOMES,selMostrai,estadoGrupos,gruposHTML,PROCESSOS,barraEtapas,nb,publicarPainel,acessosCliente,cabCliente,mapaLoja,get FORNEC(){return FORNEC;},set FORNEC(v){FORNEC=v;},fornItem,fornDe,fornTab,fornPreco,FAIXAS,NOME_ORC,ORDEM_ORC,
+  return {PRIMEIRA,FORA_CARDAPIO,givCatalogo,givChave,comissaoPedido,GRUPOS,SERV_IDS,grupoDe,ehServico,MOSTRAI_PLANOS,SERV_NOMES,selMostrai,estadoGrupos,gruposHTML,PROCESSOS,barraEtapas,nb,publicarPainel,acessosCliente,cabCliente,mapaLoja,get FORNEC(){return FORNEC;},set FORNEC(v){FORNEC=v;},fornItem,fornDe,fornTab,fornPreco,FAIXAS,NOME_ORC,ORDEM_ORC,
   LOC_DIAS,LOC_TEMAS,LOC_IMG,isoDia,maisDias,diaBR,locFim,precoLocacao,reservasLoc,locLivre,reservarLoc,baseId,qtdMin,qtdOpcoes,passoQtd,qtdNormal,precoEm,orcamento,pagamentos,VITRINE_PADRAO,vitrineMaisPerto,CUSTO,venda,lucroPct,LUCRO_PADRAO,fundoTransparente,logoComoTratado,VITRINE,precoProduto,$,$$,esc,qs,ZONA,zonaDe,desempenho,get METAS(){return METAS;},arquivarLoja,reagendarLoja,FAMILIAS,familiaDe,TIPOS_ROTA,rotaDe,gravarRota,rotaDoPlay,recarregarFicha,get PLANO(){return PLANO;},setorNome,nomeLoja,telFmt,ini,sessao,eu,dados,ficha,estrelas,estrelasHTML,estado,salvar,abrirVendas,lerCliente,gravarCliente,cliente,lerChave,gravarChave,API,definirCliente,classificar,logoPrincipal,removerLogo,estadoLogo,ROTULO_LOGO,aprovarLogo,escolherImagem,abrirLogotipo,entradas,ligarEntradas,artePadrao,gerarProdutos,contextualizar,aparar,assarRecortes,desenharElementos,desenharTexto,desenharQR,desenharVetor,carregarScript,recortarLogo,PRODUTOS_IDS,separarCores,garantirCamadas,dadosCarimbo,desenharCarimbo,cenaCarimbo,desenharLista,desenharSeta,listarNotas,gravarNota,apagarNota,diasDeRota,reagendar,hojeISO,dataCurta,META,ICONES,NA_CASCA,avulsos,novoAvulso,atualizarAvulso,ocorrenciasManuais,gravarOcorrencias,ocorrenciasAuto,ETAPAS,etapaDe,moverEtapa,nav,topo,voltar,acoes,menuLongo,ligarLongo};
 })();
 

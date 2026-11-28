@@ -1358,6 +1358,9 @@ class H(BaseHTTPRequestHandler):
                         return self._send(200, json.load(open(os.path.join(ESTADO_DIR, "logos_auto-" + re.sub(r"[^a-z0-9-]", "", qs.get("zona") or "") + ".json"))))
                     except Exception:
                         return self._send(200, {"andamento": True})
+                if p == "/api/admin/rotas":   # painel do supervisor: uma linha por rota captada (só leitura)
+                    import rotas_painel, importlib; importlib.reload(rotas_painel)
+                    return self._send(200, rotas_painel.painel(RAIZ))
                 if p == "/api/admin/atividade":
                     # rastro das contextualizações (cache em /var/lib/genio/kits, um arquivo por arte aplicada); as fichas ficam no aparelho
                     import datetime as _dt

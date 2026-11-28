@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>GenIO · Rotas</title>
+<meta name="theme-color" content="#6933C5">
+<meta name="robots" content="noindex,nofollow">
+<link rel="icon" href="genio-favicon.png" type="image/png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="portal.css?v=3d7a2206ab">
+<style>
+.rt-wrap{max-width:980px;margin:0 auto;padding:16px}
+.rt-h{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin:8px 0 4px}
+.rt-h h1{margin:0;font-size:24px}
+.rt-sub{color:#5B5670;font-size:14px;margin:0 0 14px}
+.rt-aviso{background:#FFF6E0;border-radius:12px;padding:10px 12px;font-size:14px;margin:0 0 14px;color:#5A4300}
+.rt-tot{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:0 0 14px}
+.rt-tot div{background:#fff;border-radius:14px;padding:10px 12px}
+.rt-tot small{display:block;color:#5B5670;font-size:12px}
+.rt-tot b{font-size:22px;font-variant-numeric:tabular-nums}
+.rota{background:#fff;border-radius:16px;padding:14px;margin:0 0 10px}
+.rota-top{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.rota-top b{font-size:17px}
+.rota-top .dono{margin-left:auto;display:flex;align-items:center;gap:6px;font-size:13px;color:#5B5670}
+.rota-top input{min-height:40px;border:1.5px solid #E3DEF0;border-radius:10px;padding:0 10px;font:inherit;font-size:15px;width:150px}
+.barra{height:8px;border-radius:999px;background:#EEE9F7;overflow:hidden;margin:10px 0 4px}
+.barra i{display:block;height:100%;background:#04C6C0;border-radius:999px}
+.rota small.pc{color:#5B5670;font-size:13px}
+.nums{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:10px 0 0}
+.nums div{background:#F6F3FB;border-radius:10px;padding:8px 10px}
+.nums small{display:block;color:#5B5670;font-size:12px;line-height:1.2}
+.nums b{font-size:17px;font-variant-numeric:tabular-nums}
+.nums .alerta{background:#FDECEC}.nums .alerta b{color:#B3261E}
+.rt-vazio{background:#fff;border-radius:16px;padding:18px;color:#5B5670}
+@media(max-width:560px){.rt-tot,.nums{grid-template-columns:repeat(2,minmax(0,1fr))}.rota-top .dono{margin-left:0;width:100%}.rota-top input{flex:1}}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <a class="marca" href="app.html"><b>Gen<i>IO</i></b><span>rotas</span></a>
+  <div class="fill"></div>
+  <a class="btn btn-s btn-sm" href="admin.html">Administração</a>
+</div></header>
+<main class="rt-wrap">
+  <div class="rt-h"><h1>Acompanhamento por rota</h1><span id="quando" class="rt-sub"></span></div>
+  <p class="rt-sub">Uma linha por rota captada. Os números vêm do que os vendedores marcam no aplicativo.</p>
+  <div id="aviso"></div>
+  <div class="rt-tot" id="tot"></div>
+  <div id="lista"><div class="rt-vazio">Carregando…</div></div>
+</main>
+<script src="portal.js?v=3d7a2206ab"></script>
+<script>
+(async()=>{const {$,esc}=G;let EU=null;
+  try{EU=await G.eu();}catch(e){}
+  if(!EU){location.replace("/?entrar=1&volta=rotas.html");return;}
+  if(EU.papel!=="admin"){location.replace("app.html");return;}
+  const R=v=>Number(v||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
+  const dBR=iso=>iso?iso.slice(8,10)+"/"+iso.slice(5,7):"";
+  let D=null,donos={};
+  async function carregar(){
+    const r=await fetch("/api/admin/rotas",{credentials:"same-origin",cache:"no-store"});
+    if(!r.ok){$("#lista").innerHTML=`<div class="rt-vazio">Não consegui ler as rotas (${r.status}).</div>`;return;}
+    D=await r.json();donos={};D.rotas.forEach(x=>{if(x.dono)donos[x.zona]=x.dono;});desenhar();}
+  function desenhar(){
+    const T=D.rotas.reduce((t,x)=>({lojas:t.lojas+x.lojas,vis:t.vis+x.visitadas,ped:t.ped+x.pedidos,pend:t.pend+x.entregas_pendentes,mensal:t.mensal+x.mensal}),{lojas:0,vis:0,ped:0,pend:0,mensal:0});
+    $("#quando").textContent=D.estado_atualizado?`última gravação ${D.estado_atualizado.replace("T"," ").slice(0,16)}${D.estado_por?" · "+D.estado_por:""}`:"";
+    $("#aviso").innerHTML=D.estado_unico?`<div class="rt-aviso">Hoje o aplicativo guarda um único caderno de visitas para todos os vendedores. Com uma pessoa na rua os números estão certos; com duas ou mais, eles se misturam.</div>`:"";
+    $("#tot").innerHTML=`<div><small>Rotas</small><b>${D.rotas.length}</b></div><div><small>Lojas visitadas</small><b>${T.vis}/${T.lojas}</b></div><div><small>Pedidos</small><b>${T.ped}</b></div><div><small>Mensalidades fechadas</small><b>${R(T.mensal)}</b></div>`;
+    $("#lista").innerHTML=D.rotas.length?D.rotas.map(x=>{const pc=x.lojas?Math.round(100*x.visitadas/x.lojas):0;return `<section class="rota" data-z="${esc(x.zona)}">
+      <div class="rota-top"><b>${esc(x.nome)}</b><span class="dono">Dono <input type="text" value="${esc(x.dono||"")}" placeholder="vendedor" aria-label="Dono da rota ${esc(x.nome)}" maxlength="40"></span></div>
+      <div class="barra"><i style="width:${pc}%"></i></div><small class="pc">${x.visitadas} de ${x.lojas} lojas visitadas (${pc}%)${x.ultima_visita?" · última visita "+esc(x.ultima_visita.replace("T"," ")):""}</small>
+      <div class="nums"><div><small>Orçamentos</small><b>${x.orcamentos}</b></div><div><small>Pedidos</small><b>${x.pedidos}</b></div><div><small>Valor dos pedidos</small><b>${R(x.receita)}</b></div><div><small>Mensalidades</small><b>${R(x.mensal)}</b></div>
+        <div class="${x.entregas_pendentes?"alerta":""}"><small>Entregas pendentes</small><b>${x.entregas_pendentes}</b></div><div><small>Adesivos ativados</small><b>${x.adesivos}</b></div><div><small>Conversas (abertas)</small><b>${x.conversas} (${x.conversas_abertas})</b></div>
+        <div class="${x.voltas_vencidas?"alerta":""}"><small>Voltas vencidas · próxima</small><b>${x.voltas_vencidas} · ${x.proxima_volta?dBR(x.proxima_volta):"sem data"}</b></div></div></section>`;}).join(""):`<div class="rt-vazio">Nenhuma rota captada ainda.</div>`;
+    document.querySelectorAll(".rota input").forEach(i=>i.onchange=async()=>{const z=i.closest(".rota").dataset.z;const v=i.value.trim();if(v)donos[z]=v;else delete donos[z];
+      const r=await fetch("/api/estado/rotas-donos",{method:"PUT",credentials:"same-origin",headers:{"Content-Type":"application/json"},body:JSON.stringify({valor:donos})});i.style.borderColor=r.ok?"#04C6C0":"#B3261E";});}
+  await carregar();setInterval(carregar,60000);
+})();
+</script>
+</body>
+</html>

@@ -6,7 +6,7 @@
 <title>GênIO · Início</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="app.css?v=121eb8fc34">
+<link rel="stylesheet" href="app.css?v=8c1c91e58c">
 <style>
 .ini-meta{background:#141C3A;color:#fff;border-radius:18px;padding:18px;display:flex;flex-direction:column;gap:10px;margin:0 0 12px}
 .ini-meta small{font-size:12px;font-weight:700;letter-spacing:.12em;color:#C9C2DC}
@@ -34,7 +34,7 @@
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=121eb8fc34"></script>
+<script src="app.js?v=8c1c91e58c"></script>
 <script>
 (async()=>{
   const {$,esc,sessao,eu,dados,estado,nav,topo,desempenho,etapaDe,PROCESSOS,hojeISO,reservasLoc}=App;
@@ -81,7 +81,7 @@
       <div class="num"><b>${d.vMes}</b><span>${d.mMes?`de ${d.mMes} vendas`:"vendas · meta do mês não definida"}</span></div>
       ${d.mMes?`<div class="trilho"><i style="width:${Math.min(100,pctMeta)}%"></i></div>`:""}
       <div class="pe"><span>Hoje: ${d.vDia}${d.mDia?` de ${d.mDia}`:""}</span><span>faltam ${uteis} dia(s) útil(eis)</span></div></section>
-    <section class="ini-2"><div><span>Ganhei no mês</span><b>${d.comissao===null?"—":brl(d.comissao)}</b><span style="color:#0E6E6A">${d.comissao===null?"comissão ainda não definida":`comissão de ${pc}% a receber`}</span></div>
+    <section class="ini-2"><div><span>Ganhei no mês</span><b>${d.comissao===null?"—":brl(d.comissao)}</b><span style="color:#0E6E6A">${d.comissao===null?"comissão ainda não definida":`comissão a receber${pc?" · "+pc+"% dos pedidos":""}${d.nm?" + "+d.nm+" mensalidade(s) por contrato":""}`}</span></div>
       <div><span>Desde que entrei</span><b>${ganhoTotal===null?"—":brl(ganhoTotal)}</b><span>${desde?`desde ${dBR(desde)}/${desde.slice(0,4)}`:""}</span></div></section>
     <section class="ini-sec"><small>DESDE QUE ENTREI, POR PROCESSO</small>
       <div class="ini-proc">
