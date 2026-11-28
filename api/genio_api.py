@@ -1081,6 +1081,21 @@ def chaves_ler():
             return json.load(f)
     except Exception:
         return {}
+# ---------- caderno do dia por vendedor (decisão do dono, 28/11) ----------
+# O aplicativo grava visitas, orçamentos e pedidos na chave "dia". Antes era um arquivo só para todos; agora cada conta tem o seu
+# (dia-u<id>). O caderno antigo (dia.json) não é apagado nem alterado: ele é o ponto de partida de quem o escreveu por último.
+def estado_chave(chave, eu):
+    return f"dia-u{int(eu['id'])}" if chave == "dia" and eu and eu.get("id") is not None else chave
+
+def estado_ler_de(chave, eu):
+    k = estado_chave(chave, eu)
+    e = DADOS.estado_ler(k)
+    if e is None and k != chave:
+        ant = DADOS.estado_ler(chave)
+        if ant and (ant.get("por") == eu.get("nome") or (not ant.get("por") and eu.get("papel") == "admin")):
+            return ant
+    return e
+
 def chaves_estado():
     c = chaves_ler()
     return [{"nome": n, "definida": bool(c.get(n)), "fim": (c.get(n) or "")[-4:]} for n in CHAVES_NOMES]
@@ -1305,7 +1320,7 @@ class H(BaseHTTPRequestHandler):
                         return self._send(200, {"mensagens": DADOS.mensagens_ler(p.split("/")[3])})
                     if p == "/api/dados/resumo":
                         return self._send(200, DADOS.resumo())
-                    e = DADOS.estado_ler(p.split("/")[3])
+                    e = estado_ler_de(p.split("/")[3], self._eu())
                     return self._send(200, e if e else {"valor": None})
                 except ValueError as e:
                     return self._erro(400, str(e))
@@ -1462,7 +1477,7 @@ class H(BaseHTTPRequestHandler):
             if p.startswith("/api/notas/") and len(partes) == 4:
                 return self._send(200, DADOS.nota_gravar(partes[3], self._json_grande(), eu["nome"]))
             if p.startswith("/api/estado/") and len(partes) == 4:
-                return self._send(200, {"valor": DADOS.estado_gravar(partes[3], self._json_grande().get("valor"), eu["nome"])})
+                return self._send(200, {"valor": DADOS.estado_gravar(estado_chave(partes[3], eu), self._json_grande().get("valor"), eu["nome"])})
             if p.startswith("/api/mensagens/") and len(partes) == 5 and partes[4] == "lidas":
                 return self._send(200, DADOS.mensagens_lidas(partes[3]))
             if p.startswith("/api/mensagens/") and len(partes) == 4:   # resposta do atendimento (aparece para o cliente no painel dele)
