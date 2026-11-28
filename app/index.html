@@ -8,7 +8,7 @@
 <link rel="icon" href="../genio-favicon.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
-<link rel="stylesheet" href="app.css?v=e7b0106968">
+<link rel="stylesheet" href="app.css?v=64b6e1c64e">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <style>
 /* montagem da rota pelo vendedor (14/11): 1 lojas · 2 logotipos · 3 recorte e ordem */
@@ -76,7 +76,7 @@ select.campo,input.campo{width:100%;font:inherit;font-size:16px;min-height:46px;
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=e7b0106968"></script>
+<script src="app.js?v=64b6e1c64e"></script>
 <script>
 (async()=>{
   const {$,$$,esc,qs,sessao,eu,dados,estrelasHTML,estado,salvar,nav,topo,setorNome,nomeLoja,cliente,gravarCliente,menuLongo}=App;
@@ -85,7 +85,7 @@ select.campo,input.campo{width:100%;font:inherit;font-size:16px;min-height:46px;
   const hoje=App.hojeISO();
   const dia=/^\d{4}-\d{2}-\d{2}$/.test(qs.get("d")||"")?qs.get("d"):hoje;
   const zonas=App.PLANO.filter(z=>D.zonas[z]);
-  let R=JSON.parse(JSON.stringify(App.rotaDe(dia)||{tipo:"zona-familia",zona:zonas[0],familia:"alimentacao",slugs:[],etapa:1,criada:new Date().toISOString(),por:eu().nome}));
+  let R=JSON.parse(JSON.stringify(App.rotaDe(dia)||{tipo:"zona-familia",zona:zonas[0],familia:"mensalidade",slugs:[],etapa:1,criada:new Date().toISOString(),por:eu().nome}));
   let etapa=+qs.get("etapa")||R.etapa||1;
   const L$=s=>D.lojas.find(l=>l.slug===s);
   const salvaR=()=>App.gravarRota(dia,R);
@@ -107,7 +107,7 @@ select.campo,input.campo{width:100%;font:inherit;font-size:16px;min-height:46px;
     const outras={};for(const [d,X] of Object.entries(e.rotas||{}))if(d!==dia&&X&&!X.encerrada)for(const s of X.slugs||[])if(!(X.res||{})[s])outras[s]=d;
     let L;
     if(R.tipo==="retorno"){const ret=new Set([...(e.retornos||[]),...retornosVencendo(null).map(l=>l.slug),...Object.entries(e.atend||{}).filter(([,a])=>a&&(a.res==="voltar"||a.res==="nao_estava")).map(([s])=>s)]);L=D.lojas.filter(l=>ret.has(l.slug)&&!arq.has(l.slug));}
-    else{L=D.lojas.filter(l=>l.zona===R.zona&&l.estrelas>=3&&!arq.has(l.slug)&&!feitas.has(l.slug));if(R.tipo==="zona-familia")L=L.filter(l=>App.familiaDe(l.setor)===R.familia);}
+    else{L=D.lojas.filter(l=>l.zona===R.zona&&l.estrelas>=3&&!arq.has(l.slug)&&!feitas.has(l.slug));if(R.tipo==="zona-familia")L=L.filter(l=>R.familia==="mensalidade"?App.RAMOS_MENSAL.includes(l.setor):App.familiaDe(l.setor)===R.familia);}
     return L.sort((a,b)=>b.estrelas-a.estrelas||(a.dia||0)-(b.dia||0)||(a.ordem||0)-(b.ordem||0)).map(l=>({l,outra:outras[l.slug]||null}));}
   // ---- cabeçalho: dias com rota + escolher outro dia; etapas
   const AJ=["Escolha o tipo de rota, a zona e marque as lojas. O mapa mostra o melhor caminho.","Confira os logotipos. Toque nos errados; segure para pôr um à mão.","Peça o recorte de cada logotipo: antes e depois lado a lado.","Arrume a fila: arraste pelo ≡, tire lojas ou troque por outras perto.","Avise as lojas pelo WhatsApp que você vai passar.","Confira tudo e marque a rota como pronta."];
@@ -131,7 +131,7 @@ select.campo,input.campo{width:100%;font:inherit;font-size:16px;min-height:46px;
     <section class="card"><h2>Tipo de rota</h2>
       <div class="op">${Object.entries(App.TIPOS_ROTA).map(([k,t])=>`<button type="button" data-tipo="${k}" class="${R.tipo===k?"on":""}">${t}</button>`).join("")}</div>
       ${R.tipo!=="retorno"?`<label class="muted" style="font-size:13px">Zona</label><select class="campo" id="zona">${zonas.map(z=>`<option value="${z}" ${z===R.zona?"selected":""}>${esc(D.zonas[z].nome)} · ${D.lojas.filter(l=>l.zona===z&&l.estrelas>=3).length} lojas 3–5★</option>`).join("")}</select>`:`<p class="muted" style="margin:0">Lojas que pediram para voltar e as que não estavam quando o vendedor passou.</p>`}
-      ${R.tipo==="zona-familia"?`<label class="muted" style="font-size:13px">Família</label><div class="op">${Object.entries(App.FAMILIAS).map(([k,f])=>`<button type="button" data-fam="${k}" class="${R.familia===k?"on":""}">${f.nome}</button>`).join("")}</div>`:""}
+      ${R.tipo==="zona-familia"?`<label class="muted" style="font-size:13px">Família</label><div class="op"><button type="button" data-fam="mensalidade" class="${R.familia==="mensalidade"?"on":""}">Mensalidade</button>${Object.entries(App.FAMILIAS).map(([k,f])=>`<button type="button" data-fam="${k}" class="${R.familia===k?"on":""}">${f.nome}</button>`).join("")}</div>${R.familia==="mensalidade"?`<small class="muted" style="display:block;margin:6px 0 0">Restaurantes, padarias, cafés, bares, salões, clínicas, academias e pet shops: onde cabe um serviço mensal.</small>`:""}`:""}
     </section>
     ${(()=>{if(R.tipo==="retorno")return "";const rv=retornosVencendo(R.zona);const fora2=rv.filter(l=>!R.slugs.includes(l.slug));if(!rv.length)return "";const MOT=s=>((estado().voltas||{})[s]||{}).motivo||"retorno";
       return `<button type="button" class="ret-b" id="incRet" ${fora2.length?"":"disabled"}><b>${rv.length} retorno(s) vencem nesta zona até ${limVolta().slice(8,10)}/${limVolta().slice(5,7)}</b><small>${rv.slice(0,4).map(l=>`${esc(nomeLoja(l.nome))} (${esc(MOT(l.slug))})`).join(" · ")}${rv.length>4?" …":""}. ${fora2.length?"Toque para incluir na rota.":"Já estão na rota."}</small></button>`;})()}

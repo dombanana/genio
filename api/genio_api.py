@@ -1090,7 +1090,7 @@ def estado_chave(chave, eu):
 # Configurações (28/11): lucro, comissão, pagamento, preços e fornecedores são da empresa e só o administrador muda.
 # As metas de venda (dia, mês, jornada) são de cada vendedor (metas-u<id>) e aparecem por cima das da empresa.
 METAS_PESSOAIS = ("dia", "mes", "jornada")
-ESTADO_SO_ADMIN = ("fornecedores", "giv-catalogo", "rotas-donos")
+ESTADO_SO_ADMIN = ("fornecedores", "giv-catalogo", "rotas-donos", "rotas-metas")
 
 def estado_gravar_de(chave, valor, eu):
     admin = eu.get("papel") == "admin"

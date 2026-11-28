@@ -34,6 +34,10 @@
 .nums small{display:block;color:#5B5670;font-size:12px;line-height:1.2}
 .nums b{font-size:17px;font-variant-numeric:tabular-nums}
 .nums .alerta{background:#FDECEC}.nums .alerta b{color:#B3261E}
+.mens{position:relative;display:flex;gap:10px;align-items:center;flex-wrap:wrap;background:#EFFBFA;border-radius:12px;padding:10px 12px 14px;margin:10px 0 0;overflow:hidden}
+.mens small{display:block;color:#0E6E6A;font-size:12px;font-weight:600}.mens b{font-size:20px;font-variant-numeric:tabular-nums}.mens span{display:block;color:#5B5670;font-size:13px}
+.mens label{margin-left:auto;font-size:13px;color:#5B5670;display:flex;align-items:center;gap:6px}.mens input{width:96px;min-height:40px;border:1.5px solid #BFEDEA;border-radius:10px;padding:0 10px;font:inherit;font-size:15px}
+.mens i{position:absolute;left:0;bottom:0;height:5px;width:calc(var(--p)*100%);background:#04C6C0}
 .rt-vazio{background:#fff;border-radius:16px;padding:18px;color:#5B5670}
 @media(max-width:560px){.rt-tot,.nums{grid-template-columns:repeat(2,minmax(0,1fr))}.rota-top .dono{margin-left:0;width:100%}.rota-top input{flex:1}}
 </style>
@@ -59,23 +63,26 @@
   if(EU.papel!=="admin"){location.replace("app.html");return;}
   const R=v=>Number(v||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
   const dBR=iso=>iso?iso.slice(8,10)+"/"+iso.slice(5,7):"";
-  let D=null,donos={};
+  let D=null,donos={},metas={};
   async function carregar(){
     const r=await fetch("/api/admin/rotas",{credentials:"same-origin",cache:"no-store"});
     if(!r.ok){$("#lista").innerHTML=`<div class="rt-vazio">Não consegui ler as rotas (${r.status}).</div>`;return;}
-    D=await r.json();donos={};D.rotas.forEach(x=>{if(x.dono)donos[x.zona]=x.dono;});desenhar();}
+    D=await r.json();donos={};metas={};D.rotas.forEach(x=>{if(x.dono)donos[x.zona]=x.dono;if(x.meta_contratos)metas[x.zona]=x.meta_contratos;});desenhar();}
   function desenhar(){
     const T=D.rotas.reduce((t,x)=>({lojas:t.lojas+x.lojas,vis:t.vis+x.visitadas,ped:t.ped+x.pedidos,pend:t.pend+x.entregas_pendentes,mensal:t.mensal+x.mensal}),{lojas:0,vis:0,ped:0,pend:0,mensal:0});
     $("#quando").textContent=(D.cadernos||[]).length?`${D.cadernos.length} vendedor(es) com caderno: ${D.cadernos.map(c=>c.nome.split(" ")[0]).join(", ")}`:"";
     $("#aviso").innerHTML=D.estado_unico?`<div class="rt-aviso">Hoje o aplicativo guarda um único caderno de visitas para todos os vendedores. Com uma pessoa na rua os números estão certos; com duas ou mais, eles se misturam.</div>`:"";
-    $("#tot").innerHTML=`<div><small>Rotas</small><b>${D.rotas.length}</b></div><div><small>Lojas visitadas</small><b>${T.vis}/${T.lojas}</b></div><div><small>Pedidos</small><b>${T.ped}</b></div><div><small>Mensalidades fechadas</small><b>${R(T.mensal)}</b></div>`;
+    $("#tot").innerHTML=`<div><small>Rotas</small><b>${D.rotas.length}</b></div><div><small>Lojas visitadas</small><b>${T.vis}/${T.lojas}</b></div><div><small>Pedidos</small><b>${T.ped}</b></div><div><small>Contratos mensais</small><b>${D.rotas.reduce((s,x)=>s+(x.contratos||0),0)} · ${R(T.mensal)}/mês</b></div>`;
     $("#lista").innerHTML=D.rotas.length?D.rotas.map(x=>{const pc=x.lojas?Math.round(100*x.visitadas/x.lojas):0;return `<section class="rota" data-z="${esc(x.zona)}">
       <div class="rota-top"><b>${esc(x.nome)}</b><span class="dono">Dono <input type="text" value="${esc(x.dono||"")}" placeholder="vendedor" aria-label="Dono da rota ${esc(x.nome)}" maxlength="40"></span></div>
       <div class="barra"><i style="width:${pc}%"></i></div><small class="pc">${x.visitadas} de ${x.lojas} lojas visitadas (${pc}%)${x.ultima_visita?" · última visita "+esc(x.ultima_visita.replace("T"," ")):""}</small>${(x.vendedores||[]).length?`<small class="pc" style="display:block;margin-top:4px">${x.vendedores.map(v=>`<b>${esc(v.nome.split(" ")[0])}</b>: ${v.visitadas} visita(s), ${v.orcamentos} orçamento(s), ${v.pedidos} pedido(s)`).join(" · ")}</small>`:""}
+      <div class="mens"><div><small>Contratos mensais</small><b>${x.contratos||0}${x.meta_contratos?" de "+x.meta_contratos:""}</b><span>${R(x.mensal)}/mês · ${x.alvo_visitadas} de ${x.alvo_mensal} lojas-alvo visitadas</span></div><label>Meta <input type="number" class="meta" min="0" inputmode="numeric" value="${x.meta_contratos||""}" placeholder="contratos" aria-label="Meta de contratos mensais"></label>${x.meta_contratos?`<i style="--p:${Math.min(1,(x.contratos||0)/x.meta_contratos)}"></i>`:""}</div>
       <div class="nums"><div><small>Orçamentos</small><b>${x.orcamentos}</b></div><div><small>Pedidos</small><b>${x.pedidos}</b></div><div><small>Valor dos pedidos</small><b>${R(x.receita)}</b></div><div><small>Mensalidades</small><b>${R(x.mensal)}</b></div>
         <div class="${x.entregas_pendentes?"alerta":""}"><small>Entregas pendentes</small><b>${x.entregas_pendentes}</b></div><div><small>Adesivos ativados</small><b>${x.adesivos}</b></div><div><small>Conversas (abertas)</small><b>${x.conversas} (${x.conversas_abertas})</b></div>
         <div class="${x.voltas_vencidas?"alerta":""}"><small>Voltas vencidas · próxima</small><b>${x.voltas_vencidas} · ${x.proxima_volta?dBR(x.proxima_volta):"sem data"}</b></div></div></section>`;}).join(""):`<div class="rt-vazio">Nenhuma rota captada ainda.</div>`;
-    document.querySelectorAll(".rota input").forEach(i=>i.onchange=async()=>{const z=i.closest(".rota").dataset.z;const v=i.value.trim();if(v)donos[z]=v;else delete donos[z];
+    document.querySelectorAll(".rota input.meta").forEach(i=>i.onchange=async()=>{const z=i.closest(".rota").dataset.z;const v=parseInt(i.value,10);if(v>0)metas[z]=v;else delete metas[z];
+      const r=await fetch("/api/estado/rotas-metas",{method:"PUT",credentials:"same-origin",headers:{"Content-Type":"application/json"},body:JSON.stringify({valor:metas})});i.style.borderColor=r.ok?"#04C6C0":"#B3261E";if(r.ok)carregar();});
+    document.querySelectorAll(".rota .dono input").forEach(i=>i.onchange=async()=>{const z=i.closest(".rota").dataset.z;const v=i.value.trim();if(v)donos[z]=v;else delete donos[z];
       const r=await fetch("/api/estado/rotas-donos",{method:"PUT",credentials:"same-origin",headers:{"Content-Type":"application/json"},body:JSON.stringify({valor:donos})});i.style.borderColor=r.ok?"#04C6C0":"#B3261E";});}
   await carregar();setInterval(carregar,60000);
 })();

@@ -205,7 +205,7 @@ const App=(()=>{
   // ---- arte automática: logotipo tratado centralizado preenchendo a área segura do gabarito, cor padrão do material
   const COR_PADRAO={capacho:"#2B2B2D",rigido:"#F4F1EA",vinil:null,tecido:"#F4F1EA",papel:"#FFFFFF",lona:"#FFFFFF",carimbo:null};
   const PRODUTOS_IDS=["capacho","placas","adesivos","uniformes","impressos","panfleto","banners","parede","brindes","carimbo","windbanner","faixa","folheto","camiseta","bone","avental"];
-  let _G=null;const gabaritos=async()=>_G||(_G=await (await fetch("gabaritos.json?v=e7b0106968")).json());
+  let _G=null;const gabaritos=async()=>_G||(_G=await (await fetch("gabaritos.json?v=64b6e1c64e")).json());
   const carregarImg=src=>new Promise(res=>{const i=new Image();i.crossOrigin="anonymous";i.onload=()=>res(i);i.onerror=()=>res(null);i.src=src;});
   // ---- carimbo: só texto — nome, razão social, CNPJ (negrito), endereço, telefone; nunca logotipo
   async function dadosCarimbo(l){const cad=await ficha(l.slug).catch(()=>null);const L=(cad&&cad.lacunas)||{};const leit=(L.leitura||{}).valor||"";const razao=((leit.match(/Razão social: ([^·]+)/)||[])[1]||"").trim();const cnpj=((leit.match(/CNPJ:? ?([\d./-]{14,18})/)||[])[1]||"");
@@ -252,7 +252,7 @@ const App=(()=>{
     const aw=W-2*(B+S),ah=H-2*(B+S);const f=Math.min(aw/LW,(P.ancora==="topo"?ah*0.45:ah)/LH);const w=LW*f,h=LH*f;const x=(W-w)/2,y=P.ancora==="topo"?B+S+ah*0.05:(H-h)/2;
     const fundo=P.sem_fundo?null:(COR_PADRAO[P.superficie]===undefined?"#FFFFFF":COR_PADRAO[P.superficie]);
     // kit de 14 setores (10/11): a maquete frontal do ramo da loja é a arte de partida de todos os produtos
-    await carregarScript("qr.js?v=e7b0106968");await carregarScript("impressos.js?v=e7b0106968");await carregarScript("kits14.js?v=e7b0106968");
+    await carregarScript("qr.js?v=64b6e1c64e");await carregarScript("impressos.js?v=64b6e1c64e");await carregarScript("kits14.js?v=64b6e1c64e");
     if(window.Kits14&&window.Kits14.ARQ[pid]){const K=await window.Kits14.montar(App,pid,c,l,{W,H,B,S,im,rec});
       if(K){const doc={fundo:K.fundo,fundoImg:null,el:K.el,campos:null,auto:true,kit:KIT14,setorKit:K.setorKit,kitRef:K.kitRef,W,H};const imgs={[c.manual.tratado]:im};
         const k=Math.min(1,1400/Math.max(W,H));const cv=document.createElement("canvas");cv.width=Math.round(W*k);cv.height=Math.round(H*k);const g=cv.getContext("2d");g.scale(k,k);
@@ -570,6 +570,8 @@ const App=(()=>{
   const ORDEM_ORC=["capacho","placas","adesivos","parede","faixa","banners","windbanner","impressos","panfleto","folheto","carimbo","uniformes","camiseta","bone","avental","brindes","locacao","mostraai","falaai","inpi"];
   const NOME_ORC={capacho:"Tapete sob medida",placas:"Placa",adesivos:"Adesivo de vitrine",uniformes:"Camisa polo",impressos:"Cartão de visita",panfleto:"Flyer",banners:"Banner retrátil",parede:"Adesivo de parede",brindes:"Ecobag",carimbo:"Carimbo",windbanner:"Wind banner",faixa:"Faixa",folheto:"Folheto 2 dobras",camiseta:"Camiseta",bone:"Boné",avental:"Avental",locacao:"Kit locação",mostraai:"Mostraí",falaai:"Fala Aí",inpi:"Registro de marca (INPI)"};
   // cardápio de venda (28/11): os 4 impressos da primeira visita; os que saíram do cardápio só aparecem se já estiverem num orçamento
+  // rota de mensalidade (28/11): ramos em que um serviço mensal cabe — TV de ofertas (comida) e agenda (salão, clínica, academia, pet)
+  const RAMOS_MENSAL=["restaurante","padaria","cafeteria","bar","salão/barbearia","clínica/consultório","academia/estúdio","pet"];
   const PRIMEIRA=["capacho","impressos","adesivos","placas"],FORA_CARDAPIO=["panfleto","folheto","brindes","bone","camiseta","carimbo"];
   // catálogo completo da GIV: leitura do site guardada no servidor (estado "giv-catalogo": {lido, itens:[{s,n,d,e,p,q,pz,i,sku}]}) — fica na busca, para o que o lojista pedir fora do cardápio
   let _GIV=null;const givCatalogo=async()=>{if(_GIV)return _GIV;const v=await lerChave("giv-catalogo");if(!v||!Array.isArray(v.itens))throw new Error("catálogo ainda não carregado");return (_GIV=v);};const givChave=s=>"giv-"+s;
@@ -609,7 +611,7 @@ const App=(()=>{
         soma:O.soma,frete:O.frete,total:O.total,mensal:O.mensal||0,semPreco:O.semPreco||0,pagamentos:O.total?pagamentos(O.total):[],pag:Object.assign({pix:5,cartao:8,parc:6,sinal:50},METAS.pag||{})}};
     const ass=JSON.stringify(pn);if(_pubUlt[l.slug]===ass)return;pn.em=new Date().toISOString();c.painel=pn;await gravarCliente(c);_pubUlt[l.slug]=ass;}catch(e){}}
   async function acessosCliente(slug,acao,corpo){const u=`/api/clientes/${encodeURIComponent(slug)}/acessos${acao?"/"+acao:""}`;const r=await fetch(u,{method:corpo||acao?"POST":"GET",credentials:"same-origin",headers:{"Content-Type":"application/json"},body:corpo||acao?JSON.stringify(corpo||{}):undefined});const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.erro||r.status);return d.acessos||[];}
-  return {PRIMEIRA,FORA_CARDAPIO,givCatalogo,givChave,comissaoPedido,GRUPOS,SERV_IDS,grupoDe,ehServico,MOSTRAI_PLANOS,SERV_NOMES,selMostrai,estadoGrupos,gruposHTML,PROCESSOS,barraEtapas,nb,publicarPainel,acessosCliente,cabCliente,mapaLoja,get FORNEC(){return FORNEC;},set FORNEC(v){FORNEC=v;},fornItem,fornDe,fornTab,fornPreco,FAIXAS,NOME_ORC,ORDEM_ORC,
+  return {RAMOS_MENSAL,PRIMEIRA,FORA_CARDAPIO,givCatalogo,givChave,comissaoPedido,GRUPOS,SERV_IDS,grupoDe,ehServico,MOSTRAI_PLANOS,SERV_NOMES,selMostrai,estadoGrupos,gruposHTML,PROCESSOS,barraEtapas,nb,publicarPainel,acessosCliente,cabCliente,mapaLoja,get FORNEC(){return FORNEC;},set FORNEC(v){FORNEC=v;},fornItem,fornDe,fornTab,fornPreco,FAIXAS,NOME_ORC,ORDEM_ORC,
   LOC_DIAS,LOC_TEMAS,LOC_IMG,isoDia,maisDias,diaBR,locFim,precoLocacao,reservasLoc,locLivre,reservarLoc,baseId,qtdMin,qtdOpcoes,passoQtd,qtdNormal,precoEm,orcamento,pagamentos,VITRINE_PADRAO,vitrineMaisPerto,CUSTO,venda,lucroPct,LUCRO_PADRAO,fundoTransparente,logoComoTratado,VITRINE,precoProduto,$,$$,esc,qs,ZONA,zonaDe,desempenho,get METAS(){return METAS;},arquivarLoja,reagendarLoja,FAMILIAS,familiaDe,TIPOS_ROTA,rotaDe,gravarRota,rotaDoPlay,recarregarFicha,get PLANO(){return PLANO;},setorNome,nomeLoja,telFmt,ini,sessao,eu,dados,ficha,estrelas,estrelasHTML,estado,salvar,abrirVendas,lerCliente,gravarCliente,cliente,lerChave,gravarChave,API,definirCliente,classificar,logoPrincipal,removerLogo,estadoLogo,ROTULO_LOGO,aprovarLogo,escolherImagem,abrirLogotipo,entradas,ligarEntradas,artePadrao,gerarProdutos,contextualizar,aparar,assarRecortes,desenharElementos,desenharTexto,desenharQR,desenharVetor,carregarScript,recortarLogo,PRODUTOS_IDS,separarCores,garantirCamadas,dadosCarimbo,desenharCarimbo,cenaCarimbo,desenharLista,desenharSeta,listarNotas,gravarNota,apagarNota,diasDeRota,reagendar,hojeISO,dataCurta,META,ICONES,NA_CASCA,avulsos,novoAvulso,atualizarAvulso,ocorrenciasManuais,gravarOcorrencias,ocorrenciasAuto,ETAPAS,etapaDe,moverEtapa,nav,topo,voltar,acoes,menuLongo,ligarLongo};
 })();
 

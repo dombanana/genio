@@ -8,6 +8,9 @@ Cada vendedor tem o seu caderno do dia (estado/dia-u<id>.json); o painel soma to
 import json, os, time
 import dados as DADOS
 
+# ramos em que cabe um serviço mensal (a mesma lista da "rota de mensalidade" do aplicativo)
+RAMOS_MENSAL = ("restaurante", "padaria", "cafeteria", "bar", "salão/barbearia", "clínica/consultório", "academia/estúdio", "pet")
+
 def _ler(arq):
     try:
         with open(arq, encoding="utf-8") as f:
@@ -38,19 +41,20 @@ def _conta(e, slugs, hoje):
     orc = {s for s in slugs if any((v or {}).get("q", 0) > 0 for v in (sel.get(s) or {}).values())}
     pds = {s for s in slugs if any(h.get("etapa") != "entrada" for h in ((ped.get(s) or {}).get("hist") or []))}
     ent = {s for s in pds if (ped.get(s) or {}).get("etapa") == "entregue"}
-    receita = sum(float((ped.get(s) or {}).get("valor") or 0) for s in pds); mensal = 0.0
+    receita = sum(float((ped.get(s) or {}).get("valor") or 0) for s in pds); mensal = 0.0; contratos = 0
     for s in pds:
         for v in (sel.get(s) or {}).values():
             if v and v.get("q", 0) > 0 and v.get("servico") and v.get("mensal"):
-                mensal += float(v["mensal"])
+                mensal += float(v["mensal"]); contratos += 1
     vd = sorted(d for d in ((voltas.get(s) or {}).get("data") for s in slugs) if d)
     ult = max([((atend.get(s) or {}).get("fim") or "") for s in slugs] or [""])
-    return {"vis": vis, "orc": orc, "pds": pds, "ent": ent, "receita": receita, "mensal": mensal, "voltas": vd, "ult": ult}
+    return {"vis": vis, "orc": orc, "pds": pds, "ent": ent, "receita": receita, "mensal": mensal, "contratos": contratos, "voltas": vd, "ult": ult}
 
 def painel(raiz):
     hoje = time.strftime("%Y-%m-%d")
     cad = _cadernos()
     donos = ((_ler(os.path.join(DADOS.RAIZ_DADOS, "estado", "rotas-donos.json")) or {}).get("valor")) or {}
+    metas = ((_ler(os.path.join(DADOS.RAIZ_DADOS, "estado", "rotas-metas.json")) or {}).get("valor")) or {}
     cods = _ler(os.path.join(DADOS.RAIZ_DADOS, "relaciona", "codigos.json")) or {}
     ades = {}
     for c in cods.values():
@@ -63,12 +67,13 @@ def painel(raiz):
             continue
         rec = _ler(os.path.join(raiz, "captacao", "zonas", z + ".json")) or _ler(os.path.join("/var/lib/genio/captacao/zonas", z + ".json")) or {}
         slugs = [x["slug"] for x in L]
-        vis, orc, pds, ent, voltas = set(), set(), set(), set(), []; receita = mensal = 0.0; ult = ""; vend = []
+        vis, orc, pds, ent, voltas = set(), set(), set(), set(), []; receita = mensal = 0.0; contratos = 0; ult = ""; vend = []
+        alvo = [x["slug"] for x in L if x.get("setor") in RAMOS_MENSAL]
         for c in cad:
             r = _conta(c["e"], slugs, hoje)
-            vis |= r["vis"]; orc |= r["orc"]; pds |= r["pds"]; ent |= r["ent"]; voltas += r["voltas"]; receita += r["receita"]; mensal += r["mensal"]; ult = max(ult, r["ult"])
+            vis |= r["vis"]; orc |= r["orc"]; pds |= r["pds"]; ent |= r["ent"]; voltas += r["voltas"]; receita += r["receita"]; mensal += r["mensal"]; contratos += r["contratos"]; ult = max(ult, r["ult"])
             if r["vis"] or r["orc"] or r["pds"]:
-                vend.append({"nome": c["nome"], "visitadas": len(r["vis"]), "orcamentos": len(r["orc"]), "pedidos": len(r["pds"]), "receita": round(r["receita"], 2), "mensal": round(r["mensal"], 2)})
+                vend.append({"nome": c["nome"], "visitadas": len(r["vis"]), "orcamentos": len(r["orc"]), "pedidos": len(r["pds"]), "contratos": r["contratos"], "receita": round(r["receita"], 2), "mensal": round(r["mensal"], 2)})
         conv = 0; abertas = 0
         for s in slugs:
             if s in ades:
@@ -79,7 +84,8 @@ def painel(raiz):
         voltas.sort()
         rotas.append({"zona": z, "nome": (rec.get("nome") or z).split(" (")[0], "bairro": rec.get("bairro") or "", "dono": donos.get(z) or "",
                       "lojas": len(slugs), "visitadas": len(vis), "orcamentos": len(orc), "pedidos": len(pds), "entregues": len(ent),
-                      "entregas_pendentes": len(pds) - len(ent), "receita": round(receita, 2), "mensal": round(mensal, 2),
+                      "entregas_pendentes": len(pds) - len(ent), "receita": round(receita, 2), "mensal": round(mensal, 2), "contratos": contratos,
+                      "meta_contratos": int(metas.get(z) or 0), "alvo_mensal": len(alvo), "alvo_visitadas": len(vis & set(alvo)),
                       "adesivos": sum(1 for s in slugs if s in ades), "conversas": conv, "conversas_abertas": abertas,
                       "voltas_vencidas": sum(1 for d in voltas if d < hoje), "proxima_volta": next((d for d in voltas if d >= hoje), None),
                       "ultima_visita": ult[:16] or None, "vendedores": sorted(vend, key=lambda v: -v["visitadas"])})
