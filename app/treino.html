@@ -6,7 +6,7 @@
 <title>GênIO · Treinamento</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="app.css?v=2d1d303f9e">
+<link rel="stylesheet" href="app.css?v=db7f6df133">
 <style>
 .tr-abas{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));background:#fff;border-radius:12px;padding:4px;gap:4px;margin:0 0 12px;position:sticky;top:6px;z-index:5;box-shadow:0 2px 10px rgba(28,22,53,.08)}
 .tr-abas button{min-height:44px;border:0;border-radius:9px;background:transparent;font:inherit;font-size:13px;font-weight:600;color:var(--texto2)}
@@ -27,7 +27,7 @@
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=2d1d303f9e"></script>
+<script src="app.js?v=db7f6df133"></script>
 <script>
 (async()=>{
   const {$,$$,esc,sessao,nav,topo}=App;
@@ -49,8 +49,9 @@
       passo(1,"Entregue e instale","Confira a peça com o lojista e receba o restante."),
       passo(2,"Teste o adesivo com ele","Abra a página da loja no celular dele e mande uma mensagem de teste, para ele ver chegar no painel."),
       passo(3,"Ligue o Mostraí","Na TV da loja ou no celular dele, com o cardápio fotografado na visita 1.","“Você troca preço e destaque pelo celular e a TV muda na hora.”"),
-      passo(4,"Não venda ainda","Deixe funcionando. A proposta fica para a próxima visita.","“Fica funcionando até eu voltar. Veja se os clientes olham.”"),
-      passo(5,"Marque a visita 3","Com data, em Pedidos → Próxima volta.")].join("")},
+      passo(4,"Em salão, barbearia e clínica: abra a agenda","No Painel do cliente, com o lojista: Agenda → Configurar a agenda. Cadastre os serviços e os profissionais e marque um horário de teste pelo QR.","“O seu cliente marca sozinho, pelo adesivo. Você vê a agenda aqui no celular.”"),
+      passo(5,"Não venda ainda","Deixe funcionando. A proposta fica para a próxima visita.","“Fica funcionando até eu voltar. Veja se os clientes usam.”"),
+      passo(6,"Marque a visita 3","Com data, em Pedidos → Próxima volta.")].join("")},
     v3:{rot:"Visita 3",tit:"Visita 3 · Mensalidade",min:"15 minutos · quem faz: o vendedor",html:()=>[
       passo(1,"Comece pelos números da loja","Conversas recebidas pelo adesivo e uso da tela desde a entrega."),
       passo(2,"Faça a proposta",`Mostraí com aparelho emprestado: ${R(com.entrada)} de ativação e ${R(com.mensal)} por mês, 12 meses. Ou ${R(anu.entrada)} à vista no ano.`),
@@ -59,7 +60,7 @@
       passo(5,"Feche ou marque nova volta","Quem não fecha continua com o adesivo e a página. O relacionamento segue.")].join("")},
     card:{rot:"Cardápio",tit:"Cardápio de venda",min:"o que oferecer em cada momento",html:()=>`
       <h3 style="margin:0 0 4px">Primeira visita</h3>
-      ${[["Adesivo do balcão e página da loja","presente de abertura","grátis"],["Tapete sob medida","colorido, na medida da porta","preço ao montar"],["Capacho padrão 60×40","preto, uma cor · pelo catálogo","3 dias úteis + frete"],["Cartão de visita","fecha na hora",""],["Adesivo de vitrine","usa o logotipo já recortado",""],["Placa","fachada e recepção",""],["Mostraí","mostre na entrega; venda na visita 3",`${R(com.mensal)}/mês`]].map(([a,b,c])=>`<div class="prod-l"><div>${a}<small>${b}</small></div><span>${c}</span></div>`).join("")}
+      ${[["Adesivo do balcão e página da loja","presente de abertura","grátis"],["Tapete sob medida","colorido, na medida da porta","preço ao montar"],["Capacho padrão","60×40, 80×60 ou 120×60 · preto, uma cor","3 dias úteis + frete"],["Cartão de visita","fecha na hora",""],["Adesivo de vitrine","usa o logotipo já recortado",""],["Placa","fachada e recepção",""],["Mostraí","loja de comida · mostre na entrega; venda na visita 3",`${R(com.mensal)}/mês`],["Agenda da loja","salão, barbearia e clínica · abra na entrega","preço a definir"]].map(([a,b,c])=>`<div class="prod-l"><div>${a}<small>${b}</small></div><span>${c}</span></div>`).join("")}
       <h3 style="margin:18px 0 4px">Terceira visita</h3>
       ${[["Fala Aí","atendente no telefone com o nome da loja"],["Registro de marca","nome e logotipo no INPI"],["Kit de locação","tapete e wind banner por 15 dias, em datas de promoção"],["Camisa polo e avental","pedido com tamanhos e quantidades"]].map(([a,b])=>`<div class="prod-l"><div>${a}<small>${b}</small></div><span></span></div>`).join("")}
       <h3 style="margin:18px 0 4px">Só se o lojista pedir</h3>

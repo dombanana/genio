@@ -1317,7 +1317,13 @@ class H(BaseHTTPRequestHandler):
                 if not self._eu():
                     return self._erro(401, "entre com a sua conta")
                 try:
-                    return self._send(200, RELACIONA.resumo_vendedor(p.split("/")[3]))
+                    rv = RELACIONA.resumo_vendedor(p.split("/")[3])
+                    try:
+                        ag = AGENDA.painel(p.split("/")[3])
+                        rv["agenda"] = {"pronta": ag["pronta"], "servicos": len(ag["config"]["servicos"]), "profissionais": len(ag["config"]["profissionais"]), **ag["indicadores"]}
+                    except Exception:
+                        rv["agenda"] = None
+                    return self._send(200, rv)
                 except ValueError:
                     return self._erro(400, "loja?")
             if p == "/api/painel/eu" or p == "/api/painel/arq":

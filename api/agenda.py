@@ -308,6 +308,9 @@ def bloquear(slug, d):
             raise ValueError("informe o dia e o intervalo")
         if pid != "todos" and not _prof(e, pid):
             raise ValueError("profissional não encontrado")
+        choque = [r for r in e["reservas"] if r["dia"] == dia and r["estado"] in ATIVAS and (pid == "todos" or r["prof"] == pid) and _min(r["ini"]) < _min(fim) and _min(ini) < _min(r["fim"])]
+        if choque:
+            raise ValueError(f"já há {len(choque)} horário(s) marcado(s) nesse intervalo ({', '.join(r['ini'] + ' ' + r['nome'] for r in choque[:3])}). Remarque ou cancele antes de fechar.")
         e["bloqueios"].append({"id": secrets.token_hex(5), "prof": pid, "dia": dia, "ini": ini, "fim": fim, "motivo": str(d.get("motivo") or "")[:60]})
         _gravar(slug, e)
 

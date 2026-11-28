@@ -73,6 +73,8 @@ input:focus,textarea:focus{outline:2px solid var(--roxo);border-color:transparen
 .ag-ln button,.ag-x{min-height:44px;border:0;border-radius:10px;background:#F3EFFA;font:700 16px Rubik,system-ui,sans-serif;color:#6B6580}
 .ag-sem{display:grid;grid-template-columns:44px 1fr 1fr 76px;gap:6px;align-items:center;margin:0 0 6px;font-size:14px}.ag-sem input[type=time]{min-height:44px;border:1.5px solid #E2DDEC;border-radius:10px;padding:0 6px;font:500 15px Rubik,system-ui,sans-serif;width:100%;min-width:0}
 .ag-chk{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 10px}.ag-chk label{display:flex;align-items:center;gap:6px;background:#F6F3FB;border-radius:999px;padding:6px 10px;font-size:13.5px;font-weight:500;margin:0}
+.ag-novo{background:#FFF2D6;color:#7A5200;border-radius:12px;padding:10px 12px;font-weight:700;font-size:15px;margin:0 0 10px}
+.ag-blq{display:grid;grid-template-columns:minmax(0,1fr) 40px;gap:8px;align-items:center;padding:8px 0;border-top:1px solid #EEE9F7;font-size:15px}.ag-blq small{display:block;color:#6B6580;font-size:13px}
 .ag-err{color:#B4472E;font-weight:600;font-size:14px;min-height:18px;margin:8px 0 0}
 .rel-ind{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 10px}.rel-ind span{background:#fff;border-radius:999px;padding:6px 12px;font-size:13.5px;font-weight:600}
 .rel-ind span b{color:var(--roxo)}
@@ -162,7 +164,7 @@ input:focus,textarea:focus{outline:2px solid var(--roxo);border-color:transparen
   const MOT={elogio:"elogio",resolvido:"resolvido por você",cliente:"o cliente encerrou",tempo:"sem resposta do cliente por 2 h"};
   const dh=s=>(s||"").slice(8,10)+"/"+(s||"").slice(5,7)+" "+(s||"").slice(11,16);
   // ---- agenda simples da loja (28/11): reservas por profissional, feitas pelo cliente no QR do balcão ou pelo lojista aqui
-  let AGD=null,AGC=null,AGU={form:false,remarca:"",cfg:false,erro:"",horas:null,rh:null};
+  let AGD=null,AGC=null,AGU={form:false,remarca:"",cfg:false,erro:"",horas:null,rh:null,blq:false};
   const SEM=["Seg","Ter","Qua","Qui","Sex","Sáb","Dom"],EST={marcado:"a confirmar",confirmado:"confirmado",feito:"atendido",faltou:"não veio",cancelado:"cancelado"};
   const diaL=iso=>new Date(iso+"T12:00:00").toLocaleDateString("pt-BR",{weekday:"long",day:"numeric",month:"long"});
   const telL=t=>{t=String(t||"");return t.length===11?`(${t.slice(0,2)}) ${t.slice(2,7)}-${t.slice(7)}`:t.length===10?`(${t.slice(0,2)}) ${t.slice(2,6)}-${t.slice(6)}`:t;};
@@ -202,9 +204,17 @@ input:focus,textarea:focus{outline:2px solid var(--roxo);border-color:transparen
         <span class="st ${esc(r.estado)}">${esc(EST[r.estado]||r.estado)}${r.estado==="cancelado"&&r.cancelado_por?" pelo "+(r.cancelado_por==="cliente"?"cliente":"salão"):""}</span>
         ${["marcado","confirmado"].includes(r.estado)?`<div class="ag-b">${r.estado==="marcado"?`<button type="button" class="p" data-agm="${esc(r.id)}" data-ac="confirmar">Confirmar</button>`:""}${r.dia<=AGD.hoje?`<button type="button" data-agm="${esc(r.id)}" data-ac="feito">Atendido</button><button type="button" data-agm="${esc(r.id)}" data-ac="faltou">Não veio</button>`:""}<button type="button" data-agr="${esc(r.id)}">Remarcar</button><button type="button" data-agm="${esc(r.id)}" data-ac="cancelar">Cancelar</button></div>`:""}
         ${AGU.remarca===r.id?`<div class="ag-f" style="margin-top:8px"><div><label>Novo dia</label><input type="date" id="arD" min="${AGD.hoje}" value="${AGU.rd||r.dia}"></div><div><label>Horário</label><select id="arH">${AGU.rh===null?`<option value="">procurando…</option>`:AGU.rh.length?`<option value="">escolha</option>`+AGU.rh.map(x=>`<option value="${x.h}">${x.h}</option>`).join(""):`<option value="">sem horário livre</option>`}</select></div><div class="larg rap" style="margin:0"><button type="button" class="btn sec" id="arX">Voltar</button><button type="button" class="btn" id="arOk">Remarcar</button></div></div>`:""}</div></div>`;
-    el.innerHTML=`<h2>Agenda</h2>${AGD.pronta?`<div class="rel-ind"><span><b>${I.hoje||0}</b> hoje</span><span><b>${I.proximos||0}</b> nos próximos dias</span><span><b>${I.a_confirmar||0}</b> a confirmar</span></div>`:""}
+    document.title=(I.a_confirmar?`(${I.a_confirmar}) `:"")+"GenIO · Painel do cliente";
+    el.innerHTML=`<h2>Agenda</h2>${AGD.pronta&&I.a_confirmar?`<div class="ag-novo">🔔 ${I.a_confirmar===1?"1 horário novo":I.a_confirmar+" horários novos"} para confirmar</div>`:""}${AGD.pronta?`<div class="rel-ind"><span><b>${I.hoje||0}</b> hoje</span><span><b>${I.proximos||0}</b> nos próximos dias</span><span><b>${I.a_confirmar||0}</b> a confirmar</span></div>`:""}
       ${AGD.pronta?`<div class="card">${dias.length?dias.map(d=>`<div class="ag-dia">${d===AGD.hoje?"Hoje · ":""}${esc(diaL(d))}</div>${vivos.filter(r=>r.dia===d).map(linha).join("")}`).join(""):`<p class="muted" style="margin:0">Nenhum horário marcado. Quando um cliente agendar pelo QR do balcão, aparece aqui.</p>`}<p class="ag-err">${AGU.form||AGU.cfg?"":esc(AGU.erro)}</p></div>
-        ${AGU.form?agFormHTML():`<button type="button" class="btn sec" id="agNovo" style="margin-top:10px">+ Marcar um horário</button>`}`
+        ${AGU.form?agFormHTML():`<button type="button" class="btn sec" id="agNovo" style="margin-top:10px">+ Marcar um horário</button>`}
+        ${(AGD.bloqueios||[]).length?`<div class="card" style="margin-top:10px"><b style="display:block;margin:0 0 6px">Horários fechados</b>${AGD.bloqueios.map(b=>{const p=c.profissionais.find(x=>x.id===b.prof);return `<div class="ag-blq"><span>${esc(diaL(b.dia))} · ${esc(b.ini)} às ${esc(b.fim)}<small>${esc(p?p.nome:"todos")}${b.motivo?" · "+esc(b.motivo):""}</small></span><button type="button" class="ag-x" data-blx="${esc(b.id)}" aria-label="reabrir este horário">×</button></div>`;}).join("")}</div>`:""}
+        ${AGU.blq?`<div class="card" style="margin-top:10px"><h3 style="margin:0 0 10px;font-size:17px">Fechar um horário</h3><div class="ag-f">
+          <div><label>Dia</label><input type="date" id="abD" min="${AGD.hoje}" value="${AGU.blq.d||AGD.hoje}"></div><div><label>Quem</label><select id="abP"><option value="todos">todos</option>${c.profissionais.map(p=>`<option value="${esc(p.id)}" ${AGU.blq.p===p.id?"selected":""}>${esc(p.nome)}</option>`).join("")}</select></div>
+          <div><label>Das</label><input type="time" id="abI" value="${AGU.blq.i||"12:00"}"></div><div><label>Até</label><input type="time" id="abF" value="${AGU.blq.f||"13:00"}"></div>
+          <div class="larg"><label>Motivo (opcional)</label><input id="abM" maxlength="60" placeholder="almoço, folga, feriado" value="${esc(AGU.blq.m||"")}"></div></div>
+          <p class="ag-err" id="abErr">${esc(AGU.erro)}</p><div class="rap"><button type="button" class="btn sec" id="abX">Voltar</button><button type="button" class="btn" id="abOk">Fechar horário</button></div></div>`
+          :`<button type="button" class="btn sec" id="agBlq" style="margin-top:10px">Fechar um horário (folga, almoço)</button>`}`
         :`<div class="card"><p class="muted" style="margin:0">${c.servicos.length&&c.profissionais.length?"A sua agenda está fechada para os clientes. Abra em “Configurar a agenda”.":"Deixe os seus clientes marcarem horário pelo QR do balcão. Cadastre os serviços e os profissionais para começar."}</p></div>`}
       <details class="card" style="margin-top:10px" id="agCfg" ${AGU.cfg?"open":""}><summary style="font-weight:600;cursor:pointer">Configurar a agenda</summary><div style="margin-top:10px">${AGU.cfg?agCfgHTML():""}</div></details>`;
     const cf=$("#agCfg");cf.ontoggle=()=>{if(cf.open&&!AGU.cfg){AGU.cfg=true;AGU.erro="";AGC=JSON.parse(JSON.stringify(AGD.config));desenharAg();}else if(!cf.open&&AGU.cfg){AGU.cfg=false;desenharAg();}};
@@ -221,6 +231,11 @@ input:focus,textarea:focus{outline:2px solid var(--roxo);border-color:transparen
     el.querySelectorAll("[data-agr]").forEach(b=>b.onclick=()=>{AGU.remarca=b.dataset.agr;AGU.rd="";AGU.erro="";rem();});
     const arD=$("#arD");if(arD){arD.onchange=()=>{AGU.rd=arD.value;rem();};$("#arX").onclick=()=>{AGU.remarca="";desenharAg();};
       $("#arOk").onclick=async()=>{const h=$("#arH").value;if(!h)return;const r=AGD.reservas.find(x=>x.id===AGU.remarca);if(await agPost(`/api/painel/agenda/${r.id}/remarcar`,{dia:AGU.rd||r.dia,hora:h,profissional:r.prof}))AGU.remarca="";desenharAg();};}
+    const bq=$("#agBlq");if(bq)bq.onclick=()=>{AGU.blq={d:AGD.hoje};AGU.erro="";desenharAg();};
+    if(AGU.blq){$("#abX").onclick=()=>{AGU.blq=false;AGU.erro="";desenharAg();};
+      $("#abOk").onclick=async()=>{AGU.blq={d:$("#abD").value,p:$("#abP").value,i:$("#abI").value,f:$("#abF").value,m:$("#abM").value};   // guarda o que foi digitado: se o servidor recusar, o formulário volta preenchido
+        if(await agPost("/api/painel/agenda/bloqueio",{dia:AGU.blq.d,profissional:AGU.blq.p,ini:AGU.blq.i,fim:AGU.blq.f,motivo:AGU.blq.m}))AGU.blq=false;desenharAg();};}
+    el.querySelectorAll("[data-blx]").forEach(b=>b.onclick=async()=>{b.disabled=true;await agPost(`/api/painel/agenda/bloqueio/${b.dataset.blx}/apagar`);desenharAg();});
     const nv=$("#agNovo");if(nv)nv.onclick=()=>{AGU.form={s:c.servicos.length===1?c.servicos[0].id:"",p:"",d:AGD.hoje,h:"",n:"",t:""};AGU.erro="";agHoras();};
     if(AGU.form){const F=AGU.form;$("#afS").onchange=ev=>{F.s=ev.target.value;F.p="";F.h="";agHoras();};$("#afP").onchange=ev=>{F.p=ev.target.value;F.h="";agHoras();};$("#afD").onchange=ev=>{F.d=ev.target.value;F.h="";agHoras();};
       $("#afH").onchange=ev=>{F.h=ev.target.value;};$("#afN").oninput=ev=>{F.n=ev.target.value;};$("#afT").oninput=ev=>{F.t=ev.target.value;};$("#afX").onclick=()=>{AGU.form=false;AGU.erro="";desenharAg();};
@@ -257,7 +272,7 @@ input:focus,textarea:focus{outline:2px solid var(--roxo);border-color:transparen
     const rr=f.querySelector("#rRes");if(rr)rr.onclick=()=>acao(`/api/painel/relacionamento/${cid}/resolvido`);
     f.querySelector("#rExc").onclick=()=>acao(`/api/painel/relacionamento/${cid}/excelencia`);
     if(!c.lida&&!soAtualizar)acao(`/api/painel/relacionamento/${cid}/lida`);}
-  setInterval(()=>{if(!document.hidden&&D){puxarRel();const a=document.activeElement;if(!(a&&a.closest&&a.closest("#ag"))&&!AGU.form&&!AGU.remarca&&!AGU.cfg)puxarAg();}},20000);
+  setInterval(()=>{if(!document.hidden&&D){puxarRel();const a=document.activeElement;if(!(a&&a.closest&&a.closest("#ag"))&&!AGU.form&&!AGU.remarca&&!AGU.cfg&&!AGU.blq)puxarAg();}},20000);
   function verProduto(x){const f=(D.fotos||{})[x.k]||(x.img?[x.img]:[]);const v=document.createElement("div");v.className="ver";
     v.innerHTML=`<div class="t"><b>${esc(x.nome)}${x.total!=null?" · "+R(x.total):""}</b><button type="button">Fechar</button></div><div class="g">${f.length?f.map(s=>`<img src="${esc(img(s))}" alt="" loading="lazy">`).join(""):`<p style="color:#fff">Fotos deste produto em preparo.</p>`}</div>`;
     document.body.appendChild(v);v.querySelector("button").onclick=()=>v.remove();}

@@ -6,7 +6,7 @@
 <title>GênIO · Visita</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="app.css?v=2d1d303f9e">
+<link rel="stylesheet" href="app.css?v=db7f6df133">
 <style>
 .cab{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
 .fach{width:100%;aspect-ratio:16/9;border-radius:16px;overflow:hidden;background:var(--lav2);display:grid;place-items:center;position:relative}
@@ -33,7 +33,9 @@
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=2d1d303f9e"></script>
+<script src="app.js?v=db7f6df133"></script>
+<script src="qr.js?v=db7f6df133"></script>
+<script src="../pdfmini.js?v=db7f6df133"></script>
 <script>
 (async()=>{
   const {$,$$,esc,qs,sessao,dados,ficha,estrelasHTML,estado,salvar,nav,topo,voltar,setorNome,nomeLoja,telFmt,cliente,gravarCliente,classificar,definirCliente,menuLongo,ligarLongo,ZONA,entradas,ligarEntradas,abrirLogotipo,logoPrincipal,removerLogo}=App;
@@ -108,7 +110,7 @@
   const selP=()=>((estado().sel||{})[slug])||{};const nSelP=()=>Object.entries(selP()).filter(([k,v])=>v&&v.q>0&&((c.artes||{})[k]||App.ehServico(k))).length;
   function filaHTML(){const f=filaP();const X=Rp();const i=f.indexOf(slug);const x=App.dataCurta(diaP);
     return `<div class="passos fila-p"><div class="t"><span>${diaP===App.hojeISO()?"Rota de hoje":`Rota de ${x.sem} ${x.dia}/${x.mes}`} · loja ${i+1} de ${f.length}</span><b>${f.filter(s=>X.res[s]).length} feita(s)</b></div><ol>${f.map(s=>`<li class="${X.res[s]?"ok":s===slug?"agora":""}"></li>`).join("")}</ol></div>`;}
-  let KIT14=null;App.carregarScript("kits14.js?v=2d1d303f9e").then(()=>{KIT14=window.Kits14;if(modo==="play"&&ETL===1){const y=scrollY;render();scrollTo(0,y);}}).catch(()=>{});
+  let KIT14=null;App.carregarScript("kits14.js?v=db7f6df133").then(()=>{KIT14=window.Kits14;if(modo==="play"&&ETL===1){const y=scrollY;render();scrollTo(0,y);}}).catch(()=>{});
   const kGrupo="grupo-"+slug;let GRUPO_AB=(()=>{try{return sessionStorage.getItem(kGrupo)||"";}catch(e){return "";}})();  // começa com os 5 fechados: todos à vista, com o mesmo peso
   const qsL=`l=${encodeURIComponent(slug)}`;
   function conteudoGrupo(g){const S=selP();
@@ -169,6 +171,8 @@
       <p class="muted" style="margin:0 0 10px;font-size:14px">Cole o adesivo no balcão ou no caixa e digite o código dele. O QR passa a abrir a conversa dos clientes com o gerente desta loja. O gerente responde pelo Painel do cliente (etapa 4 · Painel do cliente → + Telefone).</p>
       ${cs.length?`<div class="ln-o" style="flex-wrap:wrap">${cs.map(c=>`<span>✓ <b>${esc(c)}</b> ligado</span><span><a href="/q.html?c=${encodeURIComponent(c)}" target="_blank" rel="noopener">abrir a página</a> · <a href="#" data-ades-x="${esc(c)}">desligar</a></span>`).join("")}</div>`:""}
       ${I?`<p class="muted" style="margin:6px 0 0;font-size:13px">${I.mes||0} conversa(s) este mês · ${I.abertas||0} em aberto · ${I.voltaram||0} cliente(s) voltaram</p>`:""}
+      ${cs.length?`<p class="muted" style="margin:6px 0 0;font-size:13px"><b>Agenda:</b> ${ADES.agenda&&ADES.agenda.pronta?`aberta · ${ADES.agenda.hoje||0} hoje · ${ADES.agenda.proximos||0} nos próximos dias · ${ADES.agenda.a_confirmar||0} a confirmar`:ADES.agenda&&ADES.agenda.servicos?"configurada, ainda fechada para os clientes":"ainda não configurada"}. Em salão, barbearia e clínica, abra com o lojista o Painel do cliente → Agenda → Configurar a agenda: os clientes passam a marcar horário pelo mesmo QR.</p>
+        <div id="adesPdf" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">${cs.map(c=>`<button type="button" class="btn sec sm" data-plaq="${esc(c)}" style="width:auto;min-height:40px;padding:0 12px">Plaquinha ${esc(c)} (PDF)</button>`).join("")}</div>`:""}
       <div style="display:flex;gap:8px;margin-top:10px"><input class="campo" id="adesCod" placeholder="GA-0001" inputmode="text" autocapitalize="characters" style="flex:1;text-transform:uppercase"><button type="button" class="btn" id="adesOk" style="width:auto;padding:0 18px">Ativar</button></div>
       <p class="muted" id="adesMsg" style="margin:6px 0 0;font-size:13px">${ADES&&ADES.codigos&&ADES.codigos.length&&!ADES.google?"Sem o código da loja no Google: a conversa funciona, só sem o convite para avaliar.":""}</p></section>`;}
   function saidaPlayHTML(){const A=A_();const V=((estado().voltas||{})[slug])||{};const r=A.saida||(A.fech?"vendeu":"");
@@ -307,6 +311,8 @@
         try{const r=await fetch("/api/relaciona/ativar",{method:"POST",credentials:"same-origin",headers:{"Content-Type":"application/json"},body:JSON.stringify({codigo:c,slug,loja:{nome:l.nome,setor:l.setor,endereco:l.endereco,tel:l.tel,place_id:l.place_id,maps:l.maps,horario:l.horario}})});
           const j=await r.json();if(!r.ok)throw new Error(j.erro||"não ativou");const r2=await fetch(`/api/relaciona/${encodeURIComponent(slug)}`,{credentials:"same-origin",cache:"no-store"});ADES=r2.ok?await r2.json():{codigos:[j.codigo]};const y=scrollY;render();scrollTo(0,y);}
         catch(e){$("#adesMsg").textContent=e.message;ao.disabled=false;}};
+      // plaquinha de balcão (display A6) com o QR desta loja, pronta para a gráfica
+      $$("[data-plaq]").forEach(b=>b.onclick=()=>{const cd=b.dataset.plaq;try{PDFMini.plaquinha({nome,codigo:cd,qr:QR.matriz("https://genio.dombanana.tech/q.html?c="+cd),agenda:!!(ADES&&ADES.agenda&&ADES.agenda.pronta)}).baixar("plaquinha-"+cd+".pdf");}catch(e){alert("Não deu para montar o PDF: "+e.message);}});
       $$("[data-ades-x]").forEach(a=>a.onclick=async ev=>{ev.preventDefault();if(!confirm(`Desligar o adesivo ${a.dataset.adesX} desta loja?`))return;
         await fetch("/api/relaciona/desativar",{method:"POST",credentials:"same-origin",headers:{"Content-Type":"application/json"},body:JSON.stringify({codigo:a.dataset.adesX,slug})});
         const r2=await fetch(`/api/relaciona/${encodeURIComponent(slug)}`,{credentials:"same-origin",cache:"no-store"});ADES=r2.ok?await r2.json():{codigos:[]};const y=scrollY;render();scrollTo(0,y);});}
