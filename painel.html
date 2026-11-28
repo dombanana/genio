@@ -73,6 +73,9 @@ input:focus,textarea:focus{outline:2px solid var(--roxo);border-color:transparen
 .ag-ln button,.ag-x{min-height:44px;border:0;border-radius:10px;background:#F3EFFA;font:700 16px Rubik,system-ui,sans-serif;color:#6B6580}
 .ag-sem{display:grid;grid-template-columns:44px 1fr 1fr 76px;gap:6px;align-items:center;margin:0 0 6px;font-size:14px}.ag-sem input[type=time]{min-height:44px;border:1.5px solid #E2DDEC;border-radius:10px;padding:0 6px;font:500 15px Rubik,system-ui,sans-serif;width:100%;min-width:0}
 .ag-chk{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 10px}.ag-chk label{display:flex;align-items:center;gap:6px;background:#F6F3FB;border-radius:999px;padding:6px 10px;font-size:13.5px;font-weight:500;margin:0}
+.pu{display:flex;gap:10px;align-items:center;flex-wrap:wrap;background:#fff;border-radius:14px;padding:10px 12px;margin:0 0 12px;font-size:14.5px;line-height:1.35}
+.pu span{flex:1;min-width:180px}.pu button{min-height:44px;border:0;border-radius:12px;background:var(--roxo);color:#fff;font:700 15px Rubik,system-ui,sans-serif;padding:0 14px}
+.pu button.sec{background:#F3EFFA;color:#1C1635;font-weight:600}
 .ag-novo{background:#FFF2D6;color:#7A5200;border-radius:12px;padding:10px 12px;font-weight:700;font-size:15px;margin:0 0 10px}
 .ag-blq{display:grid;grid-template-columns:minmax(0,1fr) 40px;gap:8px;align-items:center;padding:8px 0;border-top:1px solid #EEE9F7;font-size:15px}.ag-blq small{display:block;color:#6B6580;font-size:13px}
 .ag-err{color:#B4472E;font-weight:600;font-size:14px;min-height:18px;margin:8px 0 0}
@@ -138,7 +141,7 @@ input:focus,textarea:focus{outline:2px solid var(--roxo);border-color:transparen
     const est=n=>n?` · <span class="est">${"★".repeat(n)}<span>${"★".repeat(5-n)}</span></span>`:"";
     $("#app").innerHTML=`<h1>${esc(L.nome||"Sua loja")}</h1><p class="sub">${esc(L.setor||"")}${L.endereco?` · <a href="${esc(L.maps||"#")}" target="_blank" rel="noopener">📍 ${esc(L.endereco)}</a>`:""}${est(L.estrelas)}</p>
       <div class="ola">Olá${eu.nome?`, <b>${esc(eu.nome)}</b>`:""}! Aqui está o seu orçamento${D.vendedor&&D.vendedor.nome?` feito por <b>${esc(D.vendedor.nome)}</b>`:""}${D.em?` · atualizado em ${esc(new Date(D.em).toLocaleDateString("pt-BR"))}`:""}. Toque num produto para ver as fotos.</div>
-      <div id="rel"></div><div id="ag"></div>
+      <div id="pu"></div><div id="rel"></div><div id="ag"></div>
       ${PED?statusHTML(PED):""}
       ${O&&O.linhas&&O.linhas.length?`<h2>Seu orçamento</h2><div class="card">${O.linhas.map((x,i)=>{const a=linhaAtual(x);const pode=x.opcoes&&!PED;return `<div class="ln ${a.q===0?"fora":""}" data-i="${i}"><div class="fig" style="${x.img?`background-image:url('${esc(img(x.img))}')`:""}">${x.img?"":x.servico?"📺":"▫"}</div>
           <div><b>${esc(x.nome)}</b><small>${x.servico?"":a.q===0?"não quero · ":`${(+a.q||0).toLocaleString("pt-BR")} un. · `}${esc(x.unid||"")}</small>${pode?`<span class="qt"><button type="button" data-q="-" aria-label="menos">−</button><span>${a.q===0?"0":a.q.toLocaleString("pt-BR")}</span><button type="button" data-q="+" aria-label="mais">+</button></span>`:""}</div>
@@ -163,6 +166,28 @@ input:focus,textarea:focus{outline:2px solid var(--roxo);border-color:transparen
   let REL=null,relAberta=null;
   const MOT={elogio:"elogio",resolvido:"resolvido por você",cliente:"o cliente encerrou",tempo:"sem resposta do cliente por 2 h"};
   const dh=s=>(s||"").slice(8,10)+"/"+(s||"").slice(5,7)+" "+(s||"").slice(11,16);
+  // ---- aviso neste celular (notificação do painel): o lojista liga aqui; o servidor toca quando chega mensagem ou horário novo
+  let PU={st:"",sub:null,reg:null,erro:"",pronto:false};
+  const b64u=s=>{s=s.replace(/-/g,"+").replace(/_/g,"/");const b=atob(s+"=".repeat((4-s.length%4)%4));return Uint8Array.from(b,c=>c.charCodeAt(0));};
+  const swAtivo=reg=>new Promise(r=>{if(reg.active)return r();const w=reg.installing||reg.waiting;if(!w)return r();w.addEventListener("statechange",()=>{if(w.state==="activated")r();});});
+  async function puEstado(){if(PU.pronto)return desenharPu();PU.pronto=true;
+    if(!("serviceWorker" in navigator)||!("PushManager" in window)||!("Notification" in window)){PU.st=/iphone|ipad|ipod/i.test(navigator.userAgent)?"ios":"sem";return desenharPu();}
+    try{PU.reg=await navigator.serviceWorker.register("/painel-sw.js",{scope:"/painel-push/"});PU.sub=await PU.reg.pushManager.getSubscription();PU.st=Notification.permission==="denied"?"negado":PU.sub?"ligado":"desligado";
+      if(PU.sub)api("/api/painel/push/assinar",{endpoint:PU.sub.endpoint}).catch(()=>{});}   // mantém o servidor em dia com este aparelho
+    catch(e){PU.st="sem";}desenharPu();}
+  function desenharPu(){const el=$("#pu");if(!el)return;if(!REL||!REL.ativo||!PU.st||PU.st==="sem"){el.innerHTML="";return;}
+    const T={ios:`<span>Para receber avisos no iPhone, toque em Compartilhar e em “Adicionar à Tela de Início”, e abra o painel por lá.</span>`,
+      negado:`<span>Os avisos estão bloqueados para este site neste navegador. Libere nas permissões do site para ligar.</span>`,
+      desligado:`<span>Receba um aviso neste celular quando chegar mensagem de cliente ou horário novo.</span><button type="button" id="puOn">🔔 Avisar neste celular</button>`,
+      ligado:`<span>🔔 Avisos ligados neste celular.</span><button type="button" class="sec" id="puOff">Desligar</button>`}[PU.st]||"";
+    el.innerHTML=`<div class="pu">${T}${PU.erro?`<span style="flex-basis:100%;color:#B4472E;font-weight:600">${esc(PU.erro)}</span>`:""}</div>`;
+    const on=$("#puOn");if(on)on.onclick=async()=>{on.disabled=true;PU.erro="";
+      try{const perm=await Notification.requestPermission();if(perm!=="granted"){PU.st=perm==="denied"?"negado":"desligado";return desenharPu();}
+        const k=(await api("/api/painel/push")).chave;await swAtivo(PU.reg);PU.sub=await PU.reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:b64u(k)});
+        await api("/api/painel/push/assinar",{endpoint:PU.sub.endpoint});PU.st="ligado";}
+      catch(e){PU.erro="Não deu para ligar os avisos: "+(e.message||e);if(PU.sub){try{await PU.sub.unsubscribe();}catch(x){}PU.sub=null;}}
+      desenharPu();};
+    const off=$("#puOff");if(off)off.onclick=async()=>{off.disabled=true;try{await api("/api/painel/push/sair",{endpoint:PU.sub.endpoint});await PU.sub.unsubscribe();}catch(e){}PU.sub=null;PU.st="desligado";desenharPu();};}
   // ---- agenda simples da loja (28/11): reservas por profissional, feitas pelo cliente no QR do balcão ou pelo lojista aqui
   let AGD=null,AGC=null,AGU={form:false,remarca:"",cfg:false,erro:"",horas:null,rh:null,blq:false};
   const SEM=["Seg","Ter","Qua","Qui","Sex","Sáb","Dom"],EST={marcado:"a confirmar",confirmado:"confirmado",feito:"atendido",faltou:"não veio",cancelado:"cancelado"};
@@ -240,7 +265,7 @@ input:focus,textarea:focus{outline:2px solid var(--roxo);border-color:transparen
     if(AGU.form){const F=AGU.form;$("#afS").onchange=ev=>{F.s=ev.target.value;F.p="";F.h="";agHoras();};$("#afP").onchange=ev=>{F.p=ev.target.value;F.h="";agHoras();};$("#afD").onchange=ev=>{F.d=ev.target.value;F.h="";agHoras();};
       $("#afH").onchange=ev=>{F.h=ev.target.value;};$("#afN").oninput=ev=>{F.n=ev.target.value;};$("#afT").oninput=ev=>{F.t=ev.target.value;};$("#afX").onclick=()=>{AGU.form=false;AGU.erro="";desenharAg();};
       $("#afOk").onclick=async()=>{if(!F.s||!F.d||!F.h){$("#afErr").textContent="Escolha o serviço, o dia e o horário.";return;}if(await agPost("/api/painel/agenda/reservar",{servico:F.s,profissional:F.p,dia:F.d,hora:F.h,nome:F.n,tel:F.t})){AGU.form=false;}desenharAg();};}}
-  async function puxarRel(){try{REL=await api("/api/painel/relacionamento");}catch(e){REL=null;}desenharRel();if(relAberta)abrirConversa(relAberta,true);if(AGD===null&&REL&&REL.ativo)puxarAg();}
+  async function puxarRel(){try{REL=await api("/api/painel/relacionamento");}catch(e){REL=null;}desenharRel();if(relAberta)abrirConversa(relAberta,true);if(AGD===null&&REL&&REL.ativo)puxarAg();if(REL&&REL.ativo)puEstado();}
   function desenharRel(){const el=$("#rel");if(!el)return;if(!REL||!REL.ativo){el.innerHTML="";return;}const I=REL.indicadores||{};
     const ov=$("#orcVazio");if(ov)ov.hidden=true;   // loja só com o adesivo: não mostra "orçamento em preparo"
     el.innerHTML=`<h2>Relacionamento com os seus clientes</h2><div class="rel-ind"><span><b>${I.abertas||0}</b> em aberto</span><span><b>${I.mes||0}</b> este mês</span><span><b>${I.voltaram||0}</b> voltaram à loja</span></div>

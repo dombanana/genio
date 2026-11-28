@@ -730,6 +730,7 @@ ESTADO_DIR =os.path.dirname(CHAVES_ARQ) if os.path.dirname(CHAVES_ARQ) else "/va
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__))); import dados as DADOS
 import relaciona as RELACIONA
 import agenda as AGENDA
+import push as PUSH
 import cardapio as CARDAPIO; import mostra as MOSTRA  # fichas, notas e estado do app: fonte única no servidor
 MAX_FICHA = 60 * 1024 * 1024  # ficha com artes em base64 (vira arquivos no servidor)
 KIT_IDS = {"capacho": "01", "placas": "02", "adesivos": "03", "uniformes": "04", "impressos": "05", "panfleto": "06", "banners": "07", "parede": "08", "brindes": "09", "carimbo": "10",
@@ -1280,6 +1281,22 @@ class H(BaseHTTPRequestHandler):
                     return self._erro(404, "esta loja não tem agenda aberta")
                 except ValueError as e:
                     return self._erro(400, str(e))
+            # ---- aviso no celular do lojista: chave para o navegador e "o que há de novo" (lido pelo celular quando a campainha toca)
+            if p in ("/api/painel/push", "/api/painel/novidades"):
+                ac = painel_acesso(self._tok("genio_c"))
+                if not ac:
+                    return self._erro(401, "entre com o seu telefone e o seu código")
+                if p == "/api/painel/push":
+                    return self._send(200, {"chave": PUSH.chave_publica(), "aparelhos": PUSH.aparelhos(ac["slug"])})
+                nv = {"mensagens": 0, "horarios": 0}
+                try:
+                    rp = RELACIONA.painel(ac["slug"])
+                    nv["mensagens"] = sum(1 for c in (rp.get("conversas") or []) if not c.get("lida"))
+                    nv["loja"] = (((RELACIONA.ler(ac["slug"]) or {}).get("loja") or {}).get("nome")) or ""
+                    nv["horarios"] = AGENDA.painel(ac["slug"])["indicadores"]["a_confirmar"]
+                except Exception:
+                    pass
+                return self._send(200, nv)
             if p == "/api/painel/agenda" or p == "/api/painel/agenda/horarios":
                 ac = painel_acesso(self._tok("genio_c"))
                 if not ac:
@@ -1608,11 +1625,24 @@ class H(BaseHTTPRequestHandler):
                         raise FileNotFoundError
                     d = self._json()
                     res = AGENDA.reservar(slug_ag, tok, d) if p.endswith("/reservar") else AGENDA.cancelar(slug_ag, tok, str(d.get("id") or ""))
+                    PUSH.avisar(slug_ag)
                 except FileNotFoundError:
                     return self._erro(404, "não encontrei esse horário")
                 except ValueError as e:
                     return self._erro(400, str(e))
                 return self._send(200, {"reserva": res, "agenda": AGENDA.publica(slug_ag, tok)}, cookie=novo, cookie_nome="genio_r", cookie_dias=730) if novo else self._send(200, {"reserva": res, "agenda": AGENDA.publica(slug_ag, tok)})
+            if p in ("/api/painel/push/assinar", "/api/painel/push/sair"):
+                if not self._origem_ok():
+                    return self._erro(403, "origem não permitida")
+                ac = painel_acesso(self._tok("genio_c"))
+                if not ac:
+                    return self._erro(401, "entre com o seu telefone e o seu código")
+                try:
+                    ep = str(self._json().get("endpoint") or "")
+                    nap = PUSH.assinar(ac["slug"], ep, ac["nome"] or ac["telefone"]) if p.endswith("/assinar") else PUSH.sair(ac["slug"], ep)
+                except ValueError as e:
+                    return self._erro(400, str(e))
+                return self._send(200, {"aparelhos": nap})
             if p.startswith("/api/painel/agenda"):
                 if not self._origem_ok():
                     return self._erro(403, "origem não permitida")
@@ -1650,6 +1680,8 @@ class H(BaseHTTPRequestHandler):
                     tok = novo = secrets.token_urlsafe(24)
                 try:
                     res = RELACIONA.cliente_escrever(cod, tok, self._json()) if p.endswith("/mensagem") else RELACIONA.cliente_encerrar(cod, tok)
+                    if p.endswith("/mensagem"):
+                        PUSH.avisar(RELACIONA.slug_do_codigo(cod))
                 except FileNotFoundError:
                     return self._erro(404, "este adesivo ainda não foi ativado")
                 except ValueError as e:
