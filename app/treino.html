@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover,user-scalable=no">
+<title>GênIO · Treinamento</title>
+<meta name="theme-color" content="#F1EEF8">
+<link rel="icon" href="../genio-favicon.png">
+<link rel="stylesheet" href="app.css?v=2d1d303f9e">
+<style>
+.tr-abas{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));background:#fff;border-radius:12px;padding:4px;gap:4px;margin:0 0 12px;position:sticky;top:6px;z-index:5;box-shadow:0 2px 10px rgba(28,22,53,.08)}
+.tr-abas button{min-height:44px;border:0;border-radius:9px;background:transparent;font:inherit;font-size:13px;font-weight:600;color:var(--texto2)}
+.tr-abas button.on{background:var(--marca);color:#fff}
+.passo{display:grid;grid-template-columns:32px minmax(0,1fr);gap:10px;padding:12px 0;border-top:1px solid var(--linha)}
+.passo:first-of-type{border-top:0}
+.passo .n{width:32px;height:32px;border-radius:50%;background:var(--lav);display:grid;place-items:center;font-weight:700;font-variant-numeric:tabular-nums}
+.passo b{display:block;font-size:16px;margin:4px 0 4px}
+.passo p{margin:0;font-size:15px;line-height:1.45}
+.fala{background:#EFFBFA;border-radius:12px;padding:10px 12px;margin:8px 0 0;font-size:15px;line-height:1.45}
+.fala::before{content:"Fale assim";display:block;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#0E6E6A;margin:0 0 4px}
+.tr-min{color:var(--texto2);font-size:13px;margin:0 0 6px}
+.prod-l{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;padding:10px 0;border-top:1px solid var(--linha);font-size:15px}
+.prod-l:first-of-type{border-top:0}.prod-l small{display:block;color:var(--texto2);font-size:13px;margin-top:2px}
+.prod-l span{color:var(--texto2);font-size:13px;white-space:nowrap}
+.nao li{margin:8px 0;line-height:1.4}
+</style>
+</head>
+<body>
+<div class="w" id="app"></div>
+<script src="app.js?v=2d1d303f9e"></script>
+<script>
+(async()=>{
+  const {$,$$,esc,sessao,nav,topo}=App;
+  if(!await sessao())return;
+  const R=v=>Number(v).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
+  const P=App.MOSTRAI_PLANOS,com=P.find(x=>x.id==="comodato"),anu=P.find(x=>x.id==="anual");
+  const pag=Object.assign({pix:5,cartao:8,parc:6,sinal:50},(App.METAS||{}).pag||{});
+  const passo=(n,t,txt,fala)=>`<div class="passo"><span class="n">${n}</span><div><b>${t}</b><p>${txt}</p>${fala?`<div class="fala">${fala}</div>`:""}</div></div>`;
+  const ABAS={
+    v1:{rot:"Visita 1",tit:"Visita 1 · Venda",min:"10 a 15 minutos · quem faz: o vendedor",html:()=>[
+      passo(1,"Abra com o adesivo na mão","O adesivo do balcão é presente. Ele abre a conversa e deixa a loja dentro do sistema.","“Bom dia, sou da GênIO, aqui do bairro. Trouxe um presente para o seu balcão: um adesivo em que o cliente aponta o celular e fala direto com o gerente. É grátis e fica seu.”"),
+      passo(2,"Faça uma pergunta","Escute antes de mostrar qualquer produto.","“Hoje, quando um cliente tem uma reclamação ou um elogio, como chega até você?”"),
+      passo(3,"Mostre a marca dele","Abra a loja no aplicativo e mostre o logotipo já aplicado no tapete, no cartão, na vitrine e na placa."),
+      passo(4,"Ofereça um item só","São quatro impressos na primeira visita. Feche um, não o catálogo inteiro.","“Qual destes você colocaria primeiro?”"),
+      passo(5,"Fotografe o cardápio","Em loja de comida, fotografe o cardápio ou a tabela de preços. Ele vira a tela do Mostraí na entrega.","“Na entrega eu te mostro isso numa TV.”"),
+      passo(6,"Feche com sinal",`Orçamento na tela, sinal de ${pag.sinal}% por Pix e a data da entrega marcada.`),
+      `<p class="muted" style="margin:10px 0 0">Pediu algo fora dos quatro? Busque no catálogo completo. Não fechou nada? Cole o adesivo, ative a página e marque a volta.</p>`].join("")},
+    v2:{rot:"Visita 2",tit:"Visita 2 · Entrega",min:"10 minutos · quem faz: a entrega",html:()=>[
+      passo(1,"Entregue e instale","Confira a peça com o lojista e receba o restante."),
+      passo(2,"Teste o adesivo com ele","Abra a página da loja no celular dele e mande uma mensagem de teste, para ele ver chegar no painel."),
+      passo(3,"Ligue o Mostraí","Na TV da loja ou no celular dele, com o cardápio fotografado na visita 1.","“Você troca preço e destaque pelo celular e a TV muda na hora.”"),
+      passo(4,"Não venda ainda","Deixe funcionando. A proposta fica para a próxima visita.","“Fica funcionando até eu voltar. Veja se os clientes olham.”"),
+      passo(5,"Marque a visita 3","Com data, em Pedidos → Próxima volta.")].join("")},
+    v3:{rot:"Visita 3",tit:"Visita 3 · Mensalidade",min:"15 minutos · quem faz: o vendedor",html:()=>[
+      passo(1,"Comece pelos números da loja","Conversas recebidas pelo adesivo e uso da tela desde a entrega."),
+      passo(2,"Faça a proposta",`Mostraí com aparelho emprestado: ${R(com.entrada)} de ativação e ${R(com.mensal)} por mês, 12 meses. Ou ${R(anu.entrada)} à vista no ano.`),
+      passo(3,"Se ouvir “está caro”","Compare com o que ele gasta para reimprimir cardápio e cartaz a cada mudança de preço."),
+      passo(4,"Se ouvir “não tenho TV”","A TV é dele; o aparelho que liga nela é emprestado. Sem TV, deixe para a próxima volta."),
+      passo(5,"Feche ou marque nova volta","Quem não fecha continua com o adesivo e a página. O relacionamento segue.")].join("")},
+    card:{rot:"Cardápio",tit:"Cardápio de venda",min:"o que oferecer em cada momento",html:()=>`
+      <h3 style="margin:0 0 4px">Primeira visita</h3>
+      ${[["Adesivo do balcão e página da loja","presente de abertura","grátis"],["Tapete sob medida","colorido, na medida da porta","preço ao montar"],["Capacho padrão 60×40","preto, uma cor · pelo catálogo","3 dias úteis + frete"],["Cartão de visita","fecha na hora",""],["Adesivo de vitrine","usa o logotipo já recortado",""],["Placa","fachada e recepção",""],["Mostraí","mostre na entrega; venda na visita 3",`${R(com.mensal)}/mês`]].map(([a,b,c])=>`<div class="prod-l"><div>${a}<small>${b}</small></div><span>${c}</span></div>`).join("")}
+      <h3 style="margin:18px 0 4px">Terceira visita</h3>
+      ${[["Fala Aí","atendente no telefone com o nome da loja"],["Registro de marca","nome e logotipo no INPI"],["Kit de locação","tapete e wind banner por 15 dias, em datas de promoção"],["Camisa polo e avental","pedido com tamanhos e quantidades"]].map(([a,b])=>`<div class="prod-l"><div>${a}<small>${b}</small></div><span></span></div>`).join("")}
+      <h3 style="margin:18px 0 4px">Só se o lojista pedir</h3>
+      <p style="margin:0;font-size:15px;line-height:1.45">Banner, adesivo de parede, wind banner, faixa e tudo o que está no catálogo completo. Busque, ponha no orçamento e não perca a venda.</p>
+      <h3 style="margin:18px 0 4px">O que você não promete</h3>
+      <ul class="nao" style="margin:0;padding-left:20px;font-size:15px"><li>Avaliação no Google em troca de brinde ou desconto.</li><li>Prazo menor que o do fornecedor.</li><li>Preço diferente do que o aplicativo mostra.</li></ul>`}};
+  let A=(location.hash||"#v1").slice(1);if(!ABAS[A])A="v1";
+  function render(){const x=ABAS[A];
+    $("#app").innerHTML=`${topo()}<h1>Treinamento</h1><p class="sub">As três visitas por loja e o que oferecer em cada uma.</p>
+      <div class="tr-abas">${Object.entries(ABAS).map(([k,v])=>`<button type="button" data-a="${k}" class="${k===A?"on":""}">${v.rot}</button>`).join("")}</div>
+      <section class="card"><h2 style="margin:0 0 2px">${x.tit}</h2><p class="tr-min">${x.min}</p>${x.html()}</section>${nav("inicio")}`;
+    $$("[data-a]").forEach(b=>b.onclick=()=>{A=b.dataset.a;history.replaceState(null,"","#"+A);render();window.scrollTo(0,0);});}
+  render();
+})();
+</script>
+</body>
+</html>

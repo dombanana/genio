@@ -205,7 +205,7 @@ const App=(()=>{
   // ---- arte automática: logotipo tratado centralizado preenchendo a área segura do gabarito, cor padrão do material
   const COR_PADRAO={capacho:"#2B2B2D",rigido:"#F4F1EA",vinil:null,tecido:"#F4F1EA",papel:"#FFFFFF",lona:"#FFFFFF",carimbo:null};
   const PRODUTOS_IDS=["capacho","placas","adesivos","uniformes","impressos","panfleto","banners","parede","brindes","carimbo","windbanner","faixa","folheto","camiseta","bone","avental"];
-  let _G=null;const gabaritos=async()=>_G||(_G=await (await fetch("gabaritos.json?v=64b6e1c64e")).json());
+  let _G=null;const gabaritos=async()=>_G||(_G=await (await fetch("gabaritos.json?v=2d1d303f9e")).json());
   const carregarImg=src=>new Promise(res=>{const i=new Image();i.crossOrigin="anonymous";i.onload=()=>res(i);i.onerror=()=>res(null);i.src=src;});
   // ---- carimbo: só texto — nome, razão social, CNPJ (negrito), endereço, telefone; nunca logotipo
   async function dadosCarimbo(l){const cad=await ficha(l.slug).catch(()=>null);const L=(cad&&cad.lacunas)||{};const leit=(L.leitura||{}).valor||"";const razao=((leit.match(/Razão social: ([^·]+)/)||[])[1]||"").trim();const cnpj=((leit.match(/CNPJ:? ?([\d./-]{14,18})/)||[])[1]||"");
@@ -252,7 +252,7 @@ const App=(()=>{
     const aw=W-2*(B+S),ah=H-2*(B+S);const f=Math.min(aw/LW,(P.ancora==="topo"?ah*0.45:ah)/LH);const w=LW*f,h=LH*f;const x=(W-w)/2,y=P.ancora==="topo"?B+S+ah*0.05:(H-h)/2;
     const fundo=P.sem_fundo?null:(COR_PADRAO[P.superficie]===undefined?"#FFFFFF":COR_PADRAO[P.superficie]);
     // kit de 14 setores (10/11): a maquete frontal do ramo da loja é a arte de partida de todos os produtos
-    await carregarScript("qr.js?v=64b6e1c64e");await carregarScript("impressos.js?v=64b6e1c64e");await carregarScript("kits14.js?v=64b6e1c64e");
+    await carregarScript("qr.js?v=2d1d303f9e");await carregarScript("impressos.js?v=2d1d303f9e");await carregarScript("kits14.js?v=2d1d303f9e");
     if(window.Kits14&&window.Kits14.ARQ[pid]){const K=await window.Kits14.montar(App,pid,c,l,{W,H,B,S,im,rec});
       if(K){const doc={fundo:K.fundo,fundoImg:null,el:K.el,campos:null,auto:true,kit:KIT14,setorKit:K.setorKit,kitRef:K.kitRef,W,H};const imgs={[c.manual.tratado]:im};
         const k=Math.min(1,1400/Math.max(W,H));const cv=document.createElement("canvas");cv.width=Math.round(W*k);cv.height=Math.round(H*k);const g=cv.getContext("2d");g.scale(k,k);
@@ -488,7 +488,7 @@ const App=(()=>{
       <div class="mp-g"><div><small>Conversão no mês</small><b>${d.conv===null?"–":d.conv+"%"}</b><span>${d.atMes} atendimento(s)</span></div><div><small>Tempo médio na loja</small><b>${mm(d.media)}</b><span>${d.atHoje} hoje</span></div><div><small>Lojas por dia</small><b>${d.projecao||"–"}</b><span>ciclo de ${mm(d.ciclo)} com deslocamento</span></div></div>
       <a href="config.html#metas" class="mp-aj">Ajustar metas</a>`;document.body.appendChild(p);});
   document.addEventListener("click",ev=>{const b=ev.target.closest("#avatarBtn");const aberto=document.querySelector(".menu-conta");if(!b){if(aberto&&!ev.target.closest(".menu-conta"))aberto.remove();return;}if(aberto){aberto.remove();return;}
-    const m=document.createElement("div");m.className="menu-conta";m.innerHTML=`<div class="quem"><b>${esc(eu().nome)}</b><small>${esc(eu().email||"")}</small></div><a href="perfil.html">${ICONES.perfil}<span>Perfil</span></a><a href="financeiro.html">${ICONES.financeiro}<span>Financeiro</span></a><a href="config.html">${ICONES.config}<span>Configuração</span></a><a href="/api/sair" class="sair"><span>Sair</span></a>`;document.body.appendChild(m);});
+    const m=document.createElement("div");m.className="menu-conta";m.innerHTML=`<div class="quem"><b>${esc(eu().nome)}</b><small>${esc(eu().email||"")}</small></div><a href="perfil.html">${ICONES.perfil}<span>Perfil</span></a><a href="treino.html">${ICONES.arquivos}<span>Treinamento</span></a><a href="financeiro.html">${ICONES.financeiro}<span>Financeiro</span></a><a href="config.html">${ICONES.config}<span>Configuração</span></a><a href="/api/sair" class="sair"><span>Sair</span></a>`;document.body.appendChild(m);});
   const voltar=(href,txt)=>`<div class="faixa"><a href="${href}">${esc(txt)}</a></div>`;
   const acoes=(voltaHref,voltaTxt,avancaId,avancaTxt)=>`<div class="acoes"><div class="w">${voltaHref?`<a class="btn sec" href="${voltaHref}">← ${esc(voltaTxt)}</a>`:""}<button class="btn" id="${avancaId}" type="button">${esc(avancaTxt)}</button></div></div>`;
   // menu lateral de toque longo: devolve o item escolhido (ou null)

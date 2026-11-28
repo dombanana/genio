@@ -6,7 +6,7 @@
 <title>GênIO · Produtos e serviços</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="app.css?v=64b6e1c64e">
+<link rel="stylesheet" href="app.css?v=2d1d303f9e">
 <style>
 .grade{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .sec-t{margin:4px 0 10px;font-size:15px;color:var(--texto2);text-transform:uppercase;letter-spacing:.04em}
@@ -69,8 +69,8 @@
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=64b6e1c64e"></script>
-<script src="qr.js?v=64b6e1c64e"></script>
+<script src="app.js?v=2d1d303f9e"></script>
+<script src="qr.js?v=2d1d303f9e"></script>
 <script>
 (async()=>{
   const {$,$$,esc,qs,sessao,dados,nav,topo,voltar,setorNome,nomeLoja,estado,salvar,cliente,gravarCliente,definirCliente}=App;
@@ -80,8 +80,8 @@
   const nome=nomeLoja(l.nome);definirCliente(l);let c=await cliente(l);
   // a personalização só abre depois do logotipo limpo; os serviços (Mostraí, Fala Aí, locação, registro de marca) não dependem dele
   const SEMLOGO=!(c.manual&&c.manual.editado);
-  const G=await (await fetch("gabaritos.json?v=64b6e1c64e")).json();
-  await App.carregarScript("kits14.js?v=64b6e1c64e");
+  const G=await (await fetch("gabaritos.json?v=2d1d303f9e")).json();
+  await App.carregarScript("kits14.js?v=2d1d303f9e");
   // os 16 produtos do kit de 14 setores (10/11); a foto de cada um é a do ramo da loja
   const CAT=await Promise.all([["capacho","Tapete sob medida"],["placas","Placa"],["adesivos","Adesivo de vitrine"],["uniformes","Camisa polo"],["impressos","Cartão de visita"],["panfleto",/padaria|restaurante|bar|cafeteria/.test(l.setor||"")?"Flyer · cardápio":"Flyer · produtos e serviços"],["banners","Banner retrátil"],["parede","Adesivo de parede · rotas"],["brindes","Ecobag"],["carimbo","Carimbo"],["windbanner","Wind banner"],["faixa","Faixa"],["folheto","Folheto promocional"],["camiseta","Camiseta"],["bone","Boné"],["avental","Avental"]].map(async([id,n])=>({id,nome:n,img:await Kits14.foto(l.setor,id,true)})));
   const SERV=[{id:"mostraai",nome:"Mostraí · TV de ofertas",desc:"Sua TV em pé com itens, preços e destaque · muda pelo celular",ic:"📺"},{id:"falaai",nome:"Fala Aí · atendente no telefone",desc:"URA com o nome da loja · frases gravadas do sistema",ic:"📞"},{id:"inpi",nome:"Registro de marca (INPI)",desc:"Proteção do nome e do logo",ic:"®"}];
