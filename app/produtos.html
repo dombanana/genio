@@ -6,7 +6,7 @@
 <title>GênIO · Produtos e serviços</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="app.css?v=8c1c91e58c">
+<link rel="stylesheet" href="app.css?v=0215a9ddca">
 <style>
 .grade{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .sec-t{margin:4px 0 10px;font-size:15px;color:var(--texto2);text-transform:uppercase;letter-spacing:.04em}
@@ -69,8 +69,8 @@
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=8c1c91e58c"></script>
-<script src="qr.js?v=8c1c91e58c"></script>
+<script src="app.js?v=0215a9ddca"></script>
+<script src="qr.js?v=0215a9ddca"></script>
 <script>
 (async()=>{
   const {$,$$,esc,qs,sessao,dados,nav,topo,voltar,setorNome,nomeLoja,estado,salvar,cliente,gravarCliente,definirCliente}=App;
@@ -80,8 +80,8 @@
   const nome=nomeLoja(l.nome);definirCliente(l);let c=await cliente(l);
   // a personalização só abre depois do logotipo limpo; os serviços (Mostraí, Fala Aí, locação, registro de marca) não dependem dele
   const SEMLOGO=!(c.manual&&c.manual.editado);
-  const G=await (await fetch("gabaritos.json?v=8c1c91e58c")).json();
-  await App.carregarScript("kits14.js?v=8c1c91e58c");
+  const G=await (await fetch("gabaritos.json?v=0215a9ddca")).json();
+  await App.carregarScript("kits14.js?v=0215a9ddca");
   // os 16 produtos do kit de 14 setores (10/11); a foto de cada um é a do ramo da loja
   const CAT=await Promise.all([["capacho","Capacho"],["placas","Placa"],["adesivos","Adesivo de vitrine"],["uniformes","Camisa polo"],["impressos","Cartão de visita"],["panfleto",/padaria|restaurante|bar|cafeteria/.test(l.setor||"")?"Flyer · cardápio":"Flyer · produtos e serviços"],["banners","Banner retrátil"],["parede","Adesivo de parede · rotas"],["brindes","Ecobag"],["carimbo","Carimbo"],["windbanner","Wind banner"],["faixa","Faixa"],["folheto","Folheto promocional"],["camiseta","Camiseta"],["bone","Boné"],["avental","Avental"]].map(async([id,n])=>({id,nome:n,img:await Kits14.foto(l.setor,id,true)})));
   const SERV=[{id:"mostraai",nome:"Mostraí · TV de ofertas",desc:"Sua TV em pé com itens, preços e destaque · muda pelo celular",ic:"📺"},{id:"falaai",nome:"Fala Aí · atendente no telefone",desc:"URA com o nome da loja · frases gravadas do sistema",ic:"📞"},{id:"inpi",nome:"Registro de marca (INPI)",desc:"Proteção do nome e do logo",ic:"®"}];
@@ -158,7 +158,7 @@
   const givImg=u=>u?`<img src="${esc(u)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.visibility='hidden'">`:`<span class="semimg"></span>`;
   const ATALHOS=[["display-em-acrilico","Plaquinha de balcão (Pix, WhatsApp)"],...(/padaria|restaurante|bar|cafeteria/.test(l.setor||"")?[["cardapio-em-plastico","Cardápio em plástico"],["cardapio-em-papel","Cardápio em papel"]]:[])];
   function givSelHTML(){givConta();return Object.keys(S).filter(k=>S[k]&&S[k].giv&&S[k].q>0).map(k=>{const v=S[k],g=v.giv;return `<div class="giv-it sel" data-gk="${esc(k)}">${givImg(g.img)}<div><b>${esc(v.nome)}</b><small>${esc(g.unid||"")}</small><small class="pr"><b>${Rb(App.venda((+g.custo||0)*v.q))}</b>${g.prazo?` · ${g.prazo} dias úteis + frete`:""}</small></div><div class="gq"><button type="button" data-gm="-" aria-label="menos">−</button><span>${v.q}</span><button type="button" data-gm="+" aria-label="mais">+</button></div></div>`;}).join("");}
-  function givHTML(){return `<section class="giv" id="giv"><h2 class="sec-t">Catálogo completo</h2><p>O lojista pediu outra coisa? Busque aqui e ponha no orçamento.</p>
+  function givHTML(){return `<section class="giv" id="giv"><h2 class="sec-t">Catálogo completo</h2><p>O lojista pediu outra coisa? Busque aqui e ponha no orçamento. O preço é o da medida e quantidade de referência da gráfica; para outra medida, confira antes de fechar.</p>
       <div class="giv-at">${ATALHOS.map(([s,t])=>`<button type="button" data-gat="${s}">+ ${esc(t)}</button>`).join("")}</div>
       <input type="search" id="givQ" placeholder="Buscar: cardápio, ímã, sacola, display…" value="${esc(GT)}" autocomplete="off"><div id="givSel">${givSelHTML()}</div><div id="givR"></div></section>`;}
   const givConta=()=>{const b=$("#resN");if(b){const n=Object.values(S).filter(v=>v&&v.q>0).length;b.textContent=n?`${n} item(ns) no orçamento`:"Nada escolhido ainda";}};
@@ -166,7 +166,7 @@
   async function givBusca(){const box=$("#givR");if(!box)return;const t=normG(GT).trim();if(t.length<2){box.innerHTML="";return;}
     try{GIV=GIV||await App.givCatalogo();}catch(err){box.innerHTML=`<p class="giv-n">Não consegui abrir o catálogo (${esc(err.message)}).</p>`;return;}
     const pal=t.split(/\s+/);const ach=GIV.itens.filter(p=>{const x=normG(p.n+" "+p.d+" "+p.e);return pal.every(w=>x.includes(w));}).sort((a,b)=>(normG(b.n).includes(t)?1:0)-(normG(a.n).includes(t)?1:0)||a.n.localeCompare(b.n));
-    box.innerHTML=(ach.slice(0,30).map(p=>`<div class="giv-it">${givImg(p.i)}<div><b>${esc(p.n)}</b><small>${esc(p.d)}${p.e?" · "+esc(p.e):""}</small><small class="pr"><b>${Rb(App.venda(p.p))}</b> · ${givUn(p)}${p.pz?` · ${p.pz} dias úteis + frete`:""}</small></div><button type="button" class="add" data-gadd="${esc(p.s)}" aria-label="Pôr no orçamento">+</button></div>`).join("")||`<p class="giv-n">Nada com “${esc(GT)}” no catálogo. Anote o pedido na ficha da loja.</p>`)+(ach.length>30?`<p class="giv-n">Mostrando 30 de ${ach.length}. Escreva mais para afinar.</p>`:"");
+    box.innerHTML=(ach.slice(0,30).map(p=>`<div class="giv-it">${givImg(p.i)}<div><b>${esc(p.n)}</b><small>${esc(p.d)}${p.e?" · "+esc(p.e):""}</small><small class="pr"><b>${Rb(App.venda(p.p))}</b> · ${givUn(p)}${p.pz?` · ${p.pz} dias úteis + frete`:""} · <a href="https://www.givonline.com.br/produto/${encodeURIComponent(p.s)}" target="_blank" rel="noopener noreferrer">ver na gráfica ↗</a></small></div><button type="button" class="add" data-gadd="${esc(p.s)}" aria-label="Pôr no orçamento">+</button></div>`).join("")||`<p class="giv-n">Nada com “${esc(GT)}” no catálogo. Anote o pedido na ficha da loja.</p>`)+(ach.length>30?`<p class="giv-n">Mostrando 30 de ${ach.length}. Escreva mais para afinar.</p>`:"");
     box.querySelectorAll("[data-gadd]").forEach(b=>b.onclick=()=>{const p=GIV.itens.find(x=>x.s===b.dataset.gadd);if(!p)return;givAdd(p);const sl=$("#givSel");if(sl){sl.innerHTML=givSelHTML();ligarGiv();}b.textContent="✓";setTimeout(()=>{b.textContent="+";},700);});}
   function ligarGiv(){const q=$("#givQ");if(q&&!q._ok){q._ok=true;q.oninput=()=>{GT=q.value;clearTimeout(q._t);q._t=setTimeout(givBusca,220);};}
     $$("#givSel [data-gm]").forEach(b=>b.onclick=()=>{const k=b.closest("[data-gk]").dataset.gk;const v=S[k];if(!v)return;v.q=(v.q||0)+(b.dataset.gm==="+"?1:-1);if(v.q<=0){delete S[k];const P=(e.pedidos||{})[slug];if(P&&P.desc)delete P.desc[k];}salvar(e);const sl=$("#givSel");sl.innerHTML=givSelHTML();ligarGiv();});
