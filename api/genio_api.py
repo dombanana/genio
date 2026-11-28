@@ -1087,7 +1087,31 @@ def chaves_ler():
 def estado_chave(chave, eu):
     return f"dia-u{int(eu['id'])}" if chave == "dia" and eu and eu.get("id") is not None else chave
 
+# Configurações (28/11): lucro, comissão, pagamento, preços e fornecedores são da empresa e só o administrador muda.
+# As metas de venda (dia, mês, jornada) são de cada vendedor (metas-u<id>) e aparecem por cima das da empresa.
+METAS_PESSOAIS = ("dia", "mes", "jornada")
+ESTADO_SO_ADMIN = ("fornecedores", "giv-catalogo", "rotas-donos")
+
+def estado_gravar_de(chave, valor, eu):
+    admin = eu.get("papel") == "admin"
+    if chave in ESTADO_SO_ADMIN and not admin:
+        raise PermissionError("só o administrador muda isto")
+    if chave == "metas":
+        v = valor if isinstance(valor, dict) else {}
+        DADOS.estado_gravar(f"metas-u{int(eu['id'])}", {k: v[k] for k in METAS_PESSOAIS if k in v}, eu["nome"])
+        if admin:
+            ant = (DADOS.estado_ler("metas") or {}).get("valor") or {}
+            DADOS.estado_gravar("metas", {**{k: x for k, x in v.items() if k not in METAS_PESSOAIS}, **{k: ant[k] for k in METAS_PESSOAIS if k in ant}}, eu["nome"])
+        return (estado_ler_de("metas", eu) or {}).get("valor")
+    return DADOS.estado_gravar(estado_chave(chave, eu), valor, eu["nome"])
+
 def estado_ler_de(chave, eu):
+    if chave == "metas" and eu:
+        base = DADOS.estado_ler("metas") or {"valor": {}}
+        meu = DADOS.estado_ler(f"metas-u{int(eu['id'])}")
+        if meu and isinstance(meu.get("valor"), dict):
+            base = dict(base); base["valor"] = {**(base.get("valor") or {}), **meu["valor"]}
+        return base if base.get("valor") else None
     k = estado_chave(chave, eu)
     e = DADOS.estado_ler(k)
     if e is None and k != chave:
@@ -1477,7 +1501,10 @@ class H(BaseHTTPRequestHandler):
             if p.startswith("/api/notas/") and len(partes) == 4:
                 return self._send(200, DADOS.nota_gravar(partes[3], self._json_grande(), eu["nome"]))
             if p.startswith("/api/estado/") and len(partes) == 4:
-                return self._send(200, {"valor": DADOS.estado_gravar(estado_chave(partes[3], eu), self._json_grande().get("valor"), eu["nome"])})
+                try:
+                    return self._send(200, {"valor": estado_gravar_de(partes[3], self._json_grande().get("valor"), eu)})
+                except PermissionError as e:
+                    return self._erro(403, str(e))
             if p.startswith("/api/mensagens/") and len(partes) == 5 and partes[4] == "lidas":
                 return self._send(200, DADOS.mensagens_lidas(partes[3]))
             if p.startswith("/api/mensagens/") and len(partes) == 4:   # resposta do atendimento (aparece para o cliente no painel dele)

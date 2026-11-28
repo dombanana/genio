@@ -6,7 +6,7 @@
 <title>GênIO · Configuração</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="app.css?v=0215a9ddca">
+<link rel="stylesheet" href="app.css?v=e7b0106968">
 <style>
 .forn{display:grid;grid-template-columns:1fr;gap:6px;margin:8px 0 0}
 .forn .it{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;background:var(--lav);border-radius:12px;padding:10px 12px}
@@ -29,11 +29,13 @@
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=0215a9ddca"></script>
+<script src="app.js?v=e7b0106968"></script>
 <script>
 (async()=>{
   const {$,$$,esc,sessao,nav,topo}=App;
   if(!await sessao())return;
+  // lucro, comissão, pagamento, locação e fornecedores são da empresa: só o administrador vê e muda (o servidor também recusa)
+  if((App.eu()||{}).papel!=="admin"){const st=document.createElement("style");st.textContent="#lucro,#locacao,#fornec{display:none!important}label:has(#mCom),label:has(#mComM),#metas .metas-f+small{display:none!important}";document.head.appendChild(st);}
   await App.dados().catch(()=>null);
   const API=(()=>{try{return window.top.REC_API||null;}catch(e){return null;}})();
   let tipoSel=localStorage.getItem("rec-tipo")||"audio",telaAcesa=localStorage.getItem("rec-tela")!=="0";

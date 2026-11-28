@@ -6,7 +6,7 @@
 <title>GênIO · Visita</title>
 <meta name="theme-color" content="#F1EEF8">
 <link rel="icon" href="../genio-favicon.png">
-<link rel="stylesheet" href="app.css?v=0215a9ddca">
+<link rel="stylesheet" href="app.css?v=e7b0106968">
 <style>
 .cab{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
 .fach{width:100%;aspect-ratio:16/9;border-radius:16px;overflow:hidden;background:var(--lav2);display:grid;place-items:center;position:relative}
@@ -33,7 +33,7 @@
 </head>
 <body>
 <div class="w" id="app"></div>
-<script src="app.js?v=0215a9ddca"></script>
+<script src="app.js?v=e7b0106968"></script>
 <script>
 (async()=>{
   const {$,$$,esc,qs,sessao,dados,ficha,estrelasHTML,estado,salvar,nav,topo,voltar,setorNome,nomeLoja,telFmt,cliente,gravarCliente,classificar,definirCliente,menuLongo,ligarLongo,ZONA,entradas,ligarEntradas,abrirLogotipo,logoPrincipal,removerLogo}=App;
@@ -108,7 +108,7 @@
   const selP=()=>((estado().sel||{})[slug])||{};const nSelP=()=>Object.entries(selP()).filter(([k,v])=>v&&v.q>0&&((c.artes||{})[k]||App.ehServico(k))).length;
   function filaHTML(){const f=filaP();const X=Rp();const i=f.indexOf(slug);const x=App.dataCurta(diaP);
     return `<div class="passos fila-p"><div class="t"><span>${diaP===App.hojeISO()?"Rota de hoje":`Rota de ${x.sem} ${x.dia}/${x.mes}`} · loja ${i+1} de ${f.length}</span><b>${f.filter(s=>X.res[s]).length} feita(s)</b></div><ol>${f.map(s=>`<li class="${X.res[s]?"ok":s===slug?"agora":""}"></li>`).join("")}</ol></div>`;}
-  let KIT14=null;App.carregarScript("kits14.js?v=0215a9ddca").then(()=>{KIT14=window.Kits14;if(modo==="play"&&ETL===1){const y=scrollY;render();scrollTo(0,y);}}).catch(()=>{});
+  let KIT14=null;App.carregarScript("kits14.js?v=e7b0106968").then(()=>{KIT14=window.Kits14;if(modo==="play"&&ETL===1){const y=scrollY;render();scrollTo(0,y);}}).catch(()=>{});
   const kGrupo="grupo-"+slug;let GRUPO_AB=(()=>{try{return sessionStorage.getItem(kGrupo)||"";}catch(e){return "";}})();  // começa com os 5 fechados: todos à vista, com o mesmo peso
   const qsL=`l=${encodeURIComponent(slug)}`;
   function conteudoGrupo(g){const S=selP();

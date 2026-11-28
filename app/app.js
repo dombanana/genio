@@ -205,7 +205,7 @@ const App=(()=>{
   // ---- arte automática: logotipo tratado centralizado preenchendo a área segura do gabarito, cor padrão do material
   const COR_PADRAO={capacho:"#2B2B2D",rigido:"#F4F1EA",vinil:null,tecido:"#F4F1EA",papel:"#FFFFFF",lona:"#FFFFFF",carimbo:null};
   const PRODUTOS_IDS=["capacho","placas","adesivos","uniformes","impressos","panfleto","banners","parede","brindes","carimbo","windbanner","faixa","folheto","camiseta","bone","avental"];
-  let _G=null;const gabaritos=async()=>_G||(_G=await (await fetch("gabaritos.json?v=0215a9ddca")).json());
+  let _G=null;const gabaritos=async()=>_G||(_G=await (await fetch("gabaritos.json?v=e7b0106968")).json());
   const carregarImg=src=>new Promise(res=>{const i=new Image();i.crossOrigin="anonymous";i.onload=()=>res(i);i.onerror=()=>res(null);i.src=src;});
   // ---- carimbo: só texto — nome, razão social, CNPJ (negrito), endereço, telefone; nunca logotipo
   async function dadosCarimbo(l){const cad=await ficha(l.slug).catch(()=>null);const L=(cad&&cad.lacunas)||{};const leit=(L.leitura||{}).valor||"";const razao=((leit.match(/Razão social: ([^·]+)/)||[])[1]||"").trim();const cnpj=((leit.match(/CNPJ:? ?([\d./-]{14,18})/)||[])[1]||"");
@@ -252,7 +252,7 @@ const App=(()=>{
     const aw=W-2*(B+S),ah=H-2*(B+S);const f=Math.min(aw/LW,(P.ancora==="topo"?ah*0.45:ah)/LH);const w=LW*f,h=LH*f;const x=(W-w)/2,y=P.ancora==="topo"?B+S+ah*0.05:(H-h)/2;
     const fundo=P.sem_fundo?null:(COR_PADRAO[P.superficie]===undefined?"#FFFFFF":COR_PADRAO[P.superficie]);
     // kit de 14 setores (10/11): a maquete frontal do ramo da loja é a arte de partida de todos os produtos
-    await carregarScript("qr.js?v=0215a9ddca");await carregarScript("impressos.js?v=0215a9ddca");await carregarScript("kits14.js?v=0215a9ddca");
+    await carregarScript("qr.js?v=e7b0106968");await carregarScript("impressos.js?v=e7b0106968");await carregarScript("kits14.js?v=e7b0106968");
     if(window.Kits14&&window.Kits14.ARQ[pid]){const K=await window.Kits14.montar(App,pid,c,l,{W,H,B,S,im,rec});
       if(K){const doc={fundo:K.fundo,fundoImg:null,el:K.el,campos:null,auto:true,kit:KIT14,setorKit:K.setorKit,kitRef:K.kitRef,W,H};const imgs={[c.manual.tratado]:im};
         const k=Math.min(1,1400/Math.max(W,H));const cv=document.createElement("canvas");cv.width=Math.round(W*k);cv.height=Math.round(H*k);const g=cv.getContext("2d");g.scale(k,k);
@@ -568,7 +568,7 @@ const App=(()=>{
     if(r.inicio){if(!locLivre(R,r.tema,r.inicio))return false;R.push({id:r.id,slug:r.slug,loja:r.loja||"",tema:r.tema,inicio:r.inicio,fim:locFim(r.inicio),em:new Date().toISOString(),por:(EU&&EU.nome)||""});}
     else if(i<0)return true;await gravarChave("locacoes",R);return true;}
   const ORDEM_ORC=["capacho","placas","adesivos","parede","faixa","banners","windbanner","impressos","panfleto","folheto","carimbo","uniformes","camiseta","bone","avental","brindes","locacao","mostraai","falaai","inpi"];
-  const NOME_ORC={capacho:"Capacho",placas:"Placa",adesivos:"Adesivo de vitrine",uniformes:"Camisa polo",impressos:"Cartão de visita",panfleto:"Flyer",banners:"Banner retrátil",parede:"Adesivo de parede",brindes:"Ecobag",carimbo:"Carimbo",windbanner:"Wind banner",faixa:"Faixa",folheto:"Folheto 2 dobras",camiseta:"Camiseta",bone:"Boné",avental:"Avental",locacao:"Kit locação",mostraai:"Mostraí",falaai:"Fala Aí",inpi:"Registro de marca (INPI)"};
+  const NOME_ORC={capacho:"Tapete sob medida",placas:"Placa",adesivos:"Adesivo de vitrine",uniformes:"Camisa polo",impressos:"Cartão de visita",panfleto:"Flyer",banners:"Banner retrátil",parede:"Adesivo de parede",brindes:"Ecobag",carimbo:"Carimbo",windbanner:"Wind banner",faixa:"Faixa",folheto:"Folheto 2 dobras",camiseta:"Camiseta",bone:"Boné",avental:"Avental",locacao:"Kit locação",mostraai:"Mostraí",falaai:"Fala Aí",inpi:"Registro de marca (INPI)"};
   // cardápio de venda (28/11): os 4 impressos da primeira visita; os que saíram do cardápio só aparecem se já estiverem num orçamento
   const PRIMEIRA=["capacho","impressos","adesivos","placas"],FORA_CARDAPIO=["panfleto","folheto","brindes","bone","camiseta","carimbo"];
   // catálogo completo da GIV: leitura do site guardada no servidor (estado "giv-catalogo": {lido, itens:[{s,n,d,e,p,q,pz,i,sku}]}) — fica na busca, para o que o lojista pedir fora do cardápio
@@ -583,6 +583,7 @@ const App=(()=>{
       if(v.servico){q=1;fixa=true;if(baseId(k)==="mostraai"&&v.entrada!=null){lista=+v.entrada;mensal=+v.mensal||0;unid=(v.nome||"").replace(/^Mostraí · /,"");}}
       else if(baseId(k)==="locacao"){q=1;fixa=true;lista=precoLocacao(v.inicio);const t=LOC_TEMAS.find(x=>x.id===v.tema);unid=`${t?t.nome:"tema a escolher"} · ${v.inicio?diaBR(v.inicio)+" a "+diaBR(locFim(v.inicio))+" · 15 dias":"data a escolher"}`;}
       else if(baseId(k)==="capacho"&&c&&c.capacho_preco&&c.capacho_preco.total){const cp=c.capacho_preco;lista=+cp.total;q=cp.qtd||1;fixa=true;unid=(cp.medidas||[]).map(m=>`${(m.w/100).toFixed(2).replace(".",",")} × ${(m.h/100).toFixed(2).replace(".",",")} m`).join(" + ");}
+      else if(baseId(k)==="capacho"){lista=null;unid="sob medida · monte o tapete para ter o preço";}   // o tapete colorido só tem preço depois de montado no motor (medida e cores); o capacho padrão da gráfica é item do catálogo
       else if(v.giv){lista=venda((+v.giv.custo||0)*q);unid=v.giv.unid||"";}
       else{q=qtdNormal(k,q,fid);const fmt=(c&&c.formatos||{})[k];lista=precoEm(k,q,fmt,fid);const pr=precoProduto(k,fmt,fid);unid=pr?pr.unid.replace(/^\d[\d.]* un\. · /,"").replace(/^un\. · /,""):"";}
       const pct=dc[k]!=null?+dc[k]:0;const total=lista==null?null:Math.round(lista*(1+pct/100)*100)/100;
